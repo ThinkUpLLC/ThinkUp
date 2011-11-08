@@ -84,10 +84,13 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         'option_value' => 'abc123public');
         $bvalue4 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'default_instance',
         'option_value' => '123');
+        $bvalue5 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_opted_out_usage_stats',
+        'option_value' => 'true');
         $bdata = FixtureBuilder::build('options', $bvalue);
         $bdata2 = FixtureBuilder::build('options', $bvalue2);
         $bdata3 = FixtureBuilder::build('options', $bvalue3);
         $bdata4 = FixtureBuilder::build('options', $bvalue4);
+        $bdata5 = FixtureBuilder::build('options', $bvalue5);
 
         $results = $controller->control();
         $json_obj = json_decode($results);
@@ -96,6 +99,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->values->recaptcha_private_key->option_value, 'abc123');
         $this->assertEqual($json_obj->values->recaptcha_public_key->option_value, 'abc123public');
         $this->assertEqual($json_obj->values->default_instance->option_value, '123');
+        $this->assertTrue($json_obj->values->is_opted_out_usage_stats->option_value);
     }
 
     public function testSaveConfigViewDataNoCSRFTokenPassed() {
@@ -127,6 +131,15 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->status, 'success');
         $this->assertEqual($json_obj->saved, 0);
         $this->assertEqual($json_obj->deleted, 0);
+
+        // bad arg for is_registration_open
+        $_POST['is_opted_out_usage_stats'] = 'falsify';
+        $controller = new AppConfigController(true);
+        $results = $controller->control();
+        $json_obj = json_decode($results);
+        $this->assertEqual($json_obj->status, 'failed');
+        $this->assertNotNull($json_obj->required->is_opted_out_usage_stats);
+        $_POST['is_opted_out_usage_stats'] = 'false';
 
         // bad arg for is_registration_open
         $_POST['is_registration_open'] = 'falsey';
@@ -168,7 +181,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
-        $this->assertEqual($json_obj->saved, 4);
+        $this->assertEqual($json_obj->saved, 5);
 
         // bad arg, not numeric
         $_POST['default_instance'] = 'notanumber';
@@ -194,7 +207,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
-        $this->assertEqual($json_obj->saved, 5);
+        $this->assertEqual($json_obj->saved, 6);
 
         // good double digit arg for default_instance
         $_POST['default_instance'] = '57';
@@ -202,7 +215,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
-        $this->assertEqual($json_obj->saved, 5);
+        $this->assertEqual($json_obj->saved, 6);
 
         // good triple digit arg for default_instance
         $_POST['default_instance'] = '105';
@@ -210,7 +223,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
-        $this->assertEqual($json_obj->saved, 5);
+        $this->assertEqual($json_obj->saved, 6);
 
         //assert Session info re: selected instance has been cleared
         $session_instance_network = SessionCache::get('selected_instance_network');
@@ -227,7 +240,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         }
         $stmt->closeCursor();
         array_shift($data); //shift off database version record
-        $this->assertEqual(count($data), 5);
+        $this->assertEqual(count($data), 6);
         $this->assertEqual($data[0]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[0]['option_name'], 'is_registration_open');
         $this->assertEqual($data[0]['option_value'], 'false');
@@ -245,8 +258,10 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[3]['option_name'], 'recaptcha_private_key');
         $this->assertEqual($data[3]['option_value'], '1234abc');
         $this->assertEqual($data[4]['namespace'], OptionDAO::APP_OPTIONS);
-        $this->assertEqual($data[4]['option_name'], 'default_instance');
-        $this->assertEqual($data[4]['option_value'], '105');
+        $this->assertEqual($data[4]['option_name'], 'is_opted_out_usage_stats');
+        $this->assertEqual($data[4]['option_value'], 'false');
+        $this->assertEqual($data[5]['option_name'], 'default_instance');
+        $this->assertEqual($data[5]['option_value'], '105');
 
         // update records...
         $_POST['is_registration_open'] = 'true';
@@ -262,7 +277,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
-        $this->assertEqual($json_obj->saved, 5);
+        $this->assertEqual($json_obj->saved, 6);
         $this->assertEqual($json_obj->deleted, 0);
         $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
@@ -273,7 +288,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         }
         $stmt->closeCursor();
         array_shift($data); //shift off database version record
-        $this->assertEqual(count($data), 5);
+        $this->assertEqual(count($data), 6);
         $this->assertEqual($data[0]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[0]['option_name'], 'is_registration_open');
         $this->assertEqual($data[0]['option_value'], 'true');
@@ -290,7 +305,8 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[3]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[3]['option_name'], 'recaptcha_private_key');
         $this->assertEqual($data[3]['option_value'], '12345abc');
-        $this->assertEqual($data[4]['option_value'], '12345');
+        $this->assertEqual($data[4]['option_value'], 'false');
+        $this->assertEqual($data[5]['option_value'], '12345');
 
         // delete records...
         $_POST['is_registration_open'] = 'true';
@@ -298,12 +314,13 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $_POST['recaptcha_public_key'] = '';
         $_POST['recaptcha_private_key'] = '';
         $_POST['default_instance'] = '';
+        $_POST['is_opted_out_usage_stats'] = '';
         $controller = new AppConfigController(true);
         $results = $controller->control();
         $json_obj = json_decode($results);
         $this->assertEqual($json_obj->status, 'success');
         $this->assertEqual($json_obj->saved, 1);
-        $this->assertEqual($json_obj->deleted, 4);
+        $this->assertEqual($json_obj->deleted, 5);
         $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);

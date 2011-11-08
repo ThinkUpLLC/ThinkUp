@@ -31,7 +31,10 @@
  */
 class CheckVersionController extends ThinkUpAuthController {
     public function authControl() {
+        $this->setContentType('text/javascript');
         $this->setViewTemplate('install.checkversion.tpl');
+        $config = Config::getInstance();
+        $this->addToView('is_opted_out_usage_stats', $config->getValue('is_opted_out_usage_stats'));
         return $this->generateView();
     }
 }

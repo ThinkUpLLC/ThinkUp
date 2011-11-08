@@ -37,6 +37,7 @@ $controller_test->add(new TestOfActivateAccountController());
 $controller_test->add(new TestOfAppConfigController());
 $controller_test->add(new TestOfBackupController());
 $controller_test->add(new TestOfCheckCrawlerController());
+$controller_test->add(new TestOfCheckVersionController());
 $controller_test->add(new TestOfCrawlerAuthController());
 $controller_test->add(new TestOfDashboardController());
 $controller_test->add(new TestOfThinkUpEmbedController());

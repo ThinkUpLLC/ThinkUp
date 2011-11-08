@@ -36,13 +36,6 @@ Check this box if you don't want to allow users to
 :doc:`embed ThinkUp threads on third-party web sites </userguide/listings/all/post_listings>` using a JavaScript
 embed code. When this box is checked, the code will not be available for use.
 
-Developer Log
--------------
-
-Check this box if you want to see the :doc:`verbose, unformatted developer
-log </troubleshoot/common/advanced/crawlerlog>` on the "Update Now" screen, instead of the quieter, formatted user log.
-Once you change this setting, go back to the Dashboard and click on "Update Now" to see the change in action.
-
 Default service user
 --------------------
 
@@ -52,6 +45,33 @@ successfully.
 
 If you set this to a public service user which becomes private, this setting will fall back to its default, the last
 updated service user.
+
+Developer Log
+-------------
+
+Check this box if you want to see the :doc:`verbose, unformatted developer
+log </troubleshoot/common/advanced/crawlerlog>` on the "Update Now" screen, instead of the quieter, formatted user log.
+Once you change this setting, go back to the Dashboard and click on "Update Now" to see the change in action.
+
+
+Disable Usage Reporting
+-----------------------
+
+ThinkUp sends usage information to `thinkupapp.com <http://thinkupapp.com>`_ when it checks if there's
+a new version available. Collecting this usage information enables ThinkUp's :doc:`core development team </core>` to
+gain insight into what features are in use, and make data-informed decisions about how to improve the application.
+
+The information collected about individual ThinkUp installations is not public; it is only available to ThinkUp's
+:doc:`core development team </core>`. From time to time, the team may publish usage statistics in aggregate.
+
+The usage information includes:
+
+*    The location and version of the ThinkUp installation
+*    How many and which service users have been added to the installation
+*    The last time an administrator logged into the ThinkUp installation
+
+Check this box to disable usage reporting on your ThinkUp installation.
+
 
 Back Up and Export Data
 ------------------------

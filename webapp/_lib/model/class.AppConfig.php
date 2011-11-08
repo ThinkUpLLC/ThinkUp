@@ -69,7 +69,7 @@ class AppConfig {
             'match_message' => '',
             'default' => '',
             ),
-             
+
             /**
              * Currently there's a bug with checkboxes which have a default value of true. When you uncheck the box,
              * and save the form, no value gets submitted for the checkbox, so the false value doesn't get saved.
@@ -96,6 +96,14 @@ class AppConfig {
         'is_log_verbose' => array(
             'type' => 'checkbox',
             'title' => 'See the verbose, unformatted developer log on the Update Now screen',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^(true|false)$/',
+            'match_message' => 'Must be true or false'
+            ),
+        'is_opted_out_usage_stats' => array(
+            'type' => 'checkbox',
+            'title' => 'Usage reporting helps us improve ThinkUp',
             'required' => false,
             'default' => 'false',
             'match' => '/^(true|false)$/',

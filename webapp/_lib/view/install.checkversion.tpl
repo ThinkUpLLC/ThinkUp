@@ -1,5 +1,5 @@
 {literal}ThinkUpAppVersion = new function()  {
-  var CONTENT_URL = 'http://thinkupapp.com/version.php?v={/literal}{$thinkup_version}{literal}';
+  var CONTENT_URL = 'http://thinkupapp.com/version.php?v={/literal}{$thinkup_version}{if $is_opted_out_usage_stats}&usage=n{/if}{literal}';
   var ROOT = 'thinkup_version';
 
   function requestContent( local ) {

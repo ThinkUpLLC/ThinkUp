@@ -1,5 +1,5 @@
   <div class="prepend_20">
-    <div class="help-container">{insert name="help_link" id='application_settings'}</div>
+  {insert name="help_link" id='application_settings'}
     <h1>Application Settings</h1>
   </div>
   <div class="clearfix prepend_20">
@@ -44,7 +44,8 @@
 
       <div style="float: left;">
         <label for="recaptcha_enable">
-          Enable reCAPTCHA:
+          Enable reCAPTCHA: 
+          <br>
         </label>
       </div>
       <div style="float: left;">
@@ -52,7 +53,7 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
-        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
+        Add reCAPTCHA to ThinkUp's registration form. <a href="https://www.google.com/recaptcha">Get your reCAPTCHA keys here</a>.
       </div>
 
       <div id="recaptcha_enable_deps" style="display: none; width: 470px; margin: 10px 0px 60px 20px;">
@@ -83,12 +84,11 @@
         </label>
       </div>
       <div style="float: left;">
-        {insert name="help_link" id="api"}
         <input type="checkbox" name="is_api_disabled" id="is_api_disabled" value="true">
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
-        Set whether or not your site's data is available via ThinkUp's JSON API. 
+        Set whether or not your site's data is available via ThinkUp's JSON API. <a href="http://thinkupapp.com/docs/userguide/api/posts/index.html">Learn more...</a> 
       </div>
 
       <div style="float: left;">
@@ -138,6 +138,20 @@
         See the verbose, unformatted developer log on the Update Now screen.
       </div>
    </div>
+
+      <div style="float: left;">
+        <label for="is_opted_out_usage_stats">
+          Disable usage reporting:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_opted_out_usage_stats" id="is_opted_out_usage_stats" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
+        Usage reporting helps us improve ThinkUp. <a href="http://thinkupapp.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a>
+      </div>
 
     <div style="text-align: center" id="save_setting_image">
         <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="31" height="31"  

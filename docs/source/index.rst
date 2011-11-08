@@ -28,3 +28,4 @@ engine.
    contact
    contribute/index
    changelog
+   core
