@@ -108,9 +108,9 @@
                         {/if}
                     {/foreach}
                     {if $instance->network neq "twitter"}
-                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|replace:'|':''|strip_tags|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|replace:'|':''|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|replace:'|':''|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
+                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|replace:'|':''|strip_tags|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|replace:'|':''|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|replace:'|':''|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3E5D9A,3C8ECC&&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                     {else}
-                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{$post->post_text|replace:'|':''|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl=Retweets|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
+                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{$post->post_text|replace:'|':''|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3E5D9A,3C8ECC&chdl=Retweets|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                     {/if}
                 </div>
         </div>
@@ -140,48 +140,56 @@
 
             {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
               
-                <div class="section">
+                <div class="section" style="float : left; clear : none; width : 345px;">
                   <h2>
                     {if $instance->network eq 'twitter'}Followers {elseif $instance->network eq 'facebook page'}Fans {elseif $instance->network eq 'facebook'}Friends {/if}By Day
                     {if $follower_count_history_by_day.trend}
-                        ({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}
-                        {$follower_count_history_by_day.trend|number_format}</span>/day)
+                        ({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_day.trend|number_format}</span>/day)
                     {/if}
                   </h2>
                   {if !$follower_count_history_by_day.history OR $follower_count_history_by_day.history|@count < 2}
                     <div class="alert helpful">Not enough data to display chart</div>
                   {else}
                       <div class="article">
-                    <img width="680" height="200" src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=FF9900&chd=t:{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxr={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
+                    <img width="320" height="200" src="http://chart.apis.google.com/chart?chs=320x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=7DD3F0&chd=t:{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxr={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
                     </div>
+                    <div class="view-all">
+                    <a href="{$site_root_path}?v=followers&u={$instance->network_username}&n={$instance->network}">More...</a>
+                  </div>
+                    
                   {/if}
                 </div>
-                <div class="section">
+                <div class="section" style="float : left; clear : none;margin-left : 16px; width : 345px;">
                   <h2>
                     {if $instance->network eq 'twitter'}Followers {elseif $instance->network eq 'facebook page'}Fans {elseif $instance->network eq 'facebook'}Friends {/if} By Week
                     {if $follower_count_history_by_week.trend != 0}
-                        ({if $follower_count_history_by_week.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}
-                        {$follower_count_history_by_week.trend|number_format}</span>/week)
+                        ({if $follower_count_history_by_week.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_week.trend|number_format}</span>/week)
                     {/if}
                   </h2>
                   {if !$follower_count_history_by_week.history OR $follower_count_history_by_week.history|@count < 2}
                       <div class="alert helpful">Not enough data to display chart</div>
                   {else}
-                      <div class="article">
-                    <img width="680" height="200" src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=FF9900&chd=t:{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxr={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
+                    <div class="article">
+                        <img width="320" height="200" src="http://chart.apis.google.com/chart?chs=320x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=7DD3F0&chd=t:{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxr={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
                     </div>
+                    {if $follower_count_history_by_week.milestone and $follower_count_history_by_week.milestone.will_take > 0}
+                    <div class="stream-pagination"><small style="color:gray">
+                        <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate.
+                    </small></div>
+                    {/if}
+                  <div class="view-all">
+                    <a href="{$site_root_path}?v=followers&u={$instance->network_username}&n={$instance->network}">More...</a>
+                  </div>
                   {/if}
+
+                
                 </div>
 
             {/if}
 
-            {if $follower_count_history_by_week.milestone and $follower_count_history_by_week.milestone.will_take > 0}
-              <div class="small gray">
-                Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
-              </div>
-            {/if}
+
             {if $least_likely_followers}
-              <div class="clearfix">
+              <div class="clearfix section">
                 <h2>This Week's Most Discerning Followers</h2>
                 <div class="clearfix article" style="padding-top : 0px;">
                 {foreach from=$least_likely_followers key=uid item=u name=foo}
