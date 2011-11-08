@@ -189,6 +189,6 @@ class TestExportDAOFileFail {
  */
 class TestExportDAOGrantFail {
     public function dropExportedPostsTable($backup_file = null) {
-        throw new Exception("Mysql does not have GRANT FILE ON permissions to write to: /bla");
+        throw new Exception("MySQL does not have GRANT FILE ON permissions to write to: /bla");
     }
 }

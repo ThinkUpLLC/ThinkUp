@@ -1847,7 +1847,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // post deleted
         $this->assertEqual(1, $pdao->deletePost(1));
         $sql = "select * from " . $this->table_prefix . 'posts where id = 1';
-        $stmt = PostMysqlDAO::$PDO->query($sql);
+        $stmt = PostMySQLDAO::$PDO->query($sql);
         $this->assertFalse($stmt->fetch(PDO::FETCH_ASSOC));
     }
 

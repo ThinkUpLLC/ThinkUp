@@ -52,7 +52,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $optiondao->insertOption('test_namespace', 'test_name', 'test_value');
         $sql = "select * from " . $this->table_prefix . 'options where namespace = ' .
             '\'test_namespace\' order by option_id';
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
@@ -72,7 +72,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
 
         $sql = "select * from " . $this->table_prefix . 'options where namespace = ' .
             '\'test_namespace2\' order by option_id';
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
@@ -143,7 +143,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(1, $optiondao->updateOption($builder1->columns['last_insert_id'], 'test_value123'));
 
         $sql = "select * from " . $this->table_prefix . 'options where option_id = ' . $builder1->columns['last_insert_id'];
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual($data['option_name'], 'testname');
         $this->assertEqual($data['namespace'], 'test');
@@ -169,7 +169,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(1, $optiondao->updateOption($builder1->columns['last_insert_id'], 'test_value123', 'newname'));
 
         $sql = "select * from " . $this->table_prefix . 'options where option_id = ' . $builder1->columns['last_insert_id'];
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual($data['option_name'], 'newname');
         $this->assertEqual($data['namespace'], 'test');
@@ -195,7 +195,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(1, $optiondao->updateOptionByName('test', 'testname', 'test_value123'));
 
         $sql = "select * from " . $this->table_prefix . 'options where option_id = ' . $builder1->columns['last_insert_id'];
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual($data['option_name'], 'testname');
         $this->assertEqual($data['namespace'], 'test');
@@ -339,7 +339,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
     public function testIsOptionsTable() {
         $optiondao = new OptionMySQLDAO();
         $this->assertTrue($optiondao->isOptionsTable(), 'we have an option table');
-        PluginOptionMysqlDAO::$PDO->query("drop table " . $this->table_prefix . 'options');
+        PluginOptionMySQLDAO::$PDO->query("drop table " . $this->table_prefix . 'options');
         $this->assertFalse($optiondao->isOptionsTable(), 'we do not have an option table');
     }
 }

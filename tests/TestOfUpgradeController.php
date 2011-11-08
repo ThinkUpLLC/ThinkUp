@@ -42,7 +42,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $config = Config::getInstance();
         $dao = DAOFactory::getDAO('OptionDAO');
-        $this->pdo = OptionMysqlDAO::$PDO;
+        $this->pdo = OptionMySQLDAO::$PDO;
 
         $this->init_db_version = $config->getValue('THINKUP_VERSION');
         $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10); //set a high version num

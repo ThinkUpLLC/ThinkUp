@@ -242,7 +242,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($new_api_key);
         $sql = "select id, api_key from " . $this->table_prefix . "owners where id = " .
         $this->builders[0]->columns['last_insert_id'];
-        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $stmt = OwnerMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual($this->builders[0]->columns['api_key'], $data['api_key']); // should be the same api_key
 
@@ -251,7 +251,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(strlen($data['api_key']), 32); //md5 32 char api key
         $sql = "select id, api_key from " . $this->table_prefix . "owners where id = " .
         $this->builders[0]->columns['last_insert_id'];
-        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $stmt = OwnerMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual($this->builders[0]->columns['last_insert_id'], $data['id']);
         $this->assertNotEqual($this->builders[0]->columns['api_key'], $data['api_key']); // should be a new api_key

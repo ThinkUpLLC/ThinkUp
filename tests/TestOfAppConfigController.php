@@ -233,7 +233,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
 
         $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
@@ -281,7 +281,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->deleted, 0);
         $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
@@ -323,7 +323,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->deleted, 5);
         $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);

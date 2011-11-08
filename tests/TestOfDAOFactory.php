@@ -104,7 +104,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         // valid mysql test dao
         Config::getInstance()->setValue('db_type', 'mysql');
         $test_dao = DAOFactory::getDAO('TestDAO');
-        $this->assertIsA($test_dao, 'TestMysqlDAO', 'we are a mysql dao');
+        $this->assertIsA($test_dao, 'TestMySQLDAO', 'we are a mysql dao');
         $data_obj = $test_dao->selectRecord(1);
         $this->assertNotNull($data_obj);
         $this->assertEqual($data_obj->test_name, 'name1');

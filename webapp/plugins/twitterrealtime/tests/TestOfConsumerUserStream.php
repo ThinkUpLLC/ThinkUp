@@ -90,7 +90,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
         // stream proc data set
         $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
         $this->table_prefix . "stream_procs";
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $process_id = getmypid();
         $this->assertIdentical($data[0]['process_id'], $process_id . '');
@@ -127,7 +127,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
             // stream proc data set
             $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
             $this->table_prefix . "stream_procs";
-            $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+            $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
             $data = $stmt->fetchAll();
             $process_id = getmypid();
             $this->assertIdentical($data[0]['process_id'], $process_id . '');
@@ -146,7 +146,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
         $consumer_user_stream->enqueueStatus("string1");
         $consumer_user_stream->enqueueStatus("string2");
         $sql = "select * from " . $this->table_prefix . "stream_data";
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $this->assertIdentical($data[0][0],'1');
         $this->assertIdentical($data[0][1],'string1');
@@ -157,7 +157,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
 
         $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
         $this->table_prefix . "stream_procs";
-        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $stmt = PluginOptionMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $process_id = getmypid();
         $this->assertIdentical($data[0]['process_id'], $process_id . '');

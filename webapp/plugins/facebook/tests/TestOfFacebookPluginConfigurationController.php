@@ -155,7 +155,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         //app not configured
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $prefix = Config::getInstance()->getValue('table_prefix');
-        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -183,7 +183,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         //app not configured
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $prefix = Config::getInstance()->getValue('table_prefix');
-        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured

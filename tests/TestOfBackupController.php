@@ -270,7 +270,7 @@ class TestBackupDAOGrantFail implements BackupDAO {
         // does nothing
     }
     public function export($backup_file = null) {
-        throw new MySQLGrantException("Mysql does not have GRANT FILE ON permissions to write to: /bla");
+        throw new MySQLGrantException("MySQL does not have GRANT FILE ON permissions to write to: /bla");
     }
 }
 
@@ -282,6 +282,6 @@ class TestBackupDAOFileFail implements BackupDAO {
         // does nothing
     }
     public function export($backup_file = null) {
-        throw new OpenFileException("Mysql does not have permissions to write to: /bla");
+        throw new OpenFileException("MySQL does not have permissions to write to: /bla");
     }
 }

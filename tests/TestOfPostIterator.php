@@ -58,7 +58,7 @@ class TestOfPostIterator extends ThinkUpUnitTestCase {
     public function testStmtNoResults() {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $sql = "select * from " . $this->table_prefix . self::TEST_TABLE;
-        $stmt = PostMysqlDAO::$PDO->query($sql);
+        $stmt = PostMySQLDAO::$PDO->query($sql);
         $post_it = new PostIterator($stmt);
         $cnt = 0;
         foreach($post_it as $key => $value) {

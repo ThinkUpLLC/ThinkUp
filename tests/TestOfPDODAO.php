@@ -103,8 +103,8 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
 
     public function testTwoObjectsOneConnection() {
         DAOFactory::getDAO('TestDAO');
-        $this->assertNotNull(TestMysqlDAO::$PDO);
-        TestMysqlDAO::$PDO->tu_testing = "testing";
+        $this->assertNotNull(TestMySQLDAO::$PDO);
+        TestMySQLDAO::$PDO->tu_testing = "testing";
         $testdao2 = DAOFactory::getDAO('TestDAO');
         $this->assertEqual(TestMySQLDAO::$PDO->tu_testing, "testing");
     }
