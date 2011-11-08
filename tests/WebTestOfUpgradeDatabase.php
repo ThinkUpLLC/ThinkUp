@@ -148,7 +148,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
-        $this->assertEqual(count($data), 197);
+        $this->assertEqual(count($data), 200);
     }
 
     /**
@@ -183,8 +183,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
-        'step.');
+        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
 
         //Set test mode
         putenv("MODE=TESTS");
@@ -237,8 +236,18 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('email', 'user@example.com');
         $this->setField('pwd', 'secret');
         $this->click("Log In");
-        $this->assertText('You have no'); //accounts/services configured. Set up an account now');
-        $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
+        if (version_compare($version, '0.17', '>=')) {
+            $this->assertText('Add a Twitter account');
+            $this->assertText('Add a Facebook account');
+            $this->assertText('Add a Google+ account');
+            $this->assertText('Adjust Your Settings');
+        }
+        if (version_compare($version, '0.16', '>=')) {
+            $this->assertText('Welcome to ThinkUp. Let\'s get started.');
+        } else {
+            $this->assertText('You have no'); //accounts/services configured. Set up an account now');
+            $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
+        }
         //Visit Configuration/Settings page and assert content there
         if (version_compare($version, '0.6', '>=')) {
             $this->click("Settings"); //link name changed in beta 6

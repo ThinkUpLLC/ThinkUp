@@ -65,6 +65,7 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
     }
 
     public function testOptedOut() {
+        include THINKUP_ROOT_PATH.'webapp/install/version.php';
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_opted_out_usage_stats',
         'option_value' => 'true');
         $bdata = FixtureBuilder::build('options', $bvalues);
@@ -75,15 +76,19 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertNoPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this/', $results);
         $this->assertPattern('/var ROOT = \'thinkup_version\'/', $results);
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v=0.16\&usage=n/', $results);
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v='.$THINKUP_VERSION.
+        '\&usage=n/', $results);
     }
 
     public function testNotOptedOut() {
+        include THINKUP_ROOT_PATH.'webapp/install/version.php';
         $this->simulateLogin('me@example.com');
         $controller = new CheckVersionController(true);
 
         $results = $controller->go();
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v=0.16/', $results);
-        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v=0.16q\&usage=n/', $results);
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v='.$THINKUP_VERSION.
+        '/', $results);
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        '\&usage=n/', $results);
     }
 }

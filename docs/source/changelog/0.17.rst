@@ -1,0 +1,30 @@
+Beta 0.17 - 08 Nov 2011
+=======================
+
+**New features:**
+
+*    Completely redesigned application interface
+*    Collapsed Dashboard sidebar menu into high level categories
+*    Twitter Plugin: Added "This Week's Most Discerning Followers" module on Followers page
+*    Twitter Plugin: Capture and chart Twitter list membership totals (on Followers page)
+*    Facebook Plugin: Capture Facebook wall posts from other users (Posts -> Posts On Your Wall)
+*    Facebook Plugin: Add pages you manage (in addition to pages you "like") to Add Facebook Page dropdown
+*    Added ability for admins to "Promote" and "Demote" other ThinkUp users to administrators
+*    Made post reply search available to non-logged in users
+
+**Improvements:**
+
+*    Improved ThinkUp's password policy (8 characters, alphanumeric)
+*    Collapse plugin setup details once the plugin is successfully configured
+*    Database Upgrader: Auto-detect database size and advise users backing up or upgrading large databases to use the
+     command line option
+*    Database Upgrader: Improved database upgrade process to avoid "table not found" error on DROP TABLE statements
+*    Set MySQL timezone when possible to better handle Daylight Saving time
+*    Redirect to application front page on login to avoid form resubmission prompt on refresh
+*    Various user interface improvements (copy to clipboard buttons, better plugin setup instructions, simplified copy,
+     standardized terminology)
+*    Google+ Plugin: "Access not configured" and "undefined property" bugs fixed
+*    Twitter Plugin: Tweets with multiple links in them no longer show up twice in post listings
+*    Twitter Plugin: Update all Twitter username links to use Web Intents
+*    Facebook Plugin: Fixed bug when adding a Facebook account from a ThinkUp installation running on https
+*    Added ability to opt out of usage reporting (Settings > Application)

@@ -467,13 +467,13 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-11-08  8:19:12
+-- Dump completed on 2011-11-08  8:57:28
 
 --
 -- Insert DB Version
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
-VALUES ('application_options', 'database_version', '0.16', NOW(), NOW()); 
+VALUES ('application_options', 'database_version', '0.17', NOW(), NOW()); 
 
 --
 -- Insert default plugin(s)

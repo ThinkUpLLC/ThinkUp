@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.16';
+$LATEST_VERSION = '0.17';
 $TOTAL_MIGRATION_COUNT = 215;
 
 $MIGRATIONS = array(
@@ -41,7 +41,7 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_owners email',
                     'match' => "/varchar\(200\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 )
             )
         )
@@ -55,12 +55,12 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_owners email',
                     'match' => "/varchar\(200\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts post_id',
                     'match' => "/bigint\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 )
             )
         )
@@ -74,37 +74,37 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_posts in_retweet_of_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_reply_to_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_links post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_post_errors post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_users last_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances last_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
             )
         )
@@ -119,14 +119,14 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_options option_id',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
-                    'query' => 
+                    'query' =>
                         "SELECT option_value FROM tu_options WHERE namespace = 'application_options' " .
                         "AND option_name = 'database_version'",
                     'match' => "/^0\.4$/",
-                    'column' => 'option_value', 
+                    'column' => 'option_value',
                 )
             )
         )
@@ -142,13 +142,13 @@ $MIGRATIONS = array(
                     'query' => 'show index from tu_posts where Key_name = \'postnetwk\' and Column_name = '.
                     '\'post_id\' and Non_unique = 0;',
                     'match' => "/postnetwk/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                 ),
                 array(
                     'query' => 'show index from tu_links where Key_name = \'url\' and Column_name = '.
                     '\'url\' and Non_unique = 0;',
                     'match' => "/url/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                 ),
             )
         )
@@ -163,37 +163,37 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_instances last_favorite_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances last_unfav_page_checked',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances last_page_fetched_favorites',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances favorites_profile',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances owner_favs_in_system',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_users favorites_count',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_favorites post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
            )
         )
@@ -212,34 +212,34 @@ $MIGRATIONS = array(
                             "INDEX (  `plugin_id` )" .
                             ") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin",
                             "INSERT INTO tu_plugin_options (plugin_id, option_name, option_value) " .
-                            "VALUES (2345, 'test_plugin_name', 'test_plugin_value')" 
+                            "VALUES (2345, 'test_plugin_name', 'test_plugin_value')"
         ),
         'migration_assertions' => array(
             'sql' => array(
                 array(
                     'query' => 'DESCRIBE tu_owners failed_logins',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_owners account_status',
                     'match' => "/varchar\(150\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_rt_of_user_id',
                     'match' => "/bigint\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts old_retweet_count_cache',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => "SELECT namespace FROM tu_options WHERE namespace = 'plugin_options-2345'",
                     'match' => "/plugin_options-2345/",
-                    'column' => 'namespace', 
+                    'column' => 'namespace',
                 )
             )
         )
@@ -274,13 +274,13 @@ $MIGRATIONS = array(
             'sql' => array(
                 array(
                     // Deleted plugin row
-                    'query' => "SELECT id FROM tu_plugins WHERE folder_name = 'flickrthumbnails'; ", 
+                    'query' => "SELECT id FROM tu_plugins WHERE folder_name = 'flickrthumbnails'; ",
                     'no_match' => true,
                 ),
                 array(
                     // Dropped column from tu_instance
                     'query' => 'DESCRIBE tu_instances api_calls_to_leave_unmade_per_minute',
-                    'no_match' => true 
+                    'no_match' => true
                  )
             )
         )
@@ -297,21 +297,21 @@ $MIGRATIONS = array(
                     'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'user_id' and Column_name = ".
                     "'network' and Non_unique = 0;",
                     'match' => "/user_id/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                  ),
                 array(
                     // Added active index
                     'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'active' and Column_name = ".
                     "'network' and Non_unique = 1;",
                     'match' => "/active/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                  ),
                 array(
                     // Added last_seen index
                     'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'network' and Column_name = ".
                     "'network' and Non_unique = 1;",
                     'match' => "/network/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                  ),
                 array(
                     // Modified field definition
@@ -321,23 +321,23 @@ $MIGRATIONS = array(
                 ),
                 array(
                     // Modified field definition
-                    'query' => "DESCRIBE tu_instances is_archive_loaded_follows", 
+                    'query' => "DESCRIBE tu_instances is_archive_loaded_follows",
                     'match' => "/int\(1\)/",
                     'column' => 'Type',
                 ),
                 array(
                     // Removed column
                     'query' => 'DESCRIBE tu_instances total_users_in_system',
-                    'no_match' => true 
+                    'no_match' => true
                  ),
                 array(
                     // Moved this column out of this table...
-                    'query' => "DESCRIBE tu_instances last_page_fetched_replies", 
-                    'no_match' => true 
+                    'query' => "DESCRIBE tu_instances last_page_fetched_replies",
+                    'no_match' => true
                 ),
                  array(
                     // ...and into this table.
-                    'query' => "DESCRIBE tu_instances_twitter last_page_fetched_replies", 
+                    'query' => "DESCRIBE tu_instances_twitter last_page_fetched_replies",
                     'match' => "/int\(11\)/",
                     'column' => 'Type',
                 ),
@@ -355,7 +355,7 @@ $MIGRATIONS = array(
                     // Back-protect private posts
                     'query' => "SELECT a.user_name, p.post_id, p.post_text, p.is_protected, a.is_protected FROM ".
                     "tu_posts p INNER JOIN tu_users a ON p.author_user_id=a.user_id AND p.network=a.network WHERE ".
-                    "a.is_protected=1 AND p.is_protected=0; ", 
+                    "a.is_protected=1 AND p.is_protected=0; ",
                     'no_match' => true,
                 )
             )
@@ -373,13 +373,13 @@ $MIGRATIONS = array(
                     // Created invites table
                     'query' => 'DESCRIBE tu_invites invite_code',
                     'match' => "/varchar\(10\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created invites table
                     'query' => 'DESCRIBE tu_invites created_time',
                     'match' => "/timestamp/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Deleted Embed Thread plugin
@@ -400,14 +400,14 @@ $MIGRATIONS = array(
                     // Added retweet_count_api field
                     'query' => 'DESCRIBE tu_posts retweet_count_api',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Added unique user_id/network key to tu_users
                     'query' => 'show index from tu_users where Key_name = \'user_id\' and Column_name = '.
                     '\'user_id\' and Non_unique = 0;',
                     'match' => "/user_id/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                 )
             )
         )
@@ -423,67 +423,67 @@ $MIGRATIONS = array(
                     // Created tu_mentions table
                     'query' => 'DESCRIBE tu_mentions count_cache',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_mentions_posts table
                     'query' => 'DESCRIBE tu_mentions_posts mention_id',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_hashtags table
                     'query' => 'DESCRIBE tu_hashtags count_cache',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_hashtags_posts table
                     'query' => 'DESCRIBE tu_hashtags_posts hashtag_id',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_places table
                     'query' => 'DESCRIBE tu_places place_id',
                     'match' => "/varchar\(100\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_places_posts table
                     'query' => 'DESCRIBE tu_places_posts post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_stream_data table
                     'query' => 'DESCRIBE tu_stream_data data',
                     'match' => "/text/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created tu_stream_procs table
                     'query' => 'DESCRIBE tu_stream_procs instance_id',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Added fav_timestamp field
                     'query' => 'DESCRIBE tu_favorites fav_timestamp',
                     'match' => "/timestamp/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Added api_key field
                     'query' => 'DESCRIBE tu_owners api_key',
                     'match' => "/varchar\(32\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Changed pub_date from timestamp to datetime
                     'query' => 'DESCRIBE tu_posts pub_date',
                     'match' => "/datetime/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 )
             )
         )
@@ -499,31 +499,31 @@ $MIGRATIONS = array(
                     // Created first_seen column
                     'query' => 'DESCRIBE tu_follows first_seen',
                     'match' => "/timestamp/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created pwd_salt column
                     'query' => 'DESCRIBE tu_owners pwd_salt',
                     'match' => "/varchar\(255\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created description column
                     'query' => 'DESCRIBE tu_links description',
                     'match' => "/varchar\(255\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created image_src column
                     'query' => 'DESCRIBE tu_links image_src',
                     'match' => "/varchar\(255\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Created caption column
                     'query' => 'DESCRIBE tu_links caption',
                     'match' => "/varchar\(255\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     // Dropped is_image column
@@ -534,7 +534,7 @@ $MIGRATIONS = array(
                     // Created favlike_count_cache column
                     'query' => 'DESCRIBE tu_posts favlike_count_cache',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
             )
         )
@@ -542,169 +542,194 @@ $MIGRATIONS = array(
 
     /* beta 0.16 */
     '0.16' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.16.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
                 array(
                     'query' => 'DESCRIBE tu_instances network_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances network_viewer_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_favorites author_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_favorites fav_of_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_users user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_users last_post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts author_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_reply_to_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_rt_of_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_reply_to_post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts in_retweet_of_post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_posts post_text',
                     'match' => "/text/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_follows follower_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_follows user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_follower_count network_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_user_errors user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_user_errors error_issued_to_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_post_errors post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_post_errors error_issued_to_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_mentions user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_mentions_posts author_user_id',
                     'match' => "/varchar\(30\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_favorites post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_hashtags_posts post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_instances last_post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_mentions_posts post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_places_posts post_id',
                     'match' => "/varchar\(80\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_links post_key',
                     'match' => "/int\(11\)/",
-                    'column' => 'Type', 
+                    'column' => 'Type',
                 ),
                 array(
                     'query' => 'DESCRIBE tu_links post_id',
-                    'no_match' => true 
+                    'no_match' => true
                  ),
                 array(
                     'query' => 'DESCRIBE tu_links network',
-                    'no_match' => true 
+                    'no_match' => true
                  ),
                 array(
                     'query' => 'SHOW INDEX FROM tu_links WHERE Key_name = \'url\' AND Column_name = '.
                     '\'url\' AND Non_unique = 0;',
                     'match' => "/url/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
                 ),
                 array(
                     'query' => 'SHOW INDEX FROM tu_links WHERE Key_name = \'post_key\' AND Column_name = '.
                     '\'post_key\' AND Non_unique = 1;',
                     'match' => "/post_key/",
-                    'column' => 'Key_name', 
+                    'column' => 'Key_name',
+                ),
+            )
+        )
+     ),
+
+     /* beta 0.17 */
+    '0.17' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'DESCRIBE tu_groups id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_group_members group_id',
+                    'match' => "/varchar\(50\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_group_member_count member_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type',
                 ),
             )
         )
