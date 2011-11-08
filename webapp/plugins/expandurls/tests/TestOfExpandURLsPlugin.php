@@ -114,11 +114,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     private function buildData() {
         $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 1,
+            'email' => 'admin@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
-            'is_admin' => 1 
+            'is_admin' => 1
         ));
 
         //Insert test links (not images, not expanded)
@@ -250,7 +250,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
 
         //use fake Flickr API key
-        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
         'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
@@ -276,11 +276,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 1,
+            'email' => 'admin@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
-            'is_admin' => 1 
+            'is_admin' => 1
         ));
 
         //Insert test links (not images, not expanded)
@@ -354,11 +354,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 1,
+            'email' => 'admin@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
-            'is_admin' => 1 
+            'is_admin' => 1
         ));
 
         //Insert test links (not images, not expanded)
@@ -433,7 +433,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $crawler = Crawler::getInstance();
         $config = Config::getInstance();
 
-        $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
         'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
@@ -463,11 +463,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
 
         //use fake Bitly API key
-        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
         'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
 
         //use fake Bitly login name
-        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
         'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
 
         $this->simulateLogin('admin@example.com', true);
@@ -494,11 +494,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 1,
+            'email' => 'admin@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
-            'is_admin' => 1 
+            'is_admin' => 1
         ));
 
         //Insert test links (not images, not expanded)
