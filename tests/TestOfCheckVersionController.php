@@ -49,7 +49,10 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $controller = new CheckVersionController(true);
 
         $results = $controller->go();
-        $this->assertPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this/', $results);
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testLoggedin() {
