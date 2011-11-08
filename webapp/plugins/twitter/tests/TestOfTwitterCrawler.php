@@ -409,6 +409,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post_orig->old_retweet_count_cache, 1);
         $this->assertEqual($post_orig->retweet_count_cache, 0);
         $this->assertEqual($post_orig->retweet_count_api, 0);
+
+        $mention_dao = DAOFactory::getDAO('MentionDAO');
+        $mentions = $mention_dao->getMentionInfoUserName('amygdala', 'twitter');
+        $this->assertEqual($mentions['count_cache'], 1);
     }
 
     public function testFetchInstanceUserTweetsRetweetsBudget() {
