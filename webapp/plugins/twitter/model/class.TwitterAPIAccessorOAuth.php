@@ -254,13 +254,22 @@ class TwitterAPIAccessorOAuth {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
-                        $parsed_payload[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name,
-                            'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 
-                            'description'=>$xml->description, 'url'=>$xml->url, 
-                            'is_protected'=>self::boolXMLToInt($xml->protected),
-                            'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 
-                            'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 
-                            'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'network'=>'twitter');
+                        $parsed_payload[] = array(
+                            'user_id'         => (string)$xml->id,
+                            'user_name'       => (string)$xml->screen_name,
+                            'full_name'       => (string)$xml->name,
+                            'avatar'          => (string)$xml->profile_image_url,
+                            'location'        => (string)$xml->location,
+                            'description'     => (string)$xml->description,
+                            'url'             => (string)$xml->url,
+                            'is_protected'    => (integer)self::boolXMLToInt($xml->protected),
+                            'follower_count'  => (integer)$xml->followers_count,
+                            'friend_count'    => (integer)$xml->friends_count,
+                            'post_count'      => (integer)$xml->statuses_count,
+                            'favorites_count' => (integer)$xml->favourites_count,
+                            'joined'          => gmdate("Y-m-d H:i:s", strToTime($xml->created_at)),
+                            'network'         => 'twitter'
+                        );
                         break;
                     case 'ids':
                         foreach ($xml->children() as $item) {
@@ -280,56 +289,82 @@ class TwitterAPIAccessorOAuth {
                             $georss = $xml->geo->children($namespaces['georss']);
                         }
                         $parsed_payload[] = array('post_id'=>$xml->id,
-                            'author_user_id'=>$xml->user->id, 'user_id'=>$xml->user->id,
-                            'author_username'=>$xml->user->screen_name, 'user_name'=>$xml->user->screen_name,
-                            'author_fullname'=>$xml->user->name, 'full_name'=>$xml->user->name,
-                            'author_avatar'=>$xml->user->profile_image_url, 'avatar'=>$xml->user->profile_image_url, 
-                            'location'=>$xml->user->location, 
-                            'description'=>$xml->user->description, 'url'=>$xml->user->url, 
-                            'is_protected'=>self::boolXMLToInt($xml->user->protected), 
-                            'followers'=>$xml->user->followers_count, 
-                            'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 
-                            'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 
-                            'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
-                            'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 
-                            'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source, 
-                            'favorited' => $xml->favorited,
-                            'geo'=>(isset($georss)?$georss->point:''), 'place'=>$xml->place->full_name, 
-                            'network'=>'twitter');
+                            'author_user_id'      => (string)$xml->user->id,
+                            'user_id'             => (string)$xml->user->id,
+                            'author_username'     => (string)$xml->user->screen_name,
+                            'user_name'           => (string)$xml->user->screen_name,
+                            'author_fullname'     => (string)$xml->user->name,
+                            'full_name'           => (string)$xml->user->name,
+                            'author_avatar'       => (string)$xml->user->profile_image_url,
+                            'avatar'              => (string)$xml->user->profile_image_url,
+                            'location'            => (string)$xml->user->location,
+                            'description'         => (string)$xml->user->description,
+                            'url'                 => (string)$xml->user->url,
+                            'is_protected'        => self::boolXMLToInt($xml->user->protected),
+                            'followers'           => (integer)$xml->user->followers_count,
+                            'following'           => (integer)$xml->user->friends_count,
+                            'tweets'              => (integer)$xml->user->statuses_count,
+                            'joined'              => gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)),
+                            'post_text'           => (string)$xml->text,
+                            'pub_date'            => gmdate("Y-m-d H:i:s", strToTime($xml->created_at)),
+                            'in_reply_to_post_id' => (string)$xml->in_reply_to_status_id,
+                            'in_reply_to_user_id' => (string)$xml->in_reply_to_user_id,
+                            'source'              => (string)$xml->source,
+                            'favorited'           => (string) $xml->favorited,
+                            'geo'                 => (string)(isset($georss)?$georss->point:''),
+                            'place'               => (string)$xml->place->full_name,
+                            'network'             =>'twitter'
+                        );
                         break;
                     case 'users_list':
                         $this->next_cursor = $xml->next_cursor;
                         foreach ($xml->users->children() as $item) {
-                            $parsed_payload[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id,
-                                'user_name'=>$item->screen_name, 'full_name'=>$item->name, 
-                                'avatar'=>$item->profile_image_url, 'location'=>$item->location, 
-                                'description'=>$item->description, 'url'=>$item->url, 
-                                'is_protected'=>self::boolXMLToInt($item->protected),
-                                'friend_count'=>$item->friends_count, 
-                                'follower_count'=>$item->followers_count, 
-                                'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
-                                'post_text'=>$item->status->text, 
-                                'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
-                                'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
-                                'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count,
-                                'network'=>'twitter');
+                            $parsed_payload[] = array(
+                                'post_id'         => (string)$item->status->id,
+                                'user_id'         => (string)$item->id,
+                                'user_name'       => (string)$item->screen_name,
+                                'full_name'       => (string)$item->name,
+                                'avatar'          => (string)$item->profile_image_url,
+                                'location'        => (string)$item->location,
+                                'description'     => (string)$item->description,
+                                'url'             => (string)$item->url,
+                                'is_protected'    => self::boolXMLToInt($item->protected),
+                                'friend_count'    => (integer)$item->friends_count,
+                                'follower_count'  => (integer)$item->followers_count,
+                                'joined'          => gmdate("Y-m-d H:i:s", strToTime($item->created_at)),
+                                'post_text'       => (string)$item->status->text,
+                                'last_post'       => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
+                                'pub_date'        => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
+                                'favorites_count' => (integer)$item->favourites_count,
+                                'post_count'      => (integer)$item->statuses_count,
+                                'network'         =>'twitter'
+                            );
                         }
                         break;
                     case 'users':
                         foreach ($xml->children() as $item) {
-                            $parsed_payload[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id,
-                                'user_name'=>$item->screen_name, 'full_name'=>$item->name, 
-                                'avatar'=>$item->profile_image_url, 'location'=>$item->location, 
-                                'description'=>$item->description, 'url'=>$item->url, 
-                                'is_protected'=>self::boolXMLToInt($item->protected),
-                                'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 
-                                'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
-                                'post_text'=>$item->status->text, 
-                                'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
-                                'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
-                                'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count, 
-                                'source'=>$item->status->source, 
-                                'in_reply_to_post_id'=>$item->status->in_reply_to_status_id, 'network'=>'twitter');
+                            $parsed_payload[] = array(
+                                'post_id'             => (string)$item->status->id,
+                                'user_id'             => (string)$item->id,
+                                'user_name'           => (string)$item->screen_name,
+                                'full_name'           => (string)$item->name,
+                                'avatar'              => (string)$item->profile_image_url,
+                                'location'            => (string)$item->location,
+                                'description'         => (string)$item->description,
+                                'url'                 => (string)$item->url,
+                                'is_protected'        => self::boolXMLToInt($item->protected),
+                                'friend_count'        => (integer)$item->friends_count,
+                                'follower_count'      => (integer)$item->followers_count,
+                                'joined'              => gmdate("Y-m-d H:i:s", strToTime($item->created_at)),
+                                'post_text'           => (string)$item->status->text,
+                                'last_post'           => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
+                                'pub_date'            => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
+                                'favorites_count'     => (integer)$item->favourites_count,
+                                'post_count'          => (integer)$item->statuses_count,
+                                'source'              => (string)$item->status->source,
+                                'in_reply_to_post_id' => (string)$item->status->in_reply_to_status_id,
+                                'network'             => 'twitter'
+                            );
                         }
                         break;
                     case 'statuses':
@@ -338,12 +373,17 @@ class TwitterAPIAccessorOAuth {
                         }
                         break;
                     case 'hash':
-                        $parsed_payload = array('remaining-hits'=>$xml-> {'remaining-hits'} ,
-                            'hourly-limit'=>$xml-> {'hourly-limit'} , 'reset-time'=>$xml-> {'reset-time-in-seconds'} );
+                        $parsed_payload = array(
+                            'remaining-hits' => (integer)$xml->{'remaining-hits'},
+                            'hourly-limit'   => (integer)$xml->{'hourly-limit'},
+                            'reset-time'     => (integer)$xml->{'reset-time-in-seconds'}
+                        );
                         break;
                     case 'relationship':
-                        $parsed_payload = array('source_follows_target'=>$xml->source->following,
-                            'target_follows_source'=>$xml->target->following);
+                        $parsed_payload = array(
+                            'source_follows_target' => $xml->source->following,
+                            'target_follows_source' => $xml->target->following
+                        );
                         break;
                     case 'lists_list':
                         $this->next_cursor = $xml->next_cursor;
@@ -351,11 +391,11 @@ class TwitterAPIAccessorOAuth {
                             $parsed_payload[] = array(
                             // might want to get additional fields:
                             // slug, subscriber_count, member_count, created_at, mode
-                                'group_id' => (string)$item->id,
+                                'group_id'   => (string)$item->id,
                                 'group_name' => (string)$item->full_name,
-                                'owner_id' => (string)$item->user->id,
+                                'owner_id'   => (string)$item->user->id,
                                 'owner_name' => (string)$item->user->screen_name,
-                                'network' => 'twitter',
+                                'network'    => 'twitter',
                             );
                         }
                         break;
@@ -379,25 +419,34 @@ class TwitterAPIAccessorOAuth {
         if (isset($namespaces['georss'])) {
             $georss = $post->geo->children($namespaces['georss']);
         }
-        $parsed_data = array('post_id'=>$post->id,
-            'author_user_id'=>$post->user->id, 'user_id'=>$post->user->id,
-            'author_username'=>$post->user->screen_name, 'user_name'=>$post->user->screen_name,
-            'author_fullname'=>$post->user->name, 'full_name'=>$post->user->name,
-            'author_avatar'=>$post->user->profile_image_url,
-            'avatar'=>$post->user->profile_image_url, 
-            'location'=>$post->user->location, 
-            'description'=>$post->user->description, 'url'=>$post->user->url, 
-            'is_protected'=>self::boolXMLToInt($post->user->protected), 'follower_count'=>$post->user->followers_count,
-            'friend_count'=>$post->user->friends_count, 'post_count'=>$post->user->statuses_count,
-            'joined'=>gmdate("Y-m-d H:i:s", strToTime($post->user->created_at)), 
-            'post_text'=>$post->text, 
-            'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($post->created_at)), 
-            'favorites_count'=>$post->user->favourites_count, 
-            'in_reply_to_post_id'=>$post->in_reply_to_status_id, 
-            'in_reply_to_user_id'=>$post->in_reply_to_user_id, 'source'=>$post->source, 
-        // 'favorited' => $xml->favorited, // what did this do?
-            'geo'=>(isset($georss)?$georss->point:''), 'place'=>$post->place->full_name, 
-            'network'=>'twitter');
+        $parsed_data = array(
+            'post_id'             => (string)$post->id,
+            'author_user_id'      => (string)$post->user->id,
+            'user_id'             => (string)$post->user->id,
+            'author_username'     => (string)$post->user->screen_name,
+            'user_name'           => (string)$post->user->screen_name,
+            'author_fullname'     => (string)$post->user->name,
+            'full_name'           => (string)$post->user->name,
+            'author_avatar'       => (string)$post->user->profile_image_url,
+            'avatar'              => (string)$post->user->profile_image_url,
+            'location'            => (string)$post->user->location,
+            'description'         => (string)$post->user->description,
+            'url'                 => (string)$post->user->url,
+            'is_protected'        => (integer)self::boolXMLToInt($post->user->protected),
+            'follower_count'      => (integer)$post->user->followers_count,
+            'friend_count'        => (integer)$post->user->friends_count,
+            'post_count'          => (integer)$post->user->statuses_count,
+            'joined'              => (string)gmdate("Y-m-d H:i:s", strToTime($post->user->created_at)),
+            'post_text'           => (string)$post->text,
+            'pub_date'            => (string)gmdate("Y-m-d H:i:s", strToTime($post->created_at)),
+            'favorites_count'     => (integer)$post->user->favourites_count,
+            'in_reply_to_post_id' => (string)$post->in_reply_to_status_id,
+            'in_reply_to_user_id' => (string)$post->in_reply_to_user_id,
+            'source'              => (string)$post->source,
+            // 'favorited' => $xml->favorited, // what did this do?
+            'geo'                 => (string)(isset($georss)?$georss->point:''),
+            'place'               => (string) $post->place->full_name,
+            'network'             => 'twitter');
         if (isset($post->retweet_count) && !isset($post->retweeted_status)) {
             // do this only for the original post (rt will have rt count too)
             $retweet_count_api = $post->retweet_count;
@@ -407,7 +456,7 @@ class TwitterAPIAccessorOAuth {
                 $retweet_count_api = substr($post->retweet_count, 0, $pos) ;
             }
             // this field holds the reported native rt count from twitter
-            $parsed_data['retweet_count_api'] = $retweet_count_api;
+            $parsed_data['retweet_count_api'] = (integer)$retweet_count_api;
         }
         if (isset($post->retweeted_status)) {
             // then this is a retweet.
@@ -417,8 +466,8 @@ class TwitterAPIAccessorOAuth {
             $rtp = array();
             $rtp['content']= $this->parsePostXML($post->retweeted_status);
             $parsed_data['retweeted_post'] = $rtp;
-            $parsed_data['in_retweet_of_post_id'] = $post->retweeted_status->id;
-            $parsed_data['in_rt_of_user_id'] = $post->retweeted_status->user->id;
+            $parsed_data['in_retweet_of_post_id'] = (string)$post->retweeted_status->id;
+            $parsed_data['in_rt_of_user_id'] = (string)$post->retweeted_status->user->id;
 
         }
         return $parsed_data;
