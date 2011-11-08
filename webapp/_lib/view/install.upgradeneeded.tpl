@@ -71,7 +71,7 @@ If you are the administrator of this ThinkUp installation, check your email to c
 
 <p>
 <form method="get" action="{$site_root_path}install/upgrade.php" style="margin-top: 20px">
-If you have an
+<p>If you have an
 <a href="http://thinkupapp.com/docs/troubleshoot/messages/upgrading.html">
 upgrade token</a>, you can enter it here:
 <input type="text" name="upgrade_token" />
@@ -87,9 +87,6 @@ upgrade token</a>, you can enter it here:
 
 <div class="container small center">
 
-<div id="ft" role="contentinfo">
-<p>It is nice to be nice.</p>
-</div>
 <!-- #ft --></div>
 <!-- .content -->
 

@@ -6,12 +6,10 @@
     <div class="grid_18" style="margin-bottom : 20px; margin-left : 100px;">
         {include file="_usermessage.tpl"}
     </div>
-    
-    
-    
 
   <div class="prepend_20">
     <h1>Upgrade ThinkUp</h1>
+    <br><br>
   </div>
 
     {if $high_table_row_count}
