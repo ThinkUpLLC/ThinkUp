@@ -1,4 +1,4 @@
-<div class="section">
+<div class="">
 <div class="">
           {if $post}
             <div class="clearfix alert stats">
@@ -55,7 +55,7 @@
               <div class="big-number">
                {if $post->favlike_count_cache}
                   <h2>{$post->favlike_count_cache}</h2>
-                  <h3>+1s</h3>
+                  <h3>+1's</h3>
               </div>
             </div>
         {/if}{/if}

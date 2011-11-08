@@ -1,13 +1,13 @@
-       {if $post}
+
           {if $post}
-            <div class="clearfix">
+            <div class="clearfix alert stats">
               <div class="grid_2 alpha">
                 <div class="avatar-container">
                   <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                 </div>
               </div>
 
-              <div class="grid_12">
+              <div class="grid_10">
                 <div class="br" style="min-height:110px">
                   <div class="tweet pr">
                     {if $post->post_text}
@@ -15,7 +15,7 @@
                           {if $post->is_protected}
                                 <span class="sprite icon-locked"></span>
                           
-                        {/if}
+						  {/if}
                     {/if}
                   </div>
 
@@ -68,7 +68,7 @@
                 </div>
               </div>
 
-              <div class="grid_5 omega center keystats">
+              <div class="grid_5 center keystats omega">
                 <div class="big-number">
                        {if $likes}
                       <h1>{$likes|@count}</h2>
@@ -78,16 +78,18 @@
               </div>
             </div> <!-- /.clearfix -->
           {/if} <!-- end if post -->
-    {/if}
+
 
 {if $likes}
-  <div class="prepend">
-  <div class="append_20 clearfix bt"><br />
+<div class="prepend">
+  <div class="append_20 clearfix section">
+      <h2>Likes</h2>
     {foreach from=$likes key=fid item=f name=foo}
         {include file="_user.tpl" f=$f}
     {/foreach}
   </div>
-  </div>
+</div>
+
 {/if}
 
 
