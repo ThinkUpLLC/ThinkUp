@@ -67,9 +67,11 @@
 {/if}
 
 {if $messages_to_you}
+<div id="all-posts-div">
   {foreach from=$messages_to_you key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 {if ($display eq 'mentions-all' and not $all_mentions) or 
