@@ -37,7 +37,7 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         $network, __METHOD__.','. __LINE__);
 
         $mention_id = null;
-        // see if record for mention already exists.  If so, increment its count.
+        // see if record for mention already exists.  If so, increment its count if this is a new mention.
         $q  = "SELECT id FROM #prefix#mentions ";
         $q .= "WHERE user_id = :user_id AND network = :network";
         $vars = array(
@@ -48,17 +48,6 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         $row = $this->getDataRowAsArray($ps);
         if ($row) {
             $mention_id = $row['id'];
-            // then update record with incremented cache count
-            $q  = "UPDATE #prefix#mentions ";
-            $q .= "SET count_cache = count_cache + 1 WHERE id = :id";
-            $vars  = array(
-                ':id'  =>$mention_id
-            );
-            $ps = $this->execute($q, $vars);
-            $res = $this->getUpdateCount($ps);
-            if (!$res) {
-                throw new Exception("Error: Could not update mention.");
-            }
         } else {
             // do the insert
             $q  = "INSERT IGNORE INTO #prefix#mentions ";
@@ -69,7 +58,7 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
                 ':user_id'  =>(string)$mention_user_id,
                 ':user_name'  =>$mention_user_name,
                 ':network'  =>$network,
-                ':count' => 1
+                ':count' => 0
             );
             $ps = $this->execute($q, $vars);
             $mention_id = $this->getInsertId($ps);
@@ -79,19 +68,31 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         }
         // now create the join table entry
         $q  = "INSERT IGNORE INTO #prefix#mentions_posts ";
-        $q .= "(post_id, mention_id, author_user_id) ";
-        $q .= "VALUES ( :post_id, :mention_id, :author_user_id) ";
+        $q .= "(post_id, mention_id, author_user_id, network) ";
+        $q .= "VALUES ( :post_id, :mention_id, :author_user_id, :network) ";
         $vars = array(
              ':mention_id'   =>$mention_id,
              ':post_id'      =>(string)$post_id,
-             ':author_user_id' => (string)$author_user_id
+             ':author_user_id' => (string)$author_user_id,
+             ':network' => (string)$network
         );
         $ps  = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
             $this->logger->logDebug("Could not update mentions_posts with $post_id, $mention_id",
             __METHOD__.','. __LINE__);
-            // throw new Exception("Error: Could not update mentions_posts.");
+        } else {
+            // update record with incremented cache count if insert into mention_posts was successful
+            $q  = "UPDATE #prefix#mentions ";
+            $q .= "SET count_cache = count_cache + 1 WHERE id = :id";
+            $vars  = array(
+                ':id'  =>$mention_id
+            );
+            $ps = $this->execute($q, $vars);
+            $res = $this->getUpdateCount($ps);
+            if (!$res) {
+                throw new Exception("Error: Could not update mention.");
+            }
         }
     }
 
