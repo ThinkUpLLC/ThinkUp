@@ -6,8 +6,8 @@
 
     <!-- begin left nav -->
     <div class="grid_4 alpha omega">
+        {if $instance}
       <div id="nav">
-          {if $instance}
         <ul id="top-level-sidenav">
         {/if}
         {if $instance}
@@ -26,10 +26,10 @@
             {/foreach}
 
         {/if}
-          {if $instance}
+        {if $instance}
         </ul>
-        {/if}
       </div>
+        {/if}
     </div>
 
     <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
@@ -247,16 +247,16 @@
         {if !$instance}
           <div style="width:60%;text-align:center;">
           {if $add_user_buttons}
+          <br ><br>
             {foreach from=$add_user_buttons key=smkey item=button name=smenuloop}
-                <br><br>
-                <div style="float:right;"><a href="{$site_root_path}account/?p={$button}" class="linkbutton emphasized">Add a {if $button eq 'googleplus'}Google+{else}{$button|ucwords}{/if} Account</a></div>
+                <div style="float:right;padding:5px;"><a href="{$site_root_path}account/?p={$button}" class="linkbutton emphasized">Add a {if $button eq 'googleplus'}Google+{else}{$button|ucwords}{/if} Account &rarr;</a></div>
+                <div style="clear:both;">&nbsp;</div>
              {/foreach}
           {/if}
-          <br><br>
           {if $logged_in_user}
-          <div style="float:right;"><a href="{$site_root_path}account/" class="linkbutton emphasized">Adjust Your Settings</a></div>
+          <div style="float:right;padding:5px;"><a href="{$site_root_path}account/" class="linkbutton emphasized">Adjust Your Settings</a></div>
           {else}
-          <div style="float:right;"><a href="{$site_root_path}session/login.php" class="linkbutton emphasized">Log In</a></div>
+          <div style="float:right;padding:5px;"><a href="{$site_root_path}session/login.php" class="linkbutton emphasized">Log In</a></div>
           {/if}
           </div>
         {/if}

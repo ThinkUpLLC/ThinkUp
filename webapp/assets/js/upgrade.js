@@ -133,8 +133,6 @@ var TU_Update = function() {
 						tu_update.appendStatus("<br />");
 						tu_update.submitForm();
 					} else {
-						$('#info-parent').removeClass('ui-state-highlight');
-						$('#info-parent').addClass('ui-state-success');
 						$('#migration-info').html(
 								'Success! Your ThinkUp is now up-to-date.');
 						$('#migrate_spinner').hide();

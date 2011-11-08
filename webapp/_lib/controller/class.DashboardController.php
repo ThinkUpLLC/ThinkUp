@@ -71,6 +71,7 @@ class DashboardController extends ThinkUpController {
                             }
                         }
                     }
+                    $add_user_buttons = array_reverse($add_user_buttons);
                     $this->addToView('add_user_buttons', $add_user_buttons);
                 }
             }
@@ -173,6 +174,9 @@ class DashboardController extends ThinkUpController {
             }
 
             $this->addToView('instance', $this->instance);
+        } else {
+            SessionCache::put('selected_instance_network', null);
+            SessionCache::put('selected_instance_username', null);
         }
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
     }

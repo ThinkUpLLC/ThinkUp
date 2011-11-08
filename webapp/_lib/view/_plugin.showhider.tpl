@@ -20,10 +20,11 @@ function show_settings() {
 {/literal}
 </script>
 
+{if $is_configured}
 <p>
     <a href="#" onclick="show_settings(); return false"><img id="settings-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="settings-flip-prompt">Show</span> Settings</a>
-<br><br>
 </p>
-
+{/if}
+<br><br>
 <div class="plugin-settings">
 <h2 class="subhead">Settings</h2>

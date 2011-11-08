@@ -93,8 +93,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $owner  = $build_data[1];
-        $plugin  = $build_data[2];
-        $plugin_option  = $build_data[3];
+        $plugin_option  = $build_data[2];
 
         // just user, not an admin, so view only
         $output = $controller->go();
@@ -130,11 +129,9 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $is_admin = 1;
         $this->simulateLogin('me@example.com', true);
         $build_data = $this->buildController();
-        // var_dump($build_data[1]);
         $controller = $build_data[0];
         $owner  = $build_data[1];
-        $plugin  = $build_data[2];
-        $plugin_option  = $build_data[3];
+        $plugin_option  = $build_data[2];
 
         // just name, is admin, so form should be enabled
         $output = $controller->go();
@@ -188,8 +185,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
     private function buildController() {
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
-        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'googleplus', 'is_active' => 1) );
-        $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $plugin_id = 3;
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
@@ -203,7 +199,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner, 'googleplus');
-        return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
+        return array($controller, $builder_owner, $builder_plugin_options);
     }
 
     function getElementById($doc, $id) {
@@ -253,7 +249,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
     }
 
     private function buildPluginOptions() {
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-4';
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-3';
         $builders = array();
         $builders[] = FixtureBuilder::build('plugins',
         array('name' => 'Google+', 'folder_name' => 'googleplus', 'description' => "Google+ plugin") );
