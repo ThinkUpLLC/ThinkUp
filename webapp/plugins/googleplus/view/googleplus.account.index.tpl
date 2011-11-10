@@ -63,9 +63,7 @@
 <li>
   Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to 
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">
-          http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=google%2B
-      </code>
+      <code style="font-family:Courier;" id="clippy_2988">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=google%2B</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
