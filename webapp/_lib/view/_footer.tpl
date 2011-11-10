@@ -13,6 +13,7 @@
         It is nice to be nice.
         <br /> <br /><a href="http://twitter.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
         <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
+        <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a>
       </p>
     </div>
     </div> <!-- #ft -->
