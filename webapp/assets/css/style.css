@@ -639,7 +639,6 @@ a.linkbutton.help {
        border-radius: 8px;
      }
      #nav ul li a, nav ul li a:visited{
-          background: url(../images/nav-light.png) 95% 4px no-repeat;
           color: #343030;
           display: block;
           text-shadow: rgba(248, 245, 235, 1) 1px 1px 1px;

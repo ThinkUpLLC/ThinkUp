@@ -14,7 +14,7 @@
 <div class="section">
     <h2>Posts on Your Wall</h2>
     {foreach from=$wallposts key=tid item=t name=foo}
-        {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
+        {include file="_post.author_no_counts.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
     <div class="view-all"><a href="?v=posts-toyou&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>

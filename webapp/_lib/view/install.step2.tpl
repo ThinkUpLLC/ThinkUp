@@ -99,7 +99,7 @@
               }
               {/literal}
               </script>
-              <span class="input_information">Defaults to your browser's time zone; will fall back to <a href="http://www.php.net/manual/en/function.date-default-timezone-get.php">php.ini's date.time zone value</a>.</span>
+              <span class="input_information"></span>
             </div>
           </div>
 
