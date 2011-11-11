@@ -65,13 +65,16 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
         }
         if ($units == 'DAY') {
             $group_by = 'fc.date';
+            $date_format = "DATE_FORMAT(date, '%c/%d/%Y')";
         } else if ($units == 'WEEK') {
             $group_by = 'YEAR(fc.date), WEEK(fc.date)';
+            $date_format = "DATE_FORMAT(date, '%c/%e')";
         } else if ($units == 'MONTH') {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
+            $date_format = "DATE_FORMAT(date,'%m/01/%Y')";
         }
         $q = "SELECT member_user_id, network, count, date, full_date FROM ";
-        $q .= "(SELECT member_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
+        $q .= "(SELECT member_user_id, network, count, ".$date_format." as date, date as full_date ";
         $q .= "FROM #prefix#group_member_count AS fc ";
         $q .= "WHERE fc.member_user_id = :network_user_id AND fc.network=:network ";
         $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
@@ -108,8 +111,14 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
                 $date = date ( $format );
                 $i = $limit;
                 while ($i > 0 ) {
-                    if ($units != "MONTH") {
+                    if ($units == "DAY") {
+                        $format = 'm/d/Y';
                         $date_ago = date ($format, strtotime('-'.$i.' '.$units.$date));
+                    } else if ($units == "WEEK") {
+                        if ($i == $limit) {
+                            $last_saturday = Utils::getLastSaturday();
+                        }
+                        $date_ago = date ($format, strtotime('-'.$i.' '.$units.$last_saturday));
                     } else {
                         $first_day_of_this_month = date('n/1');
                         $format = 'm/d/Y';
@@ -120,6 +129,13 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
                 }
                 //merge the data we do have with the dates we want
                 $history = array_merge($dates_to_display, $simplified_history);
+                //cut down oversized array
+                if (sizeof($history) > $limit) {
+                    $history = array_slice($history, (sizeof($history)-$limit));
+                }
+                if ($units=="DAY") {
+                    ksort($history);
+                }
             }
 
             //calculate the point percentages

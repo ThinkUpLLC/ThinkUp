@@ -105,6 +105,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
         //check history
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
 
+        $format = 'm/d/Y';
         if ($todays_day_of_the_week == 0 ) {
             $date_ago = date ($format, strtotime('-4 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 12);
@@ -115,6 +116,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
             $date_ago = date ($format, strtotime('-2 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 14);
         } else  {
+            $this->debug($result);
             $date_ago = date ($format, strtotime('-3 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 12);
 
@@ -184,6 +186,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
         //check history
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
 
+        $format = 'm/d/Y';
         if ($todays_day_of_the_week == 0 ) {
             $date_ago = date ($format, strtotime('-4 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 920);
@@ -333,7 +336,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
 
         //check history
         $this->assertEqual(sizeof($result['history']), 5, '5 counts returned');
-
+        $format = 'm/d/Y';
         $this->debug(Utils::varDumpToString($result));
         $date_ago = date ($format, strtotime('-5 day'.$date));
         $this->assertEqual($result['history'][$date_ago], 120);

@@ -52,7 +52,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
     var $api_budget_allocation_auth = array(
         'fetchInstanceUserTweets' => array('percent' => 20),
         'fetchAndAddTweetRepliedTo' => array('percent' => 20), // for fetchStrayRepliedToTweets
-        'fetchAndAddUser' => array('percent' => 20), // for fetchUnloadedFollowerDetails 
+        'fetchAndAddUser' => array('percent' => 20), // for fetchUnloadedFollowerDetails
         'fetchFriendTweetsAndFriends' => array('percent' => 20),
         'fetchInstanceUserMentions' => array('percent' => 20),
         'fetchInstanceUserFriends' => array('percent' => 20),
@@ -204,7 +204,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $tweets_menu_item = new MenuItem("Tweets", "Tweets insights", $tweets_data_tpl);
 
         $tweets_menu_ds_1 = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-        'twitter', 5, "#page_number#"), 'getAllPostsIterator', array($instance->network_user_id, 'twitter', 
+        'twitter', 5, "#page_number#"), 'getAllPostsIterator', array($instance->network_user_id, 'twitter',
         GridController::getMaxRows()) );
         $tweets_menu_ds_1->addHelp('userguide/listings/twitter/dashboard_tweets-all');
         $tweets_menu_item->addDataset($tweets_menu_ds_1);
@@ -270,7 +270,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $followers_menu_item->addDataset($followers_ds4);
 
         $followers_ds5 = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'MONTH', 11));
+        array($instance->network_user_id, 'twitter', 'MONTH', 15));
         $followers_ds5->addHelp('userguide/listings/twitter/dashboard_followers-history');
         $followers_menu_item->addDataset($followers_ds5);
 
@@ -283,7 +283,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $followers_menu_item->addDataset($followers_ds7);
 
         $followers_ds8 = new Dataset("list_membership_count_history_by_month", 'GroupMembershipCountDAO',
-        'getHistory', array($instance->network_user_id, 'twitter', 'MONTH', 11));
+        'getHistory', array($instance->network_user_id, 'twitter', 'MONTH', 15));
         $followers_ds8->addHelp('userguide/listings/twitter/dashboard_followers-liststats');
         $followers_menu_item->addDataset($followers_ds8);
 

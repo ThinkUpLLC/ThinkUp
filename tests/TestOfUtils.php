@@ -188,7 +188,7 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         "f.network=u.network AND active=1 AND follower_count > 10000 AND friend_count > 0 ORDER BY ".
         "LikelihoodOfFollow ASC, u.follower_count DESC LIMIT :count ;";
         $vars = array(
-            ':userid'=>1001, 
+            ':userid'=>1001,
             ':network'=>'some_network',
             ':count'=>123
         );
@@ -219,5 +219,13 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         //Next milestone in 5 units of time
         $expected = array('next_milestone'=>100, 'will_take'=>5);
         $this->assertEqual(Utils::predictNextMilestoneDate(75, 5), $expected);
+    }
+
+    public function testGetLastSaturday()  {
+        $last_saturday = Utils::getLastSaturday('11/11/2011');
+        $this->assertEqual('11/4', $last_saturday);
+
+        $last_saturday = Utils::getLastSaturday('11/6/2011');
+        $this->assertEqual('10/30', $last_saturday);
     }
 }

@@ -422,4 +422,18 @@ class Utils {
             return null;
         }
     }
+
+    public static function getLastSaturday($from_date = null ) {
+        $format = 'n/j';
+        if (!isset($from_date)) {
+            $offset = strtotime(date('Y-m-d'));
+        } else {
+            $offset = strtotime($from_date);
+        }
+        if (date('w') == 5) {
+            return date($format,strtotime('-1 week', $offset));
+        } else {
+            return date($format,strtotime("last Saturday",$offset));
+        }
+    }
 }
