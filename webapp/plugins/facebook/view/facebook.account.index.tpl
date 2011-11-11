@@ -147,9 +147,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <li>
   At the bottom of the page, click the "Website" section and add the Site URL:
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">
-          http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}
-      </code>
+      <code style="font-family:Courier;" id="clippy_2988">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
