@@ -56,6 +56,8 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
                 $logger->enableHTMLOutput();
             }
             $crawler = Crawler::getInstance();
+            //close session so that it's not locked by long crawl
+            session_write_close();
             $crawler->crawl();
             $logger->close();
         } catch (CrawlerLockedException $e) {
