@@ -100,9 +100,16 @@
                       {/if}
                     {/if}
                     {if $post->network eq 'twitter'}
-                      <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-                      <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-                      <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
+                      <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}">
+                      <span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></span></a>
+                      <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}">
+                      <span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
+                      <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}">
+                      <span class="ui-icon ui-icon-star" title="favorite"></span></a>
+                      {if $disable_embed_code != true}
+                      <a href="javascript:;" title="Embed this thread" onclick="$('#embed-this-thread').show(); return false;">
+                      <span class="ui-icon ui-icon-carat-2-e-w"></span></a>
+                      {/if}
                     {/if}
                     
                   </div> <!-- /#more-detail -->
@@ -119,9 +126,14 @@
               </div>
             </div> <!-- /.clearfix -->
           {/if} <!-- end if post -->
-          
             {if $disable_embed_code != true}
-                <div class="alert stats">
+                <div class="alert stats" style="display:none;" id="embed-this-thread">
+                <div style="float: right; margin: 0px 10px 0px 0px;">
+                <a href="javascript:;" title="Embed this thread"
+                onclick="$('#embed-this-thread').hide(); return false;">
+                <span class="ui-icon ui-icon-circle-close"></span></a>
+                </div>
+
                 <h6>Embed this thread:</h6>
                 <textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
                 </div>
