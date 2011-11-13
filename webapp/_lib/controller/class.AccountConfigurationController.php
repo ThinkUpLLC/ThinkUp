@@ -107,8 +107,34 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $invite_link = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.
                 'session/register.php?code='. $invite_code;
                 $this->addSuccessMessage("Invitation created!<br />Copy this link and send it to someone you want to ".
-                'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'">'.
-                $invite_link.'</a><br /> Good for one new registration. Expires in 7 days.', 'invite');
+                'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'" id="clippy_12345">'.
+                $invite_link.'</a>
+                  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+                          width="100"
+                          height="14"
+                          class="clippy"
+                          id="clippy" >
+                  <param name="movie" value="'.'http'.
+                (isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.'assets/flash/clippy.swf"/>
+                  <param name="allowScriptAccess" value="always" />
+                  <param name="quality" value="high" />
+                  <param name="scale" value="noscale" />
+                  <param NAME="FlashVars" value="id=clippy_12345&amp;copied=copied!&amp;copyto=copy to clipboard">
+                  <param name="bgcolor" value="#D5F0FC">
+                  <param name="wmode" value="opaque">
+                  <embed src="'.'http'.
+                (isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.'assets/flash/clippy.swf"
+                         width="100"
+                         height="14"
+                         name="clippy"
+                         quality="high"
+                         allowScriptAccess="always"
+                         type="application/x-shockwave-flash"
+                         pluginspage="http://www.macromedia.com/go/getflashplayer"
+                         FlashVars="id=clippy_12345&amp;copied=copied!&amp;copyto=copy to clipboard"
+                         bgcolor="#D5F0FC"
+                         wmode="opaque"/></object>
+                <br /> Good for one new registration. Expires in 7 days.', 'invite');
             } else {
                 $this->addErrorMessage("There was an error creating a new invite. Please try again.", 'invite');
             }

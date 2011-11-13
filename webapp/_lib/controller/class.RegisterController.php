@@ -65,7 +65,11 @@ class RegisterController extends ThinkUpController {
             }
             $this->addToView('invite_code', $invite_code);
             $is_invite_code_valid = $invite_dao->isInviteValid($invite_code);
+            if ($invite_code != null && $is_invite_code_valid) {
+                $this->addSuccessMessage("Welcome, VIP! You've been invited to register on this ThinkUp installation.");
+            }
 
+            $has_been_registered = false;
             if ( !$is_registration_open && !$is_invite_code_valid ){
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
@@ -129,6 +133,7 @@ class RegisterController extends ThinkUpController {
                                     if ( $is_invite_code_valid ) {
                                         $invite_dao->deleteInviteCode($invite_code);
                                     }
+                                    $has_been_registered = true;
                                 } else {
                                     $this->addErrorMessage("Unable to register a new user. Please try again.");
                                 }
@@ -141,6 +146,7 @@ class RegisterController extends ThinkUpController {
                     if (isset($_POST["email"])) {
                         $this->addToView('mail', $_POST["email"]);
                     }
+                    $this->addToView('has_been_registered', $has_been_registered);
                 }
                 $challenge = $captcha->generate();
                 $this->addToView('captcha', $challenge);

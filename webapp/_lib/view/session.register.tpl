@@ -9,11 +9,11 @@
         
         <div class="article">
         
-        <div style="margin-right : 20px; margin-bottom : 20px;">
+        <div style="margin-right : 20px;">
             {include file="_usermessage.tpl"}<br>
         </div>
         
-        {if !$closed and !$success_msg}
+        {if !$closed and !$has_been_registered}
         <form name="form1" method="post" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login append_20">
           <div class="clearfix">
             <div class="grid_4 prefix_2 right">

@@ -299,6 +299,26 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         'Spaces properly escaped;slashes are not');
     }
 
+    public function testValidInviteGreeting() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+
+        $builders = array();
+        // make sure registration is closed
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::APP_OPTIONS,
+        'option_name' => 'is_registration_open', 'option_value' => 'false'));
+        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '0123456789', 'created_time' => '-3s'));
+
+        $_SERVER['HTTP_HOST'] = "mythinkup" ;
+        $_GET['code'] = '0123456789' ;
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $this->debug($results);
+        $this->assertPattern('/Welcome, VIP! You\'ve been invited to register on this ThinkUp installation./',
+        $results);
+    }
+
     public function testInviteUser() {
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
