@@ -527,6 +527,12 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
     public function getPostDetailMenuItems($post) {
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.post.retweets.tpl';
         $menus = array();
+        $rt_plugin_active = false;
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('twitterrealtime');
+        if (isset($plugin_id)) {
+            $rt_plugin_active = $plugin_dao->isPluginActive($plugin_id);
+        }
 
         if ($post->network == 'twitter') {
             $retweets_menu_item = new MenuItem("Retweets", "Retweets of this tweet", $twitter_data_tpl);
@@ -535,12 +541,14 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
             'twitter', 'default', 'km', !Session::isLoggedIn()) );
             $retweets_menu_item->addDataset($retweets_dataset);
             $menus['fwds'] = $retweets_menu_item;
-            $favd_menu_item = new MenuItem("Favorited", "Those who favorited this tweet", $twitter_data_tpl);
-            //if not logged in, show only public fav'd info
-            $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
-            'twitter', !Session::isLoggedIn()) );
-            $favd_menu_item->addDataset($favd_dataset);
-            $menus['favs'] = $favd_menu_item;
+            if ($rt_plugin_active) {
+                $favd_menu_item = new MenuItem("Favorited", "Those who favorited this tweet", $twitter_data_tpl);
+                //if not logged in, show only public fav'd info
+                $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
+                'twitter', !Session::isLoggedIn()) );
+                $favd_menu_item->addDataset($favd_dataset);
+                $menus['favs'] = $favd_menu_item;
+            }
         }
         return $menus;
     }
