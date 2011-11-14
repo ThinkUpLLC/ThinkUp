@@ -58,11 +58,11 @@
         <span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
         <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}">
         <span class="ui-icon ui-icon-star" title="favorite"></span></a>
-        {if $disable_embed_code != true}
-        <a href="javascript:;" title="Embed this thread" onclick="$('#embed-this-thread').show(); return false;">
-        <span class="ui-icon ui-icon-carat-2-e-w"></span></a>
-        {/if}
       {/if}
+    {if $disable_embed_code != true && $show_embed}
+    <a href="javascript:;" title="Embed this thread" onclick="$('#embed-this-thread').show(); return false;">
+    <span class="ui-icon ui-icon-carat-2-e-w"></span></a>
+    {/if}
     </div> <!-- /#more-detail -->
   </div>
 </div>

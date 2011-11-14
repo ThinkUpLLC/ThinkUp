@@ -15,25 +15,6 @@
         
         </div>
         {/if}
-        
-</div>
-
-
-
-        {if $disable_embed_code != true}
-            <div class="alert stats">
-            <h6>Embed this thread:</h6>
-            <textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
-            </div>
-            {literal}
-            <script type="text/javascript">
-            function SelectAll(id) {
-            document.getElementById(id).focus();
-            document.getElementById(id).select();
-            }
-            </script>
-            {/literal}
-        {/if}
     
     {if $display eq 'all_gplus_posts' or $gplus_posts}
 

@@ -46,7 +46,7 @@
           {if $post}
             <div class="clearfix alert stats">
 
-{include file="post.index._top-post.tpl"}
+{include file="post.index._top-post.tpl" show_embed=true}
 
               <div class="grid_6 omega center keystats">
                 <div class="big-number">

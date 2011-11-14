@@ -210,32 +210,32 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         //Test post page menu items
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
         'retweet_count_api' => '', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
         'post_id'=>'9021481076', 'is_protected'=>0, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
         //Shouldn't register mapping items if is_geo_encoded is 0
         $post_menus_array = $this->webapp->getPostDetailMenu($post);
         $this->assertIsA($post_menus_array, 'Array');
-        $this->assertEqual(sizeof($post_menus_array), 2); //2 from Twitter plugin
+        $this->assertEqual(sizeof($post_menus_array), 1); //1 from Twitter plugin
     }
 
     public function testMenuItemRegistrationOnPostPageGeoencoded() {
         //Test post page menu items
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
         'retweet_count_api' => '', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
         'post_id'=>'9021481076', 'is_protected'=>0, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
         'is_geo_encoded'=>1, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
         //Should register mapping items if is_geo_encoded is 1
         $post_menus_array = $this->webapp->getPostDetailMenu($post);
         $this->assertIsA($post_menus_array, 'Array');
-        $this->assertEqual(sizeof($post_menus_array), 4); //2 from Twitter plugin, 2 from GeoEncoder
+        $this->assertEqual(sizeof($post_menus_array), 3); //3 from Twitter plugin, 2 from GeoEncoder
         $this->assertIsA($post_menus_array['geoencoder_map'], 'MenuItem');
         $this->assertIsA($post_menus_array['geoencoder_nearest'], 'MenuItem');
     }
@@ -292,7 +292,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         'in_reply_to_post_id'=>'15338041815', 'is_geo_encoded'=>0, 'in_retweet_of_post_id'=>null));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>13, 'post_id'=>'14914043658', 'network'=>'twitter',
-        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!!', 
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!!',
         'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>14, 'post_id'=>'14913946516', 'network'=>'twitter',
@@ -302,7 +302,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('id'=>15, 'post_id'=>'11259110570', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
         'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>'28.56213 77.165297',
-        'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>'14914043658', 'is_geo_encoded'=>0, 
+        'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>'14914043658', 'is_geo_encoded'=>0,
         'in_retweet_of_post_id'=>null));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>16, 'post_id'=>'12259110570', 'network'=>'twitter',
