@@ -2,7 +2,7 @@
   <div class="grid_2 alpha">
     <div class="avatar-container">
         {if $f.network == 'twitter'}<a href="https://twitter.com/intent/user?user_id={$f.user_id}" title="{$f.user_name} on Twitter">{/if}
-      <img src="{$f.avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$f.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+      <img src="{$f.avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$f.network|get_plugin_path}/assets/img/favicon.png" class="service-icon"/>
       {if $f.network == 'twitter'}</a>{/if}
     </div>
   </div>

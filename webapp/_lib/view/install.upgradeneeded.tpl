@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <title>ThinkUp: Upgrading</title>
 <link rel="shortcut icon" type="image/x-icon"
-    href="/assets/img/favicon.ico">
+    href="/assets/img/favicon.png">
 <!-- jquery -->
 <link type="text/css" rel="stylesheet"
     href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">

@@ -17,7 +17,7 @@
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.png" class="service-icon"/>
         {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
            <div class="small gray">Friend</div>
         {/if}

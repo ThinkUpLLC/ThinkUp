@@ -15,7 +15,7 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
     <div class="grid_2 alpha">
       <div class="avatar-container">
         {if $post->network == 'twitter'} <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username} on Twitter">{/if}
-        <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+        <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon"/>
         {if $post->network == 'twitter'}</a>{/if}
       </div>
     </div>
