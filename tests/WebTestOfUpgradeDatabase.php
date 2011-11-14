@@ -237,9 +237,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('pwd', 'secret123');
         $this->click("Log In");
         if (version_compare($version, '0.17', '>=')) {
-            $this->assertText('Add a Twitter account');
-            $this->assertText('Add a Facebook account');
-            $this->assertText('Add a Google+ account');
+            $this->assertText('Add a Twitter Account');
+            $this->assertText('Add a Facebook Account');
+            $this->assertText('Add a Google+ Account');
             $this->assertText('Adjust Your Settings');
         }
         if (version_compare($version, '0.16', '>=')) {
