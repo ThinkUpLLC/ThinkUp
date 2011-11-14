@@ -19,8 +19,11 @@
     {if $display eq 'all_gplus_posts' or $gplus_posts}
 
 <div class="section">
-
-{if $description}<h2>{$description}</h2>{/if}
+<div class="clearfix">
+  {insert name="help_link" id=$display}
+  <h2>{if $parent_name}<a href="?v={$parent}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$parent_name}</a> &rarr; {/if}{$header}</h2>
+  {if $description}<h3>{$description}</h3>{/if}
+</div>
 
 <div class="header">
   
@@ -43,7 +46,7 @@
     {if $gplus_posts}
     <div id="all-posts-div">
       {foreach from=$gplus_posts key=tid item=t name=foo}
-        {include file="_post.tpl" t=$t}
+        {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
       {/foreach}
     </div>
     {/if}

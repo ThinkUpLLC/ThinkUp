@@ -23,7 +23,7 @@
 {if $all_facebook_posts and ($display eq 'posts-all' OR $display eq 'posts-questions')}
 <div id="all-posts-div">
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
   {/foreach}
 </div>
 {/if}
@@ -31,7 +31,7 @@
 {if $most_replied_to_posts}
 <div id="all-posts-div">
   {foreach from=$most_replied_to_posts key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+        {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
   {/foreach}
 </div>
 {/if}
