@@ -40,9 +40,6 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
         {/if}
     </div>
     <div class="grid_12 omega">
-      {if $post->links[0]->image_src}
-         <div class="pic"><a href="{$post->links[0]->url}"><img src="{$post->links[0]->image_src}" /></a></div>
-      {/if}
       <div class="post">
         {if $post->post_text}
           {if $scrub_reply_username}
