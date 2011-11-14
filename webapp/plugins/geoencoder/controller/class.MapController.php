@@ -149,10 +149,11 @@ class MapController extends ThinkUpController {
                 }
                 // Split geo into latitude and longitude.
                 $geo_data = explode(',',$post['geo']);
-                $latitude = $geo_data[0];
-                $longitude = $geo_data[1];
+                if (isset($geo_data[0]) && isset($geo_data[1])) {
+                    $latitude = $geo_data[0];
+                    $longitude = $geo_data[1];
 
-                $all_locations[] = array (
+                    $all_locations[] = array (
                     'name'=>$post['location'],
                     'latitude'=>$latitude,
                     'longitude'=>$longitude,
@@ -160,7 +161,8 @@ class MapController extends ThinkUpController {
                     'retweet_count'=>$retweet_count,
                     'includes_main_post'=>$main_post_included,
                     'posts'=>$$place
-                );
+                    );
+                }
             }
             $main_post_included = 0;
             $flag = 1;
