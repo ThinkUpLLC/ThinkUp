@@ -154,7 +154,7 @@
                     <img width="320" height="200" src="http://chart.apis.google.com/chart?chs=320x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=7DD3F0&chd=t:{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxr={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
                     </div>
                     <div class="view-all">
-                    <a href="{$site_root_path}?v=followers&u={$instance->network_username}&n={$instance->network}">More...</a>
+                    <a href="{$site_root_path}?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
                   </div>
                     
                   {/if}
@@ -178,7 +178,7 @@
                     </small></div>
                     {/if}
                   <div class="view-all">
-                    <a href="{$site_root_path}?v=followers&u={$instance->network_username}&n={$instance->network}">More...</a>
+                    <a href="{$site_root_path}?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
                   </div>
                   {/if}
 
