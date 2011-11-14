@@ -80,6 +80,9 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
     }
 
     public function updateUser($user) {
+        if (!isset($user->username)) {
+            return 0;
+        }
         $status_message = "";
         $has_friend_count = $user->friend_count != '' ? true : false;
 

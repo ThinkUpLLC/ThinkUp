@@ -92,10 +92,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAnilDash() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
-        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
-        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -113,10 +113,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAnilDashDelete() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36825', 'network_viewer_id'=>'36823',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
-        'total_posts_in_system'=>'21', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'total_posts_in_system'=>'21', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
-        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -133,11 +133,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     private function setUpInstanceUserAnilDashUsernameChange() {
-        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36824', 'network_viewer_id'=>'36823',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
-        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36824', 'network_viewer_id'=>'36824',
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
-        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -153,11 +153,12 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
 
         // add post to backfill
-        $builder = FixtureBuilder::build('posts', array('post_id'=>'1', 'author_user_id'=>36824,
-            'author_username'=>'anildash', 'author_fullname'=>'Anil Dash', 'author_avatar'=>'avatar.jpg', 
-            'post_text'=>'This is a great post', 'network'=>'twitter','in_rt_of_user_id' => null,
-            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
-        return $builder;
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'1', 'author_user_id'=>'36824',
+        'author_username'=>'anildash', 'author_fullname'=>'Anil Dash', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'This is a great post', 'network'=>'twitter','in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'36824', 'network'=>'twitter'));
+        return $builders;
     }
 
     private function setUpInstanceUserPrivateMcprivate() {
@@ -166,10 +167,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_protected'=>1, 'last_post_id'=>''));
 
         $r = array('id'=>1, 'network_username'=>'mcprivate', 'network_user_id'=>'123456', 'network_viewer_id'=>'123456',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
-        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
-        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -188,10 +189,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserGinaTrapani() {
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061',
-        'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'favorites_profile' => '0',  'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -304,7 +305,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $post_builder = self::setUpInstanceUserAnilDashUsernameChange();
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
-        'network_username'=>'anildash2', 'network'=>'twitter', 'network_viewer_id'=>15, 
+        'network_username'=>'anildash2', 'network'=>'twitter', 'network_viewer_id'=>15,
         'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
         $post_dao = DAOFactory::getDAO('PostDAO');
@@ -339,8 +340,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $post_builder = self::setUpInstanceUserAnilDashDelete();
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'36825',
-        'network_username'=>'anildash', 'network'=>'twitter', 'network_viewer_id'=>'36825', 
+        'network_username'=>'anildash', 'network'=>'twitter', 'network_viewer_id'=>'36825',
         'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'36825', 'network'=>'twitter'));
 
         // some tweets...
         $builder = FixtureBuilder::build('posts', array('id' => 1, 'post_id' => '12345',
@@ -357,7 +360,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // found on twitter, so don't delete
         $post_dao = DAOFactory::getDAO('PostDAO');
         $this->assertNotNull($post_dao->getPost('123456', 'twitter'));
-
     }
 
     public function testFetchPrivateInstanceUserTweets() {
@@ -377,6 +379,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testFetchInstanceUserTweetsRetweets() {
         self::setUpInstanceUserAmygdala();
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'2768241', 'network'=>'twitter'));
+
         $this->instance->last_page_fetched_tweets = 17;
 
         $twitter_crawler = new TwitterCrawler($this->instance, $this->api);

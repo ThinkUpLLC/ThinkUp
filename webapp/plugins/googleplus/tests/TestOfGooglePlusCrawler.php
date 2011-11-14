@@ -49,10 +49,10 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $r = array('id'=>1, 'network_username'=>'Gina Trapani', 'network_user_id'=>'113612142759476883204',
-        'network_viewer_id'=>'113612142759476883204', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'113612142759476883204', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'google+',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -62,6 +62,11 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->profile1_instance = new Instance($r);
     }
 
+    private function buildData() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'113612142759476883204', 'network'=>'google+'));
+        return $builders;
+    }
     public function tearDown() {
         parent::tearDown();
         $this->logger->close();
@@ -166,9 +171,9 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchInstanceUserPosts() {
+        $builders = self::buildData();
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
         $gpc->fetchInstanceUserPosts();
-
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('z12is5v4snurihgdl22iiz3pjrnws3lle', 'google+', true);
         $this->assertIsA($post, 'Post');

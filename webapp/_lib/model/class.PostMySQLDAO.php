@@ -79,7 +79,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getPost($post_id, $network, $is_public = false) {
         $q = "SELECT  u.*, p.*, p.id as post_key, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = p.network ";
+        $q .= "LEFT JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = p.network ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network ";
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
