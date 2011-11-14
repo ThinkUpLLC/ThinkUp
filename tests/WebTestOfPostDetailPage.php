@@ -46,7 +46,11 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
-        $this->assertPattern('/Search/'); // we now allow search for non logged in users...
+        // allow search for non logged in users
+        $this->assertPattern('/Search/');
+        $this->assertField('Go', 'Go');
+        $this->assertField('search', 'Search');
+
         $this->assertText('Retweets');
         $this->assertNoText('GeoEncoder');
 
@@ -66,8 +70,9 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
-        //must be logged in to search
-        $this->assertField('Search', 'Search');
+
+        $this->assertField('Go', 'Go');
+        $this->assertField('search', 'Search');
         $this->assertText('Retweets');
         $this->assertNoText('Response Map');
 

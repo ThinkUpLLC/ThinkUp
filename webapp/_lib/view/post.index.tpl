@@ -10,7 +10,7 @@
         
         {if $post}
 
-            <li><a href="{insert name=dashboard_link}">Dashboard</a></li>
+          <li><a href="{insert name=dashboard_link}">Dashboard</a></li>
           <li{if $smarty.get.v eq ''} class="selected"{/if}>
           <a href="?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
           </li>
@@ -19,9 +19,23 @@
           <form id="grid_search_form" action="{$site_root_path}post">
           <input type="hidden" name="t" value="{$post->post_id}" />
           <input type="hidden" name="n" value="{$post->network}" />
-            <input type="text" name="search" id="grid_search_sidebar_input" value="" style="margin-top: 3px;" size="5"/>&nbsp;<input type="submit" href="#" class="grid_search" onclick="$('#grid_search_form').submit(); return false;" value="Search">
+            <input type="text" name="search" id="grid_search_sidebar_input" onclick="clickclear(this, 'Search')" onblur="clickrecall(this,'Search')" value="Search" style="margin-top: 3px;" size="5"/>&nbsp;<input type="submit" href="#" class="grid_search" onclick="$('#grid_search_form').submit(); return false;" value="Go">
           </form>
             </li>
+<script type="text/javascript">{literal}
+function clickclear(thisfield, defaulttext) {
+if (thisfield.value == defaulttext) {
+thisfield.value = "";
+}
+}
+
+function clickrecall(thisfield, defaulttext) {
+if (thisfield.value == "") {
+thisfield.value = defaulttext;
+}
+}{/literal}
+</script>
+            
           {/if}
         {/if}
         {if $sidebar_menu}
@@ -29,8 +43,8 @@
               <li{if $smarty.get.v eq $smkey} class="selected"{/if}><a href="?v={$smkey}&t={$post->post_id}&n={$post->network|urlencode}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
             {/foreach}
         {/if}
-
         </ul>
+
       </div>
     </div> <!-- end left nav -->
 
