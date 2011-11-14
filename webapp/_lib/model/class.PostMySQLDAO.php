@@ -49,9 +49,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id',
-    'in_rt_of_user_id', 'location', 'place', 'place_id', 'geo', 'retweet_count_cache', 
+    'in_rt_of_user_id', 'location', 'place', 'place_id', 'geo', 'retweet_count_cache',
     'retweet_count_api', 'old_retweet_count_cache', 'favlike_count_cache',
-    'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend', 
+    'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
     'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
     /**
@@ -77,8 +77,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getPost($post_id, $network, $is_public = false) {
-        $q = "SELECT  p.*, p.id as post_key, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT  u.*, p.*, p.id as post_key, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = p.network ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network ";
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
@@ -107,6 +108,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     $post->addLink(new Link($link_row));
                 }
             }
+            $post->author = new User($post_row);
             return $post;
         } else {
             return null;
@@ -287,7 +289,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $start_on_record = ($page - 1) * $count;
         $q = "SELECT * FROM (
         SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date
-        FROM #prefix#posts p 
+        FROM #prefix#posts p
         WHERE (in_retweet_of_post_id=:post_id OR in_reply_to_post_id=:post_id) ";
 
         if ($include_original_post) {

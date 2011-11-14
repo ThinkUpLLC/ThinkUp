@@ -1,6 +1,6 @@
 <div class="grid_2 alpha">
   <div class="avatar-container">
-    <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/>
+    <img src="{$post->author->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/>
   </div>
 </div>
 
