@@ -75,7 +75,7 @@ thisfield.value = defaulttext;
    <a href="https://twitter.com/share" class="twitter-share-button"
       data-via="thinkupapp"
       data-text="{$post->post_text}"
-      data-related="anywhere:The Javascript API"
+      data-related="thinkupapp,expertlabs,ginatrapani"
       data-count="none">Tweet</a>
 {literal}
 
