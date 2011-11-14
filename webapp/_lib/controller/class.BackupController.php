@@ -84,14 +84,14 @@ class BackupController extends ThinkUpAdminController {
                 } catch (MySQLGrantException $e) {
                     $this->addErrorMessage('It looks like the MySQL user does not have the proper permissions to grant'
                     . ' export Access. Please see the'
-                    . ' <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">'
+                    . ' <a href="http://thinkupapp.com/docs/troubleshoot/common/backupcannotwrite.html">'
                     . ' ThinkUp documentation</a> for more info on how to resolve this issue.');
                     self::mutexLock(true);
                     return $this->generateView();
                 } catch (OpenFileException $e) {
                     $this->addErrorMessage('It looks like the MySQL user does not have the proper file permissions to'
                     . ' export data. Please see the'
-                    . ' <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">'
+                    . ' <a href="http://thinkupapp.com/docs/troubleshoot/common/backupcannotwrite.html">'
                     . ' ThinkUp documentation</a> for more info on how to resolve this issue.');
                     self::mutexLock(true);
                     return $this->generateView();
