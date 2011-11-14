@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" itemscope itemtype="http://schema.org/Article">
 <head>
   <meta charset="utf-8">
   <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
@@ -83,5 +83,9 @@
   </script>
 {/literal}
 
+{if $post->post_text} 
+<meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
+<meta itemprop="description" content="{$post->post_text}">
+{/if}
 </head>
 <body>

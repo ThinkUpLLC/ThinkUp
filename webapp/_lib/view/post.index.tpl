@@ -68,6 +68,28 @@ thisfield.value = defaulttext;
                     <h3>{if $post->reply_count_cache eq 1}reply{else}replies{/if}
                     
                      in {$post->adj_pub_date|relative_datetime}</h3>
+
+{if !$post->is_protected}
+<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
+
+   <a href="https://twitter.com/share" class="twitter-share-button"
+      data-via="thinkupapp"
+      data-text="{$post->post_text}"
+      data-related="anywhere:The Javascript API"
+      data-count="none">Tweet</a>
+{literal}
+
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+<g:plusone size="medium" annotation="none"></g:plusone>
+{/literal}
+{/if}
                 </div>
               </div>
             </div> <!-- /.clearfix -->
