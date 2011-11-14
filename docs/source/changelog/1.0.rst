@@ -1,6 +1,12 @@
 1.0 - 15 Nov 2011
 =================
 
-TODO: Fill in list of mostly cosmetic bugfixes from beta 17.
+With this release, ThinkUp is officially out of beta, with support for Twitter, Facebook, and Google+.
 
-ThinkUp is officially out of beta, with support for Twitter, Facebook, and Google+.
+Changes since beta 17 (our release candidate):
+
+*   Extensive cosmetic adjustments and fixes, including Internet Explorer 8 compatibility
+*   Added Tweet and +1 button to post detail page, under reply count
+*   Fixed but when copy to clipboard button included unnecessary whitespace
+*   Collapsed "Embed This Thread" module into a link to show/hide it
+*   Fixed X-axis of Follower and List count by week charts

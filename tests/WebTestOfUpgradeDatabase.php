@@ -195,8 +195,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $this->setField('full_name', 'ThinkUp J. User');
         $this->setField('site_email', 'user@example.com');
-        $this->setField('password', 'secret');
-        $this->setField('confirm_password', 'secret');
+        $this->setField('password', 'secret123');
+        $this->setField('confirm_password', 'secret123');
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
@@ -234,7 +234,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->clickLink('Log in');
 
         $this->setField('email', 'user@example.com');
-        $this->setField('pwd', 'secret');
+        $this->setField('pwd', 'secret123');
         $this->click("Log In");
         if (version_compare($version, '0.17', '>=')) {
             $this->assertText('Add a Twitter account');
