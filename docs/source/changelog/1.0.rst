@@ -1,0 +1,6 @@
+1.0 - 15 Nov 2011
+=================
+
+TODO: Fill in list of mostly cosmetic bugfixes from beta 17.
+
+ThinkUp is officially out of beta, with support for Twitter, Facebook, and Google+.
