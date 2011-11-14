@@ -36,6 +36,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.OwnerInstanceMySQLDAO.php';
+
 class TestOfPostController extends ThinkUpUnitTestCase {
     public function setUp(){
         parent::setUp();
@@ -73,6 +75,22 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a test post/", $results);
     }
 
+    public function testControlExistingPublicPostIDWithLink() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
+        'is_protected'=>0));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
+        'network'=>'twitter'));
+        $link_builder = FixtureBuilder::build('links', array('post_key'=>'1', 'description'=>'My test description',
+        'expanded_url'=>'http://example.com/i/am/expanded/yo/index.html'));
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/My test description/", $results);
+        $this->assertPattern( "/http:\/\/example.com\/i\/am\/expanded\/yo\/index.html/", $results);
+    }
+
     public function testControlWithNumericButNonExistentPostID(){
         $_GET["t"] = '11';
         $controller = new PostController(true);
@@ -89,7 +107,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
 
     public function testControlExistingPrivatePostIDNotLoggedIn() {
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5',
         'network'=>'twitter'));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
         'network'=>'twitter'));
@@ -376,37 +394,37 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $public_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'11', 'username'=>'jack',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1002', 'author_user_id'=>'11',
-        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>'1001', 'is_protected'=>'0'));
 
         $public_reply_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'12', 'username'=>'jill',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1003', 'author_user_id'=>'12',
-        'author_username'=>'jill', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jill', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>'1001', 'is_protected'=>'0'));
 
         $private_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
         'is_protected'=>'1', 'network'=>'twitter'));
         $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
-        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>'1001', 'is_protected'=>'1'));
 
         $private_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'14', 'username'=>'joan',
         'is_protected'=>'1', 'network'=>'twitter'));
         $retweet_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1005', 'author_user_id'=>'14',
-        'author_username'=>'joan', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
+        'author_username'=>'joan', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter',
         'in_retweet_of_post_id'=>'1001', 'is_protected'=>'1'));
 
         $private_retweet_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'15', 'username'=>'peggy',
         'is_protected'=>'1', 'network'=>'twitter'));
         $retweet_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1006', 'author_user_id'=>'15',
-        'author_username'=>'peggy', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
+        'author_username'=>'peggy', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter',
         'in_retweet_of_post_id'=>'1001', 'is_protected'=>'1'));
 
         $public_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'16', 'username'=>'don',
         'is_protected'=>'0', 'network'=>'twitter'));
         $retweet_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1007', 'author_user_id'=>'16',
-        'author_username'=>'don', 'post_text'=>'This is a public retweet of 1001', 'network'=>'twitter', 
+        'author_username'=>'don', 'post_text'=>'This is a public retweet of 1001', 'network'=>'twitter',
         'in_retweet_of_post_id'=>'1001', 'is_protected'=>'0'));
 
         return array($post_builder, $original_post_author_builder, $public_reply_author_builder1, $reply_builder1,

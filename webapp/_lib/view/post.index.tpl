@@ -67,20 +67,18 @@
                     {/if}
                   </div>
 
-                  {if $post->link->expanded_url and !$post->link->image_src and $post->link->expanded_url != $post->link->url}
-                    <div class="clearfix">
-                      <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a><span class="ui-icon ui-icon-newwin">
-                    </div>
-                  {/if}
+                  {foreach from=$post->links key=lkey item=link name=linkloop}
+                  <div class="clearfix" style="word-wrap:break-word;">
+                      {if $link->expanded_url}
+                        {if $link->image_src}
+                         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$link->url}"><img src="{$link->image_src}" style="margin-bottom:5px;"/></a></div>
+                        {/if}
+                         <span class="small"><a href="{$link->expanded_url}" title="{$link->url}">{if $link->title}{$link->title}{else}{$link->expanded_url}{/if}</a>
+                        {if $link->description}<br><small>{$link->description}</small>{/if}</span><br><br>
+                      {/if}
+                  </div>
+                  {/foreach}
 
-                  {if $post->link->expanded_url}
-                    {if $post->link->image_src}
-                     <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->image_src}" style="margin-bottom:50px;"/></a></div>
-                    {/if}
-                     <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
-                    {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
-                  {/if}
-      
                   <div class="clearfix gray" id="more-detail" style="width:460px;">
                     {if $post->network eq 'twitter'}
                       <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">
