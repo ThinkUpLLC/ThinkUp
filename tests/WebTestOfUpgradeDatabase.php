@@ -90,7 +90,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             array_push($migration_versions, $version);
         }
         $migration_max_index = $migrations_count-1;
-
         for($i = 0; $i < $migrations_count-1; $i++) {
             $run_migrations = array($migration_versions[$migration_max_index] =>
             $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
@@ -107,7 +106,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             . $migration_versions[$migration_max_index] );
             $this->debug("");
         }
-
         // then test a migration from 4 that needs a snowflake uprade
         $this->debug("Testing snowflake migration/update");
         $run_migrations = array($migration_versions[$migration_max_index] =>
@@ -195,8 +193,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $this->setField('full_name', 'ThinkUp J. User');
         $this->setField('site_email', 'user@example.com');
-        $this->setField('password', 'secret');
-        $this->setField('confirm_password', 'secret');
+        $this->setField('password', 'secret123');
+        $this->setField('confirm_password', 'secret123');
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
@@ -234,12 +232,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->clickLink('Log in');
 
         $this->setField('email', 'user@example.com');
-        $this->setField('pwd', 'secret');
+        $this->setField('pwd', 'secret123');
         $this->click("Log In");
         if (version_compare($version, '0.17', '>=')) {
-            $this->assertText('Add a Twitter account');
-            $this->assertText('Add a Facebook account');
-            $this->assertText('Add a Google+ account');
+            $this->assertText('Add a Twitter Account');
+            $this->assertText('Add a Facebook Account');
+            $this->assertText('Add a Google+ Account');
             $this->assertText('Adjust Your Settings');
         }
         if (version_compare($version, '0.16', '>=')) {
@@ -309,7 +307,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             }
 
             // if we want to break a sql migration for testing
-            if($fail && $fail == 1 ) {
+            if ($fail && $fail == 1 ) {
                 $this->debug("Munging migration v0.10 sql for fail testing");
                 $migration_10 = $this->install_dir
                 . '/thinkup/install/sql/mysql_migrations/2011-04-19_v0.10.sql.migration';
@@ -335,81 +333,96 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             preg_match("/sql_array = (\[.*?}])/", $content, $matches);
             $json_array = json_decode($matches[1]);
             $cnt = 0;
-            foreach($json_array as $json_migration) {
-                $this->debug("running migration: " . $json_migration->version);
+            if (isset($json_array)) {
+                foreach($json_array as $json_migration) {
+                    $this->debug("running migration: " . $json_migration->version);
 
-                // if there is setup_sql run it
-                if (isset($MIGRATIONS[$json_migration->version ]['setup_sql'])) {
-                    $this->debug('running setup_sql scripts');
-                    $install_dao = DAOFactory::getDAO('InstallerDAO');
-                    foreach($MIGRATIONS[$json_migration->version ]['setup_sql'] as $sql) {
-                        $this->debug('running setup_sql script: ' . substr($sql, 0, 40)  . '...');
-                        $install_dao->runMigrationSQL($sql);
-                    }
-                }
-                $cnt++;
-                $this->get($token_url . "&migration_index=" . $cnt);
-                if($fail && $fail == 1) {
-                    $this->assertText('{ "processed":false,');
-                    $this->assertText('ThinkUp could not execute the following query: ' .
-                    'INSERT INTO tu_follows_b10 (SELECTs');
-                    return;
-                }
-                $this->assertText('{ "processed":true,');
-                $content = $this->getBrowser()->getContent();
-                if ( !preg_match('/"processed":true/', $content)) {
-                    error_log($content);
-                    return;
-                }
-                if (isset($json_array[$cnt]) && $json_array[$cnt]->version == $json_migration->version) {
-                    continue;
-                }
-                $this->debug("Running migration assertion test for " . $json_migration->version);
-                if ( !isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
-                $assertions = $MIGRATIONS[ $json_migration->version ];
-                foreach($assertions['migration_assertions']['sql'] as $assertion_sql) {
-                    // don't run the database_version assertion if it exists, this will get run below...
-                    if (preg_match("/database_version/i", $assertion_sql['query'])) {
-                        continue;
-                    }
-                    $this->debug("Running assertion sql: " . $assertion_sql['query']);
-                    $stmt = $this->pdo->query($assertion_sql['query']);
-                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if (isset($assertion_sql['no_match'])) {
-                        $this->assertFalse($data, 'no results for query'); // a table or column deleted?
-                    } else {
-                        $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
-                        $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
-                        if ( ! preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ])) {
-                            error_log("TEST FAIL DEBUGGING:");
-                            error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
-                            . $assertion_sql['match'] . " failed");
+                    // if there is setup_sql run it
+                    if (isset($MIGRATIONS[$json_migration->version ]['setup_sql'])) {
+                        $this->debug('running setup_sql scripts');
+                        $install_dao = DAOFactory::getDAO('InstallerDAO');
+                        foreach($MIGRATIONS[$json_migration->version ]['setup_sql'] as $sql) {
+                            $this->debug('running setup_sql script: ' . substr($sql, 0, 40)  . '...');
+                            $install_dao->runMigrationSQL($sql);
                         }
                     }
-                    $stmt->closeCursor();
+                    $cnt++;
+                    $this->get($token_url . "&migration_index=" . $cnt);
+                    if ($fail && $fail == 1) {
+                        $this->assertText('{ "processed":false,');
+                        $this->assertText('ThinkUp could not execute the following query: ' .
+                        'INSERT INTO tu_follows_b10 (SELECTs');
+                        return;
+                    }
+                    $this->assertText('{ "processed":true,');
+                    $content = $this->getBrowser()->getContent();
+                    if ( !preg_match('/"processed":true/', $content)) {
+                        error_log($content);
+                        return;
+                    }
+                    if (isset($json_array[$cnt]) && $json_array[$cnt]->version == $json_migration->version) {
+                        continue;
+                    }
+                    $this->debug("Running migration assertion test for " . $json_migration->version);
+                    if ( !isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
+                    $assertions = $MIGRATIONS[ $json_migration->version ];
+                    foreach($assertions['migration_assertions']['sql'] as $assertion_sql) {
+                        // don't run the database_version assertion if it exists, this will get run below...
+                        if (preg_match("/database_version/i", $assertion_sql['query'])) {
+                            continue;
+                        }
+                        $this->debug("Running assertion sql: " . $assertion_sql['query']);
+                        $stmt = $this->pdo->query($assertion_sql['query']);
+                        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if (isset($assertion_sql['no_match'])) {
+                            $this->assertFalse($data, 'no results for query'); // a table or column deleted?
+                        } else {
+                            $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
+                            $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
+                            if ( ! preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ])) {
+                                error_log("TEST FAIL DEBUGGING:");
+                                error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
+                                . $assertion_sql['match'] . " failed");
+                            }
+                        }
+                        $stmt->closeCursor();
+                    }
                 }
+                $this->get($token_url . '&migration_done=true');
+                $this->assertText('{ "migration_complete":true }');
+                $this->get($this->url.'/test_installer/thinkup/');
+                $this->assertText('Logged in');
+                $this->assertText('user@example.com');
+            } else {
+                $this->assertText('Your database is up to date');
             }
-            $this->get($token_url . '&migration_done=true');
-            $this->assertText('{ "migration_complete":true }');
-            $this->get($this->url.'/test_installer/thinkup/');
-            $this->assertText('Logged in');
-            $this->assertText('user@example.com');
+            //application_options | database_version        | 0.17
+            $sql = "SELECT option_value from " . $this->table_prefix .
+            "options WHERE namespace = 'application_options' and option_name='database_version'";
+            $stmt = $this->pdo->query($sql);
+            $data = $stmt->fetch();
+            $this->debug("DB option value should now be set to $version");
+            $this->assertEqual($data[0], $version);
 
             // run db migration tests
-            $this->debug("Running final migration assertion test for $version");
-            foreach($migration_data['migration_assertions'] as $assertions) {
-                foreach($assertions as $assertion) {
-                    $this->debug("Running assertion sql: " . $assertion['query']);
-                    $stmt = $this->pdo->query($assertion['query']);
-                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if (isset($assertion['no_match'])) {
-                        $this->assertFalse($data, 'no results for query'); // a table or column deleted?
-                    } else {
-                        $this->assertEqual(preg_match($assertion['match'], $data[ $assertion['column'] ]), 1,
-                        $assertion['match'] . ' should match ' .  $data[ $assertion['column'] ]);
+            if (isset( $migration_data['migration_assertions'] )) {
+                $this->debug("Running final migration assertion test for $version");
+                foreach($migration_data['migration_assertions'] as $assertions) {
+                    foreach($assertions as $assertion) {
+                        $this->debug("Running assertion sql: " . $assertion['query']);
+                        $stmt = $this->pdo->query($assertion['query']);
+                        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if (isset($assertion['no_match'])) {
+                            $this->assertFalse($data, 'no results for query'); // a table or column deleted?
+                        } else {
+                            $this->assertEqual(preg_match($assertion['match'], $data[ $assertion['column'] ]), 1,
+                            $assertion['match'] . ' should match ' .  $data[ $assertion['column'] ]);
+                        }
+                        $stmt->closeCursor();
                     }
-                    $stmt->closeCursor();
                 }
+            } else {
+                $this->debug("No final migration assertion test for $version");
             }
         }
     }

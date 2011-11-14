@@ -6,7 +6,7 @@
     <div id="ft" role="contentinfo">
     <div id="">
       <p>
-       <a href="http://thinkupapp.com">ThinkUp</a>{if $thinkup_version} beta {$thinkup_version}{/if} | 
+       <a href="http://thinkupapp.com">ThinkUp</a> {$thinkup_version} | 
        <a href="http://thinkupapp.com/docs/">Documentation</a> 
        | <a href="http://groups.google.com/group/thinkupapp">Mailing List</a> 
        | <a href="http://webchat.freenode.net/?channels=thinkup">IRC Channel</a><br>

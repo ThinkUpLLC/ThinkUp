@@ -45,8 +45,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->pdo = OptionMySQLDAO::$PDO;
 
         $this->init_db_version = $config->getValue('THINKUP_VERSION');
-        $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10); //set a high version num
-
+        $new_version = $config->getValue('THINKUP_VERSION') + 10;
+        if (! preg_match('/\./', $new_version)) {
+            $new_version .= '.0';
+        }
+        $config->setValue('THINKUP_VERSION', $new_version ); //set a high version num
         $this->token_file = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . '/.htupgrade_token';
 
         $this->migrations_test_dir = THINKUP_ROOT_PATH . 'tests/data/migrations/';
@@ -822,6 +825,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
         $migration_version = $app_version - 1;
+        if (! preg_match('/\./', $migration_version)) {
+            $migration_version .= '.0';
+        }
         $migration_test1 = $this->migrations_test_dir . $this->migrations_file1;
         $migration1 = $this->migrations_dir
         . '2010-09-17_v' . $migration_version . '.sql.migration';
