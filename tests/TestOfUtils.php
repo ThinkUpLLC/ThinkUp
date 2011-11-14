@@ -223,9 +223,9 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
     public function testGetLastSaturday()  {
         $last_saturday = Utils::getLastSaturday('11/11/2011');
-        $this->assertEqual('11/4', $last_saturday);
+        $this->assertEqual('11/5', $last_saturday);
 
         $last_saturday = Utils::getLastSaturday('11/6/2011');
-        $this->assertEqual('10/30', $last_saturday);
+        $this->assertEqual('11/5', $last_saturday);
     }
 }
