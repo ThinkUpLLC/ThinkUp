@@ -32,7 +32,7 @@
 		}
 	
 		h2 {
-			color: #E2AA58;
+			color: #222;
 			font-size: x-large;
 		}
 		
@@ -86,6 +86,7 @@
 			 padding: 12px 0 12px 0;
 			 margin-bottom: 10px;
 			margin-right : 4px;
+			min-height : 300px;
 		}
 			 .featurebox h3{
 				  color: #343030;
@@ -131,6 +132,7 @@
 		}
 
 		#identity h1 {
+			/*
 			text-indent: -5000px;
 			height: 56px;
 			background-image: url('assets/img/thinkup-logo.png');
@@ -138,12 +140,24 @@
 			background-position: left bottom;
 			margin-bottom: 0px;
 			padding-bottom: 0px;
+			*/
+			font-size : 60px;
+			font-weight : 700;
+			margin-bottom : 0px;
+			padding-bottom : 0px;
+			margin-top : 25px;
+		}
+		
+		#identity h1 .up {
+			font-weight : 200;
+			color : black;
 		}
 		
 		#identity h2 {
 			margin-top: 0px;
 			padding-top: 0px;
 			font-size: x-large;
+			font-weight: 200;
 		}
 		
 		#promo {
@@ -167,6 +181,24 @@
 			padding-top: 0px;
 		}
 		
+		#introtext {
+			border: 1px solid #c9c9c9;
+			
+			-moz-border-radius: 8px;
+			-webkit-border-radius: 8px;
+			border-radius: 8px;    
+			box-shadow: 0 0 5px rgba(0,0,0,0.2);
+			margin-bottom: 1em;
+			background: #d5f0fc;
+			margin-right : 4px;
+			margin-left : 0px;
+			padding-left : 10px;
+		}
+		
+		#introtext p {
+			margin-left : 6px;
+		}
+		
 		#download, #download h3 {
 			text-align: center;
 			color: white;
@@ -182,23 +214,29 @@
 			display:block;
 			margin: 0px 100px 10px 100px;
 			height: 65px;
-			-webkit-border-radius: 8px;
-			-moz-border-radius: 8px;
-			border-radius: 8px;
-			border: 1px solid #3B9877;
-			color:#fff;
 			overflow:visible;
-			background:#6ECBAB;
-			background: -moz-linear-gradient(top, #6ECBAB 0%, #3B9877 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6ECBAB), color-stop(100%,#3B9877));
-			background: linear-gradient(top, #6ECBAB 0%, #3B9877 100%);
-			filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#6ECBAB', endColorstr='#3B9877',GradientType=0 );
+
+			background: #ebeadf;
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			border-radius: 4px;   
+			background-color: #00bdf2;
+			color : white;
+			border : none;
+			padding: 4px 12px;
+			
+		/*	
+
+			cursor: pointer;
+			display: inline;
+
+		*/
+
 		}
 		
 		a#download:hover {
-			background:#3B9877;
+			background:#31C22D;
 			text-decoration: none;
-			border: 1px solid #666;
 		}
 		
 		#promo h3, #promo h3 a, #fundamentals .featurebox h3 { color: #504B9E; }
@@ -243,7 +281,7 @@
 <div id="header" class="container_12 clearfix">
 
 <div id="identity" class="grid_6 ">
-	<h1>ThinkUp</h1>
+	<h1>Think<span class="up">Up</span></h1>
 	<h2>Understand your social networks</h2>
 </div>
 
@@ -251,17 +289,17 @@
 	
 	<ul id="promoitems">
 		<li id="promo-docs" style="overflow: display;">
-			<img src="assets/img/promo-beta17.png" width="128" height="128" alt="ThinkUp Adds Google+" style="float: left; padding-top: 20px;" />
+			<img src="assets/img/promo-1.0.png" width="128" height="128" alt="ThinkUp Adds Google+" style="float: left; padding-top: 20px;" />
 			
-			<h3><a href="http://expertlabs.org/2011/11/thinkup-beta-17-now-available.html">ThinkUp Beta 17 Released</a></h3>
-			<p>Beta 17 adds a redesigned interface, Twitter list membership, and much more. <a href="http://expertlabs.org/2011/11/thinkup-beta-17-now-available.html">Read more &raquo;</a></p>
+			<h3><a href="http://expertlabs.org/">ThinkUp 1.0 is here!</a></h3>
+			<p>Track, archive & search your activity on Twitter, Facebook and Google+ <a href="http://expertlabs.org/">Read more &raquo;</a></p>
 		</li>	
 		<li id="promo-docs" style="overflow: display;">
 	
 			<img src="assets/img/promo-redesign.png" width="128" height="128" alt="ThinkUp 2.0 Redesign" style="float: left; padding-top: 20px;" />
 			
 			<h3><a href="http://expertlabs.org/2011/09/designing-thinkup-20.html">Preview ThinkUp 2.0's Redesign</a></h3>
-			<p>Get an early glimpse at Mule Design's design overhaul for ThinkUp 2.0. <a href="http://expertlabs.org/2011/09/designing-thinkup-20.html">Read more &raquo;</a></p>
+			<p>Want to see what's next? Peek at Mule Design's design overhaul for ThinkUp 2.0. <a href="http://expertlabs.org/2011/09/designing-thinkup-20.html">Read more &raquo;</a></p>
 		</li>	
 		<li id="promo-docs" style="overflow: display;">
 	
@@ -345,7 +383,7 @@
 	
 		<div id="community" class="grid_4 featurebox">
 			<h3>Join the Community</h3>
-			<p><img src="assets/img/nice-people.png" alt="100% Nice People" width="65" height="65" style="float: right; padding: 10px 20px 5px 10px;" />Our vibrant community connects on a mailing list, wiki, blog and Twitter &mdash; and we sincerely welcome newbies!</p>
+			<p><img src="assets/img/nice-people.png" alt="100% Nice People" width="65" height="65" style="float: right; padding: 10px 20px 5px 10px;" />Our vibrant community is growing quickly &mdash; and we sincerely welcome newbies!</p>
 			<ul>
 				<li><a href="http://thinkupapp.com/docs/">ThinkUp Documentation</a></li>
 				<li><a href="http://groups.google.com/group/thinkupapp">ThinkUp Community Mailing List</a></li>
@@ -360,7 +398,7 @@
 		
 		<div id="developers" class="grid_4 featurebox">
 			<h3>Welcoming All Developers</h3>
-			<p><img src="assets/img/gina-trapani.jpg" alt="Gina Trapani" width="70" height="70" style="float: right; padding: 10px 10px 0px 10px;" /><a href="http://ginatrapani.org/">Gina Trapani</a> began building ThinkUp in 2009 as a personal project. Today, our developer community powers one of the most inclusive &amp; innovative open source projects in the world.</p>
+			<p><img src="assets/img/gina-trapani.jpg" alt="Gina Trapani" width="70" height="70" style="float: right; padding: 10px 10px 0px 10px;" /><a href="http://ginatrapani.org/">Gina Trapani</a> began building ThinkUp in 2009 as a personal project. Today, our developer community is one of the most inclusive open source projects in the world.</p>
 			<ul>
 				<li><a href="http://github.com/ginatrapani/thinkup">ThinkUp Source Code</a> (GitHub)</li>
 				<li><a href="http://groups.google.com/a/expertlabs.org/group/thinkup-dev">Developer Mailing List</a></li>
@@ -371,7 +409,7 @@
 		
 		<div id="expertlabs" class="grid_4 featurebox">
 			<h3>Software with a Purpose</h3>
-			<p><img src="assets/img/expert-labs-logo.png" alt="Expert Labs" width="62" height="62" style="float: right; padding: 10px;" />Development of ThinkUp is led by <a href="http://expertlabs.org/">Expert Labs</a>, a non-profit startup that helps government be more effective by tapping in to the power of social networks.</p>
+			<p><img src="assets/img/expert-labs-logo.png" alt="Expert Labs" width="62" height="62" style="float: right; padding: 10px;" />Development of ThinkUp is led by <a href="http://expertlabs.org/">Expert Labs</a>, a non-profit startup that helps government tap in to the power of social networks.</p>
 		
 			<p>From the White House to an ordinary citizens, anyone can use ThinkUp to gain insights through crowdsourcing. <a href="http://expertlabs.org/">Find out more &raquo;</a></p>
 		</div>
