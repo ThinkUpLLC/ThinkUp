@@ -36,7 +36,7 @@
 			font-size: x-large;
 		}
 		
-		strong, #promo a { color: #3B9877; }
+		strong, #promo a { color: #31C22D; }
 		
 		p {
 			font-size: 18px;
@@ -122,6 +122,8 @@
 			padding-bottom: 20px;
 			margin-top : 20px;
 			
+			width : 900px;
+			
 			border: 1px solid #c9c9c9;
 			
 			-moz-border-radius: 8px;
@@ -129,6 +131,10 @@
 			border-radius: 8px;    
 			box-shadow: 0 0 5px rgba(0,0,0,0.2);
 			margin-bottom: 1em;
+		}
+		
+		#identity {
+			width :  400px;
 		}
 
 		#identity h1 {
@@ -212,7 +218,7 @@
 		
 		a#download, a#download:link, a#download:visited {
 			display:block;
-			margin: 0px 100px 10px 100px;
+			margin: 0px 100px 30px 100px;
 			height: 65px;
 			overflow:visible;
 
@@ -249,7 +255,23 @@
 			padding-top: 20px;
 			padding-bottom: 20px;
 			margin-top: 40px;
+			/*
 			border-top: 1px solid silver;
+			*/
+
+			background: #7d7d7d;
+			/*
+			position : relative;
+			width : 960px;
+			clear: both;
+			margin: 75px auto 75px auto;
+			*/
+			border: 1px solid #c9c9c9;
+			
+			-moz-border-radius: 8px;
+			-webkit-border-radius: 8px;
+			border-radius: 8px;  			
+
 		}
 		
 		#footer p {
@@ -257,8 +279,10 @@
 			font-size: small;
 		}
 		
-		#footer a { font-weight: normal; }
-		
+		#footer a {
+			font-weight: normal;
+			color: #00bdf2;
+		}
 
 	</style> 
 	
@@ -320,7 +344,7 @@
 	<div id="intro" class="clearfix" >
 	
 		<div id="introtext" class="grid_6 ">
-			<p>ThinkUp is a <strong>free</strong>, <strong>open source</strong> web application that captures your posts, tweets, replies, retweets, friends, followers and links on social networks like Twitter, Facebook and Google+.</p>
+			<p>ThinkUp is a <strong>free</strong>, <strong>open source</strong> web application that captures all your activity on social networks like Twitter, Facebook and Google+.</p>
 			<p>With ThinkUp, you can store your social activity in a database
 			that <strong>you control</strong>, making it easy to search, sort, analyze, publish and display activity from your network. All you need is a web server that can run a PHP application.</p>
 			<a id="download" href="http://github.com/ginatrapani/thinkup/downloads"><h3>Download ThinkUp &raquo;</h3><h4>Version 1.0 (1.3MB .zip)</h4></a>
