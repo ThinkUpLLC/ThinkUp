@@ -77,7 +77,7 @@
               <label>Time Zone</label>
             </div>
             <div class="grid_14 prefix_1 left">
-              <select name="timezone" id="timezone" style="margin-top:1.25em">
+              <select name="timezone" id="timezone">
               <option value=""{if $current_tz eq ''} selected{/if}>Select a Time Zone:</option>
                 {foreach from=$tz_list key=group_name item=group}
                   <optgroup label='{$group_name}'>
