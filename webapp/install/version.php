@@ -26,6 +26,10 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Dwi Widiastuti, Gina Trapani, Guillaume Boudreau
  */
-$THINKUP_VERSION = '0.17';
+if (file_exists(dirname(__FILE__) . '/../../.git')) {
+    $THINKUP_VERSION = 'git ' . shell_exec('git log -1 --pretty=format:%h%d');
+} else {
+    $THINKUP_VERSION = 'beta 0.17';
+}
 $THINKUP_VERSION_REQUIRED['php'] = '5.2';
 $THINKUP_VERSION_REQUIRED['mysql'] = '5';
