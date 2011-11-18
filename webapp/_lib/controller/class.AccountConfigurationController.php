@@ -46,7 +46,6 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
     public function authControl() {
         $this->disableCaching();
-
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');

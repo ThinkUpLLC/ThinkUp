@@ -239,14 +239,14 @@
   
   <div class="clearfix bt append prepend">
     <div class="grid_14 small alpha">
-        <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name}</span><br>
-        <small>{$o->email}</small>
+        <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
+        <small>{$o->email|filter_xss}</small>
         <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
          {if $o->instances neq null}
          <br><br>Service users:
          <span style="color:#666"><br><small>
           {foreach from=$o->instances key=iid item=i}
-              {$i->network_username} | {$i->network|capitalize}
+              {$i->network_username|filter_xss} | {$i->network|capitalize}
               {if !$i->is_active} (paused){/if}<br>
           {/foreach}
         {else}
