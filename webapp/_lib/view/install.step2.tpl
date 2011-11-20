@@ -30,7 +30,7 @@
     <img id="dart2" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
-        <form class="input" name="form1" method="post" action="index.php?step=3">
+        <form class="input" name="install_form" method="post" action="index.php?step=3">
             {include file="_usermessage.tpl"}
 
             <h2 class="clearfix step_title">Create Your ThinkUp Account</h2>
@@ -58,7 +58,14 @@
               <label>Choose&nbsp;Password</label>
             </div>
             <div class="grid_14 prefix_1 left">
-              <input type="password" name="password" id="password"{if isset($password)} value="{$password}"{/if}>
+              <input type="password" name="password" id="password"{if isset($password)} value="{$password}"{/if}
+              class="password" onfocus="$('#password-meter').show();">
+                <div class="password-meter" style="display:none;" id="password-meter">
+                    <div class="password-meter-message"></div>
+                    <div class="password-meter-bg">
+                        <div class="password-meter-bar"></div>
+                    </div>
+                </div>
             </div>
           </div>
 
@@ -67,7 +74,8 @@
               <label>Confirm Password</label>
             </div>
             <div class="grid_14 prefix_1 left">
-              <input type="password" name="confirm_password" id="confirm_password"{if isset($confirm_password)} value="{$confirm_password}"{/if}>
+              <input type="password" name="confirm_password" id="confirm_password"
+              {if isset($confirm_password)} value="{$confirm_password}"{/if} class="password">
             </div>
           </div>
 
@@ -145,7 +153,7 @@
               <label>Password</label>
             </div>
             <div class="grid_14 prefix_1 left">
-              <input type="password" name="db_passwd" id="db_passwd"{if isset($db_passwd)} value="{$db_passwd}"{/if}>
+              <input type="password" name="db_passwd" class="ignore" id="db_passwd"{if isset($db_passwd)} value="{$db_passwd}"{/if}>
               <span class="input_information">Your MySQL password.</span>
             </div>
           </div>
