@@ -53,6 +53,12 @@ class RegisterController extends ThinkUpController {
             $controller = new DashboardController(true);
             return $controller->go();
         } else {
+            // register form validation
+            $this->addHeaderCSS('assets/css/validate_password.css');
+            $this->addHeaderJavaScript('assets/js/jquery.validate.min.js');
+            $this->addHeaderJavaScript('assets/js/jquery.validate.password.js');
+            $this->addHeaderJavaScript('assets/js/validate_password.js');
+
             $config = Config::getInstance();
             $is_registration_open = $config->getValue('is_registration_open');
 

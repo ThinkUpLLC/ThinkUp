@@ -37,10 +37,13 @@ class TestController extends ThinkUpController {
             $this->setContentType('text/plain');
         } else if (isset($_GET['png'])) {
             $this->setContentType('image/png');
+        } else if (isset($_GET['css'])) {
+            $this->addHeaderCSS('assets/css/bla.css');
+            $this->setViewTemplate('session.login.tpl');
         }
         if (isset($_GET['throwexception'])) {
             throw new Exception("Testing exception handling!");
-        } else if (!isset($_GET['json'])) {
+        } else if (!isset($_GET['json']) && ! isset($_GET['css'])) {
             $this->setViewTemplate('testme.tpl');
             $this->addToView('test', 'Testing, testing, 123');
         }

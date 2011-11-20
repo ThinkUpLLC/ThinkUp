@@ -14,7 +14,7 @@
         </div>
         
         {if !$closed and !$has_been_registered}
-        <form name="form1" method="post" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login append_20">
+        <form name="form1" method="post" id="registerform" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login append_20">
           <div class="clearfix">
             <div class="grid_4 prefix_2 right">
               <label for="full_name">
@@ -56,11 +56,13 @@
               </label>
             </div>
             <div class="grid_10 left">
-              <input name="pass1" type="password" id="pass1">
-              <small>
-                <br>
-                At least 8 characters and with both numbers and letters.
-              </small>
+              <input name="pass1" type="password" id="pass1" class="password" onfocus="$('#password-meter').show();">
+                <div class="password-meter" style="display:none;" id="password-meter">
+                    <div class="password-meter-message"></div>
+                    <div class="password-meter-bg">
+                        <div class="password-meter-bar"></div>
+                    </div>
+                </div>
             </div>
           </div>
           <div class="clearfix">
@@ -70,7 +72,7 @@
               </label>
             </div>
             <div class="grid_10 left">
-              <input name="pass2" type="password" id="pass2">
+              <input name="pass2" type="password" id="pass2" class="password">
               <small>
                 <br>
               </small>
