@@ -59,7 +59,11 @@ abstract class ThinkUpController {
      * @var araray
      */
     protected $header_scripts = array ();
-
+    /**
+     *
+     * @var araray
+     */
+    protected $header_css = array ();
     /**
      *
      * @var array
@@ -192,7 +196,10 @@ abstract class ThinkUpController {
         if ( count($this->header_scripts) > 0) {
             $this->addToView('header_scripts', $this->header_scripts);
         }
-
+        // add header CSS if defined
+        if ( count($this->header_css) > 0) {
+            $this->addToView('header_css', $this->header_css);
+        }
         // add CSRF token if enabled and defined
         if ($this->view_csrf_token) {
             $csrf_token = Session::getCSRFToken();
@@ -353,7 +360,23 @@ abstract class ThinkUpController {
     public function addHeaderJavaScript($script) {
         array_push($this->header_scripts, $script);
     }
-
+    /**
+     * Add CSS to header
+     *
+     * @param str CSS path
+     */
+    public function addHeaderCSS($css) {
+        array_push($this->header_css, $css);
+    }
+    /**
+     * get CSS scripts
+     *
+     * @return array List of CSS files
+     */
+    public function getHeaderCSS() {
+        return $this->header_css;
+    }
+    
     /**
      * Add data to view template engine for rendering
      *
