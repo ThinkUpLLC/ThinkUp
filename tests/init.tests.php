@@ -56,3 +56,4 @@ THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/',
 THINKUP_ROOT_PATH . 'webapp/plugins/hellothinkup/tests/',
 THINKUP_ROOT_PATH . 'webapp/plugins/googleplus/tests/'
 ));
+

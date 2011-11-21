@@ -197,7 +197,7 @@
             </div>
             {if !$permissions_compat}
             <div class="clearfix append_20 info_message">
-              <p>ThinkUp requires the <code>_lib/view/compiled_view/</code> directory and every folder and file inside it to be writable. <a href="http://thinkupapp.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
+              <p>ThinkUp requires the directory defined in <code>$THINKUP_CFG['datadir_path']</code> (by default a directory named <code>data</code> one-up from the <code>webapp</code> directory) and every folder and file inside it to be writable. <a href="http://thinkupapp.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
             </div>
             {/if}
         {/if}

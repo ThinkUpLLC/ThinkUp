@@ -39,7 +39,7 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         new ExportMySQLDAO();
         $this->config = Config::getInstance();
         $this->pdo = ExportMySQLDAO::$PDO;
-        $this->export_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_user_export_test.zip';
+        $this->export_test = Utils::getDataPath('thinkup_user_export_test.zip');
 
         $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("secretpassword");
 
@@ -79,7 +79,7 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
     }
 
     private function deleteFile($file) {
-        $file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . "/" . $file;
+        $file = Utils::getBackupPath($file);
         if (file_exists($file)) {
             unlink($file);
         }

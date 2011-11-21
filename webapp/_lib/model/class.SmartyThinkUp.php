@@ -30,6 +30,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+
 class SmartyThinkUp extends Smarty {
     /**
      * @var boolean
@@ -103,9 +104,9 @@ class SmartyThinkUp extends Smarty {
 
         $this->Smarty();
         $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
-        $this->compile_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
+        $this->compile_dir = Utils::getDataPath('compiled_view');
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
-        $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
+        $this->cache_dir = $this->compile_dir . '/cache';
         $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = $cache_lifetime;
         $this->debug = $debug;
@@ -300,4 +301,5 @@ class SmartyThinkUp extends Smarty {
             parent::clear_all_cache($exp_time);
         }
     }
+
 }
