@@ -1,8 +1,8 @@
-Core Development Team
-======================
+Development Team
+================
 
-ThinkUp development is funded by Expert Labs, a non-profit startup that helps government be more effective by tapping
-in to the power of social networks.
+ThinkUp development is funded by `Expert Labs <http://expertlabs.org>`_, a non-profit startup that helps government
+be more effective by tapping in to the power of social networks.
 
 Expert Labs
 -----------
@@ -38,7 +38,11 @@ contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=anil
 Community
 ---------
 
-The core development team works with a growing community of volunteer and third-party contributors, some of whom are
+At ThinkUp, our goal is to create the most inclusive and innovative open source projects in the world. Read more about
+`how our community and culture is our best feature 
+<http://smarterware.org/7819/my-codeconf-talk-your-community-is-your-best-feature>`_.
+
+The Expert Labs team works with a growing community of volunteer and third-party contributors, some of whom are
 paid by their employer or through open source programs. 
 
 `See ThinkUp's full list of contributors <https://github.com/ginatrapani/ThinkUp/contributors>`_.

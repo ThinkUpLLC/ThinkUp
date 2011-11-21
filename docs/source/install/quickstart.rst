@@ -3,7 +3,8 @@ Quick Start
 
 ThinkUp includes a three-step, web-based installer. To use it:
 
-1. Download the latest distribution of `ThinkUp <http://thinkupapp.com>`_.
+1. `Download the latest distribution of ThinkUp <https://github.com/ginatrapani/thinkup/downloads>`_ under
+   "Download Packages."
 2. Extract the zip file into a web-accessible folder.
 3. Visit that URL in your browser and proceed through the installation process.
 

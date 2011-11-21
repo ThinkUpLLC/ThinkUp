@@ -1,5 +1,5 @@
-"This post has not been geoencoded yet; cannot display map"
-===========================================================
+This post has not been geoencoded yet; cannot display map
+=========================================================
 
 The :doc:`GeoEncoder plugin </userguide/settings/plugins/geoencoder>` uses the Google Maps API to store latitude and
 longitude points for each post and user.

@@ -73,4 +73,3 @@ of your social network.
 
 **Export:** Export your tweets at any time and open them as a spreadsheet in Excel for further analysis. Or just save
 them for recordkeeping.
-

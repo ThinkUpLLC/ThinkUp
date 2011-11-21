@@ -1,14 +1,16 @@
-Enable the verbose crawler log
-==============================
+Capture the output of ThinkUp's verbose crawler log
+===================================================
 
-To enable ThinkUp's verbose developer log, in the config.inc.php file, set the
+
+
+To capture the output of ThinkUp's verbose developer log, in the config.inc.php file, set the
 ``$THINKUP_CFG['log_location']`` value, like this::
 
  $THINKUP_CFG['log_location']              =
  $THINKUP_CFG['source_root_path'].'logs/crawler.log';
 
-Then, SSH into your web server, run the crawler at the command line and tail -f crawler.log as you go. The output will
-look something like this (annotated).
+Then, when the crawlwer runs, the crawler.log file will contain the output. To test, SSH into your web server, run the
+crawler at the command line and tail -f crawler.log as you go. The output will look something like this (annotated).
 
 .. image:: imgs/crawler_log_output.jpg
 
@@ -17,7 +19,7 @@ look something like this (annotated).
 Problem: the crawler log / SQL log are not being created
 --------------------------------------------------------
 
-At the moment, ThinkUp will not explicitly create the crawler log and sql log files. They need to be manually created
+At the moment, ThinkUp will not explicitly create the crawler log and SQL log files. They need to be manually created
 by you. To do this, execute this command:
 
 ``$ touch path/to/log/file.log``

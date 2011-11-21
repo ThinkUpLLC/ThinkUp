@@ -23,9 +23,9 @@ engine.
    intro
    install/index
    userguide/index
+   faq/index
    troubleshoot/index
-   community/index
    contact
    contribute/index
-   changelog
    core
+   changelog

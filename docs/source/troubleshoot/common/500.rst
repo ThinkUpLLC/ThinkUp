@@ -1,5 +1,5 @@
-Crawler constantly encounters Twitter API errors (ERROR 502)
-============================================================
+Crawler encounters Twitter API errors (ERROR 502)
+=================================================
 
 Twitter's API serves a lot of "fail whales", or HTTP errors. Every time ThinkUp encounters one, you will see it listed
 in red in your crawler log. By default, the ThinkUp crawler will give up after receiving 5 error responses from

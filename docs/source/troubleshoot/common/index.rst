@@ -1,8 +1,7 @@
 Common Problems
 ===============
 
-ThinkUp is a work in progress, and certain known problems which can occur on different server setups have simple 
-solutions.
+ThinkUp is a work in progress. Certain known problems can occur on different server setups have known solutions.
 
 .. toctree::
    :maxdepth: 1
@@ -10,7 +9,6 @@ solutions.
    emaildisabled
    admindeactivated
    cacert
-   outofdate
    500
    outofmemory
    crawlfail
@@ -20,7 +18,6 @@ solutions.
    changeemail
    backupcannotwrite
    slowbigdb
-   notgeoencodedyet
 
 Advanced Troubleshooting
 ------------------------
