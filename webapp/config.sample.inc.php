@@ -13,6 +13,9 @@ $THINKUP_CFG['site_root_path']            = '/thinkup/webapp/';
 // Server path to /thinkup/ source code folder, dirname( __FILE__ ) . '/'; by default
 $THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
 
+// Server path to writable data directory, dirname( __FILE__ ) . '/data'; by default
+$THINKUP_CFG['datadir_path']          = realpath(dirname( __FILE__ ) . '/..') . '/data';
+
 // Your timezone
 $THINKUP_CFG['timezone']                  = 'UTC';
 
@@ -44,15 +47,18 @@ $THINKUP_CFG['table_prefix']              = 'tu_';
 /************************************************/
 
 // Full server path to crawler.log.
+// $THINKUP_CFG['log_location']              = $THINKUP_CFG['datadir_path'] . '/logs/crawler.log';
 $THINKUP_CFG['log_location']              = false;
 
 // Verbosity of log. 0 is everything, 1 is user messages, 2 is errors only
 $THINKUP_CFG['log_verbosity']             = 0;
 
 // Full server path to stream processor log.
+// $THINKUP_CFG['stream_log_location']       = $THINKUP_CFG['datadir_path'] . '/logs/stream.log';
 $THINKUP_CFG['stream_log_location']       = false;
 
 // Full server path to sql.log. To not log queries, set to null.
+// $THINKUP_CFG['sql_log_location']          = $THINKUP_CFG['datadir_path'] . '/logs/sql.log';
 $THINKUP_CFG['sql_log_location']          = null;
 
 // How many seconds does a query take before it gets logged as a slow query?

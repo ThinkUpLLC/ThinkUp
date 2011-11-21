@@ -60,6 +60,12 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $crawler = Crawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
+        $backup_dir = Utils::getBackupPath();
+        if (!file_exists($backup_dir)) {
+          mkdir($backup_dir);
+          chmod($backup_dir, 0775);
+        }
+
         self::isTestEnvironmentReady();
     }
 
@@ -79,6 +85,13 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $this->unsetArray($_SERVER);
         $this->unsetArray($_FILES);
         Loader::unregister();
+        $backup_dir = Utils::getBackupPath();
+        if (file_exists($backup_dir)) {
+          try {
+            rmdir($backup_dir); // won't delete if has files
+          } catch (Exception $e) {
+          }
+        }
         parent::tearDown();
     }
 
@@ -158,15 +171,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     public static function isTestEnvironmentReady() {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
 
-        if (!is_writable(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view')) {
-            $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH. '_lib/view/compiled_view '.
-            "must be writable.";
-        }
-        if (!file_exists(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache')) {
-            if (!mkdir( THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache/', 0777)) {
-                $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH.
-                '_lib/view/compiled_view/cache/ must exist and be writable.';
-            }
+        $datadir_path = Utils::getDataPath();
+        if (!is_writable($datadir_path)) {
+            $message = "In order to test your ThinkUp installation, $datadir_path must be writable.";
         }
 
         if ($THINKUP_CFG['log_location'] === false) {

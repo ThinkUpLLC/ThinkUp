@@ -141,4 +141,16 @@ class Plugin {
         }
         return $this->options_hash;
     }
+
+    /**
+     * Resolve paths to the plugin's data directory, using the same folder name
+     * @return array
+     */
+    public function getDataPath($file=null) {
+      $path = 'plugins/' . $this->folder_name;
+      if ($file) {
+        $path = $path . '/' . $file;
+      }
+      return Utils::getDataPath($path);
+    }
 }

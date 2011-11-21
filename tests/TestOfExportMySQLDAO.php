@@ -242,7 +242,7 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         $more_data[] = FixtureBuilder::build('favorites', array('post_id'=>44, 'fav_of_user_id'=>13,
         'author_user_id'=>8, 'network'=>'twitter'));
 
-        $favorites_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/favorites.tmp';
+        $favorites_file = Utils::getBackupPath('favorites.tmp');
         if (file_exists($favorites_file)) {
             unlink($favorites_file);
         }
@@ -254,7 +254,7 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testExportGeoToFile() {
-        $file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/encoded_locations.tmp';
+        $file = Utils::getBackupPath('encoded_locations.tmp');
         if (file_exists($file)) {
             unlink($file);
         }
@@ -264,9 +264,9 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testExportToFile() {
-        $posts_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/posts.tmp';
-        $links_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/links.tmp';
-        $users_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/users.tmp';
+        $posts_table_file = Utils::getBackupPath('posts.tmp');
+        $links_table_file = Utils::getBackupPath('links.tmp');
+        $users_table_file = Utils::getBackupPath('users.tmp');
         if (file_exists($posts_table_file)) {
             unlink($posts_table_file);
         }

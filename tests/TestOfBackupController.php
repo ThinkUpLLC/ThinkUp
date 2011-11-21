@@ -36,9 +36,9 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         new BackupMySQLDAO();
         $this->config = Config::getInstance();
         $this->pdo = BackupMySQLDAO::$PDO;
-        $this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/.htthinkup_db_backup.zip';
-        $this->backup_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup_test.zip';
-        $this->backup_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/backup';
+        $this->backup_file = Utils::getDataPath('.htthinkup_db_backup.zip');
+        $this->backup_test = Utils::getDataPath('thinkup_db_backup_test.zip');
+        $this->backup_dir = Utils::getBackupPath() . '/';
     }
 
     public function tearDown() {
@@ -50,7 +50,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
             unlink($this->backup_test);
         }
         if (file_exists($this->backup_dir)) {
-            unlink($this->backup_dir);
+            rmdir($this->backup_dir);
         }
 
         //set zip class requirement class name back
@@ -157,6 +157,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $q2 = "show create table ";
         $stmt = $this->pdo->query($q);
         // verify we have all table files
+
         while($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             foreach($data as $key => $value) {
                 $zfile = '/' . $value .'.txt';

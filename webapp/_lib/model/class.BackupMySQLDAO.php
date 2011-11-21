@@ -48,8 +48,8 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
                 // extract zipfile
                 // create backip dir
-                $bkdir = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/backup';
-                if (! file_exists($bkdir)) {
+                $bkdir = Utils::getBackupPath();
+                if (!file_exists($bkdir)) {
                     mkdir($bkdir);
                 }
                 $zip->extractTo($bkdir);
@@ -115,7 +115,8 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $stmt = $this->execute($q);
         $data = $this->getDataRowsAsArrays($stmt);
         $create_tables = '';
-        $zip_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htthinkup_db_backup.zip';
+
+        $zip_file = Utils::getDataPath('.htthinkup_db_backup.zip');
         if ($backup_file) {
             $zip_file = $backup_file;
         }
@@ -129,6 +130,14 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         if ($zip_create_status) {
             unlink($zip_file);
         }
+
+        $bkdir = Utils::getBackupPath();
+        if (!file_exists($bkdir)) {
+          mkdir($bkdir);
+          // the directory is created by running user, mysql might not have access, hopefully share a group
+          chmod($bkdir, 0775);
+        }
+
         if (! $zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
             throw new Exception("Unable to open backup file for exporting: $zip_file");
         }
@@ -157,7 +166,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                     $create_tables .= "\n\n";
 
                     // export table data
-                    $table_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/' . $value . '.txt';
+                    $table_file = Utils::getBackupPath($value . '.txt');
                     if (file_exists($table_file)) {
                         unlink($table_file);
                     }
@@ -168,6 +177,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 }
             }
         } catch(Exception $e) {
+          die($e->getMessage());
             $err = $e->getMessage();
             if (preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
                 // a file perm issue?
@@ -181,6 +191,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
             error_log("export DB OUTFILE error: " . $e->getMessage());
         }
         // unlock tables...
+
         $stmt = $this->execute("unlock tables");
         if (getenv('BACKUP_VERBOSE')!==false) {
             print "\n  Backing up create table statments\n";

@@ -12,7 +12,7 @@ or
 or
 
 ``PDOException: SQLSTATE[HY000]: General error: 1 Can't create/write to file 
-'<thinkup>/webapp/_lib/view/compiled_view/tu_encoded_locations.txt' (Errcode: 13)``
+'<thinkup>/webapp/data/compiled_view/tu_encoded_locations.txt' (Errcode: 13)``
 
 ThinkUp's backup or export tool doesn't have the permissions it needs to back up your files. Make sure that the MySQL 
 user has GRANT FILE and LOCK TABLE privileges in the database as well as write privileges to the compiled_view 
