@@ -9,6 +9,9 @@ ThinkUp is a work in progress. Certain known problems can occur on different ser
    emaildisabled
    admindeactivated
    cacert
+   mysqlgoneaway
+   prematureend
+   internalservererror
    500
    outofmemory
    crawlfail
