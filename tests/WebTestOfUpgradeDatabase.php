@@ -331,7 +331,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->get($token_url);
             $content = $this->getBrowser()->getContent();
             preg_match("/sql_array = (\[.*?}])/", $content, $matches);
-            $json_array = json_decode($matches[1]);
+            if(isset($matches[1])) {
+                $json_array = json_decode($matches[1]);
+            }
             $cnt = 0;
             if (isset($json_array)) {
                 foreach($json_array as $json_migration) {
