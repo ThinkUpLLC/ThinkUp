@@ -70,7 +70,9 @@ can take to secure the application and the data it stores.
 
 The ThinkUp development team strongly urges all users to:
 
-**Use strong, unique passwords** for your ThinkUp user account as well as all your social network accounts.
+**Run ThinkUp on a dedicated server.** On a shared web server, other server users potentially can access PHP session
+files and ThinkUp's configuration file, which contains your database username and password. Install
+ThinkUp on a dedicated (even if virtual) server to prevent unauthorized data access.
 
 **Use an encrypted connection.** Run ThinkUp on a web server with https/SSL or only access your ThinkUp installation
 through a VPN or secure proxy, so that no one can "sniff" your ThinkUp password when you log in.
@@ -80,6 +82,9 @@ access permissions to all your MySQL databases. Set up a ThinkUp-specific databa
 ThinkUp database, not any others.
 
 **Make sure no ThinkUp files are writable** except the ones :doc:`required by the application </install/perms>`.
+
+**Use strong, unique passwords** for your ThinkUp user account as well as all your social network accounts.
+
 
 How to Report a Security Bug
 ----------------------------
