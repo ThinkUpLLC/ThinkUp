@@ -3,8 +3,8 @@
 /***  APPLICATION CONFIG                      ***/
 /************************************************/
 
-// Application title
-$THINKUP_CFG['app_title']                 = 'ThinkUp';
+// Application title prefix - 'ThinkUp' will be appended to it in page titles
+$THINKUP_CFG['app_title_prefix']                 = '';
 
 // Public path of thinkup's /webapp/ folder on your web server.
 // For example, if the /webapp/ folder is located at http://yourdomain/thinkup/, set to '/thinkup/'.
