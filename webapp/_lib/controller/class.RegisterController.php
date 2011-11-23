@@ -72,14 +72,16 @@ class RegisterController extends ThinkUpController {
             $this->addToView('invite_code', $invite_code);
             $is_invite_code_valid = $invite_dao->isInviteValid($invite_code);
             if ($invite_code != null && $is_invite_code_valid) {
-                $this->addSuccessMessage("Welcome, VIP! You've been invited to register on this ThinkUp installation.");
+                $this->addSuccessMessage("Welcome, VIP! You've been invited to register on ".
+                $config->getValue('app_title_prefix')."ThinkUp.");
             }
 
             $has_been_registered = false;
             if ( !$is_registration_open && !$is_invite_code_valid ){
                 $this->addToView('closed', true);
                 $disable_xss = true;
-                $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+                $this->addErrorMessage('<p>Sorry, registration is closed on this installation of '.
+                $config->getValue('app_title_prefix')."ThinkUp.</p>".
                 '<p><a href="http://thinkupapp.com">Install ThinkUp on your own server.</a></p>', null, $disable_xss);
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
@@ -131,8 +133,8 @@ class RegisterController extends ThinkUpController {
                                     $es->assign('activ_code', $activation_code );
                                     $message = $es->fetch('_email.registration.tpl');
 
-                                    Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
-                                    ." Account", $message);
+                                    Mailer::mail($_POST['email'], "Activate Your Account on ".
+                                    $config->getValue('app_title_prefix')."ThinkUp", $message);
 
                                     SessionCache::unsetKey('ckey');
                                     $this->addSuccessMessage("Success! Check your email for an activation link.");

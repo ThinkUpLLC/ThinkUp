@@ -66,14 +66,14 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
         $cfg->setValue('cache_lifetime', 1200);
-        $cfg->setValue('app_title', 'Testy ThinkUp Custom Application Name');
+        $cfg->setValue('app_title_prefix', 'Testy ');
         $cfg->setValue('site_root_path', '/my/thinkup/folder/');
         $v_mgr = new SmartyThinkUp();
 
         $v_mgr->assign('test_var_1', "Testing, testing, 123");
         $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
 
-        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'Testy ThinkUp Custom Application Name');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), ($cfg->getValue('app_title_prefix')  . 'ThinkUp'));
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
         $this->assertEqual($v_mgr->cache_lifetime, 1200);
@@ -99,8 +99,8 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testSmartyThinkUpPassedInArray() {
         $cfg_array = array('debug'=>true,
         'site_root_path'=>'/my/thinkup/folder/test',
-        'source_root_path'=>'/Users/gina/Sites/thinkup', 
-        'app_title'=>"My ThinkUp", 
+        'source_root_path'=>'/Users/gina/Sites/thinkup',
+        'app_title_prefix'=>'My ',
         'cache_pages'=>true, 'cache_lifetime'=>1000);
         $v_mgr = new SmartyThinkUp($cfg_array);
 

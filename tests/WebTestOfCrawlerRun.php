@@ -49,7 +49,8 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
 
         $this->click("Log In");
 
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
+        "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
 

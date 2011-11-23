@@ -44,13 +44,14 @@ class ForgotPasswordController extends ThinkUpController {
                 $es->caching=false;
 
                 $config = Config::getInstance();
-                $es->assign('apptitle', $config->getValue('app_title') );
+                $es->assign('apptitle', $config->getValue('app_title_prefix')."ThinkUp" );
                 $es->assign('recovery_url', "session/reset.php?token=$token");
                 $es->assign('server', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
                 $es->assign('site_root_path', $config->getValue('site_root_path') );
                 $message = $es->fetch('_email.forgotpassword.tpl');
 
-                Mailer::mail($_POST['email'], $config->getValue('app_title') . " Password Recovery", $message);
+                Mailer::mail($_POST['email'], $config->getValue('app_title_prefix') . "ThinkUp Password Recovery",
+                $message);
 
                 $this->addSuccessMessage('Password recovery information has been sent to your email address.');
             } else {

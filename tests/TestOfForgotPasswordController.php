@@ -72,6 +72,7 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
 
     public function testOfControllerWithValidEmailAddress() {
         $config = Config::getInstance();
+        $config->setValue('app_title_prefix', '');
         $site_root_path = $config->getValue('site_root_path');
         $_POST['email'] = 'me@example.com';
         $_POST['Submit'] = "Send Reset";
@@ -92,8 +93,32 @@ http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset.
         $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
     }
 
+    public function testOfControllerWithValidEmailAddressAndAppPrefix() {
+        $config = Config::getInstance();
+        $config->setValue('app_title_prefix', "Angelina Jolie's ");
+        $site_root_path = $config->getValue('site_root_path');
+        $_POST['email'] = 'me@example.com';
+        $_POST['Submit'] = "Send Reset";
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $controller = new ForgotPasswordController(true);
+        $result = $controller->go();
+
+        $this->assertTrue(strpos($result, 'Password recovery information has been sent to your email address.') > 0);
+
+        $actual_forgot_email = Mailer::getLastMail();
+        $this->debug($actual_forgot_email);
+        $expected_forgot_email_pattern = '/to: me@example.com
+subject: Angelina Jolie\'s ThinkUp Password Recovery
+message: Hi there!
+
+Looks like you forgot your Angelina Jolie&#39;s ThinkUp password. Go to this URL to reset it:
+http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset.php/';
+        $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
+    }
+
     public function testOfControllerWithValidEmailAddressAndSSL() {
         $config = Config::getInstance();
+        $config->setValue('app_title_prefix', '');
         $site_root_path = $config->getValue('site_root_path');
         $_POST['email'] = 'me@example.com';
         $_POST['Submit'] = "Send Reset";

@@ -53,7 +53,7 @@ class InstallerController extends ThinkUpController {
             'source_root_path'=>THINKUP_ROOT_PATH,
             'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
             'debug'=>false,
-            'app_title'=>"ThinkUp",
+            'app_title_prefix'=>'',
             'cache_pages'=>false);
         $this->view_mgr = new SmartyThinkUp($cfg_array);
         $this->setPageTitle('Install ThinkUp');
@@ -369,7 +369,7 @@ class InstallerController extends ThinkUpController {
             'site_root_path'=>THINKUP_BASE_URL,
             'source_root_path'=>THINKUP_ROOT_PATH,
             'debug'=>false,
-            'app_title'=>"ThinkUp",
+            'app_title_prefix'=>"",
             'cache_pages'=>false);
             $email_view = new SmartyThinkUp($cfg_array);
             $email_view->caching=false;

@@ -41,7 +41,7 @@ class Mailer {
     public static function mail($to, $subject, $message) {
         $config = Config::getInstance();
 
-        $app_title = $config->getValue('app_title');
+        $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
         $host = self::getHost();
 
         $mail_header = "From: \"{$app_title}\" <notifications@{$host}>\r\n";

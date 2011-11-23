@@ -49,7 +49,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->click("Log In");
         //        $this->showSource();
 
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix') ."ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
     }
@@ -73,7 +73,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
 
         //make sure it takes you to posts view
         $this->assertText('No posts to display');
-        $this->assertTitle("thinkupapp on Twitter | ThinkUp");
+        $this->assertTitle("thinkupapp on Twitter | ". Config::getInstance()->getValue('app_title_prefix') ."ThinkUp");
 
         //not the login screen
         $this->assertNoText("Password");
@@ -85,10 +85,10 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
         $this->get($this->url.'/user/index.php?i=thinkupapp&u=ev&n=twitter');
-        $this->assertTitle('User Details: ev | ThinkUp');
+        $this->assertTitle('User Details: ev | ' . Config::getInstance()->getValue('app_title_prefix') . 'ThinkUp');
         $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('ev');
 
@@ -102,10 +102,10 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
         $this->click("Settings");
-        $this->assertTitle('Configure Your Account | ThinkUp');
+        $this->assertTitle('Configure Your Account | '. Config::getInstance()->getValue('app_title_prefix'). 'ThinkUp');
         $this->assertText('Expand URLs');
 
         $this->click("Twitter");
@@ -119,7 +119,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
         $this->get($this->url.'/index.php?v=tweets-all&u=thinkupapp&n=twitter');
         //        $this->showSource();

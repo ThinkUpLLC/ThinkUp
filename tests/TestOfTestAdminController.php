@@ -71,6 +71,7 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
     public function testLoggedInAsAdmin() {
         $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "");
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
         $controller = new TestAdminController(true);
@@ -82,13 +83,14 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
 
         $this->assertEqual($results,
-        '<a href="/my/path/to/thinkup/">ThinkUp</a>: Testing, testing, 123 | Logged in as me@example.com', 
+        '<a href="/my/path/to/thinkup/">ThinkUp</a>: Testing, testing, 123 | Logged in as me@example.com',
         "auth controller output when logged in");
     }
 
     public function testLoggedInNotAsAdmin() {
         $this->simulateLogin('me@example.com');
         $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "");
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
         $controller = new TestAdminController(true);

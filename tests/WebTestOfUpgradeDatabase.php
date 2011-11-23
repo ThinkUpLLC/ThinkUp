@@ -254,6 +254,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->click("Configuration");
             $this->debug("Clicked Configuration");
         }
+        $config = Config::getInstance();
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('admin');
 
@@ -263,7 +264,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         // build latest  version for testing
         $migration_sql_dir = THINKUP_ROOT_PATH . 'webapp/install/sql/mysql_migrations/';
         $latest_migration_file = false;
-        $config = Config::getInstance();
 
         $current_version = $config->getValue('THINKUP_VERSION');
         $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');

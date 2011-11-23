@@ -70,14 +70,14 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
         $this->click("Log In");
 
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
     }
 
     public function testAllTweets() {
         $this->get($this->url.'/index.php?v=tweets-all&u=ev&n=twitter');
-        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertTitle("ev on Twitter | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 39');
         $this->assertText('This is post 38');
         $this->assertText('This is post 37');
@@ -86,7 +86,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
     public function testLinksFromFriends() {
         $this->get($this->url.'/index.php?v=links-friends&u=ev&n=twitter');
-        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertTitle("ev on Twitter | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         //$this->showSource();
         $this->assertText('This is link post 25');
         $this->assertText('Link 25');
@@ -102,7 +102,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
         $this->click("Log In");
 
         $this->get($this->url.'/index.php?v=links-friends&u=ev&n=twitter');
-        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertTitle("ev on Twitter | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         //$this->showSource();
         $this->assertText('This is link post 39');
         $this->assertText('Link 39');
@@ -112,7 +112,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
     public function testPhotosByFriends() {
         $this->get($this->url.'/index.php?v=links-photos&u=ev&n=twitter');
-        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertTitle("ev on Twitter | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is image post 25');
         //not logged in, shouldn't display private image post
         $this->assertNoText('This is private image post 1');
@@ -126,7 +126,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
         $this->click("Log In");
 
         $this->get($this->url.'/index.php?v=links-photos&u=ev&n=twitter');
-        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertTitle("ev on Twitter | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is image post 39');
         //logged in, should display private image post
         $this->assertText('This is private image post 1');

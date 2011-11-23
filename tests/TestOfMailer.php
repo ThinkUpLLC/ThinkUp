@@ -46,20 +46,20 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
 
     public function testFromName() {
         $config = Config::getInstance();
-        $config->setValue("app_title", "My Crazy Custom ThinkUp Named Installation");
+        $config->setValue("app_title_prefix", "My Crazy Custom ");
         $_SERVER['HTTP_HOST'] = "my_thinkup_hostname";
         Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
         $email_body = Mailer::getLastMail();
         $this->debug($email_body);
-        $this->assertPattern('/From: "My Crazy Custom ThinkUp Named Installation" <notifications@my_thinkup_hostname>/',
-        $email_body, 'Headers set to custom application name');
+        $this->assertPattern('/From: "My Crazy Custom ThinkUp" <notifications@my_thinkup_hostname>/',
+        $email_body);
 
-        $config->setValue("app_title", "My Other TU App Install");
+        $config->setValue("app_title_prefix", "My Other Installation of ");
         $_SERVER['HTTP_HOST'] = "my_other_hostname";
         Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
         $email_body = Mailer::getLastMail();
         $this->debug($email_body);
-        $this->assertPattern('/From: "My Other TU App Install" <notifications@my_other_hostname>/',
-        $email_body, 'Headers set to custom application name');
+        $this->assertPattern('/From: "My Other Installation of ThinkUp" <notifications@my_other_hostname>/',
+        $email_body);
     }
 }

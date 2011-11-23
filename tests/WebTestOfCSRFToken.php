@@ -63,7 +63,8 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
 
         //Open setting page
         $this->click("Settings");
-        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertTitle("Configure Your Account | " .  Config::getInstance()->getValue('app_title_prefix') .
+        "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         // look for global js token

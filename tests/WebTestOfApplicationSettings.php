@@ -44,7 +44,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
     public function testOpenRegistration() {
         //Assert registration is closed by default
         $this->get($this->url.'/session/register.php');
-        $this->assertText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertText('Sorry, registration is closed on this installation of ');
 
         //Log in as admin
         $this->get($this->url.'/session/login.php');
@@ -54,7 +54,8 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
 
         //Open registration
         $this->click("Settings");
-        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') .
+        "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         // NOTE: this uses an ajax call, so we need to set up the post ourselves
@@ -75,17 +76,16 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
     }
 
     public function testCSRFToken() {
-
         //Log in as admin
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-
         //Open registration bad token
         $this->click("Settings");
-        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') .
+        "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         // we should have a global js token

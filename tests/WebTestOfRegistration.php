@@ -49,7 +49,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
 
     public function testRegistrationClosedByDefault() {
         $this->get($this->url.'/session/register.php');
-        $this->assertText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertText('Sorry, registration is closed on this installation of');
     }
 
     public function testSuccessfulRegistration() {
@@ -58,7 +58,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
         'option_name'=>'is_registration_open', 'option_value'=>'true'));
 
         $this->get($this->url.'/session/register.php');
-        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertNoText('Sorry, registration is closed on this installation of');
 
         $this->setFieldById('full_name', 'Test User');
         $this->setFieldById('email', 'TestUser@example.com');
@@ -67,7 +67,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
         $this->setFieldById('user_code', '123456');
         $this->clickSubmitById('login-save');
 
-        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertNoText('Sorry, registration is closed on this installation of');
         //$this->showSource();
         $this->assertText('Success! Check your email for an activation link.');
     }
@@ -97,7 +97,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
 
     public function testInvalidInvitationCode() {
         $this->get($this->url.'/session/register.php?code=invalidcode');
-        $this->assertText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertText('Sorry, registration is closed on this installation of');
     }
 
     public function testValidInvitationCode() {

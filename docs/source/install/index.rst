@@ -11,6 +11,7 @@ everything you need to know to get ThinkUp up and running on your web server.
    hostingproviders
    quickstart
    install
+   advancedconfig
    upgrade
    backup
    perms

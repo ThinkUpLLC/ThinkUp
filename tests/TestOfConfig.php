@@ -154,4 +154,13 @@ class TestOfConfig extends ThinkUpUnitTestCase {
 
         $this->restoreConfigFile();
     }
+
+    public function testGetUnsetDefaultValue() {
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        $config = Config::getInstance(array('timezone' => 'America/Los_Angeles'));
+        $this->assertEqual($config->getValue('app_title_prefix'), '');
+        $this->assertNotNull($config->getValue('app_title_prefix'));
+        $this->restoreConfigFile();
+    }
 }

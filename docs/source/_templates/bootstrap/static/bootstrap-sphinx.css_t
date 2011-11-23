@@ -23,3 +23,10 @@ div.documentwrapper {
   {%- endif %}
 {%- endblock %}
 
+cite, code, tt {
+    font-family: 'Consolas', 'Deja Vu Sans Mono',
+                 'Bitstream Vera Sans Mono', monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.01em;
+    background-color:#eee;
+}
