@@ -131,7 +131,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Visit Settings page and assert content there
         $this->click("Settings");
-        $this->assertTitle('Configure Your Account | ThinkUp');
+        $this->assertTitle('Configure Your Account | ' . Config::getInstance()->getValue('app_title_prefix') . 'ThinkUp');
         $this->assertText('admin');
     }
 

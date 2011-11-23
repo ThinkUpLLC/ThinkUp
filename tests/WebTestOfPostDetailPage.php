@@ -43,8 +43,9 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
     }
 
     public function testPostPageNotLoggedIn() {
+        $cfg = Config::getInstance();
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
         // allow search for non logged in users
         $this->assertPattern('/Search/');
@@ -55,12 +56,13 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertNoText('GeoEncoder');
 
         $this->click('Retweets');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
         $this->assertNoText('GeoEncoder');
     }
 
     public function testPostPageLoggedIn() {
+        $cfg = Config::getInstance();
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -68,7 +70,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->click("Log In");
 
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
 
         $this->assertField('Go', 'Go');
@@ -77,18 +79,20 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertNoText('Response Map');
 
         $this->click('Retweets');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
         $this->assertNoText('Response Map');
     }
 
     public function testPostPageWithGeoencoderEnabled() {
+        $cfg = Config::getInstance();
+
         //enable GeoEncoder plugin
         $builder = FixtureBuilder::build('plugins', array('name'=>'Geoencoder', 'folder_name'=>'geoencoder',
         'is_active'=>1));
 
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
         $this->assertPattern('/Search/'); // we now allow search for non logged in users...
         $this->assertText('Retweets');
@@ -96,7 +100,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertText('Nearest Replies');
 
         $this->click('Nearest replies');
-        $this->assertTitle("Post Details | ThinkUp");
+        $this->assertTitle("Post Details | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('This is post 10');
     }
 

@@ -52,7 +52,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
