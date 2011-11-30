@@ -96,32 +96,31 @@
         {include file="_usermessage.tpl" field='password'}
         {insert name="help_link" id='account'}
         <h1>Password</h1><br />
-          <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
+          <form name="changepass" id="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_7 prefix_1 right"><label for="oldpass">Current password:</label></div>
-              <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
-                <input name="oldpass" type="password" id="oldpass">
+              <div class="grid_7 left" style="margin: 0px 0px 10px 5px; width:360px;">
+                <input name="oldpass" type="password" id="oldpass" style="width:360px;">
                 {insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
             <div class="clearfix">
               <div class="grid_7 prefix_1 right"><label for="pass1">New password:</label></div>
               <div class="grid_12 left">
-                <input name="pass1" type="password" id="pass1">
+                <input name="pass1" type="password" id="pass1" style="width:360px;"
+                onfocus="$('#password-meter').show();">
+                <div class="password-meter" style="display:none;" id="password-meter">
+                    <div class="password-meter-message"></div>
+                    <div class="password-meter-bg">
+                        <div class="password-meter-bar"></div>
+                    </div>
+                </div>
                 <br>
-                <div class="alert helpful" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em; min-height : 20px;"> 
-                  <p>
-                    <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                    8 characters with numbers and letters.
-                  </p>
-                </div>
               </div>
-              <div class="clearfix append_bottom">
-                <div class="grid_7 prefix_1 right">
-                  <label for="pass2">Re-type new password:</label>
-                </div>
-                <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
-                  <input name="pass2" type="password" id="pass2">
+              <div class="clearfix append_bottom" style="margin: 40px 0px 0px 0px;">
+                <div class="grid_7 prefix_1 right"><label for="pass2">Re-type new password:</label></div>
+                <div class="grid_7 left" style=" margin: 0px 0px 10px 5px;">
+                  <input name="pass2" type="password" id="pass2" style="width:360px;">
                 </div>
               </div>
               <div class="prefix_8 grid_7 left">

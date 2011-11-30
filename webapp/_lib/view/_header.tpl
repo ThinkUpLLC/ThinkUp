@@ -7,7 +7,9 @@
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/positioning.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-
+  {foreach from=$header_css item=css}
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
+  {/foreach}
   <!-- jquery -->
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">

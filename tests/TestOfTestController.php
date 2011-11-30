@@ -141,6 +141,20 @@ class TestOfTestController extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test add CSS 2 header
+     */
+    public function testAddCSS2Header() {
+        $config = Config::getInstance();
+        $controller = new TestController(true);
+        $_GET['css'] = true;
+        $results = $controller->go();
+        $this->assertEqual(count($controller->getHeaderCSS()), 1);
+        $css = $controller->getHeaderCSS();
+        $this->assertEqual($css[0], 'assets/css/bla.css');
+        $this->assertPattern('/href="\/assets\/css\/bla\.css"/', $results);
+    }
+
+    /**
      * Test exception handling
      */
     public function testExceptionHandling() {
