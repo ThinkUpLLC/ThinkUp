@@ -157,6 +157,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      */
     public static function isTestEnvironmentReady() {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
+        
+        $config = Config::getInstance();
+        $cache_dir = $config->getValue("cache_dir");
 
         if (!is_writable(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view')) {
             $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH. '_lib/view/compiled_view '.

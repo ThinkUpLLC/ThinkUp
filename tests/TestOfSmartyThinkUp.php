@@ -49,12 +49,12 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $cfg->setValue('cache_pages', true);
         $cfg->setValue('cache_lifetime', 600);
         $v_mgr = new SmartyThinkUp();
-
+        
         $this->assertTrue(sizeof($v_mgr->template_dir), 2);
         $this->assertEqual($v_mgr->template_dir[1], '/path/to/thinkup/tests/view');
         $this->assertTrue(sizeof($v_mgr->plugins_dir), 2);
         $this->assertEqual($v_mgr->plugins_dir[0], 'plugins');
-        $this->assertEqual($v_mgr->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
+        $this->assertEqual($v_mgr->cache_dir, $cfg->getValue('cache_dir'));
         $this->assertEqual($v_mgr->cache_lifetime, $cfg->getValue('cache_lifetime'));
         $this->assertTrue($v_mgr->caching);
     }

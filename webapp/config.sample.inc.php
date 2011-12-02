@@ -66,6 +66,14 @@ $THINKUP_CFG['enable_profiler']           = false;
 // If false (or unset), the database connection's charset will not be explicitly set.
 $THINKUP_CFG['set_pdo_charset']           = false;
 
+// Set these next two values if you want to override where ThinkUp stores its cache and compiled view files.
+// You can also use the sys_get_temp_dir function to use your system's standard temp directory.
+// i.e.: $THINKUP_CFG['cache_dir'] = sys_get_temp_dir().'/thinkup/cache'
+// i.e.: $THINKUP_CFG['compiled_view_dir'] = sys_get_temp_dir().'/thinkup/compiled_view'
+$THINKUP_CFG['cache_dir']                   = sys_get_temp_dir().'/thinkup/cache';
+$THINKUP_CFG['compiled_view_dir']           = sys_get_temp_dir().'/thinkup/compiled_view';
+
+
 //TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
 || (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
