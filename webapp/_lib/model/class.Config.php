@@ -71,8 +71,7 @@ class Config {
                 $this->config['THINKUP_VERSION_REQUIRED'] =
                 array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
             } else {
-                throw new Exception('ThinkUp\'s configuration file does not exist! Try <a href="'.THINKUP_BASE_URL.
-                'install/">installing ThinkUp.</a>');
+                throw new ConfigurationException("ThinkUp's configuration file does not exist! Try installing ThinkUp.");
             }
         }
     }

@@ -315,7 +315,7 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         $results = $controller->go();
 
         $this->debug($results);
-        $this->assertPattern('/Welcome, VIP! You\'ve been invited to register on this ThinkUp installation./',
+        $this->assertPattern('/Welcome, VIP! You&#39;ve been invited to register on this ThinkUp installation./',
         $results);
     }
 
