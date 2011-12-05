@@ -34,7 +34,7 @@
 
           {else}
           <div class="clearfix error_message">
-            <strong>Ups!</strong> Something goes wrong, read the hints below!
+            <strong>Oops!</strong> Something went wrong.
           </div>
           <div class="clearfix">
             {foreach from=$messages_db item=msg}
