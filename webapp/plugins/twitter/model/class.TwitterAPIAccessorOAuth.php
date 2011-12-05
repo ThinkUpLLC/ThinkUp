@@ -193,7 +193,7 @@ class TwitterAPIAccessorOAuth {
         //print_r($pj);
         $parsed_payload = array();
         foreach ($pj->results as $p) {
-            $parsed_payload[] = array('post_id'=>$p->id,
+            $parsed_payload[] = array('post_id'=>$p->id_str,
             'author_user_id'=>$p->from_user_id, 'user_id'=>$p->from_user_id,
             'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text,
             'author_username'=>$p->from_user, 'user_name'=>$p->from_user,
