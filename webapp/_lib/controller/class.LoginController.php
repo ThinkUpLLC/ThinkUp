@@ -74,7 +74,8 @@ class LoginController extends ThinkUpController {
                             $error_msg .= $owner->account_status .
                             '. <a href="forgot.php">Reset your password.</a>';
                         }
-                        $this->addErrorMessage($error_msg);
+                        $disable_xss = true;
+                        $this->addErrorMessage($error_msg, null, $disable_xss);
                         return $this->generateView();
                         // If the credentials supplied by the user are incorrect
                     } elseif (!$owner_dao->isOwnerAuthorized($user_email, $_POST['pwd']) ) {
@@ -87,7 +88,8 @@ class LoginController extends ThinkUpController {
                             '. <a href="forgot.php">Reset your password.</a>';
                         }
                         $owner_dao->incrementFailedLogins($user_email);
-                        $this->addErrorMessage($error_msg);
+                        $disable_xss = true;
+                        $this->addErrorMessage($error_msg, null, $disable_xss);
                         return $this->generateView();
                     } else {
                         // user has logged in sucessfully this sets variables in the session

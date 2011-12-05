@@ -165,7 +165,8 @@ class InstallerController extends ThinkUpController {
 
         //If all requirements are met, go to step 2
         if ($requirements_met) {
-            $this->addSuccessMessage("<strong>Great!</strong> Your system has everything it needs to run ThinkUp.");
+            $this->addSuccessMessage("<strong>Great!</strong> Your system has everything it needs to run ThinkUp.",
+            null, true);
             $this->step2();
         }
     }
@@ -297,8 +298,11 @@ class InstallerController extends ThinkUpController {
             } else {
                 $db_error = $error->getMessage();
             }
+            $disable_xss = true;
+            $db_error = filter_var($db_error, FILTER_SANITIZE_SPECIAL_CHARS);
             $this->addErrorMessage("ThinkUp couldn't connect to your database. The error message is:<br /> ".
-            " <strong>$db_error</strong><br />Please correct your database information and try again.", "database");
+            " <strong>$db_error</strong><br />Please correct your database information and try again.",
+            "database", $disable_xss);
             $display_errors = true;
         }
 
@@ -328,19 +332,22 @@ class InstallerController extends ThinkUpController {
                 $config_file_contents_str .= htmlentities($line);
             }
             $whoami = @exec('whoami');
+            $disable_xss = true;
             if (!empty($whoami)) {
+                $whoami = filter_var($whoami, FILTER_SANITIZE_SPECIAL_CHARS);
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
                 "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
                 "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH .
                 "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" .
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-                "<br /><br />Click the <strong>Next Step</strong> button below once you have done either.");
+                "<br /><br />Click the <strong>Next Step</strong> button below once you have done either.",
+                null, $disable_xss);
             } else {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "You will need to create the <code>" .
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-                "<br /><br />Click the <strong>Next Step</strong> button once this is done.");
+                "<br /><br />Click the <strong>Next Step</strong> button once this is done.", null, $disable_xss);
             }
             $this->addToView('config_file_contents', $config_file_contents_str );
             $this->addToView('_POST', $_POST);

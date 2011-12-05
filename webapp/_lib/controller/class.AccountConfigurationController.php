@@ -133,7 +133,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                          FlashVars="id=clippy_12345&amp;copied=copied!&amp;copyto=copy to clipboard"
                          bgcolor="#D5F0FC"
                          wmode="opaque"/></object>
-                <br /> Good for one new registration. Expires in 7 days.', 'invite');
+                <br /> Good for one new registration. Expires in 7 days.', 'invite', true);
             } else {
                 $this->addErrorMessage("There was an error creating a new invite. Please try again.", 'invite');
             }
