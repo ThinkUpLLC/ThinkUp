@@ -31,57 +31,76 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 /* CONTROLLER TESTS */
-$controller_test = new TestSuite('Controller tests');
-$controller_test->add(new TestOfAccountConfigurationController());
-$controller_test->add(new TestOfActivateAccountController());
-$controller_test->add(new TestOfAppConfigController());
-$controller_test->add(new TestOfBackupController());
-$controller_test->add(new TestOfCheckCrawlerController());
-$controller_test->add(new TestOfCheckVersionController());
-$controller_test->add(new TestOfCrawlerAuthController());
-$controller_test->add(new TestOfDashboardController());
-$controller_test->add(new TestOfThinkUpEmbedController());
-$controller_test->add(new TestOfThreadJSController());
-$controller_test->add(new TestOfExportController());
-$controller_test->add(new TestOfExportServiceUserDataController());
-$controller_test->add(new TestOfForgotPasswordController());
-$controller_test->add(new TestOfGridController());
-$controller_test->add(new TestOfGridExportController());
-$controller_test->add(new TestOfInstallerController());
-$controller_test->add(new TestOfLoginController());
-$controller_test->add(new TestOfLogoutController());
-$controller_test->add(new TestOfPasswordResetController());
-$controller_test->add(new TestOfPostController());
-$controller_test->add(new TestOfRegisterController());
-$controller_test->add(new TestOfTestController());
-$controller_test->add(new TestOfTestAuthController());
-$controller_test->add(new TestOfTestAdminController());
-$controller_test->add(new TestOfToggleActiveInstanceController());
-$controller_test->add(new TestOfToggleActiveOwnerController());
-$controller_test->add(new TestOfToggleOwnerAdminController());
-$controller_test->add(new TestOfToggleActivePluginController());
-$controller_test->add(new TestOfTogglePublicInstanceController());
-$controller_test->add(new TestOfUserController());
-$controller_test->add(new TestOfPluginOptionController());
-$controller_test->add(new TestOfTestAuthController());
-$controller_test->add(new TestOfTestAuthAPIController());
-$controller_test->add(new TestOfRSSController());
-$controller_test->add(new TestOfUpgradeController());
-$controller_test->add(new TestOfPostAPIController());
-$controller_test->add(new TestOfStreamerAuthController());
-$controller_test->add(new TestOfUpdateNowController());
+$controller_test_list = array(
+"TestOfAccountConfigurationController",
+"TestOfActivateAccountController",
+"TestOfAppConfigController",
+"TestOfBackupController",
+"TestOfCheckCrawlerController",
+"TestOfCheckVersionController",
+"TestOfCrawlerAuthController",
+"TestOfDashboardController",
+"TestOfThinkUpEmbedController",
+"TestOfThreadJSController",
+"TestOfExportController",
+"TestOfExportServiceUserDataController",
+"TestOfForgotPasswordController",
+"TestOfGridController",
+"TestOfGridExportController",
+"TestOfInstallerController",
+"TestOfLoginController",
+"TestOfLogoutController",
+"TestOfPasswordResetController",
+"TestOfPostController",
+"TestOfRegisterController",
+"TestOfTestController",
+"TestOfTestAuthController",
+"TestOfTestAdminController",
+"TestOfToggleActiveInstanceController",
+"TestOfToggleActiveOwnerController",
+"TestOfToggleOwnerAdminController",
+"TestOfToggleActivePluginController",
+"TestOfTogglePublicInstanceController",
+"TestOfUserController",
+"TestOfPluginOptionController",
+"TestOfTestAuthAPIController",
+"TestOfRSSController",
+"TestOfUpgradeController",
+"TestOfPostAPIController",
+"TestOfStreamerAuthController",
+"TestOfUpdateNowController"
+);
 
-$tr = new TextReporter();
-list($usec, $sec) = explode(" ", microtime());
-$start =  ((float)$usec + (float)$sec);
-$controller_test->run( $tr );
-
-if (getenv("TEST_TIMING")=="1") {
-    list($usec, $sec) = explode(" ", microtime());
-    $finish =  ((float)$usec + (float)$sec);
-    $runtime = round($finish - $start);
-    printf("Tests completed run in $runtime seconds\n");
+if (!getenv("TEST_TIMING")=="1") {
+    $controller_test = new TestSuite('Controller tests');
 }
+
+foreach ($controller_test_list as $test_name) {
+    include THINKUP_ROOT_PATH.'tests/'.$test_name.'.php';
+    if (getenv("TEST_TIMING")=="1") {
+        $controller_test = new TestSuite($test_name);
+    }
+    $controller_test->add(new $test_name());
+    if (getenv("TEST_TIMING")=="1") {
+        $tr = new TextReporter();
+        list($usec, $sec) = explode(" ", microtime());
+        $start =  ((float)$usec + (float)$sec);
+        $controller_test->run( $tr );
+
+        list($usec, $sec) = explode(" ", microtime());
+        $finish =  ((float)$usec + (float)$sec);
+        $runtime = round($finish - $start);
+        printf($runtime ." seconds\n");
+    }
+}
+
+if (!getenv("TEST_TIMING")=="1") {
+    $tr = new TextReporter();
+    list($usec, $sec) = explode(" ", microtime());
+    $start =  ((float)$usec + (float)$sec);
+    $controller_test->run( $tr );
+}
+
 if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
     $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
     $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
