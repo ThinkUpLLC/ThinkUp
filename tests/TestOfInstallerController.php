@@ -31,8 +31,22 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfInstallerController extends ThinkUpUnitTestCase {
-
+    /**
+     * Start time
+     * @var int
+     */
+    var $start;
+    /**
+     *
+     * @var int
+     */
+    var $current_test_index = 0;
     public function setUp() {
+        if (getenv("TEST_TIMING")=="1") {
+            list($usec, $sec) = explode(" ", microtime());
+            $this->start =  ((float)$usec + (float)$sec);
+        }
+        $this->current_test_index++;
         parent::setUp();
         if ( !defined('THINKUP_ROOT_PATH') ) {
             define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
@@ -47,6 +61,13 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         parent::tearDown();
+        if (getenv("TEST_TIMING")=="1") {
+            list($usec, $sec) = explode(" ", microtime());
+            $finish =  ((float)$usec + (float)$sec);
+            $runtime = round($finish - $this->start);
+            $test_names = self::getTests();
+            printf($test_names[$this->current_test_index] . " took ". $runtime ." seconds\n");
+        }
     }
 
     public function testAlreadyInstalledNoAdmin() {
@@ -111,6 +132,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
+        $this->debug($result);
         $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
         //make sure we've auto-progressed to step 2 b/c all requirements have been met
         $this->assertPattern('/Create Your ThinkUp Account/', $result);
