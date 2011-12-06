@@ -65,12 +65,17 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
             list($usec, $sec) = explode(" ", microtime());
             $finish =  ((float)$usec + (float)$sec);
             $runtime = round($finish - $this->start);
-            $test_names = self::getTests();
-            printf($test_names[$this->current_test_index] . " took ". $runtime ." seconds\n");
+            printf($runtime ." seconds\n");
         }
     }
 
+    protected function time($name) {
+        if (getenv("TEST_TIMING")=="1") {
+            printf($name." ");
+        }
+    }
     public function testAlreadyInstalledNoAdmin() {
+        self::time(__METHOD__);
         //force a refresh of getTables
         Installer::$show_tables = null;
 
@@ -83,6 +88,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testAlreadyInstalledWithAdmin() {
+        self::time(__METHOD__);
         //create admin
         $owner_builder = FixtureBuilder::build('owners', array('email'=>'testalreadyinstalled@example.com',
         'is_admin'=>'1'));
@@ -98,6 +104,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep1ReqsNotMet() {
+        self::time(__METHOD__);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -123,6 +130,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep1AllReqsMet() {
+        self::time(__METHOD__);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -140,6 +148,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep2() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -156,6 +165,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep2TimezoneNotSetInPHPiniFile() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -179,6 +189,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidEmail() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -209,6 +220,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3MisssingPasswords() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -239,6 +251,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3MismatchedPasswords() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -269,6 +282,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3PasswordsTooShort() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -299,6 +313,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3PasswordsNotAlphanumeric() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -329,6 +344,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3NoTimezoneSet() {
+        self::time(__METHOD__);
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -360,6 +376,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidDatabaseCredentials() {
+        self::time(__METHOD__);
         //get valid connection information
         $config = Config::getInstance();
         $valid_db_host = $config->getValue('db_host');
@@ -403,6 +420,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidDatabaseName() {
+        self::time(__METHOD__);
         //get valid connection information
         $config = Config::getInstance();
         $valid_db_host = $config->getValue('db_host');
@@ -447,6 +465,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidDatabaseHost() {
+        self::time(__METHOD__);
         //get valid connection information
         $config = Config::getInstance();
         $valid_db_socket = $config->getValue('db_socket');
@@ -496,6 +515,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3SuccessfulInstall() {
+        self::time(__METHOD__);
         //get valid credentials
         $config = Config::getInstance();
         $valid_db_username = $config->getValue('db_user');
@@ -547,6 +567,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testRepairProcess() {
+        self::time(__METHOD__);
         $config = Config::getInstance();
 
         //repair process gets kicked off when at least 1 whole TU table is missing from the DB
