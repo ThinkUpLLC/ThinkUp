@@ -165,7 +165,8 @@ class InstallerController extends ThinkUpController {
 
         //If all requirements are met, go to step 2
         if ($requirements_met) {
-            $this->addSuccessMessage("<strong>Great!</strong> Your system has everything it needs to run ThinkUp.");
+            $this->addSuccessMessage("<strong>Great!</strong> Your system has everything it needs to run ThinkUp.",
+            null, true);
             $this->step2();
         }
     }

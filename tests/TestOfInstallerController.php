@@ -414,8 +414,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
         $result = $controller->go();
         $this->debug($result);
-        $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
-        $this->assertPattern('/Access denied for user \'username\'/', $result);
+        $this->assertPattern('/ThinkUp couldn&#39;t connect to your database. The error message is:/', $result);
+        $this->assertPattern('/Access denied for user &#39;username&#39;/', $result);
         $this->restoreConfigFile();
     }
 
@@ -459,8 +459,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
-        $this->assertPattern('/Unknown database \'mythinkupdb `lol\'/', $result);
+        $this->assertPattern('/ThinkUp couldn&#39;t connect to your database. The error message is:/', $result);
+        $this->assertPattern('/Unknown database &#39;mythinkupdb `lol&#39;/', $result);
         $this->restoreConfigFile();
     }
 
@@ -506,7 +506,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/ThinkUp couldn\'t connect to your database./', $result);
+        $this->assertPattern('/ThinkUp couldn&#39;t connect to your database./', $result);
         //Different systems get different errors
         //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
         //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
@@ -560,7 +560,6 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-
         $this->assertPattern('/ThinkUp has been installed successfully./', $result);
         $this->restoreConfigFile();
         //echo $result;
@@ -578,7 +577,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
         $controller = new InstallerController(true);
         $result = $controller->go();
-        $this->assertPattern("/Looks like at least some of ThinkUp's database tables already exist./", $result);
+        $this->assertPattern("/Looks like at least some of ThinkUp&#39;s database tables already exist./", $result);
 
         $_GET["step"] = "repair";
         $_GET["m"] = "db";
