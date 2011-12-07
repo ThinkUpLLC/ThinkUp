@@ -2228,6 +2228,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $is_public = true);
 
         $this->assertEqual(sizeof($posts), 0);
+
+        // test post with links
+        $posts = $dao->getPostsByUserInRange(19, 'twitter', $from = '2006-03-01 00:01:00',
+        $until = '2006-03-01 00:01:01', $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = true);
+        foreach ($posts as $post) {
+            $this->assertEqual(sizeof($post->links), 1);
+        }
+
+        // test post with no links
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-01 00:00:01', $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = true);
+        foreach ($posts as $post) {
+            $this->assertEqual(sizeof($post->links), 0);
+        }
     }
 
     /**
