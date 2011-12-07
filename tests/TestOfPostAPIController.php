@@ -1991,6 +1991,18 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         }
         $installer_dao = DAOFactory::getDAO('InstallerDAO');
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+
+        // test posts contain a links object
+        $_GET['type'] = 'user_posts_in_range';
+        $_GET['user_id'] = 19;
+        $_GET['from'] = '2006-03-01 00:01:00';
+        $_GET['until'] = '2006-03-01 00:01:01';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        foreach($output as $post) {
+            $this->assertTrue(is_a($post->links, 'stdClass'));
+        }
+      
     }
 
     public function testAPIDisabled() {
