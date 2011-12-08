@@ -1079,8 +1079,28 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = new Post($row);
+        if ($all_rows) {
+            $post_keys_array = array();
+            foreach ($all_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
