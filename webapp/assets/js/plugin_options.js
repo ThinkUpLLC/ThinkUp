@@ -35,7 +35,7 @@ var PluginOptions = function() {
         $('#plugin_option_server_error').hide();
         for (var option_name in option_elements) {
             option = option_elements[option_name];
-            status = true;
+            status_check = true;
             if(plugin_options.DEBUG) {
                 console.debug('%s type %s id %s', option_name, option.type, option.id);
             }
@@ -57,7 +57,7 @@ var PluginOptions = function() {
                         form_data['id_option_' + option_name] = option.id;
                     }
                 } else {
-                    status = this.setRequiredMessage(option);
+                    status_check = this.setRequiredMessage(option);
                 }
             } else if(option.type == 'radio_element') {
                 value = this.processRadioElement(option);
@@ -67,7 +67,7 @@ var PluginOptions = function() {
                         form_data['id_option_' + option_name] = option.id;
                     }
                 } else {
-                    status = this.setRequiredMessage(option);
+                    status_check = this.setRequiredMessage(option);
                 }
             } else if(option.type == 'select_element') {
                 value = this.processSelectElement(option);
@@ -77,7 +77,7 @@ var PluginOptions = function() {
                         form_data['id_option_' + option_name] = option.id;
                     }
                 } else {
-                    status = this.setRequiredMessage(option);
+                    status_check = this.setRequiredMessage(option);
                 }
             }
             if(option.id && ! value && option_not_required[option_name]) {
@@ -86,7 +86,7 @@ var PluginOptions = function() {
                     form_data['option_' + option_name] = '';
                 }
             }
-            submit_status = (submit_status == false) ? false : status;
+            submit_status = (submit_status == false) ? false : status_check;
             if(plugin_options.DEBUG) { console.debug('Submitted stats = %s - %s', submit_status, option_name); }
         }
         if(! submit_status) {
