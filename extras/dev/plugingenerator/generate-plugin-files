@@ -1,0 +1,307 @@
+#!/bin/bash
+
+# Script to generate all the nessecary files and folders for a new plugin
+# The 1st argument passed in is the name of the new plugin
+
+# Function to add the preamble to the top of the php files
+# Parameter 1 = Name of Plugin  Parameter 2 = Path of file to be written to
+
+function preamble 
+{
+# Write everything before the END keyword to the file passed in as parameter 2
+cat<< END >$2
+<?php
+/**
+ *
+ * $2
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ * 
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2011 (Your Name)
+ * 
+ * @author Your Name  Your Email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2011 (Your Name)
+ */
+END
+}
+
+
+# Navigate to the root directory
+cd `dirname $0`/../../../
+
+# Create the root plugin folder
+mkdir 'webapp/plugins/'${1,,}
+# Create the model folder
+mkdir 'webapp/plugins/'${1,,}'/model'
+# Create the view folder
+mkdir 'webapp/plugins/'${1,,}'/view'
+# Create the controller folder
+mkdir 'webapp/plugins/'${1,,}'/controller'
+# Create the assets folder
+mkdir 'webapp/plugins/'${1,,}'/assets/'
+mkdir 'webapp/plugins/'${1,,}'/assets/img'
+# Create the tests folder
+mkdir 'webapp/plugins/'${1,,}'/tests'
+
+# Now its time to write all the data to our default files
+
+# Plugin Config Controller
+preamble $1 'webapp/plugins/'${1,,}'/controller/class.'$1'PluginConfigurationController.php'
+
+cat<< END >>'webapp/plugins/'${1,,}'/controller/class.'$1'PluginConfigurationController.php'
+
+class $1PluginConfigurationController extends PluginConfigurationController {
+
+    public function __construct() {
+	
+    }
+
+    public function authControl() {
+	
+    }
+
+    public function saveAccessTokens() {
+	
+    }
+
+}
+
+END
+
+# PluginName.php
+# This file has some extra data at the beginning so we dont use the normal function
+
+cat<< END >>'webapp/plugins/'${1,,}'/controller/'$1'.php'
+<?php
+/*
+ Plugin Name: $1
+ Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/${1,,}/
+ Description: 
+ Class: $1Plugin
+ Icon: assets/img/
+ Version: 0.01
+ Author: 
+ */
+/**
+ *
+ * webapp/plugins/${1,,}/controller/$1.php
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ * 
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2011 (Your Name)
+ * 
+ * @author Your Name  Your Email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2011 (Your Name)
+ */
+ 
+\$webapp = Webapp::getInstance();
+\$webapp->registerPlugin('$1', '$1Plugin');
+
+\$crawler = Crawler::getInstance();
+\$crawler->registerCrawlerPlugin('$1Plugin');
+
+END
+
+
+# Now generate the default files in the model directory
+
+preamble $1 'webapp/plugins/'${1,,}'/model/class.'$1'Plugin.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'${1,,}'/model/class.'$1'Plugin.php'
+
+class $1Plugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+
+    public function __construct() {
+	
+    }
+
+    public function activate() {
+	
+    }
+
+    public function deactivate() {
+	
+    }
+
+    public function renderConfiguration() {
+	
+    }
+
+    public function crawl() {
+	
+    }
+	
+}
+END
+
+
+# Now generate the crawler file
+
+preamble $1 'webapp/plugins/'${1,,}'/model/class.'$1'Crawler.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'${1,,}'/model/class.'$1'Crawler.php'
+
+class $1Crawler {
+
+    public function __construct() {
+	
+    }
+	
+}
+END
+
+
+# Now generate the API Accessor file
+
+preamble $1 'webapp/plugins/'${1,,}'/model/class.'$1'APIAccessor.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'${1,,}'/model/class.'$1'APIAccessor.php'
+
+class $1APIAccessor{ 
+
+    public static function apiRequest() {
+
+    }
+
+    public static function rawApiRequest() {
+
+    }
+
+}
+END
+
+
+# Now finally generate the default test files
+
+preamble $1 'webapp/plugins/'${1,,}'/tests/TestOf'$1'Plugin.php'
+
+
+# Now insert the default methods and require statements
+cat<< END >>'webapp/plugins/'${1,,}'/tests/TestOf'$1'Plugin.php'
+
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once THINKUP_ROOT_PATH. 'webapp/plugins/${1,,}/model/class.$1Plugin.php';
+
+class TestOf$1Plugin extends ThinkUpUnitTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        \$webapp = Webapp::getInstance();
+        \$webapp->registerPlugin('$1', '$1Plugin');
+        \$webapp->setActivePlugin('$1');
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+    }
+
+}
+END
+
+
+# Now generate the PluginConfigController test default file
+
+preamble $1 'webapp/plugins/'${1,,}'/tests/TestOf'$1'PluginConfigurationController.php'  
+
+# Now the default methods and require statements
+cat<< END >>'webapp/plugins/'${1,,}'/tests/TestOf'$1'PluginConfigurationController.php'  
+
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/${1,,}/controller/class.$1PluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/${1,,}/model/class.$1Crawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/${1,,}/model/class.$1Plugin.php';
+
+class TestOf$1PluginConfigurationController extends ThinkUpUnitTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        \$webapp = Webapp::getInstance();
+        \$webapp->registerPlugin('$1', '$1Plugin');
+        \$_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+    }
+
+}
+END
+
+
+# Now generate the crawler test file
+
+preamble $1 'webapp/plugins/'${1,,}'/tests/TestOf'$1'Crawler.php'
+
+# Now insert the default methods and require statements
+cat<< END >>'webapp/plugins/'${1,,}'/tests/TestOf'$1'Crawler.php'
+  
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/${1,,}/model/class.$1Crawler.php';
+
+class TestOf$1Crawler extends ThinkUpUnitTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        \$this->logger = Logger::getInstance();
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        \$this->logger->close();
+    }
+
+}
+END
+
