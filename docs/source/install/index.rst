@@ -8,6 +8,7 @@ everything you need to know to get ThinkUp up and running on your web server.
    :maxdepth: 2
 
    sysreqs
+   hostingproviders
    quickstart
    install
    upgrade

@@ -4,6 +4,25 @@ Direct Database Access
 If you have to make changes to your ThinkUp database manually, you can do so from the command line, or using an
 interface like phpMyAdmin.
 
+Access ThinkUp's MySQL database via phpMyAdmin
+----------------------------------------------
+
+Many web hosts offer access to your MySQL databases via `phpMyAdmin <http://www.phpmyadmin.net/home_page/index.php>`_.
+If you have phpMyAdmin installed, here's how to 
+access your ThinkUp database using it.
+
+1. Log in to phpMyAdmin with your username and password for your account.
+
+ .. image:: imgs/phpmyadmin_login.png
+
+2. Click on the thinkup database in the left hand column - whatever you named it during installation.
+
+ .. image:: imgs/phpmyadmin_dblist.png
+
+3. From here you can choose any table to view and update its contents.
+
+ .. image:: imgs/phpmyadmin_edittable.png
+
 Access ThinkUp's MySQL database via the Command Line
 ----------------------------------------------------
 
@@ -63,21 +82,4 @@ You will need your ThinkUp database user name and password, which you set when y
 
     mysql> exit
 
-Access ThinkUp's MySQL database via phpMyAdmin
-----------------------------------------------
-
-Many web hosts offer access to your MySQL databases via `phpMyAdmin <http://www.phpmyadmin.net/home_page/index.php>`_.
-If you have phpMyAdmin installed, here's how to 
-access your ThinkUp database using it.
-
-1. Log in to phpMyAdmin with your username and password for your account.
-
- .. image:: imgs/phpmyadmin_login.png
-
-2. Click on the thinkup database in the left hand column - whatever you named it during installation.
-
- .. image:: imgs/phpmyadmin_dblist.png
-
-3. From here you can choose any table to view and update its contents.
-
- .. image:: imgs/phpmyadmin_edittable.png
+ 

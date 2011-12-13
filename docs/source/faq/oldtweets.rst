@@ -1,8 +1,9 @@
-I've tweeted more than 3,200 times. Will ThinkUp archive my oldest tweets?
-==========================================================================
+Does ThinkUp archive old tweets/posts, or just present and future ones?
+=======================================================================
 
-No. While ThinkUp does everything it can to go back and capture historical data, it is subject to API limitations of
-the services it crawls.
+ThinkUp does everything it can to go back and capture historical tweets and posts, but it is subject to API limitations
+of the services it crawls.
 
-In Twitter's case, it's not currently possible for ThinkUp to access any tweets past the last 3,200 in your history.
+For example, Twitter currently only allows API access to the last 3,200 tweets in your history. If you've tweeted
+more than 3,200 times, ThinkUp will only capture your last 3,200 tweets and every new tweet going forward.
 

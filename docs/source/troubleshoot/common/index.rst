@@ -21,6 +21,8 @@ ThinkUp is a work in progress. Certain known problems can occur on different ser
    changeemail
    backupcannotwrite
    slowbigdb
+   couldnotwritesession
+   notgeoencodedyet
 
 Advanced Troubleshooting
 ------------------------
