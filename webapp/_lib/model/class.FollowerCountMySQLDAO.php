@@ -49,10 +49,10 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         }
         if ($units == 'DAY') {
             $group_by = 'fc.date';
-            $date_format = "DATE_FORMAT(date, '%c/%d/%Y')";
+            $date_format = "DATE_FORMAT(date, '%m/%d/%Y')";
         } else if ($units == 'WEEK') {
             $group_by = 'YEAR(fc.date), WEEK(fc.date)';
-            $date_format = "DATE_FORMAT(date, '%c/%e')";
+            $date_format = "DATE_FORMAT(date, '%m/%e')";
         } else if ($units == 'MONTH') {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
             $date_format = "DATE_FORMAT(date,'%m/01/%Y')";

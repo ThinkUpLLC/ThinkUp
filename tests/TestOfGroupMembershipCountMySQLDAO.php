@@ -233,7 +233,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetDayHistoryWeekNoGaps() {
-        $format = 'n/j';
+        $format = 'm/j';
         $date = date ( $format );
 
         $group_member_count = array('member_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-1d', 'count'=>140);

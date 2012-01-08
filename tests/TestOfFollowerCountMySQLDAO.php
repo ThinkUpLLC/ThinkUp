@@ -211,7 +211,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetDayHistoryWeekNoGaps() {
-        $format = 'n/j';
+        $format = 'm/j';
         $date = date ( $format );
 
         $follower_count = array('network_user_id'=>930061, 'network'=>'twitter', 'date'=>'-1d', 'count'=>140);
