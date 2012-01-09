@@ -464,55 +464,61 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->restoreConfigFile();
     }
 
-    public function testFreshInstallStep3InvalidDatabaseHost() {
-        self::time(__METHOD__);
-        //get valid connection information
-        $config = Config::getInstance();
-        $valid_db_socket = $config->getValue('db_socket');
-        $valid_db_user = $config->getValue('db_user');
-        $valid_db_password = $config->getvalue('db_password');
-        $valid_db_port = $config->getValue('db_port');
+    /*
+     * This test can take an unreasonablely long time to complete (over an hour) due to connection timeouts on some
+     * server setups. Commenting out for faster runs on the build server.
+     */
+    /*
+     public function testFreshInstallStep3InvalidDatabaseHost() {
+     self::time(__METHOD__);
+     //get valid connection information
+     $config = Config::getInstance();
+     $valid_db_socket = $config->getValue('db_socket');
+     $valid_db_user = $config->getValue('db_user');
+     $valid_db_password = $config->getvalue('db_password');
+     $valid_db_port = $config->getValue('db_port');
 
-        //drop DB
-        $this->testdb_helper->drop($this->test_database_name);
-        //remove config file
-        Config::destroyInstance();
-        //unset PDO so it must be recreated
-        InstallerMySQLDAO::$PDO = null;
-        $this->removeConfigFile();
+     //drop DB
+     $this->testdb_helper->drop($this->test_database_name);
+     //remove config file
+     Config::destroyInstance();
+     //unset PDO so it must be recreated
+     InstallerMySQLDAO::$PDO = null;
+     $this->removeConfigFile();
 
-        ini_set("error_reporting", E_ERROR);
+     ini_set("error_reporting", E_ERROR);
 
-        //set param for step 2
-        $_GET['step'] = '3';
-        //set post values from form
-        $_POST['site_email'] = "you@example.com";
-        $_POST['db_user'] = $valid_db_user;
-        $_POST['db_passwd'] = $valid_db_password;
-        $_POST['db_name'] = "mythinkupdb";
-        $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "localcheese";
-        $_POST['db_socket'] = $valid_db_socket;
-        $_POST['db_port'] = $valid_db_port;
-        $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "asdfads123f";
-        $_POST['confirm_password'] = "asdfads123f";
-        $_POST['full_name'] = "My Full Name";
-        $_POST['timezone'] = "America/Los_Angeles";
+     //set param for step 2
+     $_GET['step'] = '3';
+     //set post values from form
+     $_POST['site_email'] = "you@example.com";
+     $_POST['db_user'] = $valid_db_user;
+     $_POST['db_passwd'] = $valid_db_password;
+     $_POST['db_name'] = "mythinkupdb";
+     $_POST['db_type'] = "mysql";
+     $_POST['db_host'] = "localcheese";
+     $_POST['db_socket'] = $valid_db_socket;
+     $_POST['db_port'] = $valid_db_port;
+     $_POST['db_prefix'] = "tu_";
+     $_POST['password'] = "asdfads123f";
+     $_POST['confirm_password'] = "asdfads123f";
+     $_POST['full_name'] = "My Full Name";
+     $_POST['timezone'] = "America/Los_Angeles";
 
-        $_SERVER['HTTP_HOST'] = "http://example.com";
+     $_SERVER['HTTP_HOST'] = "http://example.com";
 
-        $controller = new InstallerController(true);
-        $this->assertTrue(isset($controller));
-        $result = $controller->go();
+     $controller = new InstallerController(true);
+     $this->assertTrue(isset($controller));
+     $result = $controller->go();
 
-        $this->assertPattern('/ThinkUp couldn\'t connect to your database./', $result);
-        //Different systems get different errors
-        //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
-        //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
-        $this->restoreConfigFile();
-        ini_set("error_reporting", E_ALL);
-    }
+     $this->assertPattern('/ThinkUp couldn\'t connect to your database./', $result);
+     //Different systems get different errors
+     //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
+     //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
+     $this->restoreConfigFile();
+     ini_set("error_reporting", E_ALL);
+     }
+     */
 
     public function testFreshInstallStep3SuccessfulInstall() {
         self::time(__METHOD__);

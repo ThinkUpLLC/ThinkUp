@@ -33,7 +33,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 /* INSTALLER AND UPGRADER TESTS */
 $installer_tests = new TestSuite('Installer tests');
 $installer_tests->add(new WebTestOfInstallation());
-if(! getenv("SKIP_UPGRADE_TESTS")=="1") {
+if (!getenv("SKIP_UPGRADE_TESTS")=="1") {
     $installer_tests->add(new WebTestOfUpgradeDatabase());
 } else {
     print("Note: Skipping WebTestOfUpgradeDatabase\n");
