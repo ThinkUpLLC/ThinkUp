@@ -77,7 +77,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'is_protected' => 0,
                             'follower_count' => 15,
                             'network' => 'twitter',
-                            'last_updated' => '2010-04-02 13:45:55'));
+                            'last_updated' => '2010-03-02 13:45:55'));
 
         $builders[] = FixtureBuilder::build( 'users', array(
                             'user_id' => 20,
@@ -709,10 +709,13 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
     public function testPost() {
         $_GET['type'] = 'post';
-        $_GET['post_id'] = 137;
+        $_GET['post_id'] = '137';
+        $_GET['network'] = 'twitter';
         $controller = new PostAPIController(true);
-        $output = json_decode($controller->go());
-
+        $output = $controller->go();
+        $this->debug($output);
+        //sleep(1000);
+        $output = json_decode($output);
         // test the object type is correct
         $this->assertTrue(is_a($output, 'stdClass'));
         $this->assertEqual($output->protected, false);
@@ -728,7 +731,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->coordinates, $output->geo,
                 "Geo and coordinates are meant to be exactly the same.");
 
-        $this->assertEqual($output->user->last_updated, '2010-04-02 14:45:55');
+        $this->assertEqual($output->user->last_updated, '2010-03-02 13:45:55');
 
         // test trim user
         $_GET['trim_user'] = true;

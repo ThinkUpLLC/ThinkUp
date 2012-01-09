@@ -96,6 +96,12 @@ class User {
     var $post_count;
     /**
      *
+     * @var date
+     */
+    var $last_updated;
+
+    /**
+     *
      * @var str
      */
     var $found_in;
@@ -158,6 +164,9 @@ class User {
             $this->post_count = $val['post_count'];
             if (isset($val['last_post_id'])) {
                 $this->last_post_id = $val['last_post_id'];
+            }
+            if (isset($val['last_updated'])) {
+                $this->last_updated = $val['last_updated'];
             }
             if (isset($val['friend_count'])) {
                 $this->friend_count = $val['friend_count'];

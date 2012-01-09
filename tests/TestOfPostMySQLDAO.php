@@ -52,7 +52,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:01:00', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
         'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
@@ -827,6 +827,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->id, 10);
         $this->assertNotNull($post->author);
         $this->assertEqual($post->author->username, 'ev');
+        $this->assertEqual($post->author->last_updated, '2005-01-01 13:01:00');
 
         //links
         $post = $dao->getPost('40', 'twitter');

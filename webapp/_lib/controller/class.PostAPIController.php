@@ -673,14 +673,10 @@ class PostAPIController extends ThinkUpController {
                 $post->user->statuses_count = $post->user->post_count;
                 $post->user->created_at = strftime('%a %b %d %T %z %Y', strtotime($post->user->joined));
                 $post->user->favorites_count = $post->user->favorites_count;
-                $post->user->utc_offset = Config::getInstance()->getGMTOffset() * 3600;
 
                 if (isset($post->user->other)) {
                     if (isset($post->user->other['avg_tweets_per_day'])) {
                         $post->user->avg_tweets_per_day = $post->user->other['avg_tweets_per_day'];
-                    }
-                    if (isset($post->user->other['last_updated'])) {
-                        $post->user->last_updated = $post->user->other['last_updated'];
                     }
                 }
 
