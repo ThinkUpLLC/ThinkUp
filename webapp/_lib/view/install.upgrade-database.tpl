@@ -8,8 +8,7 @@
     </div>
 
   <div class="prepend_20">
-    <h1>Upgrade ThinkUp</h1>
-    <br><br>
+    <h1>Upgrade ThinkUp's Database</h1>
   </div>
 
     {if $high_table_row_count}
@@ -32,12 +31,14 @@
      <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-           Your database is up to date. <a href="{$site_root_path}">Continue using ThinkUp</a>, or <a href="backup.php">back up your database.</a>
-                {if $version_updated}
-                <p>Your application database version has been updated to reflect the latest installed version of ThinkUp.</p>
-                {/if}
+           Sweet! Your database is up to date.</a>
         </p>
      </div> 
+     <br>
+    <div>
+      <p><a href="{$site_root_path}" class="linkbutton emphasized">Start using ThinkUp</a></p>
+    </div>
+     
     {else}
     <div id="info-parent" class="alert urgent" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">

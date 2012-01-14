@@ -69,17 +69,20 @@ abstract class ThinkUpController {
      * @var array
      */
     protected $json_data = null;
-
+    /**
+     * For testing
+     * @var str
+     */
+    public $redirect_destination;
     /**
      *
      * @var str
      */
     protected $content_type = 'text/html; charset=UTF-8'; //default
-
     /**
-     *
-     * @var boolean if true we will pass a CSRF token to the view
-     */
+    *
+    * @var boolean if true we will pass a CSRF token to the view
+    */
     protected $view_csrf_token = false; //default
 
     /**
@@ -302,6 +305,7 @@ abstract class ThinkUpController {
         if (!isset($destination)) {
             $destination = Utils::getSiteRootPathFromFileSystem();
         }
+        $this->redirect_destination = $destination; //for validation
         if ( !headers_sent() ) {
             header('Location: '.$destination);
             return true;
@@ -402,7 +406,7 @@ abstract class ThinkUpController {
             // are we in need of a database migration?
             $classname = get_class($this);
             if ($classname != 'InstallerController' && $classname != 'BackupController' &&
-            UpgradeController::isUpgrading( $this->isAdmin(), $classname) ) {
+            UpgradeDatabaseController::isUpgrading( $this->isAdmin(), $classname) ) {
                 $this->setViewTemplate('install.upgradeneeded.tpl');
                 $this->disableCaching();
                 $option_dao = DAOFactory::getDAO('OptionDAO');

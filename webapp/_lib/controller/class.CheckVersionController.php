@@ -34,7 +34,22 @@ class CheckVersionController extends ThinkUpAuthController {
         $this->setContentType('text/javascript');
         $this->setViewTemplate('install.checkversion.tpl');
         $config = Config::getInstance();
-        $this->addToView('is_opted_out_usage_stats', $config->getValue('is_opted_out_usage_stats'));
+
+        $is_in_beta = $config->getValue('is_subscribed_to_beta');
+        $is_in_beta = isset($is_in_beta)?$is_in_beta:false;
+        if ($is_in_beta) {
+            $upgrade_checker_url = 'http://thinkupapp.com/version.php?channel=beta&';
+        } else {
+            $upgrade_checker_url = 'http://thinkupapp.com/version.php?';
+        }
+
+        $opt_out = $config->getValue('is_opted_out_usage_stats');
+        $opt_out = isset($opt_out)?$opt_out:false;
+        if ( $opt_out) {
+            $upgrade_checker_url .= 'usage=n&';
+        }
+        $upgrade_checker_url .= 'v='.$config->getValue('THINKUP_VERSION');
+        $this->addToView('checker_url', $upgrade_checker_url);
         return $this->generateView();
     }
 }

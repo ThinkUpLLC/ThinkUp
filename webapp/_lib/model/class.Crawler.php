@@ -85,7 +85,7 @@ class Crawler extends PluginHook {
         }
 
         // are we in an upgrading state
-        if (UpgradeController::isUpgrading(true, 'Crawler')) {
+        if (UpgradeDatabaseController::isUpgrading(true, 'Crawler')) {
             throw new InstallerException("ThinkUp needs a database migration, so we are unable to run the crawler.");
         }
 

@@ -45,11 +45,11 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         putenv("MODE=TESTS");
         $this->get($this->url.'/install/setmode.php?m=tests');
 
-        self::isWebTestEnvironmentReady();
+        ThinkUpBasicUnitTestCase::isTestEnvironmentReady();
 
         require THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
         $this->test_database_name = $TEST_DATABASE;
-        if(ThinkUpUnitTestCase::ramDiskTestMode()) {
+        if (ThinkUpUnitTestCase::ramDiskTestMode()) {
             putenv("RD_MODE=1");
             require THINKUP_WEBAPP_PATH.'config.inc.php';
             $this->test_database_name = $THINKUP_CFG['db_name'];
@@ -63,17 +63,9 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
     }
 
     public function debug($message) {
-        if($this->DEBUG) {
+        if ($this->DEBUG) {
             $bt = debug_backtrace();
             print get_class($this) . ": line " . $bt[0]['line'] . " - " . $message . "\n";
         }
-    }
-
-    /**
-     * Preemptively halt test run if integration testing environment requirement isn't met.
-     * Prevents unnecessary/inexplicable failures and data loss.
-     */
-    public static function isWebTestEnvironmentReady() {
-        ThinkUpBasicUnitTestCase::isTestEnvironmentReady();
     }
 }

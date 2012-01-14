@@ -80,6 +80,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
     public function testCacheKeyNoRequestParams() {
         $config = Config::getInstance();
         $config->setValue('cache_pages', true);
+        $this->debug($config->getValue('datadir_path'));
         $controller = new TestController(true);
         $results = $controller->go();
 

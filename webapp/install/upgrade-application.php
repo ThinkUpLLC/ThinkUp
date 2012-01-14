@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/install/upgrade.php
+ * ThinkUp/webapp/install/upgrade-application.php
  *
  * Copyright (c) 2012 Mark Wilkie
  *
@@ -20,12 +20,13 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * This file provided for backwards-compatibility and testing.
- *
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2012 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-require_once('upgrade-database.php');
+chdir("..");
+require_once 'init.php';
+$controller = new UpgradeApplicationController();
+echo $controller->go();

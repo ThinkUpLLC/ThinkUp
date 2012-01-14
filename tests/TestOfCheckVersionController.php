@@ -76,8 +76,8 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertNoPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this/', $results);
         $this->assertPattern('/var ROOT = \'thinkup_version\'/', $results);
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v='.$THINKUP_VERSION.
-        '\&usage=n/', $results);
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?usage=n\&v='.$THINKUP_VERSION.
+        '/', $results);
     }
 
     public function testNotOptedOut() {
@@ -88,6 +88,41 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v='.$THINKUP_VERSION.
         '/', $results);
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        '\&usage=n/', $results);
+    }
+
+    public function testInBetaNotOptedOut() {
+        include THINKUP_WEBAPP_PATH.'install/version.php';
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_subscribed_to_beta',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $this->simulateLogin('me@example.com');
+        $controller = new CheckVersionController(true);
+
+        $results = $controller->go();
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?channel=beta\&v='.
+        $THINKUP_VERSION.'/', $results);
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        '\&usage=n/', $results);
+    }
+
+    public function testInBetaOptedOut() {
+        include THINKUP_WEBAPP_PATH.'install/version.php';
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_subscribed_to_beta',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues1 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_opted_out_usage_stats',
+        'option_value' => 'true');
+        $bdata2= FixtureBuilder::build('options', $bvalues);
+
+        $this->simulateLogin('me@example.com');
+        $controller = new CheckVersionController(true);
+
+        $results = $controller->go();
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?channel=beta\&v='.
+        $THINKUP_VERSION.'/', $results);
         $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
         '\&usage=n/', $results);
     }

@@ -82,8 +82,15 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $backup_dir = FileDataManager::getBackupPath();
         if (file_exists($backup_dir)) {
             try {
-                exec('cd '.$backup_dir.'; rm -rf *');
+                @exec('cd '.$backup_dir.'; rm -rf *');
                 rmdir($backup_dir); // won't delete if has files
+            } catch (Exception $e) {
+            }
+        }
+        $data_dir = FileDataManager::getDataPath();
+        if (file_exists($data_dir.'compiled_view')) {
+            try {
+                @exec('cd '.$data_dir.'; rm -rf compiled_view');
             } catch (Exception $e) {
             }
         }
@@ -107,7 +114,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     protected function removeConfigFile() {
         if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
             $cmd = 'mv '.THINKUP_WEBAPP_PATH . 'config.inc.php ' .THINKUP_WEBAPP_PATH . 'config.inc.bak.php';
-            exec($cmd, $output, $return_val);
+            @exec($cmd, $output, $return_val);
             if ($return_val != 0) {
                 echo "Could not ".$cmd;
             }
@@ -120,7 +127,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     protected function restoreConfigFile() {
         if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.bak.php')) {
             $cmd = 'mv '.THINKUP_WEBAPP_PATH . 'config.inc.bak.php ' .THINKUP_WEBAPP_PATH . 'config.inc.php';
-            exec($cmd, $output, $return_val);
+            @exec($cmd, $output, $return_val);
             if ($return_val != 0) {
                 echo "Could not ".$cmd;
             }
@@ -169,6 +176,19 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $datadir_path = FileDataManager::getDataPath();
         if (!is_writable($datadir_path)) {
             $message = "In order to test your ThinkUp installation, $datadir_path must be writable.";
+        }
+        if (!is_writable($datadir_path.'compiled_view/')) {
+            try {
+                @exec('cd '.$datadir_path.'; rm -rf compiled_view');
+            } catch (Exception $e) {
+            }
+        }
+        if (!file_exists($datadir_path.'compiled_view/')) {
+            mkdir($datadir_path.'compiled_view/');
+            @exec('chmod -R 777 '.$datadir_path.'compiled_view/');
+        }
+        if (!is_writable($datadir_path.'compiled_view/')) {
+            $message = "In order to test your ThinkUp installation, ".$datadir_path."compiled_view/ must be writable.";
         }
 
         if ($THINKUP_CFG['log_location'] === false) {

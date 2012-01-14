@@ -48,7 +48,7 @@ if (isset($argv[0]) && preg_match('/^(\-\-with\-new\-sql)$/i', $argv[0])) {
 }
 try {
     // do we need a migration?
-    $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+    $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
     $config = Config::getInstance();
     $thinkup_db_version = $config->getValue('THINKUP_VERSION');
     $filename = false;
@@ -106,7 +106,7 @@ try {
 
     $upgrade_start_time = microtime(true);
     putenv('CLI_BACKUP=true');
-    $upgrade_ctl = new UpgradeController();
+    $upgrade_ctl = new UpgradeDatabaseController();
 
     $migrations = $upgrade_ctl->getMigrationList($db_version, $no_version);
     $install_dao = DAOFactory::getDAO('InstallerDAO');
