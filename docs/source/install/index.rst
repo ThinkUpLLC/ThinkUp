@@ -11,6 +11,6 @@ everything you need to know to get ThinkUp up and running on your web server.
    install
    advancedconfig
    upgrade
+   permsintro
    backup
-   perms
    security

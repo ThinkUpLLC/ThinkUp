@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfUpgradeController.php
+ * ThinkUp/tests/TestOfUpgradeDatabaseController.php
  *
  * Copyright (c) 2009-2012 Mark Wilkie
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * TestOfUpgradeController
+ * TestOfUpgradeDatabaseController
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Mark Wilkie
@@ -33,7 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
-class TestOfUpgradeController extends ThinkUpUnitTestCase {
+class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'options';
 
@@ -83,13 +83,13 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     }
 
     public function testConstructor() {
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->assertTrue(isset($controller));
     }
 
     public function testNoMigrationNeeded() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertPattern('/<!-- no upgrade needed -->/', $results);
     }
@@ -99,7 +99,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->migrationFiles(1);
 
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertPattern('/needs 1 database update/', $results);
         $v_mgr = $controller->getViewManager();
@@ -128,7 +128,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         // table row counts are good
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
 
         $this->assertPattern('/needs 1 database update/', $results);
@@ -136,10 +136,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('high_table_row_count') ) ;
 
         // table row counts are bad
-        $old_count = UpgradeController::$WARN_TABLE_ROW_COUNT;
-        UpgradeController::$WARN_TABLE_ROW_COUNT = 2;
+        $old_count = UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT;
+        UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT = 2;
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertPattern('/we recommend that you use the.*command line upgrade tool.*when upgrading ThinkUp/sm',
         $results);
@@ -148,16 +148,16 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $table_counts = $v_mgr->getTemplateDataItem('high_table_row_count');
         $this->assertNotNull($table_counts);
         $this->assertNotNull(3, $table_counts['count']); // tu_plugins, defaults to three
-        UpgradeController::$WARN_TABLE_ROW_COUNT = $old_count;
+        UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT = $old_count;
     }
 
     public function testGetMigrationList() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $this->newMigrationFiles('some_stuff');
         $this->newMigrationFiles('some_stuff', $old = true); // older already ran?
-        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
         $list = $controller->getMigrationList($db_version);
         $this->assertEqual(count($list), 2);
         $this->assertTrue($list[0]['new_migration']);
@@ -169,11 +169,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testGetMigrationListWithNewSQL() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $this->newMigrationFiles('some_stuff');
         $this->newMigrationFiles('some_stuff2', $old = false, $add_sql = false, $no_version = true);
-        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
         $app_version = $this->config->getValue('THINKUP_VERSION');
         $list = $controller->getMigrationList($db_version, $no_version = true);
         $clean_list = array();
@@ -224,10 +224,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testRunNewMigration() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->newMigrationFiles('some_stuff');
         $this->newMigrationFiles('some_stuff', $old = true); // older already ran?
-        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
         $list = $controller->getMigrationList($db_version);
         $this->assertEqual(count($list), 1);
         $this->assertTrue($list[0]['new_migration']);
@@ -296,10 +296,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     public function testRunNewFailedMigration() {
         $this->simulateLogin('me@example.com', true);
 
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->newMigrationFiles2('some_stuff2', $date = false, $bad_sql = true);
 
-        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
         $list = $controller->getMigrationList($db_version);
         $this->assertEqual(count($list), 1);
         $this->assertTrue($list[0]['new_migration']);
@@ -321,7 +321,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual(3, $data['count']);
 
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->newMigrationFiles2('some_stuff2', $date = false, $bad_sql = false);
         $results = $controller->go();
         $obj = json_decode($results);
@@ -349,10 +349,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testRunNewMigrationUpdateCompletedTable() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->newMigrationFiles('some_stuff');
         $this->newMigrationFiles('some_stuff', $old = true); // older already ran?
-        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($cached = false);
         $list = $controller->getMigrationList($db_version);
         $this->assertEqual(count($list), 1);
         $this->assertTrue($list[0]['new_migration']);
@@ -382,8 +382,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testGenerateUpgradeToken() {
         $this->simulateLogin('me@example.com');
-        $controller = new UpgradeController(true);
-        UpgradeController::generateUpgradeToken();
+        $controller = new UpgradeDatabaseController(true);
+        UpgradeDatabaseController::generateUpgradeToken();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/^[\da-f]{32}$/', file_get_contents($this->token_file));
     }
@@ -393,7 +393,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
      */
     public function testNotLoggedInNoTAdminGensAndAuthsToken() {
         // not logged in...
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/<!--  we are upgrading -->/', $results);
@@ -422,9 +422,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertFalse( file_exists($this->token_file) );
         $this->assertPattern('/<!-- no upgrade needed -->/', $results);
-
-        // NOTE: this will only happen when our db versions are out of sync
-        $this->assertPattern('/database version has been updated to reflect the latest installed version/', $results);
     }
 
     /**
@@ -441,7 +438,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
 
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/<!--  we are upgrading -->/', $results);
@@ -455,7 +452,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
         $token_regex = '/http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).
-        'install\/upgrade.php\?upgrade_token=' . $token . '/';
+        'install\/upgrade-database.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
@@ -475,7 +472,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $this->assertPattern('/to\: m@w\.nz,m4@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
-        $token_regex = '/\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $token_regex = '/\/install\/upgrade-database.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // should not send email if a token file exists
@@ -497,7 +494,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
         $_SERVER['HTTPS'] = "mytestthinkup";
 
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/<!--  we are upgrading -->/', $results);
@@ -511,7 +508,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
         $token_regex = '/https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).
-        'install\/upgrade.php\?upgrade_token=' . $token . '/';
+        'install\/upgrade-database.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
@@ -531,7 +528,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $this->assertPattern('/to\: m@w\.nz,m4@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
-        $token_regex = '/\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $token_regex = '/\/install\/upgrade-database.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // should not send email if a token file exists
@@ -543,7 +540,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testProcessOneMigrations() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
@@ -569,7 +566,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $version = $config->getValue('THINKUP_VERSION') + 10;
         $version .= '.2';
         $config->setValue('THINKUP_VERSION', $version); //set a high minor version
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
@@ -595,7 +592,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $test_version = $config->getValue('THINKUP_VERSION') + 10.1;
         $test_version .= '.2beta';
         $config->setValue('THINKUP_VERSION', $test_version); //set a high minor version with beta string
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
@@ -627,7 +624,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $config = Config::getInstance();
         $config->setValue('THINKUP_VERSION', '0.4');
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         //print $results;
         $this->assertPattern('/needs 1 database update/', $results);
@@ -638,7 +635,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $this->testdb_helper->runSQL('ALTER TABLE ' . $this->table_prefix .'links ADD  post_id BIGINT( 20 ) NOT NULL,'.
         'ADD network VARCHAR( 20 ) NOT NULL');
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertPattern('/needs 2 database updates/', $results);
         $v_mgr = $controller->getViewManager();
@@ -648,7 +645,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         // run snowflake migration
         $_GET['migration_index'] = 1;
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
@@ -660,7 +657,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         // run version 4 upgrade
         $_GET['migration_index'] = 2;
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue($obj->processed);
         $stmt = $this->pdo->query("desc " . $this->table_prefix . "instances last_post_id");
@@ -680,7 +677,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testProcessTwoMigrations() {
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(2);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
@@ -719,7 +716,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testProcessMigrationWithAToken() {
         // not logged in...
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/<!--  we are upgrading -->/', $results);
@@ -727,7 +724,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $token = file_get_contents($this->token_file);
         $this->assertPattern('/^[\da-f]{32}$/', $token);
 
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
         $_GET['upgrade_token'] = $token;
@@ -744,7 +741,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $_GET['migration_done'] = true;
 
         $results = $controller->go();
@@ -764,7 +761,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     public function testMigrationDoneWithToken() {
         // not logged in...
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/<!--  we are upgrading -->/', $results);
@@ -775,7 +772,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $_GET['migration_done'] = true;
         $_GET['upgrade_token'] = $token;
 
@@ -806,7 +803,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         }
 
         $this->simulateLogin('me@example.com', true);
-        $controller = new UpgradeController(true);
+        $controller = new UpgradeDatabaseController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
         $results = $controller->go();

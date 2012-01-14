@@ -110,6 +110,7 @@ class SmartyThinkUp extends Smarty {
         $this->compile_dir = FileDataManager::getDataPath('compiled_view');
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
         $this->cache_dir = $this->compile_dir . '/cache';
+        $this->compile_check = $config_array['debug'];
         $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = $cache_lifetime;
         $this->debug = $debug;

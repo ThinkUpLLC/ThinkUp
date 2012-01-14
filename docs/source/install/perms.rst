@@ -1,5 +1,5 @@
-Understanding ThinkUp's Folder Permissions
-==========================================
+Minimum Required File Permissions
+=================================
 
 In order to run, ThinkUp must be able to write files to a specific data directory defined in the
 ``config.inc.php`` file as ``$THINKUP_CFG['datadir_path']``. By default the data directory is located in the root of

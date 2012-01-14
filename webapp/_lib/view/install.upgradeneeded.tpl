@@ -8,14 +8,14 @@
 <!--  we are upgrading -->
 <p>
 {if $user_is_admin}
-ThinkUp's database needs an update. <a href="{$site_root_path}install/upgrade.php">Update now</a>.
+ThinkUp's database needs an update. <a href="{$site_root_path}install/upgrade-database.php">Update now</a>.
 {else}
 ThinkUp is currently in the process of upgrading. Please try back again in a little while.<br /><br />
 If you are the administrator of this ThinkUp installation, check your email to complete the upgrade process.<br />
 (<a href="http://thinkupapp.com/docs/troubleshoot/messages/upgrading.html">What? Help!</a>)
 
 <p>
-<form method="get" action="{$site_root_path}install/upgrade.php" style="margin-top: 20px">
+<form method="get" action="{$site_root_path}install/upgrade-database.php" style="margin-top: 20px">
 <p>If you have an
 <a href="http://thinkupapp.com/docs/troubleshoot/messages/upgrading.html">
 upgrade token</a>, you can enter it here:

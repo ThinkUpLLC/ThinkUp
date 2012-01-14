@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/controller/class.UpgradeController.php
+ * ThinkUp/webapp/_lib/controller/class.UpgradeDatabaseController.php
  *
  * Copyright (c) 2009-2012 Mark Wilkie
  *
@@ -43,7 +43,7 @@
  *
  *
  */
-class UpgradeController extends ThinkUpAuthController {
+class UpgradeDatabaseController extends ThinkUpAuthController {
 
     /**
      * First auto updatable migration
@@ -68,7 +68,7 @@ class UpgradeController extends ThinkUpAuthController {
     /**
      * Constructor
      * @param bool $session_started
-     * @return UpgradeController
+     * @return UpgradeDatabaseController
      */
     public function __construct($session_started=false) {
         if (! getenv('CLI_BACKUP')) {
@@ -119,7 +119,7 @@ class UpgradeController extends ThinkUpAuthController {
             $this->snowflakeSession(false, true);
         } else {
             $this->setPageTitle('Upgrade the ThinkUp Database Structure');
-            $this->setViewTemplate('install.upgrade.tpl');
+            $this->setViewTemplate('install.upgrade-database.tpl');
             if (version_compare($db_version, $thinkup_db_version, '<')) {
                 ## get migrations we need to run...
                 $migrations = $this->getMigrationList($db_version);
@@ -138,6 +138,7 @@ class UpgradeController extends ThinkUpAuthController {
                         $option_dao->insertOption(OptionDAO::APP_OPTIONS, 'database_version', $thinkup_db_version);
                     }
                     $this->addToView('version_updated', true);
+                    $this->addToView('thinkup_db_version', $thinkup_db_version);
                     $this->deleteTokenFile();
                 } else {
                     // pass the count of the table with  the most records
@@ -171,9 +172,9 @@ class UpgradeController extends ThinkUpAuthController {
     public static function isUpgrading($is_admin, $class_name) {
         $config = Config::getInstance();
         $status = false;
-        $db_version = UpgradeController::getCurrentDBVersion($config->getValue( 'cache_pages' ));
+        $db_version = UpgradeDatabaseController::getCurrentDBVersion($config->getValue( 'cache_pages' ));
         if (version_compare($db_version, $config->getValue('THINKUP_VERSION'), '<') ) {
-            if ( $class_name != 'UpgradeController' ) {
+            if ( $class_name != 'UpgradeDatabaseController' ) {
                 $status = true;
             } else if ( !$is_admin && !isset($_GET['upgrade_token']) ) {
                 $status = true;
@@ -301,7 +302,7 @@ class UpgradeController extends ThinkUpAuthController {
                 }
             }
         }
-        usort($migrations, 'UpgradeController::migrationDateSort');
+        usort($migrations, 'UpgradeDatabaseController::migrationDateSort');
         return $migrations;
     }
 
@@ -369,7 +370,7 @@ class UpgradeController extends ThinkUpAuthController {
     /**
      * To sort migrations by key
      * For PHP 5.2 compatibility, this method must be public so that we can call usort($migrations,
-     * 'UpgradeController::migrationDateSort')
+     * 'UpgradeDatabaseController::migrationDateSort')
      * private/self::migrationDateSort doesn't work in PHP 5.2
      */
     public static function migrationDateSort($a,$b) {

@@ -100,7 +100,7 @@ var TU_Update = function() {
 		// some time");
 		// }
 
-		controller_uri = site_root_path + 'install/upgrade.php';
+		controller_uri = site_root_path + 'install/upgrade-database.php';
 		tu_update.submitting = true;
 		$('#migrate_spinner').show();
 		var params = {

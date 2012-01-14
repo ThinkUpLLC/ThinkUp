@@ -65,10 +65,11 @@ $controller_test_list = array(
 "TestOfPluginOptionController",
 "TestOfTestAuthAPIController",
 "TestOfRSSController",
-"TestOfUpgradeController",
+"TestOfUpgradeDatabaseController",
 "TestOfPostAPIController",
 "TestOfStreamerAuthController",
-"TestOfUpdateNowController"
+"TestOfUpdateNowController",
+"TestOfUpgradeApplicationController"
 );
 
 if (!getenv("TEST_TIMING")=="1") {

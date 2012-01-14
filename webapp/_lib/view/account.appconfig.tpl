@@ -27,6 +27,25 @@
   onsubmit="return false">
     <div class="clearfix" style="width: 640px;">
 
+      <div style="float: left;">
+        <label for="default_instance">
+          Default service user:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <select name="default_instance" id="default_instance">
+        <option value="0">Last updated</option>
+        {foreach from=$public_instances item=pi}
+            <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
+        {/foreach}
+        </select>
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
+        Set the service user to display by default. {insert name="help_link" id="default_service_user"}
+      </div>
+
       <div style="clear:both;"></div>
       <div style="float: left;">
         <label for="is_registration_open">
@@ -41,6 +60,21 @@
       <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Set whether or not your site's registration page is available and accepts new user registrations.
       </div>
+
+      <div style="float: left;">
+        <label for="is_log_verbose">
+          Enable developer log:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
+        See the verbose, unformatted developer log on the Update Now screen.
+      </div>
+   </div>
 
       <div style="float: left;">
         <label for="recaptcha_enable">
@@ -77,6 +111,20 @@
        </div>
 
       <div style="float: left;">
+        <label for="is_subscribed_to_beta">
+          Enable beta upgrades:
+          <br>
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_subscribed_to_beta" id="is_subscribed_to_beta" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
+        Test bleeding edge, beta upgrades. May require command line server access. Proceed at your own risk.
+      </div>
+
+      <div style="float: left;">
         
         <label for="is_api_disabled">
           Disable the JSON API:
@@ -104,40 +152,6 @@
       <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Set whether or not a user can embed a ThinkUp thread onto another web site.
       </div>
-
-      <div style="float: left;">
-        <label for="default_instance">
-          Default service user:
-          <br />
-        </label>
-      </div>
-      <div style="float: left;">
-        <select name="default_instance" id="default_instance">
-        <option value="0">Last updated</option>
-        {foreach from=$public_instances item=pi}
-            <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
-        {/foreach}
-        </select>
-      </div>
-      <div style="clear:both;"></div>
-      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
-        Set the service user to display by default. {insert name="help_link" id="default_service_user"}
-      </div>
-
-      <div style="float: left;">
-        <label for="is_log_verbose">
-          Developer log:
-          <br />
-        </label>
-      </div>
-      <div style="float: left;">
-        <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true">
-      </div>
-      <div style="clear:both;"></div>
-      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
-        See the verbose, unformatted developer log on the Update Now screen.
-      </div>
-   </div>
 
       <div style="float: left;">
         <label for="is_opted_out_usage_stats">
