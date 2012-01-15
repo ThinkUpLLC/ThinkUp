@@ -39,6 +39,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp->registerPlugin('facebook', 'FacebookPlugin');
     }
 
     public function testConstructor() {
@@ -75,12 +76,12 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
         //Set the default service user to jack, who is not last updated
         $app_option_builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'default_instance', 'option_value'=>'2'));
+        'option_name'=>'default_instance', 'option_value'=>'3'));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -97,9 +98,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedNoDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -150,6 +151,21 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
     }
 
+    public function testNonExistentUsername() {
+        $builders = $this->buildData();
+        $_GET['u'] = 'idontexist';
+        $_GET['n'] = 'twitter';
+        $_GET['v'] = 'tweets-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $error_msg = $v_mgr->getTemplateDataItem('error_msg');
+        $this->assertNotNull($error_msg);
+        $this->assertEqual($error_msg, 'idontexist on Twitter is not in ThinkUp.');
+    }
+
     public function testLoggedInPosts() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
@@ -172,6 +188,43 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
     }
 
+    public function testLoggedInPostsWithUsernameApostrophe() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] = "Joe O\'Malley";
+        $_GET['n'] = 'facebook';
+        $_GET['v'] = 'posts-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All posts');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All your status updates');
+
+        $config = Config::getInstance();
+        $this->assertEqual($controller->getCacheKeyString(),
+        ".htdashboard.tpl-me@example.com-Joe O\'Malley-facebook-posts-all");
+        $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
+    }
+
+    public function testNotLoggedInNotPublicInstance() {
+        $builders = $this->buildData();
+        //required params
+        $_GET['u'] = "Joe O\'Malley";
+        $_GET['n'] = 'facebook';
+        $_GET['v'] = 'posts-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $error_msg = $v_mgr->getTemplateDataItem('error_msg');
+        $this->assertNotNull($error_msg);
+        $this->assertEqual($error_msg, 'Insufficient privileges');
+    }
+
     public function testLoggedInConversations() {
         $builders = $this->buildData();
         //must be logged in
@@ -187,7 +240,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Conversations', 'Header');
         $this->assertIsA($v_mgr->getTemplateDataItem('author_replies'), 'array', 'Array of tweets');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('author_replies')), 1, '1 posts in listing');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('author_replies')), 0);
 
         $config = Config::getInstance();
         $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter-tweets-convo');
@@ -266,24 +319,31 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         'email'=>'me@example.com', 'is_activated'=>1) );
 
         //Add instance_owner
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $instance_owner_builder_1 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $instance_owner_builder_2 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
 
         //Insert test data into test table
-        $user_builder_1 = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        $user_builder_1 = FixtureBuilder::build('users', array('user_id'=>'13', 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'last_updated'=>'-1d'));
 
-        $user_builder_2 = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
+        $user_builder_2 = FixtureBuilder::build('users', array('user_id'=>'12', 'user_name'=>'jack',
         'last_updated'=>'-5d'));
 
+        $user_builder_3 = FixtureBuilder::build('users', array('user_id'=>'14', 'user_name'=>"Joe O'Malley",
+        'last_updated'=>'-5d', 'network'=>'facebook'));
+
         //Make public
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,
+        $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'13',
         'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d'));
+
+        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'14',
+        'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'facebook'));
 
         $post_builders = array();
         //Add a bunch of posts
         $counter = 0;
         $post_data = 'This is post ';
-        if($with_xss) { $post_data .= "<script>alert('wa');</script>"; }
+        if ($with_xss) { $post_data .= "<script>alert('wa');</script>"; }
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
@@ -292,16 +352,30 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
             $counter++;
         }
 
-        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>41, 'author_user_id'=>13,
-        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 
-        'post_text'=>'This post is in reply to jacks post 50', 'in_reply_to_post_id'=>50, 'network'=>'twitter',
-        'in_reply_to_user_id'=>12));
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>41, 'author_user_id'=>'13',
+        'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'post_text'=>'This post is in reply to jacks post 50', 'in_reply_to_post_id'=>'50', 'network'=>'twitter',
+        'in_reply_to_user_id'=>'12'));
 
-        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>50, 'author_user_id'=>12,
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>42, 'author_user_id'=>'12',
         'author_username'=>'jack', 'author_fullname'=>'Jack Dorsey', 'post_text'=>'Ev replies to this post',
         'network'=>'twitter'));
 
-        return array($owner_builder, $instance_owner_builder, $user_builder_1, $user_builder_2, $instance_builder,
-        $post_builders);
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>43, 'author_user_id'=>'14',
+        'author_username'=>"Joe O'Malley", 'author_fullname'=>"Joe O\'Malley", 'post_text'=>"Joe's post",
+        'network'=>'facebook'));
+
+        $counter = 0;
+        $post_data = 'This is post ';
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>($counter+45), 'author_user_id'=>'14',
+            'author_username'=>"Joe O'Malley", 'author_fullname'=>"Joe O'Malley", 'post_text'=>$post_data.($counter+45),
+            'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00', 'network'=>'facebook'));
+            $counter++;
+        }
+
+        return array($owner_builder, $instance_owner_builder_1, $instance_owner_builder_2, $user_builder_1,
+        $user_builder_2, $instance_builder_1, $instance_builder_2, $post_builders);
     }
 }
