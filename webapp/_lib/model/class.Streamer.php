@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Streamer.php
  *
- * Copyright (c) 2011 Amy Unruh
+ * Copyright (c) 2011-2012 Amy Unruh
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Singleton provides hooks for streamer plugins.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Amy Unruh
+ * @copyright 2011-2012 Amy Unruh
  * @author Amy Unruh
  */
 class Streamer extends PluginHook {

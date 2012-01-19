@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Group.php
  *
- * Copyright (c) 2011 SwellPath, Inc.
+ * Copyright (c) 2011-2012 SwellPath, Inc.
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * This class represents social network groups or lists like @ginatrapani/lifehackers on Twitter.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 SwellPath, Inc.
+ * @copyright 2011-2012 SwellPath, Inc.
  * @author Christian G. Warden <cwarden[at]xerus[dot]org>
  *
  */

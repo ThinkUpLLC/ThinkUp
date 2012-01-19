@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfLoader.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of Loader class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';

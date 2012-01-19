@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfExportController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie, Michael Louis Thaler
+ * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie, Michael Louis Thaler
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @author Michael Louis Thaler <michael[dot]louis[dot]thaler[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Michael Louis Thaler
+ * @copyright 2009-2012 Gina Trapani, Mark Wilkie, Michael Louis Thaler
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

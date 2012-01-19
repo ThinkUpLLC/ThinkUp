@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/twitterrealtime/tests/TestOfStreamMessageQueueRedis.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Amy Unruh, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh, Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  * Test of TestOfConsumerUserStream
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Amy Unruh, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Amy Unruh, Mark Wilkie
  * @author Amy Unruh
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.InvalidInvalidCSRFTokenException.php
  *
- * Copyright (c) 2011 Mark Wilkie
+ * Copyright (c) 2011-2012 Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Mark Wilkie <mwilkie@gmail.com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Mark Wilkie
+ * @copyright 2011-2012 Mark Wilkie
  */
 class InvalidCSRFTokenException extends Exception {
     public function __construct($token = false) {

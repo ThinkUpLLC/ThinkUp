@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfMutexMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau
+ * Copyright (c) 2009-2012 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of MutexDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau
+ * @copyright 2009-2012 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  */
 require_once dirname(__FILE__).'/init.tests.php';

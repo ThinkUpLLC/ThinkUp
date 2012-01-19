@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/class.TestPreAuthController.php
  *
- * Copyright (c) 2011 Mark Wilkie
+ * Copyright (c) 2011-2012 Mark Wilkie
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * Test auth controller to try the ThinkUpAuthController abstract class and Controller interface
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Mark Wilkie
+ * @copyright 2011-2012 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class TestPreAuthController extends ThinkUpAuthController {

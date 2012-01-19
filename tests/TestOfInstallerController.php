@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstallerController.php
  *
- * Copyright (c) 2009-2011 Dwi Widiastuti, Gina Trapani
+ * Copyright (c) 2009-2012 Dwi Widiastuti, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

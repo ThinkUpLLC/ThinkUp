@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/model/class.FacebookCrawler.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -29,7 +29,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2012 Gina Trapani
  */
 class FacebookCrawler {
     /**

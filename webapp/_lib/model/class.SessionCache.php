@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.SessionCache.php
  *
- * Copyright (c) 2011 Gina Trapani
+ * Copyright (c) 2011-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * PHP $_SESSION accessor.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Gina Trapani
+ * @copyright 2011-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

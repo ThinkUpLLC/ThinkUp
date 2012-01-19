@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitterrealltime/controller/class.TwitterRealtimePluginConfigurationController.php
  *
- * Copyright (c) 2011 Mark Wilkie, Amy Unruh
+ * Copyright (c) 2011-2012 Mark Wilkie, Amy Unruh
  *
  * LICENSE:
  *

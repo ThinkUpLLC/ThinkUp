@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.DashboardController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The main controller which displays a given view for a give instance user.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

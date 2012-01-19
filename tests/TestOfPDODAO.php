@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPDODAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
+ * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
+ * @copyright 2009-2012 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

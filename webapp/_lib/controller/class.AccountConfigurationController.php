@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.AccountConfigurationController.php
  *
- * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
+ * Copyright (c) 2009-2012 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * AccountConfiguration Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
+ * @copyright 2009-2012 Terrance Shepherd, Gina Trapani
  * @author Terrance Shepehrd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

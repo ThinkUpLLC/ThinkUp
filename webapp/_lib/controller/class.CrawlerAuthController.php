@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.CrawlerAuthController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * Runs crawler from the command line given valid command line credentials.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class CrawlerAuthController extends ThinkUpController {

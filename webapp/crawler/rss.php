@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/crawler/rss.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau
+ * Copyright (c) 2009-2012 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau
+ * @copyright 2009-2012 Guillaume Boudreau
  */
 chdir("..");
 require_once 'init.php';

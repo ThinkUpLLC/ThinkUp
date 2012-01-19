@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfBackupMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie
+ * Copyright (c) 2009-2012 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Mark Wilkie
+ * @copyright 2009-2012 Mark Wilkie
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

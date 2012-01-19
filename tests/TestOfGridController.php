@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfGridController.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie, Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Mark Wilkie, Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2012 Mark Wilkie, Gina Trapani, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

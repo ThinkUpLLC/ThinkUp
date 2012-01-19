@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.FavoritePostMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Amy Unruh, Gina Trapani
+ * Copyright (c) 2009-2012 Amy Unruh, Gina Trapani
  *
  * LICENSE:
  *
@@ -28,7 +28,7 @@
  * about favorited posts.  The favorites table stores post id, user (author) id, favoriter id, and network.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Amy Unruh
+ * @copyright 2009-2012 Gina Trapani, Amy Unruh
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Amy Unruh
  *

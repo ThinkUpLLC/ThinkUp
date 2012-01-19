@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.FavoritePostDAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Amy Unruh
+ * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * FavoritePost Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Amy Unruh
+ * @copyright 2009-2012 Gina Trapani, Amy Unruh
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Amy Unruh
  *

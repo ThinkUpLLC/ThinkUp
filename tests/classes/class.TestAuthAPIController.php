@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/class.TestAuthAPIController.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau
+ * Copyright (c) 2009-2012 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * Test auth API controller to try the ThinkUpAuthAPIController abstract class and Controller interface
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau
+ * @copyright 2009-2012 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  */
 class TestAuthAPIController extends ThinkUpAuthAPIController {

@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/fixtures/class.FixtureBuilderException.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie
+ * Copyright (c) 2009-2012 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,6 +23,6 @@
 /**
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Mark Wilkie
+ * @copyright 2009-2012 Mark Wilkie
 */
 class FixtureBuilderException extends Exception {}

@@ -13,7 +13,7 @@
  *
  * ThinkUp/webapp/plugins/twitterrealtime/controller/twitterrealtime.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Amy Unruh
+ * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh
  *
  * LICENSE:
  *

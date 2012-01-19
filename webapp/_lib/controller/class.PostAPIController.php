@@ -4,7 +4,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PostAPIController.php
  *
- * Copyright (c) 2011 Sam Rose
+ * Copyright (c) 2011-2012 Sam Rose
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Post API Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Sam Rose
+ * @copyright 2011-2012 Sam Rose
  * @author Sam Rose <samwho@lbak.co.uk>
  *
  */

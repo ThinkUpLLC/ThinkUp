@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  */
 class HelloThinkUpPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin {
 

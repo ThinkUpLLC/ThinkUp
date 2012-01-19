@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.GroupDAO.php
  *
- * Copyright (c) 2011 SwellPath, Inc.
+ * Copyright (c) 2011-2012 SwellPath, Inc.
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Group Data Access Object Interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 SwellPath, Inc.
+ * @copyright 2011-2012 SwellPath, Inc.
  * @author Christian G. Warden <cwarden[at]xerus[dot]org>
  */
 interface GroupDAO {

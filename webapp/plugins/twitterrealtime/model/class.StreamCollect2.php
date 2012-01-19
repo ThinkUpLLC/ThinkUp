@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/twitterrealtime/model/class.StreamCollect2.php
  *
- * Copyright (c) 2011 Amy Unruh
+ * Copyright (c) 2011-2012 Amy Unruh
  *
  * LICENSE:
  *

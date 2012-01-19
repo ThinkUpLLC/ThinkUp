@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfSession.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of Session
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

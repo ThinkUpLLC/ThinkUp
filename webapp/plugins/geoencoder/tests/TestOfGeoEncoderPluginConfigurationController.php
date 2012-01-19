@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie, Ekansh Preet Singh
+ * Copyright (c) 2009-2012 Mark Wilkie, Ekansh Preet Singh
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of TestOfGeoEncoderPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Mark Wilkie, Ekansh Preet Singh
+ * @copyright 2009-2012 Mark Wilkie, Ekansh Preet Singh
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/model/class.TwitterRealtimePlugin.php
  *
- * Copyright (c) 2011 Amy Unruh
+ * Copyright (c) 2011-2012 Amy Unruh
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Twitter crawler and webapp plugin retrieves data from Twitter and displays it.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Amy Unruh
+ * @copyright 2011-2012 Amy Unruh
  * @author Amy Unruh
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.MutexDAO.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau
+ * Copyright (c) 2009-2012 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Mutex Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau
+ * @copyright 2009-2012 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */

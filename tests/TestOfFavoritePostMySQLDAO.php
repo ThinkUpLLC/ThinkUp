@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfFavoritePostMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Amy Unruh, Gina Trapani
+ * Copyright (c) 2009-2012 Amy Unruh, Gina Trapani
  *
  * LICENSE:
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Amy Unruh, Gina Trapani
+ * @copyright 2009-2012 Amy Unruh, Gina Trapani
  * @author Amy Unruh
  */
 

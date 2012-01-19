@@ -13,7 +13,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/controller/geoencoder.php
  *
- * Copyright (c) 2009-2011 Ekansh Preet Singh, Mark Wilkie
+ * Copyright (c) 2009-2012 Ekansh Preet Singh, Mark Wilkie
  *
  * LICENSE:
  *
@@ -33,7 +33,7 @@
 /**
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Ekansh Preet Singh, Mark Wilkie
+ * @copyright 2009-2012 Ekansh Preet Singh, Mark Wilkie
  */
 
 $webapp = Webapp::getInstance();

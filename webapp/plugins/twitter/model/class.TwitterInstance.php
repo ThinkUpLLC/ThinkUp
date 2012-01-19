@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/model/class.TwitterInstance.php
  *
- * Copyright (c) 2011 Gina Trapani
+ * Copyright (c) 2011-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Gina Trapani
+ * @copyright 2011-2012 Gina Trapani
  *
  * Twitter Instance
  *

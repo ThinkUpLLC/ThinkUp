@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.RSSController.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau
+ * Copyright (c) 2009-2012 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * This will allow users to crawl their ThinkUp instances by subscribing to their ThinkUp RSS feed in any RSS reader.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau
+ * @copyright 2009-2012 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  */
 class RSSController extends ThinkUpAuthAPIController {

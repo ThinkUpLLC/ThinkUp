@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PluginOptionController.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Controller to add and update plugin options
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2012 Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

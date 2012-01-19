@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * Facebook Plugin Configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

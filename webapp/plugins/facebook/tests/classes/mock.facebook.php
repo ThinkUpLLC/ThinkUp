@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/tests/classes/mock.facebook.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *

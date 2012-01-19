@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.LocationDAO.php
  *
- * Copyright (c) 2009-2011 Ekansh Preet Singh, Mark Wilkie
+ * Copyright (c) 2009-2012 Ekansh Preet Singh, Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Location Data Access Object Interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Ekansh Preet Singh, Mark Wilkie
+ * @copyright 2009-2012 Ekansh Preet Singh, Mark Wilkie
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */

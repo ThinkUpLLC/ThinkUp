@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.PluginNotFoundEception.php
  *
- * Copyright (c) 2011 Gina Trapani
+ * Copyright (c) 2011-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Gina Trapani
+ * @copyright 2011-2012 Gina Trapani
  */
 class PluginNotFoundException extends Exception {
     public function __construct($plugin_folder_name) {

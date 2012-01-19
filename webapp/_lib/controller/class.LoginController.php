@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.LoginController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * @TODO Build mechanism for redirecting user to originally-requested logged-in only page.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

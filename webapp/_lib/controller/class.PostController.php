@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PostController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Displays a post and its replies, retweets, reach, and location information.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

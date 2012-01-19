@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.InviteDAO.php
  *
- * Copyright (c) 2011 Terrance Shepherd, Gina Trapani
+ * Copyright (c) 2011-2012 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Invite Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Terrance Shepherd, Gina Trapani
+ * @copyright 2011-2012 Terrance Shepherd, Gina Trapani
  * @author Terrance Shepherd
  *
  */

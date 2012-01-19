@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/cli/backup.php
  *
- * Copyright (c) 2009-2011 Mark Wilkie
+ * Copyright (c) 2009-2012 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Caommnd line interface for backing up thinkup data
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Mark Wilkie
+ * @copyright 2009-2012 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 chdir(dirname(__FILE__) . '/../..');

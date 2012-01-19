@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/session/forgot.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Michael Louis Thaler
+ * Copyright (c) 2009-2012 Gina Trapani, Michael Louis Thaler
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Michael Louis Thaler <michael[dot]louis[dot]thaler[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Michael Louis Thaler
+ * @copyright 2009-2012 Gina Trapani, Michael Louis Thaler
  */
 chdir('..');
 require_once 'init.php';

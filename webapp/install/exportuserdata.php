@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/exportuserdata.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Dwi Widiastuti
+ * @copyright 2009-2012 Gina Trapani, Dwi Widiastuti
  */
 chdir("..");
 require_once '_lib/model/class.Loader.php';

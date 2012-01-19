@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.MutexMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Guillaume Boudreau, Gina Trapani
+ * Copyright (c) 2009-2012 Guillaume Boudreau, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Mutex Data Access Object implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Guillaume Boudreau, Gina Trapani
+ * @copyright 2009-2012 Guillaume Boudreau, Gina Trapani
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

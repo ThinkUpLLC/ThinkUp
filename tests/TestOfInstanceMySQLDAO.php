@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstanceMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
+ * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
+ * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

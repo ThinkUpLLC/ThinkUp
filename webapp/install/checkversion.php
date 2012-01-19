@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/checkversion.php
  *
- * Copyright (c) 2011 Gina Trapani
+ * Copyright (c) 2011-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Gina Trapani
+ * @copyright 2011-2012 Gina Trapani
  */
 chdir('..');
 require_once 'init.php';

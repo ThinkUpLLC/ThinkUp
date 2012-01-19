@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.InviteMySQLDAO.php
  *
- * Copyright (c) 2011 Terrance Shepherd, Gina Trapani
+ * Copyright (c) 2011-2012 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *

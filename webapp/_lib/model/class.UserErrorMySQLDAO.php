@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.UserErrorMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * User Error MySQL DAO Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

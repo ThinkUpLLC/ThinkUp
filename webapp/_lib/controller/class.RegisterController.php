@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.RegisterController.php
  *
- * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
+ * Copyright (c) 2009-2012 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Registers new ThinkUp users.
  * This controller is not used when the installer registers the first user. Class.InstallerController handles that
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
+ * @copyright 2009-2012 Terrance Shepherd, Gina Trapani
  * @author Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
