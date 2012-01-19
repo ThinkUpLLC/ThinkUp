@@ -46,6 +46,13 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
     public function authControl() {
         $this->disableCaching();
+
+        //passsswd reset validation
+        $this->addHeaderCSS('assets/css/validate_password.css');
+        $this->addHeaderJavaScript('assets/js/jquery.validate.min.js');
+        $this->addHeaderJavaScript('assets/js/jquery.validate.password.js');
+        $this->addHeaderJavaScript('assets/js/validate_password.js');
+
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');
