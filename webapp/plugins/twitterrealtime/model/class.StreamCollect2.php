@@ -34,6 +34,11 @@ class StreamCollect2  {
     var $argv;
 
     public function __construct($argc, $argv) {
+        $config = Config::getInstance();
+        if ($config->getValue('timezone')) {
+            date_default_timezone_set($config->getValue('timezone'));
+        }
+
         $this->argc = $argc;
         $this->argv = $argv;
     }
