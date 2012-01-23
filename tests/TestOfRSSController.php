@@ -70,26 +70,76 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Error: crawler log is not writable/", $results);
     }
 
+    public function testPerOwnerRefreshRate() {
+        // $THINKUP_CFG['rss_crawler_refresh_rate'] should apply per owner
+        $builders = $this->buildData();
+        $controller = new RSSController(true);
+        $_GET['un'] = 'me@example.com';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $results = $controller->go();
+        $this->assertPattern("/ThinkUp crawl started/", $results);
+
+        $instanceDAO = new InstanceMySQLDAO();
+        $instanceDAO->updateLastRun(1);
+
+        // the crawler should start for the second owner despite a recent last
+        // run time for instance 1 owned by owner 1
+        $controller = new RSSController(true);
+        $_GET['un'] = 'me@example.net';
+        $_GET['as'] = 'a34e120dc6807e0dffc0d2b973b9d55b';
+        $results = $controller->go();
+        $this->assertPattern("/ThinkUp crawl started/", $results);
+    }
+
     private function buildData() {
-        $owner_builder = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'me@example.com', 
-            'pwd' => 'XXX', 
+        $builders = array();
+
+        $owner1_builder = FixtureBuilder::build('owners', array(
+            'id' => 1,
+            'email' => 'me@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
         ));
+        array_push($builders, $owner1_builder);
 
-        $instance_builder = FixtureBuilder::build('instances', array(
+        $owner2_builder = FixtureBuilder::build('owners', array(
+            'id' => 2,
+            'email' => 'me@example.net',
+            'pwd' => 'YYY',
+            'is_activated' => 1,
+            'api_key' => 'a34e120dc6807e0dffc0d2b973b9d55b'
+        ));
+        array_push($builders, $owner2_builder);
+
+        $instance1_builder = FixtureBuilder::build('instances', array(
             'id' => 1,
             'network_username' => 'jack',
+            'crawler_last_run' => '-2h',
             'network' => 'twitter'
-            ));
+        ));
+        array_push($builders, $instance1_builder);
 
-            $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
-            'owner_id' => 1, 
+        $instance2_builder = FixtureBuilder::build('instances', array(
+            'id' => 2,
+            'network_username' => 'fred',
+            'crawler_last_run' => '-2h',
+            'network' => 'twitter'
+        ));
+        array_push($builders, $instance2_builder);
+
+        $owner_instance1_builder = FixtureBuilder::build('owner_instances', array(
+            'owner_id' => 1,
             'instance_id' => 1
-            ));
+        ));
+        array_push($builders, $owner_instance1_builder);
 
-            return array($owner_builder, $instance_builder, $owner_instance_builder);
+        $owner_instance2_builder = FixtureBuilder::build('owner_instances', array(
+            'owner_id' => 2,
+            'instance_id' => 2
+        ));
+        array_push($builders, $owner_instance2_builder);
+
+        return $builders;
     }
 }
