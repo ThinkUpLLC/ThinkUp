@@ -1,0 +1,401 @@
+#!/bin/bash
+
+# Plugin Maker
+# Generates all the necessary files and folders for a new CrawlerPlugin, DashboardPlugin and PostDetailPlugin.
+# The 1st argument passed in is the name of the new plugin.
+
+plugin_name_lcase="$(tr [A-Z] [a-z] <<< "$1")"
+
+# Function to add the preamble to the top of the php files
+# Parameter 1 = Name of Plugin  Parameter 2 = Path of file to be written to
+function preamble {
+# Write everything before the END keyword to the file passed in as parameter 2
+cat<< END >$2
+<?php
+/**
+ *
+ * $2
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ * 
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2012 (Your Name)
+ * 
+ * @author Your Name  Your Email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2012 (Your Name)
+ */
+END
+}
+
+# Navigate to the root directory
+cd `dirname $0`/../../..
+
+# Create the root plugin folder
+mkdir 'webapp/plugins/'$plugin_name_lcase
+# Create the model folder
+mkdir 'webapp/plugins/'$plugin_name_lcase'/model'
+# Create the view folder
+mkdir 'webapp/plugins/'$plugin_name_lcase'/view'
+# Create the controller folder
+mkdir 'webapp/plugins/'$plugin_name_lcase'/controller'
+# Create the assets folder
+mkdir 'webapp/plugins/'$plugin_name_lcase'/assets/'
+mkdir 'webapp/plugins/'$plugin_name_lcase'/assets/img'
+cp webapp/plugins/hellothinkup/assets/img/plugin_icon.png 'webapp/plugins/'$plugin_name_lcase'/assets/img/plugin_icon.png'
+# Create the tests folder
+mkdir 'webapp/plugins/'$plugin_name_lcase'/tests'
+
+# Now its time to write all the data to our default files
+
+# Plugin Config Controller
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/controller/class.'$1'PluginConfigurationController.php'
+
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/controller/class.'$1'PluginConfigurationController.php'
+
+class $1PluginConfigurationController extends PluginConfigurationController {
+
+    public function __construct(\$owner) {
+        parent::__construct(\$owner, '$plugin_name_lcase');
+        \$this->disableCaching();
+        \$this->owner = \$owner;
+    }
+
+    public function authControl() {
+        \$config = Config::getInstance();
+        Utils::defineConstants();
+        \$this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/$plugin_name_lcase/view/account.index.tpl');
+        \$this->addToView('message', 'Hello ThinkUp world! This is an auto-generated plugin configuration '.
+        'page for ' . \$this->owner->email .'.');
+        \$this->view_mgr->addHelp('$plugin_name_lcase', 'contribute/developers/plugins/buildplugin');
+
+        /** set option fields **/
+        // name text field
+        \$name_field = array('name' => 'testname', 'label' => 'Your Name', 'size' => 40); // set element name and label
+        \$name_field['default_value'] = 'ThinkUp User'; // set default value
+        \$this->addPluginOption(self::FORM_TEXT_ELEMENT, \$name_field); // add element
+        // set testname header
+        \$this->addPluginOptionHeader('testname', 'User Info'); // add a header for an element
+        // set a special required message
+        \$this->addPluginOptionRequiredMessage('testname',
+            'Please enter a name, because we\'d really like to have one...');
+
+        // gender radio field
+        \$gender_field = array('name' => 'testradio', 'label' => 'You Like'); // set an element name and label
+        \$gender_field['values'] = array('Cookies' => 1, 'Cake' => 2, 'Other' => 3);
+        \$gender_field['default_value'] = '3'; // set default value
+        \$this->addPluginOption(self::FORM_RADIO_ELEMENT, \$gender_field); // add element
+
+        // Birth Year Select
+        \$bday_field = array('name' => 'testbirthyear', 'label' => 'Select The Year You Were Born');
+        \$years = array();
+        \$i = 1900;
+        while (\$i <= 2010) {
+            \$years['Born in ' . \$i] = \$i;
+            \$i++;
+        }
+        \$bday_field['values'] =  \$years;
+        \$bday_field['default_value'] = '2005';
+        \$this->addPluginOption(self::FORM_SELECT_ELEMENT, \$bday_field);
+
+        // Enable registration stuff
+        \$reg_field = array('name' => 'testregopen', 'label' => 'Open Registration');
+        \$this->addPluginOptionHeader('testregopen', 'Registration Options');
+        \$reg_field['values'] = array('Open' => 1, 'Closed' => 0);
+        \$this->addPluginOption(self::FORM_RADIO_ELEMENT, \$reg_field);
+
+        // registration key
+        \$reg_key = array('name' => 'RegKey', 'validation_regex' => '^\d+\$');
+        \$this->addPluginOption(self::FORM_TEXT_ELEMENT, \$reg_key);
+        \$this->setPluginOptionNotRequired('RegKey');
+        \$this->addPluginOptionRequiredMessage('RegKey',
+            'Please enter interger value for RegKey');
+
+        // advanced data
+        \$adv1 = array('name' => 'AdvancedInfo1', 'label' => '1st advanced field', 'advanced' => true);
+        \$this->addPluginOption(self::FORM_TEXT_ELEMENT, \$adv1);
+        \$this->setPluginOptionNotRequired('AdvancedInfo1'); // by default not required
+
+        \$adv2 = array('name' => 'AdvancedInfo2', 'label' => '2nd advanced field', 'advanced' => true);
+        \$this->addPluginOption(self::FORM_TEXT_ELEMENT, \$adv2);
+
+        \$plugin = new $1Plugin();
+        \$this->addToView('is_configured', \$plugin->isConfigured());
+
+        return \$this->generateView();
+    }
+
+    public function saveAccessTokens() {
+    
+    }
+
+}
+
+END
+
+# Plugin Config Controller view
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/view/account.index.tpl'
+<div class="append_20 alert helpful">
+    {insert name="help_link" id='$plugin_name_lcase'}
+    <h2>$1 Plugin</h2>
+    <div>
+    <p>{\$message}</p>
+    </div>
+</div>
+
+<div class="append_20">
+
+{if \$options_markup}
+    {if \$user_is_admin}
+        {include file="_plugin.showhider.tpl"}
+        {include file="_usermessage.tpl" field="setup"}
+        {\$options_markup}
+    {/if}
+{/if}
+</div>
+
+END
+
+# PluginName.php
+# This file has some extra data at the beginning so we dont use the normal function
+
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/controller/'$plugin_name_lcase'.php'
+<?php
+/*
+ Plugin Name: $1
+ Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/$plugin_name_lcase/
+ Description: 
+ Class: $1Plugin
+ Icon: assets/img/plugin_icon.png
+ Version: 0.01
+ Author: 
+ */
+/**
+ *
+ * webapp/plugins/$1/controller/$1.php
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ * 
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2012 (Your Name)
+ * 
+ * @author Your Name  Your Email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2012 (Your Name)
+ */
+ 
+\$webapp = Webapp::getInstance();
+\$webapp->registerPlugin('$plugin_name_lcase', '$1Plugin');
+
+\$crawler = Crawler::getInstance();
+\$crawler->registerCrawlerPlugin('$1Plugin');
+
+END
+
+
+# Now generate the default files in the model directory
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Plugin.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Plugin.php'
+
+class $1Plugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+
+    public function __construct(\$vals=null) {
+        parent::__construct(\$vals);
+        \$this->folder_name = '$plugin_name_lcase';
+    }
+
+    public function activate() {
+    
+    }
+
+    public function deactivate() {
+    
+    }
+
+    public function renderConfiguration(\$owner) {
+        \$controller = new $1PluginConfigurationController(\$owner);
+        return \$controller->go();
+    }
+
+    public function crawl() {
+    
+    }
+    
+    public function getDashboardMenuItems(\$instance) {
+    
+    }
+    
+    public function getPostDetailMenuItems(\$post) {
+    
+    }
+}
+END
+
+
+# Now generate the crawler file
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Crawler.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Crawler.php'
+
+class $1Crawler {
+
+    public function __construct() {
+    
+    }
+
+}
+END
+
+
+# Now generate the API Accessor file
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'APIAccessor.php'
+
+# Now insert the standard methods
+
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'APIAccessor.php'
+
+class $1APIAccessor{ 
+
+    public static function apiRequest() {
+
+    }
+
+    public static function rawApiRequest() {
+
+    }
+
+}
+END
+
+
+# Now finally generate the default test files
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'Plugin.php'
+
+
+# Now insert the default methods and require statements
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'Plugin.php'
+
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once THINKUP_ROOT_PATH. 'webapp/plugins/$1/model/class.$1Plugin.php';
+
+class TestOf$1Plugin extends ThinkUpUnitTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        \$webapp = Webapp::getInstance();
+        \$webapp->registerPlugin('$1', '$1Plugin');
+        \$webapp->setActivePlugin('$1');
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+    }
+
+}
+END
+
+
+# Now generate the PluginConfigController test default file
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'PluginConfigurationController.php'  
+
+# Now the default methods and require statements
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'PluginConfigurationController.php'  
+
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/$1/controller/class.$1PluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/$1/model/class.$1Crawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/$1/model/class.$1Plugin.php';
+
+class TestOf$1PluginConfigurationController extends ThinkUpUnitTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        \$webapp = Webapp::getInstance();
+        \$webapp->registerPlugin('$1', '$1Plugin');
+        \$_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+    }
+
+}
+END
+
+
+# Now generate the crawler test file
+
+preamble $1 'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'Crawler.php'
+
+# Now insert the default methods and require statements
+cat<< END >>'webapp/plugins/'$plugin_name_lcase'/tests/TestOf'$1'Crawler.php'
+  
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/$1/model/class.$1Crawler.php';
+
+class TestOf$1Crawler extends ThinkUpUnitTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        \$this->logger = Logger::getInstance();
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        \$this->logger->close();
+    }
+
+}
+END
