@@ -102,7 +102,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
     public function testInstallerCheckPermission() {
         $perms = Installer::checkPermission();
-        $this->assertTrue($perms['compiled_view']);
+        $this->assertTrue($perms['data_dir']);
         $this->assertTrue($perms['cache']);
     }
 

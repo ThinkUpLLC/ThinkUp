@@ -1,11 +1,7 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
-webapp/_lib/view/compiled_view/*.php
-webapp/_lib/view/compiled_view/*.tmp
-logs/archive/*.bz2
-logs/*log
-logs/crawl.pid
-logs/lastcrawl
+webapp/data/*
+webapp/data/logs/*
 tests/config.tests.inc.php
 .*
 extras/cron/config

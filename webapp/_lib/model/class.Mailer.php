@@ -33,7 +33,7 @@ class Mailer {
     const EMAIL = '/latest_email';
     /**
      * Send email from ThinkUp instalation. If you're running tests, just write the message headers and contents to
-     * the file system in the compiled_view folder.
+     * the file system in the data directory.
      * @param str $to A valid email address
      * @param str $subject
      * @param str $message
@@ -49,7 +49,7 @@ class Mailer {
 
         //don't send email when running tests, just write it to the filesystem for assertions
         if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
-            $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . Mailer::EMAIL;
+          $test_email = Utils::getDataPath(Mailer::EMAIL);
             $fp = fopen($test_email, 'w');
             fwrite($fp, $mail_header."\n");
             fwrite($fp, "to: $to\n");
@@ -78,7 +78,7 @@ class Mailer {
      * @return str The contents of the last email sent
      */
     public static function getLastMail() {
-        $test_email_file = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . Mailer::EMAIL;
+        $test_email_file = Utils::getDataPath(Mailer::EMAIL);
         if (file_exists($test_email_file)) {
             return file_get_contents($test_email_file);
         } else {

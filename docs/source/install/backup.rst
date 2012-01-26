@@ -22,7 +22,7 @@ the "Backup ThinkUp's database" link. On the Backup page, click on the "Backup N
 The web based backup tool has two permissions requirements. 
 
 1. Your ThinkUp installation's database user must have "GRANT FILE ON" permissions
-2. The MySQL user must have write permissions to the ``thinkup/_lib/view/compiled_view`` directory.
+2. The MySQL user must have write permissions to the ``compiled_view`` directory under the data directory defined in $THINKUP_CFG['datadir_path'].
 
 If you don't have those permissions, you can use `mysqldump` or a tool like phpMyAdmin to back up your database
 manually.

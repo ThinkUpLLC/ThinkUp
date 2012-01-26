@@ -236,11 +236,11 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $compile_dir = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view';
-        $cache_dir = $compile_dir."/cache/";
-        $ret = array('compiled_view' => false, 'cache' => false);
-        if ( is_writable($compile_dir) ) {
-            $ret['compiled_view'] = true;
+        $data_dir = Utils::getDataPath();
+        $cache_dir = $data_dir."/cache/";
+        $ret = array('data_dir' => false, 'cache' => false);
+        if ( is_writable($data_dir) ) {
+            $ret['data_dir'] = true;
             if (!file_exists($cache_dir)) {
                 $ret['cache'] = mkdir($cache_dir, 0777);
             }

@@ -72,9 +72,8 @@ class ExportServiceUserDataController extends ThinkUpAdminController {
                 if ($instance != null) {
                     $this->zip_file_short_name = str_replace(' ', '_', $instance->network_username)."_".
                     str_replace(' ', '_', $instance->network).'_user_data.zip';
-                    $this->zip_file_full_name =  THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/'.
-                    $this->zip_file_short_name;
-                    $this->readme_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/README.txt';
+                    $this->zip_file_full_name =  Utils::getDataPath($this->zip_file_short_name);
+                    $this->readme_file = Utils::getBackupPath('README.txt');
                     $this->files_to_zip[] = array('path'=>$this->readme_file, 'name'=>'README.txt');
                     self::appendToReadme(
 'THINKUP EXPORTED USER DATA
@@ -216,7 +215,7 @@ Commands to run:
         $total_replied_to_posts_exported = $export_dao->exportPostsServiceUserRepliedTo($username, $service);
 
         //export favorites
-        $favorites_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/favorites.tmp';
+        $favorites_table_file = Utils::getBackupPath('favorites.tmp');
         $total_favorite_posts_exported = $export_dao->exportFavoritesOfServiceUser($user_id, $service,
         $favorites_table_file);
         $this->files_to_zip[] = array('path'=>$favorites_table_file, 'name'=>'favorites.tmp');
@@ -226,9 +225,9 @@ Commands to run:
 ";
 
         //export posts, links, users
-        $posts_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/posts.tmp';
-        $links_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/links.tmp';
-        $users_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/users_from_posts.tmp';
+        $posts_table_file = Utils::getBackupPath('posts.tmp');
+        $links_table_file = Utils::getBackupPath('links.tmp');
+        $users_table_file = Utils::getBackupPath('users_from_posts.tmp');
         $export_dao->exportPostsLinksUsersToFile($posts_table_file, $links_table_file, $users_table_file);
 
         $this->files_to_zip[] = array('path'=>$posts_table_file, 'name'=>'posts.tmp');
@@ -236,7 +235,7 @@ Commands to run:
         $this->files_to_zip[] = array('path'=>$users_table_file, 'name'=>'users_from_posts.tmp');
 
         //export geodata
-        $geo_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/encoded_locations.tmp';
+        $geo_table_file = Utils::getBackupPath('encoded_locations.tmp');
         $export_dao->exportGeoToFile($geo_table_file);
         $this->files_to_zip[] = array('path'=>$geo_table_file, 'name'=>'encoded_locations.tmp');
         $import_instructions .= "LOAD DATA INFILE '/your/path/to/encoded_locations.tmp' IGNORE INTO TABLE ".
@@ -269,9 +268,9 @@ Commands to run:
     }
 
     protected function exportFollowsAndFollowers($user_id, $network) {
-        $follows_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/follows.tmp';
-        $users_followers_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/users_followers.tmp';
-        $users_followees_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/users_followees.tmp';
+      $follows_table_file = Utils::getBackupPath('follows.tmp');
+      $users_followers_table_file = Utils::getBackupPath('users_followers.tmp');
+      $users_followees_table_file = Utils::getBackupPath('users_followees.tmp');
 
         $export_dao = DAOFactory::getDAO('ExportDAO');
         $export_dao->exportFollowsUsersToFile($user_id, $network, $follows_table_file, $users_followers_table_file,
@@ -298,7 +297,7 @@ Commands to run:
 
     protected function exportFollowerCountHistory($user_id, $network) {
         //just the max of each day's count
-        $follower_count_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/follower_count.tmp';
+        $follower_count_table_file = Utils::getBackupPath('follower_count.tmp');
 
         $export_dao = DAOFactory::getDAO('ExportDAO');
         $export_dao->exportFollowerCountToFile($user_id, $network, $follower_count_table_file);
