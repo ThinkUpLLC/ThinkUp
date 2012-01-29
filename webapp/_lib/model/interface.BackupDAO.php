@@ -43,5 +43,4 @@ interface BackupDAO {
      * @return boolean tru if suceeds
      */
     public function import($zipfile);
-
 }

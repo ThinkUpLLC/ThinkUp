@@ -48,7 +48,8 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp build/thinkup.zip webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
-        'unzip thinkup.zip;chmod -R 777 thinkup');
+        'unzip thinkup.zip;chmod -R 777 thinkup;'.
+        'cd thinkup;chmod -R 777 data;');
     }
 
     public function tearDown() {
@@ -75,6 +76,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
 
+        //sleep(1000);
         //Start installation process
         $this->get($this->url.'/test_installer/thinkup/');
         $this->assertTitle("ThinkUp");
@@ -83,6 +85,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
         $this->clickLinkById('nextstep');
 
+        //sleep(1000);
         $this->assertText('Create Your ThinkUp Account');
         $this->setField('full_name', 'ThinkUp J. User');
         $this->setField('site_email', 'user@example.com');
@@ -104,6 +107,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
 
+        //sleep(1000);
         //Test bad activation code
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
         $this->assertText('Houston, we have a problem: Account activation failed.');

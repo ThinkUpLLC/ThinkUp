@@ -164,7 +164,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
-        'unzip ' . $zipfile . ';chmod -R 777 thinkup');
+        'unzip ' . $zipfile . ';chmod -R 777 thinkup;');
 
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
@@ -292,6 +292,11 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
             'cd webapp/test_installer/;unzip -o ' . $zipfile);
 
+            // make sure new code with data directory has correct perms
+            if (file_exists($this->install_dir.'/thinkup/data/')) {
+                exec('chmod -R 777 webapp/test_installer/thinkup/data;');
+            }
+
             // run updates and migrations
             require 'tests/migration-assertions.php';
 
@@ -326,7 +331,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             }
             $this->get($this->url.'/test_installer/thinkup/');
             $this->assertText("ThinkUp's database needs an update");
-            $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token');
+            // token could be in 1 of 2 places, depending on what version is running
+            if (file_exists($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token') ) {
+                $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token');
+            } else {
+                $file_token = file_get_contents($this->install_dir.'/thinkup/data/.htupgrade_token');
+            }
             $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
             $this->get($token_url);
             $content = $this->getBrowser()->getContent();

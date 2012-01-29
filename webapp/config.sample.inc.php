@@ -13,8 +13,8 @@ $THINKUP_CFG['site_root_path']            = '/thinkup/webapp/';
 // Server path to /thinkup/ source code folder, dirname( __FILE__ ) . '/'; by default
 $THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
 
-// Server path to writable data directory, dirname( __FILE__ ) . '/data'; by default
-$THINKUP_CFG['datadir_path']          = realpath(dirname( __FILE__ ) . '/..') . '/data';
+// Server path to writable data directory, $THINKUP_CFG['source_root_path'] . 'data/' by default
+$THINKUP_CFG['datadir_path']              = $THINKUP_CFG['source_root_path'] . 'data/';
 
 // Your timezone
 $THINKUP_CFG['timezone']                  = 'UTC';

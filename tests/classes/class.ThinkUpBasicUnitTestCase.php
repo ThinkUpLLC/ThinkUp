@@ -60,12 +60,6 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $crawler = Crawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
-        $backup_dir = Utils::getBackupPath();
-        if (!file_exists($backup_dir)) {
-          mkdir($backup_dir);
-          chmod($backup_dir, 0775);
-        }
-
         self::isTestEnvironmentReady();
     }
 
@@ -85,12 +79,13 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $this->unsetArray($_SERVER);
         $this->unsetArray($_FILES);
         Loader::unregister();
-        $backup_dir = Utils::getBackupPath();
+        $backup_dir = FileDataManager::getBackupPath();
         if (file_exists($backup_dir)) {
-          try {
-            rmdir($backup_dir); // won't delete if has files
-          } catch (Exception $e) {
-          }
+            try {
+                exec('cd '.$backup_dir.'; rm -rf *');
+                rmdir($backup_dir); // won't delete if has files
+            } catch (Exception $e) {
+            }
         }
         parent::tearDown();
     }
@@ -171,7 +166,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     public static function isTestEnvironmentReady() {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
 
-        $datadir_path = Utils::getDataPath();
+        $datadir_path = FileDataManager::getDataPath();
         if (!is_writable($datadir_path)) {
             $message = "In order to test your ThinkUp installation, $datadir_path must be writable.";
         }
@@ -207,7 +202,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
 
         if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
             $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
-            "tests/config.tests.inc.php. 
+            "tests/config.tests.inc.php.
 In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
 "empty test database.";
         }

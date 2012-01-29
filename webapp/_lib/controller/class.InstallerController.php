@@ -51,6 +51,7 @@ class InstallerController extends ThinkUpController {
         $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
             'source_root_path'=>THINKUP_ROOT_PATH,
+            'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
             'debug'=>false,
             'app_title'=>"ThinkUp",
             'cache_pages'=>false);
@@ -153,10 +154,7 @@ class InstallerController extends ThinkUpController {
             }
         }
         $this->addToView('permissions_compat', $permissions_compat);
-        $writeable_directories = array(
-            'compiled_view' => $this->view_mgr->compile_dir,
-            'cache' => $this->view_mgr->compile_dir . 'cache');
-        $this->addToView('writeable_directories', $writeable_directories);
+        $this->addToView('writeable_data_directory', FileDataManager::getDataPath());
 
         // other vars set to view
         $requirements_met = ($php_compat && $libs_compat && $permissions_compat);

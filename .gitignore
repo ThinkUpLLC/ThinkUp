@@ -1,7 +1,7 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
 webapp/data/*
-webapp/data/logs/*
+data/
 tests/config.tests.inc.php
 .*
 extras/cron/config

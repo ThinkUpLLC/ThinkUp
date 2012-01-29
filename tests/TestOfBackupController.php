@@ -39,9 +39,9 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         new BackupMySQLDAO();
         $this->config = Config::getInstance();
         $this->pdo = BackupMySQLDAO::$PDO;
-        $this->backup_file = Utils::getDataPath('.htthinkup_db_backup.zip');
-        $this->backup_test = Utils::getDataPath('thinkup_db_backup_test.zip');
-        $this->backup_dir = Utils::getBackupPath() . '/';
+        $this->backup_file = FileDataManager::getDataPath('.htthinkup_db_backup.zip');
+        $this->backup_test = FileDataManager::getDataPath('thinkup_db_backup_test.zip');
+        $this->backup_dir = FileDataManager::getBackupPath() . '/';
     }
 
     public function tearDown() {

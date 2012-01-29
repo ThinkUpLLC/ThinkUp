@@ -41,7 +41,7 @@ class BackupController extends ThinkUpAdminController {
         parent::__construct($session_started);
         $this->setViewTemplate('install.backup.tpl');
         $this->setPageTitle('Backup & Restore');
-        $this->backup_file = Utils::getDataPath('.htthinkup_db_backup.zip'); // not in the backup dir itself
+        $this->backup_file = FileDataManager::getDataPath('.htthinkup_db_backup.zip'); // not in the backup dir itself
     }
 
     public function adminControl() {

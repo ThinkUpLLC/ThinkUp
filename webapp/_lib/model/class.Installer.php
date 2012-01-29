@@ -236,8 +236,8 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $data_dir = Utils::getDataPath();
-        $cache_dir = $data_dir."/cache/";
+        $data_dir = THINKUP_WEBAPP_PATH . 'data/';
+        $cache_dir = $data_dir."cache/";
         $ret = array('data_dir' => false, 'cache' => false);
         if ( is_writable($data_dir) ) {
             $ret['data_dir'] = true;
@@ -370,7 +370,7 @@ class Installer {
                     throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
                     "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
                     "<code>{$config['db_name']}</code> database.<br />".
-                    "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL . 
+                    "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL .
                     "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);
                 }
@@ -731,7 +731,7 @@ class Installer {
     public function repairerIsDefined($config) {
         if ( !isset($config['repair']) or !$config['repair'] ) {
             throw new InstallerException('To repair ThinkUp\'s installation, please add '.
-            '<code>$THINKUP_CFG[\'repair\'] = true; </code><br>in your configuration file at <code>' . 
+            '<code>$THINKUP_CFG[\'repair\'] = true; </code><br>in your configuration file at <code>' .
             THINKUP_WEBAPP_PATH . 'config.inc.php</code>', self::ERROR_REPAIR_CONFIG);
         }
         return true;

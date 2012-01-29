@@ -39,7 +39,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
 
     public function tearDown() {
         $this->builders = null;
-        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . Mailer::EMAIL;
+        $test_email = FileDataManager::getDataPath( Mailer::EMAIL);
         if (file_exists($test_email)) {
             unlink($test_email);
         }

@@ -88,8 +88,8 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
                 $source = 'web';
             }
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
-            'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'-1h', 
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
+            'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'-1h',
             'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
@@ -99,16 +99,16 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
         //add 2 replies to post 2
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>41, 'author_user_id'=>10,
-        'author_username'=>'ev_replies', 'author_fullname'=>'Ev Williams\' replier', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'@ev This is a reply to post 2', 'source'=>'web', 'pub_date'=>'-10m', 
+        'author_username'=>'ev_replies', 'author_fullname'=>'Ev Williams\' replier', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'@ev This is a reply to post 2', 'source'=>'web', 'pub_date'=>'-10m',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>2, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>42, 'author_user_id'=>9,
-        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' replier 2', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'@ev This is another reply to post 2', 'source'=>'web', 'pub_date'=>'-11m', 
+        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' replier 2', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'@ev This is another reply to post 2', 'source'=>'web', 'pub_date'=>'-11m',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
@@ -116,8 +116,8 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
         //add a retweet of post 3
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>43, 'author_user_id'=>8,
-        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'RT @ev: This is post 3', 'source'=>'web', 'pub_date'=>'-11m', 
+        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'RT @ev: This is post 3', 'source'=>'web', 'pub_date'=>'-11m',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => 13,
@@ -125,8 +125,8 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
         //add a mention
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>44, 'author_user_id'=>8,
-        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'Yo, @ev is da man!', 'source'=>'web', 'pub_date'=>'-11m', 
+        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'Yo, @ev is da man!', 'source'=>'web', 'pub_date'=>'-11m',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
@@ -134,8 +134,8 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
         //add a non-Ev post
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>45, 'author_user_id'=>8,
-        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'Who\'s da man?', 'source'=>'web', 'pub_date'=>'-11m', 
+        'author_username'=>'ev_replies2', 'author_fullname'=>'Ev Williams\' retweeter', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'Who\'s da man?', 'source'=>'web', 'pub_date'=>'-11m',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
@@ -225,8 +225,8 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     public function testExportPostsServiceUserRepliedTo() {
         $more_data = array();
         $more_data[] = FixtureBuilder::build('posts', array('post_id'=>46, 'author_user_id'=>13,
-        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
-        'post_text'=>'I am?', 'source'=>'web', 'pub_date'=>'-1h', 
+        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
+        'post_text'=>'I am?', 'source'=>'web', 'pub_date'=>'-1h',
         'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter',
         'old_retweet_count_cache' =>0, 'in_rt_of_user_id' => null,
@@ -242,7 +242,9 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         $more_data[] = FixtureBuilder::build('favorites', array('post_id'=>44, 'fav_of_user_id'=>13,
         'author_user_id'=>8, 'network'=>'twitter'));
 
-        $favorites_file = Utils::getBackupPath('favorites.tmp');
+        $bkdir = FileDataManager::getBackupPath();
+
+        $favorites_file = FileDataManager::getBackupPath('favorites.tmp');
         if (file_exists($favorites_file)) {
             unlink($favorites_file);
         }
@@ -254,7 +256,7 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testExportGeoToFile() {
-        $file = Utils::getBackupPath('encoded_locations.tmp');
+        $file = FileDataManager::getBackupPath('encoded_locations.tmp');
         if (file_exists($file)) {
             unlink($file);
         }
@@ -264,9 +266,9 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testExportToFile() {
-        $posts_table_file = Utils::getBackupPath('posts.tmp');
-        $links_table_file = Utils::getBackupPath('links.tmp');
-        $users_table_file = Utils::getBackupPath('users.tmp');
+        $posts_table_file = FileDataManager::getBackupPath('posts.tmp');
+        $links_table_file = FileDataManager::getBackupPath('links.tmp');
+        $users_table_file = FileDataManager::getBackupPath('users.tmp');
         if (file_exists($posts_table_file)) {
             unlink($posts_table_file);
         }
@@ -289,7 +291,7 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetExportFields() {
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
-            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
+            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
             'test_name varchar(20),' .
             'test_id int(11),' .
             'unique key test_id_idx (test_id)' .

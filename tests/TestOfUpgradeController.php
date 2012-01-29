@@ -50,7 +50,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
             $new_version .= '.0';
         }
         $config->setValue('THINKUP_VERSION', $new_version ); //set a high version num
-        $this->token_file = Utils::getDataPath('.htupgrade_token');
+        $this->token_file = FileDataManager::getDataPath('.htupgrade_token');
 
         $this->migrations_test_dir = THINKUP_ROOT_PATH . 'tests/data/migrations/';
         $this->migrations_dir = THINKUP_WEBAPP_PATH . 'install/sql/mysql_migrations/';
@@ -452,7 +452,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
-        $test_email = Utils::getDataPath(Mailer::EMAIL);
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
         unlink($test_email);
         unlink($this->token_file);
         $builder4 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm4@w.nz'));
@@ -472,7 +472,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern($token_regex, $email_file);
 
         // should not send email if a token file exists
-        $test_email = Utils::getDataPath(Mailer::EMAIL);
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
         unlink($test_email);
         $results = $controller->go();
         $this->assertFalse( file_exists($test_email) );
@@ -508,7 +508,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
-        $test_email = Utils::getDataPath(Mailer::EMAIL);
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
         unlink($test_email);
         unlink($this->token_file);
         $builder4 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm4@w.nz'));
@@ -528,7 +528,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern($token_regex, $email_file);
 
         // should not send email if a token file exists
-        $test_email = Utils::getDataPath(Mailer::EMAIL);
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
         unlink($test_email);
         $results = $controller->go();
         $this->assertFalse( file_exists($test_email) );

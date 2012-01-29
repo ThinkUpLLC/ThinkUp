@@ -118,9 +118,11 @@ abstract class ThinkUpController {
             }
         } catch (Exception $e) {
             Utils::defineConstants();
+            //echo 'sending this to Smarty:'.THINKUP_WEBAPP_PATH.'data/';
             $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
             'source_root_path'=>THINKUP_ROOT_PATH,
+            'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
             'debug'=>false,
             'app_title'=>"ThinkUp",
             'cache_pages'=>false);
@@ -376,7 +378,7 @@ abstract class ThinkUpController {
     public function getHeaderCSS() {
         return $this->header_css;
     }
-    
+
     /**
      * Add data to view template engine for rendering
      *

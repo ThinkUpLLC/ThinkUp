@@ -83,6 +83,10 @@ ThinkUp database, not any others.
 
 **Make sure no ThinkUp files are writable** except the ones :doc:`required by the application </install/perms>`.
 
+**Move ThinkUp's data directory.** By default ThinkUp's writeable data directory is located in a web-accessible
+folder. Move that folder to a more secure location :doc:`by setting its path in ThinkUp's config file.</install/perms>`
+
+
 **Use strong, unique passwords** for your ThinkUp user account as well as all your social network accounts.
 
 

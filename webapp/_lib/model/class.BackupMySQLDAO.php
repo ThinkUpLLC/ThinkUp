@@ -47,14 +47,10 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 }
 
                 // extract zipfile
-                // create backip dir
-                $bkdir = Utils::getBackupPath();
-                if (!file_exists($bkdir)) {
-                    mkdir($bkdir);
-                }
-                $zip->extractTo($bkdir);
-                $create_table = $bkdir . '/create_tables.sql';
-                $infiles = glob($bkdir . '/*.txt');
+                $backup_dir = FileDataManager::getBackupPath();
+                $zip->extractTo($backup_dir);
+                $create_table = $backup_dir . '/create_tables.sql';
+                $infiles = glob($backup_dir . '/*.txt');
 
                 // rebuild db
                 $sql = file_get_contents($create_table);
@@ -87,7 +83,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                         unlink($infile);
                     }
                 }
-                rmdir($bkdir);
+                rmdir($backup_dir);
 
                 //remove non-imported tables
                 $stmt = $this->execute("SHOW TABLES");
@@ -116,7 +112,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $data = $this->getDataRowsAsArrays($stmt);
         $create_tables = '';
 
-        $zip_file = Utils::getDataPath('.htthinkup_db_backup.zip');
+        $zip_file = FileDataManager::getDataPath('.htthinkup_db_backup.zip');
         if ($backup_file) {
             $zip_file = $backup_file;
         }
@@ -131,12 +127,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
             unlink($zip_file);
         }
 
-        $bkdir = Utils::getBackupPath();
-        if (!file_exists($bkdir)) {
-          mkdir($bkdir);
-          // the directory is created by running user, mysql might not have access, hopefully share a group
-          chmod($bkdir, 0775);
-        }
+        $backup_dir = FileDataManager::getBackupPath();
 
         if (! $zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
             throw new Exception("Unable to open backup file for exporting: $zip_file");
@@ -166,7 +157,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                     $create_tables .= "\n\n";
 
                     // export table data
-                    $table_file = Utils::getBackupPath($value . '.txt');
+                    $table_file = FileDataManager::getBackupPath($value . '.txt');
                     if (file_exists($table_file)) {
                         unlink($table_file);
                     }
@@ -177,7 +168,6 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 }
             }
         } catch(Exception $e) {
-          die($e->getMessage());
             $err = $e->getMessage();
             if (preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
                 // a file perm issue?

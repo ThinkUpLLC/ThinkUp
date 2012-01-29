@@ -39,8 +39,8 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         parent::tearDown();
-        $zipfile = Utils::getBackupPath('.htthinkup_db_backup.zip');
-        $backup_dir = Utils::getBackupPath();
+        $zipfile = FileDataManager::getBackupPath('.htthinkup_db_backup.zip');
+        $backup_dir = FileDataManager::getBackupPath();
         if (file_exists($zipfile)) {
             unlink($zipfile);
         }

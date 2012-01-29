@@ -158,14 +158,14 @@ class UpgradeController extends ThinkUpAuthController {
      * Delete token file if it exists
      */
     public function deleteTokenFile() {
-      $file = Utils::getDataPath('.htupgrade_token');
-      if (file_exists($file)) {
-        unlink($file);
-      }
+        $file = FileDataManager::getDataPath('.htupgrade_token');
+        if (file_exists($file)) {
+            unlink($file);
+        }
     }
 
     /**
-     * Determin if ThinkUp needs to show the upgrading page.
+     * Determine if ThinkUp needs to show the upgrading page.
      * @param bool Is the current user an admin
      * @param str The calling classname
      * @return bool Whether or not we need to show the upgrade page
@@ -210,7 +210,7 @@ class UpgradeController extends ThinkUpAuthController {
      * @return bool True if the token is valid
      */
     public static function isTokenAuth($query_token) {
-        $token_file = Utils::getDataPath('.htupgrade_token');
+        $token_file = FileDataManager::getDataPath('.htupgrade_token');
         $status = false;
         if (file_exists($token_file)) {
             $file_token = file_get_contents($token_file);
@@ -311,7 +311,7 @@ class UpgradeController extends ThinkUpAuthController {
      * Generates a one time upgrade token, and emails admins with the token info.
      */
     public function generateUpgradeToken() {
-        $token_file = Utils::getDataPath('.htupgrade_token');
+        $token_file = FileDataManager::getDataPath('.htupgrade_token');
         $md5_token = '';
         if (! file_exists($token_file)) {
             $fp = fopen($token_file, 'w');

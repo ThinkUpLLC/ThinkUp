@@ -36,6 +36,7 @@ $model_tests->add(new TestOfLogger());
 $model_tests->add(new TestOfPDOCorePluginDAO());
 $model_tests->add(new TestOfDAOFactory());
 $model_tests->add(new TestOfConfig());
+$model_tests->add(new TestOfFileDataManager());
 $model_tests->add(new TestOfCrawler());
 $model_tests->add(new TestOfFollowMySQLDAO());
 $model_tests->add(new TestOfFollowerCountMySQLDAO());

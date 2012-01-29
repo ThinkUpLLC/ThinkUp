@@ -436,37 +436,4 @@ class Utils {
             return date($format,strtotime("last Saturday",$offset));
         }
     }
-
-    /**
-     * Get the path to a file based on $THINKUP_CFG['datadir_path']
-     * @param str $file File or directory to get the path of
-     * @return str Absolute path to file
-     */
-    public static function getDataPath($file=null) {
-      // was initially here but not all classes have access to ThinkUpController, moved to here
-      $path = Config::getInstance()->getValue('datadir_path');
-      $path = preg_replace('/\/*$/', '', $path);
-      if ($file) {
-        $file = preg_replace('/^\/*/', '', $file);
-        $file = preg_replace('/\/*$/', '', $file);
-        $path = $path . '/' . $file;
-      }
-      return $path;
-    }
-
-    /**
-     * Get the path to a file based on $THINKUP_CFG['datadir_path']
-     * @param str $file File or directory to get the path of
-     * @return str Absolute path to file
-     */
-    public static function getBackupPath($str = null) {
-      $path = 'backup';
-      if ($str) {
-        $str = preg_replace('/^\/*/', '', $str);
-        $str = preg_replace('/\/*$/', '', $str);
-        $path = $path . '/' . $str;
-      }
-      return Utils::getDataPath($path);
-    }
-
 }
