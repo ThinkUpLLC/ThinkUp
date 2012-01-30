@@ -96,7 +96,7 @@ class SmartyThinkUp extends Smarty {
 
         $src_root_path = $config_array['source_root_path'];
         $site_root_path = $config_array['site_root_path'];
-        $app_title = $config_array['app_title'];
+        $app_title = $config_array['app_title_prefix'] . 'ThinkUp';
         $cache_pages = $config_array['cache_pages'];
         $cache_lifetime = isset($config_array['cache_lifetime'])?$config_array['cache_lifetime']:600;
         $debug =  $config_array['debug'];

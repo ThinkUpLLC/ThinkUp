@@ -53,7 +53,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
 
         $results = $controller->go();
-        $this->assertTrue(strpos( $results, "Register | ThinkUp") > 0);
+        $this->assertTrue(strpos( $results, "Register | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp") > 0);
     }
 
     public function testAlreadyLoggedIn() {
@@ -70,7 +70,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $controller = new RegisterController(true);
         $results = $controller->go();
-        $this->assertPattern("/thinkupapp's Dashboard | ThinkUp/", $results);
+        $this->assertPattern(("/thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp/"), $results);
     }
 
     public function testAllMissingFields() {

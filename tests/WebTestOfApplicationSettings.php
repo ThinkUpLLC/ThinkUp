@@ -54,7 +54,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
 
         //Open registration
         $this->click("Settings");
-        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         // NOTE: this uses an ajax call, so we need to set up the post ourselves
@@ -85,7 +85,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
 
         //Open registration bad token
         $this->click("Settings");
-        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
         // we should have a global js token
