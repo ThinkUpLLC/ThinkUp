@@ -15,6 +15,4 @@ To configure the plugin, `sign up for a Google Maps API key <http://code.google.
 and enter that key into the GeoEncoder plugin's options area. Choose whether you want to see distance in kilometers or
 miles, and click on the "Save Options" button.
 
-Here's what to do if you see an error message which reads: :doc:`This post has not been geoencoded yet;
-cannot display map </troubleshoot/messages/notgeoencodedyet>`.
 
