@@ -1,6 +1,6 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
-webapp/data/*
+webapp/data/
 data/
 tests/config.tests.inc.php
 .*
