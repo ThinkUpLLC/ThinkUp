@@ -97,6 +97,8 @@ class TestOfMentionMySQLDAO extends ThinkUpUnitTestCase {
         $mentions = array(
         array('user_id' => 136881432,'user_name' => 'HeyJacquiDey',),
         array('user_id' => 1106501,'user_name' => 'joanwalsh',),
+        array('user_id' => 1140451, 'user_name' => 'AntDeRosa' ),
+        // To test for duplicate suppression
         array('user_id' => 1140451, 'user_name' => 'AntDeRosa' )
         );
         $this->dao->insertMentions($mentions, '39089424620978176', 123456, 'twitter');
@@ -116,6 +118,13 @@ class TestOfMentionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($res4), 2);
         $this->assertEqual($res4[0]['post_id'], '39089424620978176');
         $this->assertEqual($res4[1]['author_user_id'], 123457);
+
+        // the duplicate mention for AntDeRosa should not have been counted
+        $stmt = MentionMySQLDAO::$PDO->query('SELECT count_cache FROM ' . $this->table_prefix . 'mentions WHERE
+        user_id = "1140451" AND network = "twitter"');
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual(intval($row['count_cache']), 2);
+
     }
 
     //See TestOfPostMySQLDAO for more MentionMySQLDAO tests
