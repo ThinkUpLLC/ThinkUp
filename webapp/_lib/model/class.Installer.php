@@ -370,7 +370,7 @@ class Installer {
                     throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
                     "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
                     "<code>{$config['db_name']}</code> database.<br />".
-                    "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL .
+                    "To repair your existing tables, click <a href=\"" . Utils::getSiteRootPathFromFileSystem() .
                     "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);
                 }
@@ -638,7 +638,7 @@ class Installer {
         self::checkSampleConfig($sample_config_filename);
 
         $new_config = array(
-            'site_root_path' => THINKUP_BASE_URL,
+            'site_root_path' => Utils::getSiteRootPathFromFileSystem(),
             'source_root_path' => "dirname( __FILE__ ) . '/'",
             'db_host' => $db_config['db_host'],
             'db_user' => $db_config['db_user'],
@@ -717,7 +717,8 @@ class Installer {
                 'copy / rename from <code>' . THINKUP_WEBAPP_PATH . 'config.sample.inc.php</code> to ' .
                 '<code>' . THINKUP_WEBAPP_PATH . 'config.inc.php</code>. If you don\'t have permission to ' .
                 'do this, you can reinstall ThinkUp by clearing out ThinkUp tables and then clicking '.
-                '<a href="' . THINKUP_BASE_URL . 'install/">here</a>', self::ERROR_CONFIG_FILE_MISSING);
+                '<a href="' . Utils::getSiteRootPathFromFileSystem() . 'install/">here</a>',
+            self::ERROR_CONFIG_FILE_MISSING);
         }
         return $config_file;
     }

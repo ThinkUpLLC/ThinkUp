@@ -29,10 +29,10 @@
  *
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once THINKUP_ROOT_PATH. 'webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
 
 
 class TestOfHelloThinkUpPlugin extends ThinkUpUnitTestCase {

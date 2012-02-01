@@ -26,9 +26,9 @@
  * @copyright 2009-2012 Gina Trapani
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfDashboard extends ThinkUpWebTestCase {
     public function setUp() {
@@ -47,7 +47,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        //        $this->showSource();
+        //$this->showSource();
 
         $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix') ."ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');

@@ -31,8 +31,6 @@
 class CrawlerWebController extends ThinkUpAuthAPIController {
 
     public function authControl() {
-        Utils::defineConstants();
-
         if ($this->isAPICall()) {
             // If the request comes from an API call, output JSON instead of HTML
             $this->setContentType('application/json; charset=UTF-8');

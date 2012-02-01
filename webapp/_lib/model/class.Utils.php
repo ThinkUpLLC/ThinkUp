@@ -39,7 +39,6 @@ class Utils {
      * @return string Indented version of the original JSON string.
      */
     public static function indentJSON($json) {
-
         $result = '';
         $pos = 0;
         $str_len = strlen($json);
@@ -215,7 +214,7 @@ class Utils {
      * @return str view path
      */
     public static function getPluginViewDirectory($shortname) {
-        self::defineConstants();
+        Loader::definePathConstants();
         $view_path = THINKUP_WEBAPP_PATH.'plugins/'.$shortname.'/view/';
         return $view_path;
     }
@@ -274,50 +273,34 @@ class Utils {
     }
 
     /**
-     * Define application constants
+     * Determine the site_root_path using the file system structure instead of $THINKUP_CFG['site_root_path'].
+     * Only use this function when the config file doesn't yet exist (like in the installer). Otherwise, use
+     * $THINKUP_CFG['site_root_path'].
+     * @return str
      */
-    public static function defineConstants() {
-        self::defineConstantRootPath();
-        self::defineConstantWebappPath();
-        self::defineConstantBaseUrl();
-    }
-
-    /**
-     * Define the root path to ThinkUp on the filesystem
-     */
-    public static function defineConstantRootPath() {
-        if ( defined('THINKUP_ROOT_PATH') ) return;
-
-        define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
-    }
-
-    /**
-     * Define the ThinkUp's web root on the filesystem
-     */
-    public static function defineConstantWebappPath() {
-        if ( defined('THINKUP_WEBAPP_PATH') ) return;
-
-        if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-        } else {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
-        }
-    }
-
-    /**
-     * Define base URL, the same as $THINKUP_CFG['site_root_path']
-     */
-    public static function defineConstantBaseUrl() {
-        if ( defined('THINKUP_BASE_URL') ) return;
-
+    public static function getSiteRootPathFromFileSystem() {
         $dirs_under_root = array('account', 'post', 'session', 'user', 'install', 'tests');
-        $current_script_path = explode('/', $_SERVER['PHP_SELF']);
+        if (isset($_SERVER['PHP_SELF'])) {
+            $current_script_path = explode('/', $_SERVER['PHP_SELF']);
+        } else {
+            $current_script_path = array();
+        }
         array_pop($current_script_path);
         if ( in_array( end($current_script_path), $dirs_under_root ) ) {
             array_pop($current_script_path);
         }
         $current_script_path = implode('/', $current_script_path) . '/';
-        define('THINKUP_BASE_URL', $current_script_path);
+        return $current_script_path;
+    }
+
+    /**
+     * Get the application's full URL, i.e., https://example.com/thinkup/
+     * @return str
+     */
+    public static function getApplicationURL() {
+        $server = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+        $site_root_path = Config::getInstance()->getValue('site_root_path');
+        return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.$site_root_path;
     }
 
     /**
@@ -372,7 +355,6 @@ class Utils {
             ini_set('date.timezone',$tz);
         }
     }
-
 
     /**
      * Calculate the number of time units it will take to reach the next count milestone given

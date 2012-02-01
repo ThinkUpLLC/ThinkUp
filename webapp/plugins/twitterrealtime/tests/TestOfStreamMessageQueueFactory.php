@@ -27,13 +27,13 @@
  *
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueue.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueueFactory.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueueMySQL.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueue.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueFactory.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueMySQL.php';
 
 class TestOfStreamMessageQueueFactory extends ThinkUpUnitTestCase {
 
@@ -62,7 +62,7 @@ class TestOfStreamMessageQueueFactory extends ThinkUpUnitTestCase {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         } else {
-            require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueueRedis.php';
+            require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueRedis.php';
         }
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'twitterrealtime', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];

@@ -45,11 +45,11 @@ class InstallerController extends ThinkUpController {
     public function __construct($session_started=false, $reqs=null) {
         //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
         Utils::setDefaultTimezonePHPini();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
         $cfg_array =  array(
-            'site_root_path'=>THINKUP_BASE_URL,
+            'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
             'source_root_path'=>THINKUP_ROOT_PATH,
             'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
             'debug'=>false,
@@ -103,8 +103,8 @@ class InstallerController extends ThinkUpController {
                 }
                 throw new InstallerException(
                 'ThinkUp is already installed!<br /> '.$msg.'<br />To reinstall ThinkUp from scratch, delete your '.
-                'config.inc.php file and reload this page.<br /> Otherwise, start <a href="'.THINKUP_BASE_URL.
-                '">using ThinkUp</a>.', Installer::ERROR_INSTALL_COMPLETE);
+                'config.inc.php file and reload this page.<br /> Otherwise, start <a href="'.
+                Utils::getSiteRootPathFromFileSystem(). '">using ThinkUp</a>.', Installer::ERROR_INSTALL_COMPLETE);
             }
             //if we're not in repair mode, check to see if some tables exist, and if so, let user know via Exception
             if (!isset($_GET["step"]) || $_GET['step'] != 'repair') {
@@ -366,7 +366,7 @@ class InstallerController extends ThinkUpController {
             $activation_code = $owner_dao->createAdmin($email, $password, $full_name);
             // view for email
             $cfg_array =  array(
-            'site_root_path'=>THINKUP_BASE_URL,
+            'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
             'source_root_path'=>THINKUP_ROOT_PATH,
             'debug'=>false,
             'app_title_prefix'=>"",
@@ -388,7 +388,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('errors', $this->installer->getErrorMessages() );
         $this->addToView('username', $email);
         $this->addToView('password', $password);
-        $this->addToView('login_url', THINKUP_BASE_URL . 'session/login.php');
+        $this->addToView('login_url', Utils::getSiteRootPathFromFileSystem() . 'session/login.php');
     }
 
     /**

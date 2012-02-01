@@ -27,11 +27,11 @@
  * @copyright 2011-2012 Henri Watson
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusCrawler.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
-//require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.googleplus.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/model/class.GooglePlusCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
+//require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/tests/classes/mock.googleplus.php';
 
 class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
     /**
@@ -150,9 +150,9 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         //test getting token with HTTPS
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
         $_SERVER['HTTPS'] = 'y';
-        $site_root_path = '';
-        $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
-        $redirect_uri = urlencode('http'.$ssl.'://'.$_SERVER['SERVER_NAME']. $site_root_path.'account/?p=google%2B');
+        $cfg = Config::getInstance();
+        $cfg->setValue('site_root_path', '/');
+        $redirect_uri = urlencode(Utils::getApplicationURL().'account/?p=google%2B');
 
         $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
         $redirect_uri);
@@ -160,9 +160,8 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token-with-https');
 
         //test getting token without HTTPS
-        $_SERVER['HTTPS'] = '';
-        $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
-        $redirect_uri = urlencode('http'.$ssl. '://'.$_SERVER['SERVER_NAME']. $site_root_path.'account/?p=google%2B');
+        $_SERVER['HTTPS'] = null;
+        $redirect_uri = urlencode(Utils::getApplicationURL().'account/?p=google%2B');
 
         $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
         $redirect_uri);

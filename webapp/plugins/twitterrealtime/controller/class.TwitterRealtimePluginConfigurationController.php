@@ -47,7 +47,7 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
      */
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/view/twitterrealtime.account.index.tpl');
         $this->view_mgr->addHelp('twitterrealtime', 'userguide/settings/plugins/twitterrealtime');
 

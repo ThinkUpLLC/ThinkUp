@@ -42,7 +42,7 @@ class CaptchaImageController extends ThinkUpController {
         SessionCache::put('ckey', md5($random_num));
 
         $img = rand(1,4);
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $captcha_bg_image_path = THINKUP_WEBAPP_PATH."assets/img/captcha/bg".$img.".PNG";
         $img_handle = imageCreateFromPNG($captcha_bg_image_path);
         if ($img_handle===false) {

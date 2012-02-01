@@ -31,8 +31,8 @@
  *
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.MapController.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/controller/class.MapController.php';
 
 class TestOfMapController extends ThinkUpUnitTestCase {
 

@@ -38,7 +38,7 @@ class FlickrAPIAccessor {
     }
 
     public function getFlickrPhotoSource($u) {
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/expandurls/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/testdata/';
 
         if ($this->api_key != '') {
             $this->logger->logInfo("Flickr API key set", __METHOD__.','.__LINE__);

@@ -31,7 +31,7 @@
 // currently, since RetweetDectector lives in the twitter plugin, it will not be loaded unless this plugin is active.
 // since it is needed for the twitter realtime plugin as well, we load it explicitly here.
 // @TODO - do we need a 'shared' location for code used with multiple plugins?
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.RetweetDetector.php';
 
 class TwitterJSONStreamParser {
     /**

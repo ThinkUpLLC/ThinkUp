@@ -50,7 +50,7 @@ class Captcha {
 
         if ($config->getValue('recaptcha_enable')) {
             $this->type = self::RECAPTCHA_CAPTCHA;
-            Utils::defineConstants();
+            Loader::definePathConstants();
             require_once THINKUP_WEBAPP_PATH.'_lib/extlib/recaptcha-php-1.10/recaptchalib.php';
         } else {
             $this->type = self::THINKUP_CAPTCHA;

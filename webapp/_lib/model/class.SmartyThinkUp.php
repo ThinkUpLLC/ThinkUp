@@ -100,7 +100,7 @@ class SmartyThinkUp extends Smarty {
         $cache_pages = $config_array['cache_pages'];
         $cache_lifetime = isset($config_array['cache_lifetime'])?$config_array['cache_lifetime']:600;
         $debug =  $config_array['debug'];
-        Utils::defineConstants();
+        Loader::definePathConstants();
 
         $this->Smarty();
         $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
@@ -288,13 +288,13 @@ class SmartyThinkUp extends Smarty {
         if ($continue) {
             return parent::fetch($template, $cache_key, $compile_id, $display);
         } else {
-            Utils::defineConstants();
+            Loader::definePathConstants();
             $whoami = @exec('whoami');
             if (empty($whoami)) {
                 $whoami = 'nobody';
             }
             return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
-            array(THINKUP_BASE_URL, $whoami, FileDataManager::getDataPath()),
+            array(Utils::getSiteRootPathFromFileSystem(), $whoami, FileDataManager::getDataPath()),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         }
     }

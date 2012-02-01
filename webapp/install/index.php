@@ -26,10 +26,7 @@
  * @copyright 2009-2012 Gina Trapani, Dwi Widiastuti
  */
 chdir("..");
-require_once '_lib/model/class.Loader.php';
-Loader::register();
-
-Utils::defineConstants();
+require_once 'init.php';
 
 $controller = new InstallerController();
 echo $controller->go();

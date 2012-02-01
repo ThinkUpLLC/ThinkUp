@@ -54,7 +54,7 @@ class ThinkUpEmbedController extends ThinkUpController {
      * @return str JavaScript source
      */
     public function control() {
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'_lib/view/api.embed.v1.embed.tpl');
         $this->setContentType('text/javascript');
         if (!$this->is_missing_param) {

@@ -26,11 +26,11 @@
  * @author Amy Unruh
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
 
 class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
     /**
@@ -83,7 +83,7 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->test_dir = THINKUP_ROOT_PATH . 'webapp/plugins/twitterrealtime/tests/testdata/';
+        $this->test_dir = THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/tests/testdata/';
         $this->json_parser = new TwitterJSONStreamParser();
 
         $this->logger = Logger::getInstance('stream_log_location');

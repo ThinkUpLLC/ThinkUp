@@ -29,9 +29,9 @@
  *
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
@@ -357,7 +357,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern("/^2011-09-21_some_stuff_v\d+\.\d+\.sql$/",$list[0]['filename']);
 
         // create completion table
-        $com_sql_file = THINKUP_ROOT_PATH.'webapp/install/sql/completed_migrations.sql';
+        $com_sql_file = THINKUP_WEBAPP_PATH.'install/sql/completed_migrations.sql';
         //echo $com_sql_file;
         $com_sql = file_get_contents($com_sql_file);
         $com_sql = str_replace('tu_', $this->table_prefix, $com_sql);

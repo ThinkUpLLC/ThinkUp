@@ -39,7 +39,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/twitter/view/twitter.account.index.tpl');
         $this->view_mgr->addHelp('twitter', 'userguide/settings/plugins/twitter');
 

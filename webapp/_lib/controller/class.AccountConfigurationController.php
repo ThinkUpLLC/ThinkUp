@@ -110,8 +110,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
             if ($invite_added == 1) { //invite generated and inserted
                 $server = $_SERVER['HTTP_HOST'];
-                $invite_link = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.
-                'session/register.php?code='. $invite_code;
+                $invite_link = Utils::getApplicationURL().'session/register.php?code='. $invite_code;
                 $this->addSuccessMessage("Invitation created!<br />Copy this link and send it to someone you want to ".
                 'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'" id="clippy_12345">'.
                 $invite_link.'</a>
@@ -120,16 +119,14 @@ class AccountConfigurationController extends ThinkUpAuthController {
                           height="14"
                           class="clippy"
                           id="clippy" >
-                  <param name="movie" value="'.'http'.
-                (isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.'assets/flash/clippy.swf"/>
+                  <param name="movie" value="'.Utils::getApplicationURL().'assets/flash/clippy.swf"/>
                   <param name="allowScriptAccess" value="always" />
                   <param name="quality" value="high" />
                   <param name="scale" value="noscale" />
                   <param NAME="FlashVars" value="id=clippy_12345&amp;copied=copied!&amp;copyto=copy to clipboard">
                   <param name="bgcolor" value="#D5F0FC">
                   <param name="wmode" value="opaque">
-                  <embed src="'.'http'.
-                (isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.'assets/flash/clippy.swf"
+                  <embed src="'.Utils::getApplicationURL().'assets/flash/clippy.swf"
                          width="100"
                          height="14"
                          name="clippy"
@@ -221,7 +218,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $email = $this->getLoggedInUser();
 
         //rss_crawl_url
-        $rss_crawl_url = THINKUP_BASE_URL . sprintf('crawler/rss.php?un=%s&as=%s', urlencode($email), $owner->api_key);
+        $rss_crawl_url = Utils::getApplicationURL(). sprintf('crawler/rss.php?un=%s&as=%s', urlencode($email),
+        $owner->api_key);
         $this->addToView('rss_crawl_url', $rss_crawl_url);
         //cli_crawl_command
         $cli_crawl_command = 'cd '.THINKUP_WEBAPP_PATH.'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.

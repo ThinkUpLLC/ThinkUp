@@ -77,9 +77,7 @@ class UpgradeController extends ThinkUpAuthController {
     }
 
     public function authControl() {
-
         $this->disableCaching();
-        Utils::defineConstants();
         $config = Config::getInstance();
         $thinkup_db_version = $config->getValue('THINKUP_VERSION');
 

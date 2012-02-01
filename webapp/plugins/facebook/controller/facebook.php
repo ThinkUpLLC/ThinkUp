@@ -35,7 +35,7 @@
  */
 //For testing purposes, only include Facebook library if mock class hasn't already been loaded
 if (!class_exists('BaseFacebook')) {
-    Utils::defineConstants();
+    Loader::definePathConstants();
     require_once THINKUP_WEBAPP_PATH.'plugins/facebook/extlib/facebook/facebook.php';
 }
 

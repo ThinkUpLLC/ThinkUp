@@ -79,9 +79,7 @@ class Loader {
      * @param array $paths Array of additional lookup path strings
      */
     private static function setLookupPath(Array $paths = null) {
-        // check required constants
-        defined("THINKUP_ROOT_PATH") || define("THINKUP_ROOT_PATH", dirname(dirname(dirname(dirname(__FILE__)))) . "/");
-        defined("THINKUP_WEBAPP_PATH") || define("THINKUP_WEBAPP_PATH", dirname(dirname(dirname(__FILE__))) . "/");
+        self::definePathConstants();
 
         // set default lookup paths
         self::$lookup_path = array(
@@ -92,12 +90,31 @@ class Loader {
 
         // set default lookup path for special classes
         self::$special_classes = array(
-            "Smarty" => THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php"
-            );
+        "Smarty" => THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php"
+        );
 
-            if (isset($paths)) {
-                foreach($paths as $path) self::$lookup_path[] = $path;
+        if (isset($paths)) {
+            foreach($paths as $path) {
+                self::$lookup_path[] = $path;
             }
+        }
+    }
+
+
+    /**
+     * Define application path constants THINKUP_ROOT_PATH and THINKUP_WEBAPP_PATH
+     */
+    public static function definePathConstants() {
+        if ( !defined('THINKUP_ROOT_PATH') ) {
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
+        }
+        if (!defined('THINKUP_WEBAPP_PATH') ) {
+            if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
+            } else {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
+            }
+        }
     }
 
     /**

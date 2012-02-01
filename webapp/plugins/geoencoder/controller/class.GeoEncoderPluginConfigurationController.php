@@ -32,7 +32,7 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
 
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/geoencoder/view/geoencoder.account.index.tpl');
         $this->view_mgr->addHelp('geoencoder', 'userguide/settings/plugins/geoencoder');
         $this->addToView('message', 'This is the GeoEncoder plugin configuration page for '.$this->owner->email .'.');

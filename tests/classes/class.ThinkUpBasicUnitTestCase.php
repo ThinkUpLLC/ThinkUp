@@ -28,7 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/model/class.Loader.php';
 
 class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**

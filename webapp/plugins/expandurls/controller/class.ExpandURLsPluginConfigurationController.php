@@ -29,7 +29,7 @@
 class ExpandURLsPluginConfigurationController extends PluginConfigurationController {
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH. 'plugins/expandurls/view/expandurls.account.index.tpl');
         $this->view_mgr->addHelp('expandurls', 'userguide/settings/plugins/expandurls');
 

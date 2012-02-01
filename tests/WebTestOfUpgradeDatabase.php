@@ -26,9 +26,9 @@
  * @copyright 2009-2012 Mark Wilkie
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
@@ -44,7 +44,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $optiondao = new OptionMySQLDAO();
         $this->pdo = OptionMySQLDAO::$PDO;
 
-        $this->install_dir = THINKUP_ROOT_PATH.'webapp/test_installer';
+        $this->install_dir = THINKUP_WEBAPP_PATH.'test_installer';
         $this->installs_dir = THINKUP_ROOT_PATH.'build';
         // Make sure test_installer and build directories exists
         if (!file_exists($this->install_dir)) {
@@ -55,7 +55,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         }
 
         //Clean up files from test installation
-        exec('rm -rf ' . THINKUP_ROOT_PATH.'webapp/test_installer' . '/*');
+        exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer' . '/*');
 
         $config = Config::getInstance();
         $this->table_prefix = $config->getValue('table_prefix');
@@ -68,7 +68,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
     public function tearDown() {
         //Clean up test installation files
-        exec('rm -rf ' . THINKUP_ROOT_PATH.'webapp/test_installer' . '/*');
+        exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer' . '/*');
 
         // Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';
@@ -264,7 +264,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         require dirname(__FILE__) . '/migration-assertions.php';
 
         // build latest  version for testing
-        $migration_sql_dir = THINKUP_ROOT_PATH . 'webapp/install/sql/mysql_migrations/';
+        $migration_sql_dir = THINKUP_WEBAPP_PATH.'install/sql/mysql_migrations/';
         $latest_migration_file = false;
 
         $current_version = $config->getValue('THINKUP_VERSION');

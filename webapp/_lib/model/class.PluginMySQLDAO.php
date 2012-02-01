@@ -159,7 +159,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
 
     public function getInstalledPlugins() {
         // Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $active_plugins = $inactive_plugins = array();
         $plugin_files = Utils::getPlugins(THINKUP_WEBAPP_PATH.'plugins');
         foreach ($plugin_files as $pf) {

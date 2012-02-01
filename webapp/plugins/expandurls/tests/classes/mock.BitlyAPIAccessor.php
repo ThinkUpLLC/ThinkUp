@@ -61,7 +61,7 @@ class BitlyAPIAccessor {
         $this->bitly_username = $bitly_login;
         $this->logger = Logger::getInstance();
         $this->debug = (getenv('TEST_DEBUG')!==false) ? true : false;
-        $this->test_data_path = THINKUP_ROOT_PATH . 'webapp/plugins/expandurls/tests/testdata/';
+        $this->test_data_path = THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/testdata/';
     }
 
     public function getBitlyLinkData($u) {

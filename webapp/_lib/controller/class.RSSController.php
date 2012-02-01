@@ -37,7 +37,6 @@ class RSSController extends ThinkUpAuthAPIController {
      * @return string rendered view markup
      */
     public function authControl() {
-        Utils::defineConstants();
         $this->setContentType('application/rss+xml; charset=UTF-8');
         $this->setViewTemplate('rss.tpl');
 
@@ -47,8 +46,7 @@ class RSSController extends ThinkUpAuthAPIController {
             $rss_crawler_refresh_rate = 20; // minutes
         }
 
-        $protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-        $base_url = "$protocol://".$_SERVER['HTTP_HOST'].THINKUP_BASE_URL;
+        $base_url = Utils::getApplicationURL();
 
         $crawler_launched = false;
         $instance_dao = DAOFactory::getDAO('InstanceDAO');

@@ -26,9 +26,9 @@
  */
 
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/view/plugins/modifier.link_usernames.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/view/plugins/modifier.link_usernames_to_twitter.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/view/plugins/modifier.link_usernames.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/view/plugins/modifier.link_usernames_to_twitter.php';
 
 class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
     /**

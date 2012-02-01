@@ -28,13 +28,13 @@
  *
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusCrawler.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/model/class.GooglePlusCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/model/class.GooglePlusPlugin.php';
 
 class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase {
 

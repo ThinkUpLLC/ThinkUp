@@ -27,8 +27,8 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
@@ -151,5 +151,17 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
                 $this->fail('Configuration File Exists But Failed to Load class');
             }
         }
+    }
+
+    public function testDefinePathConstants() {
+        Loader::definePathConstants();
+
+        $this->assertTrue( defined('THINKUP_ROOT_PATH') );
+        $this->assertTrue( is_readable(THINKUP_ROOT_PATH) );
+        $this->debug(THINKUP_ROOT_PATH);
+
+        $this->assertTrue( defined('THINKUP_WEBAPP_PATH') );
+        $this->assertTrue( is_readable(THINKUP_WEBAPP_PATH) );
+        $this->debug(THINKUP_WEBAPP_PATH);
     }
 }

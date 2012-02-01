@@ -46,7 +46,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
 
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/googleplus/view/googleplus.account.index.tpl');
         $this->view_mgr->addHelp('googleplus', 'userguide/settings/plugins/googleplus');
 
@@ -93,8 +93,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         //prep redirect URI
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
-        $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
-        $redirect_uri = urlencode('http'.$ssl.'://'.$_SERVER['SERVER_NAME']. $site_root_path.'account/?p=google%2B');
+        $redirect_uri = urlencode(Utils::getApplicationURL() .'account/?p=google%2B');
 
         //create OAuth link
         $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.

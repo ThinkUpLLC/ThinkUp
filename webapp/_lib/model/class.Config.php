@@ -68,7 +68,7 @@ class Config {
         if ($vals != null ) {
             $this->config = $vals;
         } else {
-            Utils::defineConstants();
+            Loader::definePathConstants();
             if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;

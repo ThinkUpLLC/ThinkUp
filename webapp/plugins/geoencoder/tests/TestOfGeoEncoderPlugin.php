@@ -29,12 +29,12 @@
  *
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
-require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/model/class.GeoEncoderPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/classes/mock.GeoEncoderCrawler.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/model/class.GeoEncoderPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/classes/mock.GeoEncoderCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
 
 class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     var $webapp;

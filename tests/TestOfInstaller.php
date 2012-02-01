@@ -28,8 +28,8 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfInstaller extends ThinkUpUnitTestCase {
     public function __construct() {
@@ -38,19 +38,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-        }
-
-        if ( !defined('THINKUP_BASE_URL') ) {
-            // Define base URL, the same as $THINKUP_CFG['site_root_path']
-            $current_script_path = explode('/', $_SERVER['PHP_SELF']);
-            array_pop($current_script_path);
-            if (!empty($current_script_path) && in_array($current_script_path[count($current_script_path)-1],
-            array('account', 'post', 'session', 'user', 'install')) ) {
-                array_pop($current_script_path);
-            }
-            $current_script_path = implode('/', $current_script_path) . '/';
-            define('THINKUP_BASE_URL', $current_script_path);
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH.'webapp/');
         }
     }
 
@@ -558,9 +546,9 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
         $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
-        'group_members', 'groups', 'hashtags', 'hashtags_posts', 
-        'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options', 
-        'owner_instances', 'owners', 'places','places_posts', 
+        'group_members', 'groups', 'hashtags', 'hashtags_posts',
+        'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options',
+        'owner_instances', 'owners', 'places','places_posts',
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
     }

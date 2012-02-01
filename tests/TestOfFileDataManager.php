@@ -26,8 +26,8 @@
  * @copyright 2012 Gina Trapani, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfFileDataManager extends ThinkUpBasicUnitTestCase {
 
@@ -62,7 +62,7 @@ class TestOfFileDataManager extends ThinkUpBasicUnitTestCase {
     }
 
     public function testGetDataPathConfigExistsWithDataDirValue() {
-        require THINKUP_ROOT_PATH.'webapp/config.inc.php';
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
 
         //if test fails here, the config file doesn't have datadir_path set
         $this->assertNotNull($THINKUP_CFG['datadir_path']);
@@ -77,7 +77,7 @@ class TestOfFileDataManager extends ThinkUpBasicUnitTestCase {
     }
 
     public function testGetBackupPath() {
-        require THINKUP_ROOT_PATH.'webapp/config.inc.php';
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
 
         //if test fails here, the config file doesn't have datadir_path set
         $this->assertNotNull($THINKUP_CFG['datadir_path']);

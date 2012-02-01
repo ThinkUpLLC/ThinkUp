@@ -27,30 +27,10 @@
  * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfUtils extends ThinkUpBasicUnitTestCase {
-
-    public function testRootPathConstant() {
-        Utils::defineConstantRootPath();
-
-        $this->assertTrue( defined('THINKUP_ROOT_PATH') );
-        $this->assertTrue( is_readable(THINKUP_ROOT_PATH) );
-    }
-
-    public function testWebappPathConstant() {
-        Utils::defineConstantWebappPath();
-
-        $this->assertTrue( defined('THINKUP_WEBAPP_PATH') );
-        $this->assertTrue( is_readable(THINKUP_WEBAPP_PATH) );
-    }
-
-    public function testBaseUrlConstant() {
-        Utils::defineConstantBaseUrl();
-
-        $this->assertTrue( defined('THINKUP_BASE_URL') );
-    }
 
     public function testgetPluginViewDirectory() {
         $config = Config::getInstance();
@@ -228,5 +208,31 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
         $last_saturday = Utils::getLastSaturday('11/6/2011');
         $this->assertEqual('11/5', $last_saturday);
+    }
+
+    public function testGetSiteRootPathFromFileSystem() {
+        // function assumes $_SERVER['PHP_SELF'] is set
+        // it only is in the web server context so we set it here to test
+        $_SERVER['PHP_SELF'] = Config::getInstance()->getValue('site_root_path');
+        $filesystem_site_root_path = Utils::getSiteRootPathFromFileSystem();
+        $cfg_site_root_path = Config::getInstance()->getValue('site_root_path');
+        $this->assertEqual($filesystem_site_root_path, $cfg_site_root_path);
+    }
+
+    public function testGetApplicationURL() {
+        //no SSL
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $_SERVER['HTTPS'] = null;
+        $cfg = Config::getInstance();
+        $cfg->setValue('site_root_path', '/my/path/to/thinkup/');
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
+
+        //with SSL
+        $_SERVER['HTTPS'] = true;
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'https://mytestthinkup/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
     }
 }

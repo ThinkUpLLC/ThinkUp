@@ -27,8 +27,8 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
 
@@ -45,7 +45,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
      */
     public function testSmartyThinkUpDefaultValues() {
         $cfg = Config::getInstance();
-        $cfg->setValue('source_root_path', '/path/to/thinkup');
+        $cfg->setValue('source_root_path', '/path/to/thinkup/');
         $cfg->setValue('cache_pages', true);
         $cfg->setValue('cache_lifetime', 600);
         $v_mgr = new SmartyThinkUp();

@@ -53,7 +53,7 @@ class ThreadJSController extends ThinkUpController {
                 $this->is_missing_param = true;
             }
         }
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'_lib/view/api.embed.v1.thread_js.tpl');
     }
     /**

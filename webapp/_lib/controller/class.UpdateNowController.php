@@ -31,7 +31,6 @@
 class UpdateNowController extends ThinkUpAuthAPIController {
     public function authControl() {
         $this->disableCaching(); // we don't want to cache the rss link with api key as it can get updated
-        Utils::defineConstants();
         $this->setContentType('text/html; charset=UTF-8');
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');

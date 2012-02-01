@@ -46,7 +46,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
     public function authControl() {
         $config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/facebook/view/facebook.account.index.tpl');
         $this->view_mgr->addHelp('facebook', 'userguide/settings/plugins/facebook');
 
@@ -174,9 +174,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 //First, prep redirect URI
                 $config = Config::getInstance();
                 $site_root_path = $config->getValue('site_root_path');
-                $redirect_uri = urlencode(sprintf('%s://%s%s%s', !empty($_SERVER['HTTPS']) ? 'https' : 'http',
-                empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'],
-                $site_root_path, 'account/?p=facebook'));
+                $redirect_uri = urlencode(Utils::getApplicationURL(). 'account/?p=facebook');
 
                 //Build API request URL
                 $api_req = 'https://graph.facebook.com/oauth/access_token?client_id='.
@@ -258,8 +256,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         if (!$user_dao->isUserInDB($fb_user_id, 'facebook')) {
             $r = array('user_id'=>$fb_user_id, 'user_name'=>$fb_username,'full_name'=>$fb_username, 'avatar'=>'',
-            'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0, 
-            'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'', 
+            'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
+            'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
             'last_post_id'=>'', 'network'=>'facebook' );
             $u = new User($r, 'Owner info');
             $user_dao->updateUser($u);

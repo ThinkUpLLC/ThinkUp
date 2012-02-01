@@ -26,7 +26,7 @@
  * @copyright 2009-2012 Gina Trapani
  */
 if (!class_exists('twitterOAuth')) {
-    Utils::defineConstants();
+    Loader::definePathConstants();
     require_once THINKUP_WEBAPP_PATH.'plugins/twitter/extlib/twitteroauth/twitteroauth.php';
 }
 

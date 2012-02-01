@@ -78,7 +78,7 @@ class TwitterOAuth {
     }
 
     public function http($url) {
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);

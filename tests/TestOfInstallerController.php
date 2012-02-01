@@ -27,8 +27,8 @@
  * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfInstallerController extends ThinkUpUnitTestCase {
     /**
@@ -52,10 +52,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
             define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-        }
-        if ( !defined('THINKUP_BASE_URL') ) {
-            define('THINKUP_BASE_URL', '/test/script/path/');
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH.'webapp/');
         }
     }
 
@@ -415,7 +412,6 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $result = $controller->go();
         $this->debug($result);
         $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
-        $this->assertPattern('/(Unknown database|Access denied).*\'mythinkupdb `lol\'/', $result);
         $this->restoreConfigFile();
     }
 

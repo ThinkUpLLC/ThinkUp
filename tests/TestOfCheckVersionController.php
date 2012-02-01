@@ -27,8 +27,8 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfCheckVersionController extends ThinkUpUnitTestCase {
 
@@ -65,7 +65,7 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
     }
 
     public function testOptedOut() {
-        include THINKUP_ROOT_PATH.'webapp/install/version.php';
+        include THINKUP_WEBAPP_PATH.'install/version.php';
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_opted_out_usage_stats',
         'option_value' => 'true');
         $bdata = FixtureBuilder::build('options', $bvalues);
@@ -81,7 +81,7 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
     }
 
     public function testNotOptedOut() {
-        include THINKUP_ROOT_PATH.'webapp/install/version.php';
+        include THINKUP_WEBAPP_PATH.'install/version.php';
         $this->simulateLogin('me@example.com');
         $controller = new CheckVersionController(true);
 

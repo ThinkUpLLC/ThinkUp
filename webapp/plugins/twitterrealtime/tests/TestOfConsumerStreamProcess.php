@@ -26,15 +26,15 @@
  * @author Amy Unruh
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/tests/TestOfConsumerUserStream.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.ConsumerUserStream.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.ConsumerStreamProcess.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueue.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/tests/TestOfConsumerUserStream.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.ConsumerUserStream.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.ConsumerStreamProcess.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueue.php';
 
 class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
 
@@ -43,7 +43,7 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->config = Config::getInstance();
-        $this->test_dir = THINKUP_ROOT_PATH . 'webapp/plugins/twitterrealtime/tests/testdata/';
+        $this->test_dir = THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/tests/testdata/';
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->favs_dao = DAOFactory::getDAO('FavoritePostDAO');
         $this->user_dao = DAOFactory::getDAO('UserDAO');
@@ -84,7 +84,7 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         } else {
-            require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueueRedis.php';
+            require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueRedis.php';
         }
         $this->setUpTwitterData();
         $this->setUpData('true');

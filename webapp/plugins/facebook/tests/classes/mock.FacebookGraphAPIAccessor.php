@@ -40,7 +40,7 @@ class FacebookGraphAPIAccessor {
         $api_domain = 'https://graph.facebook.com';
         $url = $api_domain.$path;//.'?access_token='.$access_token;
 
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/facebook/tests/testdata/';
         $url = str_replace('https://graph.facebook.com/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
@@ -80,7 +80,7 @@ class FacebookGraphAPIAccessor {
     public static function rawApiRequest($path, $decode_json=true) {
         $url = $path;
 
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/facebook/tests/testdata/';
 
         $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
         $url = preg_replace('/[\?\&]$/', '', $url);

@@ -278,7 +278,7 @@ class GeoEncoderCrawler {
      * @return string $filecontents
      */
     public function getDataForGeoencoding ($location) {
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/testdata/';
         $location = urlencode($location);
         $url = $FAUX_DATA_PATH.$location.".json";
         $filecontents=file_get_contents("$url");
@@ -293,7 +293,7 @@ class GeoEncoderCrawler {
      */
     public function getDataForReverseGeoencoding($latlng) {
         $latlng = explode(' ', $latlng, 2);
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/testdata/';
         $url = $FAUX_DATA_PATH.$latlng[0].",".$latlng[1].".json";
         $filecontents=file_get_contents("$url");
         return $filecontents;

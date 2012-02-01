@@ -28,8 +28,8 @@
  */
 
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfConfig extends ThinkUpUnitTestCase {
 
@@ -56,8 +56,8 @@ class TestOfConfig extends ThinkUpUnitTestCase {
     }
 
     public function testGetValuesArray() {
-        require THINKUP_ROOT_PATH.'webapp/config.inc.php';
-        require THINKUP_ROOT_PATH.'webapp/install/version.php';
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+        require THINKUP_WEBAPP_PATH.'install/version.php';
         $config = Config::getInstance();
         //tests assume profiler and caching is off
         $THINKUP_CFG['cache_pages']=false;

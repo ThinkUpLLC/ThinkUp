@@ -117,10 +117,10 @@ abstract class ThinkUpController {
                 .'&n='. urlencode(SessionCache::get('selected_instance_network')));
             }
         } catch (Exception $e) {
-            Utils::defineConstants();
+            Loader::definePathConstants();
             //echo 'sending this to Smarty:'.THINKUP_WEBAPP_PATH.'data/';
             $cfg_array =  array(
-            'site_root_path'=>THINKUP_BASE_URL,
+            'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
             'source_root_path'=>THINKUP_ROOT_PATH,
             'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
             'debug'=>false,
@@ -300,7 +300,7 @@ abstract class ThinkUpController {
      */
     protected function redirect($destination=null) {
         if (!isset($destination)) {
-            $destination = THINKUP_BASE_URL;
+            $destination = Utils::getSiteRootPathFromFileSystem();
         }
         if ( !headers_sent() ) {
             header('Location: '.$destination);
@@ -438,8 +438,8 @@ abstract class ThinkUpController {
         } catch (ConfigurationException $e) {
             $this->setErrorTemplateState();
             $this->addToView('error_type', get_class($e));
-            $message = 'ThinkUp\'s configuration file does not exist! Try <a href="'.THINKUP_BASE_URL.
-                'install/">installing ThinkUp.</a>';
+            $message = 'ThinkUp\'s configuration file does not exist! Try <a href="'.
+            Utils::getSiteRootPathFromFileSystem().'install/">installing ThinkUp.</a>';
             $this->addErrorMessage($message, null, true);
             return $this->generateView();
         } catch (Exception $e) {
@@ -497,7 +497,7 @@ abstract class ThinkUpController {
                 //Init plugins
                 $pdao = DAOFactory::getDAO('PluginDAO');
                 $active_plugins = $pdao->getActivePlugins();
-                Utils::defineConstants();
+                Loader::definePathConstants();
                 foreach ($active_plugins as $ap) {
                     //add plugin's model and controller folders as Loader paths here
                     Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/model/");
