@@ -14,10 +14,13 @@ Answers to users' most frequently asked questions about ThinkUp.
    multipleusers
    howmanyusers
    hashtags
+   cronpasswd
+   commercial
 
-Answers to developers' most frequently asked questions about ThinkUp.
+Answers to contributors' most frequently asked questions about ThinkUp.
 
 .. toctree::
    :maxdepth: 2
 
    altdb
+   translate
