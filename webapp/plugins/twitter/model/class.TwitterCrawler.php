@@ -393,6 +393,7 @@ class TwitterCrawler {
                         }
 
                         $post_dao = DAOFactory::getDAO('PostDAO');
+                        $mention_dao = DAOFactory::getDAO('MentionDAO');
                         if (!isset($recentTweets)) {
                             $recentTweets = $post_dao->getAllPosts($this->user->user_id, 'twitter', 100);
                         }
@@ -425,6 +426,8 @@ class TwitterCrawler {
                                     $this->user_dao->updateUser($u);
                                 }
                             }
+                            $mention_dao->insertMention($this->user->user_id, $this->user->username, $tweet['post_id'],
+                            $tweet['author_user_id'], 'twitter');
                         }
                         if ($got_newest_mentions) {
                             if ( $count > 0) {
