@@ -33,11 +33,9 @@
  * @author Amy Unruh
  */
 $config = Config::getInstance();
-//@TODO: For the testing sake, check if mock class has already been loaded
-//@TODO: Figure out a better way to do this
+//For testing, check if mock class has already been loaded
 if (!class_exists('TwitterOAuth')) {
-    Loader::definePathConstants();
-    require_once THINKUP_WEBAPP_PATH.'plugins/twitter/extlib/twitteroauth/twitteroauth.php';
+    Loader::addSpecialClass('TwitterOAuth', 'plugins/twitter/extlib/twitteroauth/twitteroauth.php');
 }
 
 $webapp = Webapp::getInstance();

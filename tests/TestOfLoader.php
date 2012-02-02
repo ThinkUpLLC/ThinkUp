@@ -164,4 +164,20 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertTrue( is_readable(THINKUP_WEBAPP_PATH) );
         $this->debug(THINKUP_WEBAPP_PATH);
     }
+
+    public function testAddSpecialClass() {
+        // SimpleTest can't catch fatal errors so this assertion doesn't work
+        // $this->expectError();
+        // $lookup_test = new ConsumerUserStream();
+
+        Loader::addSpecialClass('ConsumerUserStream', 'plugins/twitterrealtime/model/class.ConsumerUserStream.php');
+        $special_classes = Loader::getSpecialClasses();
+        $this->assertEqual( Loader::getSpecialClasses(),
+        array(
+        'Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php',
+        'ConsumerUserStream'=>THINKUP_WEBAPP_PATH . 'plugins/twitterrealtime/model/class.ConsumerUserStream.php'
+        ));
+        //shouldn't throw a not found error
+        $lookup_test = new ConsumerUserStream();
+    }
 }

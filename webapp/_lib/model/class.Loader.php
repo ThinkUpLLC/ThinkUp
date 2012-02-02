@@ -152,6 +152,19 @@ class Loader {
     }
 
     /**
+     * Add Special Classe
+     *
+     * Add special class information for loading
+     *
+     * @param str $class_name
+     * @param str $path
+     */
+    public static function addSpecialClass($class_name, $path) {
+        self::definePathConstants();
+        self::$special_classes[$class_name] = THINKUP_WEBAPP_PATH.$path;
+    }
+
+    /**
      * Load
      *
      * The method registered to run on _autoload. When a class is instantiated, this
