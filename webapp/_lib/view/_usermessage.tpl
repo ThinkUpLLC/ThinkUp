@@ -9,7 +9,7 @@
                {$success_msgs.$field|filter_xss}
            {/if}
          </p>
-     </div>    
+     </div>
     {/if}
     {if $error_msgs.$field}
      <div class="alert urgent">
@@ -47,7 +47,7 @@
                {$success_msg|filter_xss}
            {/if}
          </p>
-     </div>        
+     </div>
     {/if}
     {if $error_msg}
      <div class="alert urgent" style="">
@@ -67,7 +67,7 @@
         <p>
              <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
              {if $info_msg_no_xss_filter}
-                {$info_msg|filter_xss}
+                {$info_msg}
              {else}
                 {$info_msg|filter_xss}
              {/if}
