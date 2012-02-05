@@ -178,6 +178,6 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         'ConsumerUserStream'=>THINKUP_WEBAPP_PATH . 'plugins/twitterrealtime/model/class.ConsumerUserStream.php'
         ));
         //shouldn't throw a not found error
-        $lookup_test = new ConsumerUserStream();
+        $lookup_test = new ConsumerUserStream('username', 'password');
     }
 }
