@@ -19,7 +19,7 @@ Plans and Providers with Known Problems
 
 Several ThinkUp users report that:
 
-*   Dreamhost's least expenive shared hosting package :doc:`may time out when gathering data for busy
+*   Dreamhost's least expensive shared hosting package :doc:`may time out when gathering data for busy
     accounts </troubleshoot/common/prematureend>`. Dreamhost's 300MB VPS server (which costs around $15/month) will not.
 *   GoDaddy's shared hosting plan triggers :doc:`database server timeout errors </troubleshoot/common/mysqlgoneaway>`.
 
