@@ -1,6 +1,8 @@
 <?php
+require_once('version.inc.php');
+header('Content-type: application/javascript');
+
 echo 'ThinkUpAppVersion.serverResponse([{';
-$current_version = '1.0';
 if (isset($_GET['v'])) {
 	$install_version = $_GET['v'];
 	if (version_compare($current_version, $install_version, '>')) {
