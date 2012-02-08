@@ -799,7 +799,9 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         //sleep(1000);
         $output = json_decode($output);
         // test that 0 data was returned
-        $this->assertEqual(sizeof($output), 0);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "PostNotFoundException");
+        $this->assertEqual($output->error->message, "The requested post data is not available.");
     }
 
     public function testPostRetweets() {

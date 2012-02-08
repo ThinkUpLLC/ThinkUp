@@ -292,7 +292,7 @@ class PostAPIController extends ThinkUpController {
         } else {
             $this->user = null;
         }
-        //If it's a user-related call, make sure user obj is populated, public & that the TU service user is public
+        //Privacy checks
         if (substr($this->type, 0, 4)=='user') { //user-related API call
             if (is_null($this->user)) {
                 // Check why the User object is null. Could be missing required fields or not found.
@@ -312,6 +312,11 @@ class PostAPIController extends ThinkUpController {
                         throw new UserNotFoundException();
                     }
                 }
+            }
+        } else { //post-related API call
+            if ($this->network == "facebook") {
+                //assume all Facebook posts are private
+                throw new PostNotFoundException();
             }
         }
 
@@ -521,6 +526,10 @@ class PostAPIController extends ThinkUpController {
                 break;
         }
 
+        if (is_null($data) ) {
+            throw new PostNotFoundException();
+        }
+
         switch ($this->network) {
             case 'twitter':
                 if (is_array($data)) {
@@ -536,7 +545,8 @@ class PostAPIController extends ThinkUpController {
                 // TODO: write a function here to convert to Facebook API style
                 break;
 
-            default: break;
+            default:
+                break;
         }
 
         // if no posts were found, $data is null. Set it to an empty array.
