@@ -408,7 +408,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $menus["friends-mostactive"] = $motab;
 
         //Least Active Friends
-        $latab = new MenuItem('Deadbeats', 'People you follow who tweet the least', $twitter_data_tpl, 'you-follow');
+        $latab = new MenuItem('Quietest', 'People you follow who tweet the least', $twitter_data_tpl, 'you-follow');
         $latabds = new Dataset("people", 'FollowDAO', "getLeastActiveFollowees", array(
         $instance->network_user_id, 'twitter', 15, '#page_number#'));
         $latabds->addHelp('userguide/listings/twitter/dashboard_friends-leastactive');

@@ -17,7 +17,7 @@
 
 {if $deadbeats|@count >1}
     <div class="section">
-        <h2>Deadbeats</h2>
+        <h2>Quietest</h2>
         <div class="article" style="padding-left : 0px; padding-top : 0px;">
         {foreach from=$deadbeats key=tid item=u name=foo}
           <div class="avatar-container" style="float:left;margin:7px;">
