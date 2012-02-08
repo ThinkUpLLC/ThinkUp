@@ -61,8 +61,8 @@
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank" style="text-decoration: underline;">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
     Fill in the following settings.<br />
-    Name: <span style="font-family:Courier;">ThinkUp</span><br />
-    Description: <span style="font-family:Courier;">My ThinkUp server</span><br />
+    Name: <span style="font-family:Courier;">{$twitter_app_name}</span><br />
+    Description: <span style="font-family:Courier;">My ThinkUp installation</span><br />
     Website: 
     <small>
       <code style="font-family:Courier;" id="clippy_2987">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}</code>
