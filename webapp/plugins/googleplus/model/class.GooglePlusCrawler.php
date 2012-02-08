@@ -117,11 +117,16 @@ class GooglePlusCrawler {
         if (isset($user_details->error->code) && $user_details->error->code == '401') {
             //Token has expired, fetch and save a new one
             $tokens = self::getOAuthTokens($client_id, $client_secret, $refresh_token, 'refresh_token');
-            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-            $owner_instance_dao->updateTokens($owner_id, $this->instance->id, $access_token, $refresh_token);
-            $this->access_token  = $tokens->access_token;
-            //try again
-            $user_details =  $this->api_accessor->apiRequest('people/me', $this->access_token, $fields);
+            if (isset($tokens->error) || !isset($tokens->access_token)) {
+                $this->logger->logError("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
+                $tokens->error.".\" Please double-check your settings and try again.");
+            } else {
+                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                $owner_instance_dao->updateTokens($owner_id, $this->instance->id, $access_token, $refresh_token);
+                $this->access_token  = $tokens->access_token;
+                //try again
+                $user_details =  $this->api_accessor->apiRequest('people/me', $this->access_token, $fields);
+            }
         }
 
         $user_details->network = $network;
@@ -134,8 +139,8 @@ class GooglePlusCrawler {
             $this->logger->logSuccess("Successfully fetched ".$user_object->username. " ".$user_object->network.
             "'s details from Google+", __METHOD__.','.__LINE__);
         } else {
-            $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from the Google+ API, ".
-                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Error fetching user details from the Google+ API, response was ".
+            Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
         }
         return $user_object;
     }
@@ -183,61 +188,63 @@ class GooglePlusCrawler {
         $user_posts =  $this->api_accessor->apiRequest('people/'.$this->instance->network_user_id.
         '/activities/public', $this->access_token, $fields);
 
-        $post_dao = DAOFactory::getDAO('PostDAO');
-        $link_dao = DAOFactory::getDAO('LinkDAO');
-        foreach ($user_posts->items as $item) {
-            $should_capture_post = false;
-            //For now we're only capturing posts and shares
-            //@TODO Capture all types of posts
-            if ($item->verb == "post") {
-                $post['post_text'] = $item->object->content;
-                $should_capture_post = true;
-            } elseif ($item->verb == "share") {
-                $post['post_text'] = $item->annotation;
-                $should_capture_post = true;
-            }
-            if ($should_capture_post) {
-                $post['post_id'] = $item->id;
-                $post['author_username'] = $item->actor->displayName;
-                $post['author_fullname'] = $item->actor->displayName;
-                $post['author_avatar'] = $item->actor->image->url;
-                $post['author_user_id'] = $item->actor->id;
-                $post['pub_date'] = $item->published;
-                $post['source'] = '';
-                $post['is_protected'] = false;
-                $post['network'] = 'google+';
-                $post['reply_count_cache'] = $item->object->replies->totalItems;
-                $post['favlike_count_cache'] = $item->object->plusoners->totalItems;
-                $post['retweet_count_cache'] = $item->object->resharers->totalItems;
-                $inserted_post_key = $post_dao->addPost($post);
-
-                //If no post was added, at least update reply/fave/reshare counts and post text
-                if ($inserted_post_key === false) {
-                    $post_dao->updateFavLikeCount($post['post_id'], 'google+', $post['favlike_count_cache']);
-                    $post_dao->updateReplyCount($post['post_id'], 'google+', $post['reply_count_cache']);
-                    $post_dao->updateRetweetCount($post['post_id'], 'google+', $post['retweet_count_cache']);
-                    $post_dao->updatePostText($post['post_id'], 'google+', $post['post_text']);
+        if (isset($user_posts->items)) {
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $link_dao = DAOFactory::getDAO('LinkDAO');
+            foreach ($user_posts->items as $item) {
+                $should_capture_post = false;
+                //For now we're only capturing posts and shares
+                //@TODO Capture all types of posts
+                if ($item->verb == "post") {
+                    $post['post_text'] = $item->object->content;
+                    $should_capture_post = true;
+                } elseif ($item->verb == "share") {
+                    $post['post_text'] = $item->annotation;
+                    $should_capture_post = true;
                 }
+                if ($should_capture_post) {
+                    $post['post_id'] = $item->id;
+                    $post['author_username'] = $item->actor->displayName;
+                    $post['author_fullname'] = $item->actor->displayName;
+                    $post['author_avatar'] = $item->actor->image->url;
+                    $post['author_user_id'] = $item->actor->id;
+                    $post['pub_date'] = $item->published;
+                    $post['source'] = '';
+                    $post['is_protected'] = false;
+                    $post['network'] = 'google+';
+                    $post['reply_count_cache'] = $item->object->replies->totalItems;
+                    $post['favlike_count_cache'] = $item->object->plusoners->totalItems;
+                    $post['retweet_count_cache'] = $item->object->resharers->totalItems;
+                    $inserted_post_key = $post_dao->addPost($post);
 
-                if (isset($item->object->attachments) && isset($item->object->attachments[0]->url)) {
-                    $link_url = $item->object->attachments[0]->url;
-                    $link = new Link(array(
+                    //If no post was added, at least update reply/fave/reshare counts and post text
+                    if ($inserted_post_key === false) {
+                        $post_dao->updateFavLikeCount($post['post_id'], 'google+', $post['favlike_count_cache']);
+                        $post_dao->updateReplyCount($post['post_id'], 'google+', $post['reply_count_cache']);
+                        $post_dao->updateRetweetCount($post['post_id'], 'google+', $post['retweet_count_cache']);
+                        $post_dao->updatePostText($post['post_id'], 'google+', $post['post_text']);
+                    }
+
+                    if (isset($item->object->attachments) && isset($item->object->attachments[0]->url)) {
+                        $link_url = $item->object->attachments[0]->url;
+                        $link = new Link(array(
                     "url"=>$link_url,
                     "expanded_url"=>$link_url,
                     "image_src"=>(isset($item->object->attachments[0]->image->url))
-                    ?$item->object->attachments[0]->image->url:'',
+                        ?$item->object->attachments[0]->image->url:'',
                     "caption"=>'',
                     "description"=>(isset($item->object->attachments[0]->content))
-                    ?$item->object->attachments[0]->content:'',
+                        ?$item->object->attachments[0]->content:'',
                     "title"=>(isset($item->object->attachments[0]->displayName))
-                    ?$item->object->attachments[0]->displayName:'',
+                        ?$item->object->attachments[0]->displayName:'',
                     "post_key"=>$inserted_post_key
-                    ));
-                    $added_links = $link_dao->insert($link);
+                        ));
+                        $added_links = $link_dao->insert($link);
+                    }
                 }
+                $post = null;
+                $link = null;
             }
-            $post = null;
-            $link = null;
         }
     }
 
