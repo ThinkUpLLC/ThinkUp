@@ -28,6 +28,6 @@
  */
 class UserNotFoundException extends Exception {
     public function __construct() {
-        parent::__construct('The user that you specified could not be found in our database.');
+        parent::__construct('The requested user data is not available.');
     }
 }

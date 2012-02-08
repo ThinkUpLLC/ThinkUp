@@ -61,6 +61,16 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'network' => 'twitter'));
 
         $builders[] = FixtureBuilder::build( 'users', array(
+                            'user_id' => 14,
+                            'user_name' => 'jane',
+                            'full_name' => 'jane mcnulty',
+                            'avatar' => 'avatar.jpg',
+                            'is_protected' => 0,
+                            'follower_count' => 10,
+                            'last_updated' => '1/1/2005',
+                            'network' => 'twitter'));
+
+        $builders[] = FixtureBuilder::build( 'users', array(
                             'user_id' => 18,
                             'user_name' => 'shutterbug',
                             'full_name' => 'Shutter Bug',
@@ -150,6 +160,13 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build( 'instances', array(
                             'network_user_id' => 24,
                             'network_username' => 'notonpublictimeline',
+                            'is_public' => 0,
+                            'network' => 'twitter'));
+
+        //public on originating network, private on TU
+        $builders[] = FixtureBuilder::build( 'instances', array(
+                            'network_user_id' => 14,
+                            'network_username' => 'jane',
                             'is_public' => 0,
                             'network' => 'twitter'));
 
@@ -704,6 +721,23 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'in_reply_to_user_id' => 13,
                             'is_protected' => 0));
 
+        //protected post
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                            'post_id' => 152,
+                            'author_user_id' => 21,
+                            'author_username' => 'user2',
+                            'author_fullname' => 'User 2',
+                            'network' => 'twitter',
+                            'post_text' => 'Protect me',
+                            'source' => 'web',
+                            'pub_date' => '2006-03-01 00:02:00',
+                            'reply_count_cache' => 0,
+                            'retweet_count_cache' => 0,
+                            'old_retweet_count_cache' => 0,
+                            'in_rt_of_user_id' => null,
+                            'in_reply_to_post_id' => null,
+                            'in_reply_to_user_id' => null,
+                            'is_protected' => 1));
         return $builders;
     }
 
@@ -753,6 +787,19 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         }
         $installer_dao = DAOFactory::getDAO('InstallerDAO');
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }
+
+    public function testPostProtectedOnNetwork() {
+        $_GET['type'] = 'post';
+        $_GET['post_id'] = '152';
+        $_GET['network'] = 'twitter';
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        //sleep(1000);
+        $output = json_decode($output);
+        // test that 0 data was returned
+        $this->assertEqual(sizeof($output), 0);
     }
 
     public function testPostRetweets() {
@@ -1372,6 +1419,31 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testUserPostsProtectedOnNetwork() {
+        $_GET['type'] = 'user_posts';
+        $_GET['user_id'] = 24;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
+    public function testUserPostsProtectedInThinkUp() {
+        //user is public in users table, protected in instances table
+        $_GET['type'] = 'user_posts';
+        $_GET['user_id'] = 14;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
     public function testUserMentions() {
         $_GET['type'] = 'user_mentions';
         $_GET['user_id'] = 18;
@@ -1549,6 +1621,30 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testUserMentionsProtectedOnNetwork() {
+        $_GET['type'] = 'user_mentions';
+        $_GET['user_id'] = 24;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
+    public function testUserMentionsProtectedInThinkUp() {
+        $_GET['type'] = 'user_mentions';
+        $_GET['user_id'] = 14;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
     public function testUserReplies() {
         $_GET['type'] = 'user_replies';
         $_GET['user_id'] = 18;
@@ -1708,6 +1804,30 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testUserRepliesProtectedOnNetwork() {
+        $_GET['type'] = 'user_replies';
+        $_GET['user_id'] = 24;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
+    public function testUserRepliesProtectedInThinkUp() {
+        $_GET['type'] = 'user_replies';
+        $_GET['user_id'] = 14;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
     public function testUserQuestions() {
         $_GET['type'] = 'user_questions';
         $_GET['user_id'] = 20;
@@ -1864,6 +1984,30 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testUserQuestionsProtectedOnNetwork() {
+        $_GET['type'] = 'user_questions';
+        $_GET['user_id'] = 24;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
+    public function testUserQuestionsProtectedInThinkUp() {
+        $_GET['type'] = 'user_questions';
+        $_GET['user_id'] = 14;
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
     public function testUserPostsInRange() {
         $_GET['type'] = 'user_posts_in_range';
         $_GET['user_id'] = 18;
@@ -2009,6 +2153,34 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         foreach($output as $post) {
             $this->assertTrue(is_a($post->links, 'stdClass'));
         }
+    }
+
+    public function testUserPostsInRangeProtectedOnNetwork() {
+        $_GET['type'] = 'user_posts_in_range';
+        $_GET['user_id'] = 24;
+        $_GET['from'] = '2006-01-02 00:00:00';
+        $_GET['until'] = '2006-01-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
+    }
+
+    public function testUserPostsInRangeProtectedInThinkUp() {
+        $_GET['type'] = 'user_posts_in_range';
+        $_GET['user_id'] = 14;
+        $_GET['from'] = '2006-01-02 00:00:00';
+        $_GET['until'] = '2006-01-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "UserNotFoundException");
+        $this->assertEqual($output->error->message, "The requested user data is not available.");
     }
 
     public function testAPIDisabled() {
