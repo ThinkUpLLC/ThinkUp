@@ -196,14 +196,31 @@ class Twitter_Extractor extends Twitter_Regex {
       $start = mb_strlen(substr($tweet, 0, $matches[1][$i][1]));
       $start += mb_strlen($matches[1][$i][0]);
       # Determine the multibyte length of the matched string:
-      $length = array_sum(array_map(function ($key) use (&$results, $i) {
-        return mb_strlen($results[$i][$key]);
-      }, $keys));
+      $counter = new MultiByteCounter($results, $i);
+// This is not PHP 5.2 compatible
+//      $length = array_sum(array_map(function ($key) use (&$results, $i) {
+//        return mb_strlen($results[$i][$key]);
+//      }, $keys));
+      $length = array_sum(array_map(array($counter, 'count_multi_bytes'), $keys));
       # Ensure that the indices array contains the start and end index:
       $results[$i]['indices'] = array($start, $start + $length + $tweak);
     }
   }
 
+}
+
+class MultiByteCounter {
+    protected $_results;
+    protected $_i;
+
+    public function __construct(&$results, $i) {
+        $this->_results = $results;
+        $this->_i = $i;
+    }
+
+    public function count_multi_bytes($key) {
+        return mb_strlen($this->_results[$this->_i][$key]);
+    }
 }
 
 ################################################################################
