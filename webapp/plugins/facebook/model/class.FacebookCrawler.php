@@ -643,29 +643,31 @@ class FacebookCrawler {
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
         $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
 
-        //store relationships in follows table
-        $follows_dao = DAOFactory::getDAO('FollowDAO');
-        $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-        $user_dao = DAOFactory::getDAO('UserDAO');
+        if (isset($friends->data)) {
+            //store relationships in follows table
+            $follows_dao = DAOFactory::getDAO('FollowDAO');
+            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $user_dao = DAOFactory::getDAO('UserDAO');
 
-        foreach ($friends->data as $friend) {
-            $follower_id = $friend->id;
-            if ($follows_dao->followExists($user_id, $follower_id, $network)) {
-                // follow relationship already exists
-                $follows_dao->update($user_id, $follower_id, $network);
-            } else {
-                // follow relationship does not exist yet
-                $follows_dao->insert($user_id, $follower_id, $network);
+            foreach ($friends->data as $friend) {
+                $follower_id = $friend->id;
+                if ($follows_dao->followExists($user_id, $follower_id, $network)) {
+                    // follow relationship already exists
+                    $follows_dao->update($user_id, $follower_id, $network);
+                } else {
+                    // follow relationship does not exist yet
+                    $follows_dao->insert($user_id, $follower_id, $network);
+                }
+
+                //and users in users table.
+                $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
+                $follower_details->network = $network;
+
+                $follower = $this->parseUserDetails($follower_details);
+                $follower_object = new User($follower);
+
+                $user_dao->updateUser($follower_object);
             }
-
-            //and users in users table.
-            $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
-            $follower_details->network = $network;
-
-            $follower = $this->parseUserDetails($follower_details);
-            $follower_object = new User($follower);
-
-            $user_dao->updateUser($follower_object);
         }
 
         //totals in follower_count table
