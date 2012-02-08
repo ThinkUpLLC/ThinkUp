@@ -43,7 +43,7 @@ class Loader {
      * Classes whose filename doesn't follow the convention
      * @var array
      */
-    private static $special_classes;
+    private static $special_classes = array();
 
     /**
      * Register
@@ -89,9 +89,7 @@ class Loader {
         );
 
         // set default lookup path for special classes
-        self::$special_classes = array(
-        "Smarty" => THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php"
-        );
+        self::$special_classes ["Smarty"] = THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php";
 
         if (isset($paths)) {
             foreach($paths as $path) {
@@ -162,6 +160,7 @@ class Loader {
     public static function addSpecialClass($class_name, $path) {
         self::definePathConstants();
         self::$special_classes[$class_name] = THINKUP_WEBAPP_PATH.$path;
+        require_once(THINKUP_WEBAPP_PATH.$path);
     }
 
     /**
@@ -179,7 +178,7 @@ class Loader {
         if (class_exists($class, false)) return;
 
         // if class is a standard ThinkUp object or interface
-        foreach(self::$lookup_path as $path) {
+        foreach (self::$lookup_path as $path) {
             $filename = $path . "class." . $class . ".php";
             if (file_exists($filename)) {
                 require_once($filename);
@@ -198,9 +197,8 @@ class Loader {
                 return;
             }
         }
-
         // if class is a special class
-        if(array_key_exists($class, self::$special_classes)) {
+        if (array_key_exists($class, self::$special_classes)) {
             require_once(self::$special_classes[$class]);
             return;
         }

@@ -65,7 +65,7 @@
     Description: <span style="font-family:Courier;">My ThinkUp installation</span><br />
     Website: 
     <small>
-      <code style="font-family:Courier;" id="clippy_2987">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}</code>
+      <code style="font-family:Courier;" id="clippy_2987">{$thinkup_site_url}</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
@@ -95,7 +95,7 @@
     <br />
     Callback URL:
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}plugins/twitter/auth.php</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"

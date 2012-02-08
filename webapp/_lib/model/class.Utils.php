@@ -300,7 +300,9 @@ class Utils {
     public static function getApplicationURL() {
         $server = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
         $site_root_path = Config::getInstance()->getValue('site_root_path');
-        return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.$site_root_path;
+        $port = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != "" && $_SERVER['SERVER_PORT'] != "80"
+        && $_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT']:'';
+        return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.$port.$site_root_path;
     }
 
     /**

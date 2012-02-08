@@ -78,6 +78,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             $this->addToView('is_configured', false);
         }
 
+        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
         return $this->generateView();
     }
 

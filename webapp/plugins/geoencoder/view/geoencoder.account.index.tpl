@@ -24,7 +24,7 @@ The GeoEncoder plugin plots a post's responses on a Google Map and can lists the
 <p style="padding:5px">To set up the GeoEncoder plugin:</p>
 <ol style="margin-left:40px"><li><a href="http://code.google.com/apis/maps/signup.html" target="_blank" style="text-decoration : underline;">Sign up for a Google Maps API key</a>.</li>
 <li>Set the web site URL to <br>
-<code style="font-family:Courier;" id="clippy_2989">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}</code>
+<code style="font-family:Courier;" id="clippy_2989">{$thinkup_site_url}</code>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
               height="14"

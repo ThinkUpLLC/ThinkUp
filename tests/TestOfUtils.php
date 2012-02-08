@@ -234,5 +234,25 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $utils_url = Utils::getApplicationURL();
         $expected_url = 'https://mytestthinkup/my/path/to/thinkup/';
         $this->assertEqual($utils_url, $expected_url);
+
+        //nonstandard port
+        $_SERVER['HTTPS'] = null;
+        $_SERVER['SERVER_PORT'] = 1003;
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://mytestthinkup:1003/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
+
+        //standard port 80
+        $_SERVER['HTTPS'] = null;
+        $_SERVER['SERVER_PORT'] = 80;
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
+
+        //no port set
+        $_SERVER['SERVER_PORT'] = '';
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
     }
 }

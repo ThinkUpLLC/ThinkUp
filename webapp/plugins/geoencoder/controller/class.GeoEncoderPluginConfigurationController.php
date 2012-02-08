@@ -57,7 +57,7 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
         } else {
             $this->addToView('is_configured', true);
         }
-
+        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
         return $this->generateView();
     }
 }

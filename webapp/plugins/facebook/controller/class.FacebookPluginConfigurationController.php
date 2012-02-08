@@ -157,6 +157,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $this->addToView('owner_instances', $owner_instances);
+        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
     }
 
     /**
@@ -172,8 +173,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             if ($_GET["state"] == SessionCache::get('facebook_auth_csrf')) {
                 //Prepare API request
                 //First, prep redirect URI
-                $config = Config::getInstance();
-                $site_root_path = $config->getValue('site_root_path');
                 $redirect_uri = urlencode(Utils::getApplicationURL(). 'account/?p=facebook');
 
                 //Build API request URL

@@ -30,7 +30,9 @@
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/classes/mock.GeoEncoderCrawler.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/model/class.GeoEncoderPlugin.php';
 
 class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase {
 
@@ -38,6 +40,9 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['HTTP_HOST'] = 'dev.thinkup.com';
     }
 
     public function tearDown(){
