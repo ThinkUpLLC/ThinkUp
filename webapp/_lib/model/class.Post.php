@@ -27,6 +27,8 @@
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
+
+require_once dirname(__FILE__) . '/../../plugins/twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 class Post {
     /**
      * @const int
@@ -274,14 +276,12 @@ class Post {
      * @return array $matches All mentions in this tweet.
      */
     public static function extractMentions($post_text) {
-        preg_match_all('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', $post_text, $matches);
-
-        // sometimes there's leading or trailing whitespace on the match, trim it
-        foreach ($matches[0] as $key=>$match) {
-            $matches[0][$key] = trim($match, ' ');
+        $tweet = new Twitter_Extractor($post_text);
+        $mentions = $tweet->extractMentionedUsernames();
+        foreach ($mentions as $k => $v) {
+            $mentions[$k] = '@' . $v;
         }
-
-        return $matches[0];
+        return $mentions;
     }
 
     /**

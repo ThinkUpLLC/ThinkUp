@@ -1,0 +1,3 @@
+[submodule "webapp/plugins/twitter/extlib/twitter-text-php"]
+	path = webapp/plugins/twitter/extlib/twitter-text-php
+	url = https://github.com/ngnpope/twitter-text-php.git

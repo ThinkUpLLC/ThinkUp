@@ -22,3 +22,4 @@ except for the  external libraries listed below.
 - [Smarty](http://smarty.net) (Included)
 - [Twitter OAuth by Abraham Williams](http://github.com/abraham/twitteroauth) (Included)
 - [ReCAPTCHA PHP library](http://recaptcha.net/plugins/php/) (Included)
+- [Twitter Text (PHP Edition)](http://recaptcha.net/plugins/php/) (git submodule)
