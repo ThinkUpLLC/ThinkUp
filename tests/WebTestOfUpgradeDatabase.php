@@ -165,8 +165,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         chdir(dirname(__FILE__) . '/../');
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
-        'unzip ' . $zipfile . ';chmod -R 777 thinkup;');
-
+        'unzip ' . $zipfile . ';mkdir -p thinkup/data/compiled_view;chmod -R 777 thinkup;');
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
@@ -183,7 +182,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
         $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
-
         //Set test mode
         putenv("MODE=TESTS");
         //Include config again to get test db credentials
@@ -208,15 +206,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
         'message has been sent.');
-
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
           '/webapp/test_installer/thinkup/config.inc.php'));
-
-        //Test bad activation code
-        $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
-        //$this->showText();
-        $this->assertText('Houston, we have a problem: Account activation failed.');
 
         //Get activation code for user from database
         Utils::setDefaultTimezonePHPini();
