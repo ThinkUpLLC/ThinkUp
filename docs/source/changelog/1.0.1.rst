@@ -1,0 +1,78 @@
+1.0.1 - 8 Feb 2012
+==================
+
+Primarily a bugfix and developer release:
+
+*   Interface improvement: In user registration and installation forms, validate user password (and repeat entry) as the
+    user types using JavaScript widget instead of expecting user to submit the form and wait to get told if the password
+    is not strong or long enough
+
+*   Security improvement: Make writable directory configurable in config.inc.php's datadir_path value for environments
+    with stricter security settings like orchestra.io. Documentation:
+    http://thinkupapp.com/docs/install/advancedconfig.html
+
+*   Bugfix: Avoid "Cannot redeclare class OAuthException" fatal error in Twitter plugin
+
+*   Bugfix: Fix Tweet button markup on post detail page which potentially broke page design
+
+*   Bugfix: When saving plugin options using Internet Explorer 8, avoid "Please complete all required fields" error
+
+*   Bugfix: Return the correct search results for posts and avoid Uncaught TypeError in Javascript console
+
+*   Bugfix: Avoid fatal error "Argument 2 passed to OwnerInstanceMySQLDAO::doesOwnerHaveAccessToInstance must be an
+    instance of Instance, null given" when a username has an apostrophe in it
+
+*   Bugfix: In Post API requests, return links associated with posts, respect both originating network AND ThinkUp's
+    user privacy setting, and don't return blank JSON for Facebook data requests
+
+*   Bugfix: More accurately extract user mentions from tweet text
+
+*   Bugfix: Detect and display application URL correctly when running on a non-standard port
+
+*   Bugfix: Defensively avoid PHP Notice Undefined index/property errors during crawl in Facebook, Google+, and 
+    GeoEncoder plugins
+
+*   Bugfix: In Twitter plugin Who You Follow view, rename "Deadbeats" to "Quietest"
+
+*   Bugfix: In Twitter plugin settings, suggest an app name that's more likely to be globally unique/server-specific,
+    instead of just "ThinkUp"
+
+*   Bugfix: Standardize date format on Group membership and Follower count Google charts to Jan 08 and Jan '12
+
+*   Bugfix: Prevent some instances from never being crawled by setting crawl process to run on instances on a per-owner
+    basis
+
+*   Bugfix: Remove unused app_title value in config.inc.php and replace it with app_title_prefix, which can be set and
+    is now consistently used across page titles and email notifications. For example, to name your ThinkUp installation
+    "My Awesome ThinkUp", set app_title_prefix = "My Awesome ". By default, it is an empty string. Documentation:
+    http://thinkupapp.com/docs/install/advancedconfig.html
+
+*   Bugfix: In Twitter plugin's JSON parsing, use id_str rather than numeric type to avoid bad post ID's from getting
+    inserted into DB. (This function is currently used only by the FSMI, not the Twitter crawler by default.)
+
+*   Bugfix: In Twitter Realtime plugin, avoid timezone not set error
+
+*   Developer tool: Plugin maker auto-stubs out all necessary plugin code. Documentation:
+    http://thinkupapp.com/docs/contribute/developers/plugins/buildplugin.html
+
+*   Developer improvement: Escape markup and JS in user info/error/success messages by default to avoid inadvertent bad
+    injections & encourage restricting markup to view template
+
+*   Developer improvement: During Twitter REST crawl, capture mentions in the tu_mentions table. This enables devs to
+    stop using MySQL LIKE clause to search tu_posts for mentions in the future
+
+*   Developer improvement: Speed up unit test run bogged down by looping DNS resolution connection to a nonexistent host
+    in PDODAO test
+
+*   Developer improvement: Explicitly cast SimpleXML elements to primitive types when parsing Twitter XML from API
+
+*   Developer improvement: Don't assume the default database table prefix or working directory location in all unit
+    tests
+
+*   Developer improvement: Consolidate logic to generate app URL into a single function and removed redundant
+    THINKUP_BASE_URL global variable
+
+*   Developer improvement: Add ability to load extlib classes in Loader without using awkward require_once statement
+
+*   Documentation: Fixed typos and broken links in user interface, added documentation, restyled documentation using
+    Twitter Bootstrap
