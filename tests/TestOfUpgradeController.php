@@ -41,6 +41,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         parent::setUp();
 
         $config = Config::getInstance();
+        $this->config = $config;
         $dao = DAOFactory::getDAO('OptionDAO');
         $this->pdo = OptionMySQLDAO::$PDO;
 
@@ -173,6 +174,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->newMigrationFiles('some_stuff');
         $this->newMigrationFiles('some_stuff2', $old = false, $add_sql = false, $no_version = true);
         $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $app_version = $this->config->getValue('THINKUP_VERSION');
         $list = $controller->getMigrationList($db_version, $no_version = true);
         $clean_list = array();
         $cnt = 0;
@@ -185,7 +187,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($clean_list[0]['new_migration']);
         $this->assertTrue($clean_list[1]['new_migration']);
         $this->assertPattern("/^2011-09-21_some_stuff2.sql$/",$clean_list[0]['filename']);
-        $this->assertPattern("/^2011-09-21_some_stuff_v1".$db_version.".sql$/",$clean_list[1]['filename']);
+        $this->assertPattern("/^2011-09-21_some_stuff_v".$app_version.".sql$/",$clean_list[1]['filename']);
 
         // run migration
         $install_dao = DAOFactory::getDAO('InstallerDAO');
