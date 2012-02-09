@@ -6,10 +6,10 @@
     <div id="ft" role="contentinfo">
     <div id="">
       <p>
-       <a href="http://thinkupapp.com">ThinkUp</a> {$thinkup_version} | 
+       <a href="http://thinkupapp.com">ThinkUp{if $thinkup_version} {$thinkup_version}{/if}</a> &#8226; 
        <a href="http://thinkupapp.com/docs/">Documentation</a> 
-       | <a href="http://groups.google.com/group/thinkupapp">Mailing List</a> 
-       | <a href="http://webchat.freenode.net/?channels=thinkup">IRC Channel</a><br>
+       &#8226; <a href="http://groups.google.com/group/thinkupapp">Mailing List</a> 
+       &#8226; <a href="http://webchat.freenode.net/?channels=thinkup">IRC Channel</a><br>
         It is nice to be nice.
         <br /> <br /><a href="http://twitter.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
         <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
