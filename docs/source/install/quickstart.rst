@@ -14,8 +14,8 @@ Hosting Providers
 We built ThinkUp so that it can run on the most common and widely-available LAMP-based hosting plans. Some providers
 offer simple custom ThinkUp launchers. 
 
-Automatic ThinkUp Launchers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Recommended
+^^^^^^^^^^^
 
 If you don't have a web server hosting package and don't want to get one, one of these options is best for you:
 
@@ -24,8 +24,8 @@ If you don't have a web server hosting package and don't want to get one, one of
 *  Our `Amazon EC2 launcher <http://expertlabs.aaas.org/thinkup-launcher/>`_ spins up an Amazon web server and installs
    ThinkUp on it for you; free for the first year and costs around $15/month after that.
 
-Known Incompatibilities
-^^^^^^^^^^^^^^^^^^^^^^^
+Not Recommended
+^^^^^^^^^^^^^^^
 
 Some web hosting providers or plans have known incompatibilities with ThinkUp. Several ThinkUp users report that:
 
