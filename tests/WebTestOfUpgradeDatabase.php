@@ -165,7 +165,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         chdir(dirname(__FILE__) . '/../');
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
-        'unzip ' . $zipfile . ';mkdir -p thinkup/data;chmod -R 777 thinkup;');
+        'unzip ' . $zipfile . ';mkdir -p thinkup/data/compiled_view;chmod -R 777 thinkup;');
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
