@@ -98,7 +98,8 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
 
         //create OAuth link
         $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.
-        "&redirect_uri=".$redirect_uri."&scope=https://www.googleapis.com/auth/plus.me&response_type=code";
+        "&redirect_uri=".$redirect_uri.
+        "&scope=https://www.googleapis.com/auth/plus.me&response_type=code&access_type=offline&approval_prompt=force";
         $this->addToView('oauth_link', $oauth_link);
 
         // Google provided a code to get an access token
@@ -112,28 +113,41 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
                 $this->addErrorMessage("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
                 $tokens->error.".\" Please double-check your settings and try again.", 'authorization');
             } else {
-                $gplus_api_accessor = new GooglePlusAPIAccessor();
-                $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
-                if (isset($gplus_user->error)) {
-                    if ($gplus_user->error->code == "403" && $gplus_user->error->message == 'Access Not Configured') {
-                        $this->addErrorMessage("Oops! Looks like Google+ API access isn't turned on. ".
-                        "<a href=\"http://code.google.com/apis/console#access\">In the Google APIs console</a>, ".
-                        "in Services, flip the Google+ API Status switch to 'On' and try again.", 'authorization');
+                if (isset($tokens->access_token) && isset($tokens->access_token)) {
+                    //Get user data
+                    $gplus_api_accessor = new GooglePlusAPIAccessor();
+                    $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
+                    if (isset($gplus_user->error)) {
+                        if ($gplus_user->error->code == "403"
+                        && $gplus_user->error->message == 'Access Not Configured') {
+                            $this->addErrorMessage("Oops! Looks like Google+ API access isn't turned on. ".
+                            "<a href=\"http://code.google.com/apis/console#access\">In the Google APIs console</a>, ".
+                            "in Services, flip the Google+ API Status switch to 'On' and try again.", 'authorization');
+                        } else {
+                            $this->addErrorMessage("Oops! Something went wrong querying the Google+ API.<br>".
+                            "Google says \"". $gplus_user->error->code.": ".$gplus_user->error->message.
+                            ".\" Please double-check your settings and try again.", 'authorization');
+                        }
                     } else {
-                        $this->addErrorMessage("Oops! Something went wrong querying the Google+ API.<br>Google says \"".
-                        $gplus_user->error->code.": ".$gplus_user->error->message.
-                        ".\" Please double-check your settings and try again.", 'authorization');
+                        if (isset($gplus_user->id) && isset($gplus_user->displayName)) {
+                            $gplus_user_id = $gplus_user->id;
+                            $gplus_username = $gplus_user->displayName;
+                            //Process tokens
+                            $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
+                            $tokens->refresh_token);
+                        } else {
+                            $this->addErrorMessage("Oops! Something went wrong querying the Google+ API.<br>".
+                            "Google says \"". Utils::varDumpToString($gplus_user).
+                            ".\" Please double-check your settings and try again.", 'authorization');
+                        }
                     }
                 } else {
-                    $gplus_user_id = $gplus_user->id;
-                    $gplus_username = $gplus_user->displayName;
-
-                    $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
-                    $tokens->refresh_token);
+                    $this->addErrorMessage("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
+                    Utils::varDumpToString($tokens).".\" Please double-check your settings and try again.",
+                    'authorization');
                 }
             }
         }
-
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'google+');
         $this->addToView('owner_instances', $owner_instances);
