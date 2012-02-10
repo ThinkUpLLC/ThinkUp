@@ -27,26 +27,35 @@ How ThinkUp Handles Sensitive Data
 
 ThinkUp's official distribution adheres to a set of rules and standards for handling sensitive data, such as:
 
-**Passwords.** The only password that ThinkUp stores in its database is each user's ThinkUp account password. This
+Passwords
+^^^^^^^^^
+
+The only password that ThinkUp stores in its database is each user's ThinkUp account password. This
 password is hashed (not stored in clear text). To prevent brute force attacks which attempt to guess this password,
 ThinkUp enforces a :doc:`failed login attempt cap </userguide/accounts/index>`.
 
-**Social network credentials.** ThinkUp and its core plugins do not store passwords to social networks like Facebook
+Social network credentials
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ThinkUp and its core plugins do not store passwords to social networks like Facebook
 or Twitter. Instead, ThinkUp stores OAuth credentials to access these networks. This gives users the ability to
 revoke ThinkUp's access to their data on the originating network's settings.
 
-**Private post and user details.** While ThinkUp collects private posts and data its authorized users have access to on
+Private post and user details
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+While ThinkUp collects private posts and data its authorized users have access to on
 the originating network, ThinkUp does not make those posts available to anyone not logged into ThinkUp.
 
-**Facebook data assumptions.** ThinkUp's current Facebook support is a work in progress and Facebook's access
+**Facebook data privacy levels:** ThinkUp's current Facebook support is a work in progress and Facebook's access
 permissions system is complex. As such, ThinkUp marks all posts to a Facebook user's profile private; ThinkUp marks
 all posts to a Facebook page as public. ThinkUp assumes all Facebook users are private.
 
 Only plugins which adhere to these standards will be accepted into the official ThinkUp distribution.
 
 .. warning::
-    If you install third-party plugins which are not included in the ThinkUp distribution, you are taking the risk
-    that they don't adhere to these guidelines.
+    If you install third-party plugins which are not included in the official ThinkUp distribution, you are taking the
+    risk that they don't adhere to these guidelines.
 
 Security Measure ThinkUp's Application Code Puts in Place
 ---------------------------------------------------------
