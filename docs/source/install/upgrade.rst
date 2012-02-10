@@ -1,46 +1,41 @@
 Upgrade ThinkUp
 ===============
 
-If you're already running ThinkUp beta 0.1 or higher, to upgrade to the latest version, simply replace
-your ThinkUp folder with the new one while preserving your existing configuration file. Here's how.
+To upgrade your existing installation to the latest version of ThinkUp, simply replace your current ThinkUp folder with
+the most recent release while preserving your existing configuration file.
 
-First Things First: Back Up ThinkUp's Data
-------------------------------------------
+.. Tip:: First things first: back up ThinkUp's data. Before you begin, :doc:`back up your current ThinkUp installation's
+    data </install/backup>` in case anything goes wrong during the upgrade process. 
 
-.. sidebar:: Update Notifications as of Beta 12
+To upgrade ThinkUp, you'll need to update your installation's application code and its database structure.
 
-    From ThinkUp beta 12 on, you can find out if there's a new version of the application available by logging in as an
-    administrator. If there's a newer version than the one you're currently running available for download, you'll 
-    see a message on the right side of ThinkUp's status bar, between "Logged in as admin" and the "Settings" link. 
-    
-    For example, If you're running beta 12 and beta 13 is available, the message will read "Version 0.13 available." 
-    Click on it to download beta 13.
+Update ThinkUp's Application Code
+---------------------------------
 
-Before you begin, :doc:`back up your current ThinkUp installation's data </install/backup>`. 
+First, `download ThinkUp's latest release <http://thinkupapp.com/downloads/>`_ and extract the zip archive on your
+computer.  Then, log into your ThinkUp installation as an administrator. 
 
-Install ThinkUp's Newest Application Code
------------------------------------------
+Using your favorite FTP program, connect to your web hosting provider, and rename your existing ThinkUp folder to
+something like ``thinkup.old``. Then, upload the new ThinkUp folder you just extracted from your computer to your web
+server.
 
-Log into your ThinkUp installation as an administrator. Then, `download ThinkUp's latest version
-<http://thinkupapp.com>`_ and extract the zip archive.
+Finally, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder.
 
-Using your favorite FTP program, rename your existing ThinkUp folder to something like ``thinkup.old``. Then, upload
-the new ThinkUp folder you just extracted.
+Reload ThinkUp in your web browser. Follow the on-screen instructions on how to set :doc:`ThinkUp's required folder
+permissions </install/perms>` in your updated installation.
 
-Then, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder. Finally,
-set :doc:`ThinkUp's required folder permissions </install/perms>` in your fresh installation.
-
-Upgrade ThinkUp's Database Structure
-------------------------------------
+Update ThinkUp's Database Structure
+-----------------------------------
 
 Now that your installation has the most up-to-date code, that code may have to update your database structure to match
-it. Visit your ThinkUp installation and if you see the message "ThinkUp's database needs an update" click on the 
+it. Relaod ThinkUp in your web browser. When you see the message "ThinkUp's database needs an update" click on the 
 "Update Now" link.
 
 If the message reads "ThinkUp is currently in the process of upgrading. Please try back again in a little while", here's
 :doc:`how to continue the upgrade process </troubleshoot/messages/upgrading>`.
 
-**Small Databases: Web-Based Upgrade**
+Small Databases: Web-Based Upgrade
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Upgrade page will let you know how many database migrations have to run to get up-to-date. 
 
@@ -50,7 +45,8 @@ you know if any of your tables are this large when you begin the upgrade process
 
 Click on the "Update now" button to update ThinkUp's database structure.
 
-**Large Databases: Command Line Upgrade**
+Large Databases: Command Line Upgrade
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
 are large. (We consider a ThinkUp database with any table over half a million rows large.)

@@ -9,7 +9,8 @@ Back Up and Restore ThinkUp's Entire Database
 ThinkUp provides both a web-based and command line tool for backing up your installation's data. The best method
 depends on how large your ThinkUp installation's database has grown.
 
-**Small Databases: Web-Based Backup (Logged-in admin only)** 
+Small Databases: Web-Based Backup (Logged-in admin only)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
 If your ThinkUp installation only has 1 or 2 moderately active social media accounts set up in it, and none of your
 database tables have more than a half million rows, then you should use the easy web-based backup tool. ThinkUp will
@@ -31,7 +32,8 @@ manually.
 When running a web-based backup, here's what to do if you see the error :doc:`Can't create/write to file
 </troubleshoot/common/backupcannotwrite>`.
 
-**Large Databases: Command Line Backup** 
+Large Databases: Command Line Backup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
 are large. (We consider a ThinkUp database with any table over half a million rows large.)
@@ -47,7 +49,8 @@ Then, run:
 
 This command will back up your current database.
 
-**Restore Your ThinkUp Backup**
+Restore Your ThinkUp Backup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In :doc:`Settings>Application
 </userguide/settings/application>`, you can upload a ThinkUp backup file under the "Restore Your Thinkup Database."
