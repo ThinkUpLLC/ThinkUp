@@ -13,7 +13,7 @@ engine.
 
     .. raw:: html
 
-        <iframe title="YouTube video player" style="width: 100%; height:250px; border: 0;" src="http://www.youtube.com/embed/LtlCpvM-xeE?rel=0"></iframe>
+        <iframe title="YouTube video player" style="width: 100%; height:250px; border: 0;" src="http://www.youtube.com/embed/PnVe9NYolDU?rel=0"></iframe>
 
     Find out more at the `ThinkUp project page <http://thinkupapp.com>`_. 
 
