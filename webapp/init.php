@@ -31,11 +31,12 @@ if ( version_compare(PHP_VERSION, '5.2', '<') ) {
 }
 
 //Define path globals
-define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
-if (file_exists(THINKUP_ROOT_PATH . 'webapp')) { // source repo
+if (file_exists(str_replace("\\",'/', dirname(dirname(__FILE__))) .'/' . 'webapp')) { // source repo
+    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
     define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
 } else { // distro package
-    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
+    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(__FILE__)) .'/');
+    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH);
 }
 
 //Register our lazy class loader
