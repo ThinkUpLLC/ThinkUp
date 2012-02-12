@@ -118,8 +118,14 @@ class GooglePlusCrawler {
             //Token has expired, fetch and save a new one
             $tokens = self::getOAuthTokens($client_id, $client_secret, $refresh_token, 'refresh_token');
             if (isset($tokens->error) || !isset($tokens->access_token)) {
-                $this->logger->logError("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
-                $tokens->error.".\" Please double-check your settings and try again.");
+                $error_msg = "Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"";
+                if (isset($tokens->error)) {
+                    $error_msg .= $tokens->error;
+                } else {
+                    $error_msg .= Utils::varDumpToString($tokens);
+                }
+                $error_msg .=".\" Please double-check your settings and try again.";
+                $this->logger->logError($error_msg, __METHOD__.','.__LINE__);
             } else {
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 $owner_instance_dao->updateTokens($owner_id, $this->instance->id, $access_token, $refresh_token);

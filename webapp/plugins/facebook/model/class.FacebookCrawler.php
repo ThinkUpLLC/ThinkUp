@@ -390,7 +390,8 @@ class FacebookCrawler {
                             //$this->logger->logInfo("API call ".$api_call, __METHOD__.','.__LINE__);
                             do {
                                 $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
-                                if (isset($comments_stream) && is_array($comments_stream->data)) {
+                                if (isset($comments_stream) && isset($comments_stream->data)
+                                && is_array($comments_stream->data)) {
                                     foreach ($comments_stream->data as $c) {
                                         if (isset($c->from)) {
                                             $comment_id = explode("_", $c->id);
