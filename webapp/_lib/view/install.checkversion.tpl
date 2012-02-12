@@ -18,7 +18,7 @@
     var txt = '';
 //    console.debug(data);
 //    console.debug('version ' + data[0].version);
-    txt += ' | <a href="https://github.com/ginatrapani/thinkup/downloads">'+data[0].version+'</a>';
+    txt += ' | <a href="http://thinkupapp.com/docs/install/upgrade.html">'+data[0].version+'</a>';
     div.innerHTML =  txt;  // assign new HTML into #ROOT
     div.style.display = 'inline'; // make element visible
   }
