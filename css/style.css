@@ -343,6 +343,36 @@ div#navigation ul li:hover > ul.sub {
 	z-index: 9999;
 }
 
+/* Quotes */
+
+blockquote {
+	width: 100%;
+	margin: 30px auto 10px auto;
+	padding: 0;
+	font-size: 36px;
+	line-height: 36px;
+	text-align: center;
+	font-weight: bold;
+}
+
+cite {
+	display: block;
+	width: 100%;
+	margin: 10px auto 30px auto;
+	text-align: center;
+}
+
+cite:before {
+	content:"\2014";
+}
+
+blockquote:before {
+	content: '\201C';
+}
+blockquote:after {
+	content: '\201D';
+}
+
 /* Slider */
 
 div#slider {
