@@ -56,12 +56,19 @@ function drawCharts() {
         dataTable: follower_count_history_by_day_data,
         options: {
             title: follower_description + ' Count By Day',
-            width: 600,
+            colors: ['#3c8ecc'],
+            width: '100%',
             height: 250,
-            legend: "top",
+            legend: "none",
             interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+				format: 'MMM d'
+			},
             vAxis: {
-              minValue: 0
+	            baselineColor: '#ccc',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
             }
         },
     });
@@ -73,12 +80,19 @@ function drawCharts() {
         dataTable: follower_count_history_by_week_data,
         options: {
             title: follower_description + ' Count By Week',
-            width: 600,
+            colors: ['#3c8ecc'],
+            width: '100%',
             height: 250,
-            legend: "top",
+            legend: "none",
             interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+				format: 'MMM d'
+			},
             vAxis: {
-              minValue: 0
+	            baselineColor: '#ccc',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
             }
         },
     });
@@ -90,12 +104,19 @@ function drawCharts() {
         dataTable: follower_count_history_by_month_data,
         options: {
             title: follower_description + ' Count By Month',
-            width: 600,
+            colors: ['#3c8ecc'],
+            width: '100%',
             height: 250,
-            legend: "top",
+            legend: "none",
             interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+				format: 'MMM yyyy'
+			},
             vAxis: {
-              minValue: 0
+	            baselineColor: '#ccc',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
             }
         },
     });

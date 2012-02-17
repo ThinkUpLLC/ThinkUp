@@ -168,8 +168,11 @@
                           titleTextStyle: {color: '#848884', fontSize: 16},
                           width: 350,
                           height: 250,
-                          legend: "top",
+                          legend: "none",
                           interpolateNulls: true,
+                          hAxis: {
+                          	format: 'MMM d'
+                          },
                           vAxis: {
                             minValue: 0
                           }
@@ -186,8 +189,11 @@
                           titleTextStyle: {color: '#848884', fontSize: 16},
                           width: 350,
                           height: 250,
-                          legend: "top",
+                          legend: "none",
                           interpolateNulls: true,
+                          hAxis: {
+                          	format: 'MMM d'
+                          },
                           vAxis: {
                             minValue: 0
                           }
@@ -197,9 +203,12 @@
 
                   if (typeof(replies) != 'undefined') {
                     var post_types = new google.visualization.DataTable();
-                    post_types.addColumn('number', 'Conversationalist');
-                    post_types.addColumn('number', 'Broadcaster');
-                    post_types.addRow([{v: replies/100, f: replies + '%'}, {v: links/100, f: links + '%'}]);
+                    post_types.addColumn('string', 'Type');
+                    post_types.addColumn('number', 'Percentage');
+                    post_types.addRows([
+                    	['Conversationalist', {v: replies/100, f: replies + '%'}], 
+                    	['Broadcaster', {v: links/100, f: links + '%'}]
+                    ]);
 
                     var post_type_chart = new google.visualization.ChartWrapper({
                         containerId: 'post_types',
@@ -208,14 +217,21 @@
                         options: {
                             title: 'Post Types',
                             titleTextStyle: {color: '#848884', fontSize: 19},
-                            width: 300,
-                            height: 150,
-                            legend: 'top',
+                            colors: ['#3c8ecc'],
+                            width: 350,
+                            height: 200,
+                            legend: 'none',
                             hAxis: {
-                              minValue: 0,
-                              maxValue: 1,
-                              format:'#,###%'
-                            }
+                                minValue: 0,
+                                maxValue: 1,
+                                format:'#,###%',
+                                textStyle: { color: '#666' },
+                            },
+                            vAxis: {
+                                textStyle: { color: '#666' },
+                                gridlines: { color: '#ccc' },
+                                baselineColor: '#ccc',
+                            },
                         }
                     });
                     post_type_chart.draw();
@@ -223,22 +239,25 @@
 
                   var hot_posts_chart = new google.visualization.ChartWrapper({
                       containerId: 'hot_posts',
-                      chartType: 'BarChart',
+                      chartType: 'ColumnChart',
                       dataTable: hot_posts_data,
                       options: {
-                          title: 'Recent Activity',
-                          titleTextStyle: {color: '#848884', fontSize: 19},
+                          fontName: 'Helvetica',
+                          colors: ['#3e5d9a', '#3c8ecc'],
                           isStacked: true,
                           width: 700,
-                          height: 300,
+                          height: 200,
+                          chartArea:{left:20,top:20,width:"80%",height:"80%"},
                           legend: 'right',
                           hAxis: {
-                            minValue: 0,
+                            textStyle: { color: '#fff', fontSize: 1 }
                           },
                           vAxis: {
-                            textStyle:  {fontSize: 9},
+                            minValue: 0,
+                            baselineColor: '#ccc',
+                            textStyle: { color: '#999' },
+                            gridlines: { color: '#eee' }
                           },
-                          chartArea:{width:"40%"}
                       }
                   });
                   hot_posts_chart.draw();
