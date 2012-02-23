@@ -40,19 +40,21 @@ google.setOnLoadCallback(drawCharts);
 function drawCharts() {
 {/literal}
     var follower_count_history_by_day_data = new google.visualization.DataTable(
-    {$follower_count_history_by_day.vis_data});
+    	{$follower_count_history_by_day.vis_data});
     var follower_count_history_by_week_data = new google.visualization.DataTable(
-    {$follower_count_history_by_week.vis_data});
+    	{$follower_count_history_by_week.vis_data});
     var follower_count_history_by_month_data = new google.visualization.DataTable(
-    {$follower_count_history_by_month.vis_data});
-
+    	{$follower_count_history_by_month.vis_data});
 {literal}
+	var formatter = new google.visualization.NumberFormat({fractionDigits: 0});
+	formatter.format(follower_count_history_by_day_data, 1);
     var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_day',
         chartType: 'LineChart',
         dataTable: follower_count_history_by_day_data,
         options: {
             title: 'Follower Count By Day',
+            titleTextStyle: {color: '#999', fontSize: 18},
             colors: ['#3c8ecc'],
             width: '100%',
             height: 250,
@@ -60,10 +62,13 @@ function drawCharts() {
             interpolateNulls: true,
             pointSize: 2,
 			hAxis: {
-				format: 'MMM d'
+	            baselineColor: '#eee',
+				format: 'MMM d',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
 			},
             vAxis: {
-	            baselineColor: '#ccc',
+	            baselineColor: '#eee',
 	            textStyle: { color: '#999' },
 	            gridlines: { color: '#eee' }
             },
@@ -71,12 +76,14 @@ function drawCharts() {
     });
     follower_count_history_by_day_chart.draw();
 
+	formatter.format(follower_count_history_by_week_data, 1);
     var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_week',
         chartType: 'LineChart',
         dataTable: follower_count_history_by_week_data,
         options: {
             title: 'Follower Count By Week',
+            titleTextStyle: {color: '#999', fontSize: 18},
             colors: ['#3c8ecc'],
             width: '100%',
             height: 250,
@@ -84,10 +91,13 @@ function drawCharts() {
             interpolateNulls: true,
             pointSize: 2,
 			hAxis: {
-				format: 'MMM d'
+	            baselineColor: '#eee',
+				format: 'MMM d',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
 			},
             vAxis: {
-	            baselineColor: '#ccc',
+	            baselineColor: '#eee',
 	            textStyle: { color: '#999' },
 	            gridlines: { color: '#eee' }
             },
@@ -95,12 +105,14 @@ function drawCharts() {
     });
     follower_count_history_by_week_chart.draw();
 
+	formatter.format(follower_count_history_by_month_data, 1);
     var follower_count_history_by_month_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_month',
         chartType: 'LineChart',
         dataTable: follower_count_history_by_month_data,
         options: {
             title: 'Follower Count By Month',
+            titleTextStyle: {color: '#999', fontSize: 18},
             colors: ['#3c8ecc'],
             width: '100%',
             height: 250,
@@ -108,10 +120,13 @@ function drawCharts() {
             interpolateNulls: true,
             pointSize: 2,
 			hAxis: {
-				format: 'MMM yyyy'
+	            baselineColor: '#eee',
+				format: 'MMM yyyy',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
 			},
             vAxis: {
-	            baselineColor: '#ccc',
+	            baselineColor: '#eee',
 	            textStyle: { color: '#999' },
 	            gridlines: { color: '#eee' }
             },

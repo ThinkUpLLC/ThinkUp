@@ -165,17 +165,23 @@
                       dataTable: follower_count_history_by_day_data,
                       options: {
                           title: follower_description + ' Count By Day',
-                          titleTextStyle: {color: '#848884', fontSize: 16},
+                          titleTextStyle: {color: '#999', fontSize: 16},
                           width: 350,
                           height: 250,
                           legend: "none",
                           interpolateNulls: true,
+                          pointSize: 2,
                           hAxis: {
-                          	format: 'MMM d'
+                              baselineColor: '#eee',
+                              format: 'MMM d',
+                              textStyle: { color: '#999' },
+                              gridlines: { color: '#eee' }
                           },
                           vAxis: {
-                            minValue: 0
-                          }
+                              baselineColor: '#eee',
+                              textStyle: { color: '#999' },
+                              gridlines: { color: '#eee' }
+                          },
                       },
                   });
                   follower_count_history_by_day_chart.draw();
@@ -186,17 +192,23 @@
                       dataTable: follower_count_history_by_week_data,
                       options: {
                           title: follower_description + ' Count By Week',
-                          titleTextStyle: {color: '#848884', fontSize: 16},
+                          titleTextStyle: {color: '#999', fontSize: 16},
                           width: 350,
                           height: 250,
                           legend: "none",
                           interpolateNulls: true,
+                          pointSize: 2,
                           hAxis: {
-                          	format: 'MMM d'
+                              baselineColor: '#eee',
+                              format: 'MMM d',
+                              textStyle: { color: '#999' },
+                              gridlines: { color: '#eee' }
                           },
                           vAxis: {
-                            minValue: 0
-                          }
+                              baselineColor: '#eee',
+                              textStyle: { color: '#999' },
+                              gridlines: { color: '#eee' }
+                          },
                       },
                   });
                   follower_count_history_by_week_chart.draw();
@@ -239,16 +251,15 @@
 
                   var hot_posts_chart = new google.visualization.ChartWrapper({
                       containerId: 'hot_posts',
-                      chartType: 'ColumnChart',
+                      chartType: 'BarChart',
                       dataTable: hot_posts_data,
                       options: {
-                          fontName: 'Helvetica',
                           colors: ['#3e5d9a', '#3c8ecc'],
                           isStacked: true,
                           width: 700,
-                          height: 200,
-                          chartArea:{left:20,top:20,width:"80%",height:"80%"},
-                          legend: 'right',
+                          height: 250,
+                          chartArea:{left:300,height:"80%"},
+                          legend: 'bottom',
                           hAxis: {
                             textStyle: { color: '#fff', fontSize: 1 }
                           },

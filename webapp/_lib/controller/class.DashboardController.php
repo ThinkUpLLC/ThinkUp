@@ -193,7 +193,7 @@ class DashboardController extends ThinkUpController {
             $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20,
             true);
             $this->addToView('recent_posts', $recent_posts);
-            $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
+            $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 10);
             $hot_posts_data = Utils::getHotPostVisualizationData($hot_posts, $this->instance->network);
             $this->addToView('hot_posts', $hot_posts);
             $this->addToView('hot_posts_data', $hot_posts_data);

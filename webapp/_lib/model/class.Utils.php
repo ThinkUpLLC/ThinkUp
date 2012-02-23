@@ -444,7 +444,7 @@ class Utils {
         case 'google+':
             $post_label = 'Post';
             $approval_field = 'favlike_count_cache';
-            $approval_label = "+1's";
+            $approval_label = "+1s";
             break;
         default:
             $post_label = 'Post';
@@ -455,12 +455,12 @@ class Utils {
         $metadata = array(
           array('type' => 'string', 'label' => $post_label),
           array('type' => 'number', 'label' => $approval_label),
-          array('type' => 'number', 'label' => 'Replies'),
+          array('type' => 'number', 'label' => 'Replies')
         );
         $resultset = array();
         foreach ($hot_posts as $post) {
             $resultset[] = array('c' => array(
-                array('v' => $post->post_text),
+                array('v' => substr($post->post_text, 0, 100) . '...'),
                 array('v' => intval($post->$approval_field)),
                 array('v' => intval($post->reply_count_cache)),
             ));

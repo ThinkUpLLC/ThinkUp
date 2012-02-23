@@ -87,11 +87,17 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         }
         foreach ($history_rows as $row) {
             $timestamp = strtotime($row['full_date']);
-            $resultset[] = array('c' => array(
-                array('v' => sprintf('new Date(%d,%d,%d)', date('Y', $timestamp), date('n', $timestamp) - 1,
-                date('j', $timestamp))),
-                array('v' => intval($row['count']))
-            ));
+            $resultset[] = array(
+            	'c' => array(
+                	array(
+                		'v' => sprintf('new Date(%d,%d,%d)', 
+                			date('Y', $timestamp), 
+                			date('n', $timestamp) - 1,
+                			date('j', $timestamp))
+	                ),
+	                array('v' => intval($row['count']))
+            	)
+            );
         }
         $metadata = array(
           array('type' => 'date', 'label' => 'Date'),
