@@ -50,20 +50,20 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
      * @var array
      */
     var $api_budget_allocation_auth = array(
-        'fetchInstanceUserTweets' => array('percent' => 20),
-        'fetchAndAddTweetRepliedTo' => array('percent' => 20), // for fetchStrayRepliedToTweets
-        'fetchAndAddUser' => array('percent' => 20), // for fetchUnloadedFollowerDetails
-        'fetchFriendTweetsAndFriends' => array('percent' => 20),
-        'fetchInstanceUserMentions' => array('percent' => 20),
-        'fetchInstanceUserFriends' => array('percent' => 20),
-        'getFavsPage' => array('percent' => 20), // called from testCleanupMissedFavs|maintFavsFetch|archivingFavsFetch
-        'archivingFavsFetch' => array('percent' => 20), // called from fetchInstanceFavorites
-        'fetchInstanceUserFollowersByIDs' => array('percent' => 20), // for fetchInstanceUserFollowers
-        'fetchUserTimelineForRetweet' => array('percent' => 20), // fetchRetweetsOfInstanceUser->fetchStatusRetweets
-        'cleanUpMissedFavsUnFavs' => array('percent' => 20),
-        'cleanUpFollows' => array('percent' => 20),
-        'fetchInstanceUserGroups'  => array('percent' => 20),
-        'updateStaleGroupMemberships'  => array('percent' => 20),
+        'fetchInstanceUserTweets' => array('percent' => 8),
+        'fetchAndAddTweetRepliedTo' => array('percent' => 8), // for fetchStrayRepliedToTweets
+        'fetchAndAddUser' => array('percent' => 8), // for fetchUnloadedFollowerDetails
+        'fetchFriendTweetsAndFriends' => array('percent' => 8),
+        'fetchInstanceUserMentions' => array('percent' => 8),
+        'fetchInstanceUserFriends' => array('percent' => 8),
+        'getFavsPage' => array('percent' => 8), // called from testCleanupMissedFavs|maintFavsFetch|archivingFavsFetch
+        'archivingFavsFetch' => array('percent' => 8), // called from fetchInstanceFavorites
+        'fetchInstanceUserFollowersByIDs' => array('percent' => 8), // for fetchInstanceUserFollowers
+        'fetchUserTimelineForRetweet' => array('percent' => 8), // fetchRetweetsOfInstanceUser->fetchStatusRetweets
+        'cleanUpMissedFavsUnFavs' => array('percent' => 8),
+        'cleanUpFollows' => array('percent' => 100), // last operation, give it high percentage to exhaust balance
+        'fetchInstanceUserGroups'  => array('percent' => 8),
+        'updateStaleGroupMemberships'  => array('percent' => 8),
     );
 
     public function __construct($vals = null) {
@@ -134,12 +134,13 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                 $num_twitter_errors, $max_api_calls_per_crawl);
             }
 
-            // budget our twitter calls
-            $call_limits = $this->budgetCrawlLimits($max_api_calls_per_crawl, $noauth);
-
             $crawler = new TwitterCrawler($instance, $api);
 
             $api->init();
+
+            // budget our twitter calls
+            $call_limits = $this->budgetCrawlLimits($api->available_api_calls_for_crawler, $noauth);
+
             $api->setCallerLimits($call_limits);
 
             if ($api->available_api_calls_for_crawler > 0) {
@@ -163,14 +164,13 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
                 $crawler->fetchStrayRepliedToTweets();
                 $crawler->fetchUnloadedFollowerDetails();
+                $crawler->cleanUpFollows();
                 $crawler->fetchFriendTweetsAndFriends();
 
                 if ($noauth) {
                     // No auth req'd
                     $crawler->fetchSearchResults($instance->network_username);
                 }
-
-                $crawler->cleanUpFollows();
 
                 // Save instance
                 if (isset($crawler->user)) {

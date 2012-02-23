@@ -425,9 +425,9 @@ class TwitterCrawler {
                                     $u = new User($tweet, 'mentions');
                                     $this->user_dao->updateUser($u);
                                 }
+                                $mention_dao->insertMention($this->user->user_id, $this->user->username,
+                                $tweet['post_id'], $tweet['author_user_id'], 'twitter');
                             }
-                            $mention_dao->insertMention($this->user->user_id, $this->user->username, $tweet['post_id'],
-                            $tweet['author_user_id'], 'twitter');
                         }
                         if ($got_newest_mentions) {
                             if ( $count > 0) {
@@ -475,7 +475,11 @@ class TwitterCrawler {
                 if ($cURL_status == 200) {
                     $tweets = $this->api->parseXML($twitter_data);
                     foreach ($tweets as $tweet) {
-                        $this->fetchStatusRetweets($tweet);
+                        try {
+                            $this->fetchStatusRetweets($tweet);
+                        } catch (APICallLimitExceededException $e) {
+                            break;
+                        }
                     }
                 }
             }
@@ -484,6 +488,7 @@ class TwitterCrawler {
     /**
      * Retrieve retweets of given status
      * @param array $status
+     * @throws APICallLimitExceededException
      */
     private function fetchStatusRetweets($status) {
         $status_id = $status["post_id"];
@@ -504,6 +509,7 @@ class TwitterCrawler {
      * Retrieve a retweeting user's timeline
      * @param array $retweeted_status
      * @param User $user_with_retweet
+     * @throws APICallLimitExceededException
      */
     private function fetchUserTimelineForRetweet($retweeted_status, $user_with_retweet) {
         $retweeted_status_id = $retweeted_status["post_id"];
@@ -518,11 +524,7 @@ class TwitterCrawler {
             $args['count'] = $count_arg;
             $args["include_rts"]="true";
 
-            try {
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
-            } catch (APICallLimitExceededException $e) {
-                return;
-            }
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
 
             if ($cURL_status == 200) {
                 $count = 0;
@@ -768,7 +770,11 @@ class TwitterCrawler {
                 $args['list_id'] = $stale_membership->group_id;
                 $args['user_id'] = $this->instance->network_user_id;
 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($check_group_member, $args);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($check_group_member, $args);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
 
                 if ($cURL_status == 404) {
                     $status_message = sprintf('User, %s, no longer active on twitter list, %s',
@@ -1195,18 +1201,15 @@ class TwitterCrawler {
      * For each API call left, grab oldest follow relationship, check if it exists, and update table.
      */
     public function cleanUpFollows() {
-        $this->logger->logInfo("Working on cleanUpFollows", __METHOD__.','.__LINE__);
-
-        $num_allowed_errors = 5;
-        $num_errors = 0;
-
-        $num_allowed_errors = 5;
-        $num_errors = 0;
+        // first, check that we have the resources to do work
+        if (!($this->api->available && $this->api->available_api_calls_for_crawler)) {
+            $this->logger->logInfo("Terminating-- no API calls available", __METHOD__.','.__LINE__);
+            return true;
+        }
 
         $fd = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching &&
-        $num_errors < $num_allowed_errors) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
             $oldfollow = $fd->getOldestFollow('twitter');
             if ($oldfollow != null) {
                 $friendship_call = $this->api->cURL_source['show_friendship'];
@@ -1215,6 +1218,8 @@ class TwitterCrawler {
                 $args["target_id"] = $oldfollow["follower_id"];
 
                 try {
+                    $this->logger->logInfo("Checking stale follow last seen ".$oldfollow["last_seen"],
+                    __METHOD__.','.__LINE__);
                     list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $args);
                 } catch (APICallLimitExceededException $e) {
                     break;
@@ -1223,16 +1228,24 @@ class TwitterCrawler {
                 if ($cURL_status == 200) {
                     $friendship = $this->api->parseXML($twitter_data);
                     if ($friendship['source_follows_target'] == 'true') {
+                        $this->logger->logInfo("Updating follow last seen date: ".$args["source_id"]." follows ".
+                        $args["target_id"], __METHOD__.','.__LINE__);
                         $fd->update($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter',
                         Utils::getURLWithParams($friendship_call, $args));
                     } else {
+                        $this->logger->logInfo("Deactivating follow: ".$args["source_id"]." does not follow ".
+                        $args["target_id"], __METHOD__.','.__LINE__);
                         $fd->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter',
                         Utils::getURLWithParams($friendship_call, $args));
                     }
                     if ($friendship['target_follows_source'] == 'true') {
+                        $this->logger->logInfo("Updating follow last seen date: ".$args["target_id"]." follows ".
+                        $args["source_id"], __METHOD__.','.__LINE__);
                         $fd->update($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter',
                         Utils::getURLWithParams($friendship_call, $args));
                     } else {
+                        $this->logger->logInfo("Deactivating follow: ".$args["target_id"]." does not follow ".
+                        $args["source_id"], __METHOD__.','.__LINE__);
                         $fd->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter',
                         Utils::getURLWithParams($friendship_call, $args));
                     }
@@ -1247,7 +1260,6 @@ class TwitterCrawler {
                         $fd->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter',
                         Utils::getURLWithParams($friendship_call, $args));
                     }
-                    $num_errors++;
                 }
             } else {
                 $continue_fetching = false;
@@ -1482,8 +1494,8 @@ class TwitterCrawler {
 
                     $older_favs_smode = true;
                     $stop_page = $mpage + $older_favs_pages -1;
-                    $this->logger->logInfo("next will be searching for older favs: stop page: $stop_page,
-                    fav <= $starting_fav_id ", __METHOD__.','.__LINE__);
+                    $this->logger->logInfo("next will be searching for older favs: stop page: ".$stop_page.
+                    ", fav <= $starting_fav_id ", __METHOD__.','.__LINE__);
                 }
             } else {// in older_favs_smode, check whether we should stop
                 $this->logger->logInfo("in older favs search mode with stop page $stop_page", __METHOD__.','.__LINE__);

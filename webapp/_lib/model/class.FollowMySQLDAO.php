@@ -49,7 +49,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         }
         $q .= ";";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':follower_id'=>(string)$follower_id,
             ':network'=>$network
         );
@@ -64,7 +64,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "SET last_seen=NOW(), debug_api_call = :debug ";
         $q .= "WHERE user_id = :user_id AND follower_id = :follower_id AND network = :network;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':follower_id'=>(string)$follower_id,
             ':network'=>$network,
             ':debug'=>$debug_api_call
@@ -80,7 +80,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "SET active = 0 , debug_api_call = :debug ";
         $q .= "WHERE user_id = :user_id AND follower_id = :follower_id AND network = :network;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':follower_id'=>(string)$follower_id,
             ':network'=>$network,
             ':debug'=>$debug_api_call
@@ -96,7 +96,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "(user_id, follower_id, first_seen, last_seen, debug_api_call, network) ";
         $q .= "VALUES ( :user_id, :follower_id, NOW(), NOW(), :debug, :network );";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':follower_id'=>(string)$follower_id,
             ':network'=>$network,
             ':debug'=>$debug_api_call
@@ -235,7 +235,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
     public function getOldestFollow($network) {
-        $q  = "SELECT user_id AS followee_id, follower_id ";
+        $q  = "SELECT user_id AS followee_id, follower_id, last_seen ";
         $q .= "FROM #prefix#follows AS f ";
         $q .= "WHERE network=:network AND active = 1 ORDER BY f.last_seen ASC LIMIT 1;";
         $vars = array( ':network'=>$network );
@@ -254,7 +254,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "ORDER BY u.follower_count DESC, u.user_name DESC ";
         $q .= "LIMIT :start_on_record, :count ;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -278,7 +278,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
         $q .= "LIMIT :start_on_record, :count ;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -301,7 +301,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "ORDER BY likelihood_of_follow ASC, u.follower_count DESC ";
         $q .= "LIMIT :start_on_record, :count ;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -320,7 +320,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE f.user_id = :user_id AND f.network=:network AND u.network=f.network AND active=1 ";
         $q .= "ORDER BY u.user_id ASC LIMIT :start_on_record, :count ;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -340,7 +340,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE f.follower_id = :user_id AND f.network=:network AND u.network=f.network AND active=1 ";
         $q .= "ORDER BY avg_tweets_per_day DESC LIMIT :start_on_record, :count ";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -359,7 +359,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE f.follower_id = :user_id AND active=0 AND f.network=:network AND f.network=u.network ";
         $q .= "ORDER BY u.follower_count DESC LIMIT :start_on_record, :count";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -377,7 +377,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "on f.follower_id = u.user_id WHERE f.user_id = :user_id AND f.network=:network AND active=0 ";
         $q .= " AND f.network=u.network order by u.follower_count DESC LIMIT :start_on_record, :count ";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -398,7 +398,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "ORDER BY avg_tweets_per_day ASC, u.user_name ASC ";
         $q .= "LIMIT :start_on_record, :count ";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -418,7 +418,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE f.follower_id = :user_id AND f.network=:network AND u.network = f.network AND active=1 ";
         $q .= "ORDER BY follower_count DESC LIMIT :start_on_record, :count ";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network,
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
@@ -439,7 +439,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "   WHERE follower_id = :instanceuser_id AND active=1 AND network=:network) ";
         $q .= " ORDER BY follower_count ASC;";
         $vars = array(
-            ':user_id'=>(string)$uid, 
+            ':user_id'=>(string)$uid,
             ':network'=>$network,
             ':instanceuser_id'=>$instance_uid
         );
