@@ -305,6 +305,19 @@ div#navigation ul li:hover {
 	border-radius: 2px;
 }
 
+div#navigation ul li#topsearch {
+	padding-left : 16px;
+}
+
+div#navigation ul li#topsearch:hover {
+	background : none;
+	text-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	padding-left : 16px;
+}
+
 div#navigation ul.sub {
 	display: none;
 	position: absolute;
@@ -341,6 +354,53 @@ div#navigation ul.sub li a:hover {
 div#navigation ul li:hover > ul.sub {
 	display: block;
 	z-index: 9999;
+}
+
+div#navigation ul li input {
+	background-color: #444;
+	background-color: rgba(255, 255, 255, 0.3);
+	font-size : 16px;
+	font-weight : bold;
+	width : 80%;
+	line-height: 1.231;
+	padding: 4px 9px;
+	margin-top : 12px;
+	color: #ffffff;
+	color: rgba(255, 255, 255, 0.75);
+	border: 1px solid #ccc;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.25);
+	-moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.25);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.25);
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+div#navigation ul li input:-moz-placeholder {
+	color: #ccc;
+}
+div#navigation ul li input:-webkit-input-placeholder {
+	color: #ccc;
+}
+div#navigation ul li input:hover {
+	background-color: #ccc;
+	background-color: rgba(255, 255, 255, 0.5);
+	color: #ffffff;
+}
+div#navigation ul li input:focus, div#navigation ul li input.focused {
+	outline: 0;
+	background-color: #ffffff;
+	color: #404040;
+	text-shadow: 0 1px 0 #ffffff;
+	border: 0;
+	padding: 5px 10px;
+	-webkit-box-shadow: 0 0 3px #00AEEF;
+	-moz-box-shadow: 0 0 3px #00AEEF;
+	box-shadow: 0 0 3px #00AEEF;
 }
 
 /* Quotes */
