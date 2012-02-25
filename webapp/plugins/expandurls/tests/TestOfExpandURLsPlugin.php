@@ -110,6 +110,20 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->expanded_url, 'http://yfrog.com/gz2inwrj');
         $this->assertEqual($link->image_src, 'http://yfrog.com/gz2inwrj.th.jpg');
         $this->assertEqual($link->error, '');
+
+        //check that short URLs were saved
+        $sql = "SELECT * FROM " . $this->table_prefix . 'links_short';
+        $stmt = ShortLinkMySQLDAO::$PDO->query($sql);
+        $data = array();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            array_push($data, $row);
+        }
+        $stmt->closeCursor();
+        $this->assertEqual(count($data), 9);
+        $this->assertEqual($data[0]['id'], 1);
+        $this->assertEqual($data[0]['link_id'], 1);
+        $this->assertEqual($data[0]['short_url'], 'http://bit.ly/a5VmbO');
+        $this->assertEqual($data[0]['click_count'], 0);
     }
 
     private function buildData() {

@@ -92,7 +92,7 @@ interface LinkDAO {
      * Gets a number of links that has not been expanded.
      * Non standard output - Scheduled for deprecation.
      * @param int $limit
-     * @return array with numbered keys, with strings
+     * @return array of Link objects
      */
     public function getLinksToExpand($limit = 1500);
     /**

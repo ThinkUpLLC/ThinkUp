@@ -176,6 +176,7 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
     public function expandRemainingURLs() {
         $logger = Logger::getInstance();
         $link_dao = DAOFactory::getDAO('LinkDAO');
+        $short_link_dao = DAOFactory::getDAO('ShortLinkDAO');
         $links_to_expand = $link_dao->getLinksToExpand($this->link_limit);
 
         $logger->logUserInfo(count($links_to_expand)." links to expand. Please wait. Working...",
@@ -184,31 +185,34 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
         $total_expanded = 0;
         $total_errors = 0;
         foreach ($links_to_expand as $index=>$link) {
-            if (Utils::validateURL($link)) {
-                $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($links_to_expand)." (".$link.")",
+            if (Utils::validateURL($link->url)) {
+                $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($links_to_expand)." (".$link->url.")",
                 __METHOD__.','.__LINE__);
 
                 //make sure shortened short links--like t.co--get fully expanded
                 $fully_expanded = false;
-                $short_link = $link;
+                $short_link = $link->url;
                 while (!$fully_expanded) {
-                    $expanded_url = self::untinyurl($short_link, $link_dao, $link, $index, count($links_to_expand));
+                    $expanded_url = self::untinyurl($short_link, $link_dao, $link->url, $index,
+                    count($links_to_expand));
                     if ($expanded_url == $short_link || $expanded_url == '') {
                         $fully_expanded = true;
+                    } else {
+                        $short_link_dao->insert($link->id, $short_link);
                     }
                     $short_link = $expanded_url;
                 }
                 if ($expanded_url != '') {
                     $image_src = URLProcessor::getImageSource($expanded_url);
-                    $link_dao->saveExpandedUrl($link, $expanded_url, '', $image_src);
+                    $link_dao->saveExpandedUrl($link->url, $expanded_url, '', $image_src);
                     $total_expanded = $total_expanded + 1;
                 } else {
                     $total_errors = $total_errors + 1;
                 }
             } else {
                 $total_errors = $total_errors + 1;
-                $logger->logError($link." not a valid URL", __METHOD__.','.__LINE__);
-                $link_dao->saveExpansionError($link, "Invalid URL");
+                $logger->logError($link->url." not a valid URL", __METHOD__.','.__LINE__);
+                $link_dao->saveExpansionError($link->url, "Invalid URL");
             }
         }
         $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
@@ -280,17 +284,5 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
             return '';
         }
         return $tinyurl;
-    }
-
-    /**
-     * Safe wrapper for the feof function that implements a timeout.
-     * See Example #1:
-     * http://php.net/manual/en/function.feof.php
-     * @param socket $fp Open socket
-     * @param mixed $start Int or null
-     */
-    private function safe_feof($fp, &$start = null) {
-        $start = microtime(true);
-        return feof($fp);
     }
 }

@@ -67,7 +67,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_key = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter.'e',
             'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key,
-            'error'=>'Generic test error message, Photo not found', 'image_src'=>'http://flic.kr/thumbnail.png', 
+            'error'=>'Generic test error message, Photo not found', 'image_src'=>'http://flic.kr/thumbnail.png',
             'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
@@ -130,7 +130,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testInsert(){
         $link = new Link(array('url'=>'http://example.com/test', 'image_src'=>'',
-        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
         'title'=>'Very Long URL', 'post_key'=>1234));
 
         $result = $this->DAO->insert($link);
@@ -151,8 +151,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
 
         //test another with new fields set
         $link = new Link(array('url'=>'http://example.com/test2', 'image_src'=>'',
-        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
-        'title'=>'Very Long URL', 'post_key'=>1234567, 
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
+        'title'=>'Very Long URL', 'post_key'=>1234567,
         'image_src'=>'http://example.com/thumbnail.png', 'description'=>'My hot link', 'caption'=>"Hot, huh?"));
 
         $result = $this->DAO->insert($link);
@@ -181,7 +181,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(sizeof($links_to_expand)>0);
 
         //Just expanded URL
-        $link = $links_to_expand[0];
+        $link = $links_to_expand[0]->url;
         $this->DAO->saveExpandedUrl($link, "http://expandedurl.com");
         $updated_link = $this->DAO->getLinkByUrl($link);
         $this->assertEqual($updated_link->expanded_url, "http://expandedurl.com");
@@ -223,7 +223,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testUpdate(){
         $link = new Link(array('url'=>'http://example.com/test', 'image_src'=>'',
-        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
         'title'=>'Very Long URL', 'post_key'=>15000));
 
         $result = $this->DAO->insert($link);
@@ -443,10 +443,10 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $builder1 = $builder2 = null;
         try {
             $builder1 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter, 
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter,
             'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $builder2 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter, 
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter,
             'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());

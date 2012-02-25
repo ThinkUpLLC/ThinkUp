@@ -226,9 +226,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksToExpand($limit = 1500) {
-        $q  = "SELECT l1.url AS url ";
+        $q  = "SELECT * ";
         $q .= "FROM (  ";
-        $q .= "   SELECT l.url, l.post_key ";
+        $q .= "   SELECT * ";
         $q .= "   FROM #prefix#links AS l ";
         $q .= "   WHERE l.expanded_url = '' and l.error = '' ";
         $q .= "   ORDER BY id DESC LIMIT :limit ";
@@ -240,12 +240,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
-        $rows = $this->getDataRowsAsArrays($ps);
-        $urls = array();
-        foreach($rows as $row){
-            $urls[] = $row['url'];
-        }
-        return $urls;
+        return $this->getDataRowsAsObjects($ps, 'Link');
     }
 
     public function getLinksToExpandByURL($url, $limit = 0) {

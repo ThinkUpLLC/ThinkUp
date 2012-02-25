@@ -137,6 +137,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         //$config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -211,6 +212,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -401,6 +403,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -483,6 +486,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -545,9 +549,10 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
+
         $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
         'group_members', 'groups', 'hashtags', 'hashtags_posts',
-        'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options',
+        'instances',  'instances_twitter', 'invites', 'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'places','places_posts',
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);

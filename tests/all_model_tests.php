@@ -85,6 +85,7 @@ $model_tests->add(new TestOfPlaceMySQLDAO());
 $model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfURLProcessor());
 $model_tests->add(new TestOfTableStatsMySQLDAO());
+$model_tests->add(new TestOfShortLinkMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());

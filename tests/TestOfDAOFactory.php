@@ -43,10 +43,10 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
     protected function buildData() {
         $builders = array();
-         
+
         // test table for our test dao
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
-            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
+            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
             'test_name varchar(20),' .
             'test_id int(11),' .
             'unique key test_id_idx (test_id)' .
@@ -364,13 +364,16 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'GroupMembershipCountMySQLDAO');
     }
 
-    /**
-     * Test get TableStatsDAO
-     */
     public function testGetTableStatsDAO() {
         $dao = DAOFactory::getDAO('TableStatsDAO');
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'TableStatsMySQLDAO');
+    }
+
+    public function testGetShortLinkDAO() {
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'ShortLinkMySQLDAO');
     }
     /**
      * Test get InstallerDAO without a config file, override with array of config values
@@ -384,7 +387,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 28);
+        $this->assertEqual(sizeof($result), 29);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }
