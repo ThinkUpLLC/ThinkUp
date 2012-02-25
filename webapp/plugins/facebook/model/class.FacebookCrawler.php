@@ -669,9 +669,8 @@ class FacebookCrawler {
 
                 $user_dao->updateUser($follower_object);
             }
+            //totals in follower_count table
+            $follower_count_dao->insert($user_id, $network, count($friends->data));
         }
-
-        //totals in follower_count table
-        $follower_count_dao->insert($user_id, $network, count($friends->data));
     }
 }
