@@ -61,46 +61,12 @@
           {if $data_template}
             {include file=$data_template}
           {else} <!-- else if $data_template -->
+          
             {if $hot_posts|@count > 3}
         <div class="section">
-              <h2>Hot Posts</h2>
-                {foreach from=$hot_posts key=tid item=t name=foo}
-                    {if $smarty.foreach.foo.index < 3}
-                        {if $instance->network eq "twitter"}
-                            {include file="_post.counts_no_author.tpl" post=$t}
-                        {else}
-                            {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=true}
-                        {/if}
-                    {/if}
-                {/foreach}
-        </div>
-            {else}
-              {if $recent_posts}
-        <div class="section">
-              <h2>Recent posts</h2>
-              <div class="article">
-                {foreach from=$recent_posts key=tid item=t name=foo}
-                    {if $smarty.foreach.foo.index < 3}
-                        {if $instance->network eq "twitter"}
-                            {include file="_post.counts_no_author.tpl" post=$t}
-                        {else}
-                            {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=true}
-                        {/if}
-                    {/if}
-                {/foreach}
-              </div>
-        </div>
-              {else}
-        <div class="alert helpful">
-                 No posts to display. {if $logged_in_user}Update your data and try again.{/if}
-        </div>
-              {/if}
-            {/if}
-
-            {if $hot_posts|@count > 3}
-        <div class="section">
-                <h2>Recent Activity</h2>
+                <h2>Response Totals</h2>
                 <div class="clearfix article">
+                    {assign var="ra_max" value=0}
                     {foreach from=$hot_posts key=post_id item=post name=foo}
                         {assign var="ra_count" value="`$post->favlike_count_cache+$post->reply_count_cache+$post->all_retweets`"}
                         {if $ra_max < $ra_count}
@@ -108,10 +74,45 @@
                         {/if}
                     {/foreach}
                     {if $instance->network neq "twitter"}
-                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|replace:'|':''|strip_tags|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|replace:'|':''|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|replace:'|':''|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3E5D9A,3C8ECC&&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
+                        <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|replace:'|':''|strip_tags|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|replace:'|':''|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|replace:'|':''|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3E5D9A,3C8ECC,BBCCDD&&chdl={if $instance->network eq 'google+'}%2B1s{else}Likes{/if}|Replies|Shares&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">                        
                     {else}
                         <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{$post->post_text|replace:'|':''|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3E5D9A,3C8ECC&chdl=Retweets|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                     {/if}
+                </div>
+        </div>
+            {/if}
+
+
+            {if $least_likely_followers}
+              <div class="clearfix section">
+                <h2>This Week's Most Discerning Followers</h2>
+                <div class="clearfix article" style="padding-top : 0px;">
+                {foreach from=$least_likely_followers key=uid item=u name=foo}
+                  <div class="avatar-container" style="float:left;margin:7px;">
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
+                  </div>
+                {/foreach}
+                <br /><br /><br />    
+                </div>
+                <div class="clearfix view-all">
+                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
+                </div>
+                </div>
+            {/if}
+
+
+            {if $click_stats|@count > 3}
+        <div class="section">
+                <h2>Post Link Click Totals</h2>
+                <div class="clearfix article">
+                {assign var="ra_max" value=0}
+                {foreach from=$click_stats key=post_id item=post name=foo}
+                    {assign var="ra_count" value="`$post.click_count`"}
+                    {if $ra_max < $ra_count}
+                        {assign var="ra_max" value=$ra_count}
+                    {/if}
+                {/foreach}
+                <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$click_stats|@array_reverse key=post_id item=post name=foo}{$post.post_text|replace:'|':''|strip_tags|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$click_stats key=post_id item=post name=foo}{$post.click_count}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3C8ECC&&chdl=Clicks&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                 </div>
         </div>
             {/if}
@@ -131,7 +132,7 @@
 
             {if $most_faved_1wk}
               <div class="section">
-                <h2>This Week's Most {if $instance->network eq 'google+'}+1'ed{else}Liked{/if} Posts</h2>
+                <h2>This Week's Most {if $instance->network eq 'google+'}+1ed{else}Liked{/if} Posts</h2>
                 {foreach from=$most_faved_1wk key=tid item=t name=foo}
                   {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
                 {/foreach}
@@ -181,33 +182,13 @@
                     <a href="{$site_root_path}?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
                   </div>
                   {/if}
-
-                
                 </div>
 
-            {/if}
-
-
-            {if $least_likely_followers}
-              <div class="clearfix section">
-                <h2>This Week's Most Discerning Followers</h2>
-                <div class="clearfix article" style="padding-top : 0px;">
-                {foreach from=$least_likely_followers key=uid item=u name=foo}
-                  <div class="avatar-container" style="float:left;margin:7px;">
-                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
-                  </div>
-                {/foreach}
-                <br /><br /><br />    
-                </div>
-                <div class="clearfix view-all">
-                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
-                </div>
-                </div>
             {/if}
 
             {if $most_retweeted_1wk}
               <div class="clearfix section">
-                <h2>This Week's Most {if $instance->network eq 'google+'}Reshared{else}Retweeted{/if}</h2>
+                <h2>This Week's Most {if $instance->network eq 'google+'}Reshared{else}Retweeted{/if} Posts</h2>
                 {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
                   {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=false}
                 {/foreach}

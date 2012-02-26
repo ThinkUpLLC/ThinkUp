@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- *
  * Test Of Link DAO
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani, Christoffer Viken
@@ -46,8 +45,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_key = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'',
-            'image_src'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
 
@@ -56,7 +54,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_key = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'',
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'',
             'image_src'=>'http://flic.kr/thumbnail.png'));
             $counter++;
         }
@@ -66,9 +64,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_key = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter.'e',
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key,
-            'error'=>'Generic test error message, Photo not found', 'image_src'=>'http://flic.kr/thumbnail.png',
-            'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'error'=>'Generic test error message, Photo not found',
+            'image_src'=>'http://flic.kr/thumbnail.png', 'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
 
@@ -77,8 +74,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_key = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://bit.ly/beEEfs',
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'error'=>'',  'expanded_url'=>'',
-            'error'=>'', 'image_src'=>'http://iamathumbnail.png'));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'error'=>'',  'expanded_url'=>'', 'error'=>'',
+            'image_src'=>'http://iamathumbnail.png'));
             $counter++;
         }
 
@@ -200,12 +197,11 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($updated_link->title, "my title1");
 
         //With title, image_src, and click_count
-        $this->DAO->saveExpandedUrl($link, "http://expandedurl3.com", 'my title3', '', 128);
+        $this->DAO->saveExpandedUrl($link, "http://expandedurl3.com", 'my title3', '');
         $updated_link = $this->DAO->getLinkByUrl($link);
         $this->assertEqual($updated_link->expanded_url, "http://expandedurl3.com");
         $this->assertEqual($updated_link->image_src, "");
         $this->assertEqual($updated_link->title, "my title3");
-        $this->assertEqual($updated_link->clicks, 128);
     }
 
     /**
@@ -250,6 +246,19 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->image_src, 'thumbnail.jpg');
         $this->assertEqual($result->caption, 'my caption');
         $this->assertEqual($result->description, 'This is the link description');
+    }
+
+    public function testUpdateTitle(){
+        $builders = FixtureBuilder::build('links', array('id'=>1234, 'url'=>'http://example.com/',
+        'title'=>'Old title', 'post_key'=>10000, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+
+        $result = $this->DAO->getLinkByUrl('http://example.com/');
+        $this->assertEqual($result->title, 'Old title');
+
+        $this->DAO->updateTitle(1234, 'New title');
+        //OK now check it
+        $result = $this->DAO->getLinkByUrl('http://example.com/');
+        $this->assertEqual($result->title, 'New title');
     }
 
     public function testGetLinksByFriends(){
@@ -421,14 +430,14 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
         $q  = "INSERT IGNORE INTO " . $config_array['table_prefix'] .
-        "links (url, title, clicks, post_key, image_src) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, '');";
+        "links (url, title, post_key, image_src) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', $counter, '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 1);
 
         $q  = "INSERT IGNORE INTO " . $config_array['table_prefix'] .
-        "links (url, title, clicks, post_key, image_src) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, '');";
+        "links (url, title, post_key, image_src) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', $counter, '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 0);
     }
@@ -443,11 +452,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $builder1 = $builder2 = null;
         try {
             $builder1 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter,
-            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$counter, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $builder2 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$counter,
-            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$counter, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
@@ -465,8 +472,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_key = $counter + 180;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'',
-            'image_src'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
         //Insert several posts for fav checking-- links will be associated with 5 of them
@@ -506,7 +512,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_key = $counter + 180;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
         //Insert several posts for fav checking-- links will be associated with 5 of them
@@ -544,8 +550,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_key = $counter + 280;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'',
-            'image_src'=>''));
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
         //create posts-- links will be associated with the first 15 of them

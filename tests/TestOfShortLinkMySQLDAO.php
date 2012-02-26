@@ -57,4 +57,25 @@ class TestOfShortLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($data['short_url'], 'http://t.co/12');
         $this->assertEqual($data['click_count'], 0);
     }
+
+    public function testGetLinksToUpdate() {
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->insert(12, 'http://bit.ly/12');
+        $result = $dao->insert(11, 'http://bit.ly/11');
+        $result = $dao->insert(10, 'http://t.co/10');
+
+        $result = $dao->getLinksToUpdate('http://bit.ly');
+        $this->assertIsA($result, 'Array');
+        $this->assertEqual(sizeof($result), 2);
+    }
+
+    public function testSaveClickCount() {
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->insert(12, 'http://bit.ly/12');
+        $result = $dao->insert(11, 'http://bit.ly/11');
+        $result = $dao->insert(10, 'http://t.co/10');
+
+        $result = $dao->saveClickCount('http://bit.ly/12', 100);
+        $this->assertEqual($result, 1);
+    }
 }

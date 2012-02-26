@@ -14,9 +14,9 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     <div class="grid_13 alpha">&#160;</div>
     <div class="grid_2 center">
       {if $post->network eq 'twitter' || $post->network eq 'google+'}
-        {if $show_favorites_instead_of_retweets}{if $post->network eq 'google+'}+1's{else}favorites{/if}{else}{if $post->network eq 'google+'}reshares{else}retweets{/if}{/if}
+        {if $show_favorites_instead_of_retweets}{if $post->network eq 'google+'}+1s{else}favorites{/if}{else}{if $post->network eq 'google+'}reshares{else}retweets{/if}{/if}
      {else}
-        {if $show_favorites_instead_of_retweets}{if $post->network eq 'google+'}+1's{else}likes{/if}{/if}
+        {if $show_favorites_instead_of_retweets}{if $post->network eq 'google+'}+1s{else}likes{/if}{/if}
      {/if}
     </div>
     <div class="grid_2 center omega">

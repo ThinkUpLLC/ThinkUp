@@ -57,10 +57,6 @@ class Link {
      */
     var $caption = '';
     /**
-     * @var int Total known link clicks.
-     */
-    var $clicks = 0;
-    /**
      * @var int Internal ID of the post in which this link appeared.
      */
     var $post_key;
@@ -107,10 +103,6 @@ class Link {
 
             if (isset($val["title"])) {
                 $this->title = $val["title"];
-            }
-
-            if (isset($val["clicks"])) {
-                $this->clicks = $val["clicks"];
             }
 
             if (isset($val["post_key"])) {

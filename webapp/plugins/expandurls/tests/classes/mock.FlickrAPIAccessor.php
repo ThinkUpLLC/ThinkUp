@@ -38,12 +38,21 @@ class FlickrAPIAccessor {
     }
 
     public function getFlickrPhotoSource($u) {
+        $debug = (getenv('TEST_DEBUG')!==false) ? true : false;
+
         $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/testdata/';
+        if ($debug) {
+            echo "getFlickrPhotoSource ".$u . "\n";
+        }
 
         if ($this->api_key != '') {
             $this->logger->logInfo("Flickr API key set", __METHOD__.','.__LINE__);
             $photo_short_id = substr($u, strlen('http://flic.kr/p/'));
             $photo_id = $this->base_decode($photo_short_id);
+            if ($debug) {
+                echo "decoded photo_id ".$photo_id . "\n";
+            }
+
             $params = array('method'=>$this->method, 'photo_id'=>$photo_id, 'api_key'=>$this->api_key,
             'format'=>$this->format, );
 
@@ -63,7 +72,11 @@ class FlickrAPIAccessor {
             $api_call = str_replace('/', '_', $api_call);
             $api_call = str_replace('?', '-', $api_call);
             $api_call = str_replace('&', '-', $api_call);
-            //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
+
+            if ($debug) {
+                echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
+            }
+
             $resp = file_get_contents($FAUX_DATA_PATH.$api_call);
 
             if ($resp === "NONRESPONSE") {

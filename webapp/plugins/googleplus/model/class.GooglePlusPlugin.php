@@ -98,7 +98,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $menus = array();
 
         if ($post->network == 'google+') {
-            $likes_menu_item = new MenuItem("+1's", "", $template_path);
+            $likes_menu_item = new MenuItem("+1s", "", $template_path);
             //if not logged in, show only public fav'd info
             $liked_dataset = new Dataset("plus1s", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
             $post->network, !Session::isLoggedIn()) );
@@ -157,7 +157,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $menus["posts-mostreplies"] = $mrttab;
 
         // Most liked posts
-        $mltab = new MenuItem("Most +1'ed", "Posts with most +1's", $gp_data_tpl, 'posts');
+        $mltab = new MenuItem("Most +1'ed", "Posts with most +1s", $gp_data_tpl, 'posts');
         $mltabds = new Dataset("gplus_posts", 'PostDAO', "getMostFavedPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mltabds->addHelp('userguide/listings/googleplus/dashboard_mostlikes');

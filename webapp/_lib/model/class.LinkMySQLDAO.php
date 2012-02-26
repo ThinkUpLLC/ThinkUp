@@ -49,7 +49,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getInsertId($ps);
     }
 
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $click_count = null ){
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' ){
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
@@ -57,12 +57,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':image_src'=>$image_src
         );
         $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src ";
-        if (isset($click_count)) {
-            $q .= ", clicks=:clicks ";
-            $vars[':clicks'] = $click_count;
-        }
-        $q .= "WHERE url=:url ";
+        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src WHERE url=:url ";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
@@ -303,5 +298,18 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Link");
+    }
+
+    public function updateTitle($id, $title) {
+        $q  = "UPDATE #prefix#links SET title=:title WHERE id=:id;";
+        $vars = array(
+            ':title'=>$title,
+            ':id'=>$id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+
+        return $this->getUpdateCount($ps);
     }
 }

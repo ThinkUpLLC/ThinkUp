@@ -5,7 +5,7 @@
     <div class="grid_3">&#160;</div>
     <div class="grid_8">&#160;</div>
     <div class="grid_2 center">
-      {if $t->network eq 'twitter'}retweets{else}{if $t->network eq 'google+'}+1's{else}likes{/if}{/if}
+      {if $t->network eq 'twitter'}retweets{else}{if $t->network eq 'google+'}+1s{else}likes{/if}{/if}
     </div>
     <div class="grid_2 center omega">
       replies

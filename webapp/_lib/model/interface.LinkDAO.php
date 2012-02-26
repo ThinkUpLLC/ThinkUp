@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- *
  * Link Data Access Object Interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -41,10 +40,9 @@ interface LinkDAO {
      * @param str $expanded
      * @param str $title
      * @param str $image_src
-     * @param int $click_count
      * @return int Update count
      */
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $click_count = null );
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '');
     /**
      * Stores a error message.
      * @param str $url
@@ -58,6 +56,13 @@ interface LinkDAO {
      * @return int Update count
      */
     public function update(Link $link);
+    /**
+     * Update a Link's title in the data store.
+     * @param int $id
+     * @param str $title
+     * @return int Update count
+     */
+    public function updateTitle($id, $title);
     /**
      * Get the links posted by a user's friends.
      * @param int $user_id

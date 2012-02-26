@@ -32,6 +32,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.FlickrAPIAccessor.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.BitlyAPIAccessor.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.URLExpander.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.ExpandURLsPlugin.php';
 //require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.BitlyAPIAccessor.php';
 
@@ -57,6 +58,14 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     public function testExpandURLsCrawl() {
         $builders = $this->buildData();
 
+        //use fake Bitly API key
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
+        'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
+
+        //use fake Bitly login name
+        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
+        'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
+
         $this->simulateLogin('admin@example.com', true);
         $crawler = Crawler::getInstance();
         $crawler->crawl();
@@ -66,12 +75,12 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(1);
+        $this->debug($link->url);
         $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
-        $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(2);
+        $this->debug($link->url);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, "http://bit.ly/0101001010 returned '404 Not Found'");
 
         $link = $link_dao->getLinkById(3);
         $this->assertEqual($link->expanded_url, '');
@@ -82,30 +91,35 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(5);
+        $this->debug($link->url);
         $this->assertEqual($link->expanded_url, 'http://thinkupapp.com/');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(6);
+        $this->debug($link->url);
         $this->assertEqual($link->expanded_url,
         'http://www.macworld.com/article/161927/2011/08/steve_jobs_resigns_as_apple_ceo.html#lsrc.twt_danfrakes');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(7);
-        $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, '/27427184: No host found.');
-
-        $link = $link_dao->getLinkById(8);
-        $this->assertEqual($link->expanded_url, 'http://twitpic.com/6bheho');
-        $this->assertEqual($link->image_src, 'http://twitpic.com/show/thumb/6bheho');
+        $this->debug($link->url);
+        $this->assertEqual($link->expanded_url, 'http://vimeo.com/27427184');
         $this->assertEqual($link->error, '');
 
+        $link = $link_dao->getLinkById(8);
+        $this->debug($link->url);
+        $this->assertEqual($link->expanded_url, 'http://twitpic.com/6bheho');
+        $this->assertEqual($link->image_src, 'http://twitpic.com/show/thumb/6bheho');
+
         $link = $link_dao->getLinkById(9);
+        $this->debug($link->url);
         $this->assertEqual($link->expanded_url, 'https://secure.aclu.org/site/Advocacy?'.
         'cmd=display&page=UserAction&id=3561&s_subsrc=110819_CAyouth_tw');
         $this->assertEqual($link->image_src, '');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(10);
+        $this->debug($link->url);
         $this->assertEqual($link->url, 'http://t.co/oDI8D34');
         $this->assertEqual($link->expanded_url, 'http://yfrog.com/gz2inwrj');
         $this->assertEqual($link->image_src, 'http://yfrog.com/gz2inwrj.th.jpg');
@@ -119,7 +133,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             array_push($data, $row);
         }
         $stmt->closeCursor();
-        $this->assertEqual(count($data), 9);
+        $this->assertEqual(count($data), 6);
         $this->assertEqual($data[0]['id'], 1);
         $this->assertEqual($data[0]['link_id'], 1);
         $this->assertEqual($data[0]['short_url'], 'http://bit.ly/a5VmbO');
@@ -273,6 +287,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(43);
+        //        $this->debug(Utils::varDumpToString($link));
         $this->assertEqual($link->image_src, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
         $this->assertEqual($link->expanded_url, 'http://flic.kr/p/7QQBy7');
         $this->assertEqual($link->error, '');
@@ -490,17 +505,19 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(43);
+
         $this->assertEqual($link->expanded_url, 'http://static.ak.fbcdn.net/rsrc.php/zw/r/ZEKh4ZZQY74.png');
         $this->assertEqual($link->title, 'Bitly Test URL');
-        $this->assertEqual($link->clicks, 636449);
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(42);
-        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->expanded_url,
+        'http://bitly.com/a/warning?url=http%3a%2f%2fwww%2ealideas%2ecom%2f&hash=41');
         $this->assertEqual($link->error, 'No response from http://bit.ly API');
 
         $link = $link_dao->getLinkById(41);
-        $this->assertEqual($link->expanded_url, '');
+        $this->debug($link->url);
+        $this->assertEqual($link->expanded_url, 'http://static.ak.fbcdn.net/rsrc.php/zw/r/ZEKh4ZZQY74.png');
         $this->assertEqual($link->error, 'No response from http://bit.ly API');
     }
 

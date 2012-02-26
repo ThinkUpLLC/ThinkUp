@@ -209,6 +209,11 @@ class DashboardController extends ThinkUpController {
             $this->addToView('recent_posts', $recent_posts);
             $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
             $this->addToView('hot_posts', $hot_posts);
+
+            $short_link_dao = DAOFactory::getDAO('ShortLinkDAO');
+            $click_stats = $short_link_dao->getRecentClickStats($this->instance, 20);
+            $this->addToView('click_stats', $click_stats);
+
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
