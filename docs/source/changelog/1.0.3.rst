@@ -1,0 +1,25 @@
+1.0.3 - 27 Feb 2012
+===================
+
+Changelog:
+
+*   Bugfix: Restore RSS feed crawl functionality.
+
+*   Dashboard reorganization: Rename "Recent Activity" chart to "Response Rates." Move "This Week's Most Discerning
+    Followers" further up the page. Remove "Hot Posts" module.
+
+*   New feature: Preserve intermediate short links in a links_short table. For example, if a t.co link shortens a
+    bit.ly link, the application saves both versions, instead of discarding the intermediary bit.ly version.
+
+*   Bugfix/New chart: Reliably acquire click counts for bit.ly links. Display "Clickthrough Rates" chart on
+    dashboard. Provide data structure and code for acquiring click stats from goo.gl and when Twitter makes the API
+    available, t.co.
+
+*   Bugfix: On Google+ Response Rates chart, scale horizontal bars correctly and display # of shares in addition to 
+    +1s and replies.
+
+*   Bugfix: Avoid Undefined variable follower_count_dao PHP Notice during Facebook crawl.
+
+*   Bugfix: Improve Twitter REST crawler efficiency and ensure no task is ever beyond the API call budget.
+
+*   Fix typos, add documentation.

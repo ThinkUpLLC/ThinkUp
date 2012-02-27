@@ -146,7 +146,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
-        $this->assertEqual(count($data), 200);
+        $this->assertEqual(count($data), 203);
     }
 
     /**

@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '1.0.2';
-$TOTAL_MIGRATION_COUNT = 215;
+$LATEST_VERSION = '1.0.3';
+$TOTAL_MIGRATION_COUNT = 218;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -749,7 +749,56 @@ $MIGRATIONS = array(
 
      /* 1.0.2 */
     '1.0.2' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.2.zip',
         'migrations' => 0,
+     ),
+
+     /* 1.0.3 */
+    '1.0.3' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'DESCRIBE tu_links_short id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links_short link_id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links_short short_url',
+                    'match' => "/varchar\(100\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links_short click_count',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links_short first_seen',
+                    'match' => "/timestamp/",
+                    'column' => 'Type',
+                ),
+                array(
+                    'query' => 'SHOW INDEX FROM tu_links_short WHERE Key_name = \'short_url\';',
+                    'match' => "/short_url/",
+                    'column' => 'Key_name',
+                ),
+                array(
+                    'query' => 'SHOW INDEX FROM tu_links_short WHERE Key_name = \'link_id\';',
+                    'match' => "/link_id/",
+                    'column' => 'Key_name',
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links clicks',
+                    'no_match' => true
+                 ),
+            )
+         )
      )
 );
