@@ -92,7 +92,8 @@ class BitlyAPIAccessor {
                 if (isset($bit_link['data']['clicks'][0]['global_clicks'])) {
                     $clicks = $bit_link['data']['clicks'][0]['global_clicks'];
                 } else {
-                    $error = (isset($bit_link->status_txt))?$bit_link->status_txt:'No response from http://bit.ly API';
+                    $error = (isset($bit_link["status_txt"]))?$bit_link["status_txt"]:
+                    'No response from http://bit.ly API';
                 }
             }
         } else {
