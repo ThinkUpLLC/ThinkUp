@@ -101,8 +101,8 @@ class BitlyAPIAccessor {
             //Get link clicks
             $bit_link = $this->apiRequest('clicks?', $encoded_params);
             if (isset($bit_link['status_code']) && $bit_link['status_code'] == '200'){
-                if (isset($bit_link['data']['clicks'][0]['global_clicks'])) {
-                    $clicks = $bit_link['data']['clicks'][0]['global_clicks'];
+                if (isset($bit_link['data']['clicks'][0]['user_clicks'])) {
+                    $clicks = $bit_link['data']['clicks'][0]['user_clicks'];
                 } else {
                     $error = (isset($bit_link->status_txt))?$bit_link->status_txt:'No response from http://bit.ly API';
                 }

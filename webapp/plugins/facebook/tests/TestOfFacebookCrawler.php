@@ -50,10 +50,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $r = array('id'=>1, 'network_username'=>'Gina Trapani', 'network_user_id'=>'606837591',
-        'network_viewer_id'=>'606837591', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'606837591', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -63,10 +63,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->profile1_instance = new Instance($r);
 
         $r = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -76,10 +76,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->profile2_instance = new Instance($r);
 
         $r = array('id'=>3, 'network_username'=>'Mark Linford', 'network_user_id'=>'7568536355',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -89,10 +89,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->page1_instance = new Instance($r);
 
         $r = array('id'=>4, 'network_username'=>'Mark Linford', 'network_user_id'=>'133954286636768',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -216,7 +216,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->links[0]->url,
         'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
         $this->assertEqual($post->links[0]->expanded_url,
-        'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
+        '');
         $this->assertEqual($post->links[0]->caption, 'Liked on www.youtube.com');
         $this->assertEqual($post->links[0]->description,
         'A fan made trailer for the Warner Bros. production of Superman Returns. Fan trailer produced and edited by '.
@@ -267,7 +267,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->links[0]->url,
         'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
         $this->assertEqual($post->links[0]->expanded_url,
-        'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
+        '');
         $this->assertEqual($post->links[0]->image_src,
         'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f66'.
         'f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak-'.
