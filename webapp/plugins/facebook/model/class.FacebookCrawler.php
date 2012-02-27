@@ -311,7 +311,7 @@ class FacebookCrawler {
                         $link_url = (isset($p->source))?$p->source:$p->link;
                         $link = new Link(array(
                         "url"=>$link_url,
-                        "expanded_url"=>$link_url,
+                        "expanded_url"=>'',
                         "image_src"=>(isset($p->picture))?$p->picture:'',
                         "caption"=>(isset($p->caption))?$p->caption:'',
                         "description"=>(isset($p->description))?$p->description:'',

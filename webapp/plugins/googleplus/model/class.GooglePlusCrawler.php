@@ -235,7 +235,7 @@ class GooglePlusCrawler {
                         $link_url = $item->object->attachments[0]->url;
                         $link = new Link(array(
                     "url"=>$link_url,
-                    "expanded_url"=>$link_url,
+                    "expanded_url"=>'',
                     "image_src"=>(isset($item->object->attachments[0]->image->url))
                         ?$item->object->attachments[0]->image->url:'',
                     "caption"=>'',
