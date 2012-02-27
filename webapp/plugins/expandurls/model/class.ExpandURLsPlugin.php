@@ -190,7 +190,10 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
 
                 $total_links = 0;
                 $total_errors = 0;
+                $total_updated = 0;
                 foreach ($bitly_links_to_update as $link) {
+                    $this->logger->logInfo("Getting bit.ly click stats for ". ($total_updated+1). " of ".
+                    count($bitly_links_to_update)." ".$bitly_url." links (".$link->short_url.")", __METHOD__.','.__LINE__);
                     $link_data = $api_accessor->getBitlyLinkData($link->short_url);
                     if ($link_data["clicks"] != '') {
                         //save click total here
@@ -200,9 +203,11 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
                             $this->link_dao->updateTitle($link->link_id, $link_data["title"]);
                         }
                         $total_links = $total_links + 1;
+                        $total_updated = $total_updated + 1;
                     } elseif ($link_data["error"] != '') {
                         $this->link_dao->saveExpansionError($link->short_url, $link_data["error"]);
                         $total_errors = $total_errors + 1;
+                        $total_updated = $total_updated + 1;
                     }
                 }
 

@@ -59,7 +59,6 @@ class BitlyAPIAccessor {
         $title = '';
         $error = '';
         if ($this->bitly_api_key != '') {
-            $this->logger->logInfo("Bitly API key set", __METHOD__.','.__LINE__);
             $params = array('shortUrl'=>$u, 'login'=>$this->bitly_username, 'apiKey'=>$this->bitly_api_key,
             'format'=>$this->format);
 
@@ -108,7 +107,7 @@ class BitlyAPIAccessor {
         //$this->logger->logInfo("Bit.ly API call: $api_call", __METHOD__.','.__LINE__);
 
         $resp = Utils::getURLContents($api_call);
-        $this->logger->logInfo("Bit.ly API call response: ".$resp, __METHOD__.','.__LINE__);
+        //$this->logger->logInfo("Bit.ly API call response: ".$resp, __METHOD__.','.__LINE__);
         if ($resp != false) {
             $bit_link = json_decode($resp, true);
             return $bit_link;

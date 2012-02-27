@@ -82,9 +82,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logInfo("Error '$error_text' saved for $url", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Error ".$error_text." saved for $url", __METHOD__.','.__LINE__);
         } else {
-            $this->logger->logInfo("Error '$error_text' for URL NOT saved", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Error ".$error_text." for ".$url." was NOT saved", __METHOD__.','.__LINE__);
         }
         return $ret;
     }
