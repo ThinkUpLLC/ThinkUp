@@ -64,7 +64,7 @@
           
             {if $hot_posts|@count > 3}
         <div class="section">
-                <h2>Response Totals</h2>
+                <h2>Response Rates</h2>
                 <div class="clearfix article">
                     {assign var="ra_max" value=0}
                     {foreach from=$hot_posts key=post_id item=post name=foo}
@@ -103,7 +103,7 @@
 
             {if $click_stats|@count > 3}
         <div class="section">
-                <h2>Post Link Click Totals</h2>
+                <h2>Clickthrough Rates</h2>
                 <div class="clearfix article">
                 {assign var="ra_max" value=0}
                 {foreach from=$click_stats key=post_id item=post name=foo}
