@@ -6,6 +6,7 @@ Check out what's new, fixed, and updated in each version release of ThinkUp.
 .. toctree::
    :maxdepth: 1
 
+   changelog/1.0.3
    changelog/1.0.2
    changelog/1.0.1
    changelog/1.0
