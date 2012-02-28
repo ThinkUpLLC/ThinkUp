@@ -9,8 +9,8 @@ Twitter User
 
 Username, service name (Twitter), Twitter avatar, and last updated time.
 
-Response Totals
----------------
+Response Rates
+--------------
 
 A bar chart of your replies and retweet totals for recent tweets.
 
@@ -19,11 +19,11 @@ Most Discerning Followers
 
 Your top 12 :doc:`most discerning followers </userguide/listings/twitter/dashboard_followers-leastlikely>`.
 
-Post Link Click Totals
-----------------------
+Clickthrough Rates
+------------------
 
-A bar chart of the click rates on your most recent tweets which contain shortened links from services which provide
-click stats, like Bit.ly. This chart only appears if the :doc:`Expand URLs plugin
+A bar chart of the clickthrough rates on your most recent tweets which contain shortened links from services which
+provide click stats, like Bit.ly. This chart only appears if the :doc:`Expand URLs plugin 
 </userguide/settings/plugins/expandurls>` is set up to capture link stats via Bit.ly.
 
 This Week's Most Replied-To Posts
