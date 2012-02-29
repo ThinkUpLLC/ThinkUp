@@ -75,7 +75,8 @@ class BitlyAPIAccessor {
                     $title = $bit_link['data']['info'][0]['title'];
                 }
             } else {
-                $error = (isset($bit_link->status_txt))?$bit_link->status_txt:'No response from http://bit.ly API';
+                $error = (isset($bit_link["status_txt"]))?$bit_link["status_txt"]:
+                'No response from http://bit.ly API';
             }
             //Get expanded link
             $bit_link = $this->apiRequest('expand?', $encoded_params);
@@ -83,7 +84,8 @@ class BitlyAPIAccessor {
                 if (isset($bit_link['data']['expand'][0]['long_url'])) {
                     $expanded_url = $bit_link['data']['expand'][0]['long_url'];
                 } else {
-                    $error = (isset($bit_link->status_txt))?$bit_link->status_txt:'No response from http://bit.ly API';
+                    $error = (isset($bit_link["status_txt?"]))?$bit_link["status_txt"]:
+                    'No response from http://bit.ly API';
                 }
             }
             //Get link clicks
