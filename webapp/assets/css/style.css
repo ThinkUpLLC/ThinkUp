@@ -591,7 +591,7 @@ a.linkbutton.help {
           font-size: 1.125em;
           font-weight: bold;
           height: 24px;
-          padding: 8px 0 0 16px;
+          padding: 6px 0 4px 16px;
      }
           /* no top rule on the first nav element or bottom rule on the last nav element */
           nav ul li:first-child{
@@ -792,7 +792,7 @@ aside{
           font-weight: bold;
           line-height: 0;
           margin: 0;
-          padding: 6px 10px 15px 10px;
+          padding: 6px 10px 10px 10px;
           text-shadow: rgba(255, 255, 255, 1) 1px 1px 1px;
           min-height : 8px;
      }

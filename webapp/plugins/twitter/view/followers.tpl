@@ -50,8 +50,7 @@
     <div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-    
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxr={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+	    <div id="follower_count_history_by_day"></div>
     </div>
     {if $follower_count_history_by_day.milestone and $follower_count_history_by_day.milestone.will_take > 0}
     <div class="stream-pagination"><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.will_take} day{if $follower_count_history_by_day.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.next_milestone|number_format} followers</span> at this rate.</small>
@@ -65,7 +64,7 @@
     {if !$follower_count_history_by_week.history OR $follower_count_history_by_week.history|@count < 2}<div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxr={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+	    <div id="follower_count_history_by_week"></div>
     </div>
     {if $follower_count_history_by_week.milestone and $follower_count_history_by_week.milestone.will_take > 0}
     <div class="stream-pagination">
@@ -80,7 +79,7 @@
     {if !$follower_count_history_by_month.history OR $follower_count_history_by_month.history|@count < 2}<div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_month.history key=tid item=t name=foo}{$tid|date_format:"%b '%y"}|{/foreach}1:|{foreach from=$follower_count_history_by_month.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$follower_count_history_by_month.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_month.min_count},{$follower_count_history_by_month.max_count}&chxr={$follower_count_history_by_month.min_count},{$follower_count_history_by_month.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+	    <div id="follower_count_history_by_month"></div>
     </div>
 
     {if $follower_count_history_by_month.milestone and $follower_count_history_by_month.milestone.will_take > 0}
@@ -98,7 +97,7 @@
     {else}
     <div class="article">
 
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$list_membership_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$list_membership_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$list_membership_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$list_membership_count_history_by_day.min_count},{$list_membership_count_history_by_day.max_count}&chxr={$list_membership_count_history_by_day.min_count},{$list_membership_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+    <div id="list_membership_count_history_by_day"></div>
 
     {if $list_membership_count_history_by_day.milestone and $list_membership_count_history_by_day.milestone.will_take > 0}
     <div class="stream-pagination"><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_day.milestone.will_take} day{if $list_membership_count_history_by_day.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_day.milestone.next_milestone|number_format} groups</span> at this rate.</small></div>
@@ -112,7 +111,9 @@
     {if !$list_membership_count_history_by_week.history OR $list_membership_count_history_by_week.history|@count < 2}<div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$list_membership_count_history_by_week.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$list_membership_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$list_membership_count_history_by_week.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$list_membership_count_history_by_week.min_count},{$list_membership_count_history_by_week.max_count}&chxr={$list_membership_count_history_by_week.min_count},{$list_membership_count_history_by_week.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+
+    <div id="list_membership_count_history_by_week"></div>
+
     {if $list_membership_count_history_by_week.milestone and $list_membership_count_history_by_week.milestone.will_take > 0}
     <div class="stream-pagination"><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_week.milestone.will_take} week{if $list_membership_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_week.milestone.next_milestone|number_format} groups</span> at this rate.</small></div>
     {/if}
@@ -126,7 +127,7 @@
     {else}
     <div class="article">
 
-    <img src="http://chart.apis.google.com/chart?chs=680x200&chxt=x,y&chxl=0:|{foreach from=$list_membership_count_history_by_month.history key=tid item=t name=foo}{$tid|date_format:"%b '%y"}|{/foreach}1:|{foreach from=$list_membership_count_history_by_month.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=3E5D9A&chd=t:{foreach from=$list_membership_count_history_by_month.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$list_membership_count_history_by_month.min_count},{$list_membership_count_history_by_month.max_count}&chxr={$list_membership_count_history_by_month.min_count},{$list_membership_count_history_by_month.max_count}&chxs=1N*s*&chm=N*s*,3C8ECC,0,-1,10,,e::5" />
+    <div id="list_membership_count_history_by_month"></div>
     
     {if $list_membership_count_history_by_month.milestone and $list_membership_count_history_by_month.milestone.will_take > 0}
     <div class="stream-pagination"><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_month.milestone.will_take} month{if $list_membership_count_history_by_month.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$list_membership_count_history_by_month.milestone.next_milestone|number_format} groups</span> at this rate.</small></div>
@@ -134,3 +135,142 @@
     </div>
     {/if}
 </div>
+
+<script type="text/javascript">
+// Load the Visualization API and the standard charts
+google.load('visualization', '1');
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawCharts);
+
+{literal}
+function drawCharts() {
+{/literal}
+    var follower_count_history_by_day_data = new google.visualization.DataTable(
+    	{$follower_count_history_by_day.vis_data});
+    var follower_count_history_by_week_data = new google.visualization.DataTable(
+    	{$follower_count_history_by_week.vis_data});
+    var follower_count_history_by_month_data = new google.visualization.DataTable(
+    	{$follower_count_history_by_month.vis_data});
+    var list_membership_count_history_by_day_data = new google.visualization.DataTable(
+    	{$list_membership_count_history_by_day.vis_data});
+    var list_membership_count_history_by_week_data = new google.visualization.DataTable(
+    	{$list_membership_count_history_by_week.vis_data});
+    var list_membership_count_history_by_month_data = new google.visualization.DataTable(
+    	{$list_membership_count_history_by_month.vis_data});
+{literal}
+	var formatter = new google.visualization.NumberFormat({fractionDigits: 0});
+	
+	var chart_options = {
+            colors: ['#3c8ecc'],
+            width: '100%',
+            height: 250,
+            legend: "none",
+            interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+	            baselineColor: '#eee',
+				format: 'MMM d',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+			},
+            vAxis: {
+	            baselineColor: '#eee',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+            },	
+	};
+	
+	formatter.format(follower_count_history_by_day_data, 1);
+    var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_day',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_day_data,
+        options: chart_options
+    });
+    follower_count_history_by_day_chart.draw();
+
+	formatter.format(follower_count_history_by_week_data, 1);
+    var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_week',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_week_data,
+        options: chart_options
+    });
+    follower_count_history_by_week_chart.draw();
+
+	formatter.format(follower_count_history_by_month_data, 1);
+    var follower_count_history_by_month_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_month',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_month_data,
+        options: {
+            colors: ['#3c8ecc'],
+            width: '100%',
+            height: 250,
+            legend: "none",
+            interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+	            baselineColor: '#eee',
+				format: 'MMM yyyy',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+			},
+            vAxis: {
+	            baselineColor: '#eee',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+            },
+        },
+    });
+    follower_count_history_by_month_chart.draw();
+    
+	formatter.format(list_membership_count_history_by_day_data, 1);
+    var list_membership_count_history_by_day_chart = new google.visualization.ChartWrapper({
+        containerId: 'list_membership_count_history_by_day',
+        chartType: 'LineChart',
+        dataTable: list_membership_count_history_by_day_data,
+        options: chart_options
+    });
+    list_membership_count_history_by_day_chart.draw();
+
+	formatter.format(list_membership_count_history_by_week_data, 1);
+    var list_membership_count_history_by_week_chart = new google.visualization.ChartWrapper({
+        containerId: 'list_membership_count_history_by_week',
+        chartType: 'LineChart',
+        dataTable: list_membership_count_history_by_week_data,
+        options: chart_options
+    });
+    list_membership_count_history_by_week_chart.draw();
+    
+	formatter.format(list_membership_count_history_by_month_data, 1);
+    var list_membership_count_history_by_month_chart = new google.visualization.ChartWrapper({
+        containerId: 'list_membership_count_history_by_month',
+        chartType: 'LineChart',
+        dataTable: list_membership_count_history_by_month_data,
+        options: {
+            colors: ['#3c8ecc'],
+            width: '100%',
+            height: 250,
+            legend: "none",
+            interpolateNulls: true,
+            pointSize: 2,
+			hAxis: {
+	            baselineColor: '#eee',
+				format: 'MMM yyyy',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+			},
+            vAxis: {
+	            baselineColor: '#eee',
+	            textStyle: { color: '#999' },
+	            gridlines: { color: '#eee' }
+            },
+        },
+    });
+    list_membership_count_history_by_month_chart.draw();
+
+}
+
+{/literal}
+</script>
