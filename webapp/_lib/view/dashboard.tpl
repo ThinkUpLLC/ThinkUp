@@ -71,17 +71,19 @@
 
                 </div>
         </div>
-            {/if}
-
-
-            {if $least_likely_followers}
-              <div class="clearfix section">
-                <h2>This Week's Most Discerning Followers</h2>
-                <div class="clearfix article" style="padding-top : 0px;">
-                {foreach from=$least_likely_followers key=uid item=u name=foo}
-                  <div class="avatar-container" style="float:left;margin:7px;">
-                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
-                  </div>
+            {else}
+              {if $recent_posts}
+        <div class="section">
+              <h2>Recent posts</h2>
+              <div class="article">
+                {foreach from=$recent_posts key=tid item=t name=foo}
+                    {if $smarty.foreach.foo.index < 3}
+                        {if $instance->network eq "twitt	er"}
+                            {include file="_post.counts_no_author.tpl" post=$t}
+                        {else}
+                            {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=true}
+                        {/if}
+                    {/if}
                 {/foreach}
                 <br /><br /><br />    
                 </div>
@@ -90,7 +92,6 @@
                 </div>
                 </div>
             {/if}
-
 
             {if $click_stats|@count > 3}
         <div class="section">
@@ -106,6 +107,14 @@
                 <img width="680" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$click_stats|@array_reverse key=post_id item=post name=foo}{$post.post_text|replace:'|':''|strip_tags|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$click_stats key=post_id item=post name=foo}{$post.click_count}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=3C8ECC&&chdl=Clicks&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                 </div>
         </div>
+            {if $hot_posts|@count > 3}
+		        <div class="section">
+		                <h2>Recent Activity</h2>
+		                <div class="clearfix article">
+		                    <div id="hot_posts"></div>		
+		                </div>
+		        </div>
+>>>>>>> Clean up Google charts, merged into 1.0
             {/if}
 
             {if $most_replied_to_1wk}
@@ -177,6 +186,23 @@
 
             {/if}
 
+            {if $least_likely_followers}
+              <div class="clearfix section">
+                <h2>This Week's Most Discerning Followers</h2>
+                <div class="clearfix article" style="padding-top : 0px;">
+                {foreach from=$least_likely_followers key=uid item=u name=foo}
+                  <div class="avatar-container" style="float:left;margin:7px;">
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
+                  </div>
+                {/foreach}
+                <br /><br /><br />    
+                </div>
+                <div class="clearfix view-all">
+                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More...</a>
+                </div>
+                </div>
+            {/if}
+
             {if $most_retweeted_1wk}
               <div class="clearfix section">
                 <h2>This Week's Most {if $instance->network eq 'google+'}Reshared{else}Retweeted{/if} Posts</h2>
@@ -186,21 +212,25 @@
               </div>
             {/if}
             {if $instance->network eq 'twitter' && $recent_posts|@count > 0 }
-              <div class="section" style="float : left; clear : none; width : 314px;">
+              <div class="section" style="float : left; clear : none; width : 345px;">
                   <div class="alpha">
                       <h2>Post Types</span></h2>
                       <div class="small prepend article">
                         <div id="post_types"></div>
                        </div>
                        <div class="stream-pagination"><small style="color:#666;padding:5px;">
-                       {$instance->percentage_replies|round}% posts are replies<br>
+                          {$instance->percentage_replies|round}% posts are replies<br>
                           {$instance->percentage_links|round}% posts contain links
                           </small>
                        </div>
+                       <script>
+                          var replies = {$instance->percentage_replies|round};
+                          var links = {$instance->percentage_links|round};
+                       </script>
                 </div>
             </div>
                 
-            <div class="section" style="float : left; clear : none;margin-left : 10px; width : 380px;">
+            <div class="section" style="float : left; clear : none;margin-left : 10px; width : 345px;">
                    <div class="omega">
                         <h2>Client Usage <span class="detail">(all posts)</span></h2>
                         <div class="article">
@@ -213,6 +243,155 @@
               </div>
 
             {/if}
+			<script type="text/javascript">
+			    // Load the Visualization API and the standard charts
+			    google.load('visualization', '1');
+			    // Set a callback to run when the Google Visualization API is loaded.
+			    google.setOnLoadCallback(drawCharts);
+			
+			    {literal}
+			    function drawCharts() {
+			    {/literal}
+			      var follower_count_history_by_day_data = new google.visualization.DataTable(
+			      {$follower_count_history_by_day.vis_data});
+			      var follower_count_history_by_week_data = new google.visualization.DataTable(
+			      {$follower_count_history_by_week.vis_data});
+			      			
+			      var hot_posts_data = new google.visualization.DataTable({$hot_posts_data});
+			      var client_usage_data = new google.visualization.DataTable({$all_time_clients_usage});
+			
+			      {literal}
+			      var hot_posts_chart = new google.visualization.ChartWrapper({
+			          containerId: 'hot_posts',
+			          chartType: 'BarChart',
+			          dataTable: hot_posts_data,
+			          options: {
+			              colors: ['#3e5d9a', '#3c8ecc'],
+			              isStacked: true,
+			              width: 650,
+			              height: 250,
+			              chartArea:{left:300,height:"80%"},
+			              legend: 'bottom',
+			              hAxis: {
+			                textStyle: { color: '#fff', fontSize: 1 }
+			              },
+			              vAxis: {
+			                minValue: 0,
+			                baselineColor: '#ccc',
+			                textStyle: { color: '#999' },
+			                gridlines: { color: '#eee' }
+			              },
+			          }
+			      });
+			      hot_posts_chart.draw();
+			
+
+			      var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
+			          containerId: 'follower_count_history_by_day',
+			          chartType: 'LineChart',
+			          dataTable: follower_count_history_by_day_data,
+			          options: {
+			              width: 325,
+			              height: 250,
+			              legend: "none",
+			              interpolateNulls: true,
+			              pointSize: 2,
+			              hAxis: {
+			                  baselineColor: '#eee',
+			                  format: 'MMM d',
+			                  textStyle: { color: '#999' },
+			                  gridlines: { color: '#eee' }
+			              },
+			              vAxis: {
+			                  baselineColor: '#eee',
+			                  textStyle: { color: '#999' },
+			                  gridlines: { color: '#eee' }
+			              },
+			          },
+			      });
+			      follower_count_history_by_day_chart.draw();
+			
+			      var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
+			          containerId: 'follower_count_history_by_week',
+			          chartType: 'LineChart',
+			          dataTable: follower_count_history_by_week_data,
+			          options: {
+			              width: 325,
+			              height: 250,
+			              legend: "none",
+			              interpolateNulls: true,
+			              pointSize: 2,
+			              hAxis: {
+			                  baselineColor: '#eee',
+			                  format: 'MMM d',
+			                  textStyle: { color: '#999' },
+			                  gridlines: { color: '#eee' }
+			              },
+			              vAxis: {
+			                  baselineColor: '#eee',
+			                  textStyle: { color: '#999' },
+			                  gridlines: { color: '#eee' }
+			              },
+			          },
+			      });
+			      follower_count_history_by_week_chart.draw();
+			
+			      if (typeof(replies) != 'undefined') {
+			        var post_types = new google.visualization.DataTable();
+			        post_types.addColumn('string', 'Type');
+			        post_types.addColumn('number', 'Percentage');
+			        post_types.addRows([
+			            ['Conversationalist', {v: replies/100, f: replies + '%'}], 
+			            ['Broadcaster', {v: links/100, f: links + '%'}]
+			        ]);
+			
+			        var post_type_chart = new google.visualization.ChartWrapper({
+			            containerId: 'post_types',
+			            chartType: 'ColumnChart',
+			            dataTable: post_types,
+			            options: {
+			                colors: ['#3c8ecc'],
+			                width: 300,
+			                height: 200,
+			                legend: 'none',
+			                hAxis: {
+			                    minValue: 0,
+			                    maxValue: 1,
+			                    textStyle: { color: '#000' },
+			                },
+			                vAxis: {
+			                    textStyle: { color: '#666' },
+			                    gridlines: { color: '#ccc' },
+			                    format:'#,###%',
+			                    baselineColor: '#ccc',
+			                },
+			            }
+			        });
+			        post_type_chart.draw();
+			      }
+			
+			      var client_usage_chart = new google.visualization.ChartWrapper({
+			          containerId: 'client_usage',
+			          // chartType: 'ColumnChart',
+			          chartType: 'PieChart',
+			          dataTable: client_usage_data,
+			          options: {
+			              titleTextStyle: {color: '#848884', fontSize: 19},
+			              width: 300,
+			              height: 300,
+			              sliceVisibilityThreshold: 1/100,
+			              pieSliceText: 'label',
+			          }
+			      });
+			      client_usage_chart.draw();
+			    }
+			
+			      {/literal}
+			</script>
+
+
+
+
           {/if} <!-- end if $data_template -->
         {/if}
 
@@ -240,157 +419,5 @@
 </div> <!-- /.container_24 -->
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-
-<script type="text/javascript">
-                // Load the Visualization API and the standard charts
-                google.load('visualization', '1');
-                // Set a callback to run when the Google Visualization API is loaded.
-                google.setOnLoadCallback(drawCharts);
-
-                {literal}
-                function drawCharts() {
-                {/literal}
-                  var follower_count_history_by_day_data = new google.visualization.DataTable(
-                  {$follower_count_history_by_day.vis_data});
-                  var follower_count_history_by_week_data = new google.visualization.DataTable(
-                  {$follower_count_history_by_week.vis_data});
-                  var follower_description = '{if $instance->network eq 'twitter'}Followers{elseif $instance->network eq 'facebook page'}Fans{elseif $instance->network eq 'facebook'}Friends{/if}';
-
-                  var hot_posts_data = new google.visualization.DataTable({$hot_posts_data});
-
-                  var client_usage_data = new google.visualization.DataTable({$all_time_clients_usage});
-
-                  {literal}
-                  var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
-                      containerId: 'follower_count_history_by_day',
-                      chartType: 'LineChart',
-                      dataTable: follower_count_history_by_day_data,
-                      options: {
-                          titleTextStyle: {color: '#999', fontSize: 16},
-                          width: 325,
-                          height: 250,
-                          legend: "none",
-                          interpolateNulls: true,
-                          pointSize: 2,
-                          hAxis: {
-                              baselineColor: '#eee',
-                              format: 'MMM d',
-                              textStyle: { color: '#999' },
-                              gridlines: { color: '#eee' }
-                          },
-                          vAxis: {
-                              baselineColor: '#eee',
-                              textStyle: { color: '#999' },
-                              gridlines: { color: '#eee' }
-                          },
-                      },
-                  });
-                  follower_count_history_by_day_chart.draw();
-
-                  var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
-                      containerId: 'follower_count_history_by_week',
-                      chartType: 'LineChart',
-                      dataTable: follower_count_history_by_week_data,
-                      options: {
-                          titleTextStyle: {color: '#999', fontSize: 16},
-                          width: 325,
-                          height: 250,
-                          legend: "none",
-                          interpolateNulls: true,
-                          pointSize: 2,
-                          hAxis: {
-                              baselineColor: '#eee',
-                              format: 'MMM d',
-                              textStyle: { color: '#999' },
-                              gridlines: { color: '#eee' }
-                          },
-                          vAxis: {
-                              baselineColor: '#eee',
-                              textStyle: { color: '#999' },
-                              gridlines: { color: '#eee' }
-                          },
-                      },
-                  });
-                  follower_count_history_by_week_chart.draw();
-
-                  if (typeof(replies) != 'undefined') {
-                    var post_types = new google.visualization.DataTable();
-                    post_types.addColumn('string', 'Type');
-                    post_types.addColumn('number', 'Percentage');
-                    post_types.addRows([
-                        ['Conversationalist', {v: replies/100, f: replies + '%'}], 
-                        ['Broadcaster', {v: links/100, f: links + '%'}]
-                    ]);
-
-                    var post_type_chart = new google.visualization.ChartWrapper({
-                        containerId: 'post_types',
-                        chartType: 'BarChart',
-                        dataTable: post_types,
-                        options: {
-                            title: 'Post Types',
-                            titleTextStyle: {color: '#848884', fontSize: 19},
-                            colors: ['#3c8ecc'],
-                            width: 350,
-                            height: 200,
-                            legend: 'none',
-                            hAxis: {
-                                minValue: 0,
-                                maxValue: 1,
-                                format:'#,###%',
-                                textStyle: { color: '#666' },
-                            },
-                            vAxis: {
-                                textStyle: { color: '#666' },
-                                gridlines: { color: '#ccc' },
-                                baselineColor: '#ccc',
-                            },
-                        }
-                    });
-                    post_type_chart.draw();
-                  }
-
-                  var hot_posts_chart = new google.visualization.ChartWrapper({
-                      containerId: 'hot_posts',
-                      chartType: 'BarChart',
-                      dataTable: hot_posts_data,
-                      options: {
-                          colors: ['#3e5d9a', '#3c8ecc'],
-                          isStacked: true,
-                          width: 650,
-                          height: 250,
-                          chartArea:{left:300,height:"80%"},
-                          legend: 'bottom',
-                          hAxis: {
-                            textStyle: { color: '#fff', fontSize: 1 }
-                          },
-                          vAxis: {
-                            minValue: 0,
-                            baselineColor: '#ccc',
-                            textStyle: { color: '#999' },
-                            gridlines: { color: '#eee' }
-                          },
-                      }
-                  });
-                  hot_posts_chart.draw();
-
-                  var client_usage_chart = new google.visualization.ChartWrapper({
-                      containerId: 'client_usage',
-                      // chartType: 'ColumnChart',
-                      chartType: 'PieChart',
-                      dataTable: client_usage_data,
-                      options: {
-                          titleTextStyle: {color: '#848884', fontSize: 19},
-                          width: 350,
-                          height: 300,
-                          sliceVisibilityThreshold: 1/100,
-                          pieSliceText: 'label',
-                      }
-                  });
-                  client_usage_chart.draw();
-                }
-
-                  {/literal}
-                </script>
-
 
 {include file="_footer.tpl"}

@@ -457,7 +457,7 @@ class Utils {
         $resultset = array();
         foreach ($hot_posts as $post) {
             $resultset[] = array('c' => array(
-            array('v' => $post->post_text),
+            array('v' => substr($post->post_text, 0, 100) . '...'),
             array('v' => intval($post->$approval_field)),
             array('v' => intval($post->reply_count_cache)),
             ));
