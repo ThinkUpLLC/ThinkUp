@@ -50,7 +50,7 @@
     <div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-	    <div id="follower_count_history_by_day"></div>
+        <div id="follower_count_history_by_day"></div>
     </div>
     {if $follower_count_history_by_day.milestone and $follower_count_history_by_day.milestone.will_take > 0}
     <div class="stream-pagination"><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.will_take} day{if $follower_count_history_by_day.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.next_milestone|number_format} followers</span> at this rate.</small>
@@ -64,7 +64,7 @@
     {if !$follower_count_history_by_week.history OR $follower_count_history_by_week.history|@count < 2}<div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-	    <div id="follower_count_history_by_week"></div>
+        <div id="follower_count_history_by_week"></div>
     </div>
     {if $follower_count_history_by_week.milestone and $follower_count_history_by_week.milestone.will_take > 0}
     <div class="stream-pagination">
@@ -79,7 +79,7 @@
     {if !$follower_count_history_by_month.history OR $follower_count_history_by_month.history|@count < 2}<div class="alert urgent">Not enough data to display chart</div>
     {else}
     <div class="article">
-	    <div id="follower_count_history_by_month"></div>
+        <div id="follower_count_history_by_month"></div>
     </div>
 
     {if $follower_count_history_by_month.milestone and $follower_count_history_by_month.milestone.will_take > 0}
@@ -146,41 +146,43 @@ google.setOnLoadCallback(drawCharts);
 function drawCharts() {
 {/literal}
     var follower_count_history_by_day_data = new google.visualization.DataTable(
-    	{$follower_count_history_by_day.vis_data});
+        {$follower_count_history_by_day.vis_data});
     var follower_count_history_by_week_data = new google.visualization.DataTable(
-    	{$follower_count_history_by_week.vis_data});
+        {$follower_count_history_by_week.vis_data});
     var follower_count_history_by_month_data = new google.visualization.DataTable(
-    	{$follower_count_history_by_month.vis_data});
+        {$follower_count_history_by_month.vis_data});
     var list_membership_count_history_by_day_data = new google.visualization.DataTable(
-    	{$list_membership_count_history_by_day.vis_data});
+        {$list_membership_count_history_by_day.vis_data});
     var list_membership_count_history_by_week_data = new google.visualization.DataTable(
-    	{$list_membership_count_history_by_week.vis_data});
+        {$list_membership_count_history_by_week.vis_data});
     var list_membership_count_history_by_month_data = new google.visualization.DataTable(
-    	{$list_membership_count_history_by_month.vis_data});
+        {$list_membership_count_history_by_month.vis_data});
 {literal}
-	var formatter = new google.visualization.NumberFormat({fractionDigits: 0});
-	
-	var chart_options = {
+    var formatter = new google.visualization.NumberFormat({fractionDigits: 0});
+    var formatter_date = new google.visualization.DateFormat({formatType: 'medium'});
+
+    var chart_options = {
             colors: ['#3c8ecc'],
             width: '100%',
             height: 250,
             legend: "none",
             interpolateNulls: true,
             pointSize: 2,
-			hAxis: {
-	            baselineColor: '#eee',
-				format: 'MMM d',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
-			},
+            hAxis: {
+                baselineColor: '#eee',
+                format: 'MMM d',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
+            },
             vAxis: {
-	            baselineColor: '#eee',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
-            },	
-	};
-	
-	formatter.format(follower_count_history_by_day_data, 1);
+                baselineColor: '#eee',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
+            },    
+    };
+    
+    formatter.format(follower_count_history_by_day_data, 1);
+    formatter_date.format(follower_count_history_by_day_data, 0);
     var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_day',
         chartType: 'LineChart',
@@ -189,7 +191,8 @@ function drawCharts() {
     });
     follower_count_history_by_day_chart.draw();
 
-	formatter.format(follower_count_history_by_week_data, 1);
+    formatter.format(follower_count_history_by_week_data, 1);
+    formatter_date.format(follower_count_history_by_week_data, 0);
     var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_week',
         chartType: 'LineChart',
@@ -198,7 +201,8 @@ function drawCharts() {
     });
     follower_count_history_by_week_chart.draw();
 
-	formatter.format(follower_count_history_by_month_data, 1);
+    formatter.format(follower_count_history_by_month_data, 1);
+    formatter_date.format(follower_count_history_by_month_data, 0);
     var follower_count_history_by_month_chart = new google.visualization.ChartWrapper({
         containerId: 'follower_count_history_by_month',
         chartType: 'LineChart',
@@ -210,22 +214,23 @@ function drawCharts() {
             legend: "none",
             interpolateNulls: true,
             pointSize: 2,
-			hAxis: {
-	            baselineColor: '#eee',
-				format: 'MMM yyyy',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
-			},
+            hAxis: {
+                baselineColor: '#eee',
+                format: 'MMM yyyy',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
+            },
             vAxis: {
-	            baselineColor: '#eee',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
+                baselineColor: '#eee',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
             },
         },
     });
     follower_count_history_by_month_chart.draw();
-    
-	formatter.format(list_membership_count_history_by_day_data, 1);
+
+    formatter.format(list_membership_count_history_by_day_data, 1);
+    formatter_date.format(list_membership_count_history_by_day_data, 0);
     var list_membership_count_history_by_day_chart = new google.visualization.ChartWrapper({
         containerId: 'list_membership_count_history_by_day',
         chartType: 'LineChart',
@@ -234,7 +239,8 @@ function drawCharts() {
     });
     list_membership_count_history_by_day_chart.draw();
 
-	formatter.format(list_membership_count_history_by_week_data, 1);
+    formatter.format(list_membership_count_history_by_week_data, 1);
+    formatter_date.format(list_membership_count_history_by_week_data, 0);
     var list_membership_count_history_by_week_chart = new google.visualization.ChartWrapper({
         containerId: 'list_membership_count_history_by_week',
         chartType: 'LineChart',
@@ -243,7 +249,8 @@ function drawCharts() {
     });
     list_membership_count_history_by_week_chart.draw();
     
-	formatter.format(list_membership_count_history_by_month_data, 1);
+    formatter.format(list_membership_count_history_by_month_data, 1);
+    formatter_date.format(list_membership_count_history_by_month_data, 0);
     var list_membership_count_history_by_month_chart = new google.visualization.ChartWrapper({
         containerId: 'list_membership_count_history_by_month',
         chartType: 'LineChart',
@@ -255,16 +262,16 @@ function drawCharts() {
             legend: "none",
             interpolateNulls: true,
             pointSize: 2,
-			hAxis: {
-	            baselineColor: '#eee',
-				format: 'MMM yyyy',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
-			},
+            hAxis: {
+                baselineColor: '#eee',
+                format: 'MMM yyyy',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
+            },
             vAxis: {
-	            baselineColor: '#eee',
-	            textStyle: { color: '#999' },
-	            gridlines: { color: '#eee' }
+                baselineColor: '#eee',
+                textStyle: { color: '#999' },
+                gridlines: { color: '#eee' }
             },
         },
     });

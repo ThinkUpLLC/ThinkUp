@@ -295,7 +295,7 @@ class TestOfGroupMembershipCountMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, trend, milestone, and vis_data');
 
         //check history
-        $this->assertEqual(sizeof($result['history']), 5, '5 counts returned');
+        $this->assertEqual(sizeof($result['history']), 3);
         $format = 'm/d/Y';
         $this->debug(Utils::varDumpToString($result));
         $date_ago = date ($format, strtotime('-5 day'.$date));

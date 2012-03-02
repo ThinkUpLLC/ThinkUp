@@ -98,7 +98,7 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
         }
         $metadata = array(
           array('type' => 'date', 'label' => 'Date'),
-          array('type' => 'number', 'label' => 'Count'),
+          array('type' => 'number', 'label' => 'Lists'),
         );
         $vis_data = json_encode(array('rows' => $resultset, 'cols' => $metadata));
         // Google Chart docs say that a string of the form "Date(Y,m,d)" should
