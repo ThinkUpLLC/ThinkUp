@@ -49,4 +49,12 @@ interface PlaceDAO {
      * @return array tu_places_posts array
      */
     public function getPostPlace($post_id, $network = 'twitter');
+    /**
+     * Inserts a place directly into the database, performs minimal pre processing on the data passed in
+     * Note: longlat needs to be of type 'point' and bounding box of type 'polygon'
+     * @var array $place - array of data to insert
+     * @var string $network - network this place is from
+     * @return null if no data is passed in for the place array
+     */
+    public function insertGenericPlace(array $place, $network);
 }

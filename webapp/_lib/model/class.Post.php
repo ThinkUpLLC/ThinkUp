@@ -182,10 +182,12 @@ class Post {
      * @return Post
      */
     public function __construct($val) {
-        $this->id = $val["id"];
         // a fix for getPost() where the join of the links table column links.id overides the posts.id
-        if (!isset($this->id) && isset($val["post_key"])) {
+        if (isset($val["post_key"])) {
             $this->id = $val["post_key"];
+        }
+        else {
+            $this->id = $val["id"];
         }
         $this->post_id = $val["post_id"];
         $this->author_user_id = $val["author_user_id"];
@@ -261,7 +263,7 @@ class Post {
         $url_pattern = '(?i)\b'.
         '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'.
         '(?:[^\s()<>/][^\s()<>]*|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+'.
-        '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’,�]))';
+        '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’,�]))';
         preg_match_all('#'.$url_pattern.'#', $post_text, $matches);
         $corrected_urls = array_map( 'Link::addMissingHttp', $matches[0]);
         return array_filter($corrected_urls,'Utils::validateURL');

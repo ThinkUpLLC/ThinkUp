@@ -24,7 +24,9 @@
  * @copyright 2011-2012  Amy Unruh
  * @author Amy Unruh
  */
+//class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
 class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
+    
 
     public function insertPlace(array $place, $post_id, $network) {
         if (!$place) {
@@ -86,10 +88,43 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
             $res2 = $this->getUpdateCount($ps);
         }
     }
+    
+    public function insertGenericPlace(array $place, $network) {
+        // If the place data isn't set return null we can't do anything
+        if (!$place) {
+            return null;
+        }
+        
+        // Otherwise insert as much data as we have
+        $q  = "INSERT IGNORE INTO #prefix#places ";
+        $q .= "(place_id, place_type, name, full_name, country_code, country, network, bounding_box, longlat, icon ";
+        $q .= " , map_image) VALUES (:place_id, :place_type, :name, :full_name, :country_code, :country, :network,". 
+              "PolygonFromText(:bounding_box), GeomFromText(:latlng), :icon, :map_image )";
+        
+        $vars = array(
+            ':place_id' => isset($place['id']) ?  (string)$place['id'] : null, 
+            ':place_type' => isset($place['place_type']) ?  $place['place_type'] : null,
+            ':name' => isset($place['name']) ? $place['name'] : null,
+            ':full_name' => isset($place['full_name']) ? $place['full_name'] : null,
+            ':country_code' => isset($place['country_code']) ? $place['country_code'] : null,
+            ':country' => isset($place['country']) ? $place['country'] : null,
+            ':network' => isset($network) ? $network : null, 
+            ':bounding_box' => isset($place['bounding_box']) ? $place['bounding_box'] : null,
+            ':latlng' => isset($place['lat_lng']) ? $place['lat_lng'] : null,
+            ':icon' => isset($place['icon']) ? $place['icon'] : null,
+            ':map_image' => isset($place['map_image']) ? $place['map_image'] : null
+            );
+
+            $ps = $this->execute($q, $vars);
+            $res = $this->getUpdateCount($ps);
+            return $res;
+
+    }
 
     public function getPlaceByID($place_id) {
-        $q = "SELECT id, place_id, place_type, name, full_name, country_code, country, network, AsText(longlat) " .
-            "AS longlat, AsText(bounding_box) AS bounding_box FROM #prefix#places WHERE place_id = :place_id";
+        $q = "SELECT id, place_id, place_type, name, full_name, country_code, country, network, icon, map_image, ";
+        $q .= " AsText(longlat) AS longlat, AsText(bounding_box) AS bounding_box FROM #prefix#places ";
+        $q .= " WHERE place_id = :place_id";
         $ps = $this->execute($q, array( ':place_id' => $place_id));
         $row = $this->getDataRowAsArray($ps);
         if ($row) {
@@ -112,4 +147,5 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
             return null;
         }
     }
+    
 }
