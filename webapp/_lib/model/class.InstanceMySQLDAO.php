@@ -590,4 +590,28 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+    
+    public function checkIfOldPostsHaveBeenArchived($network_username, $network) {
+        $q = "SELECT is_post_archive_loaded FROM #prefix#instances WHERE ( network_username =:network_username ";
+        $q .= " AND network =:network_name ) ";
+        $vars = array(
+            ':network_username'=>$network_username,
+            ':network_name'=>$network       
+        );
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return $result[0]['is_post_archive_loaded'];
+    }
+    
+   public function updatePostArchivedLoaded($network_username, $network, $new_value) {
+        $q = "UPDATE #prefix#instances SET is_post_archive_loaded =:new_value ";
+        $q .= "WHERE ( network_username =:network_username AND network =:network_name ) "; 
+        $vars = array(
+            ':new_value'=>$new_value,
+            ':network_username'=>$network_username,
+            ':network_name'=>$network
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
 }

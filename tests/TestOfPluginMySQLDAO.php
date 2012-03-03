@@ -61,7 +61,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins();
-        $this->assertEqual(count($plugins), 7);
+        $this->assertEqual(count($plugins), 8);
 
         usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
         $this->assertEqual($plugins[0]->name,"Expand URLs");

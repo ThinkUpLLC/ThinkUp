@@ -572,4 +572,38 @@ interface PostDAO {
      * @return array Post objects
      */
     public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null);
+
+    /**
+     * Get all checkins with place information and any links attached to the checkin.
+     * @param $author_id
+     * @param $network
+     * @param $count
+     * @param $page
+     * @return array Post objects
+     */
+    public function getAllCheckins($author_id, $network, $count=15, $page=1);
+
+    /**
+     * Count the number of checkins to each place type.
+     * @param str $author_id
+     * @param str $network
+     * @return array Place type, number of checkins to this place type pairs
+     */
+    public function countCheckinsToPlaceTypes($author_id, $network);
+
+    /**
+     * Count the number of checkins per hour,
+     * @param str $author_id
+     * @param str $network
+     * @return array Hour, number of checkins at that hour pairs
+     */
+    public function countCheckinsPerHourAllTime($author_id, $network);
+
+    /**
+     * Count the number of checkins per hour in the last week.
+     * @param str $author_id
+     * @param str $network
+     * @return array Hour, number of checkins at that hour pairs
+     */
+    public function countCheckinsPerHourLastWeek($author_id, $network);
 }

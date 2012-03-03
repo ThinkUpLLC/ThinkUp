@@ -80,7 +80,7 @@ class $1PluginConfigurationController extends PluginConfigurationController {
 
     public function authControl() {
         \$config = Config::getInstance();
-        Utils::defineConstants();
+        Loader::definePathConstants();
         \$this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/$plugin_name_lcase/view/account.index.tpl');
         \$this->addToView('message', 'Hello ThinkUp world! This is an auto-generated plugin configuration '.
         'page for ' . \$this->owner->email .'.');

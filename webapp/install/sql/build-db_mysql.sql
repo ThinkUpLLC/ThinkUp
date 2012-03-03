@@ -176,6 +176,7 @@ CREATE TABLE tu_instances (
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The lowercase name of the source network, i.e., twitter or facebook.',
   favorites_profile int(11) DEFAULT '0' COMMENT 'Total instance favorites as reported by the service API.',
   owner_favs_in_system int(11) DEFAULT '0' COMMENT 'Total instance favorites saved in the datastore.',
+  is_post_archive_loaded int(1) DEFAULT '0' COMMENT 'Has the crawler gone back in time and fetched all the old posts?',
   PRIMARY KEY (id),
   KEY network_user_id (network_user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Authed network user for which ThinkUp archives data.';
@@ -335,6 +336,8 @@ CREATE TABLE tu_places (
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The network this place appears on in lower-case, e.g. twitter or facebook.',
   longlat point DEFAULT NULL COMMENT 'Longitude/lattitude point.',
   bounding_box polygon DEFAULT NULL COMMENT 'Bounding box of place.',
+  icon varchar(255) DEFAULT NULL COMMENT 'URL to an icon which represents the place type.',
+  map_image varchar(255) DEFAULT NULL COMMENT 'URL to an image of a map representing the area this place is in.',
   PRIMARY KEY (id),
   UNIQUE KEY place_id (place_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Places on a given network.';
@@ -500,13 +503,17 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
+<<<<<<< HEAD
 -- Dump completed on 2012-07-05 23:51:04
+=======
+-- Dump completed on 2012-07-05 12:31:58
+>>>>>>> 718-Foursquare-Plugin.
 
 --
 -- Insert DB Version
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
-VALUES ('application_options', 'database_version', '1.0.8.1', NOW(), NOW()); 
+VALUES ('application_options', 'database_version', '1.0.7', NOW(), NOW()); 
 
 --
 -- Insert default plugin(s)

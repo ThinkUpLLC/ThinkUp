@@ -44,9 +44,17 @@ interface PlaceDAO {
     public function getPlaceByID($place_id);
     /**
      * Get a post's place information.
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
-     * @return array tu_places_posts array
+     * @return array Rows/columns from tu_places_posts table
      */
     public function getPostPlace($post_id, $network = 'twitter');
+    /**
+     * Insert a place into storage. Performs minimal pre-processing on the data passed in.
+     * Note: longlat needs to be of type 'point' and bounding box of type 'polygon'
+     * @var arr $place Array of data to insert
+     * @var str $network Network this place is from
+     * @return mixed Update count or null
+     */
+    public function insertGenericPlace(array $place, $network);
 }
