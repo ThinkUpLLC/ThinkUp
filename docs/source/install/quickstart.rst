@@ -19,10 +19,16 @@ Recommended
 
 If you don't have a web server hosting package and don't want to get one, one of these options is best for you:
 
-*  `PHP Fog <http://phpfog.com>`_ offers `free hosting (up to 20MB) and a simple ThinkUp installer
-   <http://expertlabs.org/2011/12/php-fog-adds-free-thinkup-hosting.html>`_.
+*  `PHP Fog <https://phpfog.com/jumpstarts?a_aid=24990363>`_ offers free hosting (up to 20MB) and a simple ThinkUp
+   installer.
 *  Our `Amazon EC2 launcher <http://expertlabs.aaas.org/thinkup-launcher/>`_ spins up an Amazon web server and installs
    ThinkUp on it for you; free for the first year and costs around $15/month after that.
+
+Watch a 2-minute screencast on how to install ThinkUp on `PHP Fog <https://phpfog.com/jumpstarts?a_aid=24990363>`_:
+
+.. raw:: html
+
+  <iframe width="420" height="315" src="http://www.youtube.com/embed/yE5tXQtkdGE" frameborder="0" allowfullscreen></iframe>
 
 Not Recommended
 ^^^^^^^^^^^^^^^
@@ -41,7 +47,7 @@ Install ThinkUp in Three Steps
 
 Once you have access to a public web server to install ThinkUp, install it in three easy steps.
 
-1. `Download the latest distribution of ThinkUp <https://thinkupapp.com/download/>`_.
+1. `Download the latest distribution of ThinkUp <http://thinkupapp.com/download/>`_.
 2. Extract the zip file into a web-accessible folder on your web server via FTP.
 3. Visit that URL in your browser to proceed through ThinkUp's simple installer.
 
