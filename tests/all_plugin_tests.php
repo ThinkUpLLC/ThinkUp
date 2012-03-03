@@ -64,6 +64,9 @@ $plugin_tests->add(new TestOfStreamMessageQueueFactory());
 $plugin_tests->add(new TestOfGooglePlusPlugin());
 $plugin_tests->add(new TestOfGooglePlusCrawler());
 $plugin_tests->add(new TestOfGooglePlusPluginConfigurationController());
+$plugin_tests->add(new TestOfFoursquarePlugin());
+$plugin_tests->add(new TestOfFoursquareCrawler());
+$plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());

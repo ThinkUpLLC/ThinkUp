@@ -113,6 +113,33 @@ class InsightsGenerator {
         $insight_dao->insertInsight("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
         $simplified_date, '', Insight::EMPHASIS_LOW, serialize($clients_usage));
     }
+    
+    /**
+     * Generate foursquare specific insights and cache them in the insights table
+     */
+    public function generateFoursquareInsights() {
+        $simplified_date = date('Y-m-d');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        
+        // Cache PostMySQLDAO::countCheckinsToPlaceTypesLastWeek
+        $checkins_count = $post_dao->countCheckinsToPlaceTypesLastWeek($this->instance->network_user_id,
+        $this->instance->network);
+        //delete existing
+        $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id);
+        //insert new
+        $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id,
+        $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_count)); 
+        
+        // Cache PostMySQLDAO::countCheckinsToPlaceTypes
+        $checkins_all_time_count = $post_dao->countCheckinsToPlaceTypes($this->instance->network_user_id,
+        $this->instance->network);
+        //delete existing
+        $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id);
+        //insert new
+        $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id,
+        $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_all_time_count));
+    }
 
     /**
      * Convert Hot Posts data to JSON for use with Google Charts

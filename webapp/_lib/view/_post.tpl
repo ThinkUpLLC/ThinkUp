@@ -36,6 +36,7 @@
         </div>
     <div class="grid_8">
       <div class="post">
+            HI
         {if $t->post_text}
           {if $scrub_reply_username}
             {if $reply_count && $reply_count > $top_20_post_min}

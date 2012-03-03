@@ -63,6 +63,207 @@
           {if $data_template}
             {include file=$data_template}
           {else} {* else if no $data_template *}
+
+              {if $instance->network eq 'foursquare'}
+                 <!--  If the user has checkins from this day last year show them -->
+                {if $checkins_one_year_ago|@count > 0 }
+                <div class="section">
+                    <h2>Flashback: Checkins On This Day Last Year</h2>
+                    {foreach from=$checkins_one_year_ago item=current}
+                        <div class="clearfix article"> 
+                        <div class="individual-tweet post clearfix">
+                        <div class="grid_5 alpha">
+                        <a href="http://maps.google.com/maps?q={$current->geo}"><img src="{$current->place_obj->map_image}"></a>
+                        </div>    
+                        <div class="grid_6"> 
+                        <img src="{$current->place_obj->icon}"> {$current->place} <br> {$current->location} <br>
+        
+                         {foreach from=$current->links item=current_link}
+                             <a href="{$current_link->url}"><img src="{$current_link->url}" width=100px height=100px}></a>
+                         {/foreach}
+                        </div>
+                        <div class="grid_5 omega"/> {$current->post_text} <br> </div>
+                        <div class="grid_1">
+                            <span class="reply-count">
+                            <a href="{$site_root_path}post/?t={$current->post_id}&n={$current->network|urlencode}">{$current->reply_count_cache|number_format}</a></span>
+                        </div>
+                        </div>
+                            <br>
+                        </div>
+                    {/foreach}
+                </div>
+               {/if} 
+               
+               {if $checkins_per_hour_last_week|count_characters neq 0}
+                   <div class="section">
+                       <h2>Places You've Been This Week</h2>
+                       <center><img src={$checkins_map}></center>
+                   </div>
+               {/if}
+    
+               {if $checkins_per_hour_last_week|count_characters neq 0}
+                   <div class="section">
+                   <h2>Checkins Per Hour This Week</h2>
+                   <div id="checkins_last_week"></div>
+                        <script type="text/javascript">
+                        // Load the Visualization API and the standard charts
+                        google.load('visualization', '1');
+                        // Set a callback to run when the Google Visualization API is loaded.
+                        google.setOnLoadCallback(drawCheckinsPerHourChart);
+                    
+                        {literal}
+                        function drawCheckinsPerHourChart() {
+                        {/literal}
+                            var checkins_week_data = new google.visualization.DataTable({$checkins_per_hour_last_week});
+                            {literal}
+                            var checkins_per_hour_last_week = new google.visualization.ChartWrapper({
+                                containerId: 'checkins_last_week',
+                                chartType: 'ColumnChart',
+                                dataTable: checkins_week_data,
+                                options: {
+                                    colors: ['#3c8ecc'],
+                                    width: 708,
+                                    height: 300,
+                                    legend: 'none',
+                                    hAxis: {
+                                        title: 'Hour of Day',
+                                        textStyle: { 
+                                            color: '#999'
+                                        }
+                                    },
+                                    vAxis: {
+                                        title: 'Number of Checkins',
+                                        minValue: 0,
+                                        baselineColor: '#ccc',
+                                        textStyle: { color: '#999' },
+                                    },
+                                }
+                            });
+                           checkins_per_hour_last_week.draw();
+                        }
+                    {/literal}
+                    </script>
+                    </div>
+                {/if}
+                
+                {if $checkins_per_hour_all_time|count_characters neq 0}
+                    <div class="section">
+                        <h2>Checkins Per Hour All Time</h2>
+                          <div id="checkins_all_time"></div>
+                        <script type="text/javascript">
+                        // Load the Visualization API and the standard charts
+                        google.load('visualization', '1');
+                        // Set a callback to run when the Google Visualization API is loaded.
+                        google.setOnLoadCallback(drawCheckinsPerHourAllTimeChart);
+                    
+                        {literal}
+                        function drawCheckinsPerHourAllTimeChart() {
+                        {/literal}
+                            var checkins_all_data = new google.visualization.DataTable({$checkins_per_hour_all_time});
+                            {literal}
+    
+                            var checkins_per_hour_all_time = new google.visualization.ChartWrapper({
+                                containerId: 'checkins_all_time',
+                                chartType: 'ColumnChart',
+                                dataTable: checkins_all_data,
+                                options: {
+                                    colors: ['#3c8ecc'],
+                                    width: 708,
+                                    height: 300,
+                                    legend: 'none',
+                                    hAxis: {
+                                        title: 'Hour of Day',
+                                        textStyle: { 
+                                            color: '#999'
+                                        }
+                                    },
+                                    vAxis: {
+                                        title: 'Number of Checkins',
+                                        minValue: 0,
+                                        baselineColor: '#ccc',
+                                        textStyle: { color: '#999' },
+                                    },
+                                }
+                            });
+                            checkins_per_hour_all_time.draw();
+                        }
+                    {/literal}
+                    </script>
+                                  
+                    </div>
+                {/if}
+                
+                {if $checkins_by_type|count_characters neq 0}
+                    <div class="section">
+                          <h2>The Types Of Places You Visit</h2>
+                          <div id="place_types"></div>
+                         <script type="text/javascript">
+                        // Load the Visualization API and the standard charts
+                        google.load('visualization', '1');
+                        // Set a callback to run when the Google Visualization API is loaded.
+                        google.setOnLoadCallback(drawPlaceTypeChart);
+                    
+                        {literal}
+                        function drawPlaceTypeChart() {
+                        {/literal}
+                          var place_type_data = new google.visualization.DataTable({$checkins_by_type});
+                          {literal}
+                          var place_type_chart = new google.visualization.ChartWrapper({
+                              containerId: 'place_types',
+                              chartType: 'PieChart',
+                              dataTable: place_type_data,
+                              options: {
+                                  titleTextStyle: {color: '#848884', fontSize: 19},
+                                  width: 708,
+                                  height: 300,
+                                  sliceVisibilityThreshold: 1/100,
+                                  pieSliceText: 'label',
+                              }
+                          });
+                          place_type_chart.draw();
+                        }
+                        {/literal}
+                    </script>
+            
+                    </div>
+                {/if}
+                
+                {if $checkins_by_type_last_week|count_characters neq 0}
+                    <div class="section">
+                          <h2>The Types Of Places You've Visited This Week</h2>
+                          <div id="place_types_last_week"></div>
+                         <script type="text/javascript">
+                        // Load the Visualization API and the standard charts
+                        google.load('visualization', '1');
+                        // Set a callback to run when the Google Visualization API is loaded.
+                        google.setOnLoadCallback(drawPlaceTypeLastWeekChart);
+                    
+                        {literal}
+                        function drawPlaceTypeLastWeekChart() {
+                        {/literal}
+                          var place_type_last_week_data = new google.visualization.DataTable({$checkins_by_type_last_week});
+                          {literal}
+                          var place_type_last_week_chart = new google.visualization.ChartWrapper({
+                              containerId: 'place_types_last_week',
+                              chartType: 'PieChart',
+                              dataTable: place_type_last_week_data,
+                              options: {
+                                  titleTextStyle: {color: '#848884', fontSize: 19},
+                                  width: 708,
+                                  height: 300,
+                                  sliceVisibilityThreshold: 1/100,
+                                  pieSliceText: 'label',
+                              }
+                          });
+                          place_type_last_week_chart.draw();
+                        }
+                        {/literal}
+                    </script>
+            
+                    </div>
+               {/if}
+             {/if}
+
             {if $hot_posts_data}
                 <div class="section">
                 {include file="_dashboard.responserates.tpl"}
@@ -125,6 +326,23 @@
                 </div>
             {/if}
 
+            {if $least_likely_followers}
+              <div class="clearfix section">
+                <h2>This Week's Most Discerning Followers</h2>
+                <div class="clearfix article" style="padding-top : 0px;">
+                {foreach from=$least_likely_followers key=uid item=u name=foo}
+                  <div class="avatar-container" style="float:left;margin:7px;">
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
+                  </div>
+                {/foreach}
+                <br /><br /><br />    
+                </div>
+                <div class="clearfix view-all">
+                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
+                </div>
+                </div>
+            {/if}
+
             {if $most_retweeted_1wk}
               <div class="clearfix section">
                 <h2>This Week's Most {if $instance->network eq 'google+'}Reshared{else}Retweeted{/if} Posts</h2>
@@ -144,6 +362,7 @@
           {/if} {* end if $data_template *}
          {/if}
         {/if}
+        
 
         {if !$instance}
           <div style="width:60%;text-align:center;">

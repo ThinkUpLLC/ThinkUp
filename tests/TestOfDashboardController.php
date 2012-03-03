@@ -41,6 +41,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
         $webapp->registerPlugin('facebook', 'FacebookPlugin');
         $webapp->registerPlugin('google+', 'GooglePlusPlugin');
+        $webapp->registerPlugin('foursquare', 'FoursquarePlugin');
     }
 
     public function testConstructor() {
@@ -77,12 +78,12 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>6, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6));
         //Set the default service user to jack, who is not last updated
         $app_option_builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'default_instance', 'option_value'=>'4'));
+        'option_name'=>'default_instance', 'option_value'=>'6'));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -99,9 +100,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedNoDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>5, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -243,6 +244,20 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertPattern('/Export/', $results);
     }
 
+    public function testLoggedInPostsFoursquare() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] ='kim@kim.com';
+        $_GET['n'] = 'foursquare';
+        $_GET['v'] = 'posts';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        $config = Config::getInstance();
+        $this->assertPattern('/kim@kim.com on Foursquare/', $results);
+    }
+
     public function testLoggedInPostsWithUsernameApostrophe() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
@@ -359,6 +374,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
         'auth_error'=>'Error validating access token: Session has expired at unix time SOME_TIME. The current unix '.
         'time is SOME_TIME.'));
+        $instance_owner_builder_4 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
 
         //Insert test data into test table
         $user_builders = array();
@@ -375,15 +391,22 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'16', 'user_name'=>"Kim",
         'last_updated'=>'-5d', 'network'=>'google+'));
 
+        $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'17', 'user_name'=>"kim@kim.com",
+        'last_updated'=>'-5d', 'network'=>'foursquare'));
+
         //Make public
         $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'13',
         'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d', 'network'=>'twitter'));
 
+        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'16',
+        'network_username'=>"Kim", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'google+'));
+
         $instance_builder_3 = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'14',
         'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'facebook'));
 
-        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'16',
-        'network_username'=>"Kim", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'google+'));
+        $instance_builder_4 = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'17',
+        'network_username'=>"kim@kim.com", 'is_public'=>1, 'crawler_last_run'=>'-1d',
+        'network'=>'foursquare'));
 
         $post_builders = array();
         //Add a bunch of posts
@@ -422,6 +445,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         }
 
         return array($owner_builder, $instance_owner_builder_1, $instance_owner_builder_2, $instance_owner_builder_3,
-        $user_builders, $instance_builder_1, $instance_builder_2, $instance_builder_3, $post_builders);
+        $instance_owner_builder_4, $user_builders, $instance_builder_1, $instance_builder_2, $instance_builder_3,
+        $instance_builder_4, $post_builders);
     }
 }

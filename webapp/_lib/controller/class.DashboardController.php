@@ -280,6 +280,41 @@ class DashboardController extends ThinkUpController {
                 $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
                 $this->addToView('latest_clients_usage', $latest_clients_usage);
             }
+
+            // Foursquare items
+            if ($this->instance->network == "foursquare") {
+                // Checkins 1 year ago
+                $query_year = date(date( 'Y' , strtotime("today -1 year")));
+                $old_checkins = $post_dao->getOnThisDayFlashbackPosts($this->instance->network_user_id,
+                'foursquare');
+                $this->addToView('checkins_one_year_ago', $old_checkins);
+
+                // Checkins per hour - all time
+                $checkins_per_hour = $post_dao->countCheckinsPerHourAllTime($this->instance->network_user_id,
+                'foursquare');
+                $this->addToView('checkins_per_hour_all_time', $checkins_per_hour);
+
+                // Checkins per hour - last week
+                $checkins_per_hour_last_week = $post_dao->countCheckinsPerHourLastWeek($this->instance->network_user_id,
+                'foursquare');
+                $this->addToView('checkins_per_hour_last_week', $checkins_per_hour_last_week);
+
+                // Checkins by type of place - all time
+                $place_types = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsToPlaceTypes', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_by_type', $place_types);
+                
+                // Checkins by type of place - last week
+                $place_types_last_week = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsToPlaceTypesLastWeek', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_by_type_last_week', $place_types_last_week);
+
+                // Map of checkins in the last week
+                $checkins_map = $post_dao->getAllCheckinsInLastWeekAsGoogleMap($this->instance->network_user_id, 
+                'foursquare');
+                $this->addToView('checkins_map', $checkins_map);
+                
+            }
         } else {
             $this->addErrorMessage($username." on ".ucwords($this->instance->network).
             " isn't set up on this ThinkUp installation.");

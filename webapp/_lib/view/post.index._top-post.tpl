@@ -6,6 +6,10 @@
 
 <div class="grid_10">
   <div class="br" style="min-height:110px;margin-bottom:1em">
+   {if $post->network eq 'foursquare'}
+     <center> {$post->place} </center> <br>
+     <a href="http://maps.google.com/maps?q={$post->geo}"><img src="http://maps.googleapis.com/maps/api/staticmap?size=350x150&zoom=15&maptype=roadmap&markers=color:blue%7C{$post->geo}&sensor=false"></a>
+   {/if}
     <div class="tweet pr">
       {if $post->post_text}
           {if $post->network == 'twitter'}
@@ -22,6 +26,9 @@
 
     {foreach from=$post->links key=lkey item=link name=linkloop}
     <div class="clearfix" style="word-wrap:break-word;">
+        {if $post->network eq 'foursquare' && $smarty.foreach.linkloop.first}
+          <center> <br>  Checkin Photos <br> <br> </center>
+        {/if}
         {if $link->expanded_url}
           {if $link->image_src}
            <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$link->url}"><img src="{$link->image_src}" style="margin-bottom:5px;"/></a></div>
@@ -37,8 +44,11 @@
       {if $post->network eq 'twitter'}
         <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">
       {/if}
+      {if $post->network eq 'foursquare'}
+        <a href="https://foursquare.com/user/{$post->author_user_id}/checkin/{$post->post_id}">
+      {/if}
       {$post->adj_pub_date|date_format:"%b %e, %Y %l:%M %p"}
-      {if $post->network eq 'twitter'}
+      {if $post->network eq 'twitter' || $post->network eq 'foursquare'}
         </a>
       {/if}
       

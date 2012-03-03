@@ -161,7 +161,6 @@ class FacebookCrawler {
         $since = isset($since_post[0])?$since_post[0]->pub_date:0;
         $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
         ($since < 0)?$since=0:$since=$since;
-
         while ($fetch_next_page) {
             $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
             if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data) > 0) {
@@ -640,7 +639,6 @@ class FacebookCrawler {
         $access_token = $this->access_token;
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
         $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
-
         if (isset($friends->data)) {
             //store relationships in follows table
             $follows_dao = DAOFactory::getDAO('FollowDAO');

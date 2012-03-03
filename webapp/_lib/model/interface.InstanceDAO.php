@@ -226,4 +226,21 @@ interface InstanceDAO {
      * @return int Count of updated instances
      */
     public function updateUsername($id, $username);
+    
+    /**
+     * Checks if the crawler has gone back in time and fetched all posts for a given network
+     * @param str network_username
+     * @param str network
+     * @return boolean true if the crawler has gone back in time
+     */
+    public function checkIfOldPostsHaveBeenArchived($network_username, $network);
+    
+    /**
+     * Updates the status of is_post_archive_loaded
+     * @param str network_username
+     * @param str network
+     * @param int new_value
+     * @return int number of rows updated (should only ever be 1)
+     */
+    public function updatePostArchivedLoaded($network_username, $network, $new_value);
 }
