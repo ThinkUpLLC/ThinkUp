@@ -811,6 +811,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= $protected;
         $q .= " AND in_reply_to_post_id IS NULL ";
         $q .= " AND p.in_reply_to_user_id = :user_id ";
+        $q .= " OR p.author_user_id = :user_id ";
         $q .= "ORDER BY p.id DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
