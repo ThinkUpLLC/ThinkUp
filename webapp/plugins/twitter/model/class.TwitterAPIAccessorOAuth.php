@@ -214,7 +214,7 @@ class TwitterAPIAccessorOAuth {
         $parsed_payload = array();
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
-            if ($xml != false) {
+            if ($xml !== false) {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'hash':
@@ -250,7 +250,7 @@ class TwitterAPIAccessorOAuth {
         $parsed_payload = array();
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
-            if ($xml != false) {
+            if ($xml !== false) {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
@@ -451,7 +451,7 @@ class TwitterAPIAccessorOAuth {
             // do this only for the original post (rt will have rt count too)
             $retweet_count_api = $post->retweet_count;
             $pos = strrpos($post->retweet_count, '+');
-            if ($pos != false) {
+            if ($pos !== false) {
                 // remove '+', e.g. '100+' --  currently 100 is the max count that will be reported
                 $retweet_count_api = substr($post->retweet_count, 0, $pos) ;
             }

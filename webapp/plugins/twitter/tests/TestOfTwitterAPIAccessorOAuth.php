@@ -68,7 +68,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
 
     public function testCreateParserFromStringMalformedMarkup() {
         $data = <<<XML
-        <?xml version='1.0'?> 
+        <?xml version='1.0'?>
 <document>
  <title>Forty What?</title>
  <from>Joe</from>
@@ -131,4 +131,19 @@ XML;
         $this->assertEqual($results[0]['is_protected'], 0);
     }
 
+    public function testParseError() {
+        $to = new TwitterOAuth('', '', '', '');
+        //Public statuses
+        $twitter_data = $to->http(
+        'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
+
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+
+        $results = $api->parseError($twitter_data);
+
+        $this->debug(Utils::varDumpToString($results));
+
+        $this->assertEqual($results['error'], 'Not found');
+        $this->assertEqual($results['request'], '/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
+    }
 }
