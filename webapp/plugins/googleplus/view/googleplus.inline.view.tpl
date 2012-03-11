@@ -32,6 +32,10 @@
 
 </div>
 
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+{/if}
 
     {if ($display eq 'all_gplus_posts' and not $gplus_posts) or 
         ($display eq 'most_replied_to_posts' and not $gplus_posts) }
