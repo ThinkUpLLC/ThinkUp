@@ -31,7 +31,7 @@ $mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data -
 
 
 ## set up app db version option
-DB_VERSION=`cat ../../../install/version.php | grep 'THINKUP_VERSION =' | grep  -o '[0-9]*\.[0-9]*'`;
+DB_VERSION=`php ../../../../extras/scripts/getversion.php`;
 
 echo "
 --
