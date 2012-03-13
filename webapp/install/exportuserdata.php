@@ -25,9 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani, Dwi Widiastuti
  */
-chdir("..");
-require_once '_lib/model/class.Loader.php';
-Loader::register();
-
+chdir('..');
+require_once 'init.php';
 $controller = new ExportServiceUserDataController();
 echo $controller->go();
