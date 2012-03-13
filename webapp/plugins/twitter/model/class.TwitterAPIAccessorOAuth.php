@@ -214,7 +214,7 @@ class TwitterAPIAccessorOAuth {
         $parsed_payload = array();
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
-            if ($xml != false) {
+            if ($xml !== false) {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'hash':
@@ -250,7 +250,7 @@ class TwitterAPIAccessorOAuth {
         $parsed_payload = array();
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
-            if ($xml != false) {
+            if ($xml !== false) {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
