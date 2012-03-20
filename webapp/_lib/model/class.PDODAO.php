@@ -155,7 +155,7 @@ abstract class PDODAO {
             $db_socket=";unix_socket=".$db_socket;
         }
         $db_string = sprintf(
-            "%s:dbname=%s;host=%s%s", 
+            "%s:dbname=%s;host=%s%s",
         $db_type,
         $config->getValue('db_name'),
         $config->getValue('db_host'),
@@ -200,12 +200,12 @@ abstract class PDODAO {
         } catch (PDOException $e) {
             $config = Config::getInstance();
             $exception_details = 'Database error! ';
-            if ($config->getValue('debug')) {
-                $exception_details .= '<br>ThinkUp could not execute the following query:<br> '.
-                str_replace(chr(10), "", $stmt->queryString) . '  <br>PDOException: '. $e->getMessage();
+            if ($config->getValue('debug') !== false) {
+                $exception_details .= 'ThinkUp could not execute the following query: '.
+                str_replace(chr(10), "", $stmt->queryString) . ' PDOException: '. $e->getMessage();
             } else {
                 $exception_details .=
-                '<br>To see the technical details of what went wrong, set debug = true in ThinkUp\'s config file.';
+                ' To see the technical details of what went wrong, set debug = true in ThinkUp\'s config file.';
             }
             throw new PDOException ($exception_details);
         }

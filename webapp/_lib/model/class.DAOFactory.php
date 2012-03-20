@@ -216,6 +216,9 @@ class DAOFactory {
      * @return string db_type, will default to 'mysql' if not defined
      */
     public static function getDBType($cfg_vals=null) {
+        if ($cfg_vals != null) {
+            Config::destroyInstance();
+        }
         $type = Config::getInstance($cfg_vals)->getValue('db_type');
         $type = is_null($type) ? 'mysql' : $type;
         return $type;

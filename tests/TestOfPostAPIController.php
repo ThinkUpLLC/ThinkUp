@@ -765,7 +765,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->coordinates, $output->geo,
                 "Geo and coordinates are meant to be exactly the same.");
 
-        $this->assertEqual($output->user->last_updated, '2010-03-02 13:45:55');
+        $this->assertEqual($output->user->last_updated, '2010-03-02 09:45:55');
 
         // test trim user
         $_GET['trim_user'] = true;

@@ -532,7 +532,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test repair on healthy and complete tables
         Installer::$show_tables = array();
         $installer->populateTables($config_array);
-        $expected = 'Your ThinkUp tables are <strong class="okay">complete</strong>.';
+        $expected = 'Your ThinkUp table repairs are <strong class="okay">complete</strong>.';
         $messages = $installer->repairTables($config_array);
         $this->assertIdentical($messages['table_complete'], $expected, $messages['table_complete']);
 

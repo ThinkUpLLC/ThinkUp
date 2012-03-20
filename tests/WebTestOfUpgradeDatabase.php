@@ -49,13 +49,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         // Make sure test_installer and build directories exists
         if (!file_exists($this->install_dir)) {
             exec('mkdir ' . $this->install_dir);
+            exec('chmod -R 777 '.$this->install_dir);
         }
         if (!file_exists($this->installs_dir)) {
             exec('mkdir ' . $this->installs_dir);
+            exec('chmod -R 777 '.$this->install_dir);
         }
-
-        //Clean up files from test installation
-        exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer' . '/*');
 
         $config = Config::getInstance();
         $this->table_prefix = $config->getValue('table_prefix');
@@ -68,7 +67,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
     public function tearDown() {
         //Clean up test installation files
-        exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer' . '/*');
+        exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer/*' );
 
         // Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';
@@ -164,8 +163,19 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         //Extract into test_installer directory and set necessary folder permissions
         chdir(dirname(__FILE__) . '/../');
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
-        'cd webapp/test_installer/;'.
-        'unzip ' . $zipfile . ';mkdir -p thinkup/data/compiled_view;chmod -R 777 thinkup;');
+        'cd webapp/test_installer/;'.'unzip ' . $zipfile .';chmod -R 777 thinkup;');
+        if (!file_exists($this->install_dir.'/thinkup/data/compiled_view')) {
+            chdir(dirname(__FILE__) . '/../');
+            if (!file_exists($this->install_dir.'/thinkup/data')) {
+                exec('cd webapp/test_installer/;mkdir thinkup/data;');
+            }
+            exec('cd webapp/test_installer/;mkdir thinkup/data/compiled_view;chmod -R 777 thinkup;');
+        }
+        if (file_exists($this->install_dir.'/thinkup/_lib/view/compiled_view')) {
+            chdir(dirname(__FILE__) . '/../');
+            exec('cd webapp/test_installer/;chmod -R 777 thinkup/_lib/view/compiled_view;');
+        }
+
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
@@ -285,12 +295,13 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->debug("unzipping $zipfile");
             chdir(dirname(__FILE__) . '/../');
             //Extract into test_installer directory and set necessary folder permissions
-            exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
-            'cd webapp/test_installer/;unzip -o ' . $zipfile);
-
-            // make sure new code with data directory has correct perms
-            if (file_exists($this->install_dir.'/thinkup/data/')) {
-                exec('chmod -R 777 webapp/test_installer/thinkup/data;');
+            exec('cp ' . $zipfile .  ' webapp/test_installer/.;cd webapp/test_installer/;'.
+            'rm -rf thinkup/_lib/view/compiled_view;unzip -o ' . $zipfile.';');
+            if (!file_exists($this->install_dir.'/thinkup/data/compiled_view')) {
+                if (!file_exists($this->install_dir.'/thinkup/data')) {
+                    exec('mkdir thinkup/data;');
+                }
+                exec('mkdir thinkup/data/compiled_view;chmod -R 777 thinkup');
             }
 
             // run updates and migrations
@@ -336,21 +347,23 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
             $this->get($token_url);
             $content = $this->getBrowser()->getContent();
+            //$this->debug($content);
             preg_match("/sql_array = (\[.*?}])/", $content, $matches);
             if (isset($matches[1])) {
                 $json_array = json_decode($matches[1]);
             }
+            //$this->debug(Utils::varDumpToString($json_array));
             $cnt = 0;
             if (isset($json_array)) {
                 foreach($json_array as $json_migration) {
-                    $this->debug("running migration: " . $json_migration->version);
+                    $this->debug("Running migration: " . $json_migration->version);
 
                     // if there is setup_sql run it
                     if (isset($MIGRATIONS[$json_migration->version ]['setup_sql'])) {
-                        $this->debug('running setup_sql scripts');
+                        $this->debug('Running setup_sql scripts');
                         $install_dao = DAOFactory::getDAO('InstallerDAO');
                         foreach($MIGRATIONS[$json_migration->version ]['setup_sql'] as $sql) {
-                            $this->debug('running setup_sql script: ' . substr($sql, 0, 40)  . '...');
+                            $this->debug('Running setup_sql script: ' . substr($sql, 0, 40)  . '...');
                             $install_dao->runMigrationSQL($sql);
                         }
                     }

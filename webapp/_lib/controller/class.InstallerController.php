@@ -460,7 +460,7 @@ class InstallerController extends ThinkUpController {
                         $info .= "<li>$msg</li>";
                     }
                     $info .= '</ul>';
-                    $this->addInfoMessage($info);
+                    $this->addInfoMessage($info, null, true);
                 }
                 $this->addToView('action_form', $_SERVER['REQUEST_URI']);
             }

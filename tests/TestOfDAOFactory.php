@@ -44,7 +44,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     protected function buildData() {
         $builders = array();
 
-        // test table for our test dao
+        // test table for our test DAO
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
             'test_name varchar(20),' .
@@ -71,12 +71,12 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /*
-     * test fetching the proper db_type
+     * Test fetching the proper db_type
      */
     public function testDAODBType() {
         Config::getInstance()->setValue('db_type', null);
         $type = DAOFactory::getDBType();
-        $this->assertEqual($type, 'mysql', 'should default to mysql');
+        $this->assertEqual($type, 'mysql', 'should default to MySQL');
 
         Config::getInstance()->setValue('db_type', 'some_sql_server');
         $type = DAOFactory::getDBType();
@@ -84,7 +84,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /*
-     * test init DAOs, bad params and all...
+     * Test init DAOs, bad params and all...
      */
     public function testGetTestDAO() {
         // no map for this DAO
@@ -92,31 +92,31 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
             DAOFactory::getDAO('NoSuchDAO');
             $this->fail('should throw an exception');
         } catch(Exception $e) {
-            $this->assertPattern('/No DAO mapping defined for: NoSuchDAO/', $e->getMessage(), 'no dao mapping');
+            $this->assertPattern('/No DAO mapping defined for: NoSuchDAO/', $e->getMessage(), 'no DAO mapping');
         }
 
-        // invalid db type for this dao
+        // invalid db type for this DAO
         Config::getInstance()->setValue('db_type', 'nodb');
         try {
             DAOFactory::getDAO('TestDAO');
             $this->fail('should throw an exception');
         } catch(Exception $e) {
-            $this->assertPattern("/No db mapping defined for 'TestDAO'/", $e->getMessage(), 'no dao db_type mapping');
+            $this->assertPattern("/No db mapping defined for 'TestDAO'/", $e->getMessage(), 'no DAO db_type mapping');
         }
 
-        // valid mysql test dao
+        // valid MySQL test DAO
         Config::getInstance()->setValue('db_type', 'mysql');
         $test_dao = DAOFactory::getDAO('TestDAO');
-        $this->assertIsA($test_dao, 'TestMySQLDAO', 'we are a mysql dao');
+        $this->assertIsA($test_dao, 'TestMySQLDAO', 'we are a MySQL DAO');
         $data_obj = $test_dao->selectRecord(1);
         $this->assertNotNull($data_obj);
         $this->assertEqual($data_obj->test_name, 'name1');
         $this->assertEqual($data_obj->test_id, 1);
 
-        // valid fuax test dao
+        // valid faux test DAO
         Config::getInstance()->setValue('db_type', 'faux');
         $test_dao = DAOFactory::getDAO('TestDAO');
-        $this->assertIsA($test_dao, 'TestFauxDAO', 'we are a mysql dao');
+        $this->assertIsA($test_dao, 'TestFauxDAO', 'we are a MySQL DAO');
         $data_obj = $test_dao->selectRecord(1);
         $this->assertNotNull($data_obj);
         $this->assertEqual($data_obj->test_name, 'Mojo Jojo');
@@ -390,5 +390,19 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($result), 29);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
+    }
+    /**
+     * Test get InstallerDAO by overriding with array of config values
+     */
+    public function testGetDAOWithConfigArrayOverride(){
+        $cfg_values = array("table_prefix"=>ThinkUpTestDatabaseHelper::$prefix, "db_host"=>"localhost",
+        'db_password'=>'funkydunkywrongpasswordyo', 'db_type'=>'notsupported');
+        try {
+            DAOFactory::getDAO('InstallerDAO', $cfg_values);
+            $this->fail('should throw an exception');
+        } catch(Exception $e) {
+            $this->assertPattern("/No db mapping defined for 'InstallerDAO' with db type: notsupported/",
+            $e->getMessage());
+        }
     }
 }

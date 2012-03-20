@@ -41,6 +41,32 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     }
 
     /**
+     * Test constructor
+     */
+    public function testNewSmartyThinkUpWithoutConfigFile() {
+        $orig_tz = date_default_timezone_get();
+
+        $this->removeConfigFile();
+        Config::destroyInstance();
+
+        $cfg_array =  array(
+        'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
+        'source_root_path'=>THINKUP_ROOT_PATH,
+        'datadir_path'=>THINKUP_WEBAPP_PATH.'data/',
+        'debug'=>false,
+        'app_title_prefix'=>"",
+        'cache_pages'=>false);
+
+        $v_mgr = new SmartyThinkUp($cfg_array);
+        $tz = date_default_timezone_get();
+        $this->assertEqual($tz, 'UTC');
+        $this->assertTrue(isset($v_mgr));
+
+        $this->restoreConfigFile();
+        date_default_timezone_set($orig_tz);
+    }
+
+    /**
      * Test default values
      */
     public function testSmartyThinkUpDefaultValues() {

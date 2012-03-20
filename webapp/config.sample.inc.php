@@ -20,7 +20,7 @@ $THINKUP_CFG['datadir_path']              = $THINKUP_CFG['source_root_path'] . '
 $THINKUP_CFG['timezone']                  = 'UTC';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
-$THINKUP_CFG['cache_pages']               = false;
+$THINKUP_CFG['cache_pages']               = true;
 
 // Smarty file cache lifetime in seconds; defaults to 600 (10 minutes)caching
 $THINKUP_CFG['cache_lifetime']               = 600;
@@ -64,7 +64,7 @@ $THINKUP_CFG['sql_log_location']          = null;
 // How many seconds does a query take before it gets logged as a slow query?
 $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 
-$THINKUP_CFG['debug']                     = true;
+$THINKUP_CFG['debug']                     = false;
 
 $THINKUP_CFG['enable_profiler']           = false;
 

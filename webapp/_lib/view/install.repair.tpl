@@ -9,17 +9,14 @@
           {if $succeed}
           <div style="margin-bottom: 20px;">
           
-             <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+           <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
                  <p>
                    <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                    <strong>Repairs complete</strong>. Please remove <code>$THINKUP_CFG['repair'] = true;</code>
+                    <strong>Success!</strong>. ThinkUp's table repairs are complete. Please remove <code>$THINKUP_CFG['repair'] = true;</code>
                       from config.inc.php to prevent this page from being used by unauthorized users.
-                      {if $username && password}
-                        Your newly created admin user: <strong>{$username}</strong>, password:
-                        <strong>{$password}</strong>
-                      {/if}
                     </p>
                   </div>
+                <div style="float:right;padding:25px;"><a href="{$site_root_path}" class="linkbutton emphasized">Start Using ThinkUp</a></div>
                   <div class="clearfix">
                     {foreach from=$messages_db item=msg}
                       {$msg}
@@ -30,7 +27,6 @@
              </div>
 
           </div>
-
 
           {else}
           <div class="clearfix error_message">

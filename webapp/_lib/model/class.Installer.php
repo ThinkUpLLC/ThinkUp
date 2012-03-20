@@ -548,7 +548,7 @@ class Installer {
                 }
             }
         } else {
-            $messages['table_complete'] = 'Your ThinkUp tables are <strong class="okay">complete</strong>.';
+            $messages['table_complete'] = 'Your ThinkUp table repairs are <strong class="okay">complete</strong>.';
         }
 
         // does checking on tables that exist
