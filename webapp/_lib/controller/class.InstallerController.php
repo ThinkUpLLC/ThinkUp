@@ -335,8 +335,8 @@ class InstallerController extends ThinkUpController {
                 $whoami = filter_var($whoami, FILTER_SANITIZE_SPECIAL_CHARS);
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
-                "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
-                "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH .
+                "following commands:<br /><code>sudo touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
+                "</code><br /><code>sudo chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH .
                 "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" .
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
                 "<br /><br />Click the <strong>Next Step</strong> button below once you have done either.",

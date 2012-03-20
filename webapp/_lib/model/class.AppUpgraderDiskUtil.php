@@ -275,8 +275,8 @@ class AppUpgraderDiskUtil {
             $whoami = 'nobody';
         }
         return "<b>Oops!</b> ThinkUp can't upgrade itself because it doesn't have the right file permissions. ".
-        "To fix this problem, run<br><br><code>chown -R $whoami ". THINKUP_WEBAPP_PATH."</code><br><br>".
+        "To fix this problem, run<br /><br /><code>sudo chown -R $whoami ". THINKUP_WEBAPP_PATH."</code><br /><br />".
         "on your server, using root (or sudo). If you don't have root access, try the following: ".
-        "<br><br> <code>chmod -R a+rw ".THINKUP_WEBAPP_PATH."</code><br><br>";
+        "<br /><br /> <code>chmod -R a+rw ".THINKUP_WEBAPP_PATH."</code><br /><br />";
     }
 }

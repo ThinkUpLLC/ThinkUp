@@ -4,7 +4,7 @@
 <div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 10px;">
     
    <div class="prepend_20">
-    <h1>Upgrade ThinkUp's Application Code</h1>
+    <h1>Upgrading Your ThinkUp Application</h1>
   </div>
     
     <div class="clearfix prepend_20 append_20">
@@ -21,7 +21,7 @@
      <div class="alert helpful">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-           Ready to upgrade ThinkUp. {if $latest_version}Here's <a href="http://thinkupapp.com/docs/changelog/{$latest_version}.html">what's new in version <b>{$latest_version}</b></a>{/if}. 
+           Ready to upgrade ThinkUp. {if $latest_version}Here's <a href="http://thinkupapp.com/docs/changelog/{$latest_version}.html" target="_new">what's new in version <b>{$latest_version}</b></a>{/if}. 
          </p>
     </div>
     <br>
