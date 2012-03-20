@@ -71,7 +71,7 @@
         style="margin: 20px 0px 50px 20px;" action="{$site_root_path}install/backup.php">
         
             <div id="uploading-status" style="display: none;">
-            <img src="{$site_root_path}assets/img/loading.gif" width="31" height="31" />
+            <img src="{$site_root_path}assets/img/loading.gif" width="50" height="50" />
             </div>
         
         <label for="backup_file">

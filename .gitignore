@@ -1,7 +1,8 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
-webapp/data/
 data/
+!tests/data
+!webapp/data/README.md
 tests/config.tests.inc.php
 .*
 extras/cron/config
@@ -11,6 +12,5 @@ extras/scripts/lic_header.py
 extras/scripts/test-pull-postback-conf
 webapp/test_installer/*
 webapp/plugins/twitterrealtime/streaming/*.pid
-build/*
-docs/build/*
+build/
 extras/dev/ramdisk/osx_make_ramdisk_db.conf

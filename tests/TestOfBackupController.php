@@ -105,14 +105,14 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('high_table_row_count') ) ;
 
         // table row counts are bad
-        $old_count = UpgradeController::$WARN_TABLE_ROW_COUNT;
-        UpgradeController::$WARN_TABLE_ROW_COUNT = 2;
+        $old_count = UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT;
+        UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT = 2;
         $results = $controller->control();
         $this->assertPattern('/we recommend that you use the/', $results);
         $table_counts = $v_mgr->getTemplateDataItem('high_table_row_count');
         $this->assertNotNull($table_counts);
         $this->assertNotNull(3, $table_counts['count']); // tu_plugins, defaults to three
-        UpgradeController::$WARN_TABLE_ROW_COUNT = $old_count;
+        UpgradeDatabaseController::$WARN_TABLE_ROW_COUNT = $old_count;
     }
 
     public function XtestBackupCrawlerHasMutex() {

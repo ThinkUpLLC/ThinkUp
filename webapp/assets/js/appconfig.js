@@ -73,11 +73,10 @@ var TUApplicationSettings = function() {
 								$('#recaptcha_enable_deps').hide();
 							}
 						});
-
 		if (document.location.href.match(/#app_settings/)) {
 			if (tu_app_settings.DEBUG) {
 				console
-						.debug("app settings tab loaded with hash #app_settings");
+				    .debug("app settings tab loaded with hash #app_settings");
 			}
 			setTimeout(function() {
 				tu_app_settings.load_settings();

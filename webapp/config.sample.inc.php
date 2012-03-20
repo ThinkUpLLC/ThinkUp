@@ -64,7 +64,7 @@ $THINKUP_CFG['sql_log_location']          = null;
 // How many seconds does a query take before it gets logged as a slow query?
 $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 
-$THINKUP_CFG['debug']                     = true;
+$THINKUP_CFG['debug']                     = false;
 
 $THINKUP_CFG['enable_profiler']           = false;
 

@@ -39,34 +39,31 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //Make sure test_installer directory exists
         chdir(dirname(__FILE__) . '/../');
         if (!file_exists($THINKUP_CFG['source_root_path'].'/webapp/test_installer/')) {
-            exec('mkdir webapp/test_installer/');
+            @exec('mkdir webapp/test_installer/');
+            @exec('chmod -R 777 webapp/test_installer/');
         }
 
-        //Clean up files from test installation
-        exec('rm -rf webapp/test_installer/*');
         //Generate new user distribution based on current state of the tree
-        exec('extras/scripts/generate-distribution');
+        @exec('extras/scripts/generate-distribution');
         //Extract into test_installer directory and set necessary folder permissions
-        exec('cp build/thinkup.zip webapp/test_installer/.;'.
-        'cd webapp/test_installer/;'.
-        'unzip thinkup.zip;chmod -R 777 thinkup;'.
-        'cd thinkup;chmod -R 777 data;');
+        @exec('cp build/thinkup.zip webapp/test_installer/.;'.
+        'cd webapp/test_installer/;unzip thinkup.zip;'.
+        'mkdir thinkup/data/compiled_view/;chmod -R 777 thinkup;');
     }
 
     public function setUpCustomFolderInstallation() {
         //Clean up files from test installation
-        exec('rm -rf webapp/test_installer/*');
-        exec('cp build/thinkup.zip webapp/test_installer/.;'.
-        'cd webapp/test_installer/;'.
-        'unzip thinkup.zip;mv thinkup mythinkupfolder; chmod -R 777 mythinkupfolder;'.
-        'cd mythinkupfolder;chmod -R 777 data;');
+        @exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer/*' );
+
+        @exec('cp build/thinkup.zip webapp/test_installer/.;'.
+        'cd webapp/test_installer/;unzip thinkup.zip;mv thinkup mythinkupfolder;'.
+        'mkdir mythinkupfolder/data/compiled_view;chmod -R 777 mythinkupfolder;');
     }
 
     public function tearDown() {
         global $THINKUP_CFG;
         //Clean up test installation files
-        chdir(dirname(__FILE__) . '/../');
-        exec('rm -rf webapp/test_installer/*');
+        @exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer/*' );
 
         //Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';

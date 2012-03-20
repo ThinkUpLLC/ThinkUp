@@ -67,7 +67,7 @@ abstract class ThinkUpAuthController extends ThinkUpController {
             $controller = new DashboardController(true);
             return $controller->go();
         } else {
-            throw new ControllerAuthException('You must log in to access this controller: ' . get_class($this)); 
+            throw new ControllerAuthException('You must log in to access this controller: ' . get_class($this));
         }
     }
 }

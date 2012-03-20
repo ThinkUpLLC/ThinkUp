@@ -19,7 +19,10 @@ a:hover{
      color: #00aeef;
      text-decoration: underline;
 }
-
+code {
+  font-family: Consolas,Monaco,Courier,monospace;
+  color : black;
+}
 /* =============================================================================
    Links
    ========================================================================== */

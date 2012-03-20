@@ -116,6 +116,14 @@ class AppConfig {
             'default' => '0',
             'match' => '/^[0-9]{1,}$/',
             'match_message' => ' be numeric'
+            ),
+        'is_subscribed_to_beta' => array(
+            'type' => 'checkbox',
+            'title' => 'Get beta upgrades',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^true$/',
+            'match_message' => 'Must be true'
             )
             );
 
