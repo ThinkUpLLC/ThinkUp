@@ -61,7 +61,7 @@
     <div class="section thinkup-canvas clearfix" id="app_settings">
         <div style="text-align: center" id="app_setting_loading_div">
             Loading application settings...<br /><br />
-            <img src="{$site_root_path}assets/img/loading.gif" width="31" height="31" />
+            <img src="{$site_root_path}assets/img/loading.gif" width="50" height="50" />
         </div>
         <div id="app_settings_div" style="display: none;">
          {include file="account.appconfig.tpl"}

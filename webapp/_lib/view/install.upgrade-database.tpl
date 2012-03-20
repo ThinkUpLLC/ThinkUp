@@ -83,7 +83,7 @@ document.getElementById(o).style.display='block';
      
      <div style="text-align:center; height: 31px;">
         <img src="{$site_root_path}assets/img/loading.gif" style="display: none;" 
-        id="migrate_spinner" width="31" height="31">
+        id="migrate_spinner" width="50" height="50">
      </div>
      
      <div id="migration-status" style="margin: 20px; display: none;">
