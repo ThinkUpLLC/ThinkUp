@@ -69,7 +69,7 @@ class ShortLinkMySQLDAO extends PDODAO {
     public function getRecentClickStats(Instance $instance, $limit = 10) {
         $q  = "SELECT p.post_text, l.expanded_url, ls.short_url, ls.click_count ";
         $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
-        $q .= "ON l.id = ls.link_id INNER JOIN tu_posts p ON p.id = l.post_key ";
+        $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
         $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
         $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL ";
         $q .= "GROUP BY short_url ORDER BY p.pub_date DESC LIMIT :limit";
