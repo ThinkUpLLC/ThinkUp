@@ -46,7 +46,7 @@
               </div>
             </div>
         {else}
-            <div class="ui-state-error ui-corner-all" style="margin-bottom: 20px; padding: 0.5em 0.7em;">
+            <div class="alert urgent" style="margin-bottom: 20px; padding: 0.5em 0.7em;">
                  <p>
                    <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
                    <strong>Oops!</strong> Your web server isn't set up to run ThinkUp. Please fix the problems below and try installation again.
