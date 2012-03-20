@@ -30,7 +30,7 @@
         <a href="{$site_root_path}install/upgrade-application.php?run_update=1" onclick="$('#update-spinner').show();" class="linkbutton emphasized">Upgrade ThinkUp</a>
         </p>
         <p id="update-spinner" style="text-align: center; display: none;">
-            <img src="{$site_root_path}assets/img/loading.gif" width="31" height="31" />
+            <img src="{$site_root_path}assets/img/loading.gif" width="50" height="50" />
         </p>
     </div>
     {/if}

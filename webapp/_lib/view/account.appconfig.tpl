@@ -168,7 +168,7 @@
       </div>
 
     <div style="text-align: center" id="save_setting_image">
-        <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="31" height="31"  
+        <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="50" height="50"  
         style="display: none; margin: 10px;"/>
     </div>
         
