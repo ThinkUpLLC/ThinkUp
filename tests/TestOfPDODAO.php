@@ -63,19 +63,6 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         return $builders;
     }
 
-    /*
-     * Test whether the database supports time zones or only offsets
-     */
-    private function isTimeZoneSupported() {
-        $testdao = DAOFactory::getDAO('TestDAO');
-        try {
-            TestMySQLDAO::$PDO->exec("SET time_zone = 'America/Los_Angeles'");
-            return true;
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-
     public function tearDown() {
         $this->builders = null;
         parent::tearDown();

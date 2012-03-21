@@ -65,7 +65,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->table_prefix = $config->getValue('table_prefix');
         $this->testdb_helper->create($THINKUP_CFG['source_root_path']."/webapp/install/sql/build-db_mysql.sql");
     }
-
     /**
      * Drop the database and kill the connection
      */
@@ -75,7 +74,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         }
         parent::tearDown();
     }
-
     /**
      * Returns an xml/xhtml document element by id
      * @param $doc an xml/xhtml document pobject
@@ -86,7 +84,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $xpath = new DOMXPath($doc);
         return $xpath->query("//*[@id='$id']")->item(0);
     }
-
     /**
      * Check if we in RAM disk test mode
      * @return bool
@@ -96,5 +93,18 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
             return true;
         }
         return false;
+    }
+    /**
+     * Check if the MySQL server can set its timezone
+     * @return bool
+     */
+    protected function isTimeZoneSupported() {
+        $testdao = DAOFactory::getDAO('TestDAO');
+        try {
+            TestMySQLDAO::$PDO->exec("SET time_zone = 'UTC'");
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }

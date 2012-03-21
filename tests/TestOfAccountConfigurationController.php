@@ -48,6 +48,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
         $this->builders = self::buildData();
         $_SERVER['HTTP_HOST'] = "mytesthost";
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
     }
 
     public function tearDown() {
@@ -655,6 +656,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', false, true);
 
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         $_SERVER['HTTPS'] = null;
         $_POST['invite'] = 'Create Invitation' ;
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
@@ -671,6 +673,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test HTTPS
         $_SERVER['HTTPS'] = 1;
         $_SERVER['HTTP_HOST'] = "myotherwtestthinkup";
+        $_SERVER['SERVER_NAME'] = 'myotherwtestthinkup';
         $_POST['invite'] = 'Create Invitation' ;
 
         $controller = new AccountConfigurationController(true);
