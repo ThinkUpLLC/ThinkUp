@@ -1,60 +1,5 @@
-<!DOCTYPE html>
+{include file="_install.header.tpl"}
 
-<html lang="en">
-
-<head>
-<meta charset="utf-8">
-<title>ThinkUp: Upgrading</title>
-<link rel="shortcut icon" type="image/x-icon"
-    href="/assets/img/favicon.png">
-<!-- jquery -->
-<link type="text/css" rel="stylesheet"
-    href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
-<script type="text/javascript"
-    src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script type="text/javascript"
-    src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<!-- custom css -->
-<link type="text/css" rel="stylesheet"
-    href="{$site_root_path}assets/css/base.css">
-<link type="text/css" rel="stylesheet"
-    href="{$site_root_path}assets/css/positioning.css">
-<link type="text/css" rel="stylesheet"
-    href="{$site_root_path}assets/css/style.css">
-<link type="text/css" rel="stylesheet"
-    href="{$site_root_path}assets/css/installer.css">
-</head>
-
-<body>
-
-<div id="status-bar" class="clearfix">
-
-<div class="status-bar-left"><!-- the user has not selected an instance -->
-</div>
-<!-- end .status-bar-left -->
-
-<div class="status-bar-right">
-<ul>
-    <li>&nbsp;</li>
-</ul>
-</div>
-<!-- end .status-bar-right --></div>
-<!-- end #status-bar -->
-
-<div class="container clearfix">
-
-<div id="app-title"><a href="{$site_root_path}index.php">
-<h1><span class="bold">Think</span><span class="gray">Up</span></h1>
-<h2>New ideas</h2>
-</a></div>
-<!-- end #app-title -->
-
-<div id="menu-bar">
-<ul>
-    <li class="round-tr round-br round-tl round-bl"><a
-        href="http://thinkupapp.com/">Get ThinkUp</a></li>
-</ul>
-</div>
 <!-- end #menu-bar --></div>
 <!-- end .container -->
 <div class="container_24 thinkup-canvas clearfix">
@@ -85,11 +30,4 @@ upgrade token</a>, you can enter it here:
 </div>
 </div>
 
-<div class="container small center">
-
-<!-- #ft --></div>
-<!-- .content -->
-
-</body>
-
-</html>
+{include file="_install.footer.tpl"}
