@@ -68,7 +68,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
             'post_text'=>'This is post'.$counter, 'source'=>'web', 'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00',
             'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5));
             $counter++;
@@ -225,6 +225,14 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //not SSL by default
         $this->assertNoPattern('/https:\/\/mytestthinkup/', $output);
+
+        //assert site URL is set so user can configure the app
+        $v_mgr = $controller->getViewManager();
+
+        $site_url = $v_mgr->getTemplateDataItem('thinkup_site_url');
+        $this->assertEqual($site_url, Utils::getApplicationURL());
+        $twitter_app_name = $v_mgr->getTemplateDataItem('twitter_app_name');
+        $this->assertEqual($twitter_app_name, "ThinkUp ". $_SERVER['SERVER_NAME']);
     }
 
     /**

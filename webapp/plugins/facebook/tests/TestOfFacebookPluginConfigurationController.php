@@ -111,6 +111,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $info = $v_mgr->getTemplateDataItem('info_msgs');
         $this->assertEqual($info['setup'], 'Please complete plugin setup to start using it.');
         $this->debug(Utils::varDumpToString($info));
+        //assert configuration URL is showing
+        $site_url = $v_mgr->getTemplateDataItem('thinkup_site_url');
+        $this->assertEqual($site_url, Utils::getApplicationURL());
     }
 
     public function testOutputNoParams() {
@@ -552,7 +555,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         // add mock page data to view
         $owner_instance_pages = array(
-            '123456' => 
+            '123456' =>
         array('id' => '123456',
               'network_username' => 'test_username',
               'network' => 'facebook', ));

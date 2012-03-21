@@ -71,6 +71,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         'default_value' => '20', 'advanced'=>true, 'size' => 3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_crawl_time);
 
+        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
+
         $facebook_plugin = new FacebookPlugin();
         if ($facebook_plugin->isConfigured()) {
             $this->setUpFacebookInteractions($facebook_plugin->getOptionsHash());
@@ -157,7 +159,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $this->addToView('owner_instances', $owner_instances);
-        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
     }
 
     /**
