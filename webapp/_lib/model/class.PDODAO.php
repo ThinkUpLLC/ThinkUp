@@ -195,6 +195,7 @@ abstract class PDODAO {
                 }
             }
         }
+
         try {
             $stmt->execute();
         } catch (PDOException $e) {

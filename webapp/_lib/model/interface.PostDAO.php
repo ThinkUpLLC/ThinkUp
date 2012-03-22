@@ -235,17 +235,19 @@ interface PostDAO {
     /**
      * Get all posts by an author given an author ID that contain a question mark
      * @param str $author_id
-     * @param str  $network
+     * @param str $network
      * @param int $count
      * @param int $page
      * @param str $order_by The column to order the results by. Defaults to "pub_date".
      * @param str $direction The direction with which to order the results. Defaults
      * to "DESC".
      * @param bool $is_public Whether or not these results are going to be shown publicly. Defaults to false.
+     * @param mixed $from The date to search from. Can be a unix timestamp or a valid date string.
+     * @param mixed $until The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
      * @return array Posts by author with a question mark in them with link set
      */
-    public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
-    $direction = 'DESC', $is_public = false);
+    public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date', 
+    $direction = 'DESC', $is_public = false, $from = false, $until = false);
 
     /**
      * Get all posts by a given user based on a given time frame.
@@ -253,7 +255,7 @@ interface PostDAO {
      * @param str $author_id The ID of the author to search for.
      * @param str $network The network of the user to search for.
      * @param mixed $from The date to search from. Can be a unix timestamp or a valid date string.
-     * @param mixed $ntil The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
+     * @param mixed $until The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
      * @param str $order_by field name to order by. Defaults to pub_date.
      * @param str $direction either "DESC" or "ASC". Defaults to DESC.
      * @param bool $iterator Specify whether or not you want a post iterator returned. Default to
@@ -356,10 +358,12 @@ interface PostDAO {
      * to "DESC".
      * @param bool $is_public Whether or not the result of the method call will be displayed publicly. Defaults to
      * false.
+     * @param mixed $from The date to search from. Can be a unix timestamp or a valid date string.
+     * @param mixed $until The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
      * @return array Posts with author and link set
      */
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
-    $is_public = false);
+    $is_public = false, $from = false, $until = false);
 
     /**
      * Get posts by a user ordered by reply count desc
