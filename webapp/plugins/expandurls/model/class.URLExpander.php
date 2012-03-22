@@ -70,6 +70,7 @@ class URLExpander {
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0");
         $response = curl_exec($ch);
         if ($response === false) {
             $error_msg = $reconstructed_url." cURL error: ".curl_error($ch);
