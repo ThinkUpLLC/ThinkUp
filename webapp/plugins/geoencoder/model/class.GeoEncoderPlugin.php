@@ -53,16 +53,23 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
         $crawler = new GeoEncoderCrawler;
 
         $posts_to_geoencode = $post_dao->getPostsToGeoencode(2000);
-        $logger->logUserInfo("There are ".count($posts_to_geoencode)." posts to geoencode.", __METHOD__.','.__LINE__);
+        $logger->logUserSuccess("Starting to collect lat/log points for ".count($posts_to_geoencode)." posts.",
+        __METHOD__.','.__LINE__);
 
+        $total_api_requests_fulfilled = 0;
         foreach ($posts_to_geoencode as $post_data) {
             if ($post_data['geo']!='') {
-                $crawler->performReverseGeoencoding($post_dao, $post_data);
+                if ($crawler->performReverseGeoencoding($post_dao, $post_data)) {
+                    $total_api_requests_fulfilled++;
+                }
             } else {
-                $crawler->performGeoencoding($post_dao, $post_data);
+                if ($crawler->performGeoencoding($post_dao, $post_data)) {
+                    $total_api_requests_fulfilled++;
+                }
             }
         }
-        $logger->logUserSuccess("Post geoencoding complete.", __METHOD__.','.__LINE__);
+        $logger->logUserSuccess("Post geoencoding complete. ".$total_api_requests_fulfilled.
+        " API requests fulfilled successfully.", __METHOD__.','.__LINE__);
     }
 
     public function renderConfiguration($owner) {

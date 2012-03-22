@@ -175,10 +175,10 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
              if ($this->function_api_call_limits && isset($this->function_api_call_limits[$calling_function])) {
                  if ($this->function_api_call_limits[$calling_function]['remaining'] == 0) {
-                     $message = 'We are over the API call limit ' .
+                     $message = 'Exceeded the API call limit ' .
                      $this->function_api_call_limits[$calling_function]['count'] .
                      " for the function call $calling_function on line $calling_line";
-                     $logger->logUserInfo($message,__METHOD__.','.__LINE__);
+                     $logger->logInfo($message,__METHOD__.','.__LINE__);
                      throw new APICallLimitExceededException($message);
                  }
              }
