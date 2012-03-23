@@ -1672,4 +1672,174 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+    
+    public function getAllCheckins($author_id, $network) {
+
+        // Get the checkins from the database for this user 
+        $q = "SELECT po.id AS post_key, po.post_id, po.author_user_id, po.author_username, po.author_fullname, "; 
+        $q .= " po.author_avatar, po.author_follower_count, po.post_text, po.is_protected, po.source, po.location, ";
+        $q .= " po.place, po.place_id, po.geo, po.pub_date, po.in_reply_to_user_id, po.in_reply_to_post_id, ";
+        $q .= " po.reply_count_cache, po.is_reply_by_friend, po.in_retweet_of_post_id, po.old_retweet_count_cache, ";
+        $q .= " po.is_retweet_by_friend, po.reply_retweet_distance, po.network, po.is_geo_encoded, ";
+        $q .= " po.in_rt_of_user_id, po.retweet_count_cache, po.retweet_count_api, po.favlike_count_cache, ";
+        $q .= " po.pub_date + interval #gmt_offset# hour as adj_pub_date, pl.place_id, pl.place_type, pl.name, ";
+        $q .= " pl.full_name, pl.country_code, pl.country, pl.network, pl.longlat, pl.bounding_box, pl.icon, ";
+        $q .= " pl.map_image, pl.id  ";
+        $q .= " FROM #prefix#posts po "; 
+        $q .= " JOIN #prefix#places pl ON po.place_id = pl.place_id ";
+        $q .= " WHERE author_user_id=:author AND po.network=:network AND po.in_reply_to_post_id IS null ";
+        $q .= " ORDER BY pub_date DESC";
+        $vars = array(
+             ':author'=>$author_id,
+             ':network'=>$network
+         );
+        
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+                
+        // Get all the post ids of the checkins (we use this later for our link query) 
+        $post_keys_array = array();
+        foreach ($all_rows as $row) {
+            $post_keys_array[] = $row['post_key'];
+        }
+       
+        // An array to store each post object in for the checkins
+        $all_posts = array();
+        foreach ($all_rows as $row) {
+            // Create a new post object from the row in the table
+            $data = new Post($row);
+            // Create a place object from the place data
+            $data->place_obj = new Place($row);
+                       
+            // Query for all the links related to these posts / checkins
+            $q2 = "SELECT * FROM #prefix#links WHERE post_key in (".implode(",", $post_keys_array).")";
+            $ps2 = $this->execute($q2);
+            $all_link_rows = $this->getDataRowsAsArrays($ps2);
+           
+            // For each link returned if it equals the post id of this post add the link to this post
+            foreach ($all_link_rows as $link_row) {
+                if ($link_row['post_key'] == $data->id) {
+                    $data->addLink(new Link($link_row));
+                }
+            } 
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            // Now we have all the information for this post store it in our array of all posts 
+            $all_posts[] = $data;
+           
+        }
+           
+        return $all_posts; 
+    }
+   
+    public function getAllCheckinsFromThisDayInYearX($author_id, $network, $year) {      
+        $q = "SELECT po.id AS post_key, po.post_id, po.author_user_id, po.author_username, po.author_fullname, "; 
+        $q .= " po.author_avatar, po.author_follower_count, po.post_text, po.is_protected, po.source, po.location, ";
+        $q .= " po.place, po.place_id, po.geo, po.pub_date, po.in_reply_to_user_id, po.in_reply_to_post_id, ";
+        $q .= " po.reply_count_cache, po.is_reply_by_friend, po.in_retweet_of_post_id, po.old_retweet_count_cache, ";
+        $q .= " po.is_retweet_by_friend, po.reply_retweet_distance, po.network, po.is_geo_encoded, ";
+        $q .= " po.in_rt_of_user_id, po.retweet_count_cache, po.retweet_count_api, po.favlike_count_cache, ";
+        $q .= " po.pub_date + interval #gmt_offset# hour as adj_pub_date, pl.place_id, pl.place_type, pl.name, ";
+        $q .= " pl.full_name, pl.country_code, pl.country, pl.network, pl.longlat, pl.bounding_box, pl.icon, ";
+        $q .= " pl.map_image, pl.id  ";
+        $q .= " FROM #prefix#posts po "; 
+        $q .= " JOIN #prefix#places pl ON po.place_id = pl.place_id ";
+        $q .= " WHERE (YEAR(pub_date)=:year) AND "; 
+        $q .= " (DAYOFMONTH(pub_date)=DAYOFMONTH(CURRENT_DATE())) AND (MONTH(pub_date)=MONTH(CURRENT_DATE())) AND ";
+        $q .= " author_user_id=:author AND po.network=:network AND in_reply_to_post_id IS null ORDER BY pub_date DESC ";    
+        $vars = array(
+            ':year'=> $year,
+            ':author'=> $author_id,
+            ':network'=>$network);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        
+        // Get all the post ids of the checkins (we use this later for our link query) 
+        $post_keys_array = array();
+        foreach ($all_rows as $row) {
+            $post_keys_array[] = $row['post_key'];
+        }
+        
+        // An array to store each post object in for the checkins
+        $all_posts = array();
+        foreach ($all_rows as $row) {
+
+            // Create a new post object from the row in the table
+            $data = new Post($row);
+            // Create a place object based on the place data
+            $data->place_obj = new Place($row);
+           
+            // Query for all the links related to these posts / checkins
+            $q2 = "SELECT * FROM #prefix#links WHERE post_key in (".implode(",", $post_keys_array).")";
+            $ps2 = $this->execute($q2);
+            $all_link_rows = $this->getDataRowsAsArrays($ps2);
+           
+            // For each link returned if it equals the post id of this post add the link to this post
+            foreach ($all_link_rows as $link_row) {
+                if ($link_row['post_key'] == $data->id) {
+                    $data->addLink(new Link($link_row));
+                }
+            } 
+           
+            // Now we have all the information for this post store it in our array of all posts 
+            $all_posts[] = $data;
+           
+        }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        return $all_posts; 
+    }
+       
+    public function countCheckinsToPlaceTypes($author_id, $network) {
+                 
+        /* Get the ID of places this user has checked into from the posts table then find out what type
+         * of place this is from the places table group them by type and count how many of each type there are
+         */
+       
+        $q = "SELECT place_type, COUNT(place_type) AS place_count FROM #prefix#places WHERE place_id IN ";
+        $q .= " (SELECT place_id FROM #prefix#posts WHERE author_user_id=:author AND network=:network)";
+        $q .= " GROUP BY place_type"; 
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps); 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        return $all_rows;
+       
+    }
+    
+    public function countCheckinsPerHourAllTime($author_id, $network) {
+                 
+        // Get the number of checkins this person makes at each hour of the day
+
+        $q = "SELECT HOUR(pub_date) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+        $q .= " WHERE author_user_id=:author ";
+        $q .= " AND network=:network AND in_reply_to_post_id IS null GROUP BY HOUR(pub_date)";
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps); 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        return $all_rows;
+       
+    }
+  
+    public function countCheckinsPerHourLastWeek($author_id, $network) {
+                 
+        // Get the number of checkins this person makes at each hour of the day in the last week
+
+        $q = "SELECT HOUR(pub_date) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+        $q .= " WHERE author_user_id=:author ";
+        $q .= " AND network=:network AND YEARWEEK(pub_date) = YEARWEEK(CURRENT_DATE) AND in_reply_to_post_id IS null ";
+        $q .= " GROUP BY HOUR(pub_date)"; 
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps); 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        return $all_rows;
+       
+    }
+ 
 }

@@ -61,7 +61,72 @@
           {if $data_template}
             {include file=$data_template}
           {else} <!-- else if $data_template -->
+          {if $instance->network eq 'foursquare'}
           
+         <!--  If the user has checkins from this day last year show them -->
+        {if $checkins_one_year_ago|@count > 0 }
+		<div class="section">
+            <h2>Remember These?</h2>
+              
+            {foreach from=$checkins_one_year_ago item=current}
+            <div class="clearfix article"> 
+            <div class="individual-tweet post clearfix">
+            <div class="grid_5 alpha">
+            <a href="http://maps.google.co.uk/maps?q={$current->geo}"><img src="{$current->place_obj->map_image}"></a>
+            </div>	
+            <div class="grid_7"> 
+            <img src="{$current->place_obj->icon}"> {$current->place} <br> {$current->location} <br>
+            
+             {foreach from=$current->links item=current_link}
+             <a href="{$current_link->url}"><img src="{$current_link->url}" width=100px height=100px}></a>
+             
+             {/foreach}
+            
+            </div>
+            <div class="grid_5 omega"/> {$current->post_text} <br> <br> {$current->pub_date} <br>
+            
+            {if $current->reply_count_cache > 0}
+                <span class="reply-count">
+                <a href="{$site_root_path}post/?t={$current->post_id}&n={$current->network|urlencode}">{$current->reply_count_cache|number_format}</a></span>
+              {else}
+                &#160;
+              {/if}
+            
+            </div>
+            </div>
+            	<br>
+            </div>
+
+            {/foreach}
+        </div>
+       {/if} 
+        
+        {if $checkins_per_hour_last_week|@count > 3 }
+        <div class="section">
+              <h2>Check-ins Per Hour - This Week</h2>
+              
+              <img width="680" height="280" src="https://chart.googleapis.com/chart?cht=bvs&amp;chco=7CC0D7&amp;chd=t:{foreach from=$checkins_per_hour_last_week name=foo item=lastweek}{$lastweek.counter|urlencode}{if !$smarty.foreach.foo.last}%2C{/if}{/foreach}&amp;chbh=a&amp;chxt=x,y&amp;chxl=0:|{foreach from=$checkins_per_hour_last_week name=foo item=lastweek2}{$lastweek2.hour|urlencode}{if !$smarty.foreach.foo.last}%7C{/if}{/foreach}&amp;chs=680x280&amp;chtt=Check-ins+Per+Hour+-+This+Week&amp;chds=a" >
+        </div>
+        {/if}
+        {if $checkins_per_hour_all_time|@count > 3 }
+        <div class="section">
+              <h2>Check-ins Per Hour - All Time</h2>
+              
+        	  <img width="680" height="280" src="https://chart.googleapis.com/chart?cht=bvs&amp;chco=7CC0D7&amp;chd=t:{foreach from=$checkins_per_hour_all_time name=foo item=alltime}{$alltime.counter|urlencode}{if !$smarty.foreach.foo.last}%2C{/if}{/foreach}&amp;chbh=a&amp;chxt=x,y&amp;chxl=0:|{foreach from=$checkins_per_hour_all_time name=foo item=alltime2}{$alltime2.hour|urlencode}{if !$smarty.foreach.foo.last}%7C{/if}{/foreach}&amp;chs=680x280&amp;chtt=Check-ins+Per+Hour+-+All+Time&amp;chds=a" >
+              
+
+        </div>
+        {/if}
+        {if $checkins_by_type|@count > 0 }
+        <div class="section">
+              <h2>The Types Of Places You Visit</h2>
+              
+              <img width="680" height="280" src="https://chart.googleapis.com/chart?chds=a&amp;chd=t:{foreach from=$checkins_by_type name=foo item=placecount}{$placecount.place_count|urlencode}{if !$smarty.foreach.foo.last}%2C{/if}{/foreach}&amp;cht=p&amp;chl={foreach from=$checkins_by_type name=foo item=placecount}{$placecount.place_type|urlencode}{if !$smarty.foreach.foo.last}%7C{/if}{/foreach}&amp;chtt=Types+of+Places+You+Visit&amp;chs=700x280&chco=7CC0D7,D5F0FC"> 
+
+        </div>
+		 {/if}
+		 {else}
+        
             {if $hot_posts|@count > 3}
         <div class="section">
                 <h2>Response Rates</h2>
@@ -182,8 +247,28 @@
                     <a href="{$site_root_path}?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
                   </div>
                   {/if}
+
+                
                 </div>
 
+            {/if}
+
+
+            {if $least_likely_followers}
+              <div class="clearfix section">
+                <h2>This Week's Most Discerning Followers</h2>
+                <div class="clearfix article" style="padding-top : 0px;">
+                {foreach from=$least_likely_followers key=uid item=u name=foo}
+                  <div class="avatar-container" style="float:left;margin:7px;">
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
+                  </div>
+                {/foreach}
+                <br /><br /><br />    
+                </div>
+                <div class="clearfix view-all">
+                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
+                </div>
+                </div>
             {/if}
 
             {if $most_retweeted_1wk}
@@ -222,8 +307,11 @@
               </div>
 
             {/if}
+            
           {/if} <!-- end if $data_template -->
+          {/if}
         {/if}
+        
 
         {if !$instance}
           <div style="width:60%;text-align:center;">

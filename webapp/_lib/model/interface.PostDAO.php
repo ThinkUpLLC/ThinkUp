@@ -563,4 +563,45 @@ interface PostDAO {
      * @return Iterator Posts with author object set, and optional link object set
      */
     public function getPostsToUserIterator($user_id, $network, $count, $is_public=false);
+
+    /**
+     * Returns all checkins, along with place information and any links attached to the checkin
+     * @param $author_id
+     * @param $network
+     * @return array of post objects
+     */
+    public function getAllCheckins($author_id, $network);
+    
+    /**
+     * Returns checkins from this day in year $year
+     * @param $author_id
+     * @param $network
+     * @param $year
+     * @return array of place objects
+     */
+    public function getAllCheckinsFromThisDayInYearX($author_id, $network, $year);
+    
+    /**
+     * Count the number of checkins to each place type 
+     * @param $author_id 
+     * @param $network
+     * @return array of place type, number of checkins to this place type pairs
+     */    
+    public function countCheckinsToPlaceTypes($author_id, $network);
+    
+    /** 
+     * Count the number of checkins per hour
+     * @param $author_id
+     * @param $network
+     * @return array of hour, number of checkins at that hour pairs
+     */
+    public function countCheckinsPerHourAllTime($author_id, $network);
+    
+    /**
+     * Count the number of checkins per hour in the last week
+     * @param unknown_type $author_id
+     * @param unknown_type $network
+     * @return array of hour, number of checkins at that hour pairs
+     */
+    public function countCheckinsPerHourLastWeek($author_id, $network);
 }
