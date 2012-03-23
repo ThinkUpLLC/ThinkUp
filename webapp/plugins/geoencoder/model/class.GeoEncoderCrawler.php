@@ -147,8 +147,8 @@ class GeoEncoderCrawler {
             if (isset($geodata[0]) && isset($geodata[1])) {
                 $geodata = $geodata[0].','.$geodata[1];
             }
-            $obj=json_decode($string);
-            if ($obj->status == 'OK') {
+            $obj = json_decode($string);
+            if (isset($obj->status) && $obj->status == 'OK') {
                 foreach ($obj->results as $p) {
                     if (isset($p->types[0])) {
                         switch($p->types[0]) {
@@ -179,7 +179,9 @@ class GeoEncoderCrawler {
                     }
                 }
             } else {
-                self::failedToGeoencode($post_dao, $post_id, $post['network'], $obj->status);
+                if (isset($obj->status)) {
+                    self::failedToGeoencode($post_dao, $post_id, $post['network'], $obj->status);
+                }
             }
         }
         return false;

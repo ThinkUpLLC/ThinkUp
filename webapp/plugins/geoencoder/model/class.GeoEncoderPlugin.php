@@ -53,7 +53,7 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
         $crawler = new GeoEncoderCrawler;
 
         $posts_to_geoencode = $post_dao->getPostsToGeoencode(2000);
-        $logger->logUserSuccess("Starting to collect lat/log points for ".count($posts_to_geoencode)." posts.",
+        $logger->logUserSuccess("Starting to collect lat/long points for ".count($posts_to_geoencode)." posts.",
         __METHOD__.','.__LINE__);
 
         $total_api_requests_fulfilled = 0;
