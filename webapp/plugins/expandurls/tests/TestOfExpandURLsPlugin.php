@@ -125,6 +125,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->image_src, 'http://yfrog.com/gz2inwrj.th.jpg');
         $this->assertEqual($link->error, '');
 
+        $link = $link_dao->getLinkById(11);
+        $this->debug($link->url);
+        $this->assertEqual($link->url, 'http://wp.me/p1fxNB-2F');
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->image_src, '');
+        $this->assertEqual($link->error, 'Invalid URL - relocates to nowhere');
+
         //check that short URLs were saved
         $sql = "SELECT * FROM " . $this->table_prefix . 'links_short';
         $stmt = ShortLinkMySQLDAO::$PDO->query($sql);
@@ -268,6 +275,19 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'image_src' => '',
             'error' => null
         ));
+
+        // Expanded URL is empty
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 11,
+            'url' => 'http://wp.me/p1fxNB-2F',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
+
         return $builders;
     }
 
@@ -471,6 +491,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(43);
+        $this->debug(Utils::varDumpToString($link));
         //Instagr.am constantly changes the location of their images so it's an unpredictable assertion
         //        $this->assertEqual($link->expanded_url,
         //        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
@@ -479,10 +500,12 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $link_dao->getLinkById(42);
         $this->assertEqual($link->expanded_url, 'http://instagr.am/41');
         $this->assertEqual($link->image_src, 'http://instagr.am/41/media/');
+        $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(41);
         $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
         $this->assertEqual($link->image_src, 'http://instagr.am/40/media/');
+        $this->assertEqual($link->error, '');
     }
 
     public function  testBitlyCrawl() {

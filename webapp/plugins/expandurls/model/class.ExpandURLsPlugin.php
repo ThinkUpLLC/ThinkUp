@@ -146,12 +146,17 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
                     }
                     $short_link = $expanded_url;
                 }
-                if ($expanded_url != '' && !$has_expanded_flickr_link) {
-                    $image_src = URLProcessor::getImageSource($expanded_url);
-                    $this->link_dao->saveExpandedUrl($link->url, $expanded_url, '', $image_src);
-                    $total_expanded = $total_expanded + 1;
-                } else {
-                    $total_errors = $total_errors + 1;
+                if (!$has_expanded_flickr_link) {
+                    if ($expanded_url != '' ) {
+                        $image_src = URLProcessor::getImageSource($expanded_url);
+                        $this->link_dao->saveExpandedUrl($link->url, $expanded_url, '', $image_src);
+                        $total_expanded = $total_expanded + 1;
+                    } else {
+                        $this->logger->logError($link->url." not a valid URL - relocates to nowhere",
+                        __METHOD__.','.__LINE__);
+                        $this->link_dao->saveExpansionError($link->url, "Invalid URL - relocates to nowhere");
+                        $total_errors = $total_errors + 1;
+                    }
                 }
             } else {
                 $total_errors = $total_errors + 1;

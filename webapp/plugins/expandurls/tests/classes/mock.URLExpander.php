@@ -101,6 +101,12 @@ class URLExpander {
             case "http://thinkupapp.com/":
                 $exp_url =  "http://thinkupapp.com/";
                 break;
+            case "http://wp.me/p1fxNB-2F":
+                $exp_url =  "";
+                break;
+            case "http://instagr.am/p/oyQ6/":
+                $exp_url = "http://instagr.am/p/oyQ6/";
+                break;
             default:
                 $exp_url = '';
         }
