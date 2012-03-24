@@ -31,17 +31,17 @@
               <div class="clearfix bt append prepend">
                 <div class="grid_18 small alpha">
                     <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
-                    {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>{/if}{/if}
-                    <span {if !$ip->is_active}style="display:none;padding:5px;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                    <span {if $ip->is_active}style="display:none;padding:5px;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span><br >
-                    <span style="color:#666"><small>{$ip->description}</small></span><br>
+                    {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.5em 0.3em 0 0;"></span>{/if}{/if}
+                    <span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
+                    <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
+                    <span style="color:#666">{$ip->description}</span><br>
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">
                   <span id="spanpluginactivation{$ip->id}">
                       <input type="submit" name="submit" class="linkbutton btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
-                  <span style="display: none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="messageactive{$ip->id}"></span>
+                  <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                   </div>
                 {/if}
               </div>
@@ -258,7 +258,7 @@
           <span id="spanowneractivation{$o->id}">
           <input type="submit" name="submit" class="linkbutton toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
           </span>
-          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageowneractive{$o->id}"></span>
+          <span style="display: none;" class="linkbutton" id="messageowneractive{$o->id}"></span>
           {/if}
       </div>
         <div class="grid_4 omega">
@@ -266,7 +266,7 @@
           <span id="spanowneradmin{$o->id}">
           <input type="submit" name="submit" class="linkbutton toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
           </span>
-          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageadmin{$o->id}"></span>
+          <span style="display: none;" class="linkbutton" id="messageadmin{$o->id}"></span>
           {/if}
       </div>
   </div>
@@ -297,7 +297,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='ui-state-success ui-corner-all' id='message" + u + "'></span>");
+          $('#div' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
           $('#message' + u).html("Set to public!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -315,7 +315,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='ui-state-success ui-corner-all' id='message" + u + "'></span>");
+          $('#div' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
           $('#message' + u).html("Set to private!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -335,7 +335,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
+          $('#divactivate' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
           $('#message' + u).html("Started!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -353,7 +353,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
+          $('#divactivate' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
           $('#message' + u).html("Paused!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
