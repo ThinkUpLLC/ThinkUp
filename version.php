@@ -1,5 +1,9 @@
 <?php
-require_once('version.inc.php');
+if (isset($_GET['channel']) && $_GET['channel']=='beta') {
+	require_once('version.beta.inc.php');
+} else {
+	require_once('version.inc.php');
+}
 header('Content-type: application/javascript');
 
 echo 'ThinkUpAppVersion.serverResponse([{';
