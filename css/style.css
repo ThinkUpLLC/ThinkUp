@@ -596,7 +596,16 @@ div#main p.cloud {
 	text-align: center;
 	font-size: 14px;
 	margin: 10px 0;
-	padding-bottom : 50px;
+	padding-bottom : 20px;
+}
+
+h4#tout {
+	margin-top : 28px;
+	margin-bottom : -20px;
+}
+
+h4#tout a {
+	color : #00d166;
 }
 
 /* Footer */
