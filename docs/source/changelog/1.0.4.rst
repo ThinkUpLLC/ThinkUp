@@ -1,0 +1,23 @@
+1.0.4 - 25 Mar 2012
+===================
+
+Changelog:
+
+
+*   New feature: Ability to upgrade ThinkUp's application code to its latest version in-app
+*   New feature: Ability to opt into a beta channel for testers to preview new features before their stable release
+*   Bugfix: Convert Google image charts to interactive charts for null value interpolation on line charts and dynamic
+    rollovers
+*   Bugfix: Avoid PHP Notice during Bitly link crawl
+*   Bugfix: Restore Google+ post search
+*   Bugfix: Avoid Database error while saving post errors
+*   Bugfix: Avoid PHP Fatal Error during user data export
+*   Bugfix: Don't assume default database table prefix during short link processing
+*   Bugfix: During installation, re-enable user ability to touch empty config file and proceed through installation
+*   Bugfix: Restore Twitter app name and Facebook URL in plugin setup pages when they're not configured
+*   Bugfix: Update views using old design elements
+*   Bugfix: Correctly obtain Facebook link final redirect destinations
+*   Bugfix: Correct outdated instructions for obtaining a Google Maps API key for the Geoencoder plugin
+*   Bugfix: Gracefully handle URLs which expand to empty strings in Expand URLs plugin
+*   Bugfix: Add instructions on how to get clickthrough rates in Expand URLs 
+
