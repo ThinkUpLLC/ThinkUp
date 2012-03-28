@@ -16,5 +16,8 @@ configuration to the maximum value. Here's more information:
 
 http://dev.mysql.com/doc/refman/5.0/en/gone-away.html
 
+If you have root access, a simple fix is to edit /etc/my.cnf and change the variable wait_timeout from 30 to 300,
+then reboot or restart mysql.
+
 If that's not possible, export your ThinkUp data and install ThinkUp in a server environment with more liberal timeouts.
 
