@@ -253,7 +253,10 @@
                       }
                   });
                   hot_posts_chart.draw();
+                  {/literal}
 
+                  {if $click_stats_data}
+                  {literal}
                   formatter.format(click_stats_data, 1);
                   var click_stats_chart = new google.visualization.ChartWrapper({
                       containerId: 'click_stats',
@@ -278,7 +281,10 @@
                       }
                   });
                   click_stats_chart.draw();
-
+                  {/literal}
+                  {/if}
+                  
+                  {literal}
                   formatter.format(follower_count_history_by_day_data, 1);
                   formatter_date.format(follower_count_history_by_day_data, 0);
 
