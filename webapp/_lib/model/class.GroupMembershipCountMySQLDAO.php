@@ -88,6 +88,7 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);
 
+        $resultset = array();
         foreach ($history_rows as $row) {
             $timestamp = strtotime($row['full_date']);
             $resultset[] = array('c' => array(
