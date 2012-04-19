@@ -31,7 +31,7 @@ if ( version_compare(PHP_VERSION, '5.2', '<') ) {
 }
 
 //Define path globals
-if (file_exists(str_replace("\\",'/', dirname(dirname(__FILE__))) .'/' . 'webapp')) { // source repo
+if (!file_exists('README.md')) { // source repo
     define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
     define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
 } else { // distro package
