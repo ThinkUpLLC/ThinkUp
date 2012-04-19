@@ -5,6 +5,7 @@ data/
 !webapp/data/README.md
 tests/config.tests.inc.php
 .*
+!.travis.yml
 extras/cron/config
 extras/scripts/autodeploy-conf
 extras/scripts/migratedb-conf

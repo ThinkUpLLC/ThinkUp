@@ -495,7 +495,7 @@ abstract class ThinkUpController {
             }
             if ($config->getValue('debug')) {
                 ini_set("display_errors", 1);
-                ini_set("error_reporting", E_ALL);
+                ini_set("error_reporting", E_STRICT);
             }
             if ($classname != "BackupController") {
                 //Init plugins

@@ -103,12 +103,12 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
         $stream_process->process($queue);
 
         // now test that both users have been added
-        $user = $this->user_dao->getDetails(19202541, 'twitter');
-        $this->assertEqual($user->user_id, 19202541);
-        $user = $this->user_dao->getDetails(17567533, 'twitter');
-        $this->assertEqual($user->user_id, 17567533);
+        $user = $this->user_dao->getDetails('19202541', 'twitter');
+        $this->assertEqual($user->user_id, '19202541');
+        $user = $this->user_dao->getDetails('17567533', 'twitter');
+        $this->assertEqual($user->user_id, '17567533');
         // check post RT count
-        $post = $this->post_dao->getPost(36479682404687872, 'twitter');
+        $post = $this->post_dao->getPost('36479682404687872', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 1);
     }
 
@@ -128,7 +128,7 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
 
             // no data in the queue
             $queue = new StreamMessageQueueRedis();
-             
+
             // items in the queue
             $retweet_test_data = file_get_contents($this->test_dir . "retweet1.json");
             $queue->enqueueStatus($retweet_test_data);

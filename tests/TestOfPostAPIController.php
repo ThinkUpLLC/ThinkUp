@@ -742,6 +742,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
     }
 
     public function testPost() {
+        $config = Config::getInstance();
+        $config->setValue('timezone', 'America/Los_Angeles');
         $_GET['type'] = 'post';
         $_GET['post_id'] = '137';
         $_GET['network'] = 'twitter';
@@ -755,15 +757,14 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->protected, false);
 
         // test that the correct tweet was retrieved
-        $this->assertEqual($output->id, 137, "Incorrect post fetched.");
+        $this->assertEqual($output->id, '137', "Incorrect post fetched.");
 
         $this->assertEqual(sizeof($output->coordinates->coordinates), 2,
         "Size of coordinates is too big or too small. Is " . sizeof($output->coordinates->coordinates) .
         " when it should be 2.");
 
         $this->assertEqual($output->thinkup->is_geo_encoded, 1);
-        $this->assertEqual($output->coordinates, $output->geo,
-                "Geo and coordinates are meant to be exactly the same.");
+        $this->assertEqual($output->coordinates, $output->geo, "Geo and coordinates are meant to be exactly the same.");
 
         if (self::isTimeZoneSupported()) { //account for Daylight Saving Time
             $this->assertEqual($output->user->last_updated, '2010-03-02 12:45:55');

@@ -47,7 +47,7 @@ class GeoEncoderCrawler {
     public function performGeoencoding($post_dao, $post) {
         if (self::$is_api_available) {
             $logger = Logger::getInstance();
-            $ldao = DAOFactory::getDAO('LocationDAO');
+            $location_dao = DAOFactory::getDAO('LocationDAO');
             $post_id = $post['post_id'];
             if ($post['place']!='') {
                 $location = $post['place'];
@@ -70,7 +70,7 @@ class GeoEncoderCrawler {
                 }
             }
             if (!$is_reverse_geoencoded) {
-                $data = $ldao->getLocation($location);
+                $data = $location_dao->getLocation($location);
                 if (isset($data)) {
                     if ($post['in_reply_to_post_id']!=NULL || $post['in_retweet_of_post_id']!=NULL) {
                         $reply_retweet_distance = $this->getDistance($post_dao, $post, $data['latlng']);
@@ -85,7 +85,7 @@ class GeoEncoderCrawler {
                 }
                 $string = self::getDataForGeoencoding($location);
                 $obj=json_decode($string);
-                if ($obj->status == "OK") {
+                if (isset($obj->status) && $obj->status == "OK") {
                     $geodata = $obj->results[0]->geometry->location->lat.','.$obj->results[0]->geometry->location->lng;
                     $short_location = $location;
                     $location = $obj->results[0]->formatted_address;
@@ -95,16 +95,21 @@ class GeoEncoderCrawler {
                             return;
                         }
                     }
-                    $post_dao->setGeoencodedPost($post_id, $post['network'], self::SUCCESS, $location, $geodata, $reply_retweet_distance);
+                    $post_dao->setGeoencodedPost($post_id, $post['network'], self::SUCCESS, $location, $geodata,
+                    $reply_retweet_distance);
                     $logger->logInfo('Lat/long coordinates retrieved via API', __METHOD__.','.__LINE__);
                     $vals = array (
                         'short_name'=>$short_location,
                         'full_name'=>$location,
                         'latlng'=>$geodata
                     );
-                    $ldao->addLocation($vals);
+                    $location_dao->addLocation($vals);
                 } else {
-                    self::failedToGeoencode($post_dao, $post_id, $post['network'], $obj->status);
+                    if (isset($obj->status)) {
+                        self::failedToGeoencode($post_dao, $post_id, $post['network'], $obj->status);
+                    } else {
+                        self::failedToGeoencode($post_dao, $post_id, $post['network'], 'No object instantiated');
+                    }
                 }
             }
         }
@@ -119,11 +124,11 @@ class GeoEncoderCrawler {
     public function performReverseGeoencoding($post_dao, $post) {
         if (self::$is_api_available) {
             $logger = Logger::getInstance();
-            $ldao = DAOFactory::getDAO('LocationDAO');
+            $location_dao = DAOFactory::getDAO('LocationDAO');
             $post_id = $post['post_id'];
             $geodata = $post['geo'];
             $reply_retweet_distance = 0;
-            $data = $ldao->getLocation($geodata);
+            $data = $location_dao->getLocation($geodata);
             if (isset($data)) {
                 if ($post['in_reply_to_post_id']!=NULL || $post['in_retweet_of_post_id']!=NULL) {
                     $reply_retweet_distance = $this->getDistance($post_dao, $post, $data['latlng']);
@@ -131,8 +136,8 @@ class GeoEncoderCrawler {
                         return;
                     }
                 }
-                $post_dao->setGeoencodedPost($post_id, $post['network'], self::SUCCESS, $data['full_name'], $data['latlng'],
-                $reply_retweet_distance);
+                $post_dao->setGeoencodedPost($post_id, $post['network'], self::SUCCESS, $data['full_name'],
+                $data['latlng'], $reply_retweet_distance);
                 $logger->logInfo('Lat/long coordinates found in DB', __METHOD__.','.__LINE__);
                 return;
             }
@@ -164,7 +169,7 @@ class GeoEncoderCrawler {
                                 'full_name'=>$location,
                                 'latlng'=>$geodata
                             );
-                            $ldao->addLocation($vals);
+                            $location_dao->addLocation($vals);
                             return;
                     }
                 }
@@ -280,9 +285,12 @@ class GeoEncoderCrawler {
     public function getDataForGeoencoding ($location) {
         $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/testdata/';
         $location = urlencode($location);
+        if ($location == "") {
+            $location = "invalid";
+        }
         $url = $FAUX_DATA_PATH.$location.".json";
-        $filecontents=file_get_contents("$url");
-        return $filecontents;
+        $file_contents = file_get_contents($url);
+        return $file_contents;
     }
 
     /**

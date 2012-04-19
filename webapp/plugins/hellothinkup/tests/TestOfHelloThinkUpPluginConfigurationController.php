@@ -130,7 +130,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
     }
 
@@ -167,7 +167,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_testname');
@@ -208,7 +208,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $radio_div = $this->getElementById($doc, 'plugin_options_testradio');
@@ -246,7 +246,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $select = $this->getElementById($doc, 'plugin_options_testbirthyear');
@@ -278,7 +278,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         $show_adv = $this->getElementById($doc, 'adv-flip-prompt');
         $this->assertPattern('/Show/', $doc->saveXML( $show_adv ) );

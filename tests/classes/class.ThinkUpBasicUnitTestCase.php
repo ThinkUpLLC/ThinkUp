@@ -232,10 +232,11 @@ In order to test your ThinkUp installation without losing data, these database n
         }
 
         if (isset($message)) {
-            die("Stopping tests...Test environment isn't ready.
+            echo "Stopping tests...Test environment isn't ready.
 ".$message."
 Please try again.
-");
+";
+            exit(1);
         }
     }
 }

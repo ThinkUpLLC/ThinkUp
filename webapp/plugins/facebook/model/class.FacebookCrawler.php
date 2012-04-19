@@ -85,7 +85,9 @@ class FacebookCrawler {
             // Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,about,location,website':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
-            $user_details->network = $network;
+            if (isset($user_details)) {
+                $user_details->network = $network;
+            }
 
             $user = $this->parseUserDetails($user_details);
             if (isset($user)) {

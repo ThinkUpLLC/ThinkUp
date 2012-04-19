@@ -1889,13 +1889,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $pdao = new PostMySQLDAO();
         $posts = $pdao->getMostRepliedToPostsInLastWeek('user3', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 5);
-        if (self::isTimeZoneSupported()) { //account for Daylight Saving Time
-            $this->assertEqual($posts[0]->reply_count_cache, 6);
-            $this->assertEqual($posts[1]->reply_count_cache, 5);
-        } else {
-            $this->assertEqual($posts[0]->reply_count_cache, 7);
-            $this->assertEqual($posts[1]->reply_count_cache, 6);
-        }
+        $this->assertEqual($posts[0]->reply_count_cache, 7);
+        $this->assertEqual($posts[1]->reply_count_cache, 6);
 
         $posts = $pdao->getMostRepliedToPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);

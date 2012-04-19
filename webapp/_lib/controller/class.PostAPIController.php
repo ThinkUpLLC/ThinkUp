@@ -607,6 +607,9 @@ class PostAPIController extends ThinkUpController {
             $coordinates = preg_split('/(, |,| )/', $post->geo);
             $post->geo = new stdClass();
             $post->geo->coordinates = $coordinates;
+            if (!isset($post->coordinates)) {
+                $post->coordinates = new stdClass();
+            }
             $post->coordinates->coordinates = $coordinates;
         }
 
@@ -651,6 +654,7 @@ class PostAPIController extends ThinkUpController {
                 $post->user->thinkup->found_in = $post->user->found_in;
 
             } else {
+                $post->user = new stdClass();
                 $post->user->id = $user->user_id;
             }
         }
@@ -661,6 +665,9 @@ class PostAPIController extends ThinkUpController {
              */
             $extracted_hashtags = Post::extractHashtags($post->text);
 
+            if (!isset($post->entities)) {
+                $post->entities = new stdClass();
+            }
             $post->entities->hashtags = array();
             if (!empty($extracted_hashtags)) {
                 foreach ($extracted_hashtags as $hashtag_text) {
@@ -678,6 +685,9 @@ class PostAPIController extends ThinkUpController {
              */
             $mentions = Post::extractMentions($post->text);
 
+            if (!isset($post->entities)) {
+                $post->entities = new stdClass();
+            }
             $post->entities->user_mentions = array();
             if (!empty($mentions)) {
                 foreach ($mentions as $username) {

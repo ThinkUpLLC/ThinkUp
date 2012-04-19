@@ -472,6 +472,10 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $valid_db_user = $config->getValue('db_user');
         $valid_db_password = $config->getvalue('db_password');
         $valid_db_port = $config->getValue('db_port');
+        $invalid_db_host = $config->getValue('invalid_db_host');
+        if (!isset($invalid_db_host)) {
+            $invalid_db_host = "127.0.0.2";
+        }
 
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
@@ -491,7 +495,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_passwd'] = $valid_db_password;
         $_POST['db_name'] = "mythinkupdb";
         $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "127.0.0.2";
+        $_POST['db_host'] = $invalid_db_host;
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = $valid_db_port;
         $_POST['db_prefix'] = "tu_";
@@ -511,7 +515,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
         //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
         $this->restoreConfigFile();
-        ini_set("error_reporting", E_ALL);
+        ini_set("error_reporting", E_STRICT);
     }
 
     public function testFreshInstallStep3SuccessfulInstall() {

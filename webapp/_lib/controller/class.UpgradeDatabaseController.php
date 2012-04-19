@@ -309,7 +309,7 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
     /**
      * Generates a one time upgrade token, and emails admins with the token info.
      */
-    public function generateUpgradeToken() {
+    public static function generateUpgradeToken() {
         $token_file = FileDataManager::getDataPath('.htupgrade_token');
         $md5_token = '';
         if (! file_exists($token_file)) {

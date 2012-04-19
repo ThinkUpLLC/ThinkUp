@@ -1,0 +1,15 @@
+language: php
+php:
+  - 5.3
+  - 5.2
+
+before_script:
+ - mysql -e 'create database thinkup'
+ - cp extras/dev/config/config.inc.php webapp/config.inc.php
+ - cp extras/dev/config/config.tests.inc.php tests/config.tests.inc.php
+ - chmod -R 777 webapp/data
+ - mkdir webapp/data/logs/
+ - touch webapp/data/logs/stream.log
+ - touch webapp/data/logs/crawler.log
+
+script: php tests/all_unit_tests.php

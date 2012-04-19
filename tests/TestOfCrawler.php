@@ -115,16 +115,16 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
 
     private function buildData() {
         $admin_owner_builder = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
-            'is_activated' => 1, 
+            'id' => 1,
+            'email' => 'admin@example.com',
+            'pwd' => 'XXX',
+            'is_activated' => 1,
             'is_admin' => 1
         ));
         $owner_builder = FixtureBuilder::build('owners', array(
-            'id' => 2, 
-            'email' => 'me@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 2,
+            'email' => 'me@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1
         ));
         return array($admin_owner_builder, $owner_builder);

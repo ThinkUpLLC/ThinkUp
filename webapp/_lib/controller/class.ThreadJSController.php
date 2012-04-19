@@ -61,7 +61,7 @@ class ThreadJSController extends ThinkUpController {
      */
     public function control() {
         //extend cache lifetime to 10 minutes in case a high-traffic web site embeds this thread
-        $this->view_mgrv_mgr->cache_lifetime = 600;
+        $this->view_mgr->cache_lifetime = 600;
         $this->setContentType('text/javascript');
         if ($this->shouldRefreshCache()) {
             $js_string = $this->getJavaScript();
@@ -92,10 +92,10 @@ class ThreadJSController extends ThinkUpController {
                         '/status/'.$post->post_id.'/':'null';
 
                         $result .='"status":"success",
-"post":'.json_encode($post->post_text).', "author_avatar":'.json_encode($post->author_avatar).', 
-"author":'.json_encode($post->author_username).', 
+"post":'.json_encode($post->post_text).', "author_avatar":'.json_encode($post->author_avatar).',
+"author":'.json_encode($post->author_username).',
 "author_link":'.json_encode($author_link).',
-"post_link":'.json_encode($post_link).', 
+"post_link":'.json_encode($post_link).',
 "replies": [
 ';
 

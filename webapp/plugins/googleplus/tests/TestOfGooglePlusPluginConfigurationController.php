@@ -121,7 +121,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
     }
 
@@ -151,7 +151,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_google_plus_client_id');

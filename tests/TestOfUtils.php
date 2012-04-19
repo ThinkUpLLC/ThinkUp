@@ -35,8 +35,7 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
     public function testgetPluginViewDirectory() {
         $config = Config::getInstance();
         $path = Utils::getPluginViewDirectory('twitter');
-        $this->assertEqual(realpath($path), realpath($config->getValue('source_root_path').
-        '/webapp/plugins/twitter/view/'));
+        $this->assertEqual(realpath($path), realpath(THINKUP_WEBAPP_PATH.'plugins/twitter/view'));
 
         $path = Utils::getPluginViewDirectory('sweetmaryjane');
         $this->assertEqual(realpath($path), realpath($config->getValue('source_root_path').

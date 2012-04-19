@@ -108,7 +108,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
@@ -127,7 +127,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
@@ -160,7 +160,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         //parse option_markup
         $doc = new DOMDocument();
         // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
         $radio_div = $this->getElementById($doc, 'plugin_options_distance_unit');

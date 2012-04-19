@@ -382,7 +382,6 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
 
     public function testGenerateUpgradeToken() {
         $this->simulateLogin('me@example.com');
-        $controller = new UpgradeDatabaseController(true);
         UpgradeDatabaseController::generateUpgradeToken();
         $this->assertTrue( file_exists($this->token_file) );
         $this->assertPattern('/^[\da-f]{32}$/', file_get_contents($this->token_file));
