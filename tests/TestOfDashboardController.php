@@ -40,6 +40,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
         $webapp->registerPlugin('facebook', 'FacebookPlugin');
+	$webapp->registerPlugin('google+', 'GooglePlusPlugin');
     }
 
     public function testConstructor() {
@@ -76,12 +77,12 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
         //Set the default service user to jack, who is not last updated
         $app_option_builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'default_instance', 'option_value'=>'3'));
+        'option_name'=>'default_instance', 'option_value'=>'4'));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -98,9 +99,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     public function testNotLoggedInNoUserOrViewSpecifiedNoDefaultServiceUserSet() {
         $builders = $this->buildData();
         //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>14,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>14,
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
@@ -163,7 +164,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $error_msg = $v_mgr->getTemplateDataItem('error_msg');
         $this->assertNotNull($error_msg);
-        $this->assertEqual($error_msg, 'idontexist on Twitter is not in ThinkUp.');
+        $this->assertEqual($error_msg, 'idontexist on Twitter is not in ThinkUp.'); 
+
     }
 
     public function testLoggedInPosts() {
@@ -176,6 +178,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $controller = new DashboardController(true);
         $results = $controller->go();
 
+
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Your tweets');
@@ -186,19 +189,51 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter-tweets-all');
         $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
+        $this->assertPattern('/Export/', $results); 
     }
 
-    public function testLoggedInPostsWithUsernameApostrophe() {
-        $builders = $this->buildData();
+    public function testLoggedInPostsFacebook() {
+	$builders = $this->buildData();
         $this->simulateLogin('me@example.com');
-        //required params
-        $_GET['u'] = "Joe O\'Malley";
+
+        
+	//required params
+        $_GET['u'] ="Joe O\'Malley";
         $_GET['n'] = 'facebook';
         $_GET['v'] = 'posts-all';
         $controller = new DashboardController(true);
         $results = $controller->go();
 
-        //test if view variables were set correctly
+        $config = Config::getInstance();
+        $this->assertPattern('/Export/', $results);
+    }
+
+   public function testLoggedInPostsGooglePlus() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] ='Kim';
+        $_GET['n'] = 'google+';
+        $_GET['v'] = 'posts-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        $config = Config::getInstance();
+        $this->assertPattern('/Export/', $results);
+    }
+
+
+    public function testLoggedInPostsWithUsernameApostrophe() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] ="Joe O\'Malley";
+        $_GET['n'] = 'facebook';
+        $_GET['v'] = 'posts-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+        
+	//test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All posts');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All your status updates');
@@ -207,6 +242,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertEqual($controller->getCacheKeyString(),
         ".htdashboard.tpl-me@example.com-Joe O\'Malley-facebook-posts-all");
         $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
+	$this->assertPattern('/Export/', $results);
     }
 
     public function testNotLoggedInNotPublicInstance() {
@@ -321,6 +357,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         //Add instance_owner
         $instance_owner_builder_1 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
         $instance_owner_builder_2 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+	$instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
 
         //Insert test data into test table
         $user_builder_1 = FixtureBuilder::build('users', array('user_id'=>'13', 'user_name'=>'ev',
@@ -332,12 +369,17 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $user_builder_3 = FixtureBuilder::build('users', array('user_id'=>'14', 'user_name'=>"Joe O'Malley",
         'last_updated'=>'-5d', 'network'=>'facebook'));
 
+
         //Make public
         $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'13',
         'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d'));
 
-        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'14',
+	$instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'16',
+        'network_username'=>"Kim", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'google+'));
+
+        $instance_builder_3 = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'15',
         'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'facebook'));
+
 
         $post_builders = array();
         //Add a bunch of posts
@@ -365,6 +407,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         'author_username'=>"Joe O'Malley", 'author_fullname'=>"Joe O\'Malley", 'post_text'=>"Joe's post",
         'network'=>'facebook'));
 
+
         $counter = 0;
         $post_data = 'This is post ';
         while ($counter < 40) {
@@ -375,8 +418,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
             $counter++;
         }
 
-        return array($owner_builder, $instance_owner_builder_1, $instance_owner_builder_2, $user_builder_1,
-        $user_builder_2, $instance_builder_1, $instance_builder_2, $post_builders);
+
+        return array($owner_builder, $instance_owner_builder_1, $instance_owner_builder_2, $instance_owner_builder_3, $user_builder_1,
+        $user_builder_2, $instance_builder_1, $instance_builder_2, $instance_builder_3, $post_builders);
     }
 
 
@@ -479,7 +523,6 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertEqual($visualization_object->rows[0]->c[0]->v,
         'Black Mirror punched me in the gut this weekend. Highly recommended. http://t.co/AnczD4Jc Thx @annal...');
         $this->assertEqual($visualization_object->rows[0]->c[1]->v, 50);
-
         $this->assertEqual($visualization_object->rows[1]->c[0]->v,
         "@saenz a geeky uncle's only +Sprint http://t.co/cxZTmWhk...");
         $this->assertEqual($visualization_object->rows[1]->c[1]->v, 150);
