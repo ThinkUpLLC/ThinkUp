@@ -14,9 +14,9 @@ retweets, friends, followers and links on social networks like Twitter and Faceb
 social activity in a database that YOU control, making it easy to search, sort, analyze, publish and display activity
 from your network. All you need is a web server that can run a PHP application.
 
-`Gina Trapani <http://ginatrapani.org>`_ began building ThinkUp as a personal project in 2009. Today, ThinkUp 
-development is led by `Expert Labs <http://expertlabs.org>`_, a non-profit startup that helps government be more
-effective by tapping in to the power of social networks.
+`Gina Trapani <http://ginatrapani.org>`_ began building ThinkUp as a personal project in 2009. From 2010 until 2012,
+`Expert Labs <http://expertlabs.org>`_ incubated ThinkUp. Today development is led by ThinkUp LLC, a company founded
+by Anil Dash and Gina Trapani.
 
 ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and 
 is available on `GitHub <http://github.com/ginatrapani/ThinkUp>`_.
