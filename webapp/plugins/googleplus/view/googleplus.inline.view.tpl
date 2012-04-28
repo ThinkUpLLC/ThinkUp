@@ -16,7 +16,7 @@
         </div>
         {/if}
     
-    {if $display eq 'all_gplus_posts' or $gplus_posts}
+    {if $display eq 'posts-all' or $gplus_posts}
 
 <div class="section">
 <div class="clearfix">
@@ -28,7 +28,7 @@
 <div class="header">
   
       {if $is_searchable}<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>{/if}
-      {if $logged_in_user and $display eq 'all_gplus_posts'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
+      {if $logged_in_user and $display eq 'posts-all'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
 
 </div>
 
@@ -37,7 +37,7 @@
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
 {/if}
 
-    {if ($display eq 'all_gplus_posts' and not $gplus_posts) or 
+    {if ($display eq 'posts-all' and not $gplus_posts) or 
         ($display eq 'most_replied_to_posts' and not $gplus_posts) }
       <div class="alert urgent"> 
         <p>
