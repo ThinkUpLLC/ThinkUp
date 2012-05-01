@@ -4,11 +4,12 @@
 /************************************************/
 
 // Application title prefix - 'ThinkUp' will be appended to it in page titles
-$THINKUP_CFG['app_title_prefix']                 = '';
+// For example, to name your ThinkUp "Angelina Jolie's ThinkUp", set this to "Angelina Jolie's "
+$THINKUP_CFG['app_title_prefix']                 = "";
 
-// Public path of thinkup's /webapp/ folder on your web server.
-// For example, if the /webapp/ folder is located at http://yourdomain/thinkup/, set to '/thinkup/'.
-$THINKUP_CFG['site_root_path']            = '/thinkup/webapp/';
+// Public path of ThinkUp's source folder on your web server.
+// For example, if ThinkUp is located at http://yourdomain/thinkup/, set to '/thinkup/'.
+$THINKUP_CFG['site_root_path']            = '/thinkup/';
 
 // Server path to /thinkup/ source code folder, dirname( __FILE__ ) . '/'; by default
 $THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
@@ -22,7 +23,7 @@ $THINKUP_CFG['timezone']                  = 'UTC';
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
 
-// Smarty file cache lifetime in seconds; defaults to 600 (10 minutes)caching
+// Smarty file cache lifetime in seconds; defaults to 600 (10 minutes) caching
 $THINKUP_CFG['cache_lifetime']               = 600;
 
 // The crawler, when triggered by requests to the RSS feed, will only launch if it's been
@@ -72,20 +73,22 @@ $THINKUP_CFG['enable_profiler']           = false;
 // If false (or unset), the database connection's charset will not be explicitly set.
 $THINKUP_CFG['set_pdo_charset']           = false;
 
-//TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
+//TESTS OVERRIDE: Assign variables below to use different settings during test builds
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
 || (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
-    // Full server path to /thinkup/ source code folder.
-    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
-    $THINKUP_CFG['db_user']                   = 'your_test_database_username';
-    $THINKUP_CFG['db_password']               = 'your_test_database_password';
-    $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
+    //    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
+    //    $THINKUP_CFG['db_user']                   = 'your_test_database_username';
+    //    $THINKUP_CFG['db_password']               = 'your_test_database_password';
+    //    $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
     ini_set('error_reporting', E_STRICT);
 }
 
 //Test RAM disk database override: Set this to run tests against the RAM disk tests database
 if (isset($_SESSION["RD_MODE"]) || getenv("RD_MODE")=="1") {
-    $THINKUP_CFG['db_user']                   = 'your_ram_disk_test_database_username';
-    $THINKUP_CFG['db_password']               = 'your_ram_disk_test_database_password';
-    $THINKUP_CFG['db_name']                   = $THINKUP_CFG['db_name'] . '_rd';
+    //    $THINKUP_CFG['db_user']                   = 'your_ram_disk_test_database_username';
+    //    $THINKUP_CFG['db_password']               = 'your_ram_disk_test_database_password';
+    //    $THINKUP_CFG['db_name']                   = $THINKUP_CFG['db_name'] . '_rd';
 }
+
+//Set aggressive time limit for long crawls
+set_time_limit(500);
