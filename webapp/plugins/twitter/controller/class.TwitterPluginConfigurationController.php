@@ -100,7 +100,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         }
 
         $this->addToView('twitter_app_name', "ThinkUp ". $_SERVER['SERVER_NAME']);
-        $this->addToView('thinkup_site_url', Utils::getApplicationURL());
+        $this->addToView('thinkup_site_url', Utils::getApplicationURL(true));
 
         $plugin = new TwitterPlugin();
         if ($plugin->isConfigured()) {

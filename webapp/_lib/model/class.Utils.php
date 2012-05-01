@@ -295,10 +295,14 @@ class Utils {
 
     /**
      * Get the application's full URL, i.e., https://example.com/thinkup/
+     * @param $replace_localhost_with_ip Default to false
      * @return str
      */
-    public static function getApplicationURL() {
+    public static function getApplicationURL($replace_localhost_with_ip = false) {
         $server = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+        if ($replace_localhost_with_ip) {
+            $server = ($server == 'localhost')?'127.0.0.1':$server;
+        }
         $site_root_path = Config::getInstance()->getValue('site_root_path');
         $port = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != "" && $_SERVER['SERVER_PORT'] != "80"
         && $_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT']:'';

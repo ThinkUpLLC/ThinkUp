@@ -123,7 +123,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
      * Test user submission
      */
     public function testAddTwitterUserNoTwitterAuth() {
-
         // build some options data
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com');
@@ -201,6 +200,20 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern($expected_pattern, $output);
 
         $this->assertNoPattern('/http:\/\/mytestthinkup/', $output);
+    }
+
+    public function testLocalhostConversionTo1270001() {
+        $_SERVER['HTTPS'] = null;
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+
+        $this->assertPattern('/http:\/\/127\.0\.0\.1/', $output);
     }
 
     /*
