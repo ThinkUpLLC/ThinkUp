@@ -54,6 +54,7 @@ class GooglePlusAPIAccessor {
         }
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . $this->data_location;
         $url = str_replace($this->api_domain, '', $url);
+        $url = str_replace(':', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
@@ -112,6 +113,7 @@ class GooglePlusAPIAccessor {
         $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
         $url = preg_replace('/[\?\&]$/', '', $url);
         $url = str_replace($this->api_domain, '', $url);
+        $url = str_replace(':', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
