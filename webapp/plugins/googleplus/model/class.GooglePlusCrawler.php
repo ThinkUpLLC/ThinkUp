@@ -135,8 +135,10 @@ class GooglePlusCrawler {
             }
         }
 
-        $user_details->network = $network;
-        $user = $this->parseUserDetails($user_details);
+        if (isset($user_details)) {
+            $user_details->network = $network;
+            $user = $this->parseUserDetails($user_details);
+        }
         if (isset($user)) {
             $user_object = new User($user, 'Owner initialization');
             $user_dao->updateUser($user_object);
