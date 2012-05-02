@@ -1,0 +1,25 @@
+1.0.5 - 4 May 2012
+==================
+
+Changelog:
+
+
+*   Bugfix: Restore Export link on Facebook and Google+ All Posts list
+*   Bugfix: Fix missing Followers and Post Types and Client Usage charts on the dashboard
+*   Bugfix: Avoid file_exists basedir restriction error in init.php
+*   Bugfix: On the Twitter Plugin setting screen, when the hostname is localhost, show 127.0.0.1 instead for 
+    Twitter.com compatibility
+*   Bugfix: During Expand URLs capture, correctly handle relative redirects
+*   Bugfix: During Google+ crawl, avoid Property of non-object PHP warning when object is not set
+*   Bugfix: Remove unnecessary CSS, tweak look of buttons and alerts, fix unstyled views and buttons
+*   Bugfix: Make web upgrader code compatible with PHPFog server restrictions
+*   Improve commenting and default settings in sample config file
+*   Rename status bar's "Update Now" button to "Capture Data"
+*   Developer bugfix: Make all test data files Windows compatible
+
+.. Note:: This release fixed a bug in the Expand URLs plugin which incorrectly marked some short URLs as invalid. To
+        force ThinkUp to retry expanding these URLs correctly, in your ThinkUp database run the following SQL: 
+        `UPDATE tu_links SET error='' where error = 'Invalid URL - relocates to nowhere'`
+
+
+
