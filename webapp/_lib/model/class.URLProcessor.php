@@ -97,4 +97,39 @@ class URLProcessor {
         }
         return $image_src;
     }
+    /**
+     * Get final URL if there's a single 302 redirect.
+     * @param str $url
+     * @param bool $verify_ssl_cert Defaults to true
+     * @return str Final URL
+     * @throws Exception if there's a cURL error
+     */
+    public static function getFinalURL($url, $verify_ssl_cert=true) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // seconds
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        if (!$verify_ssl_cert) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0");
+        $response = curl_exec($ch);
+        if ($response === false) {
+            throw new Exception ("cURL error fetching ".$url.": ".curl_error($ch));
+        }
+        curl_close($ch);
+
+        $lines = explode("\r\n", $response);
+        foreach ($lines as $line) {
+            if (stripos($line, 'Location:') === 0) {
+                list(, $location) = explode(':', $line, 2);
+                return ltrim($location);
+            }
+        }
+        return $url;
+    }
 }

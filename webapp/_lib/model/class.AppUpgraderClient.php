@@ -88,37 +88,15 @@ class AppUpgraderClient {
      * @param str $url
      * @return request response data
      */
-    private function fetchUrlData($url) {
-        $conetents = false;
+    private function fetchURLData($url) {
         if (strpos($url, "/") == 0) { // we are a file path, so use file_get_contents
             $contents = file_get_contents($url);
         } else { // else we are a url, so use our Util::getURLContents
-            $contents = Utils::getURLContents(self::getFinalURL($url));
+            $contents = Utils::getURLContents(URLProcessor::getFinalURL($url));
         }
         if (is_null($contents)) {
             $contents = false;
         }
         return $contents;
-    }
-    /**
-     * Get final URL if there's a 302 redirect.
-     * @param str $url
-     * @return str Final URL
-     */
-    private function getFinalURL($url) {
-        $furl = false;
-        // First check response headers
-        $headers = get_headers($url);
-        // Test for 301 or 302
-        if (preg_match('/^HTTP\/\d\.\d\s+(301|302)/',$headers[0])) {
-            foreach($headers as $value) {
-                if (substr(strtolower($value), 0, 9) == "location:") {
-                    $furl = trim(substr($value, 9, strlen($value)));
-                }
-            }
-        }
-        // Set final URL
-        $furl = ($furl) ? $furl : $url;
-        return $furl;
     }
 }

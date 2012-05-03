@@ -40,6 +40,8 @@ class UpgradeApplicationController extends ThinkUpAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('install.upgrade-application.tpl');
+        $config = Config::getInstance();
+        self::$DEBUG = $config->getValue('debug');
     }
 
     public function authControl() {
@@ -93,7 +95,7 @@ class UpgradeApplicationController extends ThinkUpAuthController {
 
         // do we need to update?
         $update_client = new AppUpgraderClient();
-        $update_info = $update_client->getlatestVersionInfo();
+        $update_info = $update_client->getLatestVersionInfo();
         require(dirname(__FILE__) . '/../../install/version.php');
         $version = Config::GetInstance()->getvalue('THINKUP_VERSION');
         if ( $update_info['version'] < $version) {
@@ -105,17 +107,19 @@ class UpgradeApplicationController extends ThinkUpAuthController {
         }
 
         // download zip...
-        $update_zip_data = $update_client->getlatestVersionZip($update_info['url']);
+        $update_zip_data = $update_client->getLatestVersionZip($update_info['url']);
         $update_zip = $disk_util->writeZip($update_zip_data);
         $zip = new ZipArchive();
-        if ($zip->open($update_zip) !== TRUE) {
+        $open_result = $zip->open($update_zip);
+        if ($open_result !== true) {
             unlink($update_zip);
-            throw new Exception("Unable to extract $update_zip");
+            throw new Exception("Unable to extract ".$update_zip.". ZipArchive::open failed with error code ".
+            $open_result);
         }
         $num_files = $zip->numFiles;
         if ($num_files < 1) {
             unlink($update_zip);
-            throw new Exception("Unable to extract $update_zip");
+            throw new Exception("Unable to extract ".$update_zip.". ZipArchive->numFiles is ".$num_files);
         }
 
         $backup_file_info = array();
@@ -123,7 +127,7 @@ class UpgradeApplicationController extends ThinkUpAuthController {
 
         $disk_util->deleteOldInstall();
         $data_path = FileDataManager::getDataPath();
-        if ($zip->extractTo($data_path) !== TRUE) {
+        if ($zip->extractTo($data_path) !== true) {
             throw new Exception("Unable to extract new files into $app_dir: " . $zip->getStatusString());
         } else {
             $new_version_dir = $data_path . 'thinkup';

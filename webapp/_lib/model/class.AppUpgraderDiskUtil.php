@@ -62,15 +62,21 @@ class AppUpgraderDiskUtil {
     /**
      * Get the amount of available disk space.
      * @throws Exception If there's not enough available disk space
+     * @return int Number of available megabytes; -1 if not known
      */
     public function getAvailableDiskSpace() {
-        $available = (int) round((disk_free_space($this->app_dir) / 1024) / 1024 );
-        $needed = (int) (self::$DISK_SPACE_NEEDED / 1024) / 1024;
-        if ($available > $needed) {
-            return $available;
+        $disk_free_space = disk_free_space($this->app_dir);
+        if ($disk_free_space !== false && $disk_free_space != '') {
+            $available = (int) round(($disk_free_space / 1024) / 1024 );
+            $needed = (int) (self::$DISK_SPACE_NEEDED / 1024) / 1024;
+            if ($available > $needed) {
+                return $available;
+            } else {
+                throw new exception("There is not enough free disk space to perform an update. " .$available.
+                "MB available, but ".$needed."MB required.");
+            }
         } else {
-            throw new exception("There is not enough free disk space to perform an update. " .$available.
-            "MB available, but ".$needed."MB required.");
+            return -1;
         }
     }
     /**
@@ -201,11 +207,20 @@ class AppUpgraderDiskUtil {
     /**
      * Write zip file contents to the application data directory.
      * @param str $data
+     * @throws Exception if unable to write file
+     * @return str $filename
      */
     public function writeZip($data) {
         $date = time();
         $filename = $this->data_path . 'latest_update.zip';
-        file_put_contents($filename, $data);
+        $result = file_put_contents($filename, $data);
+        if ($result === false) {
+            throw new Exception("Unable to save ".$filename.". Result ".$result);
+        } else if(is_int($result)) {
+            if ($result < 1) {
+                throw new Exception("Unable to save ".$filename.". Wrote ".$result.' bytes.');
+            }
+        }
         return $filename;
     }
     /**
