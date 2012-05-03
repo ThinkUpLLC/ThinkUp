@@ -173,6 +173,11 @@ class DashboardController extends ThinkUpController {
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user = $user_dao->getDetails($this->instance->network_user_id, $this->instance->network);
             $this->addToView('user_details', $user);
+            if (Session::isLoggedIn() && !isset($user)) {
+                $this->addInfoMessage("Oops! There's no information about ".$this->instance->network_username.
+                " on ".ucfirst($this->instance->network)." to display.");
+                $this->addToView('show_update_now_button', true);
+            }
 
             SessionCache::put('selected_instance_network', $this->instance->network);
             SessionCache::put('selected_instance_username', $this->instance->network_username);
@@ -190,6 +195,7 @@ class DashboardController extends ThinkUpController {
             SessionCache::put('selected_instance_network', null);
             SessionCache::put('selected_instance_username', null);
         }
+
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
     }
 

@@ -89,7 +89,7 @@ class AppUpgraderClient {
      * @return request response data
      */
     private function fetchURLData($url) {
-        if (strpos($url, "/") == 0) { // we are a file path, so use file_get_contents
+        if (strpos($url, "/") == 0 || strpos($url, ".") == 0) { // we are a file path, so use file_get_contents
             $contents = file_get_contents($url);
         } else { // else we are a url, so use our Util::getURLContents
             $contents = Utils::getURLContents(URLProcessor::getFinalURL($url));

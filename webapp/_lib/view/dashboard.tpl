@@ -3,7 +3,6 @@
 
 <div class="container_24">
   <div class="clearfix">
-
     <!-- begin left nav -->
     <div class="grid_4 alpha omega">
         {if $instance}
@@ -36,6 +35,10 @@
       <div class="prefix_1 suffix_1">
 
         {include file="_usermessage.tpl"}
+        {if $show_update_now_button eq true}
+        <br>
+        <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="linkbutton emphasized">Load Data Now</a>
+        {/if}
 
         {if $instance}
           <!--begin public user dashboard-->
@@ -56,12 +59,10 @@
                 </div>
               </div>
             </div>
-          {/if}
 
           {if $data_template}
             {include file=$data_template}
           {else} <!-- else if no $data_template -->
-
             {if $hot_posts_data}
                 <div class="section">
                         <h2>Response Rates</h2>
@@ -216,14 +217,18 @@
                 function drawCharts() {
                 {/literal}
 
+                  {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
                   var follower_count_history_by_day_data = new google.visualization.DataTable(
                   {$follower_count_history_by_day.vis_data});
                   var follower_count_history_by_week_data = new google.visualization.DataTable(
                   {$follower_count_history_by_week.vis_data});
-
+                  {/if}
+                  
                   var hot_posts_data = new google.visualization.DataTable({$hot_posts_data});
                   var client_usage_data = new google.visualization.DataTable({$all_time_clients_usage});
+                  {if $click_stats_data}
                   var click_stats_data = new google.visualization.DataTable({$click_stats_data});
+                  {/if}
 
                   {literal}
 
@@ -284,6 +289,7 @@
                   {/literal}
                   {/if}
                   
+                  {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
                   {literal}
                   formatter.format(follower_count_history_by_day_data, 1);
                   formatter_date.format(follower_count_history_by_day_data, 0);
@@ -340,6 +346,9 @@
                       },
                   });
                   follower_count_history_by_week_chart.draw();
+                {/literal}
+                {/if}
+                {literal}
 
                   if (typeof(replies) != 'undefined') {
                     var post_types = new google.visualization.DataTable();
@@ -397,6 +406,7 @@
             </script>
 
           {/if} <!-- end if $data_template -->
+         {/if}
         {/if}
 
         {if !$instance}

@@ -454,7 +454,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
      * @return str Path to download file
      */
     private function getInstall($url, $version, $path) {
-
         $ch = curl_init();
         $zipfile = $path . '/' . $version . '.zip';
 
@@ -467,7 +466,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $data = curl_exec($ch);
             if ( !$data) {
                 $zipfile = false;
-                $this->fail("Unable to download zipfile: $url " . curl_error($ch) );
+                $this->fail("Unable to download zip file: $url " . curl_error($ch) );
                 return false;
             }
             file_put_contents($zipfile, $data);

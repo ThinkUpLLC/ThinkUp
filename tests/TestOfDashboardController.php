@@ -177,7 +177,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $_GET['v'] = 'tweets-all';
         $controller = new DashboardController(true);
         $results = $controller->go();
-
+        $this->debug($results);
 
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
@@ -196,13 +196,13 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
 
-
         //required params
         $_GET['u'] ="Joe O\'Malley";
         $_GET['n'] = 'facebook';
         $_GET['v'] = 'posts-all';
         $controller = new DashboardController(true);
         $results = $controller->go();
+        $this->debug($results);
 
         $config = Config::getInstance();
         $this->assertPattern('/Export/', $results);
@@ -221,7 +221,6 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $this->assertPattern('/Export/', $results);
     }
-
 
     public function testLoggedInPostsWithUsernameApostrophe() {
         $builders = $this->buildData();
@@ -259,27 +258,6 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $error_msg = $v_mgr->getTemplateDataItem('error_msg');
         $this->assertNotNull($error_msg);
         $this->assertEqual($error_msg, 'Insufficient privileges');
-    }
-
-    public function testLoggedInConversations() {
-        $builders = $this->buildData();
-        //must be logged in
-        $this->simulateLogin('me@example.com');
-        //required params
-        $_GET['u'] = 'ev';
-        $_GET['n'] = 'twitter';
-        $_GET['v'] = 'tweets-convo';
-        $controller = new DashboardController(true);
-        $results = $controller->go();
-
-        //test if view variables were set correctly
-        $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Conversations', 'Header');
-        $this->assertIsA($v_mgr->getTemplateDataItem('author_replies'), 'array', 'Array of tweets');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('author_replies')), 0);
-
-        $config = Config::getInstance();
-        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter-tweets-convo');
     }
 
     public function testLoggedInPeople() {
@@ -360,26 +338,29 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
 
         //Insert test data into test table
-        $user_builder_1 = FixtureBuilder::build('users', array('user_id'=>'13', 'user_name'=>'ev',
-        'full_name'=>'Ev Williams', 'last_updated'=>'-1d'));
+        $user_builders = array();
 
-        $user_builder_2 = FixtureBuilder::build('users', array('user_id'=>'12', 'user_name'=>'jack',
-        'last_updated'=>'-5d'));
+        $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'13', 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'network'=>'twitter', 'last_updated'=>'-1d'));
 
-        $user_builder_3 = FixtureBuilder::build('users', array('user_id'=>'14', 'user_name'=>"Joe O'Malley",
+        $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'12', 'user_name'=>'jack',
+        'network'=>'twitter', 'last_updated'=>'-5d'));
+
+        $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'14', 'user_name'=>"Joe O'Malley",
         'last_updated'=>'-5d', 'network'=>'facebook'));
 
+        $user_builders[] = FixtureBuilder::build('users', array('user_id'=>'16', 'user_name'=>"Kim",
+        'last_updated'=>'-5d', 'network'=>'google+'));
 
         //Make public
         $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'13',
-        'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d'));
+        'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d', 'network'=>'twitter'));
+
+        $instance_builder_3 = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'14',
+        'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'facebook'));
 
         $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'16',
         'network_username'=>"Kim", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'google+'));
-
-        $instance_builder_3 = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'15',
-        'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-1d', 'network'=>'facebook'));
-
 
         $post_builders = array();
         //Add a bunch of posts
@@ -407,7 +388,6 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         'author_username'=>"Joe O'Malley", 'author_fullname'=>"Joe O\'Malley", 'post_text'=>"Joe's post",
         'network'=>'facebook'));
 
-
         $counter = 0;
         $post_data = 'This is post ';
         while ($counter < 40) {
@@ -418,12 +398,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
             $counter++;
         }
 
-
         return array($owner_builder, $instance_owner_builder_1, $instance_owner_builder_2, $instance_owner_builder_3,
-        $user_builder_1, $user_builder_2, $instance_builder_1, $instance_builder_2, $instance_builder_3,
-        $post_builders);
+        $user_builders, $instance_builder_1, $instance_builder_2, $instance_builder_3, $post_builders);
     }
-
 
     public function testGetHotPostVisualizationData() {
         $hot_posts = array(

@@ -29,10 +29,6 @@
  */
 class UpgradeApplicationController extends ThinkUpAuthController {
     /**
-     * @var bool
-     */
-    static $DEBUG = false;
-    /**
      * Constructor
      * @param bool $session_started
      * @return UpgradeApplicationController
@@ -40,8 +36,6 @@ class UpgradeApplicationController extends ThinkUpAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('install.upgrade-application.tpl');
-        $config = Config::getInstance();
-        self::$DEBUG = $config->getValue('debug');
     }
 
     public function authControl() {
@@ -87,9 +81,6 @@ class UpgradeApplicationController extends ThinkUpAuthController {
         // do we have the disk space we need?
         $disk_util = new AppUpgraderDiskUtil($app_dir);
         $disk_space_megs = $disk_util->getAvailableDiskSpace();
-        if (self::$DEBUG) {
-            printf("%.2f megs of disk space available\n", $disk_space_megs);
-        }
         // do we have the perms to do what we need?
         $disk_util->validateUpdatePermissions($app_dir);
 
