@@ -34,6 +34,7 @@ class PasswordResetController extends ThinkUpController {
         $session = new Session();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
+        $this->view_mgr->addHelp('reset', 'userguide/accounts/index');
         $this->setViewTemplate('session.resetpassword.tpl');
         $this->disableCaching();
 
