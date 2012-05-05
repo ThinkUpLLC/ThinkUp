@@ -5,14 +5,12 @@
   <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
   <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/positioning.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
   {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
   {/foreach}
   <!-- jquery -->
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
 
