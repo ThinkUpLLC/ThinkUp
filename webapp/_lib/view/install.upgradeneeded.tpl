@@ -8,7 +8,7 @@
 <!--  we are upgrading -->
 <p>
 {if $user_is_admin}
-ThinkUp's database needs an update. <a href="{$site_root_path}install/upgrade-database.php">Update now</a>.
+ThinkUp's database needs an upgrade. <a href="{$site_root_path}install/upgrade-database.php">Upgrade now</a>.
 {else}
 ThinkUp is currently in the process of upgrading. Please try back again in a little while.<br /><br />
 If you are the administrator of this ThinkUp installation, check your email to complete the upgrade process.<br />

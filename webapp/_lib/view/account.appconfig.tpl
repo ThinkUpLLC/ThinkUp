@@ -72,7 +72,7 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
-        See the verbose, unformatted developer log on the Update Now screen.
+        See the verbose, unformatted developer log on the Capture Data screen.
       </div>
    </div>
 

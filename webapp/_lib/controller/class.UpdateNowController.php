@@ -35,7 +35,7 @@ class UpdateNowController extends ThinkUpAuthAPIController {
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');
 
-        $this->addInfoMessage('<b>Hint</b>: You can set up ThinkUp to update automatically. Visit '.
+        $this->addInfoMessage('<b>Hint</b>: You can set up ThinkUp to capture your data automatically. Visit '.
         'Settings &rarr; Account to find out how.', null, true );
 
         if (isset($_GET['log']) && $_GET['log'] == 'full') {

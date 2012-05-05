@@ -130,9 +130,9 @@
           </form>
 <br><br>
 {insert name="help_link" id='rss'}
-<h1>Automate ThinkUp Crawls</h1><br />
+<h1>Automate ThinkUp Data Capture</h1><br />
 
-<p>To set up ThinkUp to update automatically, subscribe to this secret RSS feed URL in your favorite news reader.</p>
+<p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
 
 <div style="text-align: center; padding: 20px 0px 20px 0px;width:100%;">
 <a href="{$rss_crawl_url}" class="linkbutton emphasized">Secret RSS Feed to Update ThinkUp</a>

@@ -59,7 +59,7 @@ Upgrade ThinkUp's Database Structure
 
 Now that your installation has the most up-to-date code, that code may have to upgrade your database structure to match
 it. Relaod ThinkUp in your web browser. When you see the message "ThinkUp's database needs an update" click on the 
-"Update Now" link.
+"Capture Data" link.
 
 If the message reads "ThinkUp is currently in the process of upgrading. Please try back again in a little while", here's
 :doc:`how to continue the upgrade process </troubleshoot/messages/upgrading>`.

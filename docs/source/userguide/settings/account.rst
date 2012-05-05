@@ -15,7 +15,7 @@ Remember, your ThinkUp password must be at least 5 characters long.
 Automate ThinkUp Crawls
 -----------------------
 
-Instead of manually clicking the "Update now" link in ThinkUp's status bar, you can set up ThinkUp to automatically
+Instead of manually clicking the "Capture Data" link in ThinkUp's status bar, you can set up ThinkUp to automatically
 update its data. You can do so in one of two ways: using a special secret RSS feed subscription in your favorite 
 newsreader, or by scheduling a cron job to run on your web server.
 
@@ -37,5 +37,5 @@ you've used the URL. For example, once you've reset your API key, you'll have to
 URL to the new key.
 
 To change your API key, click on the "Reset Your API Key" button. Then, visit the 
-:doc:`Update Now page </userguide/datacapture>` to copy and paste the updated feed URL into your newsreader.
+:doc:`Capture Data page </userguide/datacapture>` to copy and paste the updated feed URL into your newsreader.
 

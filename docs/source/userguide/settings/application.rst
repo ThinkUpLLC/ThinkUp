@@ -24,8 +24,8 @@ Enable Developer Log
 --------------------
 
 Check this box if you want to see the :doc:`verbose, unformatted developer
-log </troubleshoot/common/advanced/crawlerlog>` on the "Update Now" screen, instead of the quieter, formatted user log.
-Once you change this setting, go back to the Dashboard and click on "Update Now" to see the change in action.
+log </troubleshoot/common/advanced/crawlerlog>` on the "Capture Data" screen, instead of the quieter, formatted user log.
+Once you change this setting, go back to the Dashboard and click on "Capture Data" to see the change in action.
 
 Enable reCAPTCHA
 ----------------

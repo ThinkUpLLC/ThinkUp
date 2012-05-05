@@ -95,7 +95,7 @@ class AppConfig {
             ),
         'is_log_verbose' => array(
             'type' => 'checkbox',
-            'title' => 'See the verbose, unformatted developer log on the Update Now screen',
+            'title' => 'See the verbose, unformatted developer log on the Capture Data screen',
             'required' => false,
             'default' => 'false',
             'match' => '/^(true|false)$/',

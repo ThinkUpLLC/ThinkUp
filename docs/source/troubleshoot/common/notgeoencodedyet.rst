@@ -13,7 +13,7 @@ Here's how to troubleshoot the GeoEncoder plugin.
 Check the crawler log and database table
 ----------------------------------------
 
-If the GeoEncoder plugin is activated , click the "Update Now" button in ThinkUp and look for the GeoEncoder's entries
+If the GeoEncoder plugin is activated , click the "Capture Data" button in ThinkUp and look for the GeoEncoder's entries
 in the crawl progress log. These lines will tell you how many locations the plugin has geoencoded and their status.
 
 To see what the GeoEncoder plugin has completed, :doc:`go into your ThinkUp database

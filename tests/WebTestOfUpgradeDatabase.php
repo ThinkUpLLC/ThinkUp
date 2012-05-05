@@ -337,7 +337,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 file_put_contents($migration_10, $msql);
             }
             $this->get($this->url.'/test_installer/thinkup/');
-            $this->assertText("ThinkUp's database needs an update");
+            $this->assertText("ThinkUp's database needs an upgrade");
             // token could be in 1 of 2 places, depending on what version is running
             if (file_exists($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token') ) {
                 $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token');

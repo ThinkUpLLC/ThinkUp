@@ -46,14 +46,15 @@ class TestOfUpdateNowController extends ThinkUpUnitTestCase {
         $result = $controller->go();
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('info_msg'),
-        "<b>Hint</b>: You can set up ThinkUp to update automatically. Visit Settings &rarr; Account to find out how.");
+        "<b>Hint</b>: You can set up ThinkUp to capture your data automatically. Visit Settings &rarr; ".
+        "Account to find out how.");
     }
 
     private function buildData() {
         $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'me@example.com', 
-            'pwd' => 'XXX', 
+            'id' => 1,
+            'email' => 'me@example.com',
+            'pwd' => 'XXX',
             'is_activated' => 1,
             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
             ));

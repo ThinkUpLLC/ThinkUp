@@ -37,7 +37,7 @@
         {include file="_usermessage.tpl"}
         {if $show_update_now_button eq true}
         <br>
-        <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="linkbutton emphasized">Load Data Now</a>
+        <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="linkbutton emphasized">Capture Data Now</a>
         {/if}
 
         {if $instance}
