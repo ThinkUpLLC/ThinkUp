@@ -418,7 +418,7 @@ class Utils {
         } else {
             $offset = strtotime($from_date);
         }
-        if (date('w') == 6) {
+        if (date('w', $offset) == 6) {
             return date($format,strtotime('-1 week', $offset));
         } else {
             return date($format,strtotime("last Saturday",$offset));
