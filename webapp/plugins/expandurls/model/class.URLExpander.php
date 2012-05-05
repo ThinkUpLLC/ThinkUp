@@ -84,7 +84,13 @@ class URLExpander {
         foreach ($lines as $line) {
             if (stripos($line, 'Location:') === 0) {
                 list(, $location) = explode(':', $line, 2);
-                return ltrim($location);
+                $result = ltrim($location);
+                //If this is a relative redirect, add the host
+                $dest_url = parse_url($result);
+                if (!isset($dest_url['host'])) {
+                    $result = $scheme."://$host$port".$result;
+                }
+                return $result;
             }
         }
 

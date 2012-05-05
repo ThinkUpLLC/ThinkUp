@@ -132,6 +132,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->image_src, '');
         $this->assertEqual($link->error, 'Invalid URL - relocates to nowhere');
 
+        $link = $link_dao->getLinkById(12);
+        $this->debug($link->url);
+        $this->assertEqual($link->url, 'http://flic.kr/p/8T8ZyA');
+        $this->assertEqual($link->expanded_url, 'http://www.flickr.com/photos/swirlee/5173198094/');
+        $this->assertEqual($link->image_src, '');
+        $this->assertEqual($link->error, '');
+
         //check that short URLs were saved
         $sql = "SELECT * FROM " . $this->table_prefix . 'links_short';
         $stmt = ShortLinkMySQLDAO::$PDO->query($sql);
@@ -140,7 +147,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             array_push($data, $row);
         }
         $stmt->closeCursor();
-        $this->assertEqual(count($data), 6);
+        $this->assertEqual(count($data), 8);
         $this->assertEqual($data[0]['id'], 1);
         $this->assertEqual($data[0]['link_id'], 1);
         $this->assertEqual($data[0]['short_url'], 'http://bit.ly/a5VmbO');
@@ -280,6 +287,18 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links', array(
             'id' => 11,
             'url' => 'http://wp.me/p1fxNB-2F',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        // Flickr URL with relative redirect to path
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 12,
+            'url' => 'http://flic.kr/p/8T8ZyA',
             'expanded_url' => null,
             'title' => '',
             'clicks' => 0,

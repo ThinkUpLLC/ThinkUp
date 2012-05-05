@@ -107,6 +107,15 @@ class URLExpander {
             case "http://instagr.am/p/oyQ6/":
                 $exp_url = "http://instagr.am/p/oyQ6/";
                 break;
+            case "http://flic.kr/p/8T8ZyA":
+                $exp_url = "http://www.flickr.com/photo.gne?short=8T8ZyA";
+                break;
+            case "http://www.flickr.com/photo.gne?short=8T8ZyA":
+                $exp_url = "http://www.flickr.com/photos/swirlee/5173198094/";
+                break;
+            case "http://www.flickr.com/photos/swirlee/5173198094/":
+                $exp_url = "http://www.flickr.com/photos/swirlee/5173198094/";
+                break;
             default:
                 $exp_url = '';
         }
