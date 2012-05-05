@@ -80,6 +80,8 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESS
     //    $THINKUP_CFG['db_user']                   = 'your_test_database_username';
     //    $THINKUP_CFG['db_password']               = 'your_test_database_password';
     //    $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
+    $THINKUP_CFG['cache_pages']               = false;
+    $THINKUP_CFG['debug']                     = true;
     ini_set('error_reporting', E_STRICT);
 }
 
