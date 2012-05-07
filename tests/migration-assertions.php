@@ -810,6 +810,12 @@ $MIGRATIONS = array(
 
      /* 1.0.5 */
     '1.0.5' => array(
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.5.zip',
+        'migrations' => 0,
+     ),
+
+     /* 1.0.6 */
+    '1.0.6' => array(
         'zip_url' => 'file://./build/thinkup.zip',
         'migrations' => 0,
      ),

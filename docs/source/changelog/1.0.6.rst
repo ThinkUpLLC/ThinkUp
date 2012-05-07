@@ -1,0 +1,7 @@
+1.0.6 - 7 May 2012
+==================
+
+Changelog:
+
+
+*   Fixed bug that caused "Save Settings" button in plugin settings area to not save settings.
