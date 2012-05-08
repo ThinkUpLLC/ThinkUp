@@ -64,7 +64,7 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
                 throw $e;
             } else {
                 // Will appear in the textarea of the HTML page
-                echo $e->getMessage();
+                echo '<td></td><td>' . $e->getMessage() . '</td><td></td>';
             }
         }
 

@@ -127,8 +127,29 @@ class TwitterCrawler {
                     $tweets = $this->api->parseJSON($twitter_data);
                     $post_dao = DAOFactory::getDAO('PostDAO');
                     $count = 0;
+
+                    if (!isset($recent_tweets)) {
+                        $recent_tweets = $post_dao->getAllPosts($this->user->user_id, 'twitter', 100);
+                    }
+
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
+
+                        if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
+                            $this->logger->logInfo("Retweet found, ".substr($tweet['post_text'], 0, 50).
+                            "... ", __METHOD__.','.__LINE__);
+                            // if did find retweet, add in_rt_of_user_id info
+                            // even if can't find original post id
+                            $tweet['in_rt_of_user_id'] = $this->user->user_id;
+                            $original_tweet_id = RetweetDetector::detectOriginalTweet($tweet['post_text'],
+                            $recent_tweets);
+                            if ($original_tweet_id != false) {
+                                $tweet['in_retweet_of_post_id'] = $original_tweet_id;
+                                $this->logger->logInfo("Retweet original status ID found: ".$original_tweet_id,
+                                __METHOD__.','.__LINE__);
+                            }
+                        }
+
                         $inserted_post_key = $post_dao->addPost($tweet);
                         if ($inserted_post_key !== false) {
                             $count = $count + 1;

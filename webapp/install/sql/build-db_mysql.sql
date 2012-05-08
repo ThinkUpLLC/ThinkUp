@@ -517,7 +517,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2012-12-26 13:34:12
+-- Dump completed on 2012-12-26 23:10:06
 
 --
 -- Insert DB Version
