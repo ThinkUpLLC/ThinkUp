@@ -43,7 +43,11 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         return $this->getInsertCount($ps);
     }
 
-    public function getHistory($network_user_id, $network, $units, $limit=10) {
+    public function getHistory($network_user_id, $network, $units, $limit=10, $before_date=null) {
+        if ($before_date == date('Y-m-d')) {
+            $before_date = null;
+        }
+
         if ($units != "DAY" && $units != 'WEEK' && $units != 'MONTH') {
             $units = 'DAY';
         }
@@ -57,45 +61,50 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
             $date_format = "DATE_FORMAT(date,'%m/01/%Y')";
         }
-        $q = "SELECT network_user_id, network, count, date, full_date FROM ";
-        $q .= "(SELECT network_user_id, network, count, ".$date_format." as date, date as full_date ";
-        $q .= "FROM #prefix#follower_count AS fc ";
-        $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
-        $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
-        $q .= "ORDER BY history_counts.full_date ASC";
         $vars = array(
             ':network_user_id'=>(string) $network_user_id,
             ':network'=>$network,
             ':limit'=>(int)$limit
         );
+        $q = "SELECT network_user_id, network, count, date, full_date FROM ";
+        $q .= "(SELECT network_user_id, network, count, ".$date_format." as date, date as full_date ";
+        $q .= "FROM #prefix#follower_count AS fc ";
+        $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
+        if ($before_date != null) {
+            $q .= "AND date <= :before_date ";
+            $vars[':before_date'] = $before_date;
+        }
+        $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
+        $q .= "ORDER BY history_counts.full_date ASC";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);
 
         $resultset = array();
         switch ($network) {
-        case 'facebook':
-            $follower_description = 'Friends';
-            break;
-        case 'facebook page':
-            $follower_description = 'Fans';
-            break;
-        case 'twitter':
-        default:
-            $follower_description = 'Followers';
-            break;
+            case 'facebook':
+                $follower_description = 'Friends';
+                break;
+            case 'facebook page':
+                $follower_description = 'Fans';
+                break;
+            case 'twitter':
+            default:
+                $follower_description = 'Followers';
+                break;
         }
         foreach ($history_rows as $row) {
             $timestamp = strtotime($row['full_date']);
             $resultset[] = array('c' => array(
-                array('v' => sprintf('new Date(%d,%d,%d)', date('Y', $timestamp), date('n', $timestamp) - 1,
-                date('j', $timestamp)), 'f' => $row['date']),
-                array('v' => intval($row['count']))
+            array('v' => sprintf('new Date(%d,%d,%d)', date('Y', $timestamp), date('n', $timestamp) - 1,
+            date('j', $timestamp)), 'f' => $row['date']),
+            array('v' => intval($row['count']))
             ));
         }
         $metadata = array(
-          array('type' => 'date', 'label' => 'Date'),
-          array('type' => 'number', 'label' => $follower_description),
+        array('type' => 'date', 'label' => 'Date'),
+        array('type' => 'number', 'label' => $follower_description),
         );
         $vis_data = json_encode(array('rows' => $resultset, 'cols' => $metadata));
         // Google Chart docs say that a string of the form "Date(Y,m,d)" should
@@ -156,11 +165,38 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
 
             $milestone = Utils::predictNextMilestoneDate(intval($history_rows[sizeof($history_rows)-1]['count']),
             $trend);
+
+            //If $before_date set, add difference between then and now to how long it will take
+            if (isset($before_date) ) {
+                if ($units=='DAY') {
+                    $current_day_of_year = date('z');
+                    $before_date_day_of_year = date('z', strtotime($before_date));
+                    $difference = $current_day_of_year - $before_date_day_of_year;
+                    if ($milestone['will_take'] > $difference) {
+                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    }
+                } elseif ($units=='WEEK') {
+                    $current_week_of_year = date('W');
+                    $before_date_week_of_year = date('W', strtotime($before_date));
+                    $difference = $current_week_of_year - $before_date_week_of_year;
+                    if ($milestone['will_take'] > $difference) {
+                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    }
+                } elseif ($units=='MONTH') {
+                    $current_day_of_year = date('n');
+                    $before_date_day_of_year = date('n', strtotime($before_date));
+                    $difference = $current_month_of_year - $before_date_month_of_year;
+                    if ($milestone['will_take'] > $difference) {
+                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    }
+                }
+            }
+
             if (isset($milestone)) {
                 $milestone['units_of_time'] = $units;
             }
             //only set milestone if it's within 10 to avoid "954 weeks until you reach 1000 followers" messaging
-            if ($milestone['will_take'] > 10) {
+            if ($milestone['will_take'] > 50) {
                 $milestone = null;
             }
         } else  {

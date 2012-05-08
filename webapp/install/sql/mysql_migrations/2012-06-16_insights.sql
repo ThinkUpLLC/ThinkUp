@@ -1,4 +1,4 @@
-CREATE TABLE tu_insights (
+CREATE TABLE IF NOT EXISTS tu_insights (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   instance_id int(11) NOT NULL COMMENT 'Instance ID.',
   slug varchar(100) NOT NULL COMMENT 'Identifier for a type of statistic.',

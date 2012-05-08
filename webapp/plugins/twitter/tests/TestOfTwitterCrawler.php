@@ -1087,4 +1087,99 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
             $this->assertPattern("/{$explanation}/", $logfile);
         }
     }
+
+    public function testGenerateInsightBaselines() {
+        self::setUpInstanceUserGinaTrapani();
+        // set up crawl limit budget
+        $crawl_limit = array('cleanUpFollows' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'930061', 'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $twitter_crawler->generateInsightBaselines();
+        $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $avg_rt_count_7_days = $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_7_days', 1);
+        $this->assertEqual($avg_rt_count_7_days->value, 3);
+
+        $avg_rt_count_30_days = $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_30_days', 1);
+        $this->assertEqual($avg_rt_count_30_days->value, 12);
+    }
+
+    public function testGenerateInsights() {
+        self::setUpInstanceUserGinaTrapani();
+        // set up crawl limit budget
+        $crawl_limit = array('cleanUpFollows' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'930061', 'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/4), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+        //spike
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+        'author_user_id'=>'930061', 'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+        'source'=>$source, 'pub_date'=>'-2d', 'in_reply_to_user_id'=>null,
+        'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+        'retweet_count_cache'=>200, 'network'=>'twitter',
+        'old_retweet_count_cache' => floor($counter/4), 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        //spike
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+257, 'post_id'=>$counter+257,
+        'author_user_id'=>'930061', 'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+        'source'=>$source, 'pub_date'=>'-2d', 'in_reply_to_user_id'=>null,
+        'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+        'retweet_count_cache'=>40, 'network'=>'twitter',
+        'old_retweet_count_cache' => floor($counter/4), 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $twitter_crawler->generateInsights();
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $insights = $insight_dao->getInsights( 1);
+        //sleep(1000);
+        print_r($insights);
+    }
 }

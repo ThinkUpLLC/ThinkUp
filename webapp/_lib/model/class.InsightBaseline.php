@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/interface.FollowerCountDAO.php
+ * ThinkUp/webapp/_lib/model/class.InsightBaseline.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2012 Gina Trapani
  *
  * LICENSE:
  *
@@ -20,33 +20,35 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- *
- * Follower Count Data Access Object
+ * InsightBaseline
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
  */
-interface FollowerCountDAO  {
-
+class InsightBaseline {
     /**
-     * Insert a count
-     * @param int $network_user_id
-     * @param str $network
-     * @param int $count
-     * @return int Total inserted
+     * @var date Date of baseline statistic.
      */
-    public function insert($network_user_id, $network, $count);
-
+    var $date;
     /**
-     * Get follower count history for a user
-     * @param int $network_user_id
-     * @param str $network
-     * @param str $group_by 'DAY', 'WEEK', 'MONTH'
-     * @param int $limit Defaults to 10
-     * @param str $start_date Defaults to null (today)
-     * @return array $history, $percentages
+     * @var int Instance ID.
      */
-    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null);
+    var $instance_id;
+    /**
+     * @var str Unique identifier for a type of statistic.
+     */
+    var $slug;
+    /**
+     * @var int The numeric value of this stat/total/average.
+     */
+    var $value;
+    public function __construct($row = false) {
+        if ($row) {
+            $this->date = $row['date'];
+            $this->instance_id = $row['instance_id'];
+            $this->slug = $row['slug'];
+            $this->value = $row['value'];
+        }
+    }
 }

@@ -55,7 +55,7 @@ interface InsightDAO {
      * @return Insight
      */
     public function getPreCachedInsightData($slug, $instance_id, $date);
-    /**
+    /*
      * Remove insight from storage.
      * @param str $slug
      * @param int $instance_id
