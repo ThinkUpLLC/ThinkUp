@@ -79,4 +79,13 @@ interface GroupMemberDAO {
      * @return array - numbered keys, with arrays - named keys
      */
     public function getFormerGroups($user_id, $network, $count = 20, $page = 1);
+
+    /**
+     * Get a list of group memberships first seen on a given date.
+     * @param str $network
+     * @param str $user_id
+     * @param str $from_date Defaults to null (today)
+     * @return arr Group objects
+     */
+    public function getNewMembershipsByDate($network, $user_id, $from_date=null);
 }

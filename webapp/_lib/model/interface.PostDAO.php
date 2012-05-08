@@ -565,6 +565,16 @@ interface PostDAO {
     public function getPostsToUserIterator($user_id, $network, $count, $is_public=false);
 
     /**
+     * Get the average retweet count over the last X days
+     * @param $username
+     * @param $network
+     * @param $last_x_days
+     * @param $since Date to calculate from defaults to today
+     * @return int Average retweet count over the last X days
+     */
+    public function getAverageRetweetCount($username, $network, $last_x_days, $since=null);
+
+    /**
      * Get posts from this day in every year except this one that aren't replies or reshares/retweets.
      * @param str $author_id
      * @param str $network
@@ -574,6 +584,7 @@ interface PostDAO {
     public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null);
 
     /**
+     <<<<<<< HEAD
      * Get all checkins with place information and any links attached to the checkin.
      * @param $author_id
      * @param $network
@@ -614,4 +625,13 @@ interface PostDAO {
      * @return string that is a URL to a image of the checkins on a google map
      */
     public function getAllCheckinsInLastWeekAsGoogleMap($author_id, $network);
+
+    /** Check if user has any posts with retweets on or before since_date minus last_x_days
+     * @param str $author_username
+     * @param str $network
+     * @param int $last_x_days
+     * @param str $since Date in Y-m-d format
+     * @return bool
+     */
+    public function doesUserHavePostsWithRetweetsSinceDate($author_username, $network, $last_x_days, $since=null);
 }

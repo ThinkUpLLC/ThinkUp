@@ -38,6 +38,8 @@ class DashboardModuleCacher {
     var $instance;
     public function __construct(Instance $instance) {
         $this->instance = $instance;
+        $this->logger = Logger::getInstance();
+        $this->logger->setUsername($instance->network_username);
     }
     /**
      * Pre-fetch dashboard module data and store.
@@ -55,7 +57,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($results));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($results));
         }
 
         //Cache PostMySQLDAO::getHotPosts
@@ -67,7 +69,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getHotPosts", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
         }
 
         //Cache ShortLinkMySQLDAO::getRecentClickStats
@@ -79,7 +81,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($click_stats_data));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($click_stats_data));
         }
 
         //Cache PostMySQLDAO::getAllPostsByUsernameOrderedBy // getMostRepliedToPostsInLastWeek
@@ -90,7 +92,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
         }
 
         //Cache PostMySQLDAO::getAllPostsByUsernameOrderedBy // getMostRetweetedPostsInLastWeek
@@ -101,7 +103,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
         }
 
         //Cache PostMySQLDAO::getClientsUsedByUserOnNetwork

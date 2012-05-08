@@ -28,7 +28,7 @@
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, text, related_data, emphasis FROM #prefix#insights WHERE ";
+        $q = "SELECT date, instance_id, slug, prefix, text, related_data, emphasis FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
@@ -49,27 +49,27 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
     }
 
-    public function insertInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "text=:text, emphasis=:emphasis, related_data=:related_data";
+            $q .= "prefix=:prefix, text=:text, emphasis=:emphasis, related_data=:related_data";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
             ':instance_id'=>$instance_id,
+            ':prefix'=>$prefix,
             ':text'=>$text,
             ':emphasis'=>$emphasis,
             ':related_data'=>$related_data
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
             $ps = $this->execute($q, $vars);
             $result = $this->getUpdateCount($ps);
             return ($result > 0);
         } else {
-            return self::updateInsight($slug, $instance_id, $date, $text, $emphasis, $related_data);
+            return self::updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis, $related_data);
         }
     }
 
@@ -83,7 +83,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ":limit"=>(int)$page_count
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
@@ -96,7 +95,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
                 } elseif ($insight->related_data[0] instanceof Post) {
                     $insight->related_data_type = "posts";
                 } elseif (isset($insight->related_data['history'])) {
-                    $insight->related_data_type = "follower_count_history";
+                    $insight->related_data_type = "count_history";
                 }
             }
             //assume insight came at same time of day as now for relative day notation
@@ -114,26 +113,25 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':instance_id'=>$instance_id
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
     }
 
-    public function updateInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null) {
-        $q = "UPDATE #prefix#insights SET text=:text, related_data=:related_data, emphasis=:emphasis ";
+        $q = "UPDATE #prefix#insights SET prefix=:prefix, text=:text, related_data=:related_data, emphasis=:emphasis ";
         $q .= "WHERE slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
             ':instance_id'=>$instance_id,
+            ':prefix'=>$prefix,
             ':text'=>$text,
             ':related_data'=>$related_data,
             ':emphasis'=>$emphasis
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
@@ -151,5 +149,98 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
+    }
+
+    public function getPublicInsights($page_count=10, $page_number=1) {
+        return self::getInsightsForInstances($page_count, $page_number, $public_only = true);
+    }
+
+    public function getAllInstanceInsights($page_count=10, $page_number=1) {
+        return self::getInsightsForInstances($page_count, $page_number, $public_only = false);
+    }
+
+    public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page_number=1) {
+        $start_on_record = ($page_number - 1) * $page_count;
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id ";
+        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id DESC LIMIT :start_on_record, :limit;";
+        $vars = array(
+            ":start_on_record"=>(int)$start_on_record,
+            ":limit"=>(int)$page_count,
+            ":owner_id"=>(int)$owner_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $insights = array();
+        foreach ($rows as $row) {
+            $insight = new Insight($row);
+            $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
+            $insights[] = $insight;
+        }
+        foreach ($insights as $insight) {
+            $insight->related_data = unserialize($insight->related_data);
+            if ($insight->related_data instanceof Post) {
+                $insight->related_data_type = "post";
+            } elseif (is_array($insight->related_data)) {
+                if ($insight->related_data[0] instanceof User) {
+                    $insight->related_data_type = "users";
+                } elseif ($insight->related_data[0] instanceof Post) {
+                    $insight->related_data_type = "posts";
+                } elseif (isset($insight->related_data['history'])) {
+                    $insight->related_data_type = "count_history";
+                }
+            }
+            //assume insight came at same time of day as now for relative day notation
+            $insight->date = $insight->date. " ".date('H').":".date('i');
+        }
+        return $insights;
+    }
+
+    private function getInsightsForInstances($page_count=10, $page_number=1, $public_only = true) {
+        $start_on_record = ($page_number - 1) * $page_count;
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 ";
+        if ($public_only) {
+            $q .= "AND su.is_public = 1 ";
+        }
+        $q .= " AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id DESC LIMIT :start_on_record, :limit;";
+        $vars = array(
+            ":start_on_record"=>(int)$start_on_record,
+            ":limit"=>(int)$page_count
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $insights = array();
+        foreach ($rows as $row) {
+            $insight = new Insight($row);
+            $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
+            $insights[] = $insight;
+        }
+        foreach ($insights as $insight) {
+            $insight->related_data = unserialize($insight->related_data);
+            if ($insight->related_data instanceof Post) {
+                $insight->related_data_type = "post";
+            } elseif (is_array($insight->related_data)) {
+                if ($insight->related_data[0] instanceof User) {
+                    $insight->related_data_type = "users";
+                } elseif ($insight->related_data[0] instanceof Post) {
+                    $insight->related_data_type = "posts";
+                } elseif (isset($insight->related_data['history'])) {
+                    $insight->related_data_type = "count_history";
+                }
+            }
+            //assume insight came at same time of day as now for relative day notation
+            $insight->date = $insight->date. " ".date('H').":".date('i');
+        }
+        return $insights;
     }
 }

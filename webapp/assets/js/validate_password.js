@@ -88,7 +88,7 @@ var TUValidatePassword = function() {
                     full_name: { required: "Please enter your name." },
                     email: { required: "Please enter a valid email address." },
                     pass1: { required: "" },
-                    pass2: { required: "<br />Your passwords must match.", equalTo: "<br />Your passwords must match." }
+                    pass2: { required: "Your passwords must match.", equalTo: "Your passwords must match." }
                 }
             });
             $("#pass1").valid();

@@ -2850,7 +2850,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetOnThisDayFlashbackPostsNoFromDate(){
         // Generate the date string for 1 year ago today
-        $year_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 year")));
+        $year_ago_date = date(date( 'Y-m-d 10:10:10' , strtotime("today -1 year")));
 
         // Add a post from a year ago that's not a reply or retweet
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
@@ -2866,7 +2866,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $link_builder = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
 
         // Add a post from 2 years ago that's not a reply or retweet
-        $two_years_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -2 year")));
+        $two_years_ago_date = date(date( 'Y-m-d 11:11:11' , strtotime("today -2 year")));
         $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'151', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_ago_date, 'location'=>'England',
@@ -2880,7 +2880,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $link_builder2 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
         // Add a post from today that's not a reply or retweet
-        $today_date = date(date( 'Y-m-d H:i:s' , strtotime("today")));
+        $today_date = date( 'Y-m-d 09:00:09' , strtotime("today"));
 
         $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'152', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
@@ -3318,5 +3318,77 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $valid_url .= 'blue%7C|52.477192843264,-1.484333726346|52.477192843264,-1.484333726346&sensor=false';
 
         $this->assertEqual($res, $valid_url);
+    }
+
+
+    public function testGetAverageRetweetCount() {
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $dao = new PostMySQLDAO();
+        //without date (today)
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7);
+        $this->assertEqual($average_retweet_count, 3);
+
+        //yesterday
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-1 day")));
+        $this->assertEqual($average_retweet_count, 4);
+
+        //40 days ago
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-40 day")));
+        $this->assertEqual($average_retweet_count, 17);
+    }
+
+    public function testDoesUserHavePostsWithRetweetsSinceDate() {
+        $post_dao = new PostMySQLDAO();
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('ev', 'twitter', 7);
+        $this->assertFalse($result);
+
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+            'id'=>$id,
+            'post_id'=>(147+$counter),
+            'author_user_id'=>23,
+            'author_username'=>'user3',
+            'pub_date'=>'-'.$counter.'d',
+            'retweet_count_cache'=>$counter+1,
+            'old_retweet_count_cache' => floor($counter/2),
+            'network'=>'twitter',
+            'in_reply_to_user_id'=>null,
+            'in_reply_to_post_id'=>null,
+            'in_retweet_of_post_id'=>null
+            ));
+            $counter++;
+        }
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30);
+        $this->assertTrue($result);
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $this->assertFalse($result);
     }
 }

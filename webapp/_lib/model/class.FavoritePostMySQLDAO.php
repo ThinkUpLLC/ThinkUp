@@ -334,4 +334,64 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $all_rows = $this->getDataRowsAsArrays($ps);
         return $all_rows;
     }
+
+    public function getFavoritesFromOneYearAgo($fav_of_user_id, $network, $from_date=null) {
+        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date ";
+        $q .= "FROM #prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id
+        WHERE f.fav_of_user_id = :fav_of_user_id AND p.network=:network AND p.is_protected = 0 ";
+
+        $vars = array(
+            ':fav_of_user_id'=> $fav_of_user_id,
+            ':network'=>$network
+        );
+        if (!isset($from_date)) {
+            $from_date = 'CURRENT_DATE()';
+        } else {
+            $from_date = "'$from_date'";
+        }
+        $q .= "AND (YEAR(pub_date)!=YEAR(CURRENT_DATE())) ";
+        $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) ";
+        $q .= "ORDER BY pub_date DESC ";
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($rows as $row) {
+            $posts[] = new Post($row);
+        }
+        return $posts;
+    }
+
+    public function getUsersWhoFavoritedMostOfYourPosts($author_user_id, $network, $last_x_days) {
+        //$q = "SELECT u.user_name, fav_of_user_id, count(f.post_id) AS total_likes from tu_favorites f ";
+        $q = "SELECT * FROM ( ";
+        $q .= "SELECT u.*, count(f.post_id) AS total_likes from tu_favorites f ";
+        $q .= "INNER JOIN tu_users u ON u.user_id = f.fav_of_user_id ";
+        $q .= "INNER JOIN tu_posts p ON f.post_id = p.post_id ";
+        $q .= "WHERE f.author_user_id = :author_user_id and f.network=:network ";
+        $q .= "AND p.pub_date >= date_sub(current_date, INTERVAL :last_x_days day) ";
+        $q .= "GROUP BY f.fav_of_user_id ORDER BY total_likes DESC";
+        $q .= ") favs WHERE favs.total_likes > 1 LIMIT 3";
+
+        $vars = array(
+            ':author_user_id'=> $author_user_id,
+            ':network'=>$network,
+            ':last_x_days'=>$last_x_days
+        );
+
+        //echo Utils::mergeSQLVars($q, $vars);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $users = array();
+        foreach ($rows as $row) {
+            $user = new User($row);
+            $user->total_likes = $row['total_likes'];
+            $users[] = $user;
+        }
+        return $users;
+    }
 }
