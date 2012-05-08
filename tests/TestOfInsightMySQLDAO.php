@@ -88,7 +88,6 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->builders = null;
         parent::tearDown();
     }
-
     public function testGetInsight() {
         $dao = new InsightMySQLDAO();
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-01');

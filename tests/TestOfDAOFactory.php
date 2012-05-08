@@ -376,6 +376,12 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'ShortLinkMySQLDAO');
     }
 
+    public function testInsightBaselineDAO() {
+        $dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'InsightBaselineMySQLDAO');
+    }
+
     public function testInsightDAO() {
         $dao = DAOFactory::getDAO('InsightDAO');
         $this->assertNotNull($dao);
@@ -393,7 +399,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 30);
+        $this->assertEqual(sizeof($result), 31);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

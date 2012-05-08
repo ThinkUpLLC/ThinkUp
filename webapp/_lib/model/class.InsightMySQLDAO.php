@@ -64,7 +64,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':related_data'=>$related_data
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
             $ps = $this->execute($q, $vars);
             $result = $this->getUpdateCount($ps);
             return ($result > 0);
@@ -83,7 +82,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ":limit"=>(int)$page_count
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
@@ -96,7 +94,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
                 } elseif ($insight->related_data[0] instanceof Post) {
                     $insight->related_data_type = "posts";
                 } elseif (isset($insight->related_data['history'])) {
-                    $insight->related_data_type = "follower_count_history";
+                    $insight->related_data_type = "count_history";
                 }
             }
             //assume insight came at same time of day as now for relative day notation
@@ -114,7 +112,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':instance_id'=>$instance_id
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
@@ -133,7 +130,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':emphasis'=>$emphasis
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
