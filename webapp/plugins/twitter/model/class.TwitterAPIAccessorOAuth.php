@@ -192,16 +192,18 @@ class TwitterAPIAccessorOAuth {
         $pj = json_decode($data);
         //print_r($pj);
         $parsed_payload = array();
-        foreach ($pj->results as $p) {
-            $parsed_payload[] = array('post_id'=>$p->id_str,
-            'author_user_id'=>$p->from_user_id, 'user_id'=>$p->from_user_id,
-            'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text,
-            'author_username'=>$p->from_user, 'user_name'=>$p->from_user,
-            'in_reply_to_user_id'=>$p->to_user_id,
-            'author_avatar'=>$p->profile_image_url, 'avatar'=>$p->profile_image_url,
-            'in_reply_to_post_id'=>$p->in_reply_to_status_id_str, 'author_fullname'=>'', 'full_name'=>'',
-            'source'=>'twitter', 'location'=>'', 'url'=>'',
-            'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0);
+        if (isset($pj->results)) {
+            foreach ($pj->results as $p) {
+                $parsed_payload[] = array('post_id'=>$p->id_str,
+                'author_user_id'=>$p->from_user_id, 'user_id'=>$p->from_user_id,
+                'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text,
+                'author_username'=>$p->from_user, 'user_name'=>$p->from_user,
+                'in_reply_to_user_id'=>$p->to_user_id,
+                'author_avatar'=>$p->profile_image_url, 'avatar'=>$p->profile_image_url,
+                'in_reply_to_post_id'=>((isset($p->in_reply_to_status_id_str))?$p->in_reply_to_status_id_str:''),
+                'author_fullname'=>'', 'full_name'=>'', 'source'=>'twitter', 'location'=>'', 'url'=>'',
+                'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0);
+            }
         }
         return $parsed_payload;
     }

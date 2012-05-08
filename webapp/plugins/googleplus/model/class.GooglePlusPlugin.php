@@ -169,6 +169,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $qtabds->addHelp('userguide/listings/googleplus/dashboard_questions');
         $qtab->addDataset($qtabds);
         $menus["posts-questions"] = $qtab;
+
         return $menus;
     }
 }
