@@ -63,7 +63,7 @@ abstract class PluginRegistrar {
                 if (method_exists($callback[0], $callback[1] )) {
                     $obj = new $callback[0];
                     //call_user_func($callback, $params);
-                    call_user_func(array($obj, $callback[1]), $params);
+                    call_user_func_array(array($obj, $callback[1]), $params);
                 } else {
                     throw new Exception("The ".$callback[0]." object does not have a ".$callback[1]." function.");
                 }

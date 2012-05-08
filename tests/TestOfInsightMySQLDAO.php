@@ -123,24 +123,28 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
     public function testInsertInsight() {
         $dao = new InsightMySQLDAO();
         //date specified
-        $result = $dao->insertInsight('avg_replies_per_week', 1, '2012-05-05', 'Oh hai!', 'You rock');
+        $result = $dao->insertInsight($slug='avg_replies_per_week', $instance_id=1, $date='2012-05-05',
+        $prefix='Oh hai!', $text='You rock', $filename="test_insight");
         $this->assertTrue($result);
 
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
         $this->assertEqual($result->prefix, 'Oh hai!');
         $this->assertEqual($result->text, 'You rock');
+        $this->assertEqual($result->filename, 'test_insight');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
 
         //inserting existing insight should update
         $result = $dao->insertInsight('avg_replies_per_week', 1, '2012-05-05', 'Ohai!', 'Updated: You rock',
-        Insight::EMPHASIS_HIGH);
+        'tester_insight', Insight::EMPHASIS_HIGH);
         $this->assertTrue($result);
 
         //assert update was successful
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
         $this->assertEqual($result->prefix, 'Ohai!' );
         $this->assertEqual($result->text, 'Updated: You rock');
+        //Filename shouldn't change on update
+        $this->assertEqual($result->filename, 'test_insight');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
     }
 

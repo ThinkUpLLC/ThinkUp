@@ -58,7 +58,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
      * @var Logger
      */
     var $logger;
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

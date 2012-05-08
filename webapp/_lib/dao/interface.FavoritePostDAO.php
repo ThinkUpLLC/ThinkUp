@@ -111,4 +111,21 @@ interface FavoritePostDAO extends PostDAO {
      * @return array users table array of rows who have favorited a post
      */
     public function getUsersWhoFavedPost($post_id, $network='twitter', $is_public = false);
+
+    /**
+     * Get the posts a user favorited a year ago today.
+     * @param $fav_of_user_id
+     * @param $network
+     * @param $from_date
+     * @return array Post objects
+     */
+    public function getFavoritesFromOneYearAgo($fav_of_user_id, $network, $from_date=null);
+    /**
+     * Get users who favorited most of an author's posts over the past specified number of days.
+     * @param $author_user_id
+     * @param $network
+     * @param $last_x_days
+     * @return array User objects
+     */
+    public function getUsersWhoFavoritedMostOfYourPosts($author_user_id, $network, $last_x_days);
 }

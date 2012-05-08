@@ -216,14 +216,20 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
 
         $messages = null;
         $messages = file($config->getValue('log_location'));
-        $this->assertPattern('/TestOfLogger: <span style="color:black">This is a user info message<\/span><br >/',
+
+        $this->assertPattern('/<td class="crawl-log-component">TestOfLogger: <\/td> <td class="control-group '.
+        'warning">This is a user info message<\/td>/i',
         $messages[sizeof($messages) - 4]);
-        $this->assertPattern('/TestOfLogger: <span style="color:red">This is a user error message<\/span><br >/',
+        $this->assertPattern('/<td class="crawl-log-component">TestOfLogger: <\/td> <td class="control-group error">'.
+        'This is a user error message<\/td>/i',
         $messages[sizeof($messages) - 3]);
-        $this->assertPattern('/TestOfLogger: <span style="color:red">This is an error message<\/span><br >/',
+        $this->assertPattern('/<td class="crawl-log-component">TestOfLogger: <\/td> <td class="control-group error"'.
+        '>This is an error message<\/td>/i',
         $messages[sizeof($messages) - 2]);
-        $this->assertPattern('/TestOfLogger: <span style="color:green">This is a user success message<\/span><br >/',
+        $this->assertPattern('/<td class="crawl-log-component">TestOfLogger: <\/td> <td class="control-group success">'.
+        'This is a user success message<\/td>/i',
         $messages[sizeof($messages) - 1]);
+
         $logger->close();
     }
 

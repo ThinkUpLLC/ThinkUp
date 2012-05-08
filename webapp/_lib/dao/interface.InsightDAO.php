@@ -34,12 +34,13 @@ interface InsightDAO {
      * @param str $date
      * @param str $prefix
      * @param str $text
+     * @param str $filename
      * @param int $emphasis
      * @param str $related_data Defaults to null
      * @return bool
      */
-    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
-    $related_data=null);
+    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $filename,
+    $emphasis=Insight::EMPHASIS_LOW, $related_data=null);
     /**
      * Retrieve insight from storage.
      * @param str $slug

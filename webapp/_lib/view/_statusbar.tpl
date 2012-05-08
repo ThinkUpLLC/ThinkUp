@@ -1,3 +1,36 @@
+{if $enable_bootstrap}
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+
+          <a href="{$site_root_path}{$logo_link}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
+          {if $logged_in_user}<a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="btn pull-left"><i class="icon-refresh"></i></a>{/if}
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+
+          <div class="nav-collapse">
+
+      {if $logged_in_user}
+<ul class="nav pull-right">
+        {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
+        <li><p class="navbar-text">{$logged_in_user}{if $user_is_admin} (admin){/if}</p></li>
+        <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage">Settings</a></li>
+        <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
+</ul>   
+      {else}
+<ul class="nav pull-right">
+        <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
+        <li><a href="{$site_root_path}session/login.php" >Log In</a></li>
+
+</ul>
+      {/if}
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+{else}
+
 {literal}
   <script type="text/javascript">
     $(document).ready(function() {
@@ -50,6 +83,7 @@
   
   <div class="status-bar-right text-right">
     <ul> 
+        <li><a href="{$site_root_path}insights.php" class="linkbutton" style="background: #31C22D;color:white;">Insights (New!)</a></li>
       {if $logged_in_user}
         <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
         <script>var logged_in_user = '{$logged_in_user}';</script>
@@ -72,3 +106,5 @@
   </a></div> <!-- end #app-title -->
   
 </div> <!-- end .container -->
+
+{/if}

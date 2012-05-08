@@ -52,7 +52,6 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern('/All Post Locations/', $results);
         $this->assertNoPattern("/This is a private retweet to 1001/", $results);
         $this->assertNoPattern("/This is a private reply to 1001/", $results);
     }

@@ -3073,7 +3073,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetOnThisDayFlashbackPostsNoFromDate(){
         // Generate the date string for 1 year ago today
-        $year_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 year")));
+        $year_ago_date = date(date( 'Y-m-d 10:10:10' , strtotime("today -1 year")));
 
         // Add a post from a year ago that's not a reply or retweet
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
@@ -3089,7 +3089,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $link_builder = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
 
         // Add a post from 2 years ago that's not a reply or retweet
-        $two_years_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -2 year")));
+        $two_years_ago_date = date(date( 'Y-m-d 11:11:11' , strtotime("today -2 year")));
         $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'151', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_ago_date, 'location'=>'England',
@@ -3103,7 +3103,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $link_builder2 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
         // Add a post from today that's not a reply or retweet
-        $today_date = date(date( 'Y-m-d H:i:s' , strtotime("today")));
+        $today_date = date( 'Y-m-d 09:00:09' , strtotime("today"));
 
         $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'152', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
@@ -3251,8 +3251,120 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Get the year to query for
         $res = $post_dao->getOnThisDayFlashbackPosts(20, 'foursquare', $yesterday_date);
 
-        // Check only the 1 checkin we inserted is returned
+        // Check the 2 checkins we inserted are returned
         $this->assertEqual(sizeof($res), 2);
+        // Check the author user id was set correctly
+        $this->assertEqual($res[0]->author_user_id, '20');
+        // Check the username was set correctly
+        $this->assertEqual($res[0]->author_username, 'user1');
+        // Check the author fullname was set correctly
+        $this->assertEqual($res[0]->author_fullname, 'User 1');
+        // Check the network was set correctly
+        $this->assertEqual($res[0]->network, 'foursquare');
+        // Check the post text was set correctly
+        $this->assertEqual($res[0]->post_text, 'I just checked in');
+        // Check the pub date was set correctly
+        $this->assertEqual($res[0]->pub_date, $two_years_and_day_ago_date);
+        // Check the location was set correctly
+        $this->assertEqual($res[0]->location, 'England');
+        // Check the place was set correctly
+        $this->assertEqual($res[0]->place, 'The Park');
+        // Check the place id was set correctly
+        $this->assertEqual($res[0]->place_id, '12345a');
+        // Check the geo co ordinates were set correctly
+        $this->assertEqual($res[0]->geo, '52.477192843264,-1.484333726346');
+
+        // Check the place id was set correctly
+        $this->assertEqual($res[0]->place_obj->place_id, '12345a');
+        // Check the place type was set correctly
+        $this->assertEqual($res[0]->place_obj->place_type, 'Park');
+        // Check the place name was set correctly
+        $this->assertEqual($res[0]->place_obj->name, 'A Park');
+        // Check the full name was set correctly
+        $this->assertEqual($res[0]->place_obj->full_name, 'The Greatest Park');
+        // Check the country code was set correctly
+        $this->assertEqual($res[0]->place_obj->country_code, 'UK');
+        // Check the country was set correctly
+        $this->assertEqual($res[0]->place_obj->country, 'United Kingdom');
+        // Check the icon was set correctly
+        $this->assertEqual($res[0]->place_obj->icon, 'http://www.iconlocation.com');
+        // Check the map image was set correctly
+        $this->assertEqual($res[0]->place_obj->map_image, 'http://www.mapimage.com');
+
+        // Check the link URL was set correctly
+        $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blahb');
+    }
+
+    public function testGetOnThisDayFlashbackPostsWithoutPostTextOrPlace(){
+        // Generate the date string for 1 year and 1 day ago today
+        $year_and_day_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 day", strtotime("today -1 year"))));
+
+        // Add a post from a year ago that's not a reply or retweet with empty post text and place
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'', 'source'=>'', 'pub_date'=>$year_and_day_ago_date, 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $post_key = $post_builder->columns['last_insert_id'];
+        // Add a link for this post
+        $link_builder = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
+
+        // Add a post from 2 years ago that's not a reply or retweet
+        $two_years_and_day_ago_date = date( 'Y-m-d H:i:s' , strtotime('today -1 day', strtotime("today -2 year")));
+        $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'151', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_and_day_ago_date, 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $post_key = $post_builder2->columns['last_insert_id'];
+        // Add a link for this post
+        $link_builder2 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
+
+        // Add a post from today that's not a reply or retweet
+        $yesterday_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 day")));
+
+        $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'152', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$yesterday_date, 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $post_key = $post_builder3->columns['last_insert_id'];
+        // Add a link for this post
+        $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
+
+        // Add the place information
+        $place['place_id'] = '12345a';
+        $place['place_type'] = "Park";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
+
+        // Insert the place
+        $place_builder = FixtureBuilder::build('places', $place);
+
+        // Query the database for last year's post
+        $post_dao = new PostMySQLDAO();
+        // Get the year to query for
+        $res = $post_dao->getOnThisDayFlashbackPosts(20, 'foursquare', $yesterday_date);
+
+        // Check only the 1 checkin we inserted is returned
+        $this->assertEqual(sizeof($res), 1);
         // Check the author user id was set correctly
         $this->assertEqual($res[0]->author_user_id, '20');
         // Check the username was set correctly
@@ -3560,5 +3672,88 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertNull($post->in_rt_of_user_id);
             $this->assertEqual(date('Y', strtotime($post->pub_date)), '2006');
         }
+    }
+    public function testGetAverageRetweetCount() {
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $dao = new PostMySQLDAO();
+        //without date (today)
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7);
+        $this->assertEqual($average_retweet_count, 3);
+
+        //yesterday
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-1 day")));
+        $this->assertEqual($average_retweet_count, 4);
+
+        //40 days ago
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-40 day")));
+        $this->assertEqual($average_retweet_count, 17);
+    }
+
+    public function testDoesUserHavePostsWithRetweetsSinceDate() {
+        $post_dao = new PostMySQLDAO();
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('ev', 'twitter', 7);
+        $this->assertFalse($result);
+
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+            'id'=>$id,
+            'post_id'=>(147+$counter),
+            'author_user_id'=>23,
+            'author_username'=>'user3',
+            'pub_date'=>'-'.$counter.'d',
+            'retweet_count_cache'=>$counter+1,
+            'old_retweet_count_cache' => floor($counter/2),
+            'network'=>'twitter',
+            'in_reply_to_user_id'=>null,
+            'in_reply_to_post_id'=>null,
+            'in_retweet_of_post_id'=>null
+            ));
+            $counter++;
+        }
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30);
+        $this->assertTrue($result);
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $this->assertFalse($result);
+    }
+
+    public function testGetRetweetsByAuthorsOverFollowerCount() {
+        $post_dao = new PostMySQLDAO();
+        $big_retweeters = $post_dao->getRetweetsByAuthorsOverFollowerCount('134', 'twitter', 10);
+        $this->assertEqual(sizeof($big_retweeters), 3);
+        $this->assertIsA($big_retweeters[0], 'User');
+        $this->assertEqual($big_retweeters[0]->follower_count, 90);
+        $this->assertEqual($big_retweeters[0]->username, 'user1');
+        $this->assertEqual($big_retweeters[1]->follower_count, 80);
+        $this->assertEqual($big_retweeters[1]->username, 'user2');
+        $this->assertEqual($big_retweeters[2]->follower_count, 70);
+        $this->assertEqual($big_retweeters[2]->username, 'linkbaiter');
     }
 }

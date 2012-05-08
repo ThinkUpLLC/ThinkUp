@@ -1244,8 +1244,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param str $order_by field name Default "pub_date"
      * @return array Posts with link object set
      */
-    private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
-    $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false) {
+    public function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
+    $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false, $since = null) {
         $order_by = $this->sanitizeOrderBy($order_by);
         $vars = array(
             ':author_username'=>$author_username,
@@ -1254,8 +1254,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select,
         // which we can then sort on.
         if ($order_by == 'retweets') {
-            $q = "SELECT p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " .
-            "pub_date + interval #gmt_offset# hour as adj_pub_date ";
+            $q = "SELECT p.*, GREATEST((p.retweet_count_cache + p.old_retweet_count_cache), retweet_count_api) ".
+            "as retweets, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         } else {
             $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         }
@@ -1263,7 +1263,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "WHERE author_username = :author_username AND p.network = :network ";
 
         if ($in_last_x_days > 0) {
-            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            if ($since == null) {
+                $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            } else {
+                $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :in_last_x_days DAY) ";
+                $vars[':since'] = $since;
+            }
             $vars[':in_last_x_days'] = (int)$in_last_x_days;
         }
         if ($order_by == 'reply_count_cache') {
@@ -1936,7 +1941,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null) {
         $vars = array(
-            ':author'=> $author_id,
+            ':author'=> strval($author_id),
             ':network'=>$network
         );
         if (!isset($from_date)) {
@@ -1953,7 +1958,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
         $q .= "author_user_id=:author AND po.network=:network AND ";
         $q .= "in_reply_to_post_id IS null AND in_reply_to_user_id IS NULL AND ";
-        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL ";
+        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL AND ";
+        // Don't return posts without post text or place to display
+        $q .= "(post_text != '' || po.place != '') ";
         $q .= "ORDER BY pub_date DESC ";
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -2258,5 +2265,87 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $posts[] = $post;
         }
         return $posts;
+    }
+    public function getAverageRetweetCount($author_username, $network, $last_x_days, $since=null){
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT round(avg(old_retweet_count_cache + retweet_count_cache)) as average_retweet_count ";
+        $q .= "FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+        $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+        $q .= "AND (retweet_count_cache > 0 OR old_retweet_count_cache > 0) ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        if (!isset($result["average_retweet_count"])) {
+            $q = "SELECT round(avg(retweet_count_api)) as average_retweet_count ";
+            $q .= "FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+            $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+            $q .= "AND retweet_count_api > 0 ";
+            $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+            $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+            );
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q, $vars);
+            $result = $this->getDataRowAsArray($ps);
+        }
+        return $result["average_retweet_count"];
+    }
+
+    public function doesUserHavePostsWithRetweetsSinceDate($author_username, $network, $last_x_days, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT id FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+        $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+        $q .= "AND (retweet_count_cache > 0 OR old_retweet_count_cache > 0 OR retweet_count_api > 0) ";
+        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        if (sizeof($result) < 1 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function getRetweetsByAuthorsOverFollowerCount($post_id, $network, $follower_count_threshold) {
+        $q = "SELECT u.* ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
+        $q .= "WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
+        $q .= "AND p.is_protected = 0 AND u.follower_count > :follower_count_threshold ";
+        $q .= "ORDER BY u.follower_count DESC, p.id DESC LIMIT 5";
+
+        $vars = array(
+            ':post_id'=>(string)$post_id,
+            ':network'=>$network,
+            ':follower_count_threshold'=>$follower_count_threshold
+        );
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
     }
 }

@@ -113,4 +113,19 @@ class TestOfGroupMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($this->DAO->updateOrInsertGroup($group));
         $this->assertTrue($this->DAO->isGroupInStorage($group = '133333333', 'twitter'));
     }
+
+    public function testSetMetadata() {
+        $val['id'] = 101;
+        $val['group_id'] = 1001;
+        $val['network'] = 'twitter';
+        $val['group_name'] = '@mirqamar/fivebyfive';
+        $val['is_active'] = 1;
+        $val['first_seen'] = '2012-06-13';
+        $val['last_seen'] = '2012-06-13';
+
+        $group = new Group($val);
+        $group->setMetadata();
+        $this->assertEqual($group->url, 'http://twitter.com/mirqamar/fivebyfive');
+        $this->assertEqual($group->keyword, 'fivebyfive');
+    }
 }
