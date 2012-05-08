@@ -140,6 +140,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         //$config->getValue('table_prefix')."links," .
         $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
@@ -217,6 +219,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
@@ -285,6 +289,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -329,6 +335,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -410,6 +418,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."links," .
         $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
@@ -453,6 +463,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -495,6 +507,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."insight_baselines," .
+        $config->getValue('table_prefix')."insights," .
         $config->getValue('table_prefix')."links," .
         $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
@@ -561,8 +575,9 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $tables = $installer->getTablesToInstall();
 
         $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
-        'group_members', 'groups', 'hashtags', 'hashtags_posts', 'insights', 'instances',
-        'instances_twitter', 'invites', 'links', 'links_short', 'mentions', 'mentions_posts', 'options',
+        'group_members', 'groups', 'hashtags', 'hashtags_posts',
+        'insight_baselines', 'insights', 'instances',  'instances_twitter', 'invites',
+        'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'places','places_posts',
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
