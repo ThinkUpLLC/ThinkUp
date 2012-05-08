@@ -1,116 +1,104 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap="true" register_form="true"}
+{include file="_statusbar.tpl" enable_bootstrap="true"}
 
-<div class="container_24 thinkup-canvas clearfix round-all" style="margin-top : 30px;">
 
-    <div class="grid_18 section" style="margin-bottom : 100px; margin-left : 100px;">
-        {insert name="help_link" id='register'}
-        <h2>Register</h2>
-        
-        <div class="article">
-        
-        <div style="margin-right : 20px;">
-            {include file="_usermessage.tpl"}<br>
-        </div>
+<div class="container">
+
+<div class="row">
+    <div class="span3">
+          <div class="sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="">
+                    Register
+               </li>
+            </ul>
+          </div><!--/.well -->
+    </div><!--/span3-->
+    <div class="span9">
+
+
+        {include file="_usermessage.tpl" enable_bootstrap="true"}
         
         {if !$closed and !$has_been_registered}
-        <form name="form1" method="post" id="registerform" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login append_20">
-          <div class="clearfix">
-            <div class="grid_4 prefix_2 right">
-              <label for="full_name">
-                Name:
-              </label>
-            </div>
-            <div class="grid_10 left">
-              <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name|filter_xss}"{/if}>
-              <small>
-                <br>
-                Example: Angelina Jolie
-              </small>
-            </div>
-          </div>
-          <div class="clearfix">
-            <div class="grid_9 prefix_6 left">
-              {include file="_usermessage.tpl" field="email"}
-            </div>
-            <div class="grid_4 prefix_2 right">
-              <label for="email">
-                Email:
-              </label>
-            </div>
-            <div class="grid_10 left">
-              <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}>
-              <small>
-                <br>
-                Example: angie@example.com
-              </small>
-            </div>
-          </div>
-          <div class="clearfix">
-            <div class="grid_9 prefix_6 left">
-                {include file="_usermessage.tpl" field="password"}
-            </div>
-            <div class="grid_4 prefix_2 right">
-              <label for="pass1">
-                Password:
-              </label>
-            </div>
-            <div class="grid_10 left">
-              <input name="pass1" type="password" id="pass1" class="password" onfocus="$('#password-meter').show();">
-                <div class="password-meter" style="display:none;" id="password-meter">
-                    <div class="password-meter-message"></div>
-                    <div class="password-meter-bg">
-                        <div class="password-meter-bar"></div>
+
+            <form name="form1" method="post" id="registerform" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login form-horizontal">
+
+                <fieldset style="background-color : white; padding-top : 30px;">
+                    
+                    <div class="control-group">
+                        <label for="full_name" class="control-label">Name:</label>
+                        <div class="controls">
+                            <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name|filter_xss}"{/if}>
+                        </div>
                     </div>
-                </div>
-            </div>
-          </div>
-          <div class="clearfix">
-            <div class="grid_6 prefix_0 right">
-              <label for="pass2">
-                Retype password:
-              </label>
-            </div>
-            <div class="grid_10 left">
-              <input name="pass2" type="password" id="pass2" class="password">
-              <small>
-                <br>
-              </small>
-            </div>
-          </div>
-          <div class="clearfix">
-            <div class="grid_9 prefix_6 left">
-                {include file="_usermessage.tpl" field="captcha"}
-            </div>
-            <div class="grid_6 prefix_0 right">
-              <label for="user_code">
-                Prove you&rsquo;re human:
-              </label>
-            </div>
-            <div class="grid_10 left">
-              <div class="captcha">
-                {$captcha}
-              </div>
-            </div>
-          </div>
-          <div class="clearfix">
-            <div class="grid_10 prefix_7 left">
-              <input type="submit" name="Submit" id="login-save" class="linkbutton emphasized" value="Register">
-            </div>
-          </div>
-        </form>
+                    
+                    <div class="control-group"> 
+                        
+                        <label for="email" class="control-label">Email:</label>
+                        <div class="controls">
+                            <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}> {include file="_usermessage.tpl" field="email" enable_bootstrap="true" inline="true"}
+                        </div>
+                    </div>
+                    
+                    <div class="control-group"> 
+                        
+                        <label for="pass1" class="control-label">Password:</label>
+                        <div class="controls">
+
+                            <div class="password-meter">
+                                <input type="password" name="pass1" id="pass1" class="password"><span for="pass1" class="password-meter-message"> </span> {include file="_usermessage.tpl" field="password" enable_bootstrap="true" inline="true"}
+                                
+                                <div class="password-meter-bg">
+                                    <div class="password-meter-bar"></div>
+                                </div>
+                            </div>                   
+                            
+                        </div>
+                        
+                    </div>
+
+                    <div class="control-group"> 
+                        <label for="pass2" class="control-label">Retype password:</label>
+                        <div class="controls">
+                            <input name="pass2" type="password" id="pass2" class="password">
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        
+                        <label for="user_code" class="control-label">Prove you&rsquo;re human:</label>
+                        <div class="controls">
+                            {$captcha} {include file="_usermessage.tpl" field="captcha" enable_bootstrap="true" inline="true"}
+                            
+                        </div>
+                    </div>
+                
+                    <div class="form-actions">
+
+                            <input type="submit" name="Submit" id="login-save" class="btn btn-primary" value="Register">
+                        
+                    </div>
+
+                </fieldset>
+
+
+{if !$success_msg}
+                    <div class="control-group">
+                        <div class="controls">
+                            <p class="help-block"><a href="login.php">Log In</a> |
+                                <a href="forgot.php">Forgot password</a> |
+                                {insert name="help_link" id='register'}</p>
+                        </div>
+                    </div>
+{/if}                                           
+
+            </form>
+            
         {/if}
-        
-        </div>
-        
-        <div class="view-all">
-            {if !$success_msg}
-            <a href="login.php">Log In</a> |
-            <a href="forgot.php">Forgot password</a>
-            {/if}
-        </div>
-        
+
     </div>
 </div>
 
-{include file="_footer.tpl"}
+
+</div> <!-- end container -->
+{include file="_footer.tpl" enable_bootstrap="true"}

@@ -199,8 +199,8 @@ class TwitterAPIAccessorOAuth {
             'author_username'=>$p->from_user, 'user_name'=>$p->from_user,
             'in_reply_to_user_id'=>$p->to_user_id,
             'author_avatar'=>$p->profile_image_url, 'avatar'=>$p->profile_image_url,
-            'in_reply_to_post_id'=>$p->in_reply_to_status_id_str, 'author_fullname'=>'', 'full_name'=>'',
-            'source'=>'twitter', 'location'=>'', 'url'=>'',
+            'in_reply_to_post_id'=>((isset($p->in_reply_to_status_id_str))?$p->in_reply_to_status_id_str:''),
+            'author_fullname'=>'', 'full_name'=>'', 'source'=>'twitter', 'location'=>'', 'url'=>'',
             'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0, 'joined'=>'');
         }
         return $parsed_payload;

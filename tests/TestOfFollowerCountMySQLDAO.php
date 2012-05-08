@@ -117,6 +117,74 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNotNull($result['vis_data']);
     }
 
+    public function testGetDayHistoryFromSpecificStartDate() {
+        $builders = array();
+        $format = 'n/j';
+        $date = date ( $format );
+
+        $todays_day_of_the_week = date('w');
+        $this->debug("It's currently the ".$todays_day_of_the_week." day of the week");
+        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-40d', 'count'=>90);
+        $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-41d', 'count'=>70);
+        $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-42d', 'count'=>50);
+        $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-43d', 'count'=>30);
+        $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-44d', 'count'=>10);
+        $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+
+        $dao = new FollowerCountMySQLDAO();
+        $date_ago = date ($format, strtotime('-40 day'.$date));
+        $result = $dao->getHistory('930061', 'twitter', 'DAY', 5, $date_ago);
+        $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, trend, and milestone, and vis_data');
+
+        $this->debug(Utils::varDumpToString($result));
+        //check history
+        $this->assertEqual(sizeof($result['history']), 5);
+
+        $format = 'm/d/Y';
+        if ($todays_day_of_the_week == 0 ) {
+            $date_ago = date ($format, strtotime('-40 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 90);
+
+            $date_ago = date ($format, strtotime('-41 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 70);
+
+            $date_ago = date ($format, strtotime('-42 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 50);
+
+            $date_ago = date ($format, strtotime('-43 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 30);
+        } else  {
+            $date_ago = date ($format, strtotime('-41 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 70);
+
+            $date_ago = date ($format, strtotime('-42 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 50);
+
+            $date_ago = date ($format, strtotime('-43 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 30);
+        }
+
+        //check trend
+        $this->assertEqual($result['trend'], 16);
+
+        //check milestone
+        //latest follower count is 90, next milestone is 100 followers
+        //with a 20+/day trend, this should take 1 day
+        $this->debug(Utils::varDumpToString($result['milestone']));
+        $this->assertEqual($result['milestone']["next_milestone"], 100);
+        $this->assertEqual($result['milestone']["will_take"], 1);
+
+        $this->assertNotNull($result['vis_data']);
+    }
+
     public function testGetDayHistoryNoGapsMilestoneInSight() {
         $format = 'n/j';
         $date = date ( $format );
@@ -249,11 +317,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         //$this->assertEqual($result['trend'], 3);
 
         //check milestone
-        //latest follower count is 140, next milestone is 1,000 followers
-        //with a 7+/day trend, this should take 123 days
-        //beyond our "don't feel bad about yourself" threshold of 10, so should be null
         if ($todays_day_of_the_week != 0) {
-            $this->assertNull($result['milestone']);
+            $this->assertEqual($result['milestone']['will_take'], 20);
         }
     }
 

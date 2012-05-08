@@ -70,7 +70,7 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
 
         // Jack's in two groups
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
-        'group_id'=>'18864710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-1h'));
+        'group_id'=>'18864710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-1h', 'first_seen' => '-1h'));
 
         // one stale
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
@@ -146,5 +146,14 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
         $this->DAO->update($user_id = '1234567890', $stale_group->group_id, 'twitter');
         $stale_group = $this->DAO->findStalestMemberships($user_id = '1234567890', 'twitter');
         $this->assertNull($stale_group);
+    }
+
+    public function testGetNewMembershipsByDate() {
+        $new_groups = $this->DAO->getNewMembershipsByDate('twitter', '1234567890');
+        $this->assertEqual(count($new_groups), 1);
+        $this->assertEqual($new_groups[0]->id, 1);
+        $this->assertEqual($new_groups[0]->group_id, '18864710');
+        $this->assertEqual($new_groups[0]->group_name, '@someguy/a-list');
+        $this->assertEqual($new_groups[0]->is_active, 1);
     }
 }

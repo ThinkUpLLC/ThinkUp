@@ -1,5 +1,5 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap=$enable_bootstrap}
+{include file="_statusbar.tpl" enable_bootstrap=$enable_bootstrap}
 
 <div class="container_24">
   <div class="clearfix">
@@ -168,6 +168,9 @@
   </div> <!-- /.clearfix -->
 </div> <!-- /.container_24 -->
 
-<script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 
-{include file="_footer.tpl"}
+{if $smarty.get.v eq "insights"}
+    {include file="_footer.tpl" enable_bootstrap="true"}
+{else}
+    {include file="_footer.tpl"}
+{/if}

@@ -125,7 +125,6 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
     // this version checks the menus with the twitter realtime plugin active
     public function testMenuItemRegistrationForDashboardAndPostRealtimeActive() {
-
         // define an active twitter realtime plugin
         $builders = array();
         $builders[] = FixtureBuilder::build('plugins', array('name'=>'Twitter Realtime',

@@ -2960,4 +2960,42 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Check the link URL was set correctly
         $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blahb');
     }
+
+    public function testGetAverageRetweetCount() {
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $dao = new PostMySQLDAO();
+        //without date (today)
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7);
+        $this->assertEqual($average_retweet_count, 3);
+
+        //yesterday
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-1 day")));
+        $this->assertEqual($average_retweet_count, 4);
+
+        //40 days ago
+        $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-40 day")));
+        $this->assertEqual($average_retweet_count, 17);
+    }
 }
