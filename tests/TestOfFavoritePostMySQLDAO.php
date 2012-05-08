@@ -101,10 +101,10 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             }
             $is_protected = $counter == 18 ? 1 : 0; // post with id 18 is protected
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
-            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0,
             'is_protected' => $is_protected));
             $counter++;
         }
@@ -122,17 +122,17 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             'is_protected' => $is_protected));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
+            'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0,
             'post_id'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>10822735852740608, 'author_user_id'=>23,
-        'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
+        'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter',
         'post_text'=>'@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over'.
-        ' the last 20 years http://nyti.ms/hmTVzP', 
-        'source'=>'web', 'pub_date'=>'-300s', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        ' the last 20 years http://nyti.ms/hmTVzP',
+        'source'=>'web', 'pub_date'=>'-300s', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
         'location'=>'New York City', 'is_geo_encoded'=>0, 'is_protected' => 0));
 
         // have 'user1' favorite some of ev's posts
@@ -337,12 +337,87 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($res), 2);
     }
 
+    public function testGetFavoritesFromOneYearAgo() {
+        //build post published one year ago today
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-366d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build favorite of that post by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        //get favorites from one year ago today
+        $result = $this->dao->getFavoritesFromOneYearAgo('13', 'twitter');
+
+        //assert post is returned
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->post_id, 'abadadfd1212');
+
+        //build post published one year and 4 days ago today
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-370d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build favorite of that post by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        $since_date = date("Y-m-d", strtotime("-4 day"));
+        //get favorites from one year ago today
+        $result = $this->dao->getFavoritesFromOneYearAgo('13', 'twitter', $since_date);
+
+        //assert post is returned
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->post_id, 'abadadfd1213');
+    }
+
+    public function testGetUsersWhoFavoritedMostOfYourPosts() {
+        //build post published 3 days ago
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-3d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build post published 4 days ago
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-4d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build favorite of those posts by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        //build favorite of that post by test user user1
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'20', 'network'=>'twitter'));
+
+        //build favorite of that post by test user user2
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'21', 'network'=>'twitter'));
+
+        $result = $this->dao->getUsersWhoFavoritedMostOfYourPosts('19', 'twitter', 7);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->username, 'ev');
+    }
+
     /**
      * helper method to build a post
      */
     private function buildPostArray1() {
         $vals = array();
-        $vals['post_id']=2904;
+        $vals['post_id']='2904';
         $vals['author_username']='quoter';
         $vals['author_fullname']="Quoter of Quotables";
         $vals['author_avatar']='avatar.jpg';
@@ -360,7 +435,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
      */
     private function buildPostArray2() {
         $vals = array();
-        $vals['post_id']=10822735852740608;
+        $vals['post_id']='10822735852740608';
         $vals['author_username']='user3';
         $vals['author_fullname']="User 3";
         $vals['author_avatar']='avatar.jpg';
