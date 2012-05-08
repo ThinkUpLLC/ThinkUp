@@ -60,6 +60,14 @@ class Group {
      * @var str Last time this group was seen on the originating network.
      */
     var $last_seen;
+    /**
+     * @var str Non-persistent storage for URL to group
+     */
+    var $url;
+    /**
+     * @var str Non-persistent keyword or phrase describing group
+     */
+    var $keyword;
     public function __construct($val = false) {
         if ($val) {
             if (isset($val['id'])) {
@@ -71,6 +79,14 @@ class Group {
             $this->is_active = PDODAO::convertDBToBool($val['is_active']);
             $this->first_seen = $val['first_seen'];
             $this->last_seen = $val['last_seen'];
+        }
+    }
+
+    public function setMetadata() {
+        if ($this->network == 'twitter') {
+            $this->url = 'http://twitter.com/'.substr($this->group_name,1);
+            $parts = preg_split("(\/)", $this->group_name);
+            $this->keyword = $parts[1];
         }
     }
 }

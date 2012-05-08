@@ -4,13 +4,11 @@
 .username {float: left; color: #666;}
 .pub_date {float: right; color: #666;}
 .post_text {float: right; width: 307px;}
-#wrap { height:500px; font-size:75%; line-height:20px; margin:auto; margin-top:10px; margin-bottom:60px;}
-#wrap h3 { font-size:medium; line-height:40px; font-weight:bold;}
-#userpanel {  margin-top:10px; padding-left:20px; width:650px; left:0; top:0; float:left}
-#userpanel a {font-size: 14px; padding-left: 4px; margin-bottom:10px;}
-#mappanel { height:98%; margin: auto; width:650px; border:1px solid #666;}
+#wrap { height:500px; margin:auto; margin-top:10px; margin-bottom:60px;}
+#mappanel { height:98%; margin: auto auto auto 20px; width:100%; }
+#userpanel { margin: auto auto auto 20px; width:100%; }
 #map { height:100%; }
 .columns {border: none; display: table-cell; vertical-align: top; width:240px;}
 .heading {width:820px; margin: auto; padding:20px 0px; border-bottom:1px solid #cccccc; margin-bottom:40px;}
-html {background: #fff!important;}
+
 #mainTable {display:table-row;}

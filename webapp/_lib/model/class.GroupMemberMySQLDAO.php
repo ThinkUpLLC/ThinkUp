@@ -146,4 +146,28 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
 
         return $this->getDataRowAsObject($ps, "Group");
     }
+
+    public function getNewMembershipsByDate($network, $member_user_id, $from_date=null) {
+        $vars = array(
+            ':member_user_id'=> $member_user_id,
+            ':network'=>$network
+        );
+        if (!isset($from_date)) {
+            $from_date = 'CURRENT_DATE()';
+        } else {
+            $vars[':from_date'] = $from_date;
+            $from_date = ':from_date';
+        }
+
+        $q = "SELECT g.* FROM #prefix#group_members gm INNER JOIN #prefix#groups g on g.group_id = gm.group_id ";
+        $q .= "WHERE gm.member_user_id=:member_user_id AND g.network=:network AND gm.is_active=1 ";
+        $q .= "AND  (YEAR(gm.first_seen)=YEAR($from_date)) ";
+        $q .= "AND (DAYOFMONTH(gm.first_seen)=DAYOFMONTH($from_date)) AND (MONTH(gm.first_seen)=MONTH($from_date)) ";
+        $q .= "ORDER BY gm.first_seen DESC;";
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, "Group");
+    }
 }

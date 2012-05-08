@@ -189,7 +189,7 @@ class Logger {
                     $this->output($status_signature.$status_message); # Write status to log
                 }
             } else {
-                $message_wrapper = '<span style="color:#ccc">'.date("H:i", time()).'</span> ';
+                $message_wrapper = '<tr><td><small>'.date("H:i", time()).'</small></td> <td class="crawl-log-component">';
                 $just_classname = explode('::', $classname);
                 if (isset($just_classname[0])) {
                     if ( $just_classname[0] == 'CrawlerTwitterAPIAccessorOAuth') {
@@ -200,19 +200,19 @@ class Logger {
                     }
                     $message_wrapper .= $just_classname[0].": ";
                 }
-                $message_wrapper .= '<span style="color:';
+                $message_wrapper .= '</td> <td class="';
                 switch ($type) {
                     case self::ERROR:
-                        $message_wrapper .= 'red">';
+                        $message_wrapper .= 'control-group error">';
                         break;
                     case self::SUCCESS:
-                        $message_wrapper .= 'green">';
+                        $message_wrapper .= 'control-group success">';
                         break;
                     default:
-                        $message_wrapper .= 'black">';
+                        $message_wrapper .= 'control-group warning">';
                 }
                 if (strlen($status_message) > 0) {
-                    $this->output($message_wrapper.$status_message."</span><br >"); // Write status to log
+                    $this->output($message_wrapper.$status_message.'</td></tr>'); // Write status to log
                 }
             }
         }

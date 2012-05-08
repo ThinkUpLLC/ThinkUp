@@ -311,6 +311,31 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
+    public function getLeastLikelyFollowersByDay($user_id, $network, $days_ago=0, $limit=10) {
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':days_ago'=>(int)$days_ago,
+            ':limit'=>(int)$limit
+        );
+        $q  = "SELECT u.*, ROUND((100*(friend_count/follower_count)),4) ";
+        $q .= "AS likelihood_of_follow, ".$this->getAverageTweetCount()." ";
+        $q .= "FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
+        $q .= "ON u.user_id = f.follower_id ";
+        $q .= "WHERE f.first_seen >= date_sub(current_date, INTERVAL :days_ago day) ";
+        if ($days_ago > 0) {
+            $end_days_ago = $days_ago-1;
+            $q .= "AND f.first_seen <= date_sub(current_date, INTERVAL :end_days_ago day) ";
+            $vars['end_days_ago'] = $end_days_ago;
+        }
+        $q .= "AND f.user_id = :user_id AND f.network=:network AND f.network=u.network AND active=1 ";
+        $q .= "AND follower_count > 1000 AND friend_count > 0 AND friend_count < (follower_count/2) ";
+        $q .= "ORDER BY likelihood_of_follow ASC, u.follower_count DESC LIMIT :limit;";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
+
     public function getEarliestJoinerFollowers($user_id, $network, $count = 20, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
