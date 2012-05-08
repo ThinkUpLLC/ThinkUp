@@ -45,7 +45,8 @@ interface FollowerCountDAO  {
      * @param str $network
      * @param str $group_by 'DAY', 'WEEK', 'MONTH'
      * @param int $limit Defaults to 10
+     * @param str $start_date Defaults to null (today)
      * @return array $history, $percentages
      */
-    public function getHistory($network_user_id, $network, $group_by, $limit=10);
+    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null);
 }

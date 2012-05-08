@@ -1,54 +1,62 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_statusbar.tpl" enable_bootstrap="true"}
 
-<div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 30px;">
 
-      {if isset($error_msgs)}
-        <div class="grid_18 alert urgent" style="margin-bottom : 20px; margin-left : 100px;">
-          {$error_msg}
-        </div>
-      {/if}
-      {if isset($success_msg)}
-        <div class="grid_18 alert helpful" style="margin-bottom : 20px; margin-left : 100px;">
-             <p>
-               <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-               {$success_msg}
-             </p>
-         </div> 
-      {/if}
+<div class="container">
 
-<div class="grid_18 section" style="margin-bottom : 100px; margin-left : 100px;">
-    {insert name="help_link" id='forgot'}
+<div class="row">
+    <div class="span3">
+          <div class="sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="">
+                    Reset Your Password
+               </li>
+            </ul>
+          </div><!--/.well -->
+    </div><!--/span3-->
+    <div class="span9">
 
-    <h2>Reset Your Password</h2>
 
-    <div class="article">
-    <form name="form1" method="post" action="" class="login append_20">
-      <div class="clearfix">
-        <div class="grid_4 prefix_2 right">
-          <label for="email">
-            Email:
-          </label>
-        </div>
-        <div class="grid_10 left">
-          <input name="email" type="text" id="email">
-        </div>
-      </div>
-      <div class="clearfix">
-        <div class="grid_10 prefix_7 left">
-          <input type="submit" id="login-save" name="Submit" class="linkbutton emphasized" value="Send Reset">
-        </div>
-      </div>
-    </form>
-    </div>
-    <div class="view-all">
-        {if $is_registration_open}
-        <a href="register.php">Register</a> |
-        {/if}
-      <a href="login.php">Log In</a>
-    </div>
 
-</div>
-</div>
 
-{include file="_footer.tpl"}
+    {if isset($error_msgs)}
+        <div class="alert alert-error"><p>{$error_msg}</p></div>
+    {/if}
+    {if isset($success_msg)}
+        <div class="alert alert-success"><p>{$success_msg}</p></div>
+    {/if}
+
+            <form name="forgot-form" method="post" action="" class="login form-horizontal">
+
+                <fieldset style="background-color : white; padding-top : 30px;">
+                    
+                    <div class="control-group">
+                        <label class="control-label" for="email">Email:</label>
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" name="email" id="email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Send Reset">
+                    </div>
+
+                </fieldset>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <p class="help-block"><a href="login.php">Log In</a> |
+                                <a href="register.php">Register</a> |
+                                {insert name="help_link" id='forgot'}</p>
+                        </div>
+                    </div>
+
+            </form>
+
+    </div><!-- end span9 -->
+
+</div><!-- end row -->
+
+
+</div> <!-- end container -->
+{include file="_footer.tpl" enable_bootstrap="true"}
