@@ -86,7 +86,9 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
     public function isAccountPage($account_id, $access_token) {
         $account = FacebookGraphAPIAccessor::apiRequest('/' . $account_id . '?metadata=true', $access_token);
-        return !empty($account) && !empty($account->type) && $account->type == 'page';
+        return !empty($account) &&
+                ((!empty($account->type)  && (strcmp($account->type, 'page')==0)) ||
+                 (!empty($account->metadata->type) && (strcmp($account->metadata->type, 'page')==0)));
     }
 
     protected function setUpFacebookInteractions($options) {
