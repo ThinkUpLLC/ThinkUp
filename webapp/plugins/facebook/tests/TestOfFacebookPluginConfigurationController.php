@@ -211,7 +211,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern($expected_pattern, $output);
     }
 
-    public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedPages() {
+    public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedAndManagedPages() {
         self::buildInstanceData();
         // build some options data
         $options_arry = $this->buildPluginOptions();
@@ -229,9 +229,17 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'));
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
+        $this->assertPattern("/Pages You Like/", $output);
         $this->assertPattern("/The Wire/", $output);
         $this->assertPattern("/Glee/", $output);
         $this->assertPattern("/Brooklyn, New York/", $output);
+
+        //The mock API accessor reads the page accounts JSON from the testdata/606837591_accounts file
+        $managed_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
+        $this->assertIsA($managed_pages, 'Array');
+        $this->assertEqual($managed_pages[606837591][0]->name, 'Sample Cause');
+        $this->assertPattern("/Pages You Manage/", $output);
+        $this->assertPattern("/Sample Cause/", $output);
     }
 
     public function testConfiguredPluginWithOneFacebookUserNoLikedPages() {

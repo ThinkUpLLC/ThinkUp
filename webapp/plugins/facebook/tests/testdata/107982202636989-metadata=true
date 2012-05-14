@@ -1,11 +1,11 @@
 {
-  "id": "107982202636989",
-  "name": "Sample Cause",
-  "picture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/276798_107982202636989_4098521_s.jpg",
-  "link": "https://www.facebook.com/pages/Sample-Cause/107982202636989",
-  "likes": 1,
-  "category": "Cause",
-  "website": "<<not-applicable>>",
-  "can_post": true,
+  "id": "107982202636989", 
+  "name": "Sample Cause", 
+  "picture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/276798_107982202636989_4098521_s.jpg", 
+  "link": "https://www.facebook.com/pages/Sample-Cause/107982202636989", 
+  "likes": 1, 
+  "category": "Cause", 
+  "is_published": true, 
+  "can_post": true, 
   "type": "page"
 }

@@ -86,7 +86,7 @@
   {if $user_pages.$facebook_user_id or $user_admin_pages.$facebook_user_id}
     <div class="clearfix article">
         <div class="grid_4 right" style="padding-top:.5em;">
-            {$i->network_username}&nbsp;likes:
+            {$i->network_username}:
         </div>
         <form name="addpage" action="index.php?p=facebook">
         <div class="grid_8">

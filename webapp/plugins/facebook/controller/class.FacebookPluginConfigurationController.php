@@ -83,12 +83,22 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
         return $this->generateView();
     }
-
-    public function isAccountPage($account_id, $access_token) {
+    /**
+     * Return whether or not a Facebook account ID is a page.
+     * @param str $account_id
+     * @param str $access_token
+     * @return bool
+     */
+    protected function isAccountPage($account_id, $access_token) {
         $account = FacebookGraphAPIAccessor::apiRequest('/' . $account_id . '?metadata=true', $access_token);
-        return !empty($account) && !empty($account->type) && $account->type == 'page';
+        return !empty($account)
+        && ((!empty($account->type)  && (strcmp($account->type, 'page')==0))
+        || (!empty($account->metadata->type) && (strcmp($account->metadata->type, 'page')==0)));
     }
-
+    /**
+     * Populate view manager with Facebook interaction UI, like the Facebook Add User button and page dropdown.
+     * @param array $options 'facebook_app_id' and 'facebook_api_secret'
+     */
     protected function setUpFacebookInteractions($options) {
         // Create our Facebook Application instance
         $facebook = new Facebook(array(
@@ -160,14 +170,12 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         $this->addToView('owner_instances', $owner_instances);
     }
-
     /**
      * Process actions based on $_GET parameters. Authorize FB user or add FB page.
      * @param arr $options Facebook plugin options
      * @param Facebook $facebook Facebook object
      */
     protected function processPageActions($options, Facebook $facebook) {
-
         //authorize user
         if (isset($_GET["code"]) && isset($_GET["state"])) {
             //validate state to avoid CSRF attacks
@@ -222,7 +230,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $page_data->picture);
         }
     }
-
     /**
      * Save newly-acquired OAuth access token
      * @param int $fb_user_id
@@ -264,7 +271,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
         $this->view_mgr->clear_all_cache();
     }
-
     /**
      * Insert Facebook page instance into the data store
      * @param str $fb_page_id
