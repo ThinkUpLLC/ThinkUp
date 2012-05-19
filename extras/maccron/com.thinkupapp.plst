@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.thinkupapp</string>
+  <key>UserName</key>
+  <string>youruser</string>
+  <!-- User to run cron as -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/local/bin/php</string>
+    <!-- Full path to PHP excecutable -->
+    <string>/path/to/thinkup/crawler/crawl.php</string>
+    <!-- Full path to thinkup crawler -->
+    <string>user@example.com</string>
+    <!-- Admin username -->
+    <string>myPassword</string>
+    <!-- Admin password -->
+  </array>
+  <key>KeepAlive</key>
+  <dict>
+    <key>NetworkState</key>
+    <true/>
+  </dict>
+  <!-- Does not run the deamon when not connected to the internet -->
+  <key>WorkingDirectory</key>
+  <string>/path/to/thinkup/</string>
+  <!-- Path to thinkup working directory -->
+  <key>Nice</key>
+  <integer>10</integer>
+  <!-- 
+    Nice level to run crawler at 
+    20 is lowest priority
+    -20 is highest priority
+    0 is default
+  -->
+  <key>StartInterval</key>
+  <integer>600</integer>
+  <!-- Time interval in seconds between runs -->
+  <key>Debug</key>
+  <false/>
+  <key>AbandonProcessGroup</key>
+  <true/>
+</dict>
+</plist>
