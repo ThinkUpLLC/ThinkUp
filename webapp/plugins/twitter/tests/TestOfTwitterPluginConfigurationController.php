@@ -263,6 +263,28 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/name="csrf_token" value="'. self::CSRF_TOKEN . '"/', $output);
     }
 
+    public function testLocalhostOAuthCallbackLink() {
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $options_array = $this->buildPluginOptions();
+
+        $controller = new TwitterPluginConfigurationController(null, 'twitter');
+        $config = Config::getInstance();
+
+        //From logged in
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+
+        //Check if a URL was passed
+        $auth_link = $v_mgr->getTemplateDataItem('oauthorize_link');
+        $this->assertEqual("test_auth_URL_".urlencode("http://127.0.0.1".$THINKUP_CFG['site_root_path'].
+        "plugins/twitter/auth.php"), $auth_link);
+    }
+
     /**
      * build plugin option values
      */
