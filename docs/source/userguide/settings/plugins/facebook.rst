@@ -44,5 +44,5 @@ Help! I don't see Facebook pages I manage in the dropdown list
 
 If you're only seeing pages you "like" but not pages you manage in the pages dropdown list, delete your Facebook user
 account from ThinkUp, and re-add it. Authorize ThinkUp to get access to your managed pages, and then they will appear
-in the drodown list.
+in the dropdown list.
 

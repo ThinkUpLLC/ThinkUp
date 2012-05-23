@@ -95,7 +95,7 @@ Example
 -------
 
 Here's a file that Gina's already added PHPDocumentor comments to:
-http://github.com/ginatrapani/thinkup/blob/master/webapp/controller/class.PublicTimelineController.php
+https://github.com/ginatrapani/ThinkUp/blob/master/webapp/_lib/model/class.Post.php
 
 This is what the documentation page that PHPDoc created looks like:
 http://thinkupapp.com/docs/ThinkUp/PublicTimelineController.html

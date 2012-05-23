@@ -35,11 +35,33 @@ Step 3: Contact the Community
 Send an email to the `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_ describing your problem or
 feature idea. Be specific.
 
-For bug reports, describe step by step exactly what you did and what went wrong, including application messaging word
-for word, as well as what version of ThinkUp you are running and what operating system and version of PHP and MySQL
-you are running.
+Write a Great Bug Report
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-For feature ideas, describe exactly how you think the new functionality should work, and include wireframes and 
+Help us help you! The  more information about your problem you share, the more likely it is that the community
+can help you.
+
+In your bug report, include the following information:
+
+* Your ThinkUp hosting provider
+* The version of ThinkUp you are running
+* Whether or not you have any special setup details (i.e., a subdomain, desktop installation, modified code, etc)
+* What you did before the bug occurred
+* What the application message or log contents were when the bug occurred
+* What the expected behavior was
+* What version of PHP and MySQL your ThinkUp host is running
+
+While the core development team can't respond to every bug report on the mailing list, volunteer community members
+help each other troubleshoot problems.
+
+Propose a New Feature
+^^^^^^^^^^^^^^^^^^^^^
+
+If you've got an idea for a new ThinkUp feature, we invite you to  :doc:`pull the source code and start
+building </contribute/developers/index>`! If you're not a coder, the better you pitch your feature idea to the
+community, the more likely an interested developer will work on it. 
+
+To pitch your feature idea, describe exactly how you think the new functionality should work, and include wireframes and 
 screenshots. Sell your idea to the community by clearly explaining its benefits and use cases, and how you plan to 
 help make the feature. We only build features which align with :doc:`ThinkUp's purpose </intro>`.
 

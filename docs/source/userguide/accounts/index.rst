@@ -54,8 +54,10 @@ User Permissions
 
 Currently there are two levels of user permissions in ThinkUp: user-level and administrator-level permissions.
 
-* **Users** cannot enable, disable, or configure plugins, or see a list of users for a given ThinkUp installation.
-* **Administrators** can enable, disable, and configure plugins, see a list of users on a given ThinkUp installation, see all the views for social media accounts registered on the installation, deactivate ThinkUp user accounts, and configure global application settings like whether or not registration is open to new users.
+*   **Users** cannot enable, disable, or configure plugins, or see a list of users for a given ThinkUp installation.
+*   **Administrators** can enable, disable, and configure plugins, see a list of users on a given ThinkUp installation,
+    see all the views for social media accounts registered on the installation, deactivate ThinkUp user accounts, and
+    configure global application settings like whether or not registration is open to new users.
 
 Every ThinkUp installation must have at least one administrator account. A ThinkUp installation can have any 
 number of user accounts, and it may have multiple administrator accounts.
