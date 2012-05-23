@@ -33,5 +33,5 @@ rm -rf build/thinkup/plugins/twitterrealtime/
 # Zip it up
 cd build/
 zip -r thinkup.zip thinkup 
-zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt
+zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt *.ht*
 rm -rf thinkup
