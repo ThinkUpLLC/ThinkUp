@@ -19,7 +19,6 @@
             </a>
           {/if}
           <div class="grid_6 omega small gray prefix_10">
-            <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" class="float-l">
             {if $post->network eq 'twitter'}
             Posted at <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">{$post->adj_pub_date}</a>{if $post->source} via {$post->source}{/if}<br>
             {else}
