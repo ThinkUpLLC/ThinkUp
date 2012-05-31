@@ -1,37 +1,35 @@
 Quick Start
 ===========
 
-To run ThinkUp, you'll need a public web server running:
+To run ThinkUp, you'll need a web server running PHP and MySQL. Some providers offer easy ThinkUp launchers. 
 
-* `PHP 5.2 <http://php.net/>`_ or higher with `cURL <http://php.net/manual/en/book.curl.php>`_, `GD <http://php.net/manual/en/book.image.php>`_, and the `PDO <http://php.net/manual/en/book.pdo.php>`_ `MySQL driver <http://www.php.net/manual/en/ref.pdo-mysql.php>`_ enabled
-* `MySQL 5.0.3 <http://mysql.com/>`_ or higher
+One-Click ThinkUp Launchers
+---------------------------
 
-Most users purchase server access from a web hosting provider.
+If you don't already have a web server hosting package and don't want to get one, one of these options is best for you:
 
-Hosting Providers
------------------
-
-We built ThinkUp so that it can run on the most common and widely-available LAMP-based hosting plans. Some providers
-offer simple custom ThinkUp launchers. 
-
-Recommended
-^^^^^^^^^^^
-
-If you don't have a web server hosting package and don't want to get one, one of these options is best for you:
-
-*  `PHP Fog <https://phpfog.com/jumpstarts?a_aid=24990363>`_ offers free hosting (up to 20MB) and a simple ThinkUp
-   installer.
+*  `PHP Fog <https://phpfog.com/thinkup?a_aid=24990363>`_ offers a simple ThinkUp installer and free hosting up to
+   20MB.
 *  Our `Amazon EC2 launcher <http://expertlabs.aaas.org/thinkup-launcher/>`_ spins up an Amazon web server and installs
    ThinkUp on it for you; free for the first year and costs around $15/month after that.
 
-Watch a 2-minute screencast on how to install ThinkUp on `PHP Fog <https://phpfog.com/jumpstarts?a_aid=24990363>`_:
 
-.. raw:: html
+Install ThinkUp on Your Web Server in Three Steps
+-------------------------------------------------
 
-  <iframe width="420" height="315" src="http://www.youtube.com/embed/yE5tXQtkdGE" frameborder="0" allowfullscreen></iframe>
+Most ThinkUp users purchase or already have server access from a web hosting provider. We built ThinkUp so that it can
+run on the most common and widely-available LAMP-based hosting plans. 
 
-Not Recommended
-^^^^^^^^^^^^^^^
+Once you have access to a public web server to install ThinkUp, you install it in three easy steps.
+
+1. `Download the latest distribution of ThinkUp <http://thinkupapp.com/download/>`_.
+2. Extract the zip file into a web-accessible folder on your web server via FTP.
+3. Visit that URL in your browser to proceed through ThinkUp's simple installer.
+
+Trouble? Check out the `detailed installation guide <install.html>`_.
+
+Known Incompatibilities
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Some web hosting providers or plans have known incompatibilities with ThinkUp. Several ThinkUp users report that:
 
@@ -41,14 +39,3 @@ Some web hosting providers or plans have known incompatibilities with ThinkUp. S
 
 Have notes about your ThinkUp hosting provider that should appear on this page? Please post them to the
 `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_.
-
-Install ThinkUp in Three Steps
-------------------------------
-
-Once you have access to a public web server to install ThinkUp, install it in three easy steps.
-
-1. `Download the latest distribution of ThinkUp <http://thinkupapp.com/download/>`_.
-2. Extract the zip file into a web-accessible folder on your web server via FTP.
-3. Visit that URL in your browser to proceed through ThinkUp's simple installer.
-
-Trouble? Check out the `detailed installation guide <install.html>`_.
