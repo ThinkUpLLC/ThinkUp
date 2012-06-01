@@ -1672,4 +1672,77 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+
+    public function getAverageRetweetCount($author_username, $network, $last_x_days, $since=null){
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT round(avg(old_retweet_count_cache + retweet_count_cache)) as average_retweet_count ";
+        $q .= "FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+        $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+        $q .= "AND (retweet_count_cache > 0 OR old_retweet_count_cache > 0) ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        return $result["average_retweet_count"];
+    }
+
+    public function getPostsFromThisDayThatYear($author_id, $network, $year, $from_date=null) {
+        $vars = array(
+            ':year'=> $year,
+            ':author'=> $author_id,
+            ':network'=>$network
+        );
+        if (!isset($from_date)) {
+            $from_date = 'CURRENT_DATE()';
+        } else {
+            $vars[':from_date'] = $from_date;
+            $from_date = ':from_date';
+        }
+        $q = "SELECT po.*, po.id AS post_key, po.pub_date + interval #gmt_offset# hour as adj_pub_date, ";
+        $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box ";
+        $q .= "FROM #prefix#posts po ";
+        $q .= "LEFT JOIN #prefix#places pl ON po.place_id = pl.place_id ";
+        $q .= "WHERE (YEAR(pub_date)=:year) AND ";
+        $q .= "(DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
+        $q .= "author_user_id=:author AND po.network=:network AND ";
+        $q .= "in_reply_to_post_id IS null AND in_reply_to_user_id IS NULL AND ";
+        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL ";
+        $q .= "ORDER BY pub_date DESC ";
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+
+        $post_keys_array = array();
+        foreach ($all_post_rows as $row) {
+            $post_keys_array[] = $row['post_key'];
+        }
+
+        $all_posts = array();
+        foreach ($all_post_rows as $row) {
+            $post = new Post($row);
+            // $post->place_obj = new Place($row);
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(",", $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+            foreach ($all_link_rows as $link_row) {
+                if ($link_row['post_key'] == $post->id) {
+                    $post->addLink(new Link($link_row));
+                }
+            }
+            $all_posts[] = $post;
+        }
+        return $all_posts;
+    }
 }
