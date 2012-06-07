@@ -304,8 +304,15 @@ class Utils {
             $server = ($server == 'localhost')?'127.0.0.1':$server;
         }
         $site_root_path = Config::getInstance()->getValue('site_root_path');
-        $port = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != "" && $_SERVER['SERVER_PORT'] != "80"
-        && $_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT']:'';
+        if  (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') { //non-standard port
+            if (isset($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] == '443') { //account for standard https port
+                $port = '';
+            } else {
+                $port = ':'.$_SERVER['SERVER_PORT'];
+            }
+        } else {
+            $port = '';
+        }
         return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.$port.$site_root_path;
     }
 
