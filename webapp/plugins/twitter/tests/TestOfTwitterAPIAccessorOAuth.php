@@ -145,5 +145,19 @@ XML;
 
         $this->assertEqual($results['error'], 'Not found');
         $this->assertEqual($results['request'], '/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
+
+        //Public statuses
+        $twitter_data = $to->http(
+        'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani_noerrorhash.xml?count=100');
+
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+
+        $results = $api->parseError($twitter_data);
+
+        $this->debug(Utils::varDumpToString($results));
+
+        $this->assertEqual($results['error'], 'Sorry, that page does not exist');
+        $this->assertEqual($results['request'], '');
+
     }
 }

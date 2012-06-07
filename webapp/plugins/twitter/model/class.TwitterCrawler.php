@@ -338,8 +338,8 @@ class TwitterCrawler {
                 }
             } elseif ($cURL_status == 404 || $cURL_status == 403) {
                 $e = $this->api->parseError($twitter_data);
-                $ped = DAOFactory::getDAO('PostErrorDAO');
-                $ped->insertError($tid, 'twitter', $cURL_status, $e['error'], $this->user->user_id);
+                $posterror_dao = DAOFactory::getDAO('PostErrorDAO');
+                $posterror_dao->insertError($tid, 'twitter', $cURL_status, $e['error'], $this->user->user_id);
                 $status_message = 'Error saved to tweets.';
             }
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
@@ -1053,8 +1053,8 @@ class TwitterCrawler {
                         $this->fetchUserFriendsByIDs($stale_friend->user_id, $fd);
                     } elseif ($cURL_status == 401 || $cURL_status == 404) {
                         $e = $this->api->parseError($twitter_data);
-                        $ued = DAOFactory::getDAO('UserErrorDAO');
-                        $ued->insertError($stale_friend->user_id, $cURL_status,
+                        $usererror_dao = DAOFactory::getDAO('UserErrorDAO');
+                        $usererror_dao->insertError($stale_friend->user_id, $cURL_status,
                         (isset($e['error']))?$e['error']:$twitter_data,
                         $this->user->user_id, 'twitter');
                         $this->logger->logInfo('User error saved', __METHOD__.','.__LINE__);
@@ -1190,8 +1190,8 @@ class TwitterCrawler {
             }
         } elseif ($cURL_status == 404) {
             $e = $this->api->parseError($twitter_data);
-            $ued = DAOFactory::getDAO('UserErrorDAO');
-            $ued->insertError($fid, $cURL_status, $e['error'], $this->user->user_id, 'twitter');
+            $usererror_dao = DAOFactory::getDAO('UserErrorDAO');
+            $usererror_dao->insertError($fid, $cURL_status, $e['error'], $this->user->user_id, 'twitter');
             $status_message = 'User error saved.';
         }
         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);

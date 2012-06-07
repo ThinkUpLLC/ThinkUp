@@ -211,20 +211,24 @@ class TwitterAPIAccessorOAuth {
      * @return array Error
      */
     public function parseError($data) {
-        $parsed_payload = array();
+        $parsed_payload = array('request'=>'', 'error'=>'');
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
             if ($xml !== false) {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'hash':
-                        $parsed_payload = array('request'=>$xml->request, 'error'=>$xml->error);
+                        $parsed_payload['request'] = $xml->request;
+                        $parsed_payload['error'] = $xml->error;
+                        break;
+                    case 'errors':
+                        $parsed_payload['error'] = $xml->error;
                         break;
                     default:
                         break;
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $logger = Logger::getInstance();
             $logger->logUserError('parseError Exception caught: ' . $e->getMessage(), __METHOD__.','.__LINE__);
         }
