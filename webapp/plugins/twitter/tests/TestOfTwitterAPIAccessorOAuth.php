@@ -133,7 +133,7 @@ XML;
 
     public function testParseError() {
         $to = new TwitterOAuth('', '', '', '');
-        //Public statuses
+        //Test error XML with <hash> root
         $twitter_data = $to->http(
         'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
 
@@ -146,7 +146,7 @@ XML;
         $this->assertEqual($results['error'], 'Not found');
         $this->assertEqual($results['request'], '/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
 
-        //Public statuses
+        //Test error XML with <errors> root
         $twitter_data = $to->http(
         'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani_noerrorhash.xml?count=100');
 
@@ -158,6 +158,5 @@ XML;
 
         $this->assertEqual($results['error'], 'Sorry, that page does not exist');
         $this->assertEqual($results['request'], '');
-
     }
 }
