@@ -23,6 +23,7 @@ rm -rf build/thinkup/plugins/*/tests/
 rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/test_installer/
 rm -rf build/thinkup/data/*
+rm build/thinkup/data/.ht*
 cp -R webapp/data/README.md build/thinkup/data/.
 rm -rf build/thinkup/config.inc.php
 
@@ -33,5 +34,5 @@ rm -rf build/thinkup/plugins/twitterrealtime/
 # Zip it up
 cd build/
 zip -r thinkup.zip thinkup 
-zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt *.ht*
+zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt
 rm -rf thinkup

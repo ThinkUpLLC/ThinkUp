@@ -215,6 +215,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
         '/webapp/test_installer/thinkup/config.inc.php'));
 
+        //$this->showSource();
         $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
         'message has been sent.');
     }

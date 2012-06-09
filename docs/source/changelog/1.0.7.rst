@@ -1,0 +1,12 @@
+1.0.7 - 7 Jun 2012
+==================
+
+Changelog:
+
+
+*   Twitter plugin: Fixed "error_text cannot be null" error during data capture
+*   Facebook plugin: Restore "Pages You Manage" to page dropdown
+*   Facebook plugin: Fixed bug in settings where site link included the 443 port when it shouldn't
+*   Fix broken image path references in jQuery CSS
+*   Fix JavaScript error which broke dashboard charts when there wasn't enough data
+*   Updated Google+ icon to current red version
