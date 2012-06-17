@@ -33,6 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.FlickrAPIAccessor.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.BitlyAPIAccessor.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/tests/classes/mock.URLExpander.php';
+//require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.URLExpander.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.ExpandURLsPlugin.php';
 //require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.BitlyAPIAccessor.php';
 
@@ -640,4 +641,41 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         }
         return $builders;
     }
+
+    //To test this with live URLs (which are endless loops as of 6/17/2012) comment out mock URLExpander
+    //and comment in live URLExpander
+    //    public function testURLExpansionWithEndlessLoop() {
+    //        $builders[] = FixtureBuilder::build('owners', array(
+    //            'id' => 1,
+    //            'email' => 'admin@example.com',
+    //            'pwd' => 'XXX',
+    //            'is_activated' => 1,
+    //            'is_admin' => 1
+    //        ));
+    //
+    //        $builders[] = FixtureBuilder::build('links', array(
+    //            'id' => 250,
+    //            'url' => 'http://t.co/If5llJOb',
+    //            'expanded_url' => null,
+    //            'title' => '',
+    //            'clicks' => 0,
+    //            'post_id' => 1,
+    //            'image_src' => '',
+    //            'error' => null
+    //        ));
+    //
+    //        $builders[] = FixtureBuilder::build('links', array(
+    //            'id' => 251,
+    //            'url' => 'http://t.co/V7NDaubm',
+    //            'expanded_url' => null,
+    //            'title' => '',
+    //            'clicks' => 0,
+    //            'post_id' => 1,
+    //            'image_src' => '',
+    //            'error' => null
+    //        ));
+    //        $this->simulateLogin('admin@example.com', true);
+    //        $crawler = Crawler::getInstance();
+    //        $crawler->crawl();
+    //    }
 }

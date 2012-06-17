@@ -116,6 +116,24 @@ class URLExpander {
             case "http://www.flickr.com/photos/swirlee/5173198094/":
                 $exp_url = "http://www.flickr.com/photos/swirlee/5173198094/";
                 break;
+            case "http://t.co/If5llJOb":
+                $exp_url = "http://girlgeekdinners.origo.no/-/bulletin/show/573985_kvinnelige-it-foredragsholdere";
+                break;
+            case "http://girlgeekdinners.origo.no/-/bulletin/show/573985_kvinnelige-it-foredragsholdere":
+                $exp_url = "http://apressen.o5.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere";
+                break;
+            case "http://apressen.o5.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere":
+                $exp_url = "http://girlgeekdinners.origo.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere&session=7j2piqwbbn34tso94cdusl7kxazc03ki9r2x0yzsehh4zs7y64u4uhib5mdykvy6b5xe3kscqqm92gk3p1x17jyhv7fp03uukkw";
+                break;
+            case "http://girlgeekdinners.origo.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere&session=7j2piqwbbn34tso94cdusl7kxazc03ki9r2x0yzsehh4zs7y64u4uhib5mdykvy6b5xe3kscqqm92gk3p1x17jyhv7fp03uukkw":
+                $exp_url = "http://girlgeekdinners.origo.no/-/bulletin/show/573985_kvinnelige-it-foredragsholdere";
+                break;
+            case "http://t.co/V7NDaubm":
+                $exp_url = "http://t.co/V7NDaubm/endlessredirectloop";
+                break;
+            case "http://t.co/V7NDaubm/endlessredirectloop":
+                $exp_url = "http://t.co/V7NDaubm";
+                break;
             default:
                 $exp_url = '';
         }

@@ -63,6 +63,7 @@ class URLExpander {
         $scheme = isset($url['scheme'])?$url['scheme']:'http';
 
         $reconstructed_url = $scheme."://$host$port".$path.$query.$fragment;
+        $logger->logInfo("Making cURL request for ".$reconstructed_url, __METHOD__.','.__LINE__);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $reconstructed_url);

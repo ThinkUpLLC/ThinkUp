@@ -34,7 +34,6 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
      * @var int
      */
     var $link_limit = 0;
-
     /**
      * @var Logger
      */
@@ -48,6 +47,11 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
      * @var ShortLinkDAO
      */
     var $short_link_dao;
+    /**
+     * Maximum number of times to expand a given URL. This cap prevents endless expansion loops.
+     * @var int
+     */
+    const EXPANSION_CAP = 8;
     public function __construct($vals=null) {
         parent::__construct($vals);
         $this->folder_name = 'expandurls';
@@ -122,6 +126,7 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
         $has_expanded_flickr_link = false;
         foreach ($links_to_expand as $index=>$link) {
             if (Utils::validateURL($link->url)) {
+                $endless_loop_prevention_counter = 0;
                 $this->logger->logInfo("Expanding ".($total_expanded+1). " of ".count($links_to_expand)." (".
                 $link->url.")", __METHOD__.','.__LINE__);
 
@@ -139,12 +144,14 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
                     //end Flickr thumbnail processing
                     $expanded_url = URLExpander::expandURL($short_link,$link->url, $index, count($links_to_expand),
                     $this->link_dao, $this->logger);
-                    if ($expanded_url == $short_link || $expanded_url == '') {
+                    if ($expanded_url == $short_link || $expanded_url == ''
+                    || $endless_loop_prevention_counter > self::EXPANSION_CAP) {
                         $fully_expanded = true;
                     } else {
                         $this->short_link_dao->insert($link->id, $short_link);
                     }
                     $short_link = $expanded_url;
+                    $endless_loop_prevention_counter++;
                 }
                 if (!$has_expanded_flickr_link) {
                     if ($expanded_url != '' ) {
