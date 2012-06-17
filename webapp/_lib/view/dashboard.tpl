@@ -74,9 +74,11 @@
                 <h2>This Week's Most Discerning Followers</h2>
                 <div class="clearfix article" style="padding-top : 0px;">
                 {foreach from=$least_likely_followers key=uid item=u name=foo}
+                  {if !$smarty.foreach.foo.last}
                   <div class="avatar-container" style="float:left;margin:7px;">
                     <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
                   </div>
+                  {/if}
                 {/foreach}
                 <br /><br /><br />
                 </div>

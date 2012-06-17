@@ -44,6 +44,8 @@ $model_tests->add(new TestOfGroupMySQLDAO());
 $model_tests->add(new TestOfGroupMemberMySQLDAO());
 $model_tests->add(new TestOfGroupMembershipCountMySQLDAO());
 $model_tests->add(new TestOfInstanceMySQLDAO());
+$model_tests->add(new TestOfInsightMySQLDAO());
+$model_tests->add(new TestOfInsightsGenerator());
 $model_tests->add(new TestOfInstaller());
 $model_tests->add(new TestOfInstallerMySQLDAO());
 $model_tests->add(new TestOfInviteMySQLDAO());

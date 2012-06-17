@@ -135,6 +135,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
             }
 
             $crawler = new TwitterCrawler($instance, $api);
+            $insights_generator = new InsightsGenerator($instance);
 
             $api->init();
 
@@ -166,6 +167,8 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                 $crawler->fetchUnloadedFollowerDetails();
                 $crawler->cleanUpFollows();
                 $crawler->fetchFriendTweetsAndFriends();
+
+                $insights_generator->generateInsights();
 
                 if ($noauth) {
                     // No auth req'd
@@ -252,8 +255,8 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $instance->network_user_id, 'twitter', 13, '#page_number#'));
         $followers_menu_item->addDataset($followers_ds1);
 
-        $followers_ds9 = new Dataset('leastlikelythisweek', 'FollowDAO', "getLeastLikelyFollowersThisWeek", array(
-        $instance->network_user_id, 'twitter', 13, '#page_number#'));
+        $followers_ds9 = new Dataset('leastlikelythisweek', 'InsightDAO', "getPreCachedInsightData", array(
+        'FollowMySQLDAO::getLeastLikelyFollowersThisWeek',  $instance->id, date('Y-m-d')));
         $followers_menu_item->addDataset($followers_ds9);
 
         $followers_ds2 = new Dataset("popular", 'FollowDAO', "getMostFollowedFollowers", array(

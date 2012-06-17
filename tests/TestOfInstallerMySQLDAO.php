@@ -82,7 +82,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 28);
+        $this->assertEqual(sizeof($result), 29);
         $this->assertEqual($result[0], $config_array["table_prefix"].'encoded_locations');
     }
     public function testCheckTable() {
@@ -148,7 +148,6 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $expected = "/INSERT INTO ".$config_array["table_prefix"]."plugins/i";
         $this->assertPattern( $expected, $output['queries'][1] );
 
-
         // test on missing tables
         InstallerMySQLDAO::$PDO->exec("DROP TABLE " . $config_array["table_prefix"] . "owners");
         $output = $dao->diffDataStructure($install_queries, $dao->getTables());
@@ -158,12 +157,13 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertPattern($expected, $output['queries'][$config_array["table_prefix"] . 'owners']);
 
         // test on missing PRIMARY KEY
-        InstallerMySQLDAO::$PDO->exec("ALTER TABLE " . $config_array["table_prefix"] . "follows DROP KEY user_id");
+        InstallerMySQLDAO::$PDO->exec("ALTER TABLE " . $config_array["table_prefix"] .
+        "follows DROP KEY network_follower_user");
         $tables = $dao->getTables();
         //var_dump($tables);
         $output = $dao->diffDataStructure($install_queries, $tables);
         $add_pk = "ALTER TABLE " . $config_array["table_prefix"] .
-        "follows ADD UNIQUE KEY user_id (network,follower_id,user_id)";
+        "follows ADD UNIQUE KEY network_follower_user (network,follower_id,user_id)";
         $this->assertTrue(in_array($add_pk, $output['queries']));
 
         // test on missing index

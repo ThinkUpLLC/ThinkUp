@@ -49,6 +49,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':fav_of_user_id' => (string) $favoriter_id,
             ':network' => $vals['network']
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
@@ -61,6 +62,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':user_id' => (string) $user_id,
             ':network' => $network,
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
@@ -102,7 +104,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date
         FROM (#prefix#posts p
-        INNER JOIN #prefix#favorites f on f.post_id = p.post_id) 
+        INNER JOIN #prefix#favorites f on f.post_id = p.post_id)
         WHERE f.fav_of_user_id = :owner_id AND p.network=:network ";
         $q .= $protected;
         if ($order_by == 'reply_count_cache') {
@@ -127,6 +129,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         if ($ubound > 0) {
             $vars[':ubound'] = $ubound;
         }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -182,7 +185,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         );
         $q = "SELECT p.*, pub_date - interval #gmt_offset# hour as adj_pub_date FROM
         (#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id)
-         LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
+         LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id
         WHERE u.user_name = :author_username AND p.network=:network ";
 
         if ($in_last_x_days > 0) {
@@ -200,6 +203,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $q .= " LIMIT :limit";
             $vars[':limit'] = (int)$count;
         }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -277,6 +281,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
           ':limit'=>$count,
           ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -324,6 +329,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':post_id'=>(string) $post_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         return $all_rows;

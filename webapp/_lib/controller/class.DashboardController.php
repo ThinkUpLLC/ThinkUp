@@ -208,26 +208,27 @@ class DashboardController extends ThinkUpController {
         if (isset($this->instance)) {
             $this->setPageTitle($this->instance->network_username . "'s Dashboard");
 
-            $post_dao = DAOFactory::getDAO('PostDAO');
+            $insight_dao = DAOFactory::getDAO('InsightDAO');
 
-            $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 10);
-            if (sizeof($hot_posts) > 3) {
-                $hot_posts_data = self::getHotPostVisualizationData($hot_posts, $this->instance->network);
+            $hot_posts_data = $insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts', $this->instance->id,
+            date('Y-m-d'));
+            if (isset($hot_posts_data)) {
                 $this->addToView('hot_posts_data', $hot_posts_data);
             }
 
-            $short_link_dao = DAOFactory::getDAO('ShortLinkDAO');
-            $click_stats = $short_link_dao->getRecentClickStats($this->instance, 10);
-            if (sizeof($click_stats) > 3) {
-                $click_stats_data = self::getClickStatsVisualizationData($click_stats);
+            $click_stats_data = $insight_dao->getPreCachedInsightData( 'ShortLinkMySQLDAO::getRecentClickStats',
+            $this->instance->id, date('Y-m-d'));
+            if (isset($click_stats_data)) {
                 $this->addToView('click_stats_data', $click_stats_data);
             }
 
-            $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
-            $this->instance->network, 5);
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $most_replied_to_1wk = $insight_dao->getPreCachedInsightData(
+            'PostMySQLDAO::getMostRepliedToPostsInLastWeek', $this->instance->id, date('Y-m-d'));
             $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
-            $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
-            $this->instance->network, 5);
+
+            $most_retweeted_1wk = $insight_dao->getPreCachedInsightData(
+            'PostMySQLDAO::getMostRetweetedPostsInLastWeek', $this->instance->id, date('Y-m-d'));
             $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
             //for now, only show most liked/faved posts on Facebook dashboard
             //once we cache fave counts for Twitter, we can remove this conditional
@@ -238,10 +239,9 @@ class DashboardController extends ThinkUpController {
                 $this->addToView('most_faved_1wk', $most_faved_1wk);
             }
 
-            //follows
-            $follow_dao = DAOFactory::getDAO('FollowDAO');
-            $least_likely_followers = $follow_dao->getLeastLikelyFollowersThisWeek($this->instance->network_user_id,
-            'twitter', 12);
+            //follows - these are pre-cached in insights
+            $least_likely_followers = $insight_dao->getPreCachedInsightData(
+            'FollowMySQLDAO::getLeastLikelyFollowersThisWeek', $this->instance->id, date('Y-m-d'));
             $this->addToView('least_likely_followers', $least_likely_followers);
 
             //follower count history
@@ -256,12 +256,13 @@ class DashboardController extends ThinkUpController {
             $this->instance->network, 'WEEK', 5);
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
 
-            $post_dao = DAOFactory::getDAO('PostDAO');
             list($all_time_clients_usage, $latest_clients_usage) =
-            $post_dao->getClientsUsedByUserOnNetwork($this->instance->network_user_id, $this->instance->network);
+            $insight_dao->getPreCachedInsightData(
+            'PostMySQLDAO::getClientsUsedByUserOnNetwork', $this->instance->id, date('Y-m-d'));
+            $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
 
             // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
-            $all_time_clients_usage = self::getClientUsageVisualizationData($all_time_clients_usage);
+            $all_time_clients_usage = InsightsGenerator::getClientUsageVisualizationData($all_time_clients_usage);
             $this->addToView('all_time_clients_usage', $all_time_clients_usage);
 
             // Only show the two most used clients for the last 25 posts
@@ -271,106 +272,5 @@ class DashboardController extends ThinkUpController {
             $this->addErrorMessage($username." on ".ucwords($this->instance->network).
             " isn't set up on this ThinkUp installation.");
         }
-    }
-    /**
-     * Convert Hot Posts data to JSON for use with Google Charts
-     * @param array $hot_posts Array returned from PostDAO::getHotPosts
-     * @return string JSON
-     */
-    public static function getHotPostVisualizationData($hot_posts, $network) {
-        switch ($network) {
-            case 'twitter':
-                $post_label = 'Tweet';
-                $approval_label = 'Favorites';
-                $share_label = 'Retweets';
-                $reply_label = 'Replies';
-                break;
-            case 'facebook':
-            case 'facebook page':
-                $post_label = 'Post';
-                $approval_label = 'Likes';
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-            case 'google+':
-                $post_label = 'Post';
-                $approval_label = "+1s";
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-            default:
-                $post_label = 'Post';
-                $approval_label = 'Favorites';
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-        }
-        $metadata = array(
-        array('type' => 'string', 'label' => $post_label),
-        array('type' => 'number', 'label' => $reply_label),
-        array('type' => 'number', 'label' => $share_label),
-        array('type' => 'number', 'label' => $approval_label),
-        );
-        $result_set = array();
-        foreach ($hot_posts as $post) {
-            if (isset($post->post_text) && $post->post_text != '') {
-                $post_text_label = htmlspecialchars_decode(strip_tags($post->post_text), ENT_QUOTES);
-            } elseif (isset($post->link->title) && $post->link->title != '') {
-                $post_text_label = str_replace('|','', $post->link->title);
-            } elseif (isset($post->link->url) && $post->link->url != "") {
-                $post_text_label = str_replace('|','', $post->link->url);
-            } else {
-                $post_text_label = date("M j",  date_format (date_create($post->pub_date), 'U' ));
-            }
-
-            $result_set[] = array('c' => array(
-            array('v' => substr($post_text_label, 0, 100) . '...'),
-            array('v' => intval($post->reply_count_cache)),
-            array('v' => intval($post->all_retweets)),
-            array('v' => intval($post->favlike_count_cache)),
-            ));
-        }
-        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
-    }
-
-    /**
-     * Convert client usage data to JSON for Google Charts
-     * @param array $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
-     * @return string JSON
-     */
-    public static function getClientUsageVisualizationData($client_usage) {
-        $metadata = array(
-        array('type' => 'string', 'label' => 'Client'),
-        array('type' => 'number', 'label' => 'Posts'),
-        );
-        $result_set = array();
-        foreach ($client_usage as $client => $posts) {
-            $result_set[] = array('c' => array(
-            array('v' => $client, 'f' => $client),
-            array('v' => intval($posts)),
-            ));
-        }
-        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
-    }
-
-    /**
-     * Convert click stats data to JSON for Google Charts
-     * @param array $click_stats Array returned from ShortLinkDAO::getRecentClickStats
-     * @return string JSON
-     */
-    public static function getClickStatsVisualizationData($click_stats) {
-        $metadata = array(
-        array('type' => 'string', 'label' => 'Link'),
-        array('type' => 'number', 'label' => 'Clicks'),
-        );
-        $result_set = array();
-        foreach ($click_stats as $link_stat) {
-            $post_text_label = htmlspecialchars_decode(strip_tags($link_stat['post_text']), ENT_QUOTES);
-            $result_set[] = array('c' => array(
-            array('v' => substr($post_text_label, 0, 100) . '...'),
-            array('v' => intval($link_stat['click_count'])),
-            ));
-        }
-        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
     }
 }

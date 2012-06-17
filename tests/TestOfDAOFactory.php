@@ -375,6 +375,12 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'ShortLinkMySQLDAO');
     }
+
+    public function testInsightDAO() {
+        $dao = DAOFactory::getDAO('InsightDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'InsightMySQLDAO');
+    }
     /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
@@ -387,7 +393,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 29);
+        $this->assertEqual(sizeof($result), 30);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }
