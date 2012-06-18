@@ -565,12 +565,11 @@ interface PostDAO {
     public function getPostsToUserIterator($user_id, $network, $count, $is_public=false);
 
     /**
-     * Get posts from this day in a given year that aren't replies or reshares/retweets.
+     * Get posts from this day in every year except this one that aren't replies or reshares/retweets.
      * @param str $author_id
      * @param str $network
-     * @param str $year For example, '2009' or '2005'.
      * @param str $from_date If not specified, defaults to current date
      * @return array Post objects
      */
-    public function getPostsFromThisDayThatYear($author_id, $network, $year, $from_date=null);
+    public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null);
 }

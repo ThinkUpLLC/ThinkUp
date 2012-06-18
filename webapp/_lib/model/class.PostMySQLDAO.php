@@ -1673,9 +1673,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getUpdateCount($ps);
     }
 
-    public function getPostsFromThisDayThatYear($author_id, $network, $year, $from_date=null) {
+    public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null) {
         $vars = array(
-            ':year'=> $year,
             ':author'=> $author_id,
             ':network'=>$network
         );
@@ -1689,8 +1688,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box ";
         $q .= "FROM #prefix#posts po ";
         $q .= "LEFT JOIN #prefix#places pl ON po.place_id = pl.place_id ";
-        $q .= "WHERE (YEAR(pub_date)=:year) AND ";
-        $q .= "(DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
+        $q .= "WHERE  (YEAR(pub_date)!=YEAR(CURRENT_DATE())) ";
+        $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
         $q .= "author_user_id=:author AND po.network=:network AND ";
         $q .= "in_reply_to_post_id IS null AND in_reply_to_user_id IS NULL AND ";
         $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL ";
@@ -1721,6 +1720,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             }
             $all_posts[] = $post;
         }
-        return $all_posts;
+        return array_reverse($all_posts);
     }
 }

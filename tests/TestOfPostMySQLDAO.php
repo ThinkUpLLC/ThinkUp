@@ -2831,7 +2831,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->post_text, 'This is updated post 10');
     }
 
-    public function testGetAllPostsFromThisDayYearAgo(){
+    public function testGetOnThisDayFlashbackPosts(){
         // Generate the date string for 1 year ago today
         $year_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 year")));
 
@@ -2847,6 +2847,35 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $post_key = $post_builder->columns['last_insert_id'];
         // Add a link for this post
         $link_builder = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
+
+        // Add a post from 2 years ago that's not a reply or retweet
+        $two_years_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -2 year")));
+        $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'149', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_ago_date, 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $post_key = $post_builder2->columns['last_insert_id'];
+        // Add a link for this post
+        $link_builder2 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
+
+        // Add a post from today that's not a reply or retweet
+        $today_date = date(date( 'Y-m-d H:i:s' , strtotime("today")));
+
+        $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$today_date, 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $post_key = $post_builder3->columns['last_insert_id'];
+        // Add a link for this post
+        $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
         /* Add the place information for future foursquare checkin test (We do it this way due to the fixture builder
          not being able to handle the MySQL point type
@@ -2883,12 +2912,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Query the database for last year's post
         $post_dao = new PostMySQLDAO();
         // Get the year to query for
-        $query_year = date(date( 'Y' , strtotime("today -1 year")));
-        $res = $post_dao->getPostsFromThisDayThatYear(20, 'foursquare', $query_year);
+        $res = $post_dao->getOnThisDayFlashbackPosts(20, 'foursquare');
 
-        //print_r($res);
+        $this->debug(Utils::varDumpToString($res));
         // Check only the 1 checkin we inserted is returned
-        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual(sizeof($res), 2);
         // Check the author user id was set correctly
         $this->assertEqual($res[0]->author_user_id, '20');
         // Check the username was set correctly
@@ -2900,7 +2928,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Check the post text was set correctly
         $this->assertEqual($res[0]->post_text, 'I just checked in');
         // Check the pub date was set correctly
-        $this->assertEqual($res[0]->pub_date, $year_ago_date);
+        $this->assertEqual($res[0]->pub_date, $two_years_ago_date);
         // Check the location was set correctly
         $this->assertEqual($res[0]->location, 'England');
         // Check the place was set correctly
@@ -2930,6 +2958,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
          */
 
         // Check the link URL was set correctly
-        $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blah');
+        $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blahb');
     }
 }
