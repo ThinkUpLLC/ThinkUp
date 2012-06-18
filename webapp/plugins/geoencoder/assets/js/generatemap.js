@@ -76,7 +76,7 @@
         var item = document.createElement("div");
         var tit = document.createElement("div");
         tit.innerHTML = title;
-        item.style.cssText = 'padding:2px 0;width:243px;max-height:52px;overflow:hidden;border-bottom:1px solid #E0ECFF;cursor:pointer;overflow:hidden;';
+        item.style.cssText = 'padding:2px 0;width:200px;max-height:52px;overflow:hidden;border-bottom:1px solid #E0ECFF;cursor:pointer;overflow:hidden;';
         panel.appendChild(item);
         item.appendChild(tit);
         GEvent.addDomListener(item, "mouseover", function() {

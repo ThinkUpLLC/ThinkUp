@@ -10,7 +10,7 @@
 #userpanel a {font-size: 14px; padding-left: 4px; margin-bottom:10px;}
 #mappanel { height:98%; margin: auto; width:650px; border:1px solid #666;}
 #map { height:100%; }
-.columns {border: none; display: table-cell; vertical-align: top; width:270px;}
-.heading {width:870px; margin: auto; padding:20px 0px; border-bottom:1px solid #cccccc; margin-bottom:40px;}
+.columns {border: none; display: table-cell; vertical-align: top; width:240px;}
+.heading {width:820px; margin: auto; padding:20px 0px; border-bottom:1px solid #cccccc; margin-bottom:40px;}
 html {background: #fff!important;}
 #mainTable {display:table-row;}
