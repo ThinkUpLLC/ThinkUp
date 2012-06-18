@@ -115,7 +115,7 @@ class ThinkUpTestDatabaseHelper extends PDODAO {
         }
         $db_type = $config->getValue('db_type');
 
-        if(!$db_type) {
+        if (!$db_type) {
             $db_type = 'mysql';
         }
         $db_socket = $config->getValue('db_socket');

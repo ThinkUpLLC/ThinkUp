@@ -62,11 +62,11 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $twitter_options = $plugin_option_dao->getOptionsHash('twitter', true);
         $oauth_consumer_key = null;
-        if(isset($twitter_options['oauth_consumer_key'])) {
+        if (isset($twitter_options['oauth_consumer_key'])) {
             $oauth_consumer_key = $twitter_options['oauth_consumer_key']->option_value;
         }
         $oauth_consumer_secret = null;
-        if(isset($twitter_options['oauth_consumer_secret'])) {
+        if (isset($twitter_options['oauth_consumer_secret'])) {
             $oauth_consumer_secret = $twitter_options['oauth_consumer_secret']->option_value;
         }
 
@@ -177,7 +177,7 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
 
         $has_redis = $this->isRedisSupported();
         $use_redis_label = "Use Redis"; // @TODO -- more information
-        if($has_redis) {
+        if ($has_redis) {
             $use_redis = array('name' => 'use_redis', 'label' => $use_redis_label,
             'values' => array('True' => 'true', 'False' => 'false'), 'default_value' => 'false');
             $this->addPluginOption(self::FORM_RADIO_ELEMENT, $use_redis);
@@ -192,7 +192,7 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
         $version = explode('.', PHP_VERSION);
         // check whether predis is supported. first part of this check is overkill-
         // if major v. is less than 5, we should not even be running
-        if (! ($version[0] >= $this->php_major_version_for_redis &&
+        if (!($version[0] >= $this->php_major_version_for_redis &&
         $version[1] >= $this->php_minor_version_for_redis)) {
             return false;
         }
@@ -201,7 +201,7 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
         $redis = null;
         require_once THINKUP_WEBAPP_PATH . 'plugins/twitterrealtime/extlib/predis/lib/Predis.php';
         eval('$redis = new Predis\Client();'); //for php less than 5.3
-        if(! is_null($redis)) {
+        if (!is_null($redis)) {
             try {
                 $resp = $redis->ping();
                 $redis_status = true;

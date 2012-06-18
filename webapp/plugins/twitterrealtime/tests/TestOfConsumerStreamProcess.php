@@ -80,7 +80,7 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
     public function testProcessStreamDataMockRedis() {
         //dont run redis test for php less than 5.3
         $version = explode('.', PHP_VERSION);
-        if (! ($version[0] >= 5 && $version[1] >= 3)) {
+        if (!($version[0] >= 5 && $version[1] >= 3)) {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         } else {
@@ -114,12 +114,12 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
 
     public function testProcessStreamDataRedis() {
         $version = explode('.', PHP_VERSION);
-        if (! ($version[0] >= 5 && $version[1] >= 3)) {
+        if (!($version[0] >= 5 && $version[1] >= 3)) {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         }
-        if((getenv('WITH_REDIS')!==false)) {
-            if($this->DEBUG) { print "NOTE: Running redis test againt a local redis server\n"; }
+        if ((getenv('WITH_REDIS')!==false)) {
+            if ($this->DEBUG) { print "NOTE: Running redis test againt a local redis server\n"; }
             $this->setUpTwitterData();
             $this->setUpData('true');
 

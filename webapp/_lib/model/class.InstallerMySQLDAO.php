@@ -154,7 +154,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                 //set up migration table if it doesn't exists
                 $stmt = $this->execute("SHOW TABLES LIKE '#prefix#completed_migrations'");
                 $table_data = $this->getDataRowAsArray($stmt);
-                if (! isset($table_data)) {
+                if (!isset($table_data)) {
                     // create table data
                     $sql_file = THINKUP_WEBAPP_PATH . 'install/sql/completed_migrations.sql';
                     $migration_string = file_get_contents($sql_file);
@@ -170,7 +170,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                 } else {
                     $stmt = $this->execute("SHOW COLUMNS FROM #prefix#completed_migrations");
                     $column_data = $this->getDataRowsAsArrays($stmt);
-                    if(! isset($column_data[2])) { // no sql_ran colum, so add
+                    if (!isset($column_data[2])) { // no sql_ran colum, so add
                         $stmt = $this->execute("ALTER TABLE #prefix#completed_migrations ADD COLUMN " .
                         "sql_ran text COMMENT 'The migration sql that was executed'");
                     }
@@ -222,7 +222,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                 throw new Exception("migration sql error for $sql: " . $sql);
             }
             $ps->closeCursor();
-            if (! $if_exists_statement) {
+            if (!$if_exists_statement) {
                 $cnt++;
             }
             if ($new_migration == true && ! $if_exists_statement) {

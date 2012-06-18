@@ -52,7 +52,7 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
 
         $config = Config::getInstance();
 
-        if (! self::ramDiskTestMode() ) {
+        if (!self::ramDiskTestMode() ) {
             //Override default CFG values
             $THINKUP_CFG['db_name'] = $this->test_database_name;
             $config->setValue('db_name', $this->test_database_name);

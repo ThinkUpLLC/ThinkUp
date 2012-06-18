@@ -30,10 +30,10 @@
 class TestController extends ThinkUpController {
 
     public function control() {
-        if(isset($_GET['json'])) {
+        if (isset($_GET['json'])) {
             $this->setJsonData( array( 'aname' => 'a value', 'alist' => array('apple', 'pear', 'banana'), 'alink' =>
                     'http://thinkupapp.com'));
-        } else if(isset($_GET['text'])) {
+        } else if (isset($_GET['text'])) {
             $this->setContentType('text/plain');
         } else if (isset($_GET['png'])) {
             $this->setContentType('image/png');

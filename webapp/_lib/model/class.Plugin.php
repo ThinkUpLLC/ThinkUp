@@ -82,7 +82,7 @@ class Plugin {
     public function __construct($val = null) {
         $this->required_settings = array();
 
-        if (! $val) {
+        if (!$val) {
             return;
         }
         if (isset($val["id"])) {

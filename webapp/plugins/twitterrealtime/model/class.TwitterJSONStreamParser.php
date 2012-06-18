@@ -185,7 +185,7 @@ class TwitterJSONStreamParser {
         $hashtags = array();
         $entities = array();
         $user_array = array();
-         
+
         try {
             $post['is_rt'] = false;
             $post['in_rt_of_user_id'] = '';
@@ -257,9 +257,9 @@ class TwitterJSONStreamParser {
                     $urls[] = $url_info;
                     */
                     // just need an array of urls now...
-                    if( isset($u['expanded_url']) ) {
+                    if ( isset($u['expanded_url']) ) {
                         array_push($urls, $u['expanded_url']);
-                    } else if(isset($u['url'])) {
+                    } else if (isset($u['url'])) {
                         array_push($urls, $u['url']);
                     }
                 }

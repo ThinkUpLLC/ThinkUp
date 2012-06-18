@@ -47,7 +47,7 @@ class BackupController extends ThinkUpAdminController {
     public function adminControl() {
         $this->disableCaching();
         $this->view_mgr->addHelp('backup', 'install/backup');
-        if (! self::checkForZipSupport()) {
+        if (!self::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         }
         // pass the count of the table with  the most records
@@ -151,7 +151,7 @@ class BackupController extends ThinkUpAdminController {
         } else {
             // Everyone needs to check the global mutex
             $lock_successful = $mutex_dao->getMutex($global_mutex_name);
-            if (! $lock_successful) {
+            if (!$lock_successful) {
                 throw new CrawlerLockedException("A crawl is in progress, please wait until completed...");
             }
         }

@@ -93,7 +93,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         if (isset($_POST['reset_api_key']) && $_POST['reset_api_key'] == 'Reset API Key') {
             $this->validateCSRFToken();
             $api_key = $owner_dao->resetAPIKey($owner->id);
-            if(! $api_key) {
+            if (!$api_key) {
                 throw new Exception("Unbale to update user's api_key, something bad must have happened");
             }
             $this->addSuccessMessage("Your API Key has been reset! Please update your ThinkUp RSS feed subscription.",

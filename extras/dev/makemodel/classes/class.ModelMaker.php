@@ -66,7 +66,7 @@ class ModelMaker {
         $this->parent_object_name = $parent_object_name;
         $this->config = Config::getInstance();
         //connect to database
-        if(is_null(self::$pdo)) {
+        if (is_null(self::$pdo)) {
             self::$pdo = $this->connect();
         }
     }
@@ -105,7 +105,7 @@ class ModelMaker {
     private function connect() {
         $db_string = sprintf("mysql:dbname=%s;host=%s", $this->config->getValue('db_name'),
         $this->config->getValue('db_host'));
-        if($this->DEBUG) {
+        if ($this->DEBUG) {
             echo "DEBUG: Connecting to $db_string\n";
         }
         $db_socket = $this->config->getValue('db_socket');

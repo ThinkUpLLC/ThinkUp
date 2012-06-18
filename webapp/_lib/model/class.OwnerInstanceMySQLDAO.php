@@ -39,12 +39,12 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function doesOwnerHaveAccessToInstance(Owner $owner, Instance $instance) {
         // verify $owner has an id
-        if (! isset($owner->id)) {
+        if (!isset($owner->id)) {
             $message = 'doesOwnerHaveAccessToInstance() requires an "Owner" object with "id" defined';
             throw new BadArgumentException($message);
         }
         // verify $instance has an id
-        if (! isset($instance->id)) {
+        if (!isset($instance->id)) {
             $message = 'doesOwnerHaveAccessToInstance() requires an "Instance" object with "id" defined';
             throw new BadArgumentException($message);
         }

@@ -73,7 +73,7 @@ class AppConfigController extends ThinkUpAdminController {
                             if ( isset($app_config[$dep_key]['match'])
                             && ! preg_match($app_config[$dep_key]['match'], $value) ) {
                                 $required[$dep_key] = $app_config[$dep_key]['title'] .
-                                ' is required if ' . $app_config[$key]['title'] . 
+                                ' is required if ' . $app_config[$key]['title'] .
                                 ' is set ' . $app_config[$dep_key]['match_message'];
                             }
                         }
@@ -104,7 +104,7 @@ class AppConfigController extends ThinkUpAdminController {
                 }
                 foreach($app_config as $key => $value) {
                     // delete the record if it exists and is empty in the post request
-                    if (! isset($config_values[$key]['value']) || $config_values[$key]['value'] == '') {
+                    if (!isset($config_values[$key]['value']) || $config_values[$key]['value'] == '') {
                         $config = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, $key);
                         if ($config) {
                             $option_dao->deleteOption($config->option_id);

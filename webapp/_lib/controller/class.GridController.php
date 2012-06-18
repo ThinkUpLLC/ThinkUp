@@ -91,7 +91,7 @@ class GridController extends ThinkUpAuthController {
                 $username = $_GET['u'];
                 $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
-                if (! $owner) {
+                if (!$owner) {
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 }
                 $instance = $instance_dao->getByUsername($username, $_GET['n']);
@@ -105,7 +105,7 @@ class GridController extends ThinkUpAuthController {
                         $post_dao = DAOFactory::getDAO('PostDAO');
                         $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'],$_GET['n'], 'default','km',
                         $public_search);
-                        if (! $public_search) {
+                        if (!$public_search) {
                             $private_reply_search = true;
                         }
                     } else {
@@ -125,7 +125,7 @@ class GridController extends ThinkUpAuthController {
                     }
                     foreach($posts_it as $key => $value) {
                         if ($private_reply_search) {
-                            if (! $ownerinstance_dao->doesOwnerHaveAccessToPost($owner, $value)) {
+                            if (!$ownerinstance_dao->doesOwnerHaveAccessToPost($owner, $value)) {
                                 continue;
                             }
                         }

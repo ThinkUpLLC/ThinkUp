@@ -97,7 +97,7 @@ class PluginOptionController extends ThinkUpAdminController {
                     }
                 } else {
                     $insert_id = $plugin_option_dao->insertOption($plugin_id, $name, $value);
-                    if (!  $insert_id) {
+                    if (! $insert_id) {
                         $this->json_data['message'] = "Unable to add plugin option: $name";
                         return;
                     } else {

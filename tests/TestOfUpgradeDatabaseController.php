@@ -47,7 +47,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
 
         $this->init_db_version = $config->getValue('THINKUP_VERSION');
         $new_version = $config->getValue('THINKUP_VERSION') + 10;
-        if (! preg_match('/\./', $new_version)) {
+        if (!preg_match('/\./', $new_version)) {
             $new_version .= '.0';
         }
         $config->setValue('THINKUP_VERSION', $new_version ); //set a high version num
@@ -829,7 +829,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
         $migration_version = $app_version - 1;
-        if (! preg_match('/\./', $migration_version)) {
+        if (!preg_match('/\./', $migration_version)) {
             $migration_version .= '.0';
         }
         $migration_test1 = $this->migrations_test_dir . $this->migrations_file1;
@@ -851,7 +851,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
     private function newMigrationFiles($name, $old = false, $add_sql = false, $no_version = false, $date = false) {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
-        if (! $date) {
+        if (!$date) {
             $date = '2011-09-21';
         }
         $migration_version = $app_version;
@@ -865,7 +865,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
             $migration_test1 = $this->migrations_test_dir . $this->migrations_file2;
         }
         $migration1 = $this->migrations_dir . $date . '_' . $name;
-        if (! $no_version) {
+        if (!$no_version) {
             $migration1 .= '_v' . $migration_version;
         }
         $migration1 .= '.sql';
@@ -883,7 +883,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
     private function newMigrationFiles2($name, $date = false, $bad_sql = false) {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
-        if (! $date) {
+        if (!$date) {
             $date = '2011-09-21';
         }
         $migration_version = $app_version;

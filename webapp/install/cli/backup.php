@@ -34,19 +34,19 @@ require_once 'config.inc.php';
 date_default_timezone_set($THINKUP_CFG['timezone']);
 
 // don't run via the web...
-if(isset($_SERVER['SERVER_NAME'])) {
+if (isset($_SERVER['SERVER_NAME'])) {
     die("This script should only be run via the command line.");
 }
 
 // we need zip support
-if(! BackupController::checkForZipSupport()) {
+if (!BackupController::checkForZipSupport()) {
     print "\nError: ThinkUp backups require Zip support\n\n";
     exit(1);
 }
 
 try {
     array_shift($argv);
-    if(!empty($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+    if (!empty($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
         usage();
     }
 
@@ -54,7 +54,7 @@ try {
         usage();
     } else {
         $filename = $argv[1];
-        if( ! preg_match('/\.zip$/', $filename) ) {
+        if ( ! preg_match('/\.zip$/', $filename) ) {
             error_log("\nError: data file should end in .zip");
             usage();
         } else {
@@ -64,12 +64,12 @@ try {
 
             putenv('BACKUP_VERBOSE=true');
             $backup_dao = DAOFactory::getDAO('BackupDAO');
-            if($argv[0] == '--export') {
+            if ($argv[0] == '--export') {
                 print "\nExporting data to: $filename\n\n";
                 $backup_dao->export($filename);
                 print "\nBackup completed...\n\n";
             } else {
-                if(! file_exists($filename)) {
+                if (!file_exists($filename)) {
                     error_log("\nError: data import file '$filename' not found");
                     usage();
                 }

@@ -36,7 +36,7 @@ class TestPreAuthController extends ThinkUpAuthController {
     }
 
     protected function preAuthControl() {
-        if(isset($_GET['preauth'])) {
+        if (isset($_GET['preauth'])) {
             $this->addToView('test', 'We are preauthed!');
         } else {
             return false;

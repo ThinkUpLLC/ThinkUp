@@ -51,7 +51,7 @@ class TestOfStreamMessageQueueRedis extends ThinkUpUnitTestCase {
     public function testEnqueueStatus() {
         //dont run redis test for php less than 5.3
         $version = explode('.', PHP_VERSION);
-        if (! ($version[0] >= 5 && $version[1] >= 3)) {
+        if (!($version[0] >= 5 && $version[1] >= 3)) {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         } else {
@@ -73,7 +73,7 @@ class TestOfStreamMessageQueueRedis extends ThinkUpUnitTestCase {
     public function testProcessStatus() {
         //dont run redis test for php less than 5.3
         $version = explode('.', PHP_VERSION);
-        if (! ($version[0] >= 5 && $version[1] >= 3)) {
+        if (!($version[0] >= 5 && $version[1] >= 3)) {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         }
@@ -105,8 +105,8 @@ class TestOfStreamMessageQueueRedis extends ThinkUpUnitTestCase {
      *     WITH_REDIS=1 php tests/this_test.php
      */
     public function testWithRedis() {
-        if((getenv('WITH_REDIS')!==false)) {
-            if($this->DEBUG) { print "NOTE: Running redis test againt a local redis server\n"; }
+        if ((getenv('WITH_REDIS')!==false)) {
+            if ($this->DEBUG) { print "NOTE: Running redis test againt a local redis server\n"; }
             $queue = new StreamMessageQueueRedis();
             $queue->enqueueStatus("this is a mock status 1");
             $queue->enqueueStatus("this is a mock status 2");
@@ -116,7 +116,7 @@ class TestOfStreamMessageQueueRedis extends ThinkUpUnitTestCase {
             $this->assertEqual($data2, "this is a mock status 2");
             $this->assertNull($queue->processStreamData());
         } else {
-            if($this->DEBUG) { print "NOTE: Skipping local redis server tests...\n"; }
+            if ($this->DEBUG) { print "NOTE: Skipping local redis server tests...\n"; }
         }
     }
 }

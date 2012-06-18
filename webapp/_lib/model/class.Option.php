@@ -52,7 +52,7 @@ class Option {
     var $option_value;
 
     public function __construct($args = null) {
-        if (! is_null($args)) {
+        if (!is_null($args)) {
             if (isset($args['option_id'])) {
                 $this->option_id = $args['option_id'];
             }

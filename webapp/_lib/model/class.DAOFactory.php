@@ -192,10 +192,10 @@ class DAOFactory {
      */
     public static function getDAO($dao_key, $cfg_vals=null) {
         $db_type = self::getDBType($cfg_vals);
-        if (! isset(self::$dao_mapping[$dao_key]) ) {
+        if (!isset(self::$dao_mapping[$dao_key]) ) {
             throw new Exception("No DAO mapping defined for: " . $dao_key);
         }
-        if (! isset(self::$dao_mapping[$dao_key][$db_type])) {
+        if (!isset(self::$dao_mapping[$dao_key][$db_type])) {
             throw new Exception("No db mapping defined for '" . $dao_key . "' with db type: " . $db_type);
         }
         $class_name = self::$dao_mapping[$dao_key][$db_type];

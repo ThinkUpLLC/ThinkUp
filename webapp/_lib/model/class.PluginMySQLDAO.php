@@ -63,16 +63,16 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         }
         $q = 'INSERT INTO
                 #prefix#plugins (name, folder_name, description, author, version, homepage, is_active)
-            VALUES 
+            VALUES
                 (:name, :folder_name, :description, :author, :version, :homepage, :is_active)';
         $is_active = $plugin->is_active ? 1 : 0;
         $vars = array(
-            ':name' => $plugin->name, 
+            ':name' => $plugin->name,
             'folder_name' => $plugin->folder_name,
             ':description' => $plugin->description,
             ':author' => $plugin->author,
-            ':version' => $plugin->version, 
-            ':homepage' => $plugin->homepage, 
+            ':version' => $plugin->version,
+            ':homepage' => $plugin->homepage,
             ':is_active' => $is_active);
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
@@ -84,14 +84,14 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     }
 
     public function updatePlugin($plugin) {
-        if (! is_object($plugin) || get_class($plugin) != 'Plugin'
+        if (!is_object($plugin) || get_class($plugin) != 'Plugin'
         || ! isset($plugin->name) || ! isset($plugin->folder_name)
         || ! isset($plugin->is_active) || ! isset($plugin->id) )
         {
             throw new BadArgumentException("updatePlugin() requires a valid plugin data object");
         }
         $q = 'UPDATE
-                #prefix#plugins 
+                #prefix#plugins
             SET
                 name = :name,
                 folder_name = :folder_name,
@@ -146,9 +146,9 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             $active = $this->convertBoolToDB($active);
         }
         $q = "
-            UPDATE 
+            UPDATE
                 #prefix#plugins
-             SET 
+             SET
                 is_active = :active
             WHERE
                 id = :id";

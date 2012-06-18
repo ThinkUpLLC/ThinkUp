@@ -143,14 +143,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $class_name = ucfirst($network) . 'Plugin';
         $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
         if (empty($ordering)) {
-            $ordering = 'pub_date ASC';
+            $ordering = 'pub_date ASC ';
         } else {
-            $ordering .= ', pub_date ASC';
+            $ordering .= ', pub_date ASC ';
         }
-        $q .= ' ORDER BY ' . $ordering;
+        $q .= 'ORDER BY ' . $ordering. ' ';
 
         if ($count > 0) {
-            $q .= " LIMIT :start_on_record, :limit;";
+            $q .= "LIMIT :start_on_record, :limit;";
         } else {
             $q .= ';';
         }
@@ -248,12 +248,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= "AND p.is_protected = 0 ";
         }
         if ($order_by == 'location') {
-            $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+            $q .= "ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
         } else if ($order_by != 'default') {
             $order_by = $this->sanitizeOrderBy($order_by);
-            $q .= " ORDER BY $order_by DESC ";
+            $q .= "ORDER BY $order_by DESC ";
         } else {
-            $q .= " ORDER BY is_reply_by_friend DESC, follower_count DESC, p.id DESC ";
+            $q .= "ORDER BY is_reply_by_friend DESC, follower_count DESC, p.id DESC ";
         }
 
         $vars = array(
@@ -376,18 +376,18 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getExchangesBetweenUsers($author_id, $other_user_id, $network='twitter') {
         $q = "SELECT   p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
-        $q .= " p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, ";
-        $q .= " p1.post_text as question, p1.pub_date + interval #gmt_offset# hour as question_adj_pub_date, ";
-        $q .= " p.post_id as answer_post_id,  p.author_username as answerer_username, ";
-        $q .= " p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, ";
-        $q .= " p.post_text as answer, p.network, p.pub_date + interval #gmt_offset# hour as answer_adj_pub_date ";
-        $q .= " FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
-        $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
-        $q .= " JOIN #prefix#users p3 on p3.user_id = :other_user_id ";
-        $q .= " WHERE p.in_reply_to_post_id is not null AND p.network=:network AND ";
-        $q .= " (p.author_user_id = :author_id AND p1.author_user_id = :other_user_id) ";
-        $q .= " OR (p1.author_user_id = :author_id AND p.author_user_id = :other_user_id) ";
-        $q .= " ORDER BY answer_adj_pub_date DESC, question_adj_pub_date ASC ";
+        $q .= "p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, ";
+        $q .= "p1.post_text as question, p1.pub_date + interval #gmt_offset# hour as question_adj_pub_date, ";
+        $q .= "p.post_id as answer_post_id,  p.author_username as answerer_username, ";
+        $q .= "p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, ";
+        $q .= "p.post_text as answer, p.network, p.pub_date + interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q .= "FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
+        $q .= "JOIN #prefix#users p2 on p2.user_id = :author_id ";
+        $q .= "JOIN #prefix#users p3 on p3.user_id = :other_user_id ";
+        $q .= "WHERE p.in_reply_to_post_id is not null AND p.network=:network AND ";
+        $q .= "(p.author_user_id = :author_id AND p1.author_user_id = :other_user_id) ";
+        $q .= "OR (p1.author_user_id = :author_id AND p.author_user_id = :other_user_id) ";
+        $q .= "ORDER BY answer_adj_pub_date DESC, question_adj_pub_date ASC ";
         $vars = array(
             ':author_id'=>(string)$author_id,
             ':other_user_id'=>(string)$other_user_id,
@@ -407,7 +407,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function isPostInDB($post_id, $network) {
         $q = "SELECT post_id FROM  #prefix#posts ";
-        $q .= " WHERE post_id = :post_id AND network=:network;";
+        $q .= "WHERE post_id = :post_id AND network=:network;";
         $vars = array(
             ':post_id'=>(string)$post_id,
             ':network'=>$network
@@ -440,7 +440,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     private function updateAPIRetweetCount($post_id, $retweet_count_api, $network) {
         $q = " UPDATE  #prefix#posts SET retweet_count_api = :count ";
-        $q .= " WHERE post_id = :post_id AND network=:network";
+        $q .= "WHERE post_id = :post_id AND network=:network";
         $vars = array(
             ':post_id'=>(string)$post_id,
             ':network'=>$network,
@@ -463,8 +463,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     private function updateInRetweetOfPostID($post_id, $in_retweet_of_post_id, $network) {
         $q = " UPDATE  #prefix#posts SET in_retweet_of_post_id = :rpid ";
-        $q .= " WHERE post_id = :post_id AND network=:network";
-        $q .= ' AND in_retweet_of_post_id IS NULL ';
+        $q .= " WHERE post_id = :post_id AND network=:network ";
+        $q .= "AND in_retweet_of_post_id IS NULL ";
         $vars = array(
             ':post_id'=>(string)$post_id,
             ':network'=>$network,
@@ -768,7 +768,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts AS p ";
         $q .= "WHERE p.network = :network ";
         $q .= $protected;
-        $q .= " AND p.author_user_id IN ( ";
+        $q .= "AND p.author_user_id IN ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
         $q .= ")";
@@ -809,8 +809,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts AS p ";
         $q .= "WHERE p.network = :network ";
         $q .= $protected;
-        $q .= " AND in_reply_to_post_id IS NULL ";
-        $q .= " AND p.in_reply_to_user_id = :user_id ";
+        $q .= "AND in_reply_to_post_id IS NULL ";
+        $q .= "AND p.in_reply_to_user_id = :user_id ";
         $q .= "ORDER BY p.id DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
@@ -1144,9 +1144,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
         }
-        $q .= " ORDER BY ".$order_by." DESC ";
+        $q .= "ORDER BY ".$order_by." DESC ";
         if ($count) {
-            $q .= " LIMIT :limit";
+            $q .= "LIMIT :limit";
             $vars[':limit'] = (int)$count;
         }
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -1389,20 +1389,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $start_on_record = ($page - 1) * $count;
 
         $username = "@".$username;
-        $q = " SELECT p.* , u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#posts p ";
-        $q .= " INNER JOIN #prefix#users u ON u.user_id = p.author_user_id WHERE ";
+        $q = "SELECT p.* , u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users u ON u.user_id = p.author_user_id WHERE ";
         //fulltext search only works for words longer than 4 chars
         if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
-            $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
+            $q .= "MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
         } else {
             $username = '%'.$username .'%';
             $q .= " post_text LIKE :username ";
         }
-        $q .= " AND in_reply_to_post_id is null ";
-        $q .= " AND in_retweet_of_post_id is null ";
-        $q .= " AND p.network = :network ";
-        $q .= " ORDER BY pub_date DESC LIMIT :start_on_record, :limit;";
+        $q .= "AND in_reply_to_post_id is null ";
+        $q .= "AND in_retweet_of_post_id is null ";
+        $q .= "AND p.network = :network ";
+        $q .= "ORDER BY pub_date DESC LIMIT :start_on_record, :limit;";
         $vars = array(
             ':username'=>$username,
             ':network'=>$network,
@@ -1455,9 +1455,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = "SELECT q.post_id, q.location, q.geo, q.place, q.in_reply_to_post_id, q.in_retweet_of_post_id, ";
         $q.= "q.is_reply_by_friend, q.is_retweet_by_friend, q.network FROM ";
         $q .= "(SELECT * FROM #prefix#posts AS p WHERE ";
-        $q .= " (p.geo IS NOT null OR p.place IS NOT null OR p.location IS NOT null)";
-        $q .= " AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
-        $q .= " ORDER BY id DESC LIMIT :limit) AS q ORDER BY q.id";
+        $q .= "(p.geo IS NOT null OR p.place IS NOT null OR p.location IS NOT null) ";
+        $q .= "AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
+        $q .= "ORDER BY id DESC LIMIT :limit) AS q ORDER BY q.id ";
         $vars = array(
             ':limit'=>(int)$limit
         );
@@ -1561,10 +1561,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      *               Both arrays are sorted by number of use, descending.
      */
     public function getClientsUsedByUserOnNetwork($author_id, $network) {
-        $q  = "SELECT COUNT(*) AS num_posts, source";
-        $q .= "  FROM #prefix#posts ";
-        $q .= " WHERE author_user_id = :author_id AND network = :network";
-        $q .= " GROUP BY source";
+        $q  = "SELECT COUNT(*) AS num_posts, source ";
+        $q .= "FROM #prefix#posts ";
+        $q .= "WHERE author_user_id = :author_id AND network = :network ";
+        $q .= "GROUP BY source";
         $vars = array(
             ':author_id'=>(string)$author_id,
             ':network'=>$network
@@ -1579,8 +1579,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "         FROM #prefix#posts ";
         $q .= "        WHERE author_user_id = :author_id AND network = :network";
         $q .= "        ORDER BY pub_date DESC";
-        $q .= "        LIMIT 25) p";
-        $q .= " GROUP BY source";
+        $q .= "        LIMIT 25) p ";
+        $q .= "GROUP BY source";
         $vars = array(
             ':author_id'=>(string)$author_id,
             ':network'=>$network

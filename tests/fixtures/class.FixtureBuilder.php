@@ -102,7 +102,7 @@ class FixtureBuilder {
     public function __construct($debug = false) {
         $this->DEBUG = $debug ? $debug : $this->DEBUG;
         $this->config = Config::getInstance();
-        if(is_null(self::$pdo)) {
+        if (is_null(self::$pdo)) {
             self::$pdo = $this->connect();
         }
     }
@@ -128,7 +128,7 @@ class FixtureBuilder {
     private function connect() {
         $db_string = sprintf("mysql:dbname=%s;host=%s", $this->config->getValue('db_name'),
         $this->config->getValue('db_host'));
-        if($this->DEBUG) { echo "DEBUG: Connecting to $db_string\n"; }
+        if ($this->DEBUG) { echo "DEBUG: Connecting to $db_string\n"; }
         $db_socket = $this->config->getValue('db_socket');
         if ( $db_socket) {
             $db_string.=";unix_socket=".$db_socket;
@@ -164,7 +164,7 @@ class FixtureBuilder {
     public function describeTable($table) {
         $columns = array();
         $table = $this->config->getValue('table_prefix') . $table;
-        if(isset(self::$table_descs[$table])) {
+        if (isset(self::$table_descs[$table])) {
             return self::$table_descs[$table];
         }
         try {
@@ -191,45 +191,45 @@ class FixtureBuilder {
         $sql = "INSERT INTO " . $this->config->getValue('table_prefix') . $table;
         foreach( $columns as $column) {
             $field_value = (! is_null($args)) && isset( $args[ $column['Field'] ]) ? $args[ $column['Field'] ] : null;
-            if( isset($column['Key']) && $column['Key'] == 'UNI' && ! $field_value) {
+            if ( isset($column['Key']) && $column['Key'] == 'UNI' && ! $field_value) {
                 throw new FixtureBuilderException($column['Field'] .
                 ' has a unique key constraint, a value must be defined for this column');
             }
-            if( isset($column['Extra']) && $column['Extra'] == 'auto_increment' && ! $field_value ) {
+            if ( isset($column['Extra']) && $column['Extra'] == 'auto_increment' && ! $field_value ) {
                 continue;
             }
-            if(isset($field_value)) {
-                if(gettype($field_value) == 'array') {
-                    if(! isset($field_value['function'])) {
+            if (isset($field_value)) {
+                if (gettype($field_value) == 'array') {
+                    if (!isset($field_value['function'])) {
                         throw new FixtureBuilderException("Column value array/hash must have a function defined");
                     } else {
                         $column['value'] = $field_value;
                     }
                 } else {
-                    if(preg_match('/^(times|date)/', $column['Type'])) {
+                    if (preg_match('/^(times|date)/', $column['Type'])) {
                         $column['value'] = $this->genDate($field_value);
                     } else {
                         $column['value'] = $field_value;
                     }
                 }
-            } else if(isset($args) && array_search($column['Field'], array_keys($args)) !== false) {
+            } else if (isset($args) && array_search($column['Field'], array_keys($args)) !== false) {
                 // Column value was specified, but is null; we just don't want to specify a value for that column
                 continue;
             } else if (isset($column['Default']) && $column['Default'] != ''
             && $column['Default'] != 'CURRENT_TIMESTAMP') {
                 $column['value'] = $column['Default'];
             } else {
-                if(preg_match('/^enum/', $column['Type'])) {
+                if (preg_match('/^enum/', $column['Type'])) {
                     $column['value'] = $this->genEnum( $column['Type'] );
-                } else if(preg_match('/^decimal/', $column['Type'])) {
+                } else if (preg_match('/^decimal/', $column['Type'])) {
                     $column['value'] = $this->genDecimal($column['Type']);
-                } else if(preg_match('/^(int|tinyint)/', $column['Type'])) {
+                } else if (preg_match('/^(int|tinyint)/', $column['Type'])) {
                     $column['value'] = $this->genInt();
-                } else if(preg_match('/^bigint/', $column['Type'])) {
+                } else if (preg_match('/^bigint/', $column['Type'])) {
                     $column['value'] = $this->genBigint();
-                } else if(preg_match('/^(times|date)/', $column['Type'])) {
+                } else if (preg_match('/^(times|date)/', $column['Type'])) {
                     $column['value'] = $this->genDate();
-                } else if(preg_match('/^(varchar|text|tinytext|mediumtext|longtext|blob)/', $column['Type'])) {
+                } else if (preg_match('/^(varchar|text|tinytext|mediumtext|longtext|blob)/', $column['Type'])) {
                     $column['value'] = $this->genVarchar();
                 }
             }
@@ -239,12 +239,12 @@ class FixtureBuilder {
         $values = array();
         $values_string = '';
         foreach(array_values($this->columns) as $value) {
-            if($values_string == '') {
+            if ($values_string == '') {
                 $values_string = ' (';
             } else {
                 $values_string .= ',';
             }
-            if(gettype($value) == 'array') {
+            if (gettype($value) == 'array') {
                 $values_string .= $value['function'];
             } else {
                 array_push($values, $value);
@@ -255,7 +255,7 @@ class FixtureBuilder {
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute($values);
         $last_insert_id = self::$pdo->lastInsertId();
-        if(isset($last_insert_id)) {
+        if (isset($last_insert_id)) {
             $this->columns['last_insert_id'] = $last_insert_id;
         }
     }
@@ -369,14 +369,14 @@ class FixtureBuilder {
     public function genDate($value = null) {
         $time_inc_map = array('h' => 'HOUR', 'd' => 'DAY', 'm' => 'MINUTE', 's' => 'SECOND');
         $sql = 'select now() - interval rand()*100000000 second';
-        if($value) {
-            if(preg_match('/^(\+|\-)(\d+)(s|m|h|d)/', $value, $matches)) {
+        if ($value) {
+            if (preg_match('/^(\+|\-)(\d+)(s|m|h|d)/', $value, $matches)) {
                 $sql = "select now() $matches[1] interval $matches[2] " . $time_inc_map[$matches[3]];
             } else {
                 $sql = null;
             }
         }
-        if($sql) {
+        if ($sql) {
             $stmt = self::$pdo->query(  $sql . ' as FDATE' );
             $data = $stmt->fetch();
             return $data[0];
@@ -390,7 +390,7 @@ class FixtureBuilder {
      * truncates the fixture table
      */
     function __destruct() {
-        if(isset($this->table)) {
+        if (isset($this->table)) {
             $table = Config::getInstance()->getValue('table_prefix') . $this->table;
             try {
                 self::$pdo->query('truncate table ' . $table);

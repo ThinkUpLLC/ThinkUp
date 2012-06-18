@@ -130,7 +130,7 @@ class Dataset {
     public function retrieveIterator() {
         $dao = DAOFactory::getDAO($this->dao_name);
         $iterator = null;
-        if (! is_null($this->iterator_method_name) ) {
+        if (!is_null($this->iterator_method_name) ) {
             if (method_exists($dao, $this->iterator_method_name)) {
                 $iterator = call_user_func_array(array($dao, $this->iterator_method_name),
                 $this->iterator_method_params);

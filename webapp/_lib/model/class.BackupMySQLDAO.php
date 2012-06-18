@@ -76,7 +76,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                         }
                         $q = "LOAD DATA INFILE '$infile' INTO TABLE $table";
                         $stmt = $this->execute($q);
-                        if (! $stmt) {
+                        if (!$stmt) {
                             throw new Exception("unable to load data file: " . $infile);
                         }
                         $stmt->closeCursor();
@@ -91,7 +91,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 foreach($db_tables as $table) {
                     foreach($table as $key => $value) {
                         $table_name = $value;
-                        if (! isset( $imported_tables[ $table_name ] ) ) {
+                        if (!isset( $imported_tables[ $table_name ] ) ) {
                             $stmt = $this->execute("DROP TABLE IF EXISTS $table_name");
                         }
                     }
@@ -129,7 +129,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
         $backup_dir = FileDataManager::getBackupPath();
 
-        if (! $zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
+        if (!$zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
             throw new Exception("Unable to open backup file for exporting: $zip_file");
         }
 

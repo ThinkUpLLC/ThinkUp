@@ -52,7 +52,7 @@ class GridExportController extends ThinkUpAuthController {
                 $_POST['grid_export_data'] = stripslashes($_POST['grid_export_data']);
             }
             $data = json_decode( $_POST['grid_export_data'] );
-            if (! $data ) {
+            if (!$data ) {
                 echo('No search data to export.' . json_last_error() . "<br />");
                 echo( $_POST['grid_export_data']);
             } else {

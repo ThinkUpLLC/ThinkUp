@@ -180,7 +180,7 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
 
     public function recursiveDelete($str){
         if (is_file($str)){
-            if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
+            if (!preg_match("MAKETHISDIRWRITABLE", $str)) {
                 return @unlink($str);
             } else {
                 return true;

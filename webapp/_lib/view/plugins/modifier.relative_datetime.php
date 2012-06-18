@@ -43,7 +43,7 @@
  * @return string
  */
 function smarty_modifier_relative_datetime($timestamp) {
-    if(!$timestamp){
+    if (!$timestamp){
         return 'N/A';
     }
 
@@ -58,7 +58,7 @@ function smarty_modifier_relative_datetime($timestamp) {
     }
 
     $difference = round($difference);
-    if($difference != 1) {
+    if ($difference != 1) {
         $periods[$j].= "s";
     }
 

@@ -142,7 +142,7 @@ abstract class PDODAO {
     public static function getConnectString($config) {
         //set default db type to mysql if not set
         $db_type = $config->getValue('db_type');
-        if (! $db_type) { $db_type = 'mysql'; }
+        if (!$db_type) { $db_type = 'mysql'; }
         $db_socket = $config->getValue('db_socket');
         if ( !$db_socket) {
             $db_port = $config->getValue('db_port');

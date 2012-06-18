@@ -63,7 +63,7 @@ class ExportServiceUserDataController extends ThinkUpAdminController {
 
     public function adminControl() {
         $this->disableCaching();
-        if (! BackupController::checkForZipSupport()) {
+        if (!BackupController::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         } else {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -83,7 +83,7 @@ This zip archive contains all the data related to a specific service user gather
                 'describes how to import that data into an existing ThinkUp installation.
 
 ');
-                    if (! self::exportData($instance->network_username, $instance->network)) {
+                    if (!self::exportData($instance->network_username, $instance->network)) {
                         return $this->generateView();
                     }
                     self::generateZipFile();

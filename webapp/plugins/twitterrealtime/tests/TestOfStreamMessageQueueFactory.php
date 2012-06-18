@@ -58,7 +58,7 @@ class TestOfStreamMessageQueueFactory extends ThinkUpUnitTestCase {
 
         // if we are php 5.3 or greater run test, else skip...
         $version = explode('.', PHP_VERSION);
-        if (! ($version[0] >= 5 && $version[1] >= 3)) {
+        if (!($version[0] >= 5 && $version[1] >= 3)) {
             //error_log("PHP version less than 5.3, Skipping Redis Tests...");
             return;
         } else {

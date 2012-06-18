@@ -216,7 +216,7 @@ class AppUpgraderDiskUtil {
         $result = file_put_contents($filename, $data);
         if ($result === false) {
             throw new Exception("Unable to save ".$filename.". Result ".$result);
-        } else if(is_int($result)) {
+        } else if (is_int($result)) {
             if ($result < 1) {
                 throw new Exception("Unable to save ".$filename.". Wrote ".$result.' bytes.');
             }

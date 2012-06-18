@@ -56,7 +56,7 @@ try {
         error_log("\nYour ThinkUp database structure is up to date.\n");
         exit;
     } else {
-        if (! $no_version) {
+        if (!$no_version) {
             print "\nThinkup needs to be upgraded to version $thinkup_db_version, proceed => [y|n] ";
             $handle = fopen ("php://stdin","r");
             $line = fgets($handle);
@@ -69,7 +69,7 @@ try {
         $line = fgets($handle);
         if (trim($line) == 'y'){
             // we need zip support
-            if (! BackupController::checkForZipSupport()) {
+            if (!BackupController::checkForZipSupport()) {
                 print "\n    Error: ThinkUp backups require Zip support\n\n";
                 exit(1);
             }
@@ -100,7 +100,7 @@ try {
     }
     // run updates...
     // get migrations we need to run...
-    if (! $no_version) {
+    if (!$no_version) {
         print "\nUpgrading Thinkup to version $thinkup_db_version...\n\n";
     }
 

@@ -67,7 +67,7 @@ class ConsumerStreamProcess {
     public function process($queue) {
         $logger = Logger::getInstance('stream_log_location');
         $status = $queue->processStreamData();
-        if(trim($status)) {
+        if (trim($status)) {
             $this->json_parser->parseJSON($status);
             $logger->logDebug("retrieved item is: [" . $status . "]", __METHOD__.','.__LINE__);
         } else {
