@@ -1953,9 +1953,9 @@ class TwitterCrawler {
                 }
                 $insight_dao->insertInsight('replies_frequent_words_'.$post->id, $this->instance->id,
                 $simplified_post_date,
-               'Your post got more than 20 replies! See <a href="'.$config->getValue('site_root_path').
+               'Your post got '.$post->reply_count_cache.' replies! See <a href="'.$config->getValue('site_root_path').
                 'post/?t='.$post->post_id.'&n='.$post->network.'">the most frequently-mentioned reply words</a>.',
-                Insight::EMPHASIS_LOW, serialize($post));
+                Insight::EMPHASIS_HIGH, serialize($post));
             }
         }
 
