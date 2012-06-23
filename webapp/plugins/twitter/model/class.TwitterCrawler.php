@@ -1678,10 +1678,8 @@ class TwitterCrawler {
                 break;
             }
             if ($cURL_status != 200 || $tweets == -1) {
-                // todo - handle more informatively
-                $this->logger->logInfo("in cleanUpMissedFavsUnFavs, error with: $twitter_data",
-                __METHOD__.','.__LINE__);
-                throw new Exception("in cleanUpUnFavs: error parsing favs");
+                $this->logger->logError("Error parsing favs. Twitter data: ".$twitter_data.
+                " cURL status: ".$cURL_status, __METHOD__.','.__LINE__);
             }
             if (sizeof($tweets) == 0) {
                 // then done paging backwards through the favs.
