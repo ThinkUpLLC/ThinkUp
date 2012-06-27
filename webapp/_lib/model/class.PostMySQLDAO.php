@@ -870,12 +870,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
         $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected) AS p ";
-        $q .= "WHERE post_text RLIKE '\\\\?$' OR post_text like '%? %' ";
+        $q .= "WHERE post_text RLIKE :format1 OR post_text like :format2 ";
         $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':author_id'=>(string)$author_id,
             ':network'=>$network,
+            ':format1'=>"\\?$",
+            ':format2'=>"%\\? %",
             ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
