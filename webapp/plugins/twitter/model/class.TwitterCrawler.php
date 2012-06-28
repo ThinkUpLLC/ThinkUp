@@ -1935,7 +1935,7 @@ class TwitterCrawler {
             }
 
             //If not a reply or retweet and geoencoded, show the map in the stream
-            if (!isset($post->$in_reply_to_user_id) && !isset($post->$in_reply_to_post_id)
+            if (!isset($post->in_reply_to_user_id) && !isset($post->in_reply_to_post_id)
             && !isset($post->in_retweet_of_post_id) && $post->reply_count_cache > 5) {
                 $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
                 $options = $plugin_option_dao->getOptionsHash('geoencoder', true);
