@@ -183,7 +183,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
                         $milestone['will_take'] = $milestone['will_take'] + $difference;
                     }
                 } elseif ($units=='MONTH') {
-                    $current_day_of_year = date('n');
+                    $current_month_of_year = date('n');
                     $before_date_month_of_year = date('n', strtotime($before_date));
                     $difference = $current_month_of_year - $before_date_month_of_year;
                     if ($milestone['will_take'] > $difference) {
