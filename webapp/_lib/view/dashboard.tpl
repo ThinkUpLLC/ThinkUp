@@ -1,4 +1,8 @@
 {include file="_header.tpl"}
+{if $smarty.get.v eq "insights"}
+	{include file="insights.tpl"}
+{else}
+
 {include file="_statusbar.tpl"}
 
 <div class="container_24">
@@ -168,6 +172,7 @@
   </div> <!-- /.clearfix -->
 </div> <!-- /.container_24 -->
 
-<script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
+{/if}
+
 
 {include file="_footer.tpl"}
