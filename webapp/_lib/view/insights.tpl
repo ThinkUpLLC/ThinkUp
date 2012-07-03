@@ -32,12 +32,63 @@
 
     <div id="main" class="container">
 
-
 {if sizeof($insights) eq 0}
 <div class="alert urgent">
     <p>No insights are available! Get active on your network and check back later.</p>
 </div>
 {/if}
+
+
+{assign var='cur_date' value=''}
+{foreach from=$insights key=tid item=i name=foo}
+<div class="row">
+    {if $i->text neq ''}
+        {if $cur_date neq $i->date}
+	<div class="span3">
+          <div class="sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="">{$i->date|relative_day|ucfirst}</li>
+            </ul>
+          </div><!--/.well -->
+	</div><!--/span3-->
+
+            {assign var='cur_date' value=$i->date}
+            
+        {else}
+        
+    <div class="span3">&nbsp;</div>    
+        
+        {/if}
+        
+        
+
+	<div class="span9">
+        <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-success{elseif $i->emphasis eq '3'}alert-error{/if}">
+            <p>
+            	<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{/if}">{if $i->emphasis eq '1'}Milestone:{elseif $i->emphasis eq '2'}Cool!{elseif $i->emphasis eq '3'}Hey!{else}Insight:{/if}</span> 
+                <i class="icon-star"></i>
+                {$i->text}
+    
+    <!--begin {$i->related_data_type} attachment data-->
+                {if $i->related_data_type eq 'users'}
+                    {include file="_insights.users.tpl"}
+                {elseif $i->related_data_type eq 'post'}
+                    {include file="_insights.post.tpl" post=$i->related_data}
+                {elseif $i->related_data_type eq 'posts'}
+                    {include file="_insights.posts.tpl"}
+                {elseif $i->related_data_type eq 'count_history'}
+                    {include file="_insights.count_history.tpl"}
+                {/if}
+    <!--end {$i->related_data_type} attachment data-->
+             </p>
+        </div>
+	</div><!--/span9-->
+
+   {/if}
+</div><!--/row-->
+{/foreach}
+
+
 {assign var='cur_date' value=''}
 {foreach from=$insights key=tid item=i name=foo}
     {if $i->text neq ''}
