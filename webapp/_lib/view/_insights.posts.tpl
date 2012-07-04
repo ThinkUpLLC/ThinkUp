@@ -2,7 +2,7 @@
     {foreach from=$i->related_data key=uid item=p name=bar}
         {* Hide posts after the first one *}
         {if $smarty.foreach.bar.index eq 1}
-            <div style="display:none" id="flashback-{$i->id}">
+            <div class="collapse in" id="flashback-{$i->id}">
         {/if}
 
         {* Show "X years ago you posted" text if post is from a different year than the last one *}
@@ -14,7 +14,7 @@
 
         {* Show more link if there are more posts after the first one *}
         {if $smarty.foreach.bar.total gt 0 and $smarty.foreach.bar.first}
-            <div align="right"><a href="javascript:;" title="See more flashback posts" onclick="{literal}${/literal}('#flashback-{$i->id}').show(); return false;">more...</a>&nbsp;&nbsp;</div>
+            <div class="pull-right" style="margin-top : -12px;"><button class="btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
         {/if}
 
         {* Close up hidden div if there is one *}
@@ -29,3 +29,7 @@
         {include file="_insights.post.tpl" post=$p}
     {/foreach}
 {/if}
+
+
+
+ 

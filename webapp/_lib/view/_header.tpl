@@ -20,7 +20,6 @@
       }
     {/literal}
     </style>
-    <link href="./assets/css/bootstrap-responsive.css" rel="stylesheet">
     
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -45,6 +44,20 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
+
+  
+{literal}
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $(".post").hover(
+        function() { $(this).children(".small").children(".metaroll").show(); },
+        function() { $(this).children(".small").children(".metaroll").hide(); }
+      );
+      $(".metaroll").hide();
+    });
+  </script>
+{/literal}
+
 
 {/if}
 
@@ -110,18 +123,6 @@
 
   </style>
   {/literal}
-  
-{literal}
-  <script type="text/javascript">
-  $(document).ready(function() {
-      $(".post").hover(
-        function() { $(this).children(".small").children(".metaroll").show(); },
-        function() { $(this).children(".small").children(".metaroll").hide(); }
-      );
-      $(".metaroll").hide();
-    });
-  </script>
-{/literal}
 
 {if $post->post_text} 
 <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">

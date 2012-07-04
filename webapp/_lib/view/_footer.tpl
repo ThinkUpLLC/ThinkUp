@@ -17,10 +17,21 @@
       </footer>
       
     
-    <script src="./assets/js/jquery.js"></script>
-    <script src="./assets/js/bootstrap-transition.js"></script>
-    <script src="./assets/js/bootstrap-collapse.js"></script>
+    <script src="{$site_root_path}assets/js/jquery.js"></script>
+    <script src="{$site_root_path}assets/js/bootstrap-collapse.js"></script>
 
+{literal}
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $(".post").hover(
+        function() { $(this).children(".small").children(".metaroll").show(); },
+        function() { $(this).children(".small").children(".metaroll").hide(); }
+      );
+      $(".metaroll").hide();
+      $(".collapse").collapse()
+    });
+  </script>
+{/literal}
 
 {else}
 
