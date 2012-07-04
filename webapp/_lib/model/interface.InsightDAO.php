@@ -64,6 +64,13 @@ interface InsightDAO {
      */
     public function deleteInsight($slug, $instance_id, $date);
     /**
+     * Remove insights for an instance by slug from storage.
+     * @param str $slug
+     * @param int $instance_id
+     * @return bool
+     */
+    public function deleteInsightsBySlug($slug, $instance_id);
+    /**
      * Get a page of insights for an instance.
      * @param int $instance_id
      * @param int $page_count Number of insight baselines to return
