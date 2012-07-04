@@ -44,6 +44,14 @@ interface InstanceDAO {
     public function getAllActiveInstancesStalestFirstByNetwork( $network = "twitter" );
 
     /**
+     * Get active instances, without a known last auth error, for a given owner and network. Will return all instances
+     * for a network if owner is an admin.
+     * @param Owner $owner
+     * @param str $network
+     * @return array Instance
+     */
+    public function getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError( Owner $owner, $network );
+    /**
      * Get all active instances, by last run oldest first
      * @return array with Instance
      */
@@ -145,7 +153,7 @@ interface InstanceDAO {
      * Get instances by owner and network
      * @param Owner $owner
      * @param string $network
-     * @param boolean $disregard_admin_status
+     * @param bool $disregard_admin_status
      * @param bool $active_only Return active instances only
      * @return array Instances for the owner (all if admin and !$disregard_admin_status)
      */

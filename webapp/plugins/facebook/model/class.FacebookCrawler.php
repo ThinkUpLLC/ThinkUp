@@ -33,12 +33,10 @@
  */
 class FacebookCrawler {
     /**
-     *
      * @var Instance
      */
     var $instance;
     /**
-     *
      * @var Logger
      */
     var $logger;
@@ -56,7 +54,6 @@ class FacebookCrawler {
      */
     var $page_like_count_set = false;
     /**
-     *
      * @param Instance $instance
      * @return FacebookCrawler
      */
@@ -66,7 +63,6 @@ class FacebookCrawler {
         $this->access_token = $access_token;
         $this->max_crawl_time = $max_crawl_time;
     }
-
     /**
      * If user doesn't exist in the datastore, fetch details from Facebook API and insert into the datastore.
      * If $reload_from_facebook is true, update existing user details in store with data from Facebook API.
@@ -115,7 +111,6 @@ class FacebookCrawler {
         }
         return $user_object;
     }
-
     /**
      * Convert decoded JSON data from Facebook into a ThinkUp user object.
      * @param array $details
@@ -142,7 +137,6 @@ class FacebookCrawler {
             return $user_vals;
         }
     }
-
     /**
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
@@ -182,6 +176,8 @@ class FacebookCrawler {
                 } else {
                     $fetch_next_page = false;
                 }
+            } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
+                throw new APIOAuthException($stream->error->message);
             } else {
                 $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
                 $fetch_next_page = false;
@@ -193,7 +189,6 @@ class FacebookCrawler {
             }
         }
     }
-
     /**
      * Convert parsed JSON of a profile or page's posts into ThinkUp posts and users
      * @param Object $stream
@@ -673,6 +668,8 @@ class FacebookCrawler {
             }
             //totals in follower_count table
             $follower_count_dao->insert($user_id, $network, count($friends->data));
+        } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
+            throw new APIOAuthException($stream->error->message);
         }
     }
 }

@@ -125,10 +125,10 @@ class DashboardController extends ThinkUpController {
         if ($this->isLoggedIn()) {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
             if (isset($_GET["u"]) && isset($_GET['n'])) {
                 $instance = $instance_dao->getByUsernameOnNetwork(stripslashes($_GET["u"]), $_GET['n']);
                 if (isset($instance)) {
-                    $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                     if ($owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
                         $this->instance = $instance;
                     } else {
@@ -140,6 +140,14 @@ class DashboardController extends ThinkUpController {
                 }
             } else {
                 $this->instance = $instance_dao->getFreshestByOwnerId($owner->id);
+            }
+            $owner_instance = $owner_instance_dao->get($owner->id, $this->instance->id);
+            if (isset($owner_instance) && $owner_instance->auth_error != '') {
+                $this->addErrorMessage("ThinkUp is having trouble accessing your ".
+                ucwords($this->instance->network). " data. To fix this problem, in <a href=\"account/?p=".
+                (($this->instance->network=='facebook page')?'facebook':$this->instance->network)."\">".
+                ucwords($this->instance->network).
+                " settings</a>, re-add your account.", null, true);
             }
             $this->addToView('instances', $instance_dao->getByOwner($owner));
         } else {

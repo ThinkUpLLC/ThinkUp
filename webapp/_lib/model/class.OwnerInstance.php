@@ -32,23 +32,38 @@
  *
  */
 class OwnerInstance {
-    /*
-     * @var int owner id
+    /**
+     * @var int Internal unique ID.
+     */
+    var $id;
+    /**
+     * @var int Owner ID.
      */
     var $owner_id;
-    /*
-     * @var int instance id
+    /**
+     * @var int Instance ID.
      */
     var $instance_id;
-
     /**
-     * Constructor
-     * @param int owner id - optional
-     * @param int instance id - optional
+     * @var str OAuth access token (optional).
      */
-    public function __construct($oid = null, $iid = null) {
-        if ($oid) { $this->owner_id = $oid; }
-        if ($iid) { $this->instance_id = $iid; }
+    var $oauth_access_token;
+    /**
+     * @var str OAuth secret access token (optional).
+     */
+    var $oauth_access_token_secret;
+    /**
+     * @var str Last authorization error, if there was one.
+     */
+    var $auth_error;
+    public function __construct($row = false) {
+        if ($row) {
+            $this->id = $row['id'];
+            $this->owner_id = $row['owner_id'];
+            $this->instance_id = $row['instance_id'];
+            $this->oauth_access_token = $row['oauth_access_token'];
+            $this->oauth_access_token_secret = $row['oauth_access_token_secret'];
+            $this->auth_error = $row['auth_error'];
+        }
     }
 }
-

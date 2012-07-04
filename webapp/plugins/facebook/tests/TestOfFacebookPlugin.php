@@ -30,6 +30,9 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.facebook.php';
 
 class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
 
@@ -143,4 +146,50 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $logger->close();
     }
 
+    public function testCrawlWithAuthError() {
+        //build active instance owned by a owner
+        $instance_with_autherror = array('id'=>5, 'network_username'=>'Liz Lemon', 'network_user_id'=>'123456',
+        'network_viewer_id'=>'123456', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'1', 'network'=>'facebook',
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
+        );
+
+        $instance_builder_1 = FixtureBuilder::build('instances', $instance_with_autherror);
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+
+        //log in as that owner
+        $this->simulateLogin('me@example.com');
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+
+        //run the crawl
+        $fb_plugin = new FacebookPlugin();
+        $fb_plugin->crawl();
+
+        //assert that APIOAuthException was caught and recorded in owner_instances table
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $owner_instance = $owner_instance_dao->get(1, 5);
+        $this->assertEqual($owner_instance->auth_error, 'Error validating access token: Session has expired at unix '.
+        'time SOME_TIME. The current unix time is SOME_TIME.');
+
+        //assert that the email notification was sent to the user
+        $expected_reg_email_pattern = '/to: me@example.com
+subject: Please re-authorize ThinkUp to access Liz Lemon on Facebook
+message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon Facebook account./';
+
+        $actual_reg_email = Mailer::getLastMail();
+        $this->debug($actual_reg_email);
+        $this->assertPattern($expected_reg_email_pattern, $actual_reg_email);
+    }
 }

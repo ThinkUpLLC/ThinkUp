@@ -98,12 +98,9 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
-        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('twitter');
+        $instances = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
+        'twitter');
         foreach ($instances as $instance) {
-            if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
-                // Owner doesn't have access to this instance; let's not crawl it.
-                continue;
-            }
             $logger->setUsername($instance->network_username);
             $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
             __METHOD__.','.__LINE__);

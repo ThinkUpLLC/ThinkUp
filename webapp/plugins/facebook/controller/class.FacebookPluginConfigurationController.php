@@ -121,7 +121,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             SessionCache::put('facebook_auth_csrf', md5(uniqid(rand(), true)));
         }
 
-        $params = array('scope'=>'offline_access,read_stream,user_likes,user_location,user_website,'.
+        $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
         'read_friendlists,friends_location,manage_pages,read_insights',
         'state'=>SessionCache::get('facebook_auth_csrf'));
 
@@ -209,7 +209,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     } else {
                         $error_msg = $error_msg."<br>Facebook's response: \"".$access_token_response. "\"";
                     }
-                    $this->addErrorMessage($error_msg, 'authorization');
+                    $this->addErrorMessage($error_msg, 'authorization', true);
                 }
             } else {
                 $this->addErrorMessage("Could not authenticate Facebook account due to invalid CSRF token.",
@@ -254,6 +254,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $this->addSuccessMessage("Success! You've reconnected your Facebook account. To connect a ".
                 "different account, log  out of Facebook in a different browser tab and try again.", 'user_add');
             }
+            //set auth error to empty string
+            $owner_instance_dao->setAuthError($this->owner->id, $instance->id);
         } else { //Instance does not exist
             $instance_dao->insert($fb_user_id, $fb_username, 'facebook');
             $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');

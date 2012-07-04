@@ -279,4 +279,35 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(
         OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache'][0]['follower_id'], 10);
     }
+
+    public function testSetAuthError() {
+        $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50,
+        'auth_error'=>'') );
+
+        $dao = new OwnerInstanceMySQLDAO();
+
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNotNull($owner_instance);
+        $this->assertIsA($owner_instance, 'OwnerInstance');
+        $this->assertEqual($owner_instance->auth_error, '');
+
+        $res = $dao->setAuthError(50, 20, 'Error validating access token: Session has expired at unix time SOME_TIME. '.
+        'The current unix time is SOME_TIME.');
+        $this->assertTrue($res);
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNotNull($owner_instance);
+        $this->assertIsA($owner_instance, 'OwnerInstance');
+        $this->assertEqual($owner_instance->auth_error, 'Error validating access token: Session has expired at '.
+        'unix time SOME_TIME. The current unix time is SOME_TIME.');
+
+        $res = $dao->setAuthError(49, 20, 'Error validating access token: Session has expired at unix time SOME_TIME. '.
+        'The current unix time is SOME_TIME.');
+        $this->assertFalse($res);
+
+        $res = $dao->setAuthError(50, 20);
+        $this->assertTrue($res);
+        $owner_instance = $dao->get(50, 20);
+        $this->assertIsA($owner_instance, 'OwnerInstance');
+        $this->assertEqual($owner_instance->auth_error, '');
+    }
 }
