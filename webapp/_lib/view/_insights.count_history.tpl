@@ -1,5 +1,8 @@
-<div align="right"><a href="javascript:;" title="See chart" onclick="{literal}${/literal}('#chart-{$i->id}').show(); return false;">see chart...</a>&nbsp;&nbsp;</div>
-<div style="display:none" id="chart-{$i->id}">
+
+
+<div class="pull-right" style="margin-top : -12px;"><button class="btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal"></i></button></div>
+
+<div class="collapse in" id="chart-{$i->id}">
 
 <div id="count_history_{$i->id}"></div>
 
