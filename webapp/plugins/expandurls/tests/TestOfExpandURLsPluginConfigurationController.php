@@ -124,7 +124,7 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         //app not configured
         $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
-        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+        $this->assertPattern('/var required_values_set = true/', $output); //is not configured, no required values
     }
 
     /**
@@ -147,6 +147,6 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         //app not configured
         $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
-        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+        $this->assertPattern('/var required_values_set = true/', $output); //is not configured, no required values
     }
 }
