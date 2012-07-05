@@ -145,7 +145,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     App Namespace: (leave blank)
 </li>
 <li>
-  At the bottom of the page, click the "Website" section and add the Site URL:
+  In the "Website with Facebook Login" section, add the Site URL:<br>
     <small>
       <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}</code>
     </small>
