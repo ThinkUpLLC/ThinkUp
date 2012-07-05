@@ -3,7 +3,6 @@
   {/if}
 
 
-
 {if $smarty.get.v eq "insights"}
 
 </div>
@@ -24,8 +23,8 @@
   <script type="text/javascript">
   $(document).ready(function() {
       $(".post").hover(
-        function() { $(this).children(".small").children(".metaroll").show(); },
-        function() { $(this).children(".small").children(".metaroll").hide(); }
+        function() { $(this).children(".metaroll").show(100); },
+        function() { $(this).children(".metaroll").hide(); }
       );
       $(".metaroll").hide();
       $(".collapse").collapse()

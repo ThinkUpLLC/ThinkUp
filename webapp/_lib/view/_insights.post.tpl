@@ -1,5 +1,12 @@
+{if $hide_insight_header}
+   
+{else}
+<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}">{$i->prefix}</span> 
+                <i class="icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i>
+                {$i->text}
+{/if}
 
-<div class="post">
+<div class="post lead">
   {if $post->post_text}
     {if $scrub_reply_username}
       {if $reply_count && $reply_count > $top_20_post_min}
@@ -28,32 +35,30 @@
     <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
   {/if}
 
-<span class="small gray">
-  <br clear="all">
- <span class="metaroll">
-    <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
-    {if $post->is_geo_encoded < 2}
-      {if $show_distance}
-          {if $unit eq 'km'}
-            {$post->reply_retweet_distance|number_format} kms away
-            {else}
-            {$post->reply_retweet_distance|number_format} miles away in 
-          {/if}
-      {/if}
-     from {$post->location|truncate:60:' ...'}
-    {/if}
-    {if $post->network == 'twitter'}
-    <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-    <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-    <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
-    {/if}
- </span><br>&nbsp;
-</span>
+	<div class="metaroll">
+	<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
+	{if $post->is_geo_encoded < 2}
+	  {if $show_distance}
+		  {if $unit eq 'km'}
+			{$post->reply_retweet_distance|number_format} kms away
+			{else}
+			{$post->reply_retweet_distance|number_format} miles away in 
+		  {/if}
+	  {/if}
+	 from {$post->location|truncate:60:' ...'}
+	{/if}
+	{if $post->network == 'twitter'}
+	<a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></span></a>
+	<a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
+	<a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></span></a>
+	{/if}
+	</div>
 </div>
 
 {if $i->slug eq 'geoencoded_replies'}
-<div align="right"><a href="javascript:;" title="See map of replies and shares" onclick="{literal}${/literal}('#map-{$i->id}').show(); return false;">see map...</a>&nbsp;&nbsp;</div>
-<div style="display:none" id="map-{$i->id}">
+
+<div class="pull-right detail-btn"><button class="btn-minid detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
+<div class="collapse in" id="map-{$i->id}">
 <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
 <iframe width="680" frameborder="0" src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post" name="childframe" id="childframe" >
 </iframe>
