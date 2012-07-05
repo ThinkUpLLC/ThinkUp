@@ -11,7 +11,7 @@
        &#8226; <a href="http://groups.google.com/group/thinkupapp">Mailing List</a> 
        &#8226; <a href="http://webchat.freenode.net/?channels=thinkup">IRC Channel</a><br>
         It is nice to be nice.
-        <br /> <br /><a href="http://twitter.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
+        <br /> <br /><a href="http://twitter.com/thinkup"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
         <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
         <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a>
       </p>
