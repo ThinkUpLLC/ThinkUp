@@ -76,6 +76,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $order_by;
     }
 
+    /**
+     * Sanitizes a date argument to avoid SQL injection and ensure that it's a valid date or timestamp.
+     * @param string $date Column to order on.
+     * @return string Sanitized column name. If the column was invalid, "pub_date" is returned.
+     */
+    public function sanitizeDate($date) {
+        // only allow integers, spaces, hyphens, and colons
+		if ( preg_match('/[^ 0-9\:\-]/', $date)) {
+			print "not a date!<br>";
+			return false;
+		}
+        return $date;
+    }
+
     public function getPost($post_id, $network, $is_public = false) {
         $q = "SELECT  u.*, p.*, p.id as post_key, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -853,10 +867,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
-    $direction = 'DESC', $is_public = false) {
+    $direction = 'DESC', $is_public = false, $from = false, $until = false) {
         $start_on_record = ($page - 1) * $count;
 
         $order_by = $this->sanitizeOrderBy($order_by);
+        $from = $this->sanitizeDate($from);
+        $until = $this->sanitizeDate($until);
 
         $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
 
@@ -866,11 +882,18 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $protected = '';
         }
 
+        if ($from && $until) {
+            $from_until = "AND pub_date BETWEEN '$from' AND '$until'";
+        } else {
+        	$from_until = '';
+        }
+                
         $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
-        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected) AS p ";
+        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected $from_until) AS p ";
         $q .= "WHERE post_text RLIKE '\\\\?$' OR post_text like '%? %' ";
+        
         $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
@@ -879,6 +902,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
+
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_post_rows = $this->getDataRowsAsArrays($ps);
@@ -1317,17 +1341,25 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
-    $is_public = false) {
+    $is_public = false, $from = false, $until = false) {
         $start_on_record = ($page - 1) * $count;
 
         $order_by = $this->sanitizeOrderBy($order_by);
+        $from = $this->sanitizeDate($from);
+        $until = $this->sanitizeDate($until);
 
         $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
+
+        if ($from && $until) {
+            $from_until = "AND pub_date BETWEEN '$from' AND '$until'";
+        } else {
+        	$from_until = '';
+        }
 
         $q = "SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
-        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ";
+        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network $from_until ";
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
         }

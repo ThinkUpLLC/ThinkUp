@@ -22,6 +22,16 @@ Optional Arguments
 
     The network to use in the call. Defaults to 'twitter'.
 
+* **from**
+
+    The date/time to start searching from. This can either be a
+    `valid date string <http://www.php.net/manual/en/datetime.formats.php>`_ or a Unix timestamp.
+
+* **until**
+
+    The date/time to search until. This can either be a
+    `valid date string <http://www.php.net/manual/en/datetime.formats.php>`_ or a Unix timestamp.
+
 * **order_by**
 
     The column to order the results by. Defaults to chronological order ("date").

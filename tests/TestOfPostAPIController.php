@@ -36,6 +36,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $config = Config::getInstance();
+        // Set to same timezone value in config.inc.php
+        // $config->setValue('timezone', 'UTC');
         $this->builders = self::buildData();
     }
 
@@ -522,6 +524,23 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'in_reply_to_user_id' => 21,
                             'in_reply_to_post_id' => 132));
 
+        //Add reply back
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                            'post_id' => 153,
+                            'author_user_id' => 18,
+                            'author_username' => 'shutterbug',
+                            'author_fullname' => 'Shutterbug',
+                            'network' => 'twitter',
+                            'post_text' => '@user1 I hope they figure it out soon!',
+                            'source' => 'web',
+                            'pub_date' => '2006-03-03 00:00:00',
+                            'old_retweet_count_cache' => 0,
+                            'in_rt_of_user_id' => null,
+                            'reply_count_cache' => 0,
+                            'retweet_count_cache' => 0,
+                            'in_reply_to_user_id' => 20,
+                            'in_reply_to_post_id' => 139));
+
         //Add user exchange
         $builders[] = FixtureBuilder::build( 'posts', array(
                             'post_id' => 139,
@@ -532,7 +551,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'post_text' => '@ev When will Twitter have a business model?',
                             'source' => 'web',
                             'pub_date' => '2006-03-01 00:00:00',
-                            'reply_count_cache' => 0,
+                            'reply_count_cache' => 1,
                             'retweet_count_cache' => 0,
                             'old_retweet_count_cache' => 0,
                             'in_rt_of_user_id' => null,
@@ -1655,6 +1674,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
     public function testUserReplies() {
         $_GET['type'] = 'user_replies';
         $_GET['user_id'] = 18;
+        $_GET['from'] = '2006-03-01 00:00:00';
+        $_GET['until'] = '2006-03-01 00:59:59';
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
@@ -1664,6 +1685,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(is_a($post, 'stdClass'));
             $this->assertEqual($post->protected, false);
             $this->assertEqual($post->in_reply_to_user_id, 18);
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
         }
 
         $this->assertEqual(sizeof($output), 2);
@@ -1838,6 +1861,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
     public function testUserQuestions() {
         $_GET['type'] = 'user_questions';
         $_GET['user_id'] = 20;
+        $_GET['from'] = '2006-03-01 00:00:00';
+        $_GET['until'] = '2006-03-01 00:59:59';
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
@@ -1847,6 +1872,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(is_a($post, 'stdClass'));
             $this->assertEqual($post->protected, false);
             $this->assertEqual(preg_match('/\?/', $post->text), 1);
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
         }
 
         // test count
@@ -2028,12 +2055,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         foreach($output as $post) {
             $this->assertTrue(is_a($post, 'stdClass'));
             $this->assertEqual($post->protected, false);
-            /**
-             * The following two assertions evaluate differently depending on whether your MySQL server supports
-             * SET timezone statement in PDODAO::connect function
-             */
-            //$this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
-            //$this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
         }
 
         // test order_by

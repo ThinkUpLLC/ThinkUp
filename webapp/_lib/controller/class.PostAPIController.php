@@ -497,8 +497,8 @@ class PostAPIController extends ThinkUpController {
                  * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_questions.html
                  */
             case 'user_questions':
-                $data = $this->post_dao->getAllQuestionPosts($this->user->user_id, $this->network, $this->count,
-                $this->page, $this->order_by, $this->direction, $this->is_public);
+                $data = $this->post_dao->getAllQuestionPosts($this->user->user_id, $this->network, $this->count, 
+                $this->page, $this->order_by, $this->direction, $this->is_public, $this->from, $this->until);
                 break;
 
                 /*
@@ -513,7 +513,7 @@ class PostAPIController extends ThinkUpController {
                  */
             case 'user_replies':
                 $data = $this->post_dao->getAllReplies($this->user->user_id, $this->network, $this->count,
-                $this->page, $this->order_by, $this->direction, $this->is_public);
+                $this->page, $this->order_by, $this->direction, $this->is_public, $this->from, $this->until);
                 break;
 
                 /*
