@@ -42,7 +42,7 @@ DB_NAME_TEST_RD="${DB_NAME}_tests_rd"
 
 MYSQL_CMD="$MYSQL -h $DB_HOST -u $DB_USER";
 if [ -n "${DB_PASSWORD}" ]; then
-    MYSQL_CMD="$MYSQL_CMD --pasword=$DB_PASSWORD"
+    MYSQL_CMD="$MYSQL_CMD --password=$DB_PASSWORD"
 fi
 if [ -n "${DB_SOCKET}" ]; then
     MYSQL_CMD="$MYSQL_CMD -S $DB_SOCKET"
