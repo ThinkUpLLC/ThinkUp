@@ -106,7 +106,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         if ($plugin->isConfigured()) {
             $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
             /* Request tokens from twitter */
-            $tok = $to->getRequestToken();
+            $tok = $to->getRequestToken(Utils::getApplicationURL(true)."plugins/twitter/auth.php");
 
             if (isset($tok['oauth_token'])
             || (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") { //testing

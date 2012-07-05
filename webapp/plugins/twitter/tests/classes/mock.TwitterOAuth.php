@@ -96,8 +96,13 @@ class TwitterOAuth {
         return $this->last_status_code;
     }
 
-    public function getRequestToken() {
-        return array('oauth_token'=>'dummytoken', 'oauth_token_secret'=>'dummytoken');
+    public function getRequestToken($oauth_callback = NULL) {
+        if (!empty($oauth_callback)) {
+        	return array('oauth_token'=>urlencode($oauth_callback), 'oauth_token_secret'=>'dummytoken');
+        }
+        else {
+            return array('oauth_token'=>'dummytoken', 'oauth_token_secret'=>'dummytoken');
+    	}
     }
 
     public function getAuthorizeURL($token) {
