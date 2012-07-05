@@ -4,7 +4,12 @@
   <meta charset="utf-8">
   <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
   <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
- 
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{$site_root_path}assets/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
+
+
 {if $smarty.get.v eq "insights"}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +20,32 @@
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <style>
     {literal}
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+ 	         
+	  .detail-btn {
+	  	margin-top : -18px;
       }
+      
+      .metaroll {
+      	color : #999;
+      	display : inline;
+      	font-size : small;
+      	line-height : 100%;
+      }
+
+	.label {
+	  padding: 1px 4px 2px;
+	  -webkit-border-radius: 1px;
+	  -moz-border-radius: 1px;
+	  border-radius: 1px;
+	}
+	
+	.lead {
+		padding-left : 75px;
+		margin-right : 50px;
+	}
+
     {/literal}
-    </style>
-    
+    </style>    
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -38,13 +63,6 @@
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
-
-
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{$site_root_path}assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
-
   
 {literal}
   <script type="text/javascript">
@@ -57,6 +75,7 @@
     });
   </script>
 {/literal}
+
 
 
 {/if}

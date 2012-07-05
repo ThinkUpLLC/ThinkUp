@@ -1,3 +1,7 @@
+<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}">{$i->prefix}</span> 
+                <i class="icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i>
+                {$i->text}
+
 {if $i->slug eq 'posts_on_this_day_flashback'}
     {foreach from=$i->related_data key=uid item=p name=bar}
         {* Hide posts after the first one *}
@@ -7,14 +11,15 @@
 
         {* Show "X years ago you posted" text if post is from a different year than the last one *}
         {if !$smarty.foreach.bar.first and $prev_post_year neq $p->adj_pub_date|date_format:"%Y"}
-            <span style="color:gray">{$p->adj_pub_date|date_format:"%Y"} flashback: {$p->adj_pub_date|relative_datetime} ago, you posted:</span>
+        
+        	<p><span class="label label-info">{$i->prefix}</span> <i class="icon-time"></i> {$p->adj_pub_date|relative_datetime} ago in {$p->adj_pub_date|date_format:"%Y"}, you posted:</p>
         {/if}
 
-        {include file="_insights.post.tpl" post=$p}
+        {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
 
         {* Show more link if there are more posts after the first one *}
         {if $smarty.foreach.bar.total gt 0 and $smarty.foreach.bar.first}
-            <div class="pull-right" style="margin-top : -12px;"><button class="btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
+            <div class="pull-right detail-btn"><button class="btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
         {/if}
 
         {* Close up hidden div if there is one *}
