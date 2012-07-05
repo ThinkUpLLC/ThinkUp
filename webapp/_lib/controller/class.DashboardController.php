@@ -267,15 +267,18 @@ class DashboardController extends ThinkUpController {
             list($all_time_clients_usage, $latest_clients_usage) =
             $insight_dao->getPreCachedInsightData(
             'PostMySQLDAO::getClientsUsedByUserOnNetwork', $this->instance->id, date('Y-m-d'));
-            $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
 
-            // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
-            $all_time_clients_usage = InsightsGenerator::getClientUsageVisualizationData($all_time_clients_usage);
-            $this->addToView('all_time_clients_usage', $all_time_clients_usage);
+            if (is_array($all_time_clients_usage)) {
+                // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
+                $all_time_clients_usage = InsightsGenerator::getClientUsageVisualizationData($all_time_clients_usage);
+                $this->addToView('all_time_clients_usage', $all_time_clients_usage);
+            }
 
-            // Only show the two most used clients for the last 25 posts
-            $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
-            $this->addToView('latest_clients_usage', $latest_clients_usage);
+            if (is_array($latest_clients_usage) && sizeof($latest_clients_usage > 1)) {
+                // Only show the two most used clients for the last 25 posts
+                $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
+                $this->addToView('latest_clients_usage', $latest_clients_usage);
+            }
         } else {
             $this->addErrorMessage($username." on ".ucwords($this->instance->network).
             " isn't set up on this ThinkUp installation.");

@@ -749,7 +749,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetActiveInstancesStalestFirstForOwnerByNetworkNoAuthError() {
         $this->builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17, 'network_username'=>'yaya',
-        'network'=>'twitter', 'network_viewer_id'=>17, 'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1,
+        'network'=>'twitter', 'network_viewer_id'=>17, 'crawler_last_run'=>'2010-01-21 12:00:00', 'is_active'=>1,
         'is_public'=>0));
 
         $this->builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>3, 'instance_id'=>6,

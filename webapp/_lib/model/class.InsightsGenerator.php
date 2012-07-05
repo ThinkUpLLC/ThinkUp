@@ -116,8 +116,8 @@ class InsightsGenerator {
 
     /**
      * Convert Hot Posts data to JSON for use with Google Charts
-     * @param array $hot_posts Array returned from PostDAO::getHotPosts
-     * @return string JSON
+     * @param arr $hot_posts Array returned from PostDAO::getHotPosts
+     * @return str JSON
      */
     public static function getHotPostVisualizationData($hot_posts, $network) {
         switch ($network) {
@@ -177,8 +177,8 @@ class InsightsGenerator {
 
     /**
      * Convert click stats data to JSON for Google Charts
-     * @param array $click_stats Array returned from ShortLinkDAO::getRecentClickStats
-     * @return string JSON
+     * @param arr $click_stats Array returned from ShortLinkDAO::getRecentClickStats
+     * @return str JSON
      */
     public static function getClickStatsVisualizationData($click_stats) {
         $metadata = array(
@@ -198,8 +198,8 @@ class InsightsGenerator {
 
     /**
      * Convert client usage data to JSON for Google Charts
-     * @param array $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
-     * @return string JSON
+     * @param arr $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
+     * @return str JSON
      */
     public static function getClientUsageVisualizationData($client_usage) {
         $metadata = array(
