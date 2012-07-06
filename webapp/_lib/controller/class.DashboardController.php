@@ -143,11 +143,12 @@ class DashboardController extends ThinkUpController {
             }
             $owner_instance = $owner_instance_dao->get($owner->id, $this->instance->id);
             if (isset($owner_instance) && $owner_instance->auth_error != '') {
-                $this->addErrorMessage("ThinkUp is having trouble accessing your ".
-                ucwords($this->instance->network). " data. To fix this problem, in <a href=\"account/?p=".
+                $this->addErrorMessage("ThinkUp can't connect to your ". ucwords($this->instance->network).
+                " account. This is probably normal - the connection expires after a certain amount of time. ".
+                "To fix it, in <a href=\"account/?p=".
                 (($this->instance->network=='facebook page')?'facebook':$this->instance->network)."\">".
                 ucwords($this->instance->network).
-                " settings</a>, re-add your account.", null, true);
+                " settings</a>, re-add this account.", null, true);
             }
             $this->addToView('instances', $instance_dao->getByOwner($owner));
         } else {

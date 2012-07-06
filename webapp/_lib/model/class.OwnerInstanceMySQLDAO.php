@@ -229,7 +229,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function getOAuthTokens($id) {
         $q = "SELECT
-            oauth_access_token, oauth_access_token_secret
+            oauth_access_token, oauth_access_token_secret, auth_error
             FROM
             #prefix#owner_instances
             WHERE
