@@ -72,6 +72,9 @@ class Crawler extends PluginHook {
      * When launched by a non-admin, we first check that no admin run is under way, and if that's the case,
      * we launch a crawl for the current user only.
      * No user will be able to launch two crawls in parallel, but different non-admin users crawls can run in parallel.
+     * @throws UnauthorizedUserException
+     * @throws CrawlerLockedException
+     * @throws InstallerException
      */
     public function crawl() {
         if (!Session::isLoggedIn() ) {
