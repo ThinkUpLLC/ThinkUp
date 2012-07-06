@@ -37,6 +37,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
             ':email' => $email,
             ':instance_id' => $instance_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
@@ -51,6 +52,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         $vars = array(
             ':process_id'=>$process_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if (!$row) {
@@ -66,6 +68,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
             ':email' => $email,
             ':instance_id' => $instance_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if (!$row) {
@@ -81,6 +84,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         $vars = array(
             ':instance_id' => $instance_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if (!$row) {
@@ -96,6 +100,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         $vars = array(
             ':process_id' => $process_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
@@ -111,6 +116,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
             ':email' => $email,
             ':instance_id' => $instance_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
@@ -121,6 +127,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
 
     private function getAllStreamProcessesNotIndexed() {
         $q = "SELECT * FROM #prefix#stream_procs ";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         $rows = $this->getDataRowsAsArrays($ps);
         return $rows;
@@ -128,6 +135,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
 
     public function getAllStreamProcessIDs() {
         $q = "SELECT process_id FROM #prefix#stream_procs ";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         $rows = $this->getDataRowsAsArrays($ps);
         return $rows;
@@ -151,6 +159,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         $vars = array(
             ':process_id' => $process_id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
