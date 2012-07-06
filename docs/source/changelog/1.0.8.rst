@@ -18,3 +18,7 @@ Changelog:
         these charts may appear blank. In order to restore them, run a data capture.
 
 
+1.0.8.1
+-------
+
+This bugfix-bugfix restores dashboard charts for Facebook and Google+ service users.
