@@ -84,6 +84,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
 
             $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
+            $insights_generator = new InsightsGenerator($instance);
             try {
                 $crawler->fetchPostsAndReplies();
             } catch (APIOAuthException $e) {
@@ -95,6 +96,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
+            $insights_generator->generateInsights();
 
             $instance_dao->save($crawler->instance, 0, $logger);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
