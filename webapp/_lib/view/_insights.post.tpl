@@ -1,9 +1,9 @@
 {if $hide_insight_header}
-   
+
 {else}
 <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}">{$i->prefix}</span> 
-                <i class="icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i>
-                {$i->text}
+    <i class="icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i>
+    {$i->text}
 {/if}
 
 <div class="post lead">
@@ -35,24 +35,24 @@
     <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
   {/if}
 
-	<div class="metaroll">
-	<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
-	{if $post->is_geo_encoded < 2}
-	  {if $show_distance}
-		  {if $unit eq 'km'}
-			{$post->reply_retweet_distance|number_format} kms away
-			{else}
-			{$post->reply_retweet_distance|number_format} miles away in 
-		  {/if}
-	  {/if}
-	 from {$post->location|truncate:60:' ...'}
-	{/if}
-	{if $post->network == 'twitter'}
-	<a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></span></a>
-	<a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
-	<a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></span></a>
-	{/if}
-	</div>
+    <div class="metaroll">
+    <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
+    {if $post->is_geo_encoded < 2}
+      {if $show_distance}
+          {if $unit eq 'km'}
+            {$post->reply_retweet_distance|number_format} kms away
+            {else}
+            {$post->reply_retweet_distance|number_format} miles away in 
+          {/if}
+      {/if}
+     from {$post->location|truncate:60:' ...'}
+    {/if}
+    {if $post->network == 'twitter'}
+    <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></span></a>
+    <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
+    <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></span></a>
+    {/if}
+    </div>
 </div>
 
 {if $i->slug eq 'geoencoded_replies'}

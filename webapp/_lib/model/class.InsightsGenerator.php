@@ -66,19 +66,19 @@ class InsightsGenerator {
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $insight_dao = DAOFactory::getDAO('InsightDAO');
 
-        // Get retweeted posts for last 7 days
-        $posts = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
-        $this->instance->network, 40, $is_public = false);
+        // Get posts for last 7 days
         $posts = $post_dao->getAllPostsByUsernameOrderedBy($this->instance->network_username,
         $network=$this->instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
         $iterator = false, $is_public = false);
 
-        $baseline_date = null;
+        $simplified_post_date = "";
         // foreach post
         foreach ($posts as $post) {
-            $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+            // Retweet spikes and high insights for 7/30/365 days
+            // First get spike/high 7/30/365 day baselines
+            if ($simplified_post_date != date('Y-m-d', strtotime($post->pub_date))) {
+                $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
-            if ($simplified_post_date != $baseline_date) { //need to get baselines
                 $average_retweet_count_7_days =
                 $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id,
                 $simplified_post_date);
@@ -98,9 +98,8 @@ class InsightsGenerator {
                 $high_retweet_count_365_days =
                 $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_365_days', $this->instance->id,
                 $simplified_post_date);
-
-                $baseline_date = $post->pub_date;
             }
+            // Next compare post retweet counts to baselines and store insights where there's a spike or high
             if (isset($high_retweet_count_365_days->value)
             && $post->all_retweets >= $high_retweet_count_365_days->value) {
                 $insight_dao->insertInsight('retweet_high_365_day_'.$post->id, $this->instance->id,
@@ -168,7 +167,7 @@ class InsightsGenerator {
                 $simplified_post_date);
             }
 
-            //If not a reply or retweet and geoencoded, show the map in the stream
+            // Map insight: If not a reply or retweet and geoencoded, show the map in the stream
             if (!isset($post->in_reply_to_user_id) && !isset($post->in_reply_to_post_id)
             && !isset($post->in_retweet_of_post_id) && $post->reply_count_cache > 5) {
                 $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -180,7 +179,7 @@ class InsightsGenerator {
                 }
             }
 
-            //If more than 20 replies, let user know most-frequently mentioned words are available
+            // Frequent word insight: If > 20 replies, let user know most-frequently mentioned words are available
             if ($post->reply_count_cache >= 20) {
                 if (!isset($config)) {
                     $config = Config::getInstance();
@@ -193,7 +192,7 @@ class InsightsGenerator {
             }
         }
 
-        //Generate least likely followers insights
+        // Least likely followers insights
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $days_ago = 0;
         while ($days_ago < $number_days) {
@@ -228,7 +227,7 @@ class InsightsGenerator {
             $days_ago++;
         }
 
-        //Generate new list membership insights
+        // List membership insights
         $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
         $days_ago = 0;
         while ($days_ago < $number_days) {
@@ -266,15 +265,15 @@ class InsightsGenerator {
                     $new_groups[0]->setMetadata();
                     $insight_dao->insertInsight('new_group_memberships', $this->instance->id, $insight_date, "Filed:",
                     "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.$new_groups[0]->keyword.
-                    "</a>, bringing your total to ".
+                    "</a>, bringing your total to <strong>".
                     number_format(end($list_membership_count_history_by_day['history'])).
-                    ".", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                    " lists</strong>.", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
                 }
             }
             $days_ago++;
         }
 
-        //Follower count history milestone
+        // Follower count history milestone
         $days_ago = $number_days;
         while ($days_ago > -1) {
             $insight_date = new DateTime();
@@ -290,20 +289,20 @@ class InsightsGenerator {
                 //by month
                 $follower_count_history_by_month = $follower_count_dao->getHistory($this->instance->network_user_id,
                 $this->instance->network, 'MONTH', 15, $insight_date_formatted);
+                $insight_text = "<strong>";
                 if ( isset($follower_count_history_by_month['milestone'])
                 && $follower_count_history_by_month["milestone"]["will_take"] > 0
                 && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
-                    $insight_text = "Upcoming milestone: ";
                     $insight_text .= $follower_count_history_by_month['milestone']['will_take'].' month';
                     if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
                         $insight_text .= 's';
                     }
-                    $insight_text .= ' till you reach '.
+                    $insight_text .= '</strong> till you reach <strong>'.
                     number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                    $insight_text .= ' followers at your current growth rate.';
+                    $insight_text .= '</strong> followers at your current growth rate.';
 
                     $insight_dao->insertInsight('follower_count_history_by_month_milestone', $this->instance->id,
-                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_month));
                 }
             } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -314,22 +313,22 @@ class InsightsGenerator {
                 $this->logger->logInfo($insight_date_formatted." is Sunday; Count by week stats are ".
                 Utils::varDumpToString($follower_count_history_by_week) , __METHOD__.','
                 .__LINE__);
+                $insight_text = "<strong>";
                 if ( isset($follower_count_history_by_week['milestone'])
                 && $follower_count_history_by_week["milestone"]["will_take"] > 0
                 && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
-                    $insight_text = "Upcoming milestone: ";
                     $insight_text .= $follower_count_history_by_week['milestone']['will_take'].' week';
                     if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
                         $insight_text .= 's';
                     }
-                    $insight_text .= ' till you reach '.
+                    $insight_text .= '</strong> till you reach <strong>'.
                     number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                    $insight_text .= ' followers at your current growth rate.';
+                    $insight_text .= '</strong> followers at your current growth rate.';
                     $this->logger->logInfo("Storing insight ".$insight_text, __METHOD__.','
                     .__LINE__);
 
                     $insight_dao->insertInsight('follower_count_history_by_week_milestone', $this->instance->id,
-                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_week));
                 }
             }

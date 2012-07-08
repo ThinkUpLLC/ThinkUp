@@ -136,7 +136,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -215,7 +214,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -285,7 +283,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -331,7 +328,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -414,7 +410,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -459,7 +454,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
@@ -503,7 +497,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."insights, ".
         $config->getValue('table_prefix')."instances, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .

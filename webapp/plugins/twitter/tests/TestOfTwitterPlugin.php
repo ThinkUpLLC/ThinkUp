@@ -70,7 +70,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 21);
+        $this->assertEqual(sizeof($menus), 22);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "Your tweets");
         $this->assertEqual($first_post_menuitem->description, "All your tweets");
@@ -125,7 +125,6 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
     // this version checks the menus with the twitter realtime plugin active
     public function testMenuItemRegistrationForDashboardAndPostRealtimeActive() {
-
         // define an active twitter realtime plugin
         $builders = array();
         $builders[] = FixtureBuilder::build('plugins', array('name'=>'Twitter Realtime',
@@ -139,7 +138,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 23);
+        $this->assertEqual(sizeof($menus), 24);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "Your tweets");
         $this->assertEqual($first_post_menuitem->description, "All your tweets");
