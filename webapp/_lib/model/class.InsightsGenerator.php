@@ -266,9 +266,9 @@ class InsightsGenerator {
                     $new_groups[0]->setMetadata();
                     $insight_dao->insertInsight('new_group_memberships', $this->instance->id, $insight_date, "Filed:",
                     "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.$new_groups[0]->keyword.
-                    "</a>, bringing your total to ".
+                    "</a>, bringing your total to <strong>".
                     number_format(end($list_membership_count_history_by_day['history'])).
-                    ".", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                    "lists</strong>.", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
                 }
             }
             $days_ago++;
@@ -290,20 +290,20 @@ class InsightsGenerator {
                 //by month
                 $follower_count_history_by_month = $follower_count_dao->getHistory($this->instance->network_user_id,
                 $this->instance->network, 'MONTH', 15, $insight_date_formatted);
+                $insight_text = "<strong>";
                 if ( isset($follower_count_history_by_month['milestone'])
                 && $follower_count_history_by_month["milestone"]["will_take"] > 0
                 && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
-                    $insight_text = "Upcoming milestone: ";
                     $insight_text .= $follower_count_history_by_month['milestone']['will_take'].' month';
                     if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
                         $insight_text .= 's';
                     }
-                    $insight_text .= ' till you reach '.
+                    $insight_text .= '</strong> till you reach <strong>'.
                     number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                    $insight_text .= ' followers at your current growth rate.';
+                    $insight_text .= '</strong> followers at your current growth rate.';
 
                     $insight_dao->insertInsight('follower_count_history_by_month_milestone', $this->instance->id,
-                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_month));
                 }
             } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -314,22 +314,22 @@ class InsightsGenerator {
                 $this->logger->logInfo($insight_date_formatted." is Sunday; Count by week stats are ".
                 Utils::varDumpToString($follower_count_history_by_week) , __METHOD__.','
                 .__LINE__);
+                $insight_text = "<strong>";
                 if ( isset($follower_count_history_by_week['milestone'])
                 && $follower_count_history_by_week["milestone"]["will_take"] > 0
                 && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
-                    $insight_text = "Upcoming milestone: ";
                     $insight_text .= $follower_count_history_by_week['milestone']['will_take'].' week';
                     if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
                         $insight_text .= 's';
                     }
-                    $insight_text .= ' till you reach '.
+                    $insight_text .= '</strong> till you reach <strong>'.
                     number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                    $insight_text .= ' followers at your current growth rate.';
+                    $insight_text .= '</strong> followers at your current growth rate.';
                     $this->logger->logInfo("Storing insight ".$insight_text, __METHOD__.','
                     .__LINE__);
 
                     $insight_dao->insertInsight('follower_count_history_by_week_milestone', $this->instance->id,
-                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_week));
                 }
             }
