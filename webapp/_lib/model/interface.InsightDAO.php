@@ -32,12 +32,13 @@ interface InsightDAO {
      * @param str $slug
      * @param int $instance_id
      * @param str $date
+     * @param str $prefix
      * @param str $text
      * @param int $emphasis
      * @param str $related_data Defaults to null
      * @return bool
      */
-    public function insertInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null);
     /**
      * Retrieve insight from storage.
@@ -83,11 +84,12 @@ interface InsightDAO {
      * @param str $slug
      * @param int $instance_id
      * @param int $date;
+     * @param str $prefix
      * @param str $text
      * @param int $emphasis
      * @param str $related_data Defaults to null.
      * @return bool
      */
-    public function updateInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null);
 }
