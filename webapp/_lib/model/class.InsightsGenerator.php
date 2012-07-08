@@ -267,7 +267,7 @@ class InsightsGenerator {
                     "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.$new_groups[0]->keyword.
                     "</a>, bringing your total to <strong>".
                     number_format(end($list_membership_count_history_by_day['history'])).
-                    "lists</strong>.", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                    " lists</strong>.", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
                 }
             }
             $days_ago++;
