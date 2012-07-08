@@ -104,7 +104,7 @@ class InsightsGenerator {
             if (isset($high_retweet_count_365_days->value)
             && $post->all_retweets >= $high_retweet_count_365_days->value) {
                 $insight_dao->insertInsight('retweet_high_365_day_'.$post->id, $this->instance->id,
-                $simplified_post_date, "New 365-day high! ".$post->all_retweets." people retweeted your tweet.",
+                $simplified_post_date, "New 365-day high!", $post->all_retweets." people retweeted your tweet.",
                 Insight::EMPHASIS_HIGH, serialize($post));
 
                 $insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $this->instance->id,
@@ -118,7 +118,7 @@ class InsightsGenerator {
             } elseif (isset($high_retweet_count_30_days->value)
             && $post->all_retweets >= $high_retweet_count_30_days->value) {
                 $insight_dao->insertInsight('retweet_high_30_day_'.$post->id, $this->instance->id,
-                $simplified_post_date, "New 30-day high! ".$post->all_retweets." people retweeted your tweet.",
+                $simplified_post_date, "New 30-day high!", $post->all_retweets." people retweeted your tweet.",
                 Insight::EMPHASIS_HIGH, serialize($post));
 
                 $insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $this->instance->id,
@@ -130,7 +130,7 @@ class InsightsGenerator {
             } elseif (isset($high_retweet_count_7_days->value)
             && $post->all_retweets >= $high_retweet_count_7_days->value) {
                 $insight_dao->insertInsight('retweet_high_7_day_'.$post->id, $this->instance->id, $simplified_post_date,
-                "New 7-day high! ".$post->all_retweets." people retweeted your tweet.",
+                "New 7-day high!", $post->all_retweets." people retweeted your tweet.",
                 Insight::EMPHASIS_HIGH, serialize($post));
 
                 $insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $this->instance->id,
@@ -143,7 +143,7 @@ class InsightsGenerator {
             && $post->all_retweets > ($average_retweet_count_30_days->value*2)) {
                 $multiplier = floor($post->all_retweets/$average_retweet_count_30_days->value);
                 $insight_dao->insertInsight('retweet_spike_30_day_'.$post->id, $this->instance->id,
-                $simplified_post_date, "Retweet spike! ".$post->all_retweets.
+                $simplified_post_date, "Retweet spike!", $post->all_retweets.
                 " people reshared your tweet, more than ".$multiplier. "x your 30-day average.", Insight::EMPHASIS_LOW,
                 serialize($post));
 
@@ -157,7 +157,7 @@ class InsightsGenerator {
             && $post->all_retweets > ($average_retweet_count_7_days->value*2)) {
                 $multiplier = floor($post->all_retweets/$average_retweet_count_7_days->value);
                 $insight_dao->insertInsight('retweet_spike_7_day_'.$post->id, $this->instance->id,
-                $simplified_post_date, "Retweet spike! ".$post->all_retweets." people reshared your tweet, more than "
+                $simplified_post_date, "Retweet spike!", $post->all_retweets." people reshared your tweet, more than "
                 .$multiplier. "x your 7-day average.", Insight::EMPHASIS_LOW, serialize($post));
 
                 $insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $this->instance->id,
@@ -175,7 +175,7 @@ class InsightsGenerator {
                 $options = $plugin_option_dao->getOptionsHash('geoencoder', true);
                 if (isset($options['gmaps_api_key']->option_value) && $post->is_geo_encoded == 1) {
                     $insight_dao->insertInsight('geoencoded_replies', $this->instance->id, $simplified_post_date,
-                   "Going global! Your post got replies and retweets from locations all over the map.",
+                   "Going global!", "Your post got replies and retweets from locations all over the map.",
                     Insight::EMPHASIS_LOW, serialize($post));
                 }
             }
@@ -186,8 +186,8 @@ class InsightsGenerator {
                     $config = Config::getInstance();
                 }
                 $insight_dao->insertInsight('replies_frequent_words_'.$post->id, $this->instance->id,
-                $simplified_post_date,
-               'Your post got '.$post->reply_count_cache.' replies! See <a href="'.$config->getValue('site_root_path').
+                $simplified_post_date, "Reply spike!",
+               'Your post got '.$post->reply_count_cache.' replies. See <a href="'.$config->getValue('site_root_path').
                 'post/?t='.$post->post_id.'&n='.$post->network.'">the most frequently-mentioned reply words</a>.',
                 Insight::EMPHASIS_HIGH, serialize($post));
             }
@@ -217,11 +217,11 @@ class InsightsGenerator {
                 $insight_date = $insight_date->format('Y-m-d');
                 if (sizeof($least_likely_followers) > 1) {
                     $insight_dao->insertInsight('least_likely_followers', $this->instance->id, $insight_date,
-                    "Good people: ".sizeof($least_likely_followers)." interesting users followed you.",
+                    "Good people:", sizeof($least_likely_followers)." interesting users followed you.",
                     $emphasis, serialize($least_likely_followers));
                 } else {
                     $insight_dao->insertInsight('least_likely_followers', $this->instance->id, $insight_date,
-                    "An interesting user followed you.",
+                    "Hey!", "An interesting user followed you.",
                     $emphasis, serialize($least_likely_followers));
                 }
             }
@@ -259,12 +259,12 @@ class InsightsGenerator {
                         $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                     }
                     $insight_dao->insertInsight('new_group_memberships', $this->instance->id, $insight_date,
-                    "You got added to ".sizeof($new_groups)." lists: ".$group_name_list.
+                    "Filed:", "You got added to ".sizeof($new_groups)." lists: ".$group_name_list.
                     ", bringing your total to ".number_format(end($list_membership_count_history_by_day['history'])).
                     ".", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
                 } else {
                     $new_groups[0]->setMetadata();
-                    $insight_dao->insertInsight('new_group_memberships', $this->instance->id, $insight_date,
+                    $insight_dao->insertInsight('new_group_memberships', $this->instance->id, $insight_date, "Filed:",
                     "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.$new_groups[0]->keyword.
                     "</a>, bringing your total to ".
                     number_format(end($list_membership_count_history_by_day['history'])).
@@ -303,7 +303,7 @@ class InsightsGenerator {
                     $insight_text .= ' followers at your current growth rate.';
 
                     $insight_dao->insertInsight('follower_count_history_by_month_milestone', $this->instance->id,
-                    $insight_date_formatted, $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_month));
                 }
             } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -329,7 +329,7 @@ class InsightsGenerator {
                     .__LINE__);
 
                     $insight_dao->insertInsight('follower_count_history_by_week_milestone', $this->instance->id,
-                    $insight_date_formatted, $insight_text, Insight::EMPHASIS_HIGH,
+                    $insight_date_formatted, "Milestone:", $insight_text, Insight::EMPHASIS_HIGH,
                     serialize($follower_count_history_by_week));
                 }
             }
@@ -346,7 +346,7 @@ class InsightsGenerator {
                     $number_of_years_ago = $current_year - $oldest_post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
                     $insight_dao->insertInsight("posts_on_this_day_flashback", $this->instance->id,
-                    $insight_date_formatted, $oldest_post_year." flashback: ".$number_of_years_ago." year".
+                    $insight_date_formatted, $oldest_post_year." flashback:", $number_of_years_ago." year".
                     $plural. " ago today, you posted: ", Insight::EMPHASIS_MED, serialize($flashback_posts));
                 }
             }
@@ -445,7 +445,7 @@ class InsightsGenerator {
             $insight_dao->deleteInsightsBySlug("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($results));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($results));
         }
 
         //Cache PostMySQLDAO::getHotPosts
@@ -457,7 +457,7 @@ class InsightsGenerator {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getHotPosts", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
         }
 
         //Cache ShortLinkMySQLDAO::getRecentClickStats
@@ -469,7 +469,7 @@ class InsightsGenerator {
             $insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($click_stats_data));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($click_stats_data));
         }
 
         //Cache PostMySQLDAO::getAllPostsByUsernameOrderedBy // getMostRepliedToPostsInLastWeek
@@ -480,7 +480,7 @@ class InsightsGenerator {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
         }
 
         //Cache PostMySQLDAO::getAllPostsByUsernameOrderedBy // getMostRetweetedPostsInLastWeek
@@ -491,7 +491,7 @@ class InsightsGenerator {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
         }
 
         //Cache PostMySQLDAO::getClientsUsedByUserOnNetwork
@@ -501,7 +501,7 @@ class InsightsGenerator {
         $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id);
         //insert new
         $insight_dao->insertInsight("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
-        $simplified_date, '', Insight::EMPHASIS_LOW, serialize($clients_usage));
+        $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($clients_usage));
     }
 
     /**

@@ -28,7 +28,7 @@
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, text, related_data, emphasis FROM #prefix#insights WHERE ";
+        $q = "SELECT date, instance_id, slug, prefix, text, related_data, emphasis FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
@@ -49,16 +49,17 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
     }
 
-    public function insertInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "text=:text, emphasis=:emphasis, related_data=:related_data";
+            $q .= "prefix=:prefix, text=:text, emphasis=:emphasis, related_data=:related_data";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
             ':instance_id'=>$instance_id,
+            ':prefix'=>$prefix,
             ':text'=>$text,
             ':emphasis'=>$emphasis,
             ':related_data'=>$related_data
@@ -68,7 +69,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $result = $this->getUpdateCount($ps);
             return ($result > 0);
         } else {
-            return self::updateInsight($slug, $instance_id, $date, $text, $emphasis, $related_data);
+            return self::updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis, $related_data);
         }
     }
 
@@ -117,14 +118,15 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return ($result > 0);
     }
 
-    public function updateInsight($slug, $instance_id, $date, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null) {
-        $q = "UPDATE #prefix#insights SET text=:text, related_data=:related_data, emphasis=:emphasis ";
+        $q = "UPDATE #prefix#insights SET prefix=:prefix, text=:text, related_data=:related_data, emphasis=:emphasis ";
         $q .= "WHERE slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
             ':instance_id'=>$instance_id,
+            ':prefix'=>$prefix,
             ':text'=>$text,
             ':related_data'=>$related_data,
             ':emphasis'=>$emphasis
