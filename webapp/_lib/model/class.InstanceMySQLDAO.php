@@ -78,7 +78,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
             $q .= "AND oi.owner_id = :owner_id ";
         }
         $q .= "AND is_active = 1 ";
-        $q .= "ORDER BY crawler_last_run ".$order;
+        $q .= "ORDER BY crawler_last_run";
         $vars = array(
             ':network'=>$network
         );
