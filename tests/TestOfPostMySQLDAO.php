@@ -1848,13 +1848,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * Test deletePost
      */
     public function testDeletePost() {
-        $pdao = new PostMySQLDAO();
+        $post_dao = new PostMySQLDAO();
 
         // no such post
-        $this->assertEqual(0, $pdao->deletePost(-99));
+        $this->assertEqual(0, $post_dao->deletePost(-99));
 
         // post deleted
-        $this->assertEqual(1, $pdao->deletePost(1));
+        $this->assertEqual(1, $post_dao->deletePost(1));
         $sql = "select * from " . $this->table_prefix . 'posts where id = 1';
         $stmt = PostMySQLDAO::$PDO->query($sql);
         $this->assertFalse($stmt->fetch(PDO::FETCH_ASSOC));
@@ -1864,8 +1864,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * Test getTotalPostsByUser
      */
     public function testGetTotalPostsByUser() {
-        $pdao = new PostMySQLDAO();
-        $total_posts = $pdao->getTotalPostsByUser('ev', 'twitter');
+        $post_dao = new PostMySQLDAO();
+        $total_posts = $post_dao->getTotalPostsByUser('ev', 'twitter');
 
         $this->assertEqual($total_posts, 40);
     }
@@ -1886,13 +1886,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 'reply_count_cache'=>$counter));
             $counter++;
         }
-        $pdao = new PostMySQLDAO();
-        $posts = $pdao->getMostRepliedToPostsInLastWeek('user3', 'twitter', 5);
+        $post_dao = new PostMySQLDAO();
+        $posts = $post_dao->getMostRepliedToPostsInLastWeek('user3', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 5);
         $this->assertEqual($posts[0]->reply_count_cache, 7);
         $this->assertEqual($posts[1]->reply_count_cache, 6);
 
-        $posts = $pdao->getMostRepliedToPostsInLastWeek('user2', 'twitter', 5);
+        $posts = $post_dao->getMostRepliedToPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
     }
 
@@ -1914,15 +1914,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             ));
             $counter++;
         }
-        $pdao = new PostMySQLDAO();
-        $posts = $pdao->getMostRetweetedPostsInLastWeek('user3', 'twitter', 5);
+        $post_dao = new PostMySQLDAO();
+        $posts = $post_dao->getMostRetweetedPostsInLastWeek('user3', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 5);
         $this->assertEqual($posts[0]->reply_count_cache, 0);
         $this->assertEqual($posts[1]->reply_count_cache, 0);
         $this->assertTrue(($posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache) >=
         ($posts[1]->retweet_count_cache + $posts[1]->old_retweet_count_cache));
 
-        $posts = $pdao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
+        $posts = $post_dao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
     }
 
@@ -1934,7 +1934,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         $id = 1500;
         $builders = array();
-        $pdao = new PostMySQLDAO();
+        $post_dao = new PostMySQLDAO();
 
         $builders[] = FixtureBuilder::build('posts', array(
         'id'=>$id,
@@ -1964,13 +1964,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'old_retweet_count_cache' => 5
         ));
 
-        $post = $pdao->getPost(1500, 'twitter');
+        $post = $post_dao->getPost(1500, 'twitter');
         $this->assertEqual($post->rt_threshold, 0);
         $this->assertEqual($post->all_retweets, 155);
-        $post = $pdao->getPost(1501, 'twitter');
+        $post = $post_dao->getPost(1501, 'twitter');
         $this->assertEqual($post->rt_threshold, 0);
         $this->assertEqual($post->all_retweets, 97);
-        $post = $pdao->getPost(1502, 'twitter');
+        $post = $post_dao->getPost(1502, 'twitter');
         $this->assertEqual($post->rt_threshold, 1);
         $this->assertEqual($post->all_retweets, 105);
     }
@@ -1979,7 +1979,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * Test that detection of an old-style RT for an already-stored post is properly processed
      */
     public function testCatchOldStyleRT() {
-        $pdao = new PostMySQLDAO();
+        $post_dao = new PostMySQLDAO();
         $builders = array();
         $builders[] = FixtureBuilder::build('posts', array(
         'id' => 5000,
@@ -2006,9 +2006,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'in_retweet_of_post_id' => null
         ));
 
-        $post = $pdao->getPost(12345, 'twitter');
+        $post = $post_dao->getPost(12345, 'twitter');
         $this->assertEqual($post->in_retweet_of_post_id, null);
-        $post = $pdao->getPost('13708601491193856', 'twitter');
+        $post = $post_dao->getPost('13708601491193856', 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 0);
 
         // now try adding that post again with the in_retweet_of_post_id field set.
@@ -2045,15 +2045,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_retweet_of_post_id'] = '13708601491193856';
         $vals['in_rt_of_user_id'] = 100;
 
-        $pdao->addPost($vals);
-        $post = $pdao->getPost(12345, 'twitter');
+        $post_dao->addPost($vals);
+        $post = $post_dao->getPost(12345, 'twitter');
         $this->assertEqual($post->in_retweet_of_post_id, '13708601491193856');
-        $post = $pdao->getPost('13708601491193856', 'twitter');
+        $post = $post_dao->getPost('13708601491193856', 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1);
         $this->assertEqual($post->retweet_count_cache, 2);
         // repeat, make sure no duplication now that the in_retweet_of_post_id IS set
-        $pdao->addPost($vals);
-        $post = $pdao->getPost('13708601491193856', 'twitter');
+        $post_dao->addPost($vals);
+        $post = $post_dao->getPost('13708601491193856', 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1);
         $this->assertEqual($post->retweet_count_cache, 2);
     }

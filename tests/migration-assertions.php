@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '1.0.7';
+$LATEST_VERSION = '1.0.8';
 $TOTAL_MIGRATION_COUNT = 218;
 
 $MIGRATIONS = array(
@@ -822,8 +822,35 @@ $MIGRATIONS = array(
 
      /* 1.0.7 */
     '1.0.7' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.7.zip',
         'migrations' => 0,
      ),
 
+     /* 1.0.8 */
+    '1.0.8' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                 array(
+                // Created tu_links table
+                'query' => 'DESCRIBE tu_insights id;',
+                'match' => "/int\(11\)/",
+                'column' => 'Type',
+                ),
+                // Added network_follower_user index to tu_follows
+                array(
+                    'query' => 'SHOW INDEX FROM tu_follows WHERE Key_name = \'network_follower_user\';',
+                    'match' => "/network_follower_user/",
+                    'column' => 'Key_name',
+                ),
+                // Added auth_error field to tu_owner_instances
+                array(
+                    'query' => 'DESCRIBE tu_owner_instances auth_error;',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+            )
+        )
+     ),
 );

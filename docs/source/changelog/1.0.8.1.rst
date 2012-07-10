@@ -1,0 +1,24 @@
+1.0.8 - 5 Jul 2012
+==================
+
+Changelog:
+
+
+*   Optimization: Speed up dashboard rendering by caching results of chart queries in database during data capture
+*   Expand URLs plugin: Prevent endless 302 redirect loops (which causes "Error starting crawler; another crawl
+    is already in progress" message)
+*   Expand URLs plugin: Don't require both Flickr and Bitly API keys to save settings
+*   Facebook Plugin: Alert user when Facebook's tokens have expired via email and on the dashboard
+*   Facebook Plugin: Update application setup instructions to match Facebook's UI changes
+*   Twitter plugin: Accomodate localhost installations in Twitter's OAuth callback URL
+*   Optimize images using pullcrusher
+
+.. Note:: This release started storing the data displayed in dashboard charts like Response Rates, Clickthrough Rates,
+        Followers by Day and Followers by Week, etc, during data capture. Therefore, when you first upgrade ThinkUp,
+        these charts may appear blank. In order to restore them, run a data capture.
+
+
+1.0.8.1
+-------
+
+This bugfix-bugfix restores dashboard charts for Facebook and Google+ service users.

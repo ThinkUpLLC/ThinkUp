@@ -35,6 +35,7 @@ class StreamDataMySQLDAO extends PDODAO implements StreamDataDAO {
             ':data'  =>$content,
             ':network'  =>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
@@ -52,6 +53,7 @@ class StreamDataMySQLDAO extends PDODAO implements StreamDataDAO {
         $vars = array(
             ':network'  =>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if ($row) {
@@ -71,6 +73,7 @@ class StreamDataMySQLDAO extends PDODAO implements StreamDataDAO {
         $vars = array(
             ':id' => $id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
@@ -80,6 +83,7 @@ class StreamDataMySQLDAO extends PDODAO implements StreamDataDAO {
 
     public function resetID() {
         $q = "ALTER TABLE #prefix#stream_data auto_increment = 1";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
     }
 }

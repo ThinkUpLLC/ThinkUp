@@ -68,6 +68,28 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         return $this->getAllInstances("ASC", true, $network);
     }
 
+    public function getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError( Owner $owner, $network ) {
+        $q  = "SELECT ".$this->getFieldList();
+        $q .= "FROM ".$this->getTableName()." ";
+        $q .= $this->getMetaTableJoin();
+        $q .= "INNER JOIN #prefix#owner_instances oi ON oi.instance_id = ".$this->getTableName().".id ";
+        $q .= "WHERE network=:network AND (oi.auth_error = '' OR oi.auth_error IS NULL) ";
+        if (!$owner->is_admin) {
+            $q .= "AND oi.owner_id = :owner_id ";
+        }
+        $q .= "AND is_active = 1 ";
+        $q .= "ORDER BY crawler_last_run ".$order;
+        $vars = array(
+            ':network'=>$network
+        );
+        if (!$owner->is_admin) {
+            $vars[':owner_id'] = $owner->id;
+        }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, $this->object_name);
+    }
+
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false) {
         $q  = "INSERT INTO ".$this->getTableName()." ";
         $q .= "(network_user_id, network_username, network, network_viewer_id) ";

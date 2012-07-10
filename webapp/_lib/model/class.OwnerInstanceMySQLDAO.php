@@ -126,7 +126,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function get($owner_id, $instance_id) {
         $q = "SELECT
-                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
             FROM
                 #prefix#owner_instances
             WHERE
@@ -141,7 +141,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function getByInstance($instance_id) {
         $q = "SELECT
-                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
             FROM
                 #prefix#owner_instances
             WHERE  instance_id = :instance_id";
@@ -213,13 +213,27 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         return ($insert_count > 0) ? true : false;
     }
 
+    public function setAuthError($owner_id, $instance_id, $auth_error="") {
+        $q = "UPDATE  #prefix#owner_instances SET auth_error=:auth_error ";
+        $q .= "WHERE owner_id = :owner_id AND instance_id = :instance_id";
+        $vars = array(
+            ':owner_id' => $owner_id,
+            ':instance_id' => $instance_id,
+            ':auth_error' => $auth_error
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $stmt = $this->execute($q, $vars);
+        $insert_count = $this->getInsertCount($stmt);
+        return ($insert_count > 0) ? true : false;
+    }
+
     public function getOAuthTokens($id) {
         $q = "SELECT
-                oauth_access_token, oauth_access_token_secret
+            oauth_access_token, oauth_access_token_secret, auth_error
             FROM
-                #prefix#owner_instances
+            #prefix#owner_instances
             WHERE
-                instance_id = :instance_id ORDER BY id ASC LIMIT 1";
+            instance_id = :instance_id ORDER BY id ASC LIMIT 1";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':instance_id' => $id));
         $tokens = $this->getDataRowAsArray($stmt);

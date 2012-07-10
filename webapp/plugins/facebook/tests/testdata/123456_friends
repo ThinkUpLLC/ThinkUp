@@ -1,0 +1,7 @@
+{
+  "error": {
+    "message": "Error validating access token: The session is invalid because the user logged out.", 
+    "type": "OAuthException", 
+    "code": 190
+  }
+}

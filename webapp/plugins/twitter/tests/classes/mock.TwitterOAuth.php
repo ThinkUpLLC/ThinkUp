@@ -19,9 +19,9 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
  * Mock Twitter OAuth class for tests
+ *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
@@ -96,8 +96,12 @@ class TwitterOAuth {
         return $this->last_status_code;
     }
 
-    public function getRequestToken() {
-        return array('oauth_token'=>'dummytoken', 'oauth_token_secret'=>'dummytoken');
+    public function getRequestToken($oauth_callback = NULL) {
+        if (!empty($oauth_callback)) {
+            return array('oauth_token'=>urlencode($oauth_callback), 'oauth_token_secret'=>'dummytoken');
+        } else {
+            return array('oauth_token'=>'dummytoken', 'oauth_token_secret'=>'dummytoken');
+        }
     }
 
     public function getAuthorizeURL($token) {

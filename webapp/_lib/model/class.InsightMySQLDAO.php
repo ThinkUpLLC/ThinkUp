@@ -138,4 +138,18 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
     }
+
+    public function deleteInsightsBySlug($slug, $instance_id) {
+        $q = "DELETE FROM #prefix#insights WHERE ";
+        $q .= "slug=:slug AND instance_id=:instance_id";
+        $vars = array(
+            ':slug'=>$slug,
+            ':instance_id'=>$instance_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $result = $this->getUpdateCount($ps);
+        return ($result > 0);
+    }
 }

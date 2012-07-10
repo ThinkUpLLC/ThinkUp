@@ -121,7 +121,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             SessionCache::put('facebook_auth_csrf', md5(uniqid(rand(), true)));
         }
 
-        $params = array('scope'=>'offline_access,read_stream,user_likes,user_location,user_website,'.
+        $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
         'read_friendlists,friends_location,manage_pages,read_insights',
         'state'=>SessionCache::get('facebook_auth_csrf'));
 
@@ -134,13 +134,13 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $user_pages = array();
         $user_admin_pages = array();
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
-        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
+        $instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
 
-        $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-        foreach ($owner_instances as $instance) {
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        foreach ($instances as $instance) {
             // TODO: figure out if the scope has changed since this instance last got its tokens,
             // and we need to get re-request permission with the new scope
-            $tokens = $ownerinstance_dao->getOAuthTokens($instance->id);
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
             if ($instance->network == 'facebook') { //not a page
                 $pages = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/likes', $access_token);
@@ -159,6 +159,9 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     }
                 }
             }
+            if (isset($tokens['auth_error']) && $tokens['auth_error'] != '') {
+                $instance->auth_error = $tokens['auth_error'];
+            }
         }
         $this->addToView('user_pages', $user_pages);
         $this->addToView('user_admin_pages', $user_admin_pages);
@@ -167,8 +170,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         if (count($owner_instance_pages) > 0) {
             $this->addToView('owner_instance_pages', $owner_instance_pages);
         }
-
-        $this->addToView('owner_instances', $owner_instances);
+        $this->addToView('instances', $instances);
     }
     /**
      * Process actions based on $_GET parameters. Authorize FB user or add FB page.
@@ -209,7 +211,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     } else {
                         $error_msg = $error_msg."<br>Facebook's response: \"".$access_token_response. "\"";
                     }
-                    $this->addErrorMessage($error_msg, 'authorization');
+                    $this->addErrorMessage($error_msg, 'authorization', true);
                 }
             } else {
                 $this->addErrorMessage("Could not authenticate Facebook account due to invalid CSRF token.",
@@ -254,6 +256,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $this->addSuccessMessage("Success! You've reconnected your Facebook account. To connect a ".
                 "different account, log  out of Facebook in a different browser tab and try again.", 'user_add');
             }
+            //set auth error to empty string
+            $owner_instance_dao->setAuthError($this->owner->id, $instance->id);
         } else { //Instance does not exist
             $instance_dao->insert($fb_user_id, $fb_username, 'facebook');
             $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');

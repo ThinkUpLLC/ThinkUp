@@ -24,16 +24,17 @@
     
 </div>
 
-{if count($owner_instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
+{if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
 
-{if count($owner_instances) > 0 }
+{if count($instances) > 0 }
 <div class="section">
     <h2>Facebook User Profiles</h2>
 
-    {foreach from=$owner_instances key=iid item=i name=foo}
+    {foreach from=$instances key=iid item=i name=foo}
     <div class="clearfix article">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
+            {if $i->auth_error}<span class="ui-icon ui-icon-alert" style="float: left; margin:0.25em 0 0 0;" id="facebook-auth-error"></span>{/if}
+            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
         <div class="grid_4 right">
             <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
@@ -81,7 +82,7 @@
 
 <div class="section">
 <h2>Add a Facebook Page</h2>
-{foreach from=$owner_instances key=iid item=i name=foo}
+{foreach from=$instances key=iid item=i name=foo}
   {assign var='facebook_user_id' value=$i->network_user_id}
   {if $user_pages.$facebook_user_id or $user_admin_pages.$facebook_user_id}
     <div class="clearfix article">
@@ -145,7 +146,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     App Namespace: (leave blank)
 </li>
 <li>
-  At the bottom of the page, click the "Website" section and add the Site URL:
+  In the "Website with Facebook Login" section, add the Site URL:<br>
     <small>
       <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}</code>
     </small>

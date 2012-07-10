@@ -42,13 +42,16 @@ class ExpandURLsPluginConfigurationController extends PluginConfigurationControl
         // API key text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'flickr_api_key', 'size'=>40,
         'label'=>'Flickr API key (<a href="http://www.flickr.com/services/api/keys/">Get it here</a>)')); // add element
+        $this->setPluginOptionNotRequired('flickr_api_key');
 
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'bitly_login',
         'label'=>'Bit.ly Username'));
+        $this->setPluginOptionNotRequired('bitly_login');
 
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'bitly_api_key', 'size'=>40,
-
         'label'=>'Bit.ly API key (<a href="http://bitly.com/a/your_api_key">Get it here</a>)'));
+        $this->setPluginOptionNotRequired('bitly_api_key');
+
         $this->addToView('is_configured', true);
 
         return $this->generateView();

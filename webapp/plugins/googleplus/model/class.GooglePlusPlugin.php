@@ -57,15 +57,12 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
         //crawl Google+ users
-        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('google+');
+        $instances = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
+        'google+');
 
         if (isset($options['google_plus_client_id']->option_value)
         && isset($options['google_plus_client_secret']->option_value)) {
             foreach ($instances as $instance) {
-                if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
-                    // Owner doesn't have access to this instance; let's not crawl it.
-                    continue;
-                }
                 $logger->setUsername(ucwords($instance->network) . ' | '.$instance->network_username );
                 $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s ".
                 ucwords($instance->network), __METHOD__.','.__LINE__);
@@ -76,6 +73,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
 
                 $instance_dao->updateLastRun($instance->id);
                 $crawler = new GooglePlusCrawler($instance, $access_token);
+                $insights_generator = new InsightsGenerator($instance);
                 try {
                     $crawler->initializeInstanceUser($options['google_plus_client_id']->option_value,
                     $options['google_plus_client_secret']->option_value, $access_token, $refresh_token,
@@ -86,6 +84,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                     $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
                 }
 
+                $insights_generator->generateInsights();
                 $instance_dao->save($crawler->instance, 0, $logger);
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
                 ucwords($instance->network), __METHOD__.','.__LINE__);
@@ -134,7 +133,6 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $posts_menu_item->addDataset($posts_menu_ds_4);
 
         $menus['posts'] = $posts_menu_item;
-
 
         $gp_data_tpl = Utils::getPluginViewDirectory('googleplus').'googleplus.inline.view.tpl';
 

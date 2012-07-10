@@ -1,25 +1,31 @@
 # ThinkUp Database Migrations
 
-Some ThinkUp code changes require modifications to the ThinkUp database structure. Eventually an auto-update mechanism will make this process obselete, but for now, when a commit requires a database schema change, you have to run the migration script listed here.
+Some ThinkUp code changes require modifications to the ThinkUp database structure. When a commit requires a database
+schema change, the application must run the relevant migration script(s) contained in this directory.
 
 ## Version Migrations
 
-When a new version of ThinkUp gets tagged, all the database migration scripts associated with it get rolled up into a single script that ends with `.sql.migration`. For example, version 0.001 was tagged v0.001 on February 27th. Therefore, the migration associated with it is named `2010-02-27_v0.001.sql.migration`.
+Up to beta 15, when a new version of ThinkUp got tagged, all the database migration scripts associated with it got
+rolled up into a single script that ends with `.sql.migration`. For example, version 0.001 was tagged v0.001 on
+February 27th. Therefore, the migration associated with it is named `2010-02-27_v0.001.sql.migration`.
+
+After beta 15, a version could have multiple or no migration scripts associated with it. Released migration
+filenames end in their associated version number. For example, a groups migration, written on October 21st, 2011,
+got released with beta 17. Its filename is `2011-10-21_groups_v0.17.sql`.
 
 ## Migrations Since the Last Version Release
 
-If you're downloading the latest development version of ThinkUp, there may be migrations that you need to run it. Each script name has a date and description that coincides with the commit that requires it.
+If you're downloading the latest development source code, there may be migrations that have not yet been 
+released to users, but are required to run the latest application code. Each of these migration script filenames
+have a date and description that coincides with the commit that requires it.
 
-If a commit message starts with `[DB MIGRATION REQ'D]`, after you pull the latest code files, you'll need to run the corresponding migration script on your ThinkUp database before you run the crawler or use the webapp. If you don't, you'll run into errors.
+If any commit messages start with `[DB MIGRATION REQ'D]`, after you pull the latest source code, ThinkUp will need to
+update its database structure before you can reliably run the crawler or use the webapp. If you don't, you'll run into
+errors.
 
-To run a migration script at the command line, substitute in your DB username and path to the ThinkUp files, and use this command:
+Developers can use the CLI upgrade tool to run any new database migrations using the argument “–with-new-sql”, like
+this:
 
-`mysql -u yourusername -p thinkup < /path/to/thinkup/sql/mysql_migrations/YYY_MM_DD_script-name.sql`
+``$ cd install/cli/; php upgrade.php --with-new-sql``
 
-Alternately, if you have web-based access to your database, like via PHPMyAdmin, copy and paste the migration script into the SQL window and run it.
-
-## Migration Script Assumptions
-
-The scripts listed here assume you're using the ThinkUp default table prefix `tu_`. 
-
-If you are not, manually modify the script to use your prefix or delete it entirely to match your setup before you run it (or else you'll get table not found errors).
+The CLI tool will keep track of any migrations that have already been applied and only run new migrations.

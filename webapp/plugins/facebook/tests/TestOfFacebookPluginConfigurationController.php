@@ -73,7 +73,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //Add owner instance_owner
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
-        'oauth_access_token'=>'faux-access-token1'));
+        'oauth_access_token'=>'faux-access-token1', 'auth_error'=>'Token has expired.'));
         array_push($this->builders, $owner_instance_builder);
 
         //Add second instance
@@ -83,7 +83,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //Add second owner instance_owner
         $owner_instance2_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
-        'oauth_access_token'=>'faux-access-token2'));
+        'oauth_access_token'=>'faux-access-token2', 'auth_error'=>''));
         array_push($this->builders, $owner_instance2_builder);
     }
 
@@ -134,14 +134,14 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner);
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
+        $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
     }
 
     public function testConfigOptionsNotAdmin() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -167,7 +167,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testConfigOptionsIsAdmin() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -196,7 +196,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         self::buildInstanceData();
         // build some options data
         $_SERVER['HTTPS'] = true;
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -205,16 +205,16 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $this->debug($output);
 
-        $expected_pattern = '/add the Site URL:
+        $expected_pattern = '/add the Site URL:<br>
     <small>
       <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
         $this->assertPattern($expected_pattern, $output);
     }
 
-    public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedAndManagedPages() {
+    public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedAndManagedPagesWithAuthError() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -227,8 +227,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual($liked_pages[606837591][0]->name, 'jenny o.');
         $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'));
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
+        $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('instances')), 1);
         $this->assertPattern("/Pages You Like/", $output);
         $this->assertPattern("/The Wire/", $output);
         $this->assertPattern("/Glee/", $output);
@@ -240,12 +240,16 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($managed_pages[606837591][0]->name, 'Sample Cause');
         $this->assertPattern("/Pages You Manage/", $output);
         $this->assertPattern("/Sample Cause/", $output);
+
+        //with auth error
+        $this->assertPattern('/facebook-auth-error"/', $output);
+
     }
 
-    public function testConfiguredPluginWithOneFacebookUserNoLikedPages() {
+    public function testConfiguredPluginWithOneFacebookUserNoLikedPagesNoAuthError() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me2@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -258,14 +262,18 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual(sizeof($liked_pages), 0);
         $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
+        $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('instances')), 1);
+
+        //no auth error
+        $this->debug($output);
+        $this->assertNoPattern('/facebook-auth-error/', $output);
     }
 
     public function testConfiguredPluginWithOneFacebookUserOneLikedPageOneManagedPage() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -286,7 +294,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testConfiguredPluginWithOneFacebookUserNoLikedPagesNoManagedPages() {
         self::buildInstanceData();
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me2@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -329,14 +337,14 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['p'] = 'facebook';
         $_GET['owner_id'] = '';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me2@example.com', true);
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
+        $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
 
         $msgs = $v_mgr->getTemplateDataItem('success_msgs');
@@ -374,7 +382,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['code'] = '456';
         $_GET['state'] = '123';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
@@ -416,7 +424,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['code'] = '789';
         $_GET['state'] = '123';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
@@ -456,7 +464,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['code'] = '789';
         $_GET['state'] = '123';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
@@ -495,7 +503,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['code'] = '456';
         $_GET['state'] = 'NOT123';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
@@ -529,9 +537,17 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET['code'] = '456';
         $_GET['state'] = '123';
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNotNull($instance);
+
+        //assert there is an auth error
+        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+        $this->assertEqual($owner_instance->auth_error, 'Token has expired.');
+
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
 
@@ -547,6 +563,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
         $this->assertNotNull($owner_instance);
         $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+
+        //assert the auth error got reset to an empty string on successful reconnection
+        $this->assertEqual($owner_instance->auth_error, '');
     }
 
     public function testForDeleteCSRFToken() {
@@ -556,7 +575,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $instance_dao = new InstanceMySQLDAO();
         $owner_dao = new OwnerMySQLDAO();
 
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true, true);
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');

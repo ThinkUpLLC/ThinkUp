@@ -1,3 +1,4 @@
+{if $all_time_clients_usage}
 <div class="omega">
      <h2>Client Usage <span class="detail">(all posts)</span></h2>
      <div class="article">
@@ -40,3 +41,4 @@
     }
     {/literal}
 </script>
+{/if}

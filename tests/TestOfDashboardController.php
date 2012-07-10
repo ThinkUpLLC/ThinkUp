@@ -208,6 +208,27 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertPattern('/Export/', $results);
     }
 
+    public function testFacebookAuthError() {
+        $builders = $this->buildData();
+        //required params
+        $_GET['u'] ="Joe O\'Malley";
+        $_GET['n'] = 'facebook';
+        $_GET['v'] = '';
+        $controller = new DashboardController(true);
+
+        //not logged in, shouldn't show auth error alert
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertNoPattern('/ThinkUp can\'t connect to your Facebook account./', $results);
+
+        //logged in, should show auth error alert
+        $this->simulateLogin('me@example.com');
+
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertPattern('/ThinkUp can\'t connect to your Facebook account./', $results);
+    }
+
     public function testLoggedInPostsGooglePlus() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
@@ -335,7 +356,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         //Add instance_owner
         $instance_owner_builder_1 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
         $instance_owner_builder_2 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
-        $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
+        'auth_error'=>'Error validating access token: Session has expired at unix time SOME_TIME. The current unix '.
+        'time is SOME_TIME.'));
 
         //Insert test data into test table
         $user_builders = array();

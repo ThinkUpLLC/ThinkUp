@@ -161,15 +161,46 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
     public function testDeleteInsight() {
         $dao = new InsightMySQLDAO();
 
-        //delete existing baseline
-        $result = $dao->deleteInsight('avg_replies_per_week', 1, '2012-05-01', 'LOLlerskates', Insight::EMPHASIS_MED);
+        //delete existing insight
+        $result = $dao->deleteInsight('avg_replies_per_week', 1, '2012-05-01');
         $this->assertTrue($result);
         //check that insight was deleted
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-01');
         $this->assertNull($result);
 
-        //delete nonexistent baseline
-        $result = $dao->deleteInsight('avg_replies_per_week', 1, '2012-05-10', 'ooooh burn');
+        //delete nonexistent insight
+        $result = $dao->deleteInsight('avg_replies_per_week', 1, '2012-05-10');
+        $this->assertFalse($result);
+    }
+
+    public function testDeleteInsightsBySlug() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH));
+
+        $dao = new InsightMySQLDAO();
+
+        //delete all insights for slug/instance
+        $result = $dao->deleteInsightsBySlug('avg_replies_per_week', 1);
+        $this->assertTrue($result);
+        //check that insights for that slug and instance were deleted
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-01');
+        $this->assertNull($result);
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-02');
+        $this->assertNull($result);
+        //check that insight with that slug but not for another instance were NOT deleted
+        $result = $dao->getInsight('avg_replies_per_week', 2, '2012-05-01');
+        $this->assertNotNull($result);
+
+        //delete nonexistent slug
+        $result = $dao->deleteInsightsBySlug('avg_replies_per_week_another_slug', 1);
         $this->assertFalse($result);
     }
 }

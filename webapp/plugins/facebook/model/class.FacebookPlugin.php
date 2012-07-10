@@ -68,15 +68,13 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
         //crawl Facebook user profiles and pages
-        $profiles = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook');
-        $pages = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook page');
+        $profiles = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
+        'facebook');
+        $pages = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
+        'facebook page');
         $instances = array_merge($profiles, $pages);
 
         foreach ($instances as $instance) {
-            if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
-                // Owner doesn't have access to this instance; let's not crawl it.
-                continue;
-            }
             $logger->setUsername(ucwords($instance->network) . ' | '.$instance->network_username );
             $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s ".
             ucwords($instance->network), __METHOD__.','.__LINE__);
@@ -86,16 +84,42 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
 
             $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
+            $insights_generator = new InsightsGenerator($instance);
             try {
                 $crawler->fetchPostsAndReplies();
+            } catch (APIOAuthException $e) {
+                //The access token is invalid, save in owner_instances table
+                $owner_instance_dao->setAuthError($current_owner->id, $instance->id, $e->getMessage());
+                //Send email alert
+                $this->sendInvalidOAuthEmailAlert($current_owner->email, $instance->network_username);
+                $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
+            $insights_generator->generateInsights();
 
             $instance_dao->save($crawler->instance, 0, $logger);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
             ucwords($instance->network), __METHOD__.','.__LINE__);
         }
+    }
+
+    /**
+     * Send user email alert about invalid OAuth tokens. In test mode, this will only write the message body to a file
+     * in the application data directory.
+     * @param str $email
+     * @param str $username
+     */
+    private function sendInvalidOAuthEmailAlert($email, $username) {
+        $mailer_view_mgr = new SmartyThinkUp();
+        $mailer_view_mgr->caching=false;
+        $server = $_SERVER['HTTP_HOST'];
+        $mailer_view_mgr->assign('server', $server );
+        $mailer_view_mgr->assign('email', $email );
+        $mailer_view_mgr->assign('faceboook_user_name', $username);
+        $message = $mailer_view_mgr->fetch(Utils::getPluginViewDirectory('facebook').'_email.invalidtoken.tpl');
+
+        Mailer::mail($email, "Please re-authorize ThinkUp to access ". $username. " on Facebook", $message);
     }
 
     public function renderConfiguration($owner) {

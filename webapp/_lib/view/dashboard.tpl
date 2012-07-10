@@ -134,13 +134,12 @@
               </div>
             {/if}
             {if $instance->network eq 'twitter' }
-              <div class="section" style="float : left; clear : none; width : 345px;">
-                {include file="_dashboard.posttypes.tpl"}
-              </div>
-
-            <div class="section" style="float : left; clear : none;margin-left : 10px; width : 345px;">
-                {include file="_dashboard.clientusage.tpl"}
-            </div>
+                <div class="section" style="float : left; clear : none; width : 345px;">
+                  {include file="_dashboard.posttypes.tpl"}
+                </div>
+                <div class="section" style="float : left; clear : none;margin-left : 10px; width : 345px;">
+                    {include file="_dashboard.clientusage.tpl"}
+                </div>
             {/if}
           {/if} {* end if $data_template *}
          {/if}

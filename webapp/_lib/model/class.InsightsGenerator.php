@@ -51,6 +51,9 @@ class InsightsGenerator {
         $results = $follow_dao->getLeastLikelyFollowersThisWeek($this->instance->network_user_id,
         $this->instance->network, 13, 1);
         if (isset($results)) {
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id);
+            //insert new
             $insight_dao->insertInsight("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id,
             $simplified_date, '', Insight::EMPHASIS_LOW, serialize($results));
         }
@@ -60,6 +63,9 @@ class InsightsGenerator {
         $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 10);
         if (sizeof($hot_posts) > 3) {
             $hot_posts_data = self::getHotPostVisualizationData($hot_posts, $this->instance->network);
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
+            //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getHotPosts", $this->instance->id,
             $simplified_date, '', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
         }
@@ -69,6 +75,9 @@ class InsightsGenerator {
         $click_stats = $short_link_dao->getRecentClickStats($this->instance, 10);
         if (sizeof($click_stats) > 3) {
             $click_stats_data = self::getClickStatsVisualizationData($click_stats);
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
+            //insert new
             $insight_dao->insertInsight("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
             $simplified_date, '', Insight::EMPHASIS_LOW, serialize($click_stats_data));
         }
@@ -77,6 +86,9 @@ class InsightsGenerator {
         $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
         $this->instance->network, 5);
         if (sizeof($most_replied_to_1wk) > 1) {
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id);
+            //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id,
             $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
         }
@@ -85,6 +97,9 @@ class InsightsGenerator {
         $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
         $this->instance->network, 5);
         if (sizeof($most_retweeted_1wk) > 1) {
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id);
+            //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id,
             $simplified_date, '', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
         }
@@ -92,14 +107,17 @@ class InsightsGenerator {
         //Cache PostMySQLDAO::getClientsUsedByUserOnNetwork
         $clients_usage = $post_dao->getClientsUsedByUserOnNetwork($this->instance->network_user_id,
         $this->instance->network);
+        //delete existing
+        $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id);
+        //insert new
         $insight_dao->insertInsight("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
         $simplified_date, '', Insight::EMPHASIS_LOW, serialize($clients_usage));
     }
 
     /**
      * Convert Hot Posts data to JSON for use with Google Charts
-     * @param array $hot_posts Array returned from PostDAO::getHotPosts
-     * @return string JSON
+     * @param arr $hot_posts Array returned from PostDAO::getHotPosts
+     * @return str JSON
      */
     public static function getHotPostVisualizationData($hot_posts, $network) {
         switch ($network) {
@@ -159,8 +177,8 @@ class InsightsGenerator {
 
     /**
      * Convert click stats data to JSON for Google Charts
-     * @param array $click_stats Array returned from ShortLinkDAO::getRecentClickStats
-     * @return string JSON
+     * @param arr $click_stats Array returned from ShortLinkDAO::getRecentClickStats
+     * @return str JSON
      */
     public static function getClickStatsVisualizationData($click_stats) {
         $metadata = array(
@@ -180,8 +198,8 @@ class InsightsGenerator {
 
     /**
      * Convert client usage data to JSON for Google Charts
-     * @param array $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
-     * @return string JSON
+     * @param arr $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
+     * @return str JSON
      */
     public static function getClientUsageVisualizationData($client_usage) {
         $metadata = array(
