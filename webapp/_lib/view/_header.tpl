@@ -17,7 +17,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+    <link href="{$site_root_path}assets/css/bootstrap.css" rel="stylesheet">
     <style>
     {literal}
 
@@ -76,62 +76,6 @@
   </script>
 {/literal}
 
-
-
-{/if}
-
-
-  <!-- google chart tools -->
-  <!--Load the AJAX API-->
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-  <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
-  <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
-  {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
-  {foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-  {/foreach}
-
-{if $enable_tabs}
-<script type="text/javascript">
-    {literal}
-      // tabs functionality
-      var current_query_key = 'updates';
-      $(function() {
-        $("#tabs").tabs( { select: function(event, ui) { current_query_key =  ui.panel.id  } } );
-      });
-      
-      // buttons functionality
-      $(function() {
-        //all hover and click logic for buttons
-        $(".linkbutton:not(.ui-state-disabled)")
-        .hover(
-          function() {
-            $(this).addClass("ui-state-hover"); 
-          },
-          function() {
-            $(this).removeClass("ui-state-hover"); 
-          }
-        )
-        .mousedown(function() {
-            $(this).parents('.linkbuttonset-single:first').find(".linkbutton.ui-state-active").removeClass("ui-state-active");
-            if ($(this).is('.ui-state-active.linkbutton-toggleable, .linkbuttonset-multi .ui-state-active')) {
-              $(this).removeClass("ui-state-active");
-            }
-            else {
-              $(this).addClass("ui-state-active");
-            }
-        })
-        .mouseup(function() {
-          if (! $(this).is('.linkbutton-toggleable, .linkbuttonset-single .linkbutton,  .linkbuttonset-multi .linkbutton') ) {
-            $(this).removeClass("ui-state-active");
-          }
-        });
-      });
-    {/literal}
-</script>
-{/if}
-
   <!-- custom css -->
   {literal}
   <style>
@@ -142,6 +86,19 @@
 
   </style>
   {/literal}
+
+
+{/if}
+
+  <!-- google chart tools -->
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
+  <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
+  {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
+  {foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
+  {/foreach}
 
 {if $post->post_text} 
 <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">

@@ -1,6 +1,7 @@
 
 {if $smarty.get.v eq "insights"}
-    {include file="_header.tpl" enable_bootstrap=true}
+    {include file="_header.tpl" enable_bootstrap="true"}
+    {include file="_statusbar.tpl" enable_bootstrap="true"}
     {include file="insights.tpl"}
     
 {else}
@@ -178,7 +179,7 @@
 {/if}
 
 {if $smarty.get.v eq "insights"}
-    {include file="_footer.tpl" enable_bootstrap=true}
+    {include file="_footer.tpl" enable_bootstrap="true"}
 {else}
     {include file="_footer.tpl"}
 {/if}

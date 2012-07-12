@@ -18,16 +18,22 @@
     
     <script src="{$site_root_path}assets/js/jquery.js"></script>
     <script src="{$site_root_path}assets/js/bootstrap-collapse.js"></script>
+    <script src="{$site_root_path}assets/js/bootstrap-tab.js"></script>
 
 {literal}
   <script type="text/javascript">
-  $(document).ready(function() {
-      $(".post").hover(
-        function() { $(this).children(".metaroll").show(100); },
-        function() { $(this).children(".metaroll").hide(); }
-      );
-      $(".metaroll").hide();
-      $(".collapse").collapse()
+    $(document).ready(function() {
+        $(".post").hover(
+            function() { $(this).children(".metaroll").show(100); },
+            function() { $(this).children(".metaroll").hide(); }
+        );
+        $(".metaroll").hide();
+        $(".collapse").collapse()
+        
+        $(function () {
+            $('#settingsTabs a:first').tab('show');
+        })
+
     });
   </script>
 {/literal}

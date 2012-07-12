@@ -1,39 +1,16 @@
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-
-          <a href="{$site_root_path}{$logo_link}" class="brand pull-left"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
-          {if $logged_in_user}<a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="btn pull-left">Capture Data</a>{/if}
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span></a>
-
-          <div class="nav-collapse">
-
-      {if $logged_in_user}
-<ul class="nav pull-right">
-        {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
-        <li><p class="navbar-text">{$logged_in_user}{if $user_is_admin} (admin){/if}</p></li>
-        <li><a href="{$site_root_path}account/?m=manage">Settings</a></li>
-        <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
-</ul>   
-      {else}
-<ul class="nav pull-right">         
-        <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
-        <li><a href="{$site_root_path}session/login.php" >Log In</a></li>
-
-</ul>
-      {/if}
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
 
     <div id="main" class="container">
 
 {if sizeof($insights) eq 0}
 
-<div class="page-header">
-  <h1>ThinkUp doesn't have any insights for you yet. <small>Check back later, or click "Capture Data".</small></h1>
+<div class="row">
+    <div class="span3">&nbsp;</div>
+    <div class="span9">
+        <div class="page-header">
+          <h1>ThinkUp doesn't have any insights for you yet.</h1>
+          <h2><small>Check back later, or click "Capture Data".</small></h2>
+        </div>
+    </div>
 </div>
 
 {/if}
