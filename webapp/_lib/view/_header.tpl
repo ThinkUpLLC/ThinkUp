@@ -90,6 +90,46 @@
 
 {/if}
 
+{if $enable_tabs}
+<script type="text/javascript">
+    {literal}
+      // tabs functionality
+      var current_query_key = 'updates';
+      $(function() {
+        $("#tabs").tabs( { select: function(event, ui) { current_query_key =  ui.panel.id  } } );
+      });
+      
+      // buttons functionality
+      $(function() {
+        //all hover and click logic for buttons
+        $(".linkbutton:not(.ui-state-disabled)")
+        .hover(
+          function() {
+            $(this).addClass("ui-state-hover"); 
+          },
+          function() {
+            $(this).removeClass("ui-state-hover"); 
+          }
+        )
+        .mousedown(function() {
+            $(this).parents('.linkbuttonset-single:first').find(".linkbutton.ui-state-active").removeClass("ui-state-active");
+            if ($(this).is('.ui-state-active.linkbutton-toggleable, .linkbuttonset-multi .ui-state-active')) {
+              $(this).removeClass("ui-state-active");
+            }
+            else {
+              $(this).addClass("ui-state-active");
+            }
+        })
+        .mouseup(function() {
+          if (! $(this).is('.linkbutton-toggleable, .linkbuttonset-single .linkbutton,  .linkbuttonset-multi .linkbutton') ) {
+            $(this).removeClass("ui-state-active");
+          }
+        });
+      });
+    {/literal}
+</script>
+{/if}
+
   <!-- google chart tools -->
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
