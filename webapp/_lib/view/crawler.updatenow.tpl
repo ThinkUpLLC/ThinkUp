@@ -16,7 +16,7 @@
           </div><!--/.well -->
     </div><!--/span3-->
     <div class="span9">
-        <iframe width="850" height="500" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px"></iframe>
+        <iframe width="100%" height="100%" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px"></iframe>
     </div>
 </div>
 
