@@ -1164,6 +1164,7 @@ input[type="radio"][readonly],
 input[type="checkbox"][readonly] {
   background-color: transparent;
 }
+.control-group.warning,
 .control-group.warning > label,
 .control-group.warning .help-block,
 .control-group.warning .help-inline {
@@ -1189,6 +1190,7 @@ input[type="checkbox"][readonly] {
   background-color: #d5f0fc;
   border-color: #c09853;
 }
+.control-group.error,
 .control-group.error > label,
 .control-group.error .help-block,
 .control-group.error .help-inline {
@@ -1214,6 +1216,7 @@ input[type="checkbox"][readonly] {
   background-color: #f8f8b1;
   border-color: #b94a48;
 }
+.control-group.success,
 .control-group.success > label,
 .control-group.success .help-block,
 .control-group.success .help-inline {
