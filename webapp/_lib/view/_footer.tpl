@@ -3,7 +3,7 @@
   {/if}
 
 
-{if $smarty.get.v eq "insights"}
+{if $enable_bootstrap}
 
 </div>
 

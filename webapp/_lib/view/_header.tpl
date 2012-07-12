@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
 
-{if $smarty.get.v eq "insights"}
+{if $enable_bootstrap}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -20,29 +20,29 @@
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <style>
     {literal}
- 	         
-	  .detail-btn {
-	  	margin-top : -18px;
-      }
-      
-      .metaroll {
-      	color : #999;
-      	display : inline;
-      	font-size : small;
-      	line-height : 100%;
-      }
 
-	.label {
-	  padding: 1px 4px 2px;
-	  -webkit-border-radius: 1px;
-	  -moz-border-radius: 1px;
-	  border-radius: 1px;
-	}
-	
-	.lead {
-		padding-left : 75px;
-		margin-right : 50px;
-	}
+    .detail-btn {
+        margin-top : -18px;
+    }
+      
+    .metaroll {
+        color : #999;
+        display : inline;
+        font-size : small;
+        line-height : 100%;
+    }
+
+    .label {
+        padding: 1px 4px 2px;
+        -webkit-border-radius: 1px;
+        -moz-border-radius: 1px;
+        border-radius: 1px;
+    }
+    
+    .lead {
+        padding-left : 75px;
+        margin-right : 50px;
+    }
 
     {/literal}
     </style>    
