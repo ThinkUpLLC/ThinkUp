@@ -1,4 +1,4 @@
-{include file="_header.tpl"}
+{include file="_header.tpl" enable_bootstrap="true"}
 
   <style type="text/css">
   {literal}
@@ -7,4 +7,6 @@
   {/literal}
   </style>
 
-<div style="background-color:white;padding:5px">
+<table class="table table-condensed table-striped">
+    <thead><th>Time</th><th>Capturing Data</th><th>Details</th></thead>
+    <tbody>
