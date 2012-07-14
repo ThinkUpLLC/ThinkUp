@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" itemscope itemtype="http://schema.org/Article">
 <head>
-  <meta charset="utf-8">
-  <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
-  <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{$site_root_path}assets/ico/apple-touch-icon-144-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
+    <meta charset="utf-8">
+    <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{$site_root_path}assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
 
 {if $enable_bootstrap}
@@ -40,8 +40,62 @@
     }
     
     .lead {
-        padding-left : 75px;
-        margin-right : 50px;
+        padding-left : 20px;
+        margin-right : 10px;
+    }
+    
+    .password-meter {
+    }
+    .password-meter-message {
+        color: #E41B17;
+        margin-left : 10px;
+    }
+    .password-meter-bg, .password-meter-bar {
+        height : 2px;
+    }
+    .password-meter-bg {
+        background: transparent;
+        width : 220px;
+
+    }
+    
+    .password-meter-message-very-weak {
+        color: #aa0033;
+    }
+    .password-meter-message-weak {
+        color: #f5ac00;
+    }
+    .password-meter-message-good {
+        color: #6699cc;
+    }
+    .password-meter-message-strong {
+        color: #008000;
+    }
+    
+    .password-meter-bg .password-meter-very-weak {
+        background: #aa0033;
+        width: 20%;
+    }
+    .password-meter-bg .password-meter-weak {
+        background: #f5ac00;
+        width: 30%;
+    }
+    .password-meter-bg .password-meter-good {
+        background: #6699cc;
+        width: 66%;
+    }
+    .password-meter-bg .password-meter-strong {
+        background: #008000;
+        width: 100%;
+    }
+    span.formError {
+        color: #E41B17;
+        margin-left : 10px;
+        padding-top : 4px;
+    }
+
+    #wrap {
+        background-color : transparent;
     }
 
     {/literal}
@@ -52,41 +106,94 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-{else}
-  
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-  {foreach from=$header_css item=css}
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
+    <script src="{$site_root_path}assets/js/jquery.js"></script>
+    <script src="{$site_root_path}assets/js/bootstrap-collapse.js"></script>
+    <script src="{$site_root_path}assets/js/bootstrap-tab.js"></script>
+    <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
+    <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>  
+
+  {foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
   {/foreach}
-  <!-- jquery -->
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
-  <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
-  <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
+
+    {literal}
+      <script type="text/javascript">
+    {/literal}
+        {if $register_form}
+    {literal}
+            $.validator.setDefaults({
+                errorElement: "span",
+                errorClass: "formError",
+                wrapper: "span"
+            });
+        
+            $.validator.passwordRating.messages = {
+                "similar-to-username": "Too similar to your name",
+                "too-short": "Too short",
+                "very-weak": "Very weak",
+                "weak": "Weak",
+                "good": "Good",
+                "strong": "Strong"
+            };
+
+    {/literal}
+        {/if}
+
+    {literal}
+
+        $(document).ready(function() {
+            $(".post").hover(
+                function() { $(this).children(".metaroll").show(100); },
+                function() { $(this).children(".metaroll").hide(); }
+            );
+            $(".metaroll").hide();
+            $(".collapse").collapse();
+            $(function () {
+                $('#settingsTabs a:first').tab('show');
+            })
+
+
+        });
+      </script>
+    {/literal}
+    
+{else} <!-- not bootstrap -->
   
-{literal}
-  <script type="text/javascript">
-  $(document).ready(function() {
-      $(".post").hover(
-        function() { $(this).children(".small").children(".metaroll").show(); },
-        function() { $(this).children(".small").children(".metaroll").hide(); }
-      );
-      $(".metaroll").hide();
-    });
-  </script>
-{/literal}
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
+    {foreach from=$header_css item=css}
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
+    {/foreach}
+    <!-- jquery -->
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
+    <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
+    <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
+  
+    {literal}
+      <script type="text/javascript">
+      $(document).ready(function() {
+          $(".post").hover(
+            function() { $(this).children(".small").children(".metaroll").show(); },
+            function() { $(this).children(".small").children(".metaroll").hide(); }
+          );
+          $(".metaroll").hide();
+        });
+      </script>
+    {/literal}
 
-  <!-- custom css -->
-  {literal}
-  <style>
-  .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
-  margin: 8px auto;
-  height: 1px;
-  }
-
-  </style>
-  {/literal}
-
+    <!-- custom css -->
+    {literal}
+    <style>
+        .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
+            margin: 8px auto;
+            height: 1px;
+        }
+        
+    </style>
+    {/literal}
+  {foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
+  {/foreach}
 
 {/if}
 
@@ -136,14 +243,12 @@
   <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
   <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
-  {foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-  {/foreach}
 
 {if $post->post_text} 
-<meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
-<meta itemprop="description" content="{$post->post_text|strip_tags}">
-<meta itemprop="image" content="http://thinkupapp.com/assets/img/thinkup-logo_sq.png">
+    <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
+    <meta itemprop="description" content="{$post->post_text|strip_tags}">
+    <meta itemprop="image" content="http://thinkupapp.com/assets/img/thinkup-logo_sq.png">
 {/if}
+
 </head>
 <body>

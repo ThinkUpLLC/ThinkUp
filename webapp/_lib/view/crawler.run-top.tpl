@@ -24,5 +24,5 @@
   </style>
 
 <table class="table table-condensed table-striped">
-    <thead><th>Time</th><th class="crawl-log-component">Capturing Data</th><th>Details</th></thead>
+    <thead><th>Time</th><th class="crawl-log-component">Component</th><th>Details</th></thead>
     <tbody>
