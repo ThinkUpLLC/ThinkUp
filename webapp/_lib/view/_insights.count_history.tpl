@@ -2,7 +2,7 @@
                 <i class="icon-star-empty"></i>
                 {$i->text}
 
-<div class="pull-right detail-btn"><button class="btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal"></i></button></div>
+<div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal"></i></button></div>
 
 <div class="collapse in" id="chart-{$i->id}">
 

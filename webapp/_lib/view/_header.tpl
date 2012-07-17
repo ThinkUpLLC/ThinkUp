@@ -20,29 +20,36 @@
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <style>
     {literal}
- 	         
-	  .detail-btn {
-	  	margin-top : -18px;
-      }
-      
-      .metaroll {
-      	color : #999;
-      	display : inline;
-      	font-size : small;
-      	line-height : 100%;
+
+    .insight-item {
+        position: relative;
+    }
+
+      .detail-btn {
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          z-index: 999;
       }
 
-	.label {
-	  padding: 1px 4px 2px;
-	  -webkit-border-radius: 1px;
-	  -moz-border-radius: 1px;
-	  border-radius: 1px;
-	}
-	
-	.lead {
-		padding-left : 75px;
-		margin-right : 50px;
-	}
+      .metaroll {
+          color : #999;
+          display : inline;
+          font-size : small;
+          line-height : 100%;
+      }
+
+    .label {
+      padding: 1px 4px 2px;
+      -webkit-border-radius: 1px;
+      -moz-border-radius: 1px;
+      border-radius: 1px;
+    }
+    
+    .lead {
+        padding-left : 75px;
+        margin-right : 50px;
+    }
 
     {/literal}
     </style>    
