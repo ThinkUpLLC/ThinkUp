@@ -20,9 +20,16 @@
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <style>
     {literal}
+
+    .insight-item {
+    	position: relative;
+    }
  	         
 	  .detail-btn {
-	  	margin-top : -18px;
+	  	position: absolute;
+	  	top: 14px;
+	  	right: 14px;
+	  	z-index: 999;
       }
       
       .metaroll {
