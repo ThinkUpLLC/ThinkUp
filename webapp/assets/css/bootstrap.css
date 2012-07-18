@@ -2694,18 +2694,19 @@ input[type="submit"].btn.btn-mini {
         
           -moz-border-radius: 2px;
           -webkit-border-radius: 2px;
+       box-shadow: 0 1px 0 #fff;
        border-radius: 2px;
        margin-bottom: 20px;
        padding: 1px; /* fake a gradient border with the above background and a single pixel of padding */
   }
      .sidebar-nav ul{
-          background: #cacacb; /* starting color */
-               background: #e2e2e2; /* ending color */
-              background: -moz-linear-gradient(top, #cacacb 0%, #e2e2e2 100%);
-              background: -webkit-linear-gradient(top, #cacacb 0%,#e2e2e2 100%);
-               background: -ms-linear-gradient(top, #cacacb 0%,#e2e2e2 100%);
-               filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cacacb', endColorstr='#e2e2e2',GradientType=0 );
-               background: linear-gradient(top, #cacacb 0%,#e2e2e2 100%);
+          background: #e2e2e2; /* starting color */
+               background: #cacaca; /* ending color */
+              background: -moz-linear-gradient(top, #e2e2e2 0%, #cacaca 100%);
+              background: -webkit-linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
+               background: -ms-linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
+               filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#cacaca',GradientType=0 );
+               background: linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
              
                -moz-border-radius: 2px;
           border-radius: 2px;
@@ -2718,6 +2719,7 @@ input[type="submit"].btn.btn-mini {
           font-weight: bold;
           height: 24px;
           padding: 8px 0 0 16px;
+          text-shadow: rgba(255,255,255,0.5) 0 1px 0;
      }
           /* no top rule on the first nav element or bottom rule on the last nav element */
           .sidebar-nav ul li:first-child{
@@ -3062,7 +3064,6 @@ input[type="submit"].btn.btn-mini {
   line-height: 19px;
   color: #00aeef;
   text-decoration: none;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .navbar .btn {
   display: inline-block;
@@ -3405,7 +3406,7 @@ a.thumbnail:hover {
   padding: 9px;
 }
 .alert {
-  padding: 8px 35px 8px 14px;
+  padding: 8px 14px;
   margin-bottom: 18px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #d5f0fc;
@@ -3414,7 +3415,7 @@ a.thumbnail:hover {
           -moz-border-radius: 1px;
           -webkit-border-radius: 1px;
      border-radius: 1px;    
-     box-shadow: 0 0 4px rgba(0,0,0,0.4);
+     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   color: #000;
 }
 

@@ -17,12 +17,12 @@
         {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
 
         {* Show more link if there are more posts after the first one *}
-        {if $smarty.foreach.bar.total gt 0 and $smarty.foreach.bar.first}
-            <div class="pull-right detail-btn"><button class="btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
+        {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
+            <div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
         {/if}
 
         {* Close up hidden div if there is one *}
-        {if $smarty.foreach.bar.total gt 0 and $smarty.foreach.bar.last}
+        {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.last}
             </div>
         {/if}
 
