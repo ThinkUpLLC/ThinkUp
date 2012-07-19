@@ -659,7 +659,9 @@ class FacebookCrawler {
 
                 //and users in users table.
                 $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
-                $follower_details["network"] = $network;
+                if (isset($follower_details)) {
+                    $follower_details->network = $network;
+                }
 
                 $follower = $this->parseUserDetails($follower_details);
                 $follower_object = new User($follower);
