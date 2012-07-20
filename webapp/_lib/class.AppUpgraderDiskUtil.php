@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.AppUpgraderDiskUtil.php
+ * ThinkUp/webapp/_lib/class.AppUpgraderDiskUtil.php
  *
  * Copyright (c) 2012 Mark Wilkie
  *

@@ -55,7 +55,7 @@ class InstallerController extends ThinkUpController {
             'debug'=>false,
             'app_title_prefix'=>'',
             'cache_pages'=>false);
-        $this->view_mgr = new SmartyThinkUp($cfg_array);
+        $this->view_mgr = new ViewManager($cfg_array);
         $this->setPageTitle('Install ThinkUp');
         $this->disableCaching();
         $this->reqs = $reqs;
@@ -371,7 +371,7 @@ class InstallerController extends ThinkUpController {
             'debug'=>false,
             'app_title_prefix'=>"",
             'cache_pages'=>false);
-            $email_view = new SmartyThinkUp($cfg_array);
+            $email_view = new ViewManager($cfg_array);
             $email_view->caching=false;
             $email_view->assign('server', $_SERVER['HTTP_HOST'] );
             $email_view->assign('email', urlencode($email) );

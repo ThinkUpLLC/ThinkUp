@@ -21,17 +21,17 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Test Plugin for use with TestOfPluginHook
+ * Test Plugin for use with TestOfPluginRegistrar
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface TestAppPlugin extends ThinkUpPlugin {
+interface TestAppPlugin extends GenericPlugin {
 
     /**
-     * Test method for TestOfPluginHook
+     * Test method for TestOfPluginRegistrar
      */
     public function performAppFunction();
 }

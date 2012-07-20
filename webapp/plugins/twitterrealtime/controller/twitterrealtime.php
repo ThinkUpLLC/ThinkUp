@@ -38,8 +38,8 @@ if (!class_exists('TwitterOAuth')) {
     Loader::addSpecialClass('TwitterOAuth', 'plugins/twitter/extlib/twitteroauth/twitteroauth.php');
 }
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('twitterrealtime', 'TwitterRealtimePlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('twitterrealtime', 'TwitterRealtimePlugin');
 
-$streamer = Streamer::getInstance();
-$streamer->registerStreamerPlugin('TwitterRealtimePlugin');
+$streamer_plugin_registrar = PluginRegistrarStreamer::getInstance();
+$streamer_plugin_registrar->registerStreamerPlugin('TwitterRealtimePlugin');

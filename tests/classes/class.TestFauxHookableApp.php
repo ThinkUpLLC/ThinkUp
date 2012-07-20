@@ -21,19 +21,19 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Faux TestPluginHook class for TestOfPluginHook test
+ * Faux TestPluginRegistrar class for TestOfPluginRegistrar test
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestFauxHookableApp extends PluginHook {
+class TestFauxHookableApp extends PluginRegistrar {
     /**
      * For testing purposes
      */
     public function performAppFunction() {
-        $this->emitObjectMethod('performAppFunction');
+        $this->emitObjectFunction('performAppFunction');
     }
 
     /**
@@ -41,6 +41,6 @@ class TestFauxHookableApp extends PluginHook {
      * @param str $object_name Object name
      */
     public function registerPerformAppFunction($object_name) {
-        $this->registerObjectMethod('performAppFunction', $object_name, 'performAppFunction');
+        $this->registerObjectFunction('performAppFunction', $object_name, 'performAppFunction');
     }
 }

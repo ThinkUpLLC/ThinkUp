@@ -48,10 +48,10 @@ class DashboardController extends ThinkUpController {
             $this->setInstance();
 
             $this->view_name = (isset($_GET['v']))?$_GET['v']:'default';
-            $webapp = Webapp::getInstance();
+            $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
             if (isset($this->instance)) {
-                $webapp->setActivePlugin($this->instance->network);
-                $sidebar_menu = $webapp->getDashboardMenu($this->instance);
+                $webapp_plugin_registrar->setActivePlugin($this->instance->network);
+                $sidebar_menu = $webapp_plugin_registrar->getDashboardMenu($this->instance);
                 $this->addToView('sidebar_menu', $sidebar_menu);
                 $this->loadView();
             } else {
@@ -83,11 +83,11 @@ class DashboardController extends ThinkUpController {
      * Load the view with required variables
      */
     private function loadView() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         if ($this->view_name == 'default') {
             $this->loadDefaultDashboard();
         } else {
-            $menu_item = $webapp->getDashboardMenuItem($this->view_name, $this->instance);
+            $menu_item = $webapp_plugin_registrar->getDashboardMenuItem($this->view_name, $this->instance);
             if (isset($menu_item)) {
                 $this->addToView('data_template', $menu_item->view_template);
                 $this->addToView('display', $this->view_name);
@@ -271,7 +271,7 @@ class DashboardController extends ThinkUpController {
 
             if (is_array($all_time_clients_usage)) {
                 // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
-                $all_time_clients_usage = InsightsGenerator::getClientUsageVisualizationData($all_time_clients_usage);
+                $all_time_clients_usage = DashboardModuleCacher::getClientUsageVisualizationData($all_time_clients_usage);
                 $this->addToView('all_time_clients_usage', $all_time_clients_usage);
             }
 

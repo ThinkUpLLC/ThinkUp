@@ -167,7 +167,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
         // render them and add to the parent view...
         if (count($this->option_elements) > 0) {
             $this->setValues();
-            $view_mgr = new SmartyThinkUp();
+            $view_mgr = new ViewManager();
             $view_mgr->disableCaching();
             // assign data
             $view_mgr->assign('option_elements', $this->option_elements);

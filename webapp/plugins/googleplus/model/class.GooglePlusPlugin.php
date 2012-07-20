@@ -72,20 +72,20 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                 $refresh_token = $tokens['oauth_access_token_secret'];
 
                 $instance_dao->updateLastRun($instance->id);
-                $crawler = new GooglePlusCrawler($instance, $access_token);
-                $insights_generator = new InsightsGenerator($instance);
+                $google_plus_crawler = new GooglePlusCrawler($instance, $access_token);
+                $dashboard_module_cacher = new DashboardModuleCacher($instance);
                 try {
-                    $crawler->initializeInstanceUser($options['google_plus_client_id']->option_value,
+                    $google_plus_crawler->initializeInstanceUser($options['google_plus_client_id']->option_value,
                     $options['google_plus_client_secret']->option_value, $access_token, $refresh_token,
                     $current_owner->id);
 
-                    $crawler->fetchInstanceUserPosts();
+                    $google_plus_crawler->fetchInstanceUserPosts();
                 } catch (Exception $e) {
                     $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
                 }
 
-                $insights_generator->generateInsights();
-                $instance_dao->save($crawler->instance, 0, $logger);
+                $dashboard_module_cacher->cacheDashboardModules();
+                $instance_dao->save($google_plus_crawler->instance, 0, $logger);
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
                 ucwords($instance->network), __METHOD__.','.__LINE__);
             }

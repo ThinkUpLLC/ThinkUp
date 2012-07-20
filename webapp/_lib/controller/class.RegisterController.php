@@ -125,7 +125,7 @@ class RegisterController extends ThinkUpController {
                                 $_POST['full_name']);
 
                                 if ($activation_code != false) {
-                                    $es = new SmartyThinkUp();
+                                    $es = new ViewManager();
                                     $es->caching=false;
                                     $server = $_SERVER['HTTP_HOST'];
                                     $es->assign('server', $server );

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.AppConfig.php
+ * ThinkUp/webapp/_lib/class.AppConfig.php
  *
  * Copyright (c) 2009-2012 Mark Wilkie
  *

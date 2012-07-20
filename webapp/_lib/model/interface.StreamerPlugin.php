@@ -26,7 +26,7 @@
  * @copyright 2011-2012 Amy Unruh
  * @author Amy Unruh
  */
-interface StreamerPlugin extends ThinkUpPlugin {
+interface StreamerPlugin extends GenericPlugin {
     /**
      * Start up all streams managed by the plugin.
      * @abstract

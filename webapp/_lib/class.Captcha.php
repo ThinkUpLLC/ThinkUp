@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Captcha.php
+ * ThinkUp/webapp/_lib/class.Captcha.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *

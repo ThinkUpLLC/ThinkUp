@@ -38,8 +38,8 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('geoencoder', 'GeoEncoderPlugin');
 
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
         $_SERVER['HTTP_HOST'] = 'dev.thinkup.com';

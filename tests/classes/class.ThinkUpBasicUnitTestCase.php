@@ -28,7 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-require_once THINKUP_WEBAPP_PATH.'_lib/model/class.Loader.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/class.Loader.php';
 
 class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**
@@ -56,8 +56,8 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         if ($config->getValue('timezone')) {
             date_default_timezone_set($config->getValue('timezone'));
         }
-        $webapp = Webapp::getInstance();
-        $crawler = Crawler::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
         self::isTestEnvironmentReady();
@@ -68,8 +68,8 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      */
     public function tearDown() {
         Config::destroyInstance();
-        Webapp::destroyInstance();
-        Crawler::destroyInstance();
+        PluginRegistrarWebapp::destroyInstance();
+        PluginRegistrarCrawler::destroyInstance();
         if (isset($_SESSION)) {
             $this->unsetArray($_SESSION);
         }

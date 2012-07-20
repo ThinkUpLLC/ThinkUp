@@ -39,9 +39,9 @@ class TestOfTwitterRealtimePlugin extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('google+', 'TwitterRealtimePlugin');
-        $webapp->setActivePlugin('google+');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('google+', 'TwitterRealtimePlugin');
+        $webapp_plugin_registrar->setActivePlugin('google+');
     }
 
     public function tearDown(){

@@ -60,9 +60,9 @@ class ToggleActivePluginController extends ThinkUpAdminController {
             $result = $plugin_dao->setActive($_GET["pid"], $is_active);
             if ($result > 0 ) {
                 $plugin_folder = $plugin_dao->getPluginFolder($_GET["pid"]);
-                $webapp = Webapp::getInstance();
+                $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
                 try {
-                    $plugin_class_name = $webapp->getPluginObject($plugin_folder);
+                    $plugin_class_name = $webapp_plugin_registrar->getPluginObject($plugin_folder);
                     $p = new $plugin_class_name;
                     if ($is_active) {
                         $p->activate();

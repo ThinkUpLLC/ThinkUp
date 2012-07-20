@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.FileDataManager.php
+ * ThinkUp/webapp/_lib/class.FileDataManager.php
  *
  * Copyright (c) 2012 Gina Trapani
  *

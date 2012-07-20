@@ -218,11 +218,11 @@ cat<< END >>'webapp/plugins/'$plugin_name_lcase'/controller/'$plugin_name_lcase'
  * @copyright 2012 (Your Name)
  */
  
-\$webapp = Webapp::getInstance();
-\$webapp->registerPlugin('$plugin_name_lcase', '$1Plugin');
+\$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+\$webapp_plugin_registrar->registerPlugin('$plugin_name_lcase', '$1Plugin');
 
-\$crawler = Crawler::getInstance();
-\$crawler->registerCrawlerPlugin('$1Plugin');
+\$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+\$crawler_plugin_registrar->registerCrawlerPlugin('$1Plugin');
 
 END
 
@@ -328,9 +328,9 @@ class TestOf$1Plugin extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        \$webapp = Webapp::getInstance();
-        \$webapp->registerPlugin('$1', '$1Plugin');
-        \$webapp->setActivePlugin('$1');
+        \$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        \$webapp_plugin_registrar->registerPlugin('$1', '$1Plugin');
+        \$webapp_plugin_registrar->setActivePlugin('$1');
     }
 
     public function tearDown() {
@@ -360,8 +360,8 @@ class TestOf$1PluginConfigurationController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        \$webapp = Webapp::getInstance();
-        \$webapp->registerPlugin('$1', '$1Plugin');
+        \$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        \$webapp_plugin_registrar->registerPlugin('$1', '$1Plugin');
         \$_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
     }
 

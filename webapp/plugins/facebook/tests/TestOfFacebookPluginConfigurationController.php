@@ -47,8 +47,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->builders = array();
 
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('facebook', 'FacebookPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('facebook', 'FacebookPlugin');
 
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
         $_SERVER['HTTP_HOST'] = 'dev.thinkup.com';

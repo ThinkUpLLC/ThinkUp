@@ -39,8 +39,8 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
     }
 
     public function tearDown() {

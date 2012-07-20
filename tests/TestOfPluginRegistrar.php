@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfPluginHook.php
+ * ThinkUp/tests/TestOfPluginRegistrar.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Test of PluginHook class
+ * Test of PluginRegistrar class
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
+class TestOfPluginRegistrar extends ThinkUpBasicUnitTestCase {
 
     /**
      * Test registerPlugin
@@ -66,7 +66,7 @@ class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
         //register an object without the right method
         $test_ph->registerPerformAppFunction('TestFauxPluginOne');
         $this->expectException(new
-        Exception("The TestFauxPluginOne object does not have a performAppFunction method."));
+        Exception("The TestFauxPluginOne object does not have a performAppFunction function."));
         $test_ph->performAppFunction();
     }
 }

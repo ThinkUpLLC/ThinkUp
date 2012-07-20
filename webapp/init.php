@@ -40,6 +40,6 @@ if (!file_exists('README.md')) { // source repo
 }
 
 //Register our lazy class loader
-require_once '_lib/model/class.Loader.php';
+require_once '_lib/class.Loader.php';
 
 Loader::register();

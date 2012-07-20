@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.AppUpgraderClient.php
+ * ThinkUp/webapp/_lib/class.AppUpgraderClient.php
  *
  * Copyright (c) 2012 Mark Wilkie
  *

@@ -128,7 +128,6 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         }
 
         $backup_dir = FileDataManager::getBackupPath();
-
         if (!$zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
             throw new Exception("Unable to open backup file for exporting: $zip_file");
         }
@@ -167,7 +166,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                     array_push($tmp_table_files, $table_file);
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $err = $e->getMessage();
             if (preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
                 // a file perm issue?

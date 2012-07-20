@@ -36,8 +36,8 @@
  * @copyright 2009-2012 Ekansh Preet Singh, Mark Wilkie
  */
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('geoencoder', 'GeoEncoderPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('GeoEncoderPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('GeoEncoderPlugin');

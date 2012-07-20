@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.LoggerSlowSQL.php
+ * ThinkUp/webapp/_lib/class.LoggerSlowSQL.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *

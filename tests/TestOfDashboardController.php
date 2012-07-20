@@ -37,10 +37,10 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
-        $webapp->registerPlugin('facebook', 'FacebookPlugin');
-        $webapp->registerPlugin('google+', 'GooglePlusPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp_plugin_registrar->registerPlugin('facebook', 'FacebookPlugin');
+        $webapp_plugin_registrar->registerPlugin('google+', 'GooglePlusPlugin');
     }
 
     public function testConstructor() {

@@ -139,13 +139,13 @@ class BackupController extends ThinkUpAdminController {
     }
 
     /**
-     *
-     * @param boolean $release, if defined release mutex, else get it
+     * Set mutex lock
+     * @param bool $release, if defined release mutex, else get it
      * @throws CrawlerLockedException if unable to get crawler mutex
      */
     public static function mutexLock($release = false) {
         $mutex_dao = DAOFactory::getDAO('MutexDAO');
-        $global_mutex_name = Crawler::GLOBAL_MUTEX;
+        $global_mutex_name = PluginRegistrarCrawler::GLOBAL_MUTEX;
         if ($release) {
             $mutex_dao->releaseMutex($global_mutex_name);
         } else {

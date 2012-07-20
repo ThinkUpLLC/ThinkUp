@@ -36,8 +36,8 @@
  * @copyright 2009-2012 Gina Trapani
  */
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('HelloThinkUpPlugin');

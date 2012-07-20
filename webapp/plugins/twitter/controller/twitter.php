@@ -41,8 +41,8 @@ if (!class_exists('TwitterOAuth')) {
     Loader::addSpecialClass('TwitterOAuth', 'plugins/twitter/extlib/twitteroauth/twitteroauth.php');
 }
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('twitter', 'TwitterPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('TwitterPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('TwitterPlugin');

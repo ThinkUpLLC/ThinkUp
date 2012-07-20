@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Loader.php
+ * ThinkUp/webapp/_lib/class.Loader.php
  *
  * Copyright (c) 2009-2012 Dwi Widiastuti, Gina Trapani
  *
@@ -83,9 +83,10 @@ class Loader {
 
         // set default lookup paths
         self::$lookup_path = array(
+        THINKUP_WEBAPP_PATH . "_lib/",
         THINKUP_WEBAPP_PATH . "_lib/model/",
         THINKUP_WEBAPP_PATH . "_lib/controller/",
-        THINKUP_WEBAPP_PATH . "_lib/model/exceptions/"
+        THINKUP_WEBAPP_PATH . "_lib/exceptions/"
         );
 
         // set default lookup path for special classes

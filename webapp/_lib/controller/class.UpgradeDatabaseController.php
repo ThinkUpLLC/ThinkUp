@@ -330,7 +330,7 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
                     $tos[] = $admin->email;
                 }
                 $to = join(',', $tos);
-                $upgrade_email = new SmartyThinkUp();
+                $upgrade_email = new ViewManager();
                 $upgrade_email->caching=false;
                 $server = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'; //supress test weirdness
                 $upgrade_email->assign('server', $server );

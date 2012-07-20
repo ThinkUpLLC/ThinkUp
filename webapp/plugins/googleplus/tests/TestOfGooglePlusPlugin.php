@@ -39,9 +39,9 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('google+', 'GooglePlusPlugin');
-        $webapp->setActivePlugin('google+');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('google+', 'GooglePlusPlugin');
+        $webapp_plugin_registrar->setActivePlugin('google+');
     }
 
     public function tearDown(){
@@ -57,13 +57,13 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
     }
 
     public function testMenuItemRegistration() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 
-        $menus = $webapp->getDashboardMenu($instance);
+        $menus = $webapp_plugin_registrar->getDashboardMenu($instance);
         $posts_menu = $menus["posts-all"];
 
         $this->assertEqual(sizeof($menus), 5);

@@ -35,8 +35,8 @@
  * @copyright 2011-2012 Gina Trapani
  */
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('google+', 'GooglePlusPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('google+', 'GooglePlusPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('GooglePlusPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('GooglePlusPlugin');

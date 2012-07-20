@@ -118,7 +118,6 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
                 $this->addErrorMessage($_GET['twitter_username']." is not a valid Twitter username.");
             }
         }
-
         $auth_from_twitter = '';
         if (isset($oauth_consumer_key) && isset($oauth_consumer_secret)) {
             $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);

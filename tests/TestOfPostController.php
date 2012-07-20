@@ -41,8 +41,8 @@ require_once THINKUP_WEBAPP_PATH.'_lib/model/class.OwnerInstanceMySQLDAO.php';
 class TestOfPostController extends ThinkUpUnitTestCase {
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
         $this->config = Config::getInstance();
     }
 

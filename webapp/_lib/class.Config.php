@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Config.php
+ * ThinkUp/webapp/_lib/class.Config.php
  *
  * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
  *

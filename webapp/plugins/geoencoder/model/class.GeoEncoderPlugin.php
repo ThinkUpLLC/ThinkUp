@@ -50,7 +50,7 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
         $logger = Logger::getInstance();
         $logger->setUsername(null);
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $crawler = new GeoEncoderCrawler;
+        $geoencoder_crawler = new GeoEncoderCrawler();
 
         $posts_to_geoencode = $post_dao->getPostsToGeoencode(2000);
         $logger->logUserSuccess("Starting to collect lat/long points for ".count($posts_to_geoencode)." posts.",
@@ -59,11 +59,11 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
         $total_api_requests_fulfilled = 0;
         foreach ($posts_to_geoencode as $post_data) {
             if ($post_data['geo']!='') {
-                if ($crawler->performReverseGeoencoding($post_dao, $post_data)) {
+                if ($geoencoder_crawler->performReverseGeoencoding($post_dao, $post_data)) {
                     $total_api_requests_fulfilled++;
                 }
             } else {
-                if ($crawler->performGeoencoding($post_dao, $post_data)) {
+                if ($geoencoder_crawler->performGeoencoding($post_dao, $post_data)) {
                     $total_api_requests_fulfilled++;
                 }
             }

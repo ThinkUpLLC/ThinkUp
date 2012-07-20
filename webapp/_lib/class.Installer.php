@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Installer.php
+ * ThinkUp/webapp/_lib/class.Installer.php
  *
  * Copyright (c) 2009-2012 Dwi Widiastuti, Gina Trapani
  *
@@ -116,7 +116,7 @@ class Installer {
 
             // use lazy loading
             if ( !class_exists('Loader', FALSE) ) {
-                require_once THINKUP_WEBAPP_PATH . '_lib/model/class.Loader.php';
+                require_once THINKUP_WEBAPP_PATH . '_lib/class.Loader.php';
             }
             Loader::register();
 

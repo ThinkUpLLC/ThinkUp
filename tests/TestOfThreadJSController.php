@@ -32,8 +32,8 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('embedthread', 'EmbedThreadPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('embedthread', 'EmbedThreadPlugin');
     }
 
     //test plugin not enabled

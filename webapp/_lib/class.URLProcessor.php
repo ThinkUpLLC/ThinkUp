@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.URLProcessor.php
+ * ThinkUp/webapp/_lib/class.URLProcessor.php
  *
  * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh
  *

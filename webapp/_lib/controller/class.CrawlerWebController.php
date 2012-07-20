@@ -53,10 +53,10 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
                 $logger->setVerbosity(Logger::USER_MSGS);
                 $logger->enableHTMLOutput();
             }
-            $crawler = Crawler::getInstance();
+            $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
             //close session so that it's not locked by long crawl
             session_write_close();
-            $crawler->crawl();
+            $crawler_plugin_registrar->runRegisteredPluginsCrawl();
             $logger->close();
         } catch (CrawlerLockedException $e) {
             if ($this->isAPICall()) {

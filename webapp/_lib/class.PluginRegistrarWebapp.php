@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Webapp.php
+ * ThinkUp/PluginRegistrarWebapp/_lib/class.PluginRegistrarWebapp.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -21,19 +21,19 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Webapp
+ * PluginRegistrarWebapp
  *
- * Singleton provides hooks for webapp plugins.
+ * Singleton provides hooks for PluginRegistrarWebapp plugins.
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class Webapp extends PluginHook {
+class PluginRegistrarWebapp extends PluginRegistrar {
     /**
      *
-     * @var Webapp
+     * @var PluginRegistrarWebapp
      */
     private static $instance;
     /**
@@ -41,7 +41,6 @@ class Webapp extends PluginHook {
      * @var string Name of the active plugin, defaults to "twitter"
      */
     private $active_plugin = "twitter";
-
     /**
      *
      * @var array Plugin objects
@@ -58,16 +57,15 @@ class Webapp extends PluginHook {
      */
     private $dashboard_menus = null;
     /**
-     * Get the singleton instance of Webapp
-     * @return Webapp
+     * Get the singleton instance of PluginRegistrarWebapp
+     * @return PluginRegistrarWebapp
      */
     public static function getInstance() {
         if (!isset(self::$instance)) {
-            self::$instance = new Webapp();
+            self::$instance = new PluginRegistrarWebapp();
         }
         return self::$instance;
     }
-
     /**
      * Provided only for tests that want to kill object in tearDown()
      */
@@ -76,7 +74,6 @@ class Webapp extends PluginHook {
             self::$instance = null;
         }
     }
-
     /**
      * Returns active plugin
      * @return str Name of active plugin (like "twitter" or "facebook")
@@ -84,7 +81,6 @@ class Webapp extends PluginHook {
     public function getActivePlugin() {
         return $this->active_plugin;
     }
-
     /**
      * Sets active plugin
      * @param string $ap

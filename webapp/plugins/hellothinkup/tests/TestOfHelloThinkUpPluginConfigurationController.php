@@ -40,8 +40,8 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
     }
 
     public function tearDown(){

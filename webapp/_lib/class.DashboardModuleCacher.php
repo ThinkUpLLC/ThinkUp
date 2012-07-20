@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.InsightsGenerator.php
+ * ThinkUp/webapp/_lib/class.DashboardModuleCacher.php
  *
  * Copyright (c) 2012 Gina Trapani
  *
@@ -21,16 +21,16 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Insights Generator
+ * Dashboard Module Cacher
  *
- * Generate and store insights for faster dashboard and view rendering.
+ * Generate and store dashboard module query results for faster rendering
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class InsightsGenerator {
+class DashboardModuleCacher {
     /**
      *
      * @var Instance
@@ -40,9 +40,9 @@ class InsightsGenerator {
         $this->instance = $instance;
     }
     /**
-     * Generate insights and store in the insights storage.
+     * Pre-fetch dashboard module data and store.
      */
-    public function generateInsights() {
+    public function cacheDashboardModules() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $simplified_date = date('Y-m-d');
 

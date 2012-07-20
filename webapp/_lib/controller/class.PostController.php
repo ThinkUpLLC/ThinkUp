@@ -110,8 +110,8 @@ class PostController extends ThinkUpController {
                         $private_reply_count = $all_replies_count - $public_replies_count;
                         $this->addToView('private_reply_count', $private_reply_count );
 
-                        $webapp = Webapp::getInstance();
-                        $sidebar_menu = $webapp->getPostDetailMenu($post);
+                        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+                        $sidebar_menu = $webapp_plugin_registrar->getPostDetailMenu($post);
                         $this->addToView('sidebar_menu', $sidebar_menu);
                         $this->loadView($post);
                     } else {
@@ -131,9 +131,9 @@ class PostController extends ThinkUpController {
      * Load the view with required variables
      */
     private function loadView($post) {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         if ($this->view_name != 'default') {
-            $menu_item = $webapp->getPostDetailMenuItem($this->view_name, $post);
+            $menu_item = $webapp_plugin_registrar->getPostDetailMenuItem($this->view_name, $post);
             if ($menu_item != null ) {
                 $this->addToView('data_template', $menu_item->view_template);
                 $this->addToView('display', $this->view_name);

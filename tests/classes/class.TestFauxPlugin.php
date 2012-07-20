@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Test Faux Plugin for TestOfPluginHook
+ * Test Faux Plugin for TestOfPluginRegistrar
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
@@ -51,7 +51,7 @@ class TestFauxPlugin implements TestAppPlugin {
 }
 
 /**
- * Test Faux Plugin without the required method for TestOfPluginHook
+ * Test Faux Plugin without the required method for TestOfPluginRegistrar
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

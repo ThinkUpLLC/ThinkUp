@@ -112,9 +112,9 @@ class GridController extends ThinkUpAuthController {
                         if (isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
                             self::$MAX_ROWS = 0;
                         }
-                        $webapp = Webapp::getInstance();
-                        $webapp->setActivePlugin($instance->network);
-                        $tab = $webapp->getDashboardMenuItem($_GET['d'], $instance);
+                        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+                        $webapp_plugin_registrar->setActivePlugin($instance->network);
+                        $tab = $webapp_plugin_registrar->getDashboardMenuItem($_GET['d'], $instance);
                         $posts_it = $tab->datasets[0]->retrieveIterator();
                     }
                     echo '{"status":"success","limit":' . self::$MAX_ROWS . ',"posts": [' . "\n";

@@ -290,9 +290,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $twitter_crawler->fetchInstanceUserTweets();
 
         //Test post with location has location set
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(15660373190, 'twitter'));
-        $post = $pdao->getPost(15660373190, 'twitter');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB(15660373190, 'twitter'));
+        $post = $post_dao->getPost(15660373190, 'twitter');
         $this->assertEqual($post->post_text, "@nicknotned NYC isn't a rival, it's just a better evolution of the " .
         "concept of a locale where innovation happens. > & <");
 
@@ -431,11 +431,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $twitter_crawler->fetchInstanceUserInfo();
         $twitter_crawler->fetchInstanceUserTweets();
 
-        $pdao = DAOFactory::getDAO('PostDAO');
+        $post_dao = DAOFactory::getDAO('PostDAO');
 
         $twitter_crawler->fetchInstanceUserMentions();
         // old-style RT
-        $post = $pdao->getPost('8957053141778432', 'twitter');
+        $post = $post_dao->getPost('8957053141778432', 'twitter');
         $this->assertNull($post);
     }
 
@@ -463,8 +463,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $twitter_crawler->fetchInstanceUserInfo();
         $twitter_crawler->fetchSearchResults('@whitehouse');
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertFalse($pdao->isPostInDB('11837263794', 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertFalse($post_dao->isPostInDB('11837263794', 'twitter'));
 
     }
 
@@ -716,11 +716,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
         $twitter_crawler->fetchInstanceUserInfo();
         $twitter_crawler->fetchInstanceUserTweets();
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $tweets = $pdao->getAllPostsByUsername('anildash', 'twitter');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $tweets = $post_dao->getAllPostsByUsername('anildash', 'twitter');
 
         $twitter_crawler->fetchStrayRepliedToTweets();
-        $post = $pdao->getPost(15752814831, 'twitter');
+        $post = $post_dao->getPost(15752814831, 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 0);
     }

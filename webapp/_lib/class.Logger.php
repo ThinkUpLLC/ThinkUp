@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Logger.php
+ * ThinkUp/webapp/_lib/class.Logger.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
