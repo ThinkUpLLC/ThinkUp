@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.DAOFactory.php
+ * ThinkUp/webapp/_lib/class.DAOFactory.php
  *
  * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
  *

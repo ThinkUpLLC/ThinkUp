@@ -131,8 +131,8 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                 $num_twitter_errors, $max_api_calls_per_crawl);
             }
 
-            $crawler = new TwitterCrawler($instance, $api);
-            $insights_generator = new InsightsGenerator($instance);
+            $twitter_crawler = new TwitterCrawler($instance, $api);
+            $dashboard_module_cacher = new DashboardModuleCacher($instance);
 
             $api->init();
 
@@ -146,35 +146,35 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                 $instance_dao->updateLastRun($instance->id);
 
                 // No auth for public Twitter users
-                $crawler->fetchInstanceUserTweets();
+                $twitter_crawler->fetchInstanceUserTweets();
 
                 if (!$noauth) {
                     // Auth req'd, for calling user only
-                    $crawler->fetchInstanceUserMentions();
-                    $crawler->fetchInstanceUserFriends();
-                    $crawler->fetchInstanceFavorites();
-                    $crawler->fetchInstanceUserFollowers();
-                    $crawler->fetchInstanceUserGroups();
-                    $crawler->fetchRetweetsOfInstanceUser();
-                    $crawler->cleanUpMissedFavsUnFavs();
-                    $crawler->updateStaleGroupMemberships();
+                    $twitter_crawler->fetchInstanceUserMentions();
+                    $twitter_crawler->fetchInstanceUserFriends();
+                    $twitter_crawler->fetchInstanceFavorites();
+                    $twitter_crawler->fetchInstanceUserFollowers();
+                    $twitter_crawler->fetchInstanceUserGroups();
+                    $twitter_crawler->fetchRetweetsOfInstanceUser();
+                    $twitter_crawler->cleanUpMissedFavsUnFavs();
+                    $twitter_crawler->updateStaleGroupMemberships();
                 }
 
-                $crawler->fetchStrayRepliedToTweets();
-                $crawler->fetchUnloadedFollowerDetails();
-                $crawler->cleanUpFollows();
-                $crawler->fetchFriendTweetsAndFriends();
+                $twitter_crawler->fetchStrayRepliedToTweets();
+                $twitter_crawler->fetchUnloadedFollowerDetails();
+                $twitter_crawler->cleanUpFollows();
+                $twitter_crawler->fetchFriendTweetsAndFriends();
 
-                $insights_generator->generateInsights();
+                $dashboard_module_cacher->cacheDashboardModules();
 
                 if ($noauth) {
                     // No auth req'd
-                    $crawler->fetchSearchResults($instance->network_username);
+                    $twitter_crawler->fetchSearchResults($instance->network_username);
                 }
 
                 // Save instance
-                if (isset($crawler->user)) {
-                    $instance_dao->save($instance, $crawler->user->post_count, $logger);
+                if (isset($twitter_crawler->user)) {
+                    $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
                 }
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
                 __METHOD__.','.__LINE__);

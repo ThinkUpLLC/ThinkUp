@@ -28,7 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface DashboardPlugin extends ThinkUpPlugin {
+interface DashboardPlugin extends GenericPlugin {
     /**
      * Get Dashboard menu
      * @param $instance Instance

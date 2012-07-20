@@ -33,7 +33,6 @@ if (!class_exists('BackupDAO')) {
 }
 
 class TestOfBackupController extends ThinkUpUnitTestCase {
-
     public function setUp() {
         parent::setUp();
         new BackupMySQLDAO();
@@ -139,7 +138,6 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
-
         // write downloaded zip file to disk...
         $fh = fopen($this->backup_test, 'wb');
         fwrite($fh, $results);

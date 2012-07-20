@@ -40,7 +40,7 @@ class ForgotPasswordController extends ThinkUpController {
             if (isset($user)) {
                 $token = $user->setPasswordRecoveryToken();
 
-                $es = new SmartyThinkUp();
+                $es = new ViewManager();
                 $es->caching=false;
 
                 $config = Config::getInstance();

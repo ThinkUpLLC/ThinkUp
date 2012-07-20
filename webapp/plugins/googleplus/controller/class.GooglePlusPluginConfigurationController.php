@@ -106,8 +106,8 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         if (isset($_GET['code'])) {
             $code = $_GET['code'];
 
-            $crawler = new GooglePlusCrawler(null, null);
-            $tokens = $crawler->getOAuthTokens($client_id, $client_secret, $code, 'authorization_code',
+            $crawler_plugin_registrar = new GooglePlusCrawler(null, null);
+            $tokens = $crawler_plugin_registrar->getOAuthTokens($client_id, $client_secret, $code, 'authorization_code',
             $redirect_uri);
             if (isset($tokens->error)) {
                 $this->addErrorMessage("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".

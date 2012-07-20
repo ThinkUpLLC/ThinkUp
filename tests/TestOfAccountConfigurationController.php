@@ -44,8 +44,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
         $this->builders = self::buildData();
         $_SERVER['HTTP_HOST'] = "mytesthost";
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';

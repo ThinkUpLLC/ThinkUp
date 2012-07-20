@@ -40,8 +40,8 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('googleplus', 'GooglePlusPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('googleplus', 'GooglePlusPlugin');
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
     }
 

@@ -41,8 +41,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $crawler = Crawler::getInstance();
-        $crawler->registerCrawlerPlugin('ExpandURLsPlugin');
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->registerCrawlerPlugin('ExpandURLsPlugin');
     }
 
     public function tearDown() {
@@ -68,8 +68,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
 
         $this->simulateLogin('admin@example.com', true);
-        $crawler = Crawler::getInstance();
-        $crawler->crawl();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
@@ -314,7 +314,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     public function  testFlickrCrawl() {
         $builders = $this->buildFlickrData();
 
-        $crawler = Crawler::getInstance();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $config = Config::getInstance();
 
         //use fake Flickr API key
@@ -322,7 +322,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
@@ -499,14 +499,14 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     public function testExpandInstagramImageURLs() {
         $builders = $this->buildInstagramData();
-        $crawler = Crawler::getInstance();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $config = Config::getInstance();
 
         $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
         'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
@@ -531,7 +531,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     public function  testBitlyCrawl() {
         $builders = $this->buildBitlyData();
 
-        $crawler = Crawler::getInstance();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $config = Config::getInstance();
 
         //use fake Bitly API key
@@ -543,7 +543,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
 
         $this->simulateLogin('admin@example.com', true);
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
@@ -675,7 +675,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     //            'error' => null
     //        ));
     //        $this->simulateLogin('admin@example.com', true);
-    //        $crawler = Crawler::getInstance();
-    //        $crawler->crawl();
+    //        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+    //        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
     //    }
 }

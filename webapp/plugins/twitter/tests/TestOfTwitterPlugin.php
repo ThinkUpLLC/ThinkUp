@@ -37,13 +37,13 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.TwitterRea
 
 class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $logger;
-    var $webapp;
-    var $crawler;
+    var $webapp_plugin_registrar;
+    var $crawler_plugin_registrar;
 
     public function setUp() {
         parent::setUp();
-        $this->webapp = Webapp::getInstance();
-        $this->crawler = Crawler::getInstance();
+        $this->webapp = PluginRegistrarWebapp::getInstance();
+        $this->crawler = PluginRegistrarCrawler::getInstance();
         $this->webapp->registerPlugin('twitter', 'TwitterPlugin');
         $this->crawler->registerCrawlerPlugin('TwitterPlugin');
         $this->webapp->setActivePlugin('twitter');
@@ -208,7 +208,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
     public function testDeactivate() {
         //all facebook and facebook page accounts should be set to inactive on plugin deactivation
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();

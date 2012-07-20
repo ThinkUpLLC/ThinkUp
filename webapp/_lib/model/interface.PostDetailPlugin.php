@@ -28,7 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface PostDetailPlugin extends ThinkUpPlugin {
+interface PostDetailPlugin extends GenericPlugin {
     /**
      * Get Post Detail menu
      * @param $post Post

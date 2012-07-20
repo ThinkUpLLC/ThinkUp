@@ -83,10 +83,10 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             $access_token = $tokens['oauth_access_token'];
 
             $instance_dao->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
-            $insights_generator = new InsightsGenerator($instance);
+            $facebook_crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
+            $dashboard_module_cacher = new DashboardModuleCacher($instance);
             try {
-                $crawler->fetchPostsAndReplies();
+                $facebook_crawler->fetchPostsAndReplies();
             } catch (APIOAuthException $e) {
                 //The access token is invalid, save in owner_instances table
                 $owner_instance_dao->setAuthError($current_owner->id, $instance->id, $e->getMessage());
@@ -96,9 +96,9 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
-            $insights_generator->generateInsights();
+            $dashboard_module_cacher->cacheDashboardModules();
 
-            $instance_dao->save($crawler->instance, 0, $logger);
+            $instance_dao->save($facebook_crawler->instance, 0, $logger);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
             ucwords($instance->network), __METHOD__.','.__LINE__);
         }
@@ -111,7 +111,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
      * @param str $username
      */
     private function sendInvalidOAuthEmailAlert($email, $username) {
-        $mailer_view_mgr = new SmartyThinkUp();
+        $mailer_view_mgr = new ViewManager();
         $mailer_view_mgr->caching=false;
         $server = $_SERVER['HTTP_HOST'];
         $mailer_view_mgr->assign('server', $server );

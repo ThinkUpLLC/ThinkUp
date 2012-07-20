@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/interface.ThinkUpPlugin.php
+ * ThinkUp/webapp/_lib/model/interface.GenericPlugin.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -27,7 +27,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface ThinkUpPlugin {
+interface GenericPlugin {
     /**
      * Render the configuration screen in the webapp
      * @param Owner $owner

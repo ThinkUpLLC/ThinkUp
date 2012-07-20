@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.PluginHook.php
+ * ThinkUp/webapp/_lib/class.PluginRegistrar.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Plugin Hook
+ * Plugin Registrar
  *
  * Provides hooks to register plugin objects in ThinkUp.
  *
@@ -30,50 +30,46 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-abstract class PluginHook {
+abstract class PluginRegistrar {
     /**
      * Array that associates plugin folder shortname with the plugin object name
-     * @var array
+     * @var arr
      */
     private $plugins = array();
-
     /**
      * All the registered callbacks, an array of arrays where the index is the action name
-     * @var array $object_method_callbacks['trigger_name'][] = array('object_name', 'method_name');
+     * @var arr $object_function_callbacks['trigger_name'][] = array('object_name', 'function_name');
      */
-    private $object_method_callbacks = array();
-
+    private $object_function_callbacks = array();
     /**
-     * Register an object method call
+     * Register an object function call
      * Note: This will cause a PHP fatal error if the object name does not exist
      * @param str $trigger Trigger keyword
-     * @param str $o Object name
-     * @param str $m Method name
+     * @param str $object_name Object name
+     * @param str $function_name Function name
      */
-    protected function registerObjectMethod($trigger, $o, $m) {
-        $obj = new $o;
-        $this->object_method_callbacks[$trigger][] = array($o, $m);
+    protected function registerObjectFunction($trigger, $object_name, $function_name) {
+        $this->object_function_callbacks[$trigger][] = array($object_name, $function_name);
     }
-
     /**
-     * Run all object methods registered as callbacks
+     * Run all object functions registered as callbacks.
      * @param str $trigger Trigger keyword
-     * @param array $params List of method parameters
+     * @param arr $params List of function parameters
+     * @throws Exception When registered object doesn't have function
      */
-    protected function emitObjectMethod($trigger, $params = array()) {
-        if (isset($this->object_method_callbacks[$trigger])) {
-            foreach ($this->object_method_callbacks[$trigger] as $callback) {
+    protected function emitObjectFunction($trigger, $params = array()) {
+        if (isset($this->object_function_callbacks[$trigger])) {
+            foreach ($this->object_function_callbacks[$trigger] as $callback) {
                 if (method_exists($callback[0], $callback[1] )) {
-                    $o = new $callback[0];
+                    $obj = new $callback[0];
                     //call_user_func($callback, $params);
-                    call_user_func(array($o, $callback[1]), $params);
+                    call_user_func(array($obj, $callback[1]), $params);
                 } else {
-                    throw new Exception("The ".$callback[0]." object does not have a ".$callback[1]." method.");
+                    throw new Exception("The ".$callback[0]." object does not have a ".$callback[1]." function.");
                 }
             }
         }
     }
-
     /**
      * Register an object plugin name.
      * @param str $shortname Short name for plugin, corresponds to plugin folder name (like "twitter")
@@ -82,7 +78,6 @@ abstract class PluginHook {
     public function registerPlugin($short_name, $object_name) {
         $this->plugins[$short_name] = $object_name;
     }
-
     /**
      * Retrieve an object plugin name
      * @param str $shortname Short name for the plugin, corresponds to the plugin folder name (like "twitter")

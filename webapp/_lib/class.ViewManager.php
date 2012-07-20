@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.SmartyThinkUp.php
+ * ThinkUp/webapp/_lib/class.ViewManager.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * ThinkUp's Smarty object
+ * View Manager - ThinkUp's Smarty extension
  *
  * Configures and initalizes Smarty per ThinkUp's configuration.
  *
@@ -31,7 +31,7 @@
  *
  */
 
-class SmartyThinkUp extends Smarty {
+class ViewManager extends Smarty {
     /**
      * @var boolean
      */

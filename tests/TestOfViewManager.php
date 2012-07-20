@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfSmartyThinkUp.php
+ * ThinkUp/tests/TestOfViewManager.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Test of SmartyThinkUp class
+ * Test of ViewManager class
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
@@ -30,20 +30,20 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
+class TestOfViewManager extends ThinkUpBasicUnitTestCase {
 
     /**
      * Test constructor
      */
-    public function testNewSmartyThinkUp() {
-        $v_mgr = new SmartyThinkUp();
+    public function testNewViewManager() {
+        $v_mgr = new ViewManager();
         $this->assertTrue(isset($v_mgr));
     }
 
     /**
      * Test constructor
      */
-    public function testNewSmartyThinkUpWithoutConfigFile() {
+    public function testNewViewManagerWithoutConfigFile() {
         $orig_tz = date_default_timezone_get();
 
         $this->removeConfigFile();
@@ -57,7 +57,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         'app_title_prefix'=>"",
         'cache_pages'=>false);
 
-        $v_mgr = new SmartyThinkUp($cfg_array);
+        $v_mgr = new ViewManager($cfg_array);
         $tz = date_default_timezone_get();
         $this->assertEqual($tz, 'UTC');
         $this->assertTrue(isset($v_mgr));
@@ -69,12 +69,12 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test default values
      */
-    public function testSmartyThinkUpDefaultValues() {
+    public function testViewManagerDefaultValues() {
         $cfg = Config::getInstance();
         $cfg->setValue('source_root_path', '/path/to/thinkup/');
         $cfg->setValue('cache_pages', true);
         $cfg->setValue('cache_lifetime', 600);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $this->assertTrue(sizeof($v_mgr->template_dir), 2);
         $this->assertEqual($v_mgr->template_dir[1], '/path/to/thinkup/tests/view');
@@ -88,13 +88,13 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test assigned variables get saved when debug is true
      */
-    public function testSmartyThinkUpAssignedValuesDebugOn() {
+    public function testViewManagerAssignedValuesDebugOn() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
         $cfg->setValue('cache_lifetime', 1200);
         $cfg->setValue('app_title_prefix', 'Testy ');
         $cfg->setValue('site_root_path', '/my/thinkup/folder/');
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->assign('test_var_1', "Testing, testing, 123");
         $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
@@ -108,10 +108,10 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test assigned variables don't get saved when debug is false
      */
-    public function testSmartyThinkUpAssignedValuesDebugOff() {
+    public function testViewManagerAssignedValuesDebugOff() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', false);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->assign('test_var_1', "Testing, testing, 123");
         $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), null);
@@ -122,13 +122,13 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test override config with passed-in array
      */
-    public function testSmartyThinkUpPassedInArray() {
+    public function testViewManagerPassedInArray() {
         $cfg_array = array('debug'=>true,
         'site_root_path'=>'/my/thinkup/folder/test',
         'source_root_path'=>'/Users/gina/Sites/thinkup',
         'app_title_prefix'=>'My ',
         'cache_pages'=>true, 'cache_lifetime'=>1000);
-        $v_mgr = new SmartyThinkUp($cfg_array);
+        $v_mgr = new ViewManager($cfg_array);
 
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'My ThinkUp');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
@@ -139,7 +139,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testAddHelp() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->addHelp('api', 'userguide/api/posts/index');
         $v_mgr->addHelp('user_guide', 'userguide/index');
@@ -154,7 +154,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testAddErrorMessage() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->addErrorMessage('Page level error');
         $v_mgr->addErrorMessage('Field level error', 'fieldname');
@@ -168,7 +168,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testAddInfoMessage() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->addInfoMessage('Field level info', 'fieldname');
         $v_mgr->addInfoMessage('Page level info');
@@ -182,7 +182,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testAddSuccessMessage() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
-        $v_mgr = new SmartyThinkUp();
+        $v_mgr = new ViewManager();
 
         $v_mgr->addSuccessMessage('Field level info 1', 'fieldname1');
         $v_mgr->addSuccessMessage('Page level info');

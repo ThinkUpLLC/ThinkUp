@@ -48,18 +48,18 @@ class RSSController extends ThinkUpAuthAPIController {
 
         $base_url = Utils::getApplicationURL();
 
-        $crawler_launched = false;
+        $crawler_plugin_registrar_launched = false;
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $email = $this->getLoggedInUser();
         $owner = parent::getOwner($email);
         $freshest_instance = $instance_dao->getFreshestByOwnerId($owner->id);
         if ($freshest_instance) {
-            $crawler_last_run = strtotime($freshest_instance->crawler_last_run);
+            $crawler_plugin_registrar_last_run = strtotime($freshest_instance->crawler_last_run);
         }
-        if ($freshest_instance && $crawler_last_run < time() - $rss_crawler_refresh_rate*60) {
-            $crawler_run_url = $base_url.'crawler/run.php?'.sprintf('un=%s&as=%s', $email, $owner->api_key);
+        if ($freshest_instance && $crawler_plugin_registrar_last_run < time() - $rss_crawler_refresh_rate*60) {
+            $crawler_plugin_registrar_run_url = $base_url.'crawler/run.php?'.sprintf('un=%s&as=%s', $email, $owner->api_key);
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $crawler_run_url);
+            curl_setopt($ch, CURLOPT_URL, $crawler_plugin_registrar_run_url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // seconds
             curl_setopt($ch, CURLOPT_TIMEOUT, 5); // seconds
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -70,14 +70,14 @@ class RSSController extends ThinkUpAuthAPIController {
             if (strpos($result, 'Content-Type: application/json') && function_exists('json_decode')) {
                 $json = json_decode($body);
                 if (isset($json->error)) {
-                    $crawler_launched = false;
+                    $crawler_plugin_registrar_launched = false;
                 } else if (isset($json->result) && $json->result == 'success') {
-                    $crawler_launched = true;
+                    $crawler_plugin_registrar_launched = true;
                 }
             } else if (strpos($body, 'Error starting crawler') !== FALSE) {
-                $crawler_launched = false;
+                $crawler_plugin_registrar_launched = false;
             } else {
-                $crawler_launched = true;
+                $crawler_plugin_registrar_launched = true;
             }
         }
 
@@ -85,7 +85,7 @@ class RSSController extends ThinkUpAuthAPIController {
         $logger = Logger::getInstance();
         // Don't return an item if there is a crawler log defined;
         // it would just duplicate the information available in that file.
-        if ($crawler_launched && !isset($logger->log)) {
+        if ($crawler_plugin_registrar_launched && !isset($logger->log)) {
             $title = 'ThinkUp crawl started on ' . date('Y-m-d H:i:s');
             $link = $base_url.'rss.php?d='.urlencode(date('Y-m-d H:i:s'));
             $description = "Last ThinkUp crawl ended on $freshest_instance->crawler_last_run<br />A new crawl ".

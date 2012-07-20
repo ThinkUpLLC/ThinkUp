@@ -38,9 +38,9 @@ if (!class_exists('Facebook')) {
     Loader::addSpecialClass('Facebook', 'plugins/facebook/extlib/facebook/facebook.php');
 }
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('facebook', 'FacebookPlugin');
-$webapp->registerPlugin('facebook page', 'FacebookPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('facebook', 'FacebookPlugin');
+$webapp_plugin_registrar->registerPlugin('facebook page', 'FacebookPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('FacebookPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('FacebookPlugin');

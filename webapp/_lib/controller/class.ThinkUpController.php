@@ -32,7 +32,7 @@
 
 abstract class ThinkUpController {
     /**
-     * @var SmartyThinkUp
+     * @var ViewManager
      */
     protected $view_mgr;
     /**
@@ -102,7 +102,7 @@ abstract class ThinkUpController {
             if ( $this->profiler_enabled) {
                 $this->start_time = microtime(true);
             }
-            $this->view_mgr = new SmartyThinkUp();
+            $this->view_mgr = new ViewManager();
             if ($this->isLoggedIn()) {
                 $this->addToView('logged_in_user', $this->getLoggedInUser());
             }
@@ -129,7 +129,7 @@ abstract class ThinkUpController {
             'debug'=>false,
             'app_title_prefix'=>"",
             'cache_pages'=>false);
-            $this->view_mgr = new SmartyThinkUp($cfg_array);
+            $this->view_mgr = new ViewManager($cfg_array);
         }
     }
 
@@ -499,19 +499,20 @@ abstract class ThinkUpController {
             }
             if ($classname != "BackupController") {
                 //Init plugins
-                $pdao = DAOFactory::getDAO('PluginDAO');
-                $active_plugins = $pdao->getActivePlugins();
+                $plugin_dao = DAOFactory::getDAO('PluginDAO');
+                $active_plugins = $plugin_dao->getActivePlugins();
                 Loader::definePathConstants();
-                foreach ($active_plugins as $ap) {
+                foreach ($active_plugins as $active_plugin) {
                     //add plugin's model and controller folders as Loader paths here
-                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/model/");
-                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
+                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$active_plugin->folder_name."/model/");
+                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$active_plugin->folder_name.
                     "/controller/");
                     //require the main plugin registration file here
                     if ( file_exists(
-                    THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php")) {
-                        require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.
-                        ".php";
+                    THINKUP_WEBAPP_PATH.'plugins/'.$active_plugin->folder_name."/controller/".
+                    $active_plugin->folder_name.".php")) {
+                        require_once THINKUP_WEBAPP_PATH.'plugins/'.$active_plugin->folder_name."/controller/".
+                        $active_plugin->folder_name.".php";
                     }
                 }
             }
@@ -520,7 +521,7 @@ abstract class ThinkUpController {
 
     /**
      * Provided for tests only, to assert that proper view values have been set. (Debug must be equal to true.)
-     * @return SmartyThinkUp
+     * @return ViewManager
      */
     public function getViewManager() {
         return $this->view_mgr;

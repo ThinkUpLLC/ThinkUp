@@ -37,8 +37,8 @@ require_once THINKUP_ROOT_PATH.
 class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase {
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('expandurls', 'ExpandURLsPlugin');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('expandurls', 'ExpandURLsPlugin');
         $this->builders = self::buildData();
     }
 

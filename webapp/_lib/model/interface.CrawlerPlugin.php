@@ -28,7 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface CrawlerPlugin extends ThinkUpPlugin {
+interface CrawlerPlugin extends GenericPlugin {
     /**
      * Crawl
      */

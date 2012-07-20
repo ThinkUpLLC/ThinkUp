@@ -45,54 +45,54 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
      * Test Crawler singleton instantiation
      */
     public function testCrawlerSingleton() {
-        $crawler = Crawler::getInstance();
-        $this->assertTrue(isset($crawler));
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $this->assertTrue(isset($crawler_plugin_registrar));
         //clean copy of crawler, no registered plugins, will throw exception
         $this->expectException( new PluginNotFoundException("hellothinkup") );
-        $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
+        $this->assertEqual($crawler_plugin_registrar->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
         //register a plugin
-        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
-        $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
+        $crawler_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $this->assertEqual($crawler_plugin_registrar->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
 
         //make sure singleton still has those values
-        $crawler_two = Crawler::getInstance();
-        $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
+        $crawler_plugin_registrar_two = PluginRegistrarCrawler::getInstance();
+        $this->assertEqual($crawler_plugin_registrar->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
     }
 
     /**
      * Test Crawler->crawl
      */
     public function testCrawl() {
-        $crawler = Crawler::getInstance();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
 
-        //        $crawler->registerPlugin('nonexistent', 'TestFauxPluginOne');
-        //        $crawler->registerCrawlerPlugin('TestFauxPluginOne');
+        //        $crawler_plugin_registrar->registerPlugin('nonexistent', 'TestFauxPluginOne');
+        //        $crawler_plugin_registrar->registerCrawlerPlugin('TestFauxPluginOne');
         //        $this->expectException( new Exception("The TestFauxPluginOne object does not have a crawl method.") );
-        //        $crawler->crawl();
+        //        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
-        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
-        $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
-        $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
+        $crawler_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $crawler_plugin_registrar->registerCrawlerPlugin('HelloThinkUpPlugin');
+        $this->assertEqual($crawler_plugin_registrar->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
 
         $builders = $this->buildData();
         $this->simulateLogin('admin@example.com', true);
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         $this->simulateLogin('me@example.com');
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         Session::logout();
         $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
     }
 
     public function testCrawlUnauthorized() {
         $builders = $this->buildData();
-        $crawler = Crawler::getInstance();
-        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
-        $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $crawler_plugin_registrar->registerCrawlerPlugin('HelloThinkUpPlugin');
         $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
     }
 
     public function testCrawlUpgrading() {
@@ -102,13 +102,13 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10); //set a high version num
 
         $builders = $this->buildData();
-        $crawler = Crawler::getInstance();
-        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
-        $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $crawler_plugin_registrar->registerCrawlerPlugin('HelloThinkUpPlugin');
         $this->simulateLogin('admin@example.com', true);
         $this->expectException(
         new InstallerException('ThinkUp needs a database migration, so we are unable to run the crawler.'));
-        $crawler->crawl();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
         // reset version
         $config->setValue('THINKUP_VERSION', $init_db_version);
     }

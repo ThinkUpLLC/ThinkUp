@@ -115,8 +115,8 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
     }
 
     public function testBothParamsExistentInstanceDeactivateCallback() {
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
 
         //set up 2 active Twitter instances
         $instance_builder_1 = FixtureBuilder::build('instances', array('network_username'=>'julie',

@@ -34,8 +34,8 @@
  * @copyright 2009-2012 Gina Trapani
  */
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('expandurls', 'ExpandURLsPlugin');
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('expandurls', 'ExpandURLsPlugin');
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('ExpandURLsPlugin');
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('ExpandURLsPlugin');

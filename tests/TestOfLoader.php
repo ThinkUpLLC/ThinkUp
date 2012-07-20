@@ -48,9 +48,10 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check default lookup path without additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
         THINKUP_WEBAPP_PATH . '_lib/controller/',
-        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/'
+        THINKUP_WEBAPP_PATH . '_lib/exceptions/'
         ));
 
         // check special classes
@@ -67,9 +68,10 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check lookup path with single additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
         THINKUP_WEBAPP_PATH . '_lib/controller/',
-        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
@@ -86,9 +88,10 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check lookup path with array additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
         THINKUP_WEBAPP_PATH . '_lib/controller/',
-        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests',
         THINKUP_ROOT_PATH . 'tests/classes'
         ));
@@ -112,7 +115,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertClassInstantiates('Instance');
         $this->assertClassInstantiates('User');
 
-        $this->assertIsA(new Crawler, 'Crawler');
+        $this->assertIsA(new PluginRegistrarCrawler, 'PluginRegistrarCrawler');
         $this->assertIsA(new DAOFactory, 'DAOFactory');
 
         $this->assertIsA(Config::getInstance(), 'Config');
@@ -122,16 +125,18 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
     public function testAdditionalPathAfterInitialRegister() {
         Loader::register();
         $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
         THINKUP_WEBAPP_PATH . '_lib/controller/',
-        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         ));
 
         Loader::addPath(THINKUP_ROOT_PATH . 'tests/classes');
         $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
         THINKUP_WEBAPP_PATH . '_lib/controller/',
-        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }

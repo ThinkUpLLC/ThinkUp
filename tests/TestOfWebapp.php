@@ -41,48 +41,48 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
      * Test Webapp singleton instantiation
      */
     public function testWebappSingleton() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         //test default active plugin
-        $this->assertEqual($webapp->getActivePlugin(), "twitter");
+        $this->assertEqual($webapp_plugin_registrar->getActivePlugin(), "twitter");
     }
 
     /**
      * Test activePlugin getter/setter
      */
     public function testWebappGetSetActivePlugin() {
-        $webapp = Webapp::getInstance();
-        $this->assertEqual($webapp->getActivePlugin(), "twitter");
-        $webapp->setActivePlugin('facebook');
-        $this->assertEqual($webapp->getActivePlugin(), "facebook");
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $this->assertEqual($webapp_plugin_registrar->getActivePlugin(), "twitter");
+        $webapp_plugin_registrar->setActivePlugin('facebook');
+        $this->assertEqual($webapp_plugin_registrar->getActivePlugin(), "facebook");
 
         //make sure another instance reports back the same values
-        $webapp_two = Webapp::getInstance();
-        $this->assertEqual($webapp_two->getActivePlugin(), "facebook");
+        $webapp_plugin_registrar_two = PluginRegistrarWebapp::getInstance();
+        $this->assertEqual($webapp_plugin_registrar_two->getActivePlugin(), "facebook");
     }
 
     /**
      * Test registerPlugin when plugin object does not have the right methods available
      */
     public function testWebappRegisterPluginWithoutDashboardPluginInterfaceImplemented() {
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('hellothinkup', "HelloThinkUpPlugin");
-        $webapp->setActivePlugin('hellothinkup');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('hellothinkup', "HelloThinkUpPlugin");
+        $webapp_plugin_registrar->setActivePlugin('hellothinkup');
 
-        $menu = $webapp->getDashboardMenu(null);
+        $menu = $webapp_plugin_registrar->getDashboardMenu(null);
         $this->assertIsA($menu, 'Array');
         $this->assertEqual(sizeof($menu), 0);
     }
 
     public function testGetDashboardMenu() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $config = Config::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
-        $webapp->setActivePlugin('twitter');
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar->setActivePlugin('twitter');
 
         $instance = new Instance();
         $instance->network_user_id = 930061;
 
-        $menus_array = $webapp->getDashboardMenu($instance);
+        $menus_array = $webapp_plugin_registrar->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
         $this->assertIsA($menus_array['tweets-all'], 'MenuItem');
 
@@ -92,8 +92,8 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         'folder_name'=>'twitterrealtime',
         'is_active' =>0));
 
-        $webapp->registerPlugin('twitterrealtime', "TwitterRealtimePlugin");
-        $menus_array = $webapp->getDashboardMenu($instance);
+        $webapp_plugin_registrar->registerPlugin('twitterrealtime', "TwitterRealtimePlugin");
+        $menus_array = $webapp_plugin_registrar->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
         // these two should only show up if the realtime plugin is active (which it is not in this case)
         $this->assertFalse(isset($menus_array['home-timeline']));
@@ -107,15 +107,15 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         'folder_name'=>'twitterrealtime',
         'is_active' =>1));
 
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $config = Config::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
-        $webapp->setActivePlugin('twitter');
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar->setActivePlugin('twitter');
 
         $instance = new Instance();
         $instance->network_user_id = 930061;
 
-        $menus_array = $webapp->getDashboardMenu($instance);
+        $menus_array = $webapp_plugin_registrar->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
         // check that the two additional menus are defined
         $this->assertIsA($menus_array['home-timeline'], 'MenuItem');
@@ -123,15 +123,15 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
     }
 
     public function testGetDashboardMenuItem() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $config = Config::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
-        $webapp->setActivePlugin('twitter');
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar->setActivePlugin('twitter');
 
         $instance = new Instance();
         $instance->network_user_id = 930061;
 
-        $menu_item = $webapp->getDashboardMenuItem('tweets-all', $instance);
+        $menu_item = $webapp_plugin_registrar->getDashboardMenuItem('tweets-all', $instance);
         $this->assertIsA($menu_item, 'MenuItem');
         $this->assertEqual($menu_item->view_template, Utils::getPluginViewDirectory('twitter').
         'twitter.inline.view.tpl', "Template ");
@@ -140,15 +140,15 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         $this->assertIsA($menu_item->datasets, 'array');
         $this->assertEqual(sizeOf($menu_item->datasets), 1);
 
-        $menu_item = $webapp->getDashboardMenuItem('nonexistent', $instance);
+        $menu_item = $webapp_plugin_registrar->getDashboardMenuItem('nonexistent', $instance);
         $this->assertEqual($menu_item, null);
     }
 
     public function testGetPostDetailMenu() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $config = Config::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
-        $webapp->setActivePlugin('twitter');
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar->setActivePlugin('twitter');
 
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
@@ -158,17 +158,17 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
-        $menus_array = $webapp->getPostDetailMenu($post);
+        $menus_array = $webapp_plugin_registrar->getPostDetailMenu($post);
         $this->assertIsA($menus_array, 'Array');
         $this->assertEqual(sizeof($menus_array), 1);
         $this->assertIsA($menus_array['fwds'], 'MenuItem');
     }
 
     public function testGetPostDetailMenuItem() {
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $config = Config::getInstance();
-        $webapp->registerPlugin('twitter', "TwitterPlugin");
-        $webapp->setActivePlugin('twitter');
+        $webapp_plugin_registrar->registerPlugin('twitter', "TwitterPlugin");
+        $webapp_plugin_registrar->setActivePlugin('twitter');
 
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
@@ -178,7 +178,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
-        $menu_item = $webapp->getPostDetailMenuItem('fwds', $post);
+        $menu_item = $webapp_plugin_registrar->getPostDetailMenuItem('fwds', $post);
         $this->assertIsA($menu_item, 'MenuItem');
         $this->assertEqual($menu_item->view_template, Utils::getPluginViewDirectory('twitter').
         'twitter.post.retweets.tpl', "Template ");
@@ -187,7 +187,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         $this->assertIsA($menu_item->datasets, 'array');
         $this->assertEqual(sizeOf($menu_item->datasets), 1);
 
-        $menu_item = $webapp->getPostDetailMenuItem('nonexistent', $post);
+        $menu_item = $webapp_plugin_registrar->getPostDetailMenuItem('nonexistent', $post);
         $this->assertEqual($menu_item, null);
     }
 }

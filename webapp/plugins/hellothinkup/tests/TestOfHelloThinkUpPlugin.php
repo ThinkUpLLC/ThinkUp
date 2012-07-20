@@ -39,9 +39,9 @@ class TestOfHelloThinkUpPlugin extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('google+', 'HelloThinkUpPlugin');
-        $webapp->setActivePlugin('google+');
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('google+', 'HelloThinkUpPlugin');
+        $webapp_plugin_registrar->setActivePlugin('google+');
     }
 
     public function tearDown(){

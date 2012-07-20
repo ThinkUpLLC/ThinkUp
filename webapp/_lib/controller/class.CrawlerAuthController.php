@@ -83,8 +83,8 @@ class CrawlerAuthController extends ThinkUpController {
         }
 
         if ($authorized) {
-            $crawler = Crawler::getInstance();
-            $crawler->crawl();
+            $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+            $crawler_plugin_registrar->runRegisteredPluginsCrawl();
         }
 
         return $output;

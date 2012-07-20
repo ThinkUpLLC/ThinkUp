@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Streamer.php
+ * ThinkUp/webapp/_lib/class.PluginRegistrarStreamer.php
  *
  * Copyright (c) 2011-2012 Amy Unruh
  *
@@ -21,26 +21,26 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Streamer
+ * PluginRegistrarStreamer
  * Singleton provides hooks for streamer plugins.
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011-2012 Amy Unruh
  * @author Amy Unruh
  */
-class Streamer extends PluginHook {
+class PluginRegistrarStreamer extends PluginRegistrar {
     /**
-     * Singleton instance of Streamer object.
-     * @var Streamer
+     * Singleton instance of PluginRegistrarStreamer object.
+     * @var PluginRegistrarStreamer
      */
     private static $instance;
     /**
-     * Get the singleton instance of Streamer
-     * @return Streamer
+     * Get the singleton instance of PluginRegistrarStreamer
+     * @return PluginRegistrarStreamer
      */
     public static function getInstance() {
         if (!isset(self::$instance)) {
-            self::$instance = new Streamer();
+            self::$instance = new PluginRegistrarStreamer();
         }
         return self::$instance;
     }
@@ -61,7 +61,7 @@ class Streamer extends PluginHook {
             throw new UnauthorizedUserException('You need a valid session to launch the streamer.');
         }
         // @TODO What lock mgmt is necessary?
-        $this->emitObjectMethod('stream');
+        $this->emitObjectFunction('stream');
     }
     /**
      * @throws UnauthorizedUserException
@@ -72,7 +72,7 @@ class Streamer extends PluginHook {
             throw new UnauthorizedUserException('You need a valid session to launch the streamer.');
         }
         // @TODO What lock mgmt is necessary?
-        $this->emitObjectMethod('streamProcess');
+        $this->emitObjectFunction('streamProcess');
     }
     /**
      * @throws UnauthorizedUserException
@@ -82,7 +82,7 @@ class Streamer extends PluginHook {
         if (!Session::isLoggedIn() ) {
             throw new UnauthorizedUserException('You need a valid session to launch the streamer.');
         }
-        $this->emitObjectMethod('shutdownStreams');
+        $this->emitObjectFunction('shutdownStreams');
     }
     /**
      * Register streamer plugin.
@@ -90,8 +90,8 @@ class Streamer extends PluginHook {
      * "TwitterRealtimePlugin"
      */
     public function registerStreamerPlugin($object_name) {
-        $this->registerObjectMethod('stream', $object_name, 'stream');
-        $this->registerObjectMethod('streamProcess', $object_name, 'streamProcess');
-        $this->registerObjectMethod('shutdownStreams', $object_name, 'shutdownStreams');
+        $this->registerObjectFunction('stream', $object_name, 'stream');
+        $this->registerObjectFunction('streamProcess', $object_name, 'streamProcess');
+        $this->registerObjectFunction('shutdownStreams', $object_name, 'shutdownStreams');
     }
 }

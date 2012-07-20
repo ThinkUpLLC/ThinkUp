@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Mailer.php
+ * ThinkUp/webapp/_lib/class.Mailer.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *

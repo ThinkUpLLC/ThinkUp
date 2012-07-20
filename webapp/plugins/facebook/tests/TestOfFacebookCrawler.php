@@ -146,9 +146,9 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 120);
 
         $config = Config::getInstance();
-        $crawler_log = $config->getValue('log_location');
+        $facebook_crawler_log = $config->getValue('log_location');
         // prepare log for reading after fetchPostsAndReplies
-        $log_reader_handle = fopen($crawler_log, 'r');
+        $log_reader_handle = fopen($facebook_crawler_log, 'r');
         fseek($log_reader_handle, 0, SEEK_END);
 
         $fbc->fetchPostsAndReplies();

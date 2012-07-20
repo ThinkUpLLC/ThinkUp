@@ -37,15 +37,15 @@ require_once THINKUP_WEBAPP_PATH.'plugins/geoencoder/tests/classes/mock.GeoEncod
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
 
 class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
-    var $webapp;
+    var $webapp_plugin_registrar;
 
     public function setUp() {
         parent::setUp();
-        $this->webapp = Webapp::getInstance();
-        $this->webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
-        $this->webapp->registerPlugin('twitter', 'TwitterPlugin');
-        $crawler = Crawler::getInstance();
-        $crawler->registerCrawlerPlugin('GeoEncoderPlugin');
+        $this->webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $this->webapp_plugin_registrar->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+        $this->webapp_plugin_registrar->registerPlugin('twitter', 'TwitterPlugin');
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->registerCrawlerPlugin('GeoEncoderPlugin');
         $this->builders = self::buildData();
     }
 
@@ -63,8 +63,8 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
     public function testGeoEncoderCrawl() {
         $this->simulateLogin('admin@example.com', true);
-        $crawler = Crawler::getInstance();
-        $crawler->crawl();
+        $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+        $crawler_plugin_registrar->runRegisteredPluginsCrawl();
 
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
@@ -217,7 +217,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
         //Shouldn't register mapping items if is_geo_encoded is 0
-        $post_menus_array = $this->webapp->getPostDetailMenu($post);
+        $post_menus_array = $this->webapp_plugin_registrar->getPostDetailMenu($post);
         $this->assertIsA($post_menus_array, 'Array');
         $this->assertEqual(sizeof($post_menus_array), 1); //1 from Twitter plugin
     }
@@ -233,7 +233,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         'is_geo_encoded'=>1, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
         //Should register mapping items if is_geo_encoded is 1
-        $post_menus_array = $this->webapp->getPostDetailMenu($post);
+        $post_menus_array = $this->webapp_plugin_registrar->getPostDetailMenu($post);
         $this->assertIsA($post_menus_array, 'Array');
         $this->assertEqual(sizeof($post_menus_array), 3); //3 from Twitter plugin, 2 from GeoEncoder
         $this->assertIsA($post_menus_array['geoencoder_map'], 'MenuItem');

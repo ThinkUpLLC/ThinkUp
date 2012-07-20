@@ -87,7 +87,7 @@ class ModelMaker {
         }
 
         //instantiate Smarty, assign results to view
-        $view_mgr = new SmartyThinkUp();
+        $view_mgr = new ViewManager();
         $view_mgr->assign('fields', $columns);
         $view_mgr->assign('object_name', $this->object_name);
         $view_mgr->assign('parent_name', $this->parent_name);

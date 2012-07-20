@@ -37,9 +37,8 @@ require_once THINKUP_ROOT_PATH.
 class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTestCase {
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitterrealtime', 'TwitterRealtimePlugin');
-
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+        $webapp_plugin_registrar->registerPlugin('twitterrealtime', 'TwitterRealtimePlugin');
     }
 
     public function tearDown(){
@@ -73,7 +72,6 @@ class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTest
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterRealtimePluginConfigurationController($owner, 'twitterrealtime');
-
         $output = $controller->go();
         $this->assertPattern('/Save Settings/', $output); // should have no submit option
         $this->assertPattern('/php_path/', $output);

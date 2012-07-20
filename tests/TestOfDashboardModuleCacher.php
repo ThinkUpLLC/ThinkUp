@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfInsightsGenerator.php
+ * ThinkUp/tests/TestOfDashboardModuleCacher.php
  *
  * Copyright (c) 2012 Gina Trapani
  *
@@ -30,7 +30,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfInsightsGenerator extends ThinkUpUnitTestCase {
+class TestOfDashboardModuleCacher extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
     }
@@ -54,7 +54,7 @@ class TestOfInsightsGenerator extends ThinkUpUnitTestCase {
         )
         );
 
-        $result = InsightsGenerator::getHotPostVisualizationData($hot_posts, 'twitter');
+        $result = DashboardModuleCacher::getHotPostVisualizationData($hot_posts, 'twitter');
         $this->assertEqual(gettype($result), 'string');
 
         $visualization_object = json_decode($result);
@@ -71,7 +71,7 @@ class TestOfInsightsGenerator extends ThinkUpUnitTestCase {
         $this->assertEqual($visualization_object->rows[0]->c[2]->v, 2);
         $this->assertEqual($visualization_object->rows[0]->c[3]->v, 1);
 
-        $result = InsightsGenerator::getHotPostVisualizationData($hot_posts, 'facebook');
+        $result = DashboardModuleCacher::getHotPostVisualizationData($hot_posts, 'facebook');
         $this->assertEqual(gettype($result), 'string');
 
         $visualization_object = json_decode($result);
@@ -95,7 +95,7 @@ class TestOfInsightsGenerator extends ThinkUpUnitTestCase {
             'Client 2' => 10,
         );
 
-        $result = InsightsGenerator::getClientUsageVisualizationData($client_data);
+        $result = DashboardModuleCacher::getClientUsageVisualizationData($client_data);
         $this->assertEqual(gettype($result), 'string');
 
         $visualization_object = json_decode($result);
@@ -124,7 +124,7 @@ class TestOfInsightsGenerator extends ThinkUpUnitTestCase {
         'click_count' => 23),
         );
 
-        $result = InsightsGenerator::getClickStatsVisualizationData($click_stats);
+        $result = DashboardModuleCacher::getClickStatsVisualizationData($click_stats);
         $this->assertEqual(gettype($result), 'string');
 
         $visualization_object = json_decode($result);

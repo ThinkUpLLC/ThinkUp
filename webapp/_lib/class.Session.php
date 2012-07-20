@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Session.php
+ * ThinkUp/webapp/_lib/class.Session.php
  *
  * Copyright (c) 2009-2012 Christoffer Viken, Gina Trapani
  *

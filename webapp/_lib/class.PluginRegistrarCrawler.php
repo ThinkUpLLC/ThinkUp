@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Crawler.php
+ * ThinkUp/webapp/_lib/class.PluginRegistrarCrawler.php
  *
  * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Crawler
+ * PluginRegistrarCrawler
  *
  * Singleton provides hooks for crawler plugins.
  *
@@ -30,31 +30,27 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class Crawler extends PluginHook {
-
+class PluginRegistrarCrawler extends PluginRegistrar {
     /**
      *
-     * @var Crawler
+     * @const str
      */
     const GLOBAL_MUTEX = 'crawler';
-
     /**
      *
-     * @var Crawler
+     * @var PluginRegistrarCrawler
      */
     private static $instance;
-
     /**
-     * Get the singleton instance of Crawler
-     * @return Crawler
+     * Get the singleton instance of PluginRegistrarCrawler
+     * @return PluginRegistrarCrawler
      */
     public static function getInstance() {
         if (!isset(self::$instance)) {
-            self::$instance = new Crawler();
+            self::$instance = new PluginRegistrarCrawler();
         }
         return self::$instance;
     }
-
     /**
      * Provided only for tests that want to kill object in tearDown()
      */
@@ -63,17 +59,19 @@ class Crawler extends PluginHook {
             self::$instance = null;
         }
     }
-
     /**
-     * Gets called when crawler runs.
+     * Runs registered plugins' crawl function.
      *
      * About crawler exclusivity (mutex usage):
      * When launched by an admin, no other user, admin or not, will be able to launch a crawl until this one is done.
      * When launched by a non-admin, we first check that no admin run is under way, and if that's the case,
      * we launch a crawl for the current user only.
      * No user will be able to launch two crawls in parallel, but different non-admin users crawls can run in parallel.
+     * @throws UnauthorizedUserException If user is not logged in
+     * @throws CrawlerLockedException If a crawl is already in progress
+     * @throws InstallerException If ThinkUp is in the midst of a database upgrade
      */
-    public function crawl() {
+    public function runRegisteredPluginsCrawl() {
         if (!Session::isLoggedIn() ) {
             throw new UnauthorizedUserException('You need a valid session to launch the crawler.');
         }
@@ -108,19 +106,18 @@ class Crawler extends PluginHook {
         }
 
         if ($lock_successful) {
-            $this->emitObjectMethod('crawl');
+            $this->emitObjectFunction('crawl');
             $mutex_dao->releaseMutex($mutex_name);
         } else {
             throw new CrawlerLockedException("Error starting crawler; another crawl is already in progress.");
         }
     }
-
     /**
      * Register crawler plugin.
      * @param str $object_name Name of Crawler plugin object which instantiates the Crawler interface, like
      * "TwitterPlugin"
      */
     public function registerCrawlerPlugin($object_name) {
-        $this->registerObjectMethod('crawl', $object_name, 'crawl');
+        $this->registerObjectFunction('crawl', $object_name, 'crawl');
     }
 }

@@ -53,7 +53,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->addHeaderJavaScript('assets/js/jquery.validate.password.js');
         $this->addHeaderJavaScript('assets/js/validate_password.js');
 
-        $webapp = Webapp::getInstance();
+        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
@@ -187,7 +187,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $this->addHeaderJavaScript('assets/js/plugin_options.js');
             }
             $active_plugin = $_GET['p'];
-            $pobj = $webapp->getPluginObject($active_plugin);
+            $pobj = $webapp_plugin_registrar->getPluginObject($active_plugin);
             $p = new $pobj;
             $this->addToView('body', $p->renderConfiguration($owner));
             $profiler = Profiler::getInstance();
