@@ -371,10 +371,15 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         //Add instance_owner
         $instance_owner_builder_1 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
         $instance_owner_builder_2 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+<<<<<<< HEAD
         $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
         'auth_error'=>'Error validating access token: Session has expired at unix time SOME_TIME. The current unix '.
         'time is SOME_TIME.'));
+=======
+        $instance_owner_builder_3 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
         $instance_owner_builder_4 = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
+>>>>>>> 718-Foursquare-Plugin.
+
         //Insert test data into test table
         $user_builders = array();
 
