@@ -11,7 +11,12 @@ Prerequisites
 -------------
 
 -  File-system access to a web host, preferably over FTP or SFTP.
--  `PHP 5.2 <http://php.net>`_ or higher with cURL, GD, JSON, and the PDO MySQL driver enabled.
+-  `PHP 5.2 <http://php.net>`_ or higher with the `Client URL (cURL) library
+   <http://us3.php.net/manual/en/book.curl.php>`_,
+   `GD support <http://www.php.net/manual/en/book.image.php>`_, and the `PDO MySQL driver
+   <http://php.net/manual/en/ref.pdo-mysql.php>`_.
+   (ThinkUp also requires the following items, which PHP 5.2+ enables by default: the filter, hash, JSON, SimpleXML, and
+   XML extensions, as well as session support.)
 -  `MySQL 5.0.3 <http://mysql.com/>`_ or higher.
 -  A publicly available web server. (Twitter authorization requires a public callback URL, so you'll need to expose
    non-public servers to the internet for initial authorization; after that, the server no longer needs to be publicly
