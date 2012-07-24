@@ -52,6 +52,23 @@ interface PostDAO {
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count = 350, $page = 1);
 
+
+    /**
+     * Get replies to a post in a range
+     * @param str $post_id
+     * @param str $network
+     * @param str $order_by Order of sorting posts
+     * @param int $unit Defaults to km
+     * @param bool $public Defaults to false
+     * @param int $count Defaults to 350
+     * @param int $page The page of results to return. Defaults to 1. Pages start
+     * at 1, not 0.
+     * @return array Posts with author object set, and optional link object set
+     */
+    public function getRepliesToPostInRange($post_id, $network, $from, $until, $order_by = 'default', $unit = 'km', $is_public = false,
+    $count = 350, $page = 1);
+
+
     /**
      * Get replies Iterator to a post
      * @param str $post_id
@@ -244,7 +261,7 @@ interface PostDAO {
      * @param bool $is_public Whether or not these results are going to be shown publicly. Defaults to false.
      * @return array Posts by author with a question mark in them with link set
      */
-    public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
+    public function getAllQuestionPostsInRange($author_id, $network, $count, $from, $until, $page=1, $order_by = 'pub_date',
     $direction = 'DESC', $is_public = false);
 
     /**
@@ -344,6 +361,23 @@ interface PostDAO {
      */
     public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false,
     $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
+    
+    
+     /**
+     * Get a certain number of mentions of a username on a given network
+     * @param str  $author_username
+     * @param int $count
+     * @param str $network defaults to "twitter"
+     * @param int $page Page number, defaults to 1
+     * @param bool $public Public mentions only, defaults to false
+     * @param bool $include_rts Whether or not to include retweets. Defaults to true.
+     * @param str $order_by The database column to order the results by.
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @return array of Post objects with author and link set
+     */
+    public function getAllMentionsInRange($author_username, $count, $network = "twitter", $from, $until, $page=1, $public=false,
+    $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
 
     /**
      * Get all replies to a given user ID
@@ -360,6 +394,74 @@ interface PostDAO {
      */
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
     $is_public = false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     /**
+     * Get all replies to a given user ID in a range.
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page Page number, defaults to 1
+     * @param str $order_by The database column to order the results by.
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @param bool $is_public Whether or not the result of the method call will be displayed publicly. Defaults to
+     * false.
+     * @return array Posts with author and link set
+     */
+    public function getAllRepliesInRange($user_id, $network, $count, $from, $until, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
+    $is_public = false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Get posts by a user ordered by reply count desc
