@@ -182,10 +182,11 @@ class Post {
      * @return Post
      */
     public function __construct($val) {
-        $this->id = $val["id"];
         // a fix for getPost() where the join of the links table column links.id overides the posts.id
-        if (!isset($this->id) && isset($val["post_key"])) {
+        if (isset($val["post_key"])) {
             $this->id = $val["post_key"];
+        } else {
+            $this->id = $val["id"];
         }
         $this->post_id = $val["post_id"];
         $this->author_user_id = $val["author_user_id"];
@@ -294,7 +295,6 @@ class Post {
      */
     public static function extractHashtags($post_text) {
         preg_match_all('/(^|[^a-z0-9_])#([a-z0-9_]+)/i', $post_text, $matches);
-
         // sometimes there's leading or trailing whitespace on the match, trim it
         foreach ($matches[0] as $key=>$match) {
             $matches[0][$key] = trim($match, ' ');

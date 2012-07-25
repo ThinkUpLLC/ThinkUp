@@ -80,7 +80,6 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory('930061', 'twitter', 'DAY', 3);
         $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, trend, and milestone, and vis_data');
-
         $this->debug(Utils::varDumpToString($result));
         //check history
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
