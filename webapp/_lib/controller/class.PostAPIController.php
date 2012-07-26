@@ -392,7 +392,7 @@ class PostAPIController extends ThinkUpController {
                 /**
                  * Gets replies to a post in a range.
                  *
-                 * Required arguments: post_id
+                 * Required arguments: post_id, from and until
                  *
                  * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
                  *
@@ -550,24 +550,10 @@ class PostAPIController extends ThinkUpController {
                 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 /*
                  * Gets question posts a user has made.
                  *
-                 * Required arguments: user_id or username
+                 * Required arguments: user_id or username, from and until
                  *
                  * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
                  * trim_user
@@ -586,7 +572,7 @@ class PostAPIController extends ThinkUpController {
                 /*
                  * Gets replies to a user in a range.
                  *
-                 * Required arguments: user_id or username
+                 * Required arguments: user_id or username, from and until
                  *
                  * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
                  * trim_user
@@ -599,17 +585,7 @@ class PostAPIController extends ThinkUpController {
                 break;
                 
              
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+
                  /*
                  * Gets replies to a user.
                  *

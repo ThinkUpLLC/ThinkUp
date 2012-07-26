@@ -54,7 +54,7 @@ interface PostDAO {
 
 
     /**
-     * Get replies to a post in a range
+     * Get replies to a post on a given time frame.
      * @param str $post_id
      * @param str $network
      * @param str $order_by Order of sorting posts
@@ -250,7 +250,7 @@ interface PostDAO {
     public function getPostsByFriendsIterator($user_id, $network, $count, $is_public=false);
 
     /**
-     * Get all posts by an author given an author ID that contain a question mark
+     * Get all posts by an author given an author ID that contain a question  on a given time frame.
      * @param str $author_id
      * @param str  $network
      * @param int $count
@@ -364,7 +364,7 @@ interface PostDAO {
     
     
      /**
-     * Get a certain number of mentions of a username on a given network
+     * Get a certain number of mentions of a username on a given network and on a given time frame.
      * @param str  $author_username
      * @param int $count
      * @param str $network defaults to "twitter"
@@ -395,27 +395,10 @@ interface PostDAO {
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
     $is_public = false);
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+       
     
      /**
-     * Get all replies to a given user ID in a range.
+     * Get all replies to a given user ID on a given time frame.
      * @param int $user_id
      * @param str $network
      * @param int $count
@@ -429,36 +412,6 @@ interface PostDAO {
      */
     public function getAllRepliesInRange($user_id, $network, $count, $from, $until, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
     $is_public = false);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

@@ -207,18 +207,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public function getRepliesToPostInRange($post_id, $network, $from, $until, $order_by = 'default', $unit = 'km', $is_public = false,
     $count = 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
@@ -999,10 +987,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
-    
-
-
-
 
     public function getAllQuestionPostsInRange($author_id, $network, $count, $from, $until, $page=1, $order_by = 'pub_date',
     $direction = 'DESC', $is_public = false) {
@@ -1607,10 +1591,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
-
-
-
-
 
     public function getAllRepliesInRange($user_id, $network, $count, $from, $until,$page = 1, $order_by = 'pub_date', $direction = 'DESC',
     $is_public = false) {
