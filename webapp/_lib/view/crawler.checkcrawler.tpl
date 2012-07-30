@@ -1,1 +1,1 @@
-{$message}
+<tr><td>{$message}</td></tr>

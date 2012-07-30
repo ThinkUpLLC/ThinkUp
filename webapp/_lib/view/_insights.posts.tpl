@@ -11,7 +11,7 @@
 
         {* Show "X years ago you posted" text if post is from a different year than the last one *}
         {if !$smarty.foreach.bar.first and $prev_post_year neq $p->adj_pub_date|date_format:"%Y"}
-            <p>{$p->adj_pub_date|relative_datetime} ago in {$p->adj_pub_date|date_format:"%Y"}, you posted:</p>
+            <span class="label label-info">{$p->adj_pub_date|date_format:"%Y"} Flashback:</span> <i class="icon-time"></i> {$p->adj_pub_date|relative_datetime} ago, you posted:</p>
         {/if}
 
         {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
