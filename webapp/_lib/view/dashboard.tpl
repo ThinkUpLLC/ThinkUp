@@ -1,9 +1,13 @@
-{include file="_header.tpl"}
+
 {if $smarty.get.v eq "insights"}
+    {include file="_header.tpl" enable_bootstrap="true"}
+    {include file="_statusbar.tpl" enable_bootstrap="true"}
     {include file="insights.tpl"}
+    
 {else}
 
-{include file="_statusbar.tpl"}
+    {include file="_header.tpl"}
+    {include file="_statusbar.tpl"}
 
 <div class="container_24">
   <div class="clearfix">
@@ -174,5 +178,8 @@
 
 {/if}
 
-
-{include file="_footer.tpl"}
+{if $smarty.get.v eq "insights"}
+    {include file="_footer.tpl" enable_bootstrap="true"}
+{else}
+    {include file="_footer.tpl"}
+{/if}
