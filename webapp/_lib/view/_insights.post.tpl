@@ -60,7 +60,7 @@
 <div class="pull-right detail-btn"><button class="btn btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
 <div class="collapse in" id="map-{$i->id}">
 <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
-<iframe width="680" frameborder="0" src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post" name="childframe" id="childframe" >
+<iframe width="93%" frameborder="0" src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post" name="childframe" id="childframe" >
 </iframe>
 </div>
 {/if}

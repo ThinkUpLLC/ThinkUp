@@ -593,9 +593,9 @@ pre code {
 }
 .label,
 .badge {
-  font-size: 10.998px;
+  font-size: 14px;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 18px;
   color: #ffffff;
   vertical-align: baseline;
   white-space: nowrap;
@@ -1164,6 +1164,7 @@ input[type="radio"][readonly],
 input[type="checkbox"][readonly] {
   background-color: transparent;
 }
+.control-group.warning,
 .control-group.warning > label,
 .control-group.warning .help-block,
 .control-group.warning .help-inline {
@@ -1189,6 +1190,7 @@ input[type="checkbox"][readonly] {
   background-color: #d5f0fc;
   border-color: #c09853;
 }
+.control-group.error,
 .control-group.error > label,
 .control-group.error .help-block,
 .control-group.error .help-inline {
@@ -1214,6 +1216,7 @@ input[type="checkbox"][readonly] {
   background-color: #f8f8b1;
   border-color: #b94a48;
 }
+.control-group.success,
 .control-group.success > label,
 .control-group.success .help-block,
 .control-group.success .help-inline {
@@ -1555,9 +1558,9 @@ legend + .control-group {
   border: 1px solid #cccccc;
   *border: 0;
   border-bottom-color: #b3b3b3;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
   *margin-left: .3em;
   -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
   -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
@@ -1622,9 +1625,9 @@ legend + .control-group {
   padding: 9px 14px;
   font-size: 15px;
   line-height: normal;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .btn-large [class^="icon-"] {
   margin-top: 1px;
@@ -1670,18 +1673,18 @@ legend + .control-group {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 .btn-primary {
-  background-color: #0096ef;
-  background-image: -moz-linear-gradient(top, #00aeef, #0072BC);
-  background-image: -ms-linear-gradient(top, #00aeef, #0072BC);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#00aeef), to(#0072BC));
-  background-image: -webkit-linear-gradient(top, #00aeef, #0072BC);
-  background-image: -o-linear-gradient(top, #00aeef, #0072BC);
-  background-image: linear-gradient(top, #00aeef, #0072BC);
+  background-color: #00AEEF;
+  background-image: -moz-linear-gradient(top, #00AEEF, #00AEEF);
+  background-image: -ms-linear-gradient(top, #00AEEF, #00AEEF);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#00AEEF), to(#00AEEF));
+  background-image: -webkit-linear-gradient(top, #00AEEF, #00AEEF);
+  background-image: -o-linear-gradient(top, #00AEEF, #00AEEF);
+  background-image: linear-gradient(top, #00AEEF, #00AEEF);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00aeef', endColorstr='#0072BC', GradientType=0);
   border-color: #0072BC #0072BC #004ea3;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #0072BC;
+  *background-color: #00AEEF;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -1691,7 +1694,7 @@ legend + .control-group {
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
-  background-color: #0072BC;
+  background-color: #00A5E6;
   *background-color: #0066d6;
 }
 .btn-primary:active,
@@ -1883,6 +1886,10 @@ input[type="submit"].btn.btn-mini {
 [class^="icon-"]:last-child,
 [class*=" icon-"]:last-child {
   *margin-left: 0;
+}
+[class^="icon-"]:hover,
+[class*=" icon-"]:hover {
+  background-image: url("../img/glyphicons-halflings-blue.png");
 }
 .icon-white {
   background-image: url("../img/glyphicons-halflings-white.png");
@@ -2901,7 +2908,7 @@ input[type="submit"].btn.btn-mini {
   box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
 }
 .navbar .container {
-  width: auto;
+
 }
 .nav-collapse.collapse {
   height: auto;
@@ -3406,7 +3413,7 @@ a.thumbnail:hover {
   padding: 9px;
 }
 .alert {
-  padding: 8px 14px;
+  padding: 0px 12px 8px 12px;
   margin-bottom: 18px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #d5f0fc;
@@ -3415,7 +3422,7 @@ a.thumbnail:hover {
           -moz-border-radius: 1px;
           -webkit-border-radius: 1px;
      border-radius: 1px;    
-     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+     box-shadow: 0 0 4px rgba(0,0,0,0.4);
   color: #000;
 }
 
@@ -3672,15 +3679,15 @@ color : #666;
 }
 
 footer {
-background : #7D7D7D;
-margin-top : 40px;
-color : #DADAD8;
+	background : #7D7D7D;
+	margin-top : 40px;
+	color : #DADAD8;
 }
 
 .footer {
-margin-top : 20px;
-padding : 40px 20px 60px 20px;
-width : 100%;
+	margin-top : 20px;
+	padding : 40px 20px 60px 20px;
+	width : 100%;
 }
 
 .tooltip {
