@@ -133,6 +133,8 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
             $this->addToView('is_configured', false);
         }
+        // Secret config file value enables public Twitter name search
+        $this->addToView('enable_twitter_search', $config->getValue('enable_twitter_search'));
         // add plugin options from
         $this->addOptionForm();
 
