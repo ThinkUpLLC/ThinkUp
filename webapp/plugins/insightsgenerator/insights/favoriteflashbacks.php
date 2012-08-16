@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Favorite Flashback
- Description: Posts you favorited on this day one year ago.
+ Description: Posts you favorited on this day in years past.
  */
 
 /**
@@ -36,21 +36,20 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
 
-        $number_days = 10;
         $days_ago = 0;
         while ($days_ago < $number_days) {
             $since_date = date("Y-m-d", strtotime("-".$days_ago." day"));
-            //            $existing_insight = $this->insight_dao->getInsight("favorites_year_ago_flashback", $instance->id,
-            //            $since_date);
-            //            if (!isset($existing_insight)) {
-            //Generate flashback post list
-            $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
-            $instance->network, $since_date);
-            if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
-                $this->insight_dao->insertInsight("favorites_year_ago_flashback", $instance->id,
-                $since_date, "Favorite flashback:", "On this day in years past, you favorited: ",
-                Insight::EMPHASIS_MED, serialize($flashback_favs));
-                //                }
+            $existing_insight = $this->insight_dao->getInsight("favorites_year_ago_flashback", $instance->id,
+            $since_date);
+            if (!isset($existing_insight)) {
+                //Generate flashback post list
+                $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
+                $instance->network, $since_date);
+                if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
+                    $this->insight_dao->insertInsight("favorites_year_ago_flashback", $instance->id,
+                    $since_date, "Stuff you liked:", "On this day in years past, you liked: ",
+                    Insight::EMPHASIS_MED, serialize($flashback_favs));
+                }
             }
             $days_ago++;
         }
