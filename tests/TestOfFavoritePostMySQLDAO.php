@@ -376,6 +376,42 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]->post_id, 'abadadfd1213');
     }
 
+    public function testGetUsersWhoFavoritedMostOfYourPosts() {
+        //build post published 3 days ago
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-3d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build post published 4 days ago
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-4d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'is_protected' => 0));
+
+        //build favorite of those posts by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'twitter'));
+
+        //build favorite of that post by test user user1
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'20', 'network'=>'twitter'));
+
+        //build favorite of that post by test user user2
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'21', 'network'=>'twitter'));
+
+        $result = $this->dao->getUsersWhoFavoritedMostOfYourPosts('19', 'twitter', 7);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->username, 'ev');
+    }
+
     /**
      * helper method to build a post
      */
