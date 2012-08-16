@@ -7,11 +7,17 @@
 {/if}
 
 <div class="post lead">
+  {if $i->instance->network_username != $post->author_username}
+   <div class="avatar-container" style="float:left;margin:7px; clear : left;">
+   <a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/></a>
+  </div>
+  {/if}
+
   {if $post->post_text}
     {if $scrub_reply_username}
       {if $reply_count && $reply_count > $top_20_post_min}
           <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
-      {/if} 
+      {/if}
       {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
       {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
     {else}

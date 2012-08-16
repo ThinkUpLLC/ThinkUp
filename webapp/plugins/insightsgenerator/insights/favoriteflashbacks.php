@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: Flashback
- Description: Posts you published on this day in years past.
+ Plugin Name: Favorite Flashback
+ Description: Posts you favorited on this day one year ago.
  */
 
 /**
@@ -29,32 +29,35 @@
  * @copyright 2012
  */
 
-class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
+class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
 
-        $existing_insight = $this->insight_dao->getInsight("posts_on_this_day_flashback", $instance->id,
-        $this->insight_date);
-        if (!isset($existing_insight)) {
+        $number_days = 10;
+        $days_ago = 0;
+        while ($days_ago < $number_days) {
+            $since_date = date("Y-m-d", strtotime("-".$days_ago." day"));
+            //            $existing_insight = $this->insight_dao->getInsight("favorites_year_ago_flashback", $instance->id,
+            //            $since_date);
+            //            if (!isset($existing_insight)) {
             //Generate flashback post list
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            $flashback_posts = $post_dao->getOnThisDayFlashbackPosts($instance->network_user_id,
-            $instance->network, $this->insight_date);
-            if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
-                $oldest_post_year = date(date( 'Y' , strtotime($flashback_posts[0]->pub_date)));
-                $current_year = date('Y');
-                $number_of_years_ago = $current_year - $oldest_post_year;
-                $plural = ($number_of_years_ago > 1 )?'s':'';
-                $this->insight_dao->insertInsight("posts_on_this_day_flashback", $instance->id,
-                $this->insight_date, $oldest_post_year." flashback:", $number_of_years_ago." year".
-                $plural. " ago today, you posted: ", Insight::EMPHASIS_MED, serialize($flashback_posts));
+            $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
+            $instance->network, $since_date);
+            if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
+                $this->insight_dao->insertInsight("favorites_year_ago_flashback", $instance->id,
+                $since_date, "Favorite flashback:", "On this day in years past, you favorited: ",
+                Insight::EMPHASIS_MED, serialize($flashback_favs));
+                //                }
             }
+            $days_ago++;
         }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('FlashbackInsight');
+$insights_plugin_registrar->registerInsightPlugin('FavoriteFlashbackInsight');

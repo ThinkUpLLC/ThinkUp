@@ -34,7 +34,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
-        $this->logger->logUserInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         //get new group memberships per day
         $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');

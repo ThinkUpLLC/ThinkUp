@@ -334,4 +334,33 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $all_rows = $this->getDataRowsAsArrays($ps);
         return $all_rows;
     }
+
+    public function getFavoritesFromOneYearAgo($fav_of_user_id, $network, $from_date=null) {
+        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date ";
+        $q .= "FROM #prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id
+        WHERE f.fav_of_user_id = :fav_of_user_id AND p.network=:network AND p.is_protected = 0 ";
+
+        $vars = array(
+            ':fav_of_user_id'=> $fav_of_user_id,
+            ':network'=>$network
+        );
+        if (!isset($from_date)) {
+            $from_date = 'CURRENT_DATE()';
+        } else {
+            $from_date = "'$from_date'";
+        }
+        $q .= "AND (YEAR(pub_date)!=YEAR(CURRENT_DATE())) ";
+        $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) ";
+        $q .= "ORDER BY pub_date DESC ";
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($rows as $row) {
+            $posts[] = new Post($row);
+        }
+        return $posts;
+    }
 }

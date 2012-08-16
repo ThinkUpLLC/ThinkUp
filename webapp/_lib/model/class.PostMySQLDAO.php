@@ -1687,9 +1687,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if (!isset($from_date)) {
             $from_date = 'CURRENT_DATE()';
-        } else {
-            $vars[':from_date'] = $from_date;
-            $from_date = ':from_date';
         }
         $q = "SELECT po.*, po.id AS post_key, po.pub_date + interval #gmt_offset# hour as adj_pub_date, ";
         $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box ";

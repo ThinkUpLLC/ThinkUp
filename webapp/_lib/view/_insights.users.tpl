@@ -10,8 +10,7 @@
 <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a> <small style="color:gray">{$u->follower_count|number_format} followers</small><br>
  <span style="color:gray">{$u->description|link_usernames_to_twitter}</span>
  {$u->url}<br>
- 
- </div>
+  </div>
  <div style="clear:all">&nbsp;</div>
  
  {/foreach}

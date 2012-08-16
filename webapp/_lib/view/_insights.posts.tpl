@@ -28,6 +28,10 @@
 
         {assign var="prev_post_year" value=$p->adj_pub_date|date_format:"%Y"}
     {/foreach}
+{elseif $i->slug eq 'favorites_year_ago_flashback'}
+    {foreach from=$i->related_data key=uid item=p name=bar}
+        {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
+    {/foreach}
 {else}
     {foreach from=$i->related_data key=uid item=p name=bar}
         {include file="_insights.post.tpl" post=$p}
