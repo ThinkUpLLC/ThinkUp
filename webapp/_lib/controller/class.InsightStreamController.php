@@ -42,7 +42,7 @@ class InsightStreamController extends ThinkUpController {
             if (Session::isLoggedIn()) {
                 if ($this->isAdmin()) {
                     ///show all insights for all service users
-                    $insights = $insight_dao->getAllInstanceInsights($page_count=10, $page);
+                    $insights = $insight_dao->getAllInstanceInsights($page_count=20, $page);
                     $this->addToView('insights', $insights);
                 } else {
                     //show only service users owner owns

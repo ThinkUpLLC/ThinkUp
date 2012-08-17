@@ -16,7 +16,7 @@
  <span style="color:gray">{$u->description|link_usernames_to_twitter}</span>
  {$u->url}<br>
  {else}
- {$u->full_name}<br><br><br>
+ {$u->full_name}{if $u->other.total_likes}<br><small style="color:gray">{$u->other.total_likes|number_format} likes</small>{/if}<br><br><br>
  {/if}
   </div>
  <div style="clear:all">&nbsp;</div>

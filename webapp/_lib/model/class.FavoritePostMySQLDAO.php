@@ -365,15 +365,15 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
     }
 
     public function getUsersWhoFavoritedMostOfYourPosts($author_user_id, $network, $last_x_days) {
-        //$q = "SELECT u.user_name, fav_of_user_id, count(f.post_id) AS total_favs from tu_favorites f ";
+        //$q = "SELECT u.user_name, fav_of_user_id, count(f.post_id) AS total_likes from tu_favorites f ";
         $q = "SELECT * FROM ( ";
-        $q .= "SELECT u.*, count(f.post_id) AS total_favs from tu_favorites f ";
+        $q .= "SELECT u.*, count(f.post_id) AS total_likes from tu_favorites f ";
         $q .= "INNER JOIN tu_users u ON u.user_id = f.fav_of_user_id ";
         $q .= "INNER JOIN tu_posts p ON f.post_id = p.post_id ";
         $q .= "WHERE f.author_user_id = :author_user_id and f.network=:network ";
         $q .= "AND p.pub_date >= date_sub(current_date, INTERVAL :last_x_days day) ";
-        $q .= "GROUP BY f.fav_of_user_id ORDER BY total_favs DESC";
-        $q .= ") favs WHERE favs.total_favs > 1 LIMIT 3";
+        $q .= "GROUP BY f.fav_of_user_id ORDER BY total_likes DESC";
+        $q .= ") favs WHERE favs.total_likes > 1 LIMIT 3";
 
         $vars = array(
             ':author_user_id'=> $author_user_id,
@@ -385,6 +385,13 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
 
         $ps = $this->execute($q, $vars);
-        return $this->getDataRowsAsObjects($ps, 'User');
+        $rows = $this->getDataRowsAsArrays($ps);
+        $users = array();
+        foreach ($rows as $row) {
+            $user = new User($row);
+            $user->total_likes = $row['total_likes'];
+            $users[] = $user;
+        }
+        return $users;
     }
 }
