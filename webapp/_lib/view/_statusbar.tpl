@@ -83,6 +83,7 @@
   
   <div class="status-bar-right text-right">
     <ul> 
+        <li><a href="insights.php">Insights <span style="color:red !important">(New!)</span></a></li>
       {if $logged_in_user}
         <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
       {else}

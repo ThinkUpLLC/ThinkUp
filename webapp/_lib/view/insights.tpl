@@ -28,7 +28,7 @@
             <ul class="nav nav-list">
               <li class="">
                   {if $i->date|relative_day eq "today" }
-                      {if $instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
+                      {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
                   {else}
                       {$i->date|relative_day|ucfirst}
                   {/if}

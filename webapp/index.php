@@ -25,8 +25,6 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  */
-//require_once 'init.php';
-//$controller = new DashboardController();
-//echo $controller->go();
-
-require_once 'insights.php';
+require_once 'init.php';
+$controller = new DashboardController();
+echo $controller->go();
