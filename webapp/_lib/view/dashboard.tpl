@@ -47,7 +47,7 @@
               <div class="clearfix alert stats round-all" id="">
                 <div class="grid_2 alpha">
                   <div class="avatar-container">
-                    <img src="{$user_details->avatar}" class="avatar2"/>
+                    <img src="{$user_details->avatar}" class="avatar2" width="48" height="48"/>
                     <img src="{$site_root_path}plugins/{$user_details->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/>
                   </div>
                 </div>
@@ -76,7 +76,7 @@
                 {foreach from=$least_likely_followers key=uid item=u name=foo}
                   {if !$smarty.foreach.foo.last}
                   <div class="avatar-container" style="float:left;margin:7px;">
-                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2" width="48" height="48"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.png" class="service-icon2"/></a>
                   </div>
                   {/if}
                 {/foreach}

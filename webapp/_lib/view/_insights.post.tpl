@@ -9,7 +9,7 @@
 <div class="post lead">
   {if $i->instance->network_username != $post->author_username}
    <div class="avatar-container" style="float:left;margin:7px; clear : left;">
-   <a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/></a>
+   <a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/></a>
   </div>
   {/if}
 

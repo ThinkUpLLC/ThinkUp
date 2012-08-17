@@ -1,6 +1,6 @@
 <div class="grid_2 alpha">
   <div class="avatar-container">
-    <img src="{if $post->author->avatar}{$post->author->avatar}{else}{$post->author_avatar}{/if}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/>
+    <img src="{if $post->author->avatar}{$post->author->avatar}{else}{$post->author_avatar}{/if}" class="avatar2" width="48" height="48"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/>
   </div>
 </div>
 
