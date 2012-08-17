@@ -49,7 +49,7 @@ class InsightStreamController extends ThinkUpController {
                 }
             } else {
                 //show just public service users in stream
-                $insights = $insight_dao->getPublicInsights($page_count=10, $page);
+                $insights = $insight_dao->getPublicInsights($page_count=20, $page);
                 $this->addToView('insights', $insights);
             }
             if (isset($insights) && sizeof($insights) > 0) {
