@@ -47,7 +47,7 @@
     <div class="span9">
         <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-success{/if} {$i->emphasis} insight-item">
             <p>
-{$i->instance->network_username} {$i->instance->network|capitalize}<br>
+{$i->instance->network_username} {$i->instance->network|capitalize} <img src="{$i->instance->avatar}" width="12" height="12"><br>
     <!-- begin {$i->related_data_type} attachment data -->
                 {if $i->related_data_type eq 'users'}
                     {include file="_insights.users.tpl"}

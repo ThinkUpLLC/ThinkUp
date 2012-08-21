@@ -161,8 +161,10 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
 
     private function getInsightsForInstances($page_count=10, $page_number=1, $public_only = true) {
         $start_on_record = ($page_number - 1) * $page_count;
-        $q = "SELECT i.*, i.id as insight_key, su.* FROM #prefix#insights i ";
-        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id WHERE su.is_active = 1 ";
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 ";
         if ($public_only) {
             $q .= "AND su.is_public = 1 ";
         }
@@ -173,11 +175,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $rows = $this->getDataRowsAsArrays($ps, "Insight");
+        $rows = $this->getDataRowsAsArrays($ps);
         $insights = array();
         foreach ($rows as $row) {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
             $insights[] = $insight;
         }
         foreach ($insights as $insight) {
