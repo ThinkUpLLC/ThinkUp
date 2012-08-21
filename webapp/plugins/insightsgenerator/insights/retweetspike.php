@@ -153,63 +153,72 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
         while ($days_ago < $number_days) {
             $since_date = date("Y-m-d", strtotime("-".$days_ago." day"));
 
-            //Save average retweets over past 7 days
-            $average_retweet_count_7_days = null;
-            $average_retweet_count_7_days = $post_dao->getAverageRetweetCount($instance->network_username,
-            $instance->network, 7, $since_date);
-            if ($average_retweet_count_7_days != null ) {
-                $insight_baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $instance->id,
-                $average_retweet_count_7_days, $since_date);
-                $this->logger->logSuccess("Averaged $average_retweet_count_7_days retweets in the 7 days before ".
-                $since_date, __METHOD__.','.__LINE__);
-            }
-            //Save average retweets over past 30 days
-            $average_retweet_count_30_days = null;
-            $average_retweet_count_30_days = $post_dao->getAverageRetweetCount($instance->network_username,
-            $instance->network, 30, $since_date);
-            if ($average_retweet_count_30_days != null ) {
-                $insight_baseline_dao->insertInsightBaseline('avg_retweet_count_last_30_days', $instance->id,
-                $average_retweet_count_30_days, $since_date);
-                $this->logger->logSuccess("Averaged $average_retweet_count_30_days retweets in the 30 days before ".
-                $since_date, __METHOD__.','.__LINE__);
+            if ($post_dao->doesUserHavePostsWithRetweetsSinceDate($instance->network_username, $instance->network, 7,
+            $since_date)) {
+                //Save average retweets over past 7 days
+                $average_retweet_count_7_days = null;
+                $average_retweet_count_7_days = $post_dao->getAverageRetweetCount($instance->network_username,
+                $instance->network, 7, $since_date);
+                if ($average_retweet_count_7_days != null ) {
+                    $insight_baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $instance->id,
+                    $average_retweet_count_7_days, $since_date);
+                    $this->logger->logSuccess("Averaged $average_retweet_count_7_days retweets in the 7 days before ".
+                    $since_date, __METHOD__.','.__LINE__);
+                }
+
+                //Save retweet high for last 7 days
+                $high_retweet_count_7_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+                $network=$instance->network, 1, 'retweets', 7, $iterator = false, $is_public = false,
+                $since=$since_date);
+                if ($high_retweet_count_7_days != null ) {
+                    $high_retweet_count_7_days = $high_retweet_count_7_days[0]->all_retweets;
+                    $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_7_days', $instance->id,
+                    $high_retweet_count_7_days, $since_date);
+                    $this->logger->logSuccess("High of $high_retweet_count_7_days retweets in the 7 days before ".
+                    $since_date, __METHOD__.','.__LINE__);
+                }
             }
 
-            //Save retweet high for last 7 days
-            $high_retweet_count_7_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
-            $network=$instance->network, 1, 'retweets', 7, $iterator = false, $is_public = false,
-            $since=$since_date);
-            if ($high_retweet_count_7_days != null ) {
-                $high_retweet_count_7_days = $high_retweet_count_7_days[0]->all_retweets;
-                $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_7_days', $instance->id,
-                $high_retweet_count_7_days, $since_date);
-                $this->logger->logSuccess("High of $high_retweet_count_7_days retweets in the 7 days before ".
-                $since_date, __METHOD__.','.__LINE__);
+            if ($post_dao->doesUserHavePostsWithRetweetsSinceDate($instance->network_username, $instance->network, 30,
+            $since_date)) {
+                //Save average retweets over past 30 days
+                $average_retweet_count_30_days = null;
+                $average_retweet_count_30_days = $post_dao->getAverageRetweetCount($instance->network_username,
+                $instance->network, 30, $since_date);
+                if ($average_retweet_count_30_days != null ) {
+                    $insight_baseline_dao->insertInsightBaseline('avg_retweet_count_last_30_days', $instance->id,
+                    $average_retweet_count_30_days, $since_date);
+                    $this->logger->logSuccess("Averaged $average_retweet_count_30_days retweets in the 30 days before ".
+                    $since_date, __METHOD__.','.__LINE__);
+                }
+
+                //Save retweet high for last 30 days
+                $high_retweet_count_30_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+                $network=$instance->network, 1, 'retweets', 30, $iterator = false, $is_public = false,
+                $since=$since_date);
+                if ($high_retweet_count_30_days != null ) {
+                    $high_retweet_count_30_days = $high_retweet_count_30_days[0]->all_retweets;
+                    $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_30_days', $instance->id,
+                    $high_retweet_count_30_days, $since_date);
+                    $this->logger->logSuccess("High of $high_retweet_count_30_days retweets in the 30 days before ".
+                    $since_date, __METHOD__.','.__LINE__);
+                }
             }
 
-            //Save retweet high for last 30 days
-            $high_retweet_count_30_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
-            $network=$instance->network, 1, 'retweets', 30, $iterator = false, $is_public = false,
-            $since=$since_date);
-            if ($high_retweet_count_30_days != null ) {
-                $high_retweet_count_30_days = $high_retweet_count_30_days[0]->all_retweets;
-                $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_30_days', $instance->id,
-                $high_retweet_count_30_days, $since_date);
-                $this->logger->logSuccess("High of $high_retweet_count_30_days retweets in the 30 days before ".
-                $since_date, __METHOD__.','.__LINE__);
+            if ($post_dao->doesUserHavePostsWithRetweetsSinceDate($instance->network_username, $instance->network, 365,
+            $since_date)) {
+                //Save retweet high for last 365 days
+                $high_retweet_count_365_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+                $network=$instance->network, 1, 'retweets', 365, $iterator = false, $is_public = false,
+                $since=$since_date);
+                if ($high_retweet_count_365_days != null ) {
+                    $high_retweet_count_365_days = $high_retweet_count_365_days[0]->all_retweets;
+                    $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $instance->id,
+                    $high_retweet_count_365_days, $since_date);
+                    $this->logger->logSuccess("High of $high_retweet_count_365_days retweets in the 365 days before ".
+                    $since_date, __METHOD__.','.__LINE__);
+                }
             }
-
-            //Save retweet high for last 365 days
-            $high_retweet_count_365_days = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
-            $network=$instance->network, 1, 'retweets', 365, $iterator = false, $is_public = false,
-            $since=$since_date);
-            if ($high_retweet_count_365_days != null ) {
-                $high_retweet_count_365_days = $high_retweet_count_365_days[0]->all_retweets;
-                $insight_baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $instance->id,
-                $high_retweet_count_365_days, $since_date);
-                $this->logger->logSuccess("High of $high_retweet_count_365_days retweets in the 365 days before ".
-                $since_date, __METHOD__.','.__LINE__);
-            }
-
             $days_ago++;
         }
     }

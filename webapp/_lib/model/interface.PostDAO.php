@@ -582,4 +582,14 @@ interface PostDAO {
      * @return array Post objects
      */
     public function getOnThisDayFlashbackPosts($author_id, $network, $from_date=null);
+
+    /**
+     * Check if user has any posts with retweets on or before since_date minus last_x_days
+     * @param str $author_username
+     * @param str $network
+     * @param int $last_x_days
+     * @param str $since Date in Y-m-d format
+     * @return bool
+     */
+    public function doesUserHavePostsWithRetweetsSinceDate($author_username, $network, $last_x_days, $since=null);
 }

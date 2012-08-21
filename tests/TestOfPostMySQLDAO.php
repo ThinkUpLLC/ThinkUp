@@ -2998,4 +2998,38 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $average_retweet_count = $dao->getAverageRetweetCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-40 day")));
         $this->assertEqual($average_retweet_count, 17);
     }
+
+    public function testDoesUserHavePostsWithRetweetsSinceDate() {
+        $post_dao = new PostMySQLDAO();
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('ev', 'twitter', 7);
+        $this->assertFalse($result);
+
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+            'id'=>$id,
+            'post_id'=>(147+$counter),
+            'author_user_id'=>23,
+            'author_username'=>'user3',
+            'pub_date'=>'-'.$counter.'d',
+            'retweet_count_cache'=>$counter+1,
+            'old_retweet_count_cache' => floor($counter/2),
+            'network'=>'twitter',
+            'in_reply_to_user_id'=>null,
+            'in_reply_to_post_id'=>null,
+            'in_retweet_of_post_id'=>null
+            ));
+            $counter++;
+        }
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30);
+        $this->assertTrue($result);
+
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $this->assertFalse($result);
+    }
+
 }
