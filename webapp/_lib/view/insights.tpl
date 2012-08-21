@@ -45,9 +45,9 @@
         {/if}
 
     <div class="span9">
-        <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-success{/if} {$i->emphasis} insight-item">
-            <p>
-{$i->instance->network_username} {$i->instance->network|capitalize} <img src="{$i->instance->avatar}" width="12" height="12"><br>
+        <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-info{/if} emphasis-{$i->emphasis} insight-item">
+            <div class="service-user-icons"><img src="{$site_root_path}plugins/{$i->instance->network}/assets/img/favicon.png" alt="{$i->instance->network|capitalize}" class="favicon" /> <img src="{$i->instance->avatar}" width="16" height="16" alt="{$i->instance->network_username}"></div>
+            <div class="insight-attachment-detail {$i->related_data_type}">
     <!-- begin {$i->related_data_type} attachment data -->
                 {if $i->related_data_type eq 'users'}
                     {include file="_insights.users.tpl"}
@@ -59,7 +59,7 @@
                     {include file="_insights.count_history.tpl"}
                 {/if}
     <!--end {$i->related_data_type} attachment data-->
-             </p>
+            </div>
         </div>
     </div><!--/span9-->
    {/if}
