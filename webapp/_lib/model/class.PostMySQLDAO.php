@@ -1125,8 +1125,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select,
         // which we can then sort on.
         if ($order_by == 'retweets') {
-            $q = "SELECT p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " .
-            "pub_date + interval #gmt_offset# hour as adj_pub_date ";
+            $q = "SELECT p.*, GREATEST((p.retweet_count_cache + p.old_retweet_count_cache), retweet_count_api) ".
+            "as retweets, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         } else {
             $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         }
