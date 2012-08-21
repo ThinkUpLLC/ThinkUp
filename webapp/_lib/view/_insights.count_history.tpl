@@ -1,12 +1,13 @@
-<span class="label label-{if $i->emphasis eq '1'}inverse{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}">{$i->prefix}</span> 
-                <i class="icon-star-empty"></i>
+<div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal"></i></button></div>
+
+<span class="label label-{if $i->emphasis eq '1'}inverse{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-star-empty"></i> {$i->prefix}</span> 
+                
                 {$i->text}
 
-<div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal"></i></button></div>
 
 <div class="collapse in" id="chart-{$i->id}">
 
-<div id="count_history_{$i->id}"></div>
+<div id="count_history_{$i->id}" class="chart"></div>
 
 <script type="text/javascript">
 // Load the Visualization API and the standard charts
@@ -31,7 +32,6 @@ function drawChart{/literal}{$i->id}() {literal}{
       chartType: 'LineChart',
       dataTable: count_history_data_{/literal}{$i->id}{literal},
       options: {
-          width: 800,
           height: 200,
           legend: "none",
           interpolateNulls: true,

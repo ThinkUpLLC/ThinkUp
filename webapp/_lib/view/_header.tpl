@@ -23,9 +23,14 @@
     
     <style>
     {literal}
+    
+    form .control-group {
+        margin : 6px;
+    }
 
     .detail-btn {
-        margin-top : -18px;
+        margin-right : 6px;
+        margin-left : 12px;
     }
       
     .metaroll {
@@ -35,23 +40,86 @@
         line-height : 100%;
     }
 
+
     .label {
         padding: 1px 4px 2px;
         -webkit-border-radius: 1px;
         -moz-border-radius: 1px;
         border-radius: 1px;
-        border-bottom : 1px solid black;
-        border-right : 1px solid #333;
     }
 
-    .alert .label {
+    .label .icon-white {
+        margin-top : 2px;
+    }
+    
+    .alert {
+        padding: 6px;
+    }
+
+    .alert p .label {
         margin-left : -12px;
         z-index: 999;
     }
     
+    .alert p a {
+        font-weight : bolder;
+    }
+    
     .lead {
-        padding-left : 8px;
+        padding-left : 22px;
         margin-right : 10px;
+        margin-bottom : 0px;
+        margin-top : 6px;
+        color : #666;
+    }
+    
+    .alert table {
+        margin-top : 10px;
+        width : 90%;
+        margin-left : 22px;
+    }
+    
+    .alert table td {
+        border : 0;
+    }
+    
+    .alert .chart {
+        padding-top : 12px;
+        margin-left : auto;
+        margin-right : auto;
+    }
+
+    .service-user-icons {
+        float : right;
+    }
+
+    .service-user-icons img {
+        filter: gray; /* IE6-9 */
+        -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+        opacity:0.4;
+        padding-left : 6px;
+    }
+    
+    .service-user-icons img:hover {
+        filter: none;
+        -webkit-filter: grayscale(0);
+        opacity:1;
+    }
+    
+    .alert table img {
+        max-width : 200%;
+    }
+    
+    .alert table .avatar2 {
+        padding-top : 6px;
+    }
+    
+    .avatar-data {
+        width : 50px;
+    }
+    
+    .alert table p {
+        color : #666;
     }
     
     .password-meter {
@@ -66,7 +134,6 @@
     .password-meter-bg {
         background: transparent;
         width : 220px;
-
     }
     
     .password-meter-message-very-weak {
@@ -176,6 +243,14 @@
     {/foreach}
     <!-- jquery -->
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
+{if !$user_is_admin}
+    <script type="text/javascript">
+
+    window.location = "{$site_root_path}insights.php"
+
+    </script>
+{/if}
+
     <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
     <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
   
