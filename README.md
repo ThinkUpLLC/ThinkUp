@@ -1,4 +1,4 @@
-# ThinkUp, social media insights engine [![Build Status](https://secure.travis-ci.org/ginatrapani/ThinkUp.png)](http://travis-ci.org/ginatrapani/ThinkUp)
+# ThinkUp, social media insights engine [![Build Status](https://secure.travis-ci.org/ginatrapani/ThinkUp.png?branch=master)](http://travis-ci.org/ginatrapani/ThinkUp)
 
 ThinkUp is a free, installable web application that captures the insights and expertise of your social network by 
 organizing replies to your conversations on Twitter, Facebook, Google+ and (soon!) other networks.
