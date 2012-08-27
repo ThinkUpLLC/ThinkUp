@@ -1687,6 +1687,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if (!isset($from_date)) {
             $from_date = 'CURRENT_DATE()';
+        } else {
+            $from_date = "'$from_date'";
         }
         $q = "SELECT po.*, po.id AS post_key, po.pub_date + interval #gmt_offset# hour as adj_pub_date, ";
         $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box ";
@@ -1700,7 +1702,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "ORDER BY pub_date DESC ";
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $all_post_rows = $this->getDataRowsAsArrays($ps);
 
