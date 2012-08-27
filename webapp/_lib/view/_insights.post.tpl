@@ -1,6 +1,11 @@
 {if $hide_insight_header}
 
 {else}
+
+{if $i->slug eq 'geoencoded_replies'}
+<div class="pull-right detail-btn"><button class="btn btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
+{/if}
+
 <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i> {$i->prefix}</span> 
     
     {$i->text}
@@ -63,7 +68,6 @@
 
 {if $i->slug eq 'geoencoded_replies'}
 
-<div class="pull-right detail-btn"><button class="btn btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
 <div class="collapse in" id="map-{$i->id}">
 <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
 <iframe width="93%" frameborder="0" src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post" name="childframe" id="childframe" >
