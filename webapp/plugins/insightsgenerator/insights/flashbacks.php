@@ -48,7 +48,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                 $number_of_years_ago = $current_year - $oldest_post_year;
                 $plural = ($number_of_years_ago > 1 )?'s':'';
                 $this->insight_dao->insertInsight("posts_on_this_day_flashback", $instance->id,
-                $this->insight_date, $oldest_post_year." flashback:", $number_of_years_ago." year".
+                $this->insight_date, "Time machine:", $number_of_years_ago." year".
                 $plural. " ago today, you posted: ", Insight::EMPHASIS_MED, serialize($flashback_posts));
             }
         }

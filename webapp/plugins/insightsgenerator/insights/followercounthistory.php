@@ -59,7 +59,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight_text .= '</strong> followers at your current growth rate.';
 
                 $this->insight_dao->insertInsight('follower_count_history_by_month_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_month));
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -85,7 +85,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 .__LINE__);
 
                 $this->insight_dao->insertInsight('follower_count_history_by_week_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_HIGH,
+                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_week));
             }
         }
