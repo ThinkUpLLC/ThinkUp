@@ -133,6 +133,29 @@
                 {/foreach}
               </div>
             {/if}
+            {if $posts_flashback|@count > 0 }
+            <div class="section">
+                <h2>Flashback: On This Day In Years Past</h2>
+                {if $instance->network eq 'foursquare'}
+                    <style type="text/css">
+                    {literal}
+                    .map-image-container { width: 130px; height: 130px; padding-bottom : 30px; }
+                    img.map-image2 {float:left;margin:6px 0 0 0;width:150px;height:150px;}
+                    img.place-icon2 {position: relative;width: 32px;height: 32px;top: -146px;left: 5px;}
+                    {/literal}
+                    </style>
+
+                    {foreach from=$posts_flashback item=post name=foo}
+                        {include file="_post.checkin.tpl"}
+                    {/foreach}
+                {else}
+                    {foreach from=$posts_flashback key=tid item=post name=foo}
+                      {include file="_post.counts_no_author.tpl" post=$post show_favorites_instead_of_retweets=false}
+                    {/foreach}
+                {/if}
+            </div>
+           {/if} 
+
             {if $instance->network eq 'twitter' }
                 <div class="section" style="float : left; clear : none; width : 345px;">
                   {include file="_dashboard.posttypes.tpl"}

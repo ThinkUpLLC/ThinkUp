@@ -401,6 +401,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
 
         $is_archive_loaded_follows = $this->convertBoolToDB($i->is_archive_loaded_follows);
         $is_archive_loaded_replies = $this->convertBoolToDB($i->is_archive_loaded_replies);
+        $is_archive_loaded_posts = $this->convertBoolToDB($i->is_archive_loaded_posts);
 
         //former subquery 1 for owner_favs_in_system
         $q = "SELECT COUNT(*) AS owner_favs_in_system FROM #prefix#favorites ";
@@ -460,6 +461,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "total_follows_in_system = :total_follows_in_system, ";
         $q .= "is_archive_loaded_follows = :ialf, ";
         $q .= "is_archive_loaded_replies = :ialr, ";
+        $q .= "is_archive_loaded_posts = :ialp, ";
         // For performance reasons, set this to null for now.
         $q .= "earliest_reply_in_system = null, ";
         // The former subquery is a performance hog, and the field is not in use.
@@ -485,6 +487,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
             ':total_follows_in_system' => (int) $total_follows_in_system,
             ':ialf'         => $is_archive_loaded_follows,
             ':ialr'         => $is_archive_loaded_replies,
+            ':ialp'         => $is_archive_loaded_posts,
         //':earliest_post_in_system' => $earliest_post_in_system,
         //':username'     => "%".$i->network_username."%",
             ':ppd'          => $posts_per_day,

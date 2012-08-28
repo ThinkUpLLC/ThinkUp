@@ -95,6 +95,10 @@ class Instance {
      */
     var $earliest_reply_in_system;
     /**
+     * @var bool Whether or not all the instance's posts have been backfilled.
+     */
+    var $is_archive_loaded_posts = false;
+    /**
      * @var bool Whether or not all the instance's replies have been backfilled.
      */
     var $is_archive_loaded_replies = false;
@@ -140,6 +144,7 @@ class Instance {
             $this->percentage_links = $row['percentage_links'];
             $this->earliest_post_in_system = $row['earliest_post_in_system'];
             $this->earliest_reply_in_system = $row['earliest_reply_in_system'];
+            $this->is_archive_loaded_posts = PDODAO::convertDBToBool($row['is_archive_loaded_posts']);
             $this->is_archive_loaded_replies = PDODAO::convertDBToBool($row['is_archive_loaded_replies']);
             $this->is_archive_loaded_follows = PDODAO::convertDBToBool($row['is_archive_loaded_follows']);
             $this->is_public = PDODAO::convertDBToBool($row['is_public']);

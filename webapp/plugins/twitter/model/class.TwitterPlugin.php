@@ -165,12 +165,12 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                 $twitter_crawler->cleanUpFollows();
                 $twitter_crawler->fetchFriendTweetsAndFriends();
 
-                $dashboard_module_cacher->cacheDashboardModules();
-
                 if ($noauth) {
                     // No auth req'd
                     $twitter_crawler->fetchSearchResults($instance->network_username);
                 }
+
+                $dashboard_module_cacher->cacheDashboardModules();
 
                 // Save instance
                 if (isset($twitter_crawler->user)) {
