@@ -22,6 +22,9 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
     <div class="grid_3 small">
       {if $post->network == 'twitter' && $username_link != 'internal'}
         <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username} on Twitter">{$post->author_username}</a>
+      {elseif $post->network == 'foursquare'}
+        { *don't expose user email addresses or phone numbers*}
+        {$post->author_fullname}
       {else}
         {$post->author_username}
       {/if}

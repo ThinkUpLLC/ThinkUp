@@ -271,7 +271,8 @@ class DashboardController extends ThinkUpController {
 
             if (is_array($all_time_clients_usage)) {
                 // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
-                $all_time_clients_usage = DashboardModuleCacher::getClientUsageVisualizationData($all_time_clients_usage);
+                $all_time_clients_usage =
+                DashboardModuleCacher::getClientUsageVisualizationData($all_time_clients_usage);
                 $this->addToView('all_time_clients_usage', $all_time_clients_usage);
             }
 
@@ -279,6 +280,38 @@ class DashboardController extends ThinkUpController {
                 // Only show the two most used clients for the last 25 posts
                 $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
                 $this->addToView('latest_clients_usage', $latest_clients_usage);
+            }
+
+            $posts_flashback = $insight_dao->getPreCachedInsightData('PostMySQLDAO::getOnThisDayFlashbackPosts',
+            $this->instance->id, date('Y-m-d'));
+            $this->addToView('posts_flashback', $posts_flashback);
+
+            // Foursquare items
+            if ($this->instance->network == "foursquare") {
+                // Checkins per hour - all time
+                $checkins_per_hour = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsPerHourAllTime', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_per_hour_all_time', $checkins_per_hour);
+
+                // Checkins per hour - last week
+                $checkins_per_hour_last_week = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsPerHourLastWeek', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_per_hour_last_week', $checkins_per_hour_last_week);
+
+                // Checkins by type of place - all time
+                $place_types = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsToPlaceTypes', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_by_type', $place_types);
+
+                // Checkins by type of place - last week
+                $place_types_last_week = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::countCheckinsToPlaceTypesLastWeek', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_by_type_last_week', $place_types_last_week);
+
+                // Map of checkins in the last week
+                $checkins_map = $insight_dao->getPreCachedInsightData(
+                'PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_map', $checkins_map);
             }
         } else {
             $this->addErrorMessage($username." on ".ucwords($this->instance->network).

@@ -61,7 +61,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins();
-        $this->assertEqual(count($plugins), 7);
+        $this->assertEqual(count($plugins), 8);
 
         usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
         $this->assertEqual($plugins[0]->name,"Expand URLs");
@@ -70,20 +70,23 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($plugins[1]->name,"Facebook");
         $this->assertEqual($plugins[1]->folder_name,"facebook");
 
-        $this->assertEqual($plugins[2]->name, "GeoEncoder");
-        $this->assertEqual($plugins[2]->folder_name, "geoencoder");
+        $this->assertEqual($plugins[2]->name,"Foursquare");
+        $this->assertEqual($plugins[2]->folder_name,"foursquare");
 
-        $this->assertEqual($plugins[3]->name,"Google+");
-        $this->assertEqual($plugins[3]->folder_name,"googleplus");
+        $this->assertEqual($plugins[3]->name, "GeoEncoder");
+        $this->assertEqual($plugins[3]->folder_name, "geoencoder");
 
-        $this->assertEqual($plugins[4]->name,"Hello ThinkUp");
-        $this->assertEqual($plugins[4]->folder_name,"hellothinkup");
+        $this->assertEqual($plugins[4]->name,"Google+");
+        $this->assertEqual($plugins[4]->folder_name,"googleplus");
 
-        $this->assertEqual($plugins[5]->name,"Twitter");
-        $this->assertEqual($plugins[5]->folder_name,"twitter");
+        $this->assertEqual($plugins[5]->name,"Hello ThinkUp");
+        $this->assertEqual($plugins[5]->folder_name,"hellothinkup");
 
-        $this->assertEqual($plugins[6]->name,"Twitter Realtime");
-        $this->assertEqual($plugins[6]->folder_name,"twitterrealtime");
+        $this->assertEqual($plugins[6]->name,"Twitter");
+        $this->assertEqual($plugins[6]->folder_name,"twitter");
+
+        $this->assertEqual($plugins[7]->name,"Twitter Realtime");
+        $this->assertEqual($plugins[7]->folder_name,"twitterrealtime");
     }
 
     public function testInsertPugin() {

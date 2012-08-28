@@ -143,11 +143,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $class_name = ucfirst($network) . 'Plugin';
         $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
         if (empty($ordering)) {
-            $ordering = 'pub_date ASC ';
+            $ordering = "pub_date ASC ";
         } else {
-            $ordering .= ', pub_date ASC ';
+            $ordering .= ", pub_date ASC ";
         }
-        $q .= 'ORDER BY ' . $ordering. ' ';
+        $q .= "ORDER BY " . $ordering. " ";
 
         if ($count > 0) {
             $q .= "LIMIT :start_on_record, :limit;";
@@ -439,7 +439,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return int Number of affected rows
      */
     private function updateAPIRetweetCount($post_id, $retweet_count_api, $network) {
-        $q = " UPDATE  #prefix#posts SET retweet_count_api = :count ";
+        $q = "UPDATE  #prefix#posts SET retweet_count_api = :count ";
         $q .= "WHERE post_id = :post_id AND network=:network";
         $vars = array(
             ':post_id'=>(string)$post_id,
@@ -451,7 +451,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getUpdateCount($ps);
     }
 
-
     /**
      * Update the 'in_retweet_of_post_id' field for an existing post. This will be done only if
      * this field is not already set, which could be the case if the post was originally processed via
@@ -462,8 +461,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return int Number of affected rows
      */
     private function updateInRetweetOfPostID($post_id, $in_retweet_of_post_id, $network) {
-        $q = " UPDATE  #prefix#posts SET in_retweet_of_post_id = :rpid ";
-        $q .= " WHERE post_id = :post_id AND network=:network ";
+        $q = "UPDATE  #prefix#posts SET in_retweet_of_post_id = :rpid ";
+        $q .= "WHERE post_id = :post_id AND network=:network ";
         $q .= "AND in_retweet_of_post_id IS NULL ";
         $vars = array(
             ':post_id'=>(string)$post_id,
@@ -515,7 +514,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $fieldname ="favlike";
         }
         if ($fieldname) {
-            $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
+            $q = "UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
             $q .= "WHERE post_id = :post_id AND network=:network";
             $vars = array(
                 ':post_id'=>(string)$post_id,
@@ -677,7 +676,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             //Set up any optional fields
             foreach ($this->OPTIONAL_FIELDS as $field) {
                 if (isset($vals[$field]) && $vals[$field] != '') {
-                    $q .= " ".$field."=:".$field.", ";
+                    $q .= "".$field."=:".$field.", ";
                     $vars[':'.$field] = $vals[$field];
                 }
             }
@@ -1258,7 +1257,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $direction = ($direction == 'DESC') ? 'DESC' : 'ASC';
 
         $author_username = '@'.$author_username;
-        $q = " SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
         $q .= "WHERE p.network = :network AND ";
@@ -1399,7 +1398,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= "MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
         } else {
             $username = '%'.$username .'%';
-            $q .= " post_text LIKE :username ";
+            $q .= "post_text LIKE :username ";
         }
         $q .= "AND in_reply_to_post_id is null ";
         $q .= "AND in_retweet_of_post_id is null ";
@@ -1506,7 +1505,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function updateAuthorUsername($author_user_id, $network, $author_username) {
-        $q = " UPDATE  #prefix#posts SET author_username = :author_username ";
+        $q = "UPDATE  #prefix#posts SET author_username = :author_username ";
         $q .= "WHERE author_user_id = :author_user_id AND network=:network";
         $vars = array(
             ':author_user_id'=>(string)$author_user_id,
@@ -1624,7 +1623,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function updateFavLikeCount($post_id, $network, $fav_like_count) {
-        $q = " UPDATE #prefix#posts SET favlike_count_cache=:favlike_count_cache WHERE post_id=:post_id ";
+        $q = "UPDATE #prefix#posts SET favlike_count_cache=:favlike_count_cache WHERE post_id=:post_id ";
         $q .= "AND network=:network;";
         $vars = array(
             ':favlike_count_cache'=>$fav_like_count,
@@ -1637,7 +1636,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function updateReplyCount($post_id, $network, $reply_count) {
-        $q = " UPDATE #prefix#posts SET reply_count_cache=:reply_count_cache WHERE post_id=:post_id ";
+        $q = "UPDATE #prefix#posts SET reply_count_cache=:reply_count_cache WHERE post_id=:post_id ";
         $q .= "AND network=:network;";
         $vars = array(
             ':reply_count_cache'=>$reply_count,
@@ -1650,7 +1649,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function updateRetweetCount($post_id, $network, $retweet_count) {
-        $q = " UPDATE #prefix#posts SET retweet_count_cache=:retweet_count_cache WHERE post_id=:post_id ";
+        $q = "UPDATE #prefix#posts SET retweet_count_cache=:retweet_count_cache WHERE post_id=:post_id ";
         $q .= "AND network=:network;";
         $vars = array(
             ':retweet_count_cache'=>$retweet_count,
@@ -1663,7 +1662,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function updatePostText($post_id, $network, $post_text) {
-        $q = " UPDATE #prefix#posts SET post_text=:post_text WHERE post_id=:post_id ";
+        $q = "UPDATE #prefix#posts SET post_text=:post_text WHERE post_id=:post_id ";
         $q .= "AND network=:network;";
         $vars = array(
             ':post_text'=>$post_text,
@@ -1687,8 +1686,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $from_date = ':from_date';
         }
         $q = "SELECT po.*, po.id AS post_key, po.pub_date + interval #gmt_offset# hour as adj_pub_date, ";
-        $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box ";
-        $q .= "FROM #prefix#posts po ";
+        $q .= "pl.place_type, pl.name, pl.full_name, pl.country_code, pl.country, pl.longlat, pl.bounding_box, ";
+        $q .= "pl.icon, pl.map_image FROM #prefix#posts po ";
         $q .= "LEFT JOIN #prefix#places pl ON po.place_id = pl.place_id ";
         $q .= "WHERE  (YEAR(pub_date)!=YEAR(CURRENT_DATE())) ";
         $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
@@ -1698,7 +1697,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "ORDER BY pub_date DESC ";
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-
         $ps = $this->execute($q, $vars);
         $all_post_rows = $this->getDataRowsAsArrays($ps);
 
@@ -1710,7 +1708,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $all_posts = array();
         foreach ($all_post_rows as $row) {
             $post = new Post($row);
-            // $post->place_obj = new Place($row);
+            // Create a place object incase this post has some associated place data
+            $post->place_obj = new Place($row);
             $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(",", $post_keys_array).")";
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q);
@@ -1723,5 +1722,267 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $all_posts[] = $post;
         }
         return array_reverse($all_posts);
+    }
+
+    public function getAllCheckins($author_id, $network, $count=15, $page=1) {
+        // Work out which is the first checkin we want to get
+        $start_on_record = ($page - 1) * $count;
+
+        // Get the checkins from the database for this user
+        $q = "SELECT po.id AS post_key, po.post_id, po.author_user_id, po.author_username, po.author_fullname, ";
+        $q .= "po.author_avatar, po.author_follower_count, po.post_text, po.is_protected, po.source, po.location, ";
+        $q .= "po.place, po.place_id, po.geo, pub_date, po.in_reply_to_user_id,";
+        $q .= "po.in_reply_to_post_id, ";
+        $q .= "po.reply_count_cache, po.is_reply_by_friend, po.in_retweet_of_post_id, po.old_retweet_count_cache, ";
+        $q .= "po.is_retweet_by_friend, po.reply_retweet_distance, po.network, po.is_geo_encoded, ";
+        $q .= "po.in_rt_of_user_id, po.retweet_count_cache, po.retweet_count_api, po.favlike_count_cache, ";
+        $q .= "po.pub_date + interval #gmt_offset# hour as adj_pub_date, pl.place_id, pl.place_type, pl.name, ";
+        $q .= "pl.full_name, pl.country_code, pl.country, pl.network, pl.longlat, pl.bounding_box, pl.icon, ";
+        $q .= "pl.map_image, pl.id  ";
+        $q .= "FROM #prefix#posts po ";
+        $q .= "JOIN #prefix#places pl ON po.place_id = pl.place_id ";
+        $q .= "WHERE author_user_id=:author AND po.network=:network AND po.in_reply_to_post_id IS null ";
+        $q .= "ORDER BY pub_date DESC ";
+        $vars = array(
+            ':author'=>$author_id,
+            ':network'=>$network
+        );
+        if (isset($count) && $count > 0) {
+            $q .= "LIMIT :start_on_record, :limit";
+            $vars[':limit'] = (int)$count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+
+        // Get all the post ids of the checkins (we use this later for our link query)
+        $post_keys_array = array();
+        foreach ($all_rows as $row) {
+            $post_keys_array[] = $row['post_key'];
+        }
+
+        // An array to store each post object in for the checkins
+        $all_posts = array();
+        foreach ($all_rows as $row) {
+            $data = new Post($row);
+            // Create a place object for any place related data
+            $data->place_obj = new Place($row);
+            // Query for all the links related to these posts / checkins
+            $q2 = "SELECT * FROM #prefix#links WHERE post_key in (".implode(",", $post_keys_array).")";
+            $ps2 = $this->execute($q2);
+            $all_link_rows = $this->getDataRowsAsArrays($ps2);
+
+            // For each link returned if it equals the post id of this post add the link to this post
+            foreach ($all_link_rows as $link_row) {
+                if ($link_row['post_key'] == $data->id) {
+                    $data->addLink(new Link($link_row));
+                }
+            }
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            // Now we have all the information for this post store it in our array of all posts
+            $all_posts[] = $data;
+        }
+        return $all_posts;
+    }
+
+    public function countCheckinsToPlaceTypes($author_id, $network) {
+        $q = "SELECT place_type, COUNT(place_type) AS place_count FROM #prefix#places WHERE place_id IN ";
+        $q .= "(SELECT place_id FROM #prefix#posts WHERE author_user_id=:author AND network=:network) ";
+        $q .= "GROUP BY place_type";
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        // Convert the results into Google Charts Format
+        foreach ($all_rows as $row) {
+            /* Data needs to be in format
+             {c:[{v: 'Title'}, {v: Value of data for this title}]}
+             e.g. [{c:[{v: 'Park'}, {v: 5}]}
+             */
+            $resultset[] = array('c' => array(
+            array('v' => $row['place_type'], 'f' => $row['place_type']),
+            array('v' => intval($row['place_count']))
+            ));
+        }
+
+        // Set the meta values like titles etc.
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Place Type'),
+        array('type' => 'number', 'label' => 'Number of Checkins to this place type'),
+        );
+
+        // Now encode this data as JSON for the Google Charts API
+        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
+
+        if(count($all_rows) > 0) {
+            return $visdata;
+        } else {
+            return "";
+        }
+    }
+
+    public function countCheckinsToPlaceTypesLastWeek($author_id, $network) {
+        $q = "SELECT place_type, COUNT(place_type) AS place_count FROM #prefix#places WHERE place_id IN ";
+        $q .= "(SELECT place_id FROM #prefix#posts WHERE author_user_id=:author_id AND network=:network_name ";
+        $q .= "AND YEARWEEK(pub_date) = YEARWEEK(CURRENT_DATE) AND in_reply_to_post_id IS null ) ";
+        $q .= "GROUP BY place_type";
+        $vars = array(
+                        ':author_id'=>$author_id,
+                        ':network_name'=>$network);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
+        // Convert the results into Google Charts Format
+        foreach ($all_rows as $row) {
+            /* Data needs to be in format
+             {c:[{v: 'Title'}, {v: Value of data for this title}]}
+             e.g. [{c:[{v: 'Park'}, {v: 5}]}
+             */
+            $resultset[] = array('c' => array(
+            array('v' => $row['place_type'], 'f' => $row['place_type']),
+            array('v' => intval($row['place_count']))
+            ));
+        }
+
+        // Set the meta values like titles etc.
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Place Type'),
+        array('type' => 'number', 'label' => 'Number of Checkins to this place type'),
+        );
+
+        // Now encode this data as JSON for the Google Charts API
+        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
+
+        /* As we are getting posts from the last week, we might not have any so return a blank string in that instance
+         * So we know not to draw this graph on the dashboard.
+         */
+
+        if(count($all_rows) > 0) {
+            return $visdata;
+        } else {
+            return "";
+        }
+    }
+
+    public function countCheckinsPerHourAllTime($author_id, $network) {
+        $q = "SELECT HOUR(pub_date) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+        $q .= "WHERE author_user_id=:author ";
+        $q .= "AND network=:network AND in_reply_to_post_id IS null GROUP BY HOUR(pub_date)";
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+
+        // Convert the results into Google Charts Format
+        foreach ($all_rows as $row) {
+            /* Data needs to be in format
+             {c:[{v: 'Hour'}, {v: Number of checkins at this hour}]}
+             e.g. [{c:[{v: '11'}, {v: 5}]}
+             */
+            $resultset[] = array('c' => array(
+            array('v' => $row['hour']),
+            array('v' => intval($row['counter']))
+            ));
+        }
+
+        // Set the meta values like titles etc.
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Hour of Day'),
+        array('type' => 'number', 'label' => 'Number of Checkins'),
+        );
+
+        // Now encode this data as JSON for the Google Charts API
+        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
+
+        if(count($all_rows) > 0) {
+            return $visdata;
+        } else {
+            return "";
+        }
+    }
+
+    public function countCheckinsPerHourLastWeek($author_id, $network) {
+        $q = "SELECT CAST(HOUR(pub_date) AS UNSIGNED) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+        $q .= "WHERE author_user_id=:author ";
+        $q .= "AND network=:network AND YEARWEEK(pub_date) = YEARWEEK(CURRENT_DATE) AND in_reply_to_post_id IS null ";
+        $q .= "GROUP BY HOUR(pub_date)";
+        $vars = array(
+            'author'=>$author_id,
+            'network'=>$network);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+
+        // Convert the results into Google Charts Format
+        foreach ($all_rows as $row) {
+            /* Data needs to be in format
+             {c:[{v: 'Hour'}, {v: Number of checkins at this hour}]}
+             e.g. [{c:[{v: '11'}, {v: 5}]}
+             */
+            $resultset[] = array('c' => array(
+            array('v' => intval($row['hour'])),
+            array('v' => intval($row['counter']))
+            ));
+        }
+
+        // Set the meta values like titles etc.
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Hour of Day'),
+        array('type' => 'number', 'label' => 'Number of Checkins'),
+        );
+
+        // Now encode this data as JSON for the Google Charts API
+        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
+
+        /* As we are getting posts from the last week, we might not have any so return a blank string in that instance
+         * So we know not to draw this graph on the dashboard.
+         */
+
+        if(count($all_rows) > 0) {
+            return $visdata;
+        } else {
+            return "";
+        }
+    }
+
+    public function getAllCheckinsInLastWeekAsGoogleMap($author_id, $network) {
+        $q = "SELECT geo FROM #prefix#posts WHERE author_user_id=:author_id AND network=:network_name ";
+        $q .= "AND YEARWEEK(pub_date) = YEARWEEK(CURRENT_DATE) AND in_reply_to_post_id IS null ";
+        $vars = array(
+            ':author_id'=>$author_id,
+            ':network_name'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+
+        $url = 'http://maps.googleapis.com/maps/api/staticmap?size=708x500&maptype=roadmap&markers=';
+        $url .= 'color:blue%7C';
+
+        foreach($all_rows as $row) {
+            $url .= "|".$row['geo'];
+        }
+
+        $url .= '&sensor=false';
+
+        if(count($all_rows) > 0) {
+            return $url;
+        } else {
+            return "";
+        }
     }
 }

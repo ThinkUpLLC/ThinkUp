@@ -63,6 +63,32 @@
           {if $data_template}
             {include file=$data_template}
           {else} {* else if no $data_template *}
+
+              {if $instance->network eq 'foursquare'}
+               {if $checkins_per_hour_last_week|count_characters neq 0}
+                   <div class="section">
+                       <h2>Where You Went This Week</h2>
+                       <center><img src={$checkins_map}></center>
+                   </div>
+               {/if}
+
+               {if $checkins_per_hour_last_week|count_characters neq 0}
+                    {include file="_dashboard.checkinsperhourlastweek.tpl"}
+               {/if}
+
+               {if $checkins_per_hour_all_time|count_characters neq 0}
+                    {include file="_dashboard.checkinsperhouralltime.tpl"}
+               {/if}
+
+               {if $checkins_by_type|count_characters neq 0}
+                    {include file="_dashboard.checkinplacetypesalltime.tpl"}
+               {/if}
+
+               {if $checkins_by_type_last_week|count_characters neq 0}
+                   {include file="_dashboard.checkinplacetypeslastweek.tpl"}
+               {/if}
+             {/if}
+
             {if $hot_posts_data}
                 <div class="section">
                 {include file="_dashboard.responserates.tpl"}

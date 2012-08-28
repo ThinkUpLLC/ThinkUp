@@ -54,5 +54,6 @@ THINKUP_WEBAPP_PATH . 'plugins/twitter/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/twitterrealtime/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/geoencoder/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/hellothinkup/tests/',
-THINKUP_WEBAPP_PATH . 'plugins/googleplus/tests/'
+THINKUP_WEBAPP_PATH . 'plugins/googleplus/tests/',
+THINKUP_WEBAPP_PATH . 'plugins/foursquare/tests/'
 ));
