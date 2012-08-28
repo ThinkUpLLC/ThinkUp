@@ -753,7 +753,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         //sleep(1000);
         $output = json_decode($output);
         // test the object type is correct
-        $this->assertTrue(is_a($output, 'stdClass'));
+        $this->assertTrue($output instanceof stdClass);
         $this->assertEqual($output->protected, false);
 
         // test that the correct tweet was retrieved
@@ -818,7 +818,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
             $this->assertEqual($post->retweeted_status->id, 134);
         }
@@ -932,7 +932,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1025,7 +1025,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1129,7 +1129,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1207,7 +1207,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1283,7 +1283,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1461,7 +1461,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
 
@@ -1661,7 +1661,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
             $this->assertEqual($post->in_reply_to_user_id, 18);
         }
@@ -1844,7 +1844,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
             $this->assertEqual(preg_match('/\?/', $post->text), 1);
         }
@@ -2026,7 +2026,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
-            $this->assertTrue(is_a($post, 'stdClass'));
+            $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
             /**
              * The following two assertions evaluate differently depending on whether your MySQL server supports
@@ -2158,7 +2158,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         foreach($output as $post) {
-            $this->assertTrue(is_a($post->links, 'stdClass'));
+            $this->assertTrue($post->links instanceof stdClass);
         }
     }
 
