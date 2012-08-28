@@ -75,6 +75,7 @@ echo trim(exec("cd ".THINKUP_ROOT_PATH."docs/source/; wc -w `find ./ -type f -na
 ";
 
 if ($TOTAL_FAILURES > 0) {
+    echo "Total Failures is > 0: ".$TOTAL_FAILURES;
     exit(1);
 } else {
     echo "Total failures is 0: ".$TOTAL_FAILURES;
