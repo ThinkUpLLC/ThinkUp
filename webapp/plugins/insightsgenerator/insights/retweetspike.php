@@ -68,8 +68,8 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
             if (isset($high_retweet_count_365_days->value)
             && $post->all_retweets >= $high_retweet_count_365_days->value) {
                 $this->insight_dao->insertInsight('retweet_high_365_day_'.$post->id, $instance->id,
-                $simplified_post_date, "New 365-day high!", $post->all_retweets." people reshared your post.",
-                Insight::EMPHASIS_LOW, serialize($post));
+                $simplified_post_date, "New 365-day record!", $post->all_retweets." people reshared your post.",
+                Insight::EMPHASIS_HIGH, serialize($post));
 
                 $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                 $simplified_post_date);
@@ -82,8 +82,8 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
             } elseif (isset($high_retweet_count_30_days->value)
             && $post->all_retweets >= $high_retweet_count_30_days->value) {
                 $this->insight_dao->insertInsight('retweet_high_30_day_'.$post->id, $instance->id,
-                $simplified_post_date, "New 30-day high!", $post->all_retweets." people reshared your post.",
-                Insight::EMPHASIS_LOW, serialize($post));
+                $simplified_post_date, "New 30-day record!", $post->all_retweets." people reshared your post.",
+                Insight::EMPHASIS_HIGH, serialize($post));
 
                 $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
                 $simplified_post_date);
@@ -94,8 +94,8 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
             } elseif (isset($high_retweet_count_7_days->value)
             && $post->all_retweets >= $high_retweet_count_7_days->value) {
                 $this->insight_dao->insertInsight('retweet_high_7_day_'.$post->id, $instance->id, $simplified_post_date,
-                "New 7-day high!", $post->all_retweets." people reshared your post.",
-                Insight::EMPHASIS_LOW, serialize($post));
+                "New 7-day record!", $post->all_retweets." people reshared your post.",
+                Insight::EMPHASIS_HIGH, serialize($post));
 
                 $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                 $simplified_post_date);
