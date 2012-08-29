@@ -113,7 +113,7 @@ class DashboardModuleCacher {
         $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id);
         //insert new
         $insight_dao->insertInsight("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
-        $simplified_date, '', Insight::EMPHASIS_LOW, serialize($clients_usage));
+        $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($clients_usage));
 
         //Cache PostMySQLDAO::getOnThisDayFlashbackPosts
         $posts_flashback = $post_dao->getOnThisDayFlashbackPosts($this->instance->network_user_id,
@@ -122,7 +122,7 @@ class DashboardModuleCacher {
         $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id);
         //insert new
         $insight_dao->insertInsight("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id,
-        $simplified_date, '', Insight::EMPHASIS_LOW, serialize($posts_flashback));
+        $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($posts_flashback));
 
         if ($this->instance->network == 'foursquare') {
             // Cache PostMySQLDAO::countCheckinsToPlaceTypesLastWeek
@@ -132,7 +132,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_count));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_count));
 
             // Cache PostMySQLDAO::countCheckinsToPlaceTypes
             $checkins_all_time_count = $post_dao->countCheckinsToPlaceTypes($this->instance->network_user_id,
@@ -141,7 +141,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_all_time_count));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_all_time_count));
 
             // Cache PostMySQLDAO::countCheckinsPerHourAllTime
             $checkins_per_hour = $post_dao->countCheckinsPerHourAllTime($this->instance->network_user_id,
@@ -150,7 +150,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsPerHourAllTime", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::countCheckinsPerHourAllTime", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour));
 
             // Cache PostMySQLDAO::countCheckinsPerHourLastWeek
             $checkins_per_hour_last_week = $post_dao->countCheckinsPerHourLastWeek($this->instance->network_user_id,
@@ -159,7 +159,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsPerHourLastWeek", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::countCheckinsPerHourLastWeek", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour_last_week));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour_last_week));
 
             // Cache PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap
             $checkins_map = $post_dao->getAllCheckinsInLastWeekAsGoogleMap($this->instance->network_user_id,
@@ -169,7 +169,7 @@ class DashboardModuleCacher {
             $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap", $this->instance->id,
-            $simplified_date, '', Insight::EMPHASIS_LOW, serialize($checkins_map));
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_map));
         }
     }
 
