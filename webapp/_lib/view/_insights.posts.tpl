@@ -1,5 +1,4 @@
 <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i> {$i->prefix}</span> 
-                
                 {$i->text}
 
 {if $i->slug eq 'posts_on_this_day_flashback'}
@@ -10,7 +9,6 @@
         {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
             <div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
         {/if}
-    
 
         {* Hide posts after the first one *}
         {if $smarty.foreach.bar.index eq 1}
@@ -41,6 +39,3 @@
     {/foreach}
 {/if}
 
-
-
- 

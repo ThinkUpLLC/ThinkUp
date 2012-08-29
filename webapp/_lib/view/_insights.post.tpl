@@ -28,6 +28,8 @@
       {/if}
     {/if}
   {/if}
+  {$post->place}
+
 {if $post->link->expanded_url}
   {if $post->post_text != ''}<br>{/if}
   {if $post->link->image_src}

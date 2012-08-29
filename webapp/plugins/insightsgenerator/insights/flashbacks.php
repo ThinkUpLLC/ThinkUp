@@ -43,13 +43,14 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $flashback_posts = $post_dao->getOnThisDayFlashbackPosts($instance->network_user_id,
             $instance->network, $this->insight_date);
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
+                $publishing_term = ($instance->network == 'foursquare')?'checked in at':'posted';
                 $oldest_post_year = date(date( 'Y' , strtotime($flashback_posts[0]->pub_date)));
                 $current_year = date('Y');
                 $number_of_years_ago = $current_year - $oldest_post_year;
                 $plural = ($number_of_years_ago > 1 )?'s':'';
                 $this->insight_dao->insertInsight("posts_on_this_day_flashback", $instance->id,
                 $this->insight_date, "Time machine:", $number_of_years_ago." year".
-                $plural. " ago today, you posted: ", Insight::EMPHASIS_MED, serialize($flashback_posts));
+                $plural. " ago today, you ".$publishing_term.": ", Insight::EMPHASIS_MED, serialize($flashback_posts));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
