@@ -634,4 +634,13 @@ interface PostDAO {
      * @return bool
      */
     public function doesUserHavePostsWithRetweetsSinceDate($author_username, $network, $last_x_days, $since=null);
+
+    /**
+     * Get users who have have retweeted a specified post and have a higher follower count than a given threshold.
+     * @param unknown_type $post_id
+     * @param unknown_type $network
+     * @param unknown_type $follower_count_threshold
+     * @return array User
+     */
+    public function getRetweetsByAuthorsOverFollowerCount($post_id, $network, $follower_count_threshold);
 }

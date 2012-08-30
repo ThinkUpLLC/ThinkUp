@@ -3391,4 +3391,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30, '2011-01-01');
         $this->assertFalse($result);
     }
+
+    public function testGetRetweetsByAuthorsOverFollowerCount() {
+        $post_dao = new PostMySQLDAO();
+        $big_retweeters = $post_dao->getRetweetsByAuthorsOverFollowerCount('134', 'twitter', 10);
+        $this->assertEqual(sizeof($big_retweeters), 3);
+        $this->assertIsA($big_retweeters[0], 'User');
+        $this->assertEqual($big_retweeters[0]->follower_count, 90);
+        $this->assertEqual($big_retweeters[0]->username, 'user1');
+        $this->assertEqual($big_retweeters[1]->follower_count, 80);
+        $this->assertEqual($big_retweeters[1]->username, 'user2');
+        $this->assertEqual($big_retweeters[2]->follower_count, 70);
+        $this->assertEqual($big_retweeters[2]->username, 'linkbaiter');
+    }
 }

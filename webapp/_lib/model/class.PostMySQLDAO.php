@@ -2053,4 +2053,24 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             return true;
         }
     }
+
+    public function getRetweetsByAuthorsOverFollowerCount($post_id, $network, $follower_count_threshold) {
+        $q = "SELECT u.* ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
+        $q .= "WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
+        $q .= "AND p.is_protected = 0 AND u.follower_count > :follower_count_threshold ";
+        $q .= "ORDER BY u.follower_count DESC, p.id DESC LIMIT 5";
+
+        $vars = array(
+            ':post_id'=>(string)$post_id,
+            ':network'=>$network,
+            ':follower_count_threshold'=>$follower_count_threshold
+        );
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
 }
