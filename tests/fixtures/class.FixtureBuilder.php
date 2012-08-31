@@ -231,6 +231,8 @@ class FixtureBuilder {
                     $column['value'] = $this->genDate();
                 } else if (preg_match('/^(point)/', $column['Type'])) {
                     $column['value'] = "GeometryFromText('Point" . $this->genPoint() . "')";
+                } else if (preg_match('/^(polygon)/', $column['Type'])) {
+                    $column['value'] = "PolygonFromText('Polygon" . $this->genPolygon() . "')";
                 } else if (preg_match('/^(varchar|text|tinytext|mediumtext|longtext|blob)/', $column['Type'])) {
                     $column['value'] = $this->genVarchar();
                 }
@@ -249,6 +251,8 @@ class FixtureBuilder {
             if (gettype($value) == 'array') {
                 $values_string .= $value['function'];
             } elseif(preg_match('/^GeometryFromText/',$value)) {
+                $values_string .= $value;
+            } elseif(preg_match('/^PolygonFromText/',$value)) {
                 $values_string .= $value;
             } else {
                 array_push($values, $value);
@@ -367,13 +371,23 @@ class FixtureBuilder {
 
     /*
      * Generates point value
-     * @param str A 'point(lon,lat)'
      * @return string
      */
     public function genPoint() {
         $left = mt_rand(1, 100);
         $right = mt_rand(1, 100);
         return "($left $right)";
+    }
+
+    /*
+     * Generates polygon value
+     * @return string
+     */
+    public function genPolygon() {
+        $first = mt_rand(1, 100);
+        $second = mt_rand(1, 100);
+        $third = mt_rand(1, 100);
+        return "($first $second $third)";
     }
 
     /*

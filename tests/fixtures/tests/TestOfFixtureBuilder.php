@@ -65,6 +65,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             'birthday date,' .
             'numeric_ip_address int default 2015153756,' .
             'a_point point,' .
+            'a_polygon polygon,' .
             'worth decimal(11,2)  default 12.99' .
             ')');
     }
@@ -99,6 +100,7 @@ class TestOfixtureBuilder extends UnitTestCase {
 
         // test point gen
         $this->assertPattern("/GeometryFromText\('Point\(\d+ \d+\)'\)/",$builder->columns['a_point']);
+        $this->assertPattern("/PolygonFromText\('Polygon\(\d+ \d+ \d+\)'\)/",$builder->columns['a_polygon']);
 
         $builder2 = FixtureBuilder::build(self::TEST_TABLE, array('test_id' => 2, 'fav_food' => 'hotdog'), true );
         // auto inc id
@@ -164,6 +166,19 @@ class TestOfixtureBuilder extends UnitTestCase {
         $stmt = $this->pdo->query( 'select t.*, AsText(a_point) as text_point from ' . $this->test_table . ' as t where id = 5');
         $data = $stmt->fetch();
         $this->assertEqual('POINT(27.1 20.2)', $data['text_point']);
+
+        //set polygon
+        $date_fixture_data = array('test_id' => 6, 'a_polygon' =>
+        "PolygonFromText( 'Polygon((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,-0.213503 51.572068, ".
+        "-0.213503 51.512805))')");
+        $builder6 = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+        $mysql_date = strtotime( $builder3->columns['date_created'] );
+        $match_date = time() + (60 * 60 * 24);
+        $stmt = $this->pdo->query( 'select t.*, AsText(a_polygon) as text_polygon from ' . $this->test_table .
+        ' as t where id = 6');
+        $data = $stmt->fetch();
+        $this->assertEqual('POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,-0.213503 51.572068,'.
+        '-0.213503 51.512805))', $data['text_polygon']);
     }
 
     public function testDestroyData() {
@@ -209,7 +224,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
-        $this->assertEqual(count($columns), 12, 'column count valid');
+        $this->assertEqual(count($columns), 13, 'column count valid');
     }
 
 
@@ -348,6 +363,20 @@ class TestOfixtureBuilder extends UnitTestCase {
         for($i = 0; $i < 1000; $i++) {
             $point = $this->builder->genPoint();
             $values = preg_split('/\./', $point);
+            $matches = null;
+            preg_match("/\((\d+) (\d+)\)/", $subject, $matches, PREG_OFFSET_CAPTURE, 3);
+            if ($values[0] > 0 && $values[0] < 101) { $fail =  "left value is not correct - " . $values[0]; break;}
+            if ($values[1] > 0 && $value[1] < 101) { $fail = "right value is not correct - " . $values[1]; break; }
+        }
+        if ($fail) {
+            $this->fail($fail);
+        }
+
+        // test genPolygon
+        $fail = null;
+        for($i = 0; $i < 1000; $i++) {
+            $polygon = $this->builder->genPolygon();
+            $values = preg_split('/\./', $polygon);
             $matches = null;
             preg_match("/\((\d+) (\d+)\)/", $subject, $matches, PREG_OFFSET_CAPTURE, 3);
             if ($values[0] > 0 && $values[0] < 101) { $fail =  "left value is not correct - " . $values[0]; break;}
