@@ -229,6 +229,8 @@ class FixtureBuilder {
                     $column['value'] = $this->genBigint();
                 } else if (preg_match('/^(times|date)/', $column['Type'])) {
                     $column['value'] = $this->genDate();
+                } else if (preg_match('/^(point)/', $column['Type'])) {
+                    $column['value'] = "GeometryFromText('Point" . $this->genPoint() . "')";
                 } else if (preg_match('/^(varchar|text|tinytext|mediumtext|longtext|blob)/', $column['Type'])) {
                     $column['value'] = $this->genVarchar();
                 }
@@ -246,6 +248,8 @@ class FixtureBuilder {
             }
             if (gettype($value) == 'array') {
                 $values_string .= $value['function'];
+            } elseif(preg_match('/^GeometryFromText/',$value)) {
+                $values_string .= $value;
             } else {
                 array_push($values, $value);
                 $values_string .= '?';
@@ -359,6 +363,17 @@ class FixtureBuilder {
         $value = $left . '.' . $right;
         $value = $value + 0; // cast to a float;
         return $value;
+    }
+
+    /*
+     * Generates point value
+     * @param str A 'point(lon,lat)'
+     * @return string
+     */
+    public function genPoint() {
+        $left = mt_rand(1, 100);
+        $right = mt_rand(1, 100);
+        return "($left $right)";
     }
 
     /*

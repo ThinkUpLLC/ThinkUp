@@ -26,17 +26,17 @@
  * @copyright 2009-2012 Mark Wilkie
  */
 
-require_once dirname(__FILE__).'/../../init.tests.php';
-require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_WEBAPP_PATH.'config.inc.php';
-require_once THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
-require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_WEBAPP_PATH.'_lib/model/class.Config.php';
-require_once THINKUP_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+require_once 'tests/init.tests.php';
+require_once 'webapp/_lib/class.Loader.php';
+require_once 'webapp/_lib/extlib/simpletest/autorun.php';
+require_once 'webapp/config.inc.php';
+require_once 'tests/config.tests.inc.php';
+require_once 'webapp/_lib/class.Config.php';
+require_once 'tests/fixtures/class.FixtureBuilder.php';
 
 class TestOfixtureBuilder extends UnitTestCase {
 
-    const TEST_TABLE = 'test_table';
+    const TEST_TABLE = 'thinkup_tests';
 
     public function setUp() {
         global $TEST_DATABASE;
@@ -53,7 +53,7 @@ class TestOfixtureBuilder extends UnitTestCase {
         $this->builder =  new FixtureBuilder();
         $this->pdo = FixtureBuilder::$pdo;
         $this->pdo->query('CREATE TABLE ' . $this->test_table . '(' .
-            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
+            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
             'test_name varchar(20),' .
             'test_city varchar(20) not null default "",' .
             'test_id int(11),' .
@@ -64,6 +64,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             'date_updated datetime,' .
             'birthday date,' .
             'numeric_ip_address int default 2015153756,' .
+            'a_point point,' .
             'worth decimal(11,2)  default 12.99' .
             ')');
     }
@@ -74,7 +75,6 @@ class TestOfixtureBuilder extends UnitTestCase {
 
     public function testBuildData() {
         $builder = FixtureBuilder::build(self::TEST_TABLE, array('test_id' => 1), true );
-
         // auto inc id
         $this->assertEqual(1, $builder->columns['last_insert_id'], 'our id is 1');
 
@@ -96,8 +96,10 @@ class TestOfixtureBuilder extends UnitTestCase {
         // test fav_food enum
         $enum_array = array("apple''s", 'hotdog', 'roll');
         $this->assertEqual($builder->columns['fav_food'], 'roll', 'we have a default enum value: roll');
-         
-         
+
+        // test point gen
+        $this->assertPattern("/GeometryFromText\('Point\(\d+ \d+\)'\)/",$builder->columns['a_point']);
+
         $builder2 = FixtureBuilder::build(self::TEST_TABLE, array('test_id' => 2, 'fav_food' => 'hotdog'), true );
         // auto inc id
         $this->assertEqual(2, $builder2->columns['last_insert_id'], 'our id is 2');
@@ -137,7 +139,6 @@ class TestOfixtureBuilder extends UnitTestCase {
         $this->assertEqual('1978-06-20', $data['birthday'], 'birthday set properly');
         $this->assertEqual('12.99', $data['worth'], 'worth 12.99');
 
-
         // mysql functions
         $date_fixture_data = array('test_id' => 4,
         'numeric_ip_address' =>  array("INET_ATON('127.0.0.1')") );
@@ -155,6 +156,14 @@ class TestOfixtureBuilder extends UnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual(2130706433, $data['numeric_ip_address']);
 
+        //set points
+        $date_fixture_data = array('test_id' => 5, 'a_point' => "GeometryFromText('Point(27.1 20.2)')");
+        $builder5 = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+        $mysql_date = strtotime( $builder3->columns['date_created'] );
+        $match_date = time() + (60 * 60 * 24);
+        $stmt = $this->pdo->query( 'select t.*, AsText(a_point) as text_point from ' . $this->test_table . ' as t where id = 5');
+        $data = $stmt->fetch();
+        $this->assertEqual('POINT(27.1 20.2)', $data['text_point']);
     }
 
     public function testDestroyData() {
@@ -200,7 +209,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
-        $this->assertEqual(count($columns), 11, 'column count valid');
+        $this->assertEqual(count($columns), 12, 'column count valid');
     }
 
 
@@ -210,7 +219,7 @@ class TestOfixtureBuilder extends UnitTestCase {
         $enum_array = array("apple''s",'hotdog','roll');
         $value = $this->builder->genEnum( "enum('apple''s','hotdog','roll')");
         $this->assertTrue($this->_testEnum($enum_array, $value), 'we have a valid enum value ' . $value);
-         
+
         //test int gen
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
@@ -329,6 +338,20 @@ class TestOfixtureBuilder extends UnitTestCase {
             $values = preg_split('/\./', $dec);
             if ($values[0] >= 1000) { $fail =  "left value is not less than 1000 - " . $values[0]; break;}
             if ($values[1] >= 100) { $fail = "right value is not less than 100 - " . $values[1]; break; }
+        }
+        if ($fail) {
+            $this->fail($fail);
+        }
+
+        // test genPoint
+        $fail = null;
+        for($i = 0; $i < 1000; $i++) {
+            $point = $this->builder->genPoint();
+            $values = preg_split('/\./', $point);
+            $matches = null;
+            preg_match("/\((\d+) (\d+)\)/", $subject, $matches, PREG_OFFSET_CAPTURE, 3);
+            if ($values[0] > 0 && $values[0] < 101) { $fail =  "left value is not correct - " . $values[0]; break;}
+            if ($values[1] > 0 && $value[1] < 101) { $fail = "right value is not correct - " . $values[1]; break; }
         }
         if ($fail) {
             $this->fail($fail);
