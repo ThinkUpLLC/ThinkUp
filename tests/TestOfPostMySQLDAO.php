@@ -2894,35 +2894,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Add a link for this post
         $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
-        // Add the place information for future foursquare checkin test (We do it this way due to the fixture builder
-        // not being able to handle the MySQL point type
-        // Set all possible fields
-        $place['id'] = '12345a';
+        // Add the place information
+        $place['place_id'] = '12345a';
         $place['place_type'] = "Park";
         $place['name'] = "A Park";
         $place['full_name'] = "The Greatest Park";
         $place['country_code'] = "UK";
         $place['country'] = "United Kingdom";
         $place['icon'] = "http://www.iconlocation.com";
-        $place['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $place['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-        '-0.213503 51.572068, -0.213503 51.512805)))';
-        $place['bounding_box'] = array (
-        'type' => 'Polygon',
-        'coordinates' => array  (
-        array(
-        array(-97.73818308, 30.29930703),
-        array(-97.710741, 30.29930703),
-        array(-97.710741, 30.31480602),
-        array(-97.73818308, 30.31480602),
-        )
-        )
-        );
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
         $place['map_image'] = "http://www.mapimage.com";
 
         // Insert the place
-        $place_dao = new PlaceMySQLDAO();
-        $place_dao->insertGenericPlace($place, 'foursquare');
+        $place_builder = FixtureBuilder::build('places', $place);
 
         // Query the database for last year's post
         $post_dao = new PostMySQLDAO();
@@ -3019,35 +3006,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Add a link for this post
         $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
-        // Add the place information for future foursquare checkin test (We do it this way due to the fixture builder
-        // not being able to handle the MySQL point type
-        // Set all possible fields
-        $place['id'] = '12345a';
+        // Add the place information
+        $place['place_id'] = '12345a';
         $place['place_type'] = "Park";
         $place['name'] = "A Park";
         $place['full_name'] = "The Greatest Park";
         $place['country_code'] = "UK";
         $place['country'] = "United Kingdom";
         $place['icon'] = "http://www.iconlocation.com";
-        $place['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $place['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-        '-0.213503 51.572068, -0.213503 51.512805)))';
-        $place['bounding_box'] = array (
-        'type' => 'Polygon',
-        'coordinates' => array  (
-        array(
-        array(-97.73818308, 30.29930703),
-        array(-97.710741, 30.29930703),
-        array(-97.710741, 30.31480602),
-        array(-97.73818308, 30.31480602),
-        )
-        )
-        );
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
         $place['map_image'] = "http://www.mapimage.com";
 
         // Insert the place
-        $place_dao = new PlaceMySQLDAO();
-        $place_dao->insertGenericPlace($place, 'foursquare');
+        $place_builder = FixtureBuilder::build('places', $place);
 
         // Query the database for last year's post
         $post_dao = new PostMySQLDAO();
@@ -3099,24 +3073,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetAllCheckins(){
-        /* Add the place information for the foursquare checkins (We do it this way due to the fixture builder not
-         being able to handle the MySQL point type  */
-        $place_dao = new PlaceMySQLDAO();
-        // Set all possible fields
-        $places['id'] = '12345a';
-        $places['place_type'] = "Park";
-        $places['name'] = "A Park";
-        $places['full_name'] = "The Greatest Park";
-        $places['country_code'] = "UK";
-        $places['country'] = "United Kingdom";
-        $places['icon'] = "http://www.iconlocation.com";
-        $places['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $places['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-         '-0.213503 51.572068, -0.213503 51.512805)))';
-        $places['map_image'] = "http://www.mapimage.com";
+        // Add place information for  foursquare checkins
+        $place['place_id'] = '12345a';
+        $place['place_type'] = "Park";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
 
         // Insert the place
-        $place_dao->insertGenericPlace($places, 'foursquare');
+        $place_builder = FixtureBuilder::build('places', $place);
 
         // Add A link for this checkin
         $checkin_builder[] = FixtureBuilder::build('links', array('post_key'=>'20020', 'url'=>'http://bit.ly/blah'));
@@ -3172,23 +3144,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testCountCheckinsToPlaceTypes(){
-        /* Add the place information for these foursquare checkins (We do it this way due to the fixture builder not
-         being able to handle the MySQL point type */
-        $place_dao = new PlaceMySQLDAO();
-        // Set all possible fields
-        $places['id'] = '12345a';
-        $places['place_type'] = "Park";
-        $places['name'] = "A Park";
-        $places['full_name'] = "The Greatest Park";
-        $places['country_code'] = "UK";
-        $places['country'] = "United Kingdom";
-        $places['icon'] = "http://www.iconlocation.com";
-        $places['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $places['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-         '-0.213503 51.572068, -0.213503 51.512805)))';
+        // Add place information for checkins
+        $place['place_id'] = '12345a';
+        $place['place_type'] = "Park";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
 
         // Insert the place
-        $place_dao->insertGenericPlace($places, 'foursquare');
+        $place_builder = FixtureBuilder::build('places', $place);
 
         // Query the database for the number of checkins per type of place
         $post_dao = new PostMySQLDAO();
@@ -3201,7 +3172,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testCountCheckinsToPlaceTypesLastWeek(){
-
         // Build the pub_date string which needs to be a date within the last week
         $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
         $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
@@ -3226,38 +3196,38 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
         'geo'=>'52.477192843264,-1.484333726346'));
 
-        /* Add the place information for these foursquare checkins (We do it this way due to the fixture builder not
-         being able to handle the MySQL point type */
-        $place_dao = new PlaceMySQLDAO();
-        // Set all possible fields
-        $places['id'] = '12345b';
-        $places['place_type'] = "Park";
-        $places['name'] = "A Park";
-        $places['full_name'] = "The Greatest Park";
-        $places['country_code'] = "UK";
-        $places['country'] = "United Kingdom";
-        $places['icon'] = "http://www.iconlocation.com";
-        $places['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $places['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-        '-0.213503 51.572068, -0.213503 51.512805)))';
+        // Add place information
+        $place1['place_id'] = '12345b';
+        $place1['place_type'] = "Park";
+        $place1['name'] = "A Park";
+        $place1['full_name'] = "The Greatest Park";
+        $place1['country_code'] = "UK";
+        $place1['country'] = "United Kingdom";
+        $place1['icon'] = "http://www.iconlocation.com";
+        $place1['network'] = "foursquare";
+        $place1['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place1['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place1['map_image'] = "http://www.mapimage.com";
 
         // Insert the place
-        $place_dao->insertGenericPlace($places, 'foursquare');
+        $place_builder1 = FixtureBuilder::build('places', $place1);
 
         // Set all possible fields
-        $places['id'] = '12345c';
-        $places['place_type'] = "Garage";
-        $places['name'] = "A Garage";
-        $places['full_name'] = "The Greatest Garage";
-        $places['country_code'] = "UK";
-        $places['country'] = "United Kingdom";
-        $places['icon'] = "http://www.iconlocation.com";
-        $places['lat_lng'] = 'POINT(51.514 -0.1167)';
-        $places['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
-        '-0.213503 51.572068, -0.213503 51.512805)))';
+        $place2['place_id'] = '12345c';
+        $place2['place_type'] = "Garage";
+        $place2['network'] = "foursquare";
+        $place2['name'] = "A Garage";
+        $place2['full_name'] = "The Greatest Garage";
+        $place2['country_code'] = "UK";
+        $place2['country'] = "United Kingdom";
+        $place2['icon'] = "http://www.iconlocation.com";
+        $place2['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place2['bounding_box'] = "PolygonFromText( 'Polygon((-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)))')";
 
         // Insert the place
-        $place_dao->insertGenericPlace($places, 'foursquare');
+        $place_builder2 = FixtureBuilder::build('places', $place2);
 
         // Query the database for the number of checkins per type of place in the last week
         $post_dao = new PostMySQLDAO();
