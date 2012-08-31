@@ -341,4 +341,14 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertTrue(isset($result->instance));
         }
     }
+
+    public function testDoesInsightExist() {
+        $dao = new InsightMySQLDAO();
+        $result = $dao->doesInsightExist("avg_replies_per_week", 1);
+        $this->assertTrue($result);
+        $result = $dao->doesInsightExist("avg_replies_per_week", 10);
+        $this->assertFalse($result);
+        $result = $dao->doesInsightExist("yo_yo_yooo", 1);
+        $this->assertFalse($result);
+    }
 }

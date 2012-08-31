@@ -40,6 +40,19 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return $this->getDataRowAsObject($ps, 'Insight');
     }
 
+    public function doesInsightExist($slug, $instance_id) {
+        $q = "SELECT date, instance_id, slug, prefix, text, related_data, emphasis FROM #prefix#insights WHERE ";
+        $q .= "slug=:slug AND instance_id=:instance_id";
+        $vars = array(
+            ':slug'=>$slug,
+            ':instance_id'=>$instance_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return (sizeof($result) > 0);
+    }
+
     public function getPreCachedInsightData($slug, $instance_id, $date) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight->related_data != '') {
@@ -227,7 +240,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
         foreach ($insights as $insight) {
             $insight->related_data = unserialize($insight->related_data);
-            if ($insight->related_data instanceof Post) {
+            if ($insight->related_data === false ) {
+                $insight->related_data_type = "none";
+            } elseif ($insight->related_data instanceof Post) {
                 $insight->related_data_type = "post";
             } elseif (is_array($insight->related_data)) {
                 if ($insight->related_data[0] instanceof User) {

@@ -38,7 +38,7 @@
     </div><!--/span3-->
 
             {assign var='cur_date' value=$i->date}
-            
+
         {else}
 
     <div class="span3">&nbsp;</div>
@@ -57,6 +57,9 @@
                     {include file="_insights.posts.tpl"}
                 {elseif $i->related_data_type eq 'count_history'}
                     {include file="_insights.count_history.tpl"}
+                {else}
+                    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i> {$i->prefix}</span> 
+                    {$i->text}
                 {/if}
     <!--end {$i->related_data_type} attachment data-->
             </div>
