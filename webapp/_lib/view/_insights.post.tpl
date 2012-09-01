@@ -18,14 +18,13 @@
 <table class="table table-condensed lead">
 
     <tr>
-        {if $i->instance->network_username != $post->author_username}
+        {if $i->instance->network_username != $post->author_username || 1}
     <td class="avatar-data">
             <h3><a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
     </td>
         {/if}
    
     <td>
-        
 
             {if $post->network eq 'twitter'}
                 {if $i->instance->network_username != $post->author_username}
@@ -47,25 +46,31 @@
                     </h3>
                 {/if}
                 {if $post->post_text}
-                {if $scrub_reply_username}
-                  {if $reply_count && $reply_count > $top_20_post_min}
-                      <div class="reply_text post" id="reply_text-{$smarty.foreach.foo.iteration}">
-                  {/if}
-                  {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
-                {else}
-                 {if $post->network == 'google+'}
-                  <div class="post">{$post->post_text}
-                 {else}
-                  <div class="post">{$post->post_text|filter_xss|link_usernames_to_twitter}
-                  {/if}
+                    {if $scrub_reply_username}
+                        {if $reply_count && $reply_count > $top_20_post_min}
+                          <div class="reply_text post" id="reply_text-{$smarty.foreach.foo.iteration}">
+                        {/if}
+                        {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+                    {else}
+                        {if $post->network == 'google+'}
+                        <div class="post">{$post->post_text}
+                        {else}
+                        <div class="post">{$post->post_text|filter_xss|link_usernames_to_twitter}
+                        {/if}
+                    {/if}
                 {/if}
-                {/if}
+
             {else}
-                <h3><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/> {$post->full_name}    {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}</h3>
+                <h3><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/> {$post->full_name}
+                    {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}                
+                    {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}
+                </h3>
                 <div class="post">
+                
+                    {if $post->network == 'foursquare'}From {$post->location}{/if}
             {/if}
 
-  
+                    
 
             {if $post->link->expanded_url}
               {if $post->post_text != ''}<br>{/if}
@@ -84,9 +89,9 @@
                 <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
         
             {if $post->network == 'twitter'}
-                <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></span></a>
-                <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></span></a>
-                <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></span></a>
+                <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
+                <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
+                <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="icon icon-star-empty" title="favorite"></i></a>
             {/if}
             </span>
 
