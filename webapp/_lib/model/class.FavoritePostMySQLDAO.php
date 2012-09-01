@@ -351,7 +351,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         $q .= "AND (YEAR(pub_date)!=YEAR(CURRENT_DATE())) ";
         $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) ";
-        $q .= "ORDER BY pub_date DESC ";
+        $q .= "ORDER BY pub_date DESC LIMIT 5 ";
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
 

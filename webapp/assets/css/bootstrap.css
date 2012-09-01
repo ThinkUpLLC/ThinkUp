@@ -1888,7 +1888,7 @@ input[type="submit"].btn.btn-mini {
   *margin-left: 0;
 }
 [class^="icon-"]:hover,
-[class*=" icon-"]:hover {
+[class*=" icon-"]:hover, .metaroll [class*=" icon-"] {
   background-image: url("../img/glyphicons-halflings-blue.png");
 }
 .icon-white {
