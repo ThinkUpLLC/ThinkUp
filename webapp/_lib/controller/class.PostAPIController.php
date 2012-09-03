@@ -653,7 +653,7 @@ class PostAPIController extends ThinkUpController {
      * @return stdObject The post formatted to look like the Twitter API.
      */
     private function convertPostToTweet($post) {
-        if (!is_a($post, 'Post')) {
+        if (!$post instanceof Post) {
             return null;
         }
 
