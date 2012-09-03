@@ -57,7 +57,7 @@ Optional Arguments
     false. This argument can be set to true by making it equal to either **1**, **t** or **true**.
 
 .. warning::
-    This, user_replies_in_range, user_questions_in_range, user_mentions_in_range and post_replies_in_range are the ThinkUp Post API method which do not enforce a cap of 200 post results returned per call. 
+    This, user_replies_in_range, user_questions_in_range, user_mentions_in_range and post_replies_in_range are the ThinkUp Post API methods which do not enforce a cap of 200 post results returned per call. 
     As such, when querying time ranges which contain more than 200 posts, keep in mind that processing that amount of
     data may exceed your server's memory limits.
 
