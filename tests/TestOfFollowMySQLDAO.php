@@ -46,52 +46,54 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
         //Insert test data into test table
 
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>1234567890, 'user_name'=>'jack',
-        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1234567890', 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
+        'is_protected'=>0));
 
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>1324567890, 'user_name'=>'ev',
-        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005', 'follower_count'=>36000));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1324567890', 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:58:25',
+        'follower_count'=>36000, 'is_protected'=>0));
 
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>1623457890, 'user_name'=>'private',
-        'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
+        'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345));
 
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>1723457890, 'user_name'=>'facebookuser1',
-        'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1723457890', 'user_name'=>'facebookuser1',
+        'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>1823457890, 'user_name'=>'facebookuser2',
-        'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1823457890', 'user_name'=>'facebookuser2',
+        'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
         $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
-        'error_text'=>'User not found', 'error_issued_to_user_id'=>1324567890, 'network'=>'twitter'));
+        'error_text'=>'User not found', 'error_issued_to_user_id'=>'1324567890', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>1234567890,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>14,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>14,
         'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>15,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>15,
         'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>1623457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>1623457890,
         'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1623457890, 'follower_id'=>1324567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1324567890,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1623457890, 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1234567890,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>14, 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>1234567890,
         'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>17, 'active'=>0,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>17, 'active'=>0,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1723457890, 'follower_id'=>1823457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>1823457890,
         'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
 
         return $builders;

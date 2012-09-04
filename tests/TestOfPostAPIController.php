@@ -57,7 +57,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'avatar' => 'avatar.jpg',
                             'is_protected' => 0,
                             'follower_count' => 10,
-                            'last_updated' => '1/1/2005',
+                            'last_updated' => '2005-01-01 13:48:05',
                             'network' => 'twitter'));
 
         $builders[] = FixtureBuilder::build( 'users', array(
@@ -67,7 +67,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'avatar' => 'avatar.jpg',
                             'is_protected' => 0,
                             'follower_count' => 10,
-                            'last_updated' => '1/1/2005',
+                            'last_updated' => '2005-01-01 13:48:05',
                             'network' => 'twitter'));
 
         $builders[] = FixtureBuilder::build( 'users', array(
@@ -197,7 +197,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'in_rt_of_user_id' => null,
                                 'in_reply_to_post_id' => null,
                                 'in_retweet_of_post_id' => null,
-                                'is_geo_encoded' => 0));
+                                'is_geo_encoded' => 0,
+                                'is_protected'=>0));
             $counter++;
         }
 
@@ -207,7 +208,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $source = rand(0,1) == 0 ? 'Flickr' : 'Picasa';
-            $protected = (($counter % 2) == 1);
+            $protected =  (($counter % 2) == 1)?1:0;
 
             $builders[] = FixtureBuilder::build( 'posts', array(
                                 'post_id' => $post_id,
@@ -232,9 +233,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'expanded_url' => 'http://example.com/' . $counter . '.jpg',
                                 'title' => '',
                                 'clicks' => 0,
-                                'post_id' => $post_id,
+                                'post_key' => $post_id,
                                 'image_src' => 'image.png'));
-
             $counter++;
         }
 
@@ -242,7 +242,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 80;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build(
                             'posts', array( 'post_id' => $post_id,
                                 'author_user_id' => 19,
@@ -256,14 +256,14 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'pub_date' => '2006-03-01 00:' . $pseudo_minute . ':00',
                                 'reply_count_cache' => 0,
                                 'retweet_count_cache' => 0,
-                                'network' => 'twitter'));
-
+                                'network' => 'twitter',
+                                'is_protected'=>0));
             $builders[] = FixtureBuilder::build( 'links', array(
-                                'url' => 'http://example.com/' . $counter,
+                                'url' => 'http://example.com/' . $post_id.'',
                                 'explanded_url' => 'http://example.com/' . $counter . '.html',
-                                'title' => 'Link $counter',
+                                'title' => 'Link '.$counter,
                                 'clicks' => 0,
-                                'post_id' => $post_id,
+                                'post_key' => $post_id,
                                 'image_src' => ''));
 
             $counter++;
@@ -288,7 +288,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                     'in_rt_of_user_id' => null,
                                     'post_text' => 'Hey @ev and @jack thanks for founding Twitter post ' . $counter,
                                     'pub_date' => '2006-03-01 00:' . $pseudo_minute . ':00',
-                                    'location' => 'New Delhi'));
+                                    'location' => 'New Delhi',
+                                    'is_protected'=>0));
             } else {
                 $builders[] = FixtureBuilder::build( 'posts', array(
                                     'post_id' => $post_id,
@@ -303,7 +304,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                     'in_rt_of_user_id' => null,
                                     'post_text' => 'Hey @ev and @jack should fix Twitter - post ' . $counter,
                                     'pub_date' => '2006-03-01 00:' . $pseudo_minute . ':00',
-                                    'place' => 'New Delhi'));
+                                    'place' => 'New Delhi',
+                                    'is_protected'=>0));
             }
             $counter++;
         }
@@ -520,7 +522,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'reply_count_cache' => 0,
                             'retweet_count_cache' => 0,
                             'in_reply_to_user_id' => 21,
-                            'in_reply_to_post_id' => 132));
+                            'in_reply_to_post_id' => 132,
+                            'is_protected'=>0));
 
         //Add user exchange
         $builders[] = FixtureBuilder::build( 'posts', array(
@@ -554,7 +557,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'reply_count_cache' => 0,
                             'retweet_count_cache' => 0,
                             'in_reply_to_user_id' => 20,
-                            'in_reply_to_post_id' => 139));
+                            'in_reply_to_post_id' => 139,
+                            'is_protected'=>0));
 
         //Add posts replying to post not in the system
         $builders[] = FixtureBuilder::build( 'posts', array(
@@ -571,7 +575,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'old_retweet_count_cache' => 0,
                             'in_rt_of_user_id' => null,
                             'in_reply_to_user_id' => 20,
-                            'in_reply_to_post_id' => 250));
+                            'in_reply_to_post_id' => 250,
+                            'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build( 'posts', array(
                             'post_id' => 142,
@@ -587,7 +592,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'old_retweet_count_cache' => 0,
                             'in_rt_of_user_id' => null,
                             'in_reply_to_user_id' => 20,
-                            'in_reply_to_post_id' => 251));
+                            'in_reply_to_post_id' => 251,
+                            'is_protected'=>0));
 
         //Add post by instance not on public timeline
         $builders[] = FixtureBuilder::build( 'posts', array(
@@ -600,7 +606,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'old_retweet_count_cache' => 0,
                             'in_rt_of_user_id' => null,
                             'source' => 'web',
-                            'pub_date' => '2006-03-01 00:00:00'));
+                            'pub_date' => '2006-03-01 12:00:00'));
 
         //Add replies to specific post
         $builders[] = FixtureBuilder::build( 'posts', array(
@@ -744,6 +750,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
     public function testPost() {
         $config = Config::getInstance();
         $config->setValue('timezone', 'America/Los_Angeles');
+
         $_GET['type'] = 'post';
         $_GET['post_id'] = '137';
         $_GET['network'] = 'twitter';
@@ -760,8 +767,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->id, '137', "Incorrect post fetched.");
 
         $this->assertEqual(sizeof($output->coordinates->coordinates), 2,
-        "Size of coordinates is too big or too small. Is " . sizeof($output->coordinates->coordinates) .
-        " when it should be 2.");
+     "Size of coordinates is too big or too small. Is " . sizeof($output->coordinates->coordinates) .
+     " when it should be 2.");
 
         $this->assertEqual($output->thinkup->is_geo_encoded, 1);
         $this->assertEqual($output->coordinates, $output->geo, "Geo and coordinates are meant to be exactly the same.");
@@ -834,7 +841,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $distance = $output[0]->reply_retweet_distance;
         foreach ($output as $post) {
             $this->assertTrue($post->reply_retweet_distance >= $distance, "Retweets not correctly ordered by ".
-            "distance. " . $post->reply_retweet_distance . " is not greater than " . $distance);
+     "distance. " . $post->reply_retweet_distance . " is not greater than " . $distance);
             $distance = $post->reply_retweet_distance;
         }
 
@@ -2027,7 +2034,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
             $this->assertTrue($post instanceof stdClass);
-            $this->assertEqual($post->protected, false);
+            $this->assertFalse($post->protected);
             /**
              * The following two assertions evaluate differently depending on whether your MySQL server supports
              * SET timezone statement in PDODAO::connect function
@@ -2152,13 +2159,13 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
         // test posts contain a links object
         $_GET['type'] = 'user_posts_in_range';
-        $_GET['user_id'] = 19;
+        $_GET['user_id'] = '19';
         $_GET['from'] = '2006-03-01 00:01:00';
         $_GET['until'] = '2006-03-01 00:01:01';
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         foreach($output as $post) {
-            $this->assertTrue($post->links instanceof stdClass);
+            $this->assertIsA($post, 'stdClass');
         }
     }
 

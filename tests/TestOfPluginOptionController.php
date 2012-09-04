@@ -292,12 +292,12 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($stmt->rowCount(), 3);
         for($i = 0; $i < 3; $i++) {
             $data[$i] = $stmt->fetch();
-            if ($i<2) {
-                $this->assertEqual($data[$i]['option_name'],  $builder_pos[$i]->columns['option_name'] );
-                $this->assertEqual($data[$i]['option_value'], 'value' . $i);
+            if ($i < 2) {
+                $this->assertEqual(trim($data[$i]['option_name']), trim($builder_pos[$i]->columns['option_name']) );
+                $this->assertEqual(trim($data[$i]['option_value']), trim('value' . $i));
             } else {
-                $this->assertEqual($data[$i]['option_name'],  $builder_pos[$i]->columns['option_name'] );
-                $this->assertEqual($data[$i]['option_value'], $builder_pos[$i]->columns['option_value']);
+                $this->assertEqual(trim($data[$i]['option_name']), trim($builder_pos[$i]->columns['option_name']) );
+                $this->assertEqual(trim($data[$i]['option_value']), trim($builder_pos[$i]->columns['option_value']));
             }
         }
     }
@@ -360,7 +360,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
                 $this->assertEqual($data[$i]['option_value'], 'value' . $i);
             } else {
                 $this->assertEqual($data[$i]['option_name'],  $builder_pos[$i]->columns['option_name'] );
-                $this->assertEqual($data[$i]['option_value'], $builder_pos[$i]->columns['option_value']);
+                $this->assertEqual(trim($data[$i]['option_value']), trim($builder_pos[$i]->columns['option_value']));
             }
         }
     }

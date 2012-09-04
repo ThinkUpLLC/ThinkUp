@@ -67,7 +67,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
         'posts_per_day'=>0, 'posts_per_week'=>0, 'percentage_replies'=>0, 'percentage_links'=>0,
-        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0',
+        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0',
         'url' => 'http://www.fousquare.com/user/113612142759476883204', 'is_archive_loaded_posts'=> 1
         );
         // Create an instance with these details
@@ -87,14 +87,16 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
 
     // Tidy up the database and close the logger
     public function tearDown() {
-        parent::tearDown();
         $this->logger->close();
+        $this->builders = null;
+        parent::tearDown();
     }
 
     // Test the constructor
     public function testConstructor() {
         // Create a new foursquare crawler for this instance with the access token fauxaccesstoken
-        $fsc = new FoursquareCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fsc = new FoursquareCrawler($this->profile1_instance, 'fauxaccesstoken');
+
         // Check the access token was set correctly
         $this->assertEqual($fsc->access_token, 'fauxaccesstoken');
     }

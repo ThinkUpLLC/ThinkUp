@@ -201,7 +201,7 @@ class TwitterAPIAccessorOAuth {
             'author_avatar'=>$p->profile_image_url, 'avatar'=>$p->profile_image_url,
             'in_reply_to_post_id'=>$p->in_reply_to_status_id_str, 'author_fullname'=>'', 'full_name'=>'',
             'source'=>'twitter', 'location'=>'', 'url'=>'',
-            'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0, 'joined'=>'');
+            'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0);
         }
         return $parsed_payload;
     }
@@ -324,7 +324,6 @@ class TwitterAPIAccessorOAuth {
                         $this->next_cursor = $xml->next_cursor;
                         foreach ($xml->users->children() as $item) {
                             $parsed_payload[] = array(
-                                'post_id'         => (string)$item->status->id,
                                 'user_id'         => (string)$item->id,
                                 'user_name'       => (string)$item->screen_name,
                                 'full_name'       => (string)$item->name,
@@ -335,20 +334,32 @@ class TwitterAPIAccessorOAuth {
                                 'is_protected'    => self::boolXMLToInt($item->protected),
                                 'friend_count'    => (integer)$item->friends_count,
                                 'follower_count'  => (integer)$item->followers_count,
-                                'joined'          => gmdate("Y-m-d H:i:s", strToTime($item->created_at)),
-                                'post_text'       => (string)$item->status->text,
-                                'last_post'       => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
-                                'pub_date'        => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
                                 'favorites_count' => (integer)$item->favourites_count,
                                 'post_count'      => (integer)$item->statuses_count,
                                 'network'         =>'twitter'
                                 );
+                                $current_index = current($parsed_payload);
+
+                                //If a user hasn't posted, there are no statuses
+                                if ( isset($item->status->created_at) ) {
+                                    $parsed_payload[$current_index]['last_post'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                    $parsed_payload[$current_index]['joined'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                    $parsed_payload[$current_index]['pub_date'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                }
+                                if (isset($item->status->text)) {
+                                    $parsed_payload[$current_index]['post_text'] = (string)$item->status->text;
+                                }
+                                if (isset($item->status->id)) {
+                                    $parsed_payload[$current_index]['post_id'] = (string)$item->status->id;
+                                }
                         }
                         break;
                     case 'users':
                         foreach ($xml->children() as $item) {
                             $parsed_payload[] = array(
-                                'post_id'             => (string)$item->status->id,
                                 'user_id'             => (string)$item->id,
                                 'user_name'           => (string)$item->screen_name,
                                 'full_name'           => (string)$item->name,
@@ -359,16 +370,29 @@ class TwitterAPIAccessorOAuth {
                                 'is_protected'        => self::boolXMLToInt($item->protected),
                                 'friend_count'        => (integer)$item->friends_count,
                                 'follower_count'      => (integer)$item->followers_count,
-                                'joined'              => gmdate("Y-m-d H:i:s", strToTime($item->created_at)),
-                                'post_text'           => (string)$item->status->text,
-                                'last_post'           => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
-                                'pub_date'            => gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)),
                                 'favorites_count'     => (integer)$item->favourites_count,
                                 'post_count'          => (integer)$item->statuses_count,
-                                'source'              => (string)$item->status->source,
-                                'in_reply_to_post_id' => (string)$item->status->in_reply_to_status_id,
                                 'network'             => 'twitter'
                                 );
+                                $current_index = current($parsed_payload);
+                                //If a user hasn't posted, there are no statuses
+                                if ( isset($item->status->created_at) ) {
+                                    $parsed_payload[$current_index]['last_post'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                    $parsed_payload[$current_index]['joined'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                    $parsed_payload[$current_index]['pub_date'] = gmdate("Y-m-d H:i:s",
+                                    strToTime($item->status->created_at) );
+                                }
+                                if (isset($item->status->text)) {
+                                    $parsed_payload[$current_index]['post_text'] = (string)$item->status->text;
+                                }
+                                if (isset($item->status->id)) {
+                                    $parsed_payload[$current_index]['post_id'] = (string)$item->status->id;
+                                    $parsed_payload[$current_index]['source'] = (string)$item->status->source;
+                                    $parsed_payload[$current_index]['in_reply_to_post_id'] =
+                                    (string)$item->status->in_reply_to_status_id;
+                                }
                         }
                         break;
                     case 'statuses':

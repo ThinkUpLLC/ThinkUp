@@ -131,8 +131,10 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testOfGetOptions() {
-        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'5', 'folder_name'=>'test_plugin'));
-        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'6', 'folder_name'=>'test_plugin1'));
+        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'5', 'folder_name'=>'test_plugin',
+        'is_active'=>1));
+        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'6', 'folder_name'=>'test_plugin1',
+        'is_active'=>1));
 
         # init our dao
         $dao = new PluginOptionMySQLDAO();

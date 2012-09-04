@@ -49,19 +49,19 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>10, 'network_username'=>'jack',
-        'network'=>'twitter', 'network_viewer_id'=>10, 'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 
+        'network'=>'twitter', 'network_viewer_id'=>10, 'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1,
         'is_public'=>0));
 
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>10));
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>12, 'network_username'=>'jill',
-        'network'=>'twitter', 'network_viewer_id'=>12, 'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 
+        'network'=>'twitter', 'network_viewer_id'=>12, 'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1,
         'is_public'=>0));
 
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>11));
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'stuart',
-        'network'=>'twitter', 'network_viewer_id'=>13, 'crawler_last_run'=>'2010-01-01 12:00:00', 'is_active'=>0, 
+        'network'=>'twitter', 'network_viewer_id'=>13, 'crawler_last_run'=>'2010-01-01 12:00:00', 'is_active'=>0,
         'is_public'=>1));
 
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>12));
@@ -183,7 +183,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>10));
 
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>18, 'network_username'=>'salma',
-        'network'=>'facebook page', 'network_viewer_id'=>15, 'crawler_last_run'=>'2010-01-01 12:00:01', 
+        'network'=>'facebook page', 'network_viewer_id'=>15, 'crawler_last_run'=>'2010-01-01 12:00:01',
         'is_active'=>1));
 
         $result = $this->DAO->getByUsernameOnNetwork('salma', 'twitter');
@@ -251,6 +251,8 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($this->DAO->doesMetaDataExist(101));
 
         $logger = Logger::getInstance();
+        $result->last_page_fetched_replies = 1;
+        $result->last_page_fetched_tweets = 1;
         $this->DAO->save($result, 500, $logger);
         $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
         $this->assertIsA($updated_result, "TwitterInstance");
@@ -265,8 +267,8 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertEqual($updated_result->last_favorite_id, 101);
-        $this->assertEqual($updated_result->last_page_fetched_replies, 0);
-        $this->assertEqual($updated_result->last_page_fetched_tweets, 0);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 1);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 1);
         $this->assertNull($updated_result->last_unfav_page_checked);
 
         $result->last_page_fetched_replies = 13;
@@ -275,7 +277,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertEqual($updated_result->last_favorite_id, 101);
         $this->assertEqual($updated_result->last_page_fetched_replies, 13);
-        $this->assertEqual($updated_result->last_page_fetched_tweets, 0);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 1);
         $this->assertNull($updated_result->last_unfav_page_checked);
 
         $result->last_page_fetched_tweets = 27;
@@ -420,7 +422,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetPublicInstances() {
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'sam',
-        'network'=>'twitter', 'network_viewer_id'=>13, 'crawler_last_run'=>'2010-01-01 12:00:00', 'is_active'=>1, 
+        'network'=>'twitter', 'network_viewer_id'=>13, 'crawler_last_run'=>'2010-01-01 12:00:00', 'is_active'=>1,
         'is_public'=>1));
 
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>12));

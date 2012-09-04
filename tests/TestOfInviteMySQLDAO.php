@@ -82,9 +82,9 @@ class TestOfInviteMySQLDAO extends ThinkUpUnitTestCase {
     public function testIsInviteValid() {
         $builders = array();
         $builders[] = FixtureBuilder::build('invites', array('invite_code'=>'freshinvit', 'created_time'=>'-1d'));
-        $builders[] = FixtureBuilder::build('invites', array('invite_code'=>'staleinvite', 'created_time'=>'-9d'));
+        $builders[] = FixtureBuilder::build('invites', array('invite_code'=>'staleinvit', 'created_time'=>'-9d'));
 
         $this->assertTrue($this->dao->isInviteValid('freshinvit'));
-        $this->assertFalse($this->dao->isInviteValid('staleinvite'));
+        $this->assertFalse($this->dao->isInviteValid('staleinvit'));
     }
 }

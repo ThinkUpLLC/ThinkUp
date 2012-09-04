@@ -391,24 +391,24 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
             'name' => 'My Test Plugin', 'folder_name' => 'testplugin',
             'description' => 'Proof of concept plugin',
             'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
-            'version' => '0.01', 'is_active' => '0'
-            );
-            $builder1 = FixtureBuilder::build(self::TEST_TABLE,  $plugin1);
+            'version' => '0.01', 'is_active' =>0
+        );
+        $builder1 = FixtureBuilder::build(self::TEST_TABLE,  $plugin1);
 
-            $plugin2 = array(
+        $plugin2 = array(
             'name' => 'My Test Plugin Activated', 'folder_name' => 'testpluginact',
             'description' => 'Proof of concept plugin',
             'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
-            'version' => '0.01', 'is_active' => '1'
-            );
-            $builder2 = FixtureBuilder::build(self::TEST_TABLE,  $plugin2);
-            return array($builder1, $builder2);
+            'version' => '0.01', 'is_active' => 1
+        );
+        $builder2 = FixtureBuilder::build(self::TEST_TABLE,  $plugin2);
+        return array($builder1, $builder2);
     }
 
     public function testValidatePluginId() {
         // init our dao
         $dao = new PluginMySQLDAO();
-        $builder = FixtureBuilder::build('plugins');
+        $builder = FixtureBuilder::build('plugins', array('is_active'=>1));
         $this->assertFalse($dao->isValidPluginId(-99));
         $this->assertTrue($dao->isValidPluginId( $builder->columns[ 'last_insert_id' ] ));
     }

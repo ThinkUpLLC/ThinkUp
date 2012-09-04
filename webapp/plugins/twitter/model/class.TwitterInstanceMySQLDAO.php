@@ -122,6 +122,7 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
      */
     private function updateMetaData($instance_object) {
         $lfi = ($instance_object->last_favorite_id != "" ? true : false);
+        isset($instance_object->last_page_fetched_replies)?$instance_object->last_page_fetched_replies:1;
         $q  = "UPDATE ".$this->getMetaTableName()." SET ";
         if ($lfi){
             $q .= "last_favorite_id = :lastfavid, ";

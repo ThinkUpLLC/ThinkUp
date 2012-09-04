@@ -57,7 +57,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
-        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005'));
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:48:05'));
 
         //Make public
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,

@@ -29,8 +29,8 @@
 class ShortLinkMySQLDAO extends PDODAO {
     public function insert($link_id, $short_url) {
         $q  = "INSERT INTO #prefix#links_short ";
-        $q .= "(link_id, short_url) ";
-        $q .= "VALUES (:link_id , :short_url) ";
+        $q .= "(link_id, short_url, click_count) ";
+        $q .= "VALUES (:link_id , :short_url, 0) ";
         $vars = array(
             ':link_id'=>(int)$link_id,
             ':short_url'=>$short_url

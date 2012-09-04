@@ -157,7 +157,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
         );
 
         $instance_builder_1 = FixtureBuilder::build('instances', $instance_with_autherror);

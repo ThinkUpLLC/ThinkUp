@@ -53,7 +53,8 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
         //Insert test data into test table
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1234567890', 'user_name'=>'jack',
-        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>'150210', 'friend_count'=>124));
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>'150210', 'friend_count'=>124,
+        'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,

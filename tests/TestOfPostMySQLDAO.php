@@ -192,7 +192,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_username'=>'user_123456', 'author_fullname'=>'User 123456', 'is_geo_encoded'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+            'in_reply_to_user_id'=>''));
             $counter++;
         }
 
@@ -517,31 +518,34 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllReplies() {
         $dao = new PostMySQLDAO();
-        $replies = $dao->getAllReplies(13, 'twitter', 10);
+        $replies = $dao->getAllReplies('13', 'twitter', 10);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
         // test paging
-        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
+        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 1);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
         // this query doesn't have a second page, so this should return nothing
-        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 2);
+        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 2);
         $this->assertEqual(sizeof($replies), 0);
 
         // test count
-        $replies = $dao->getAllReplies(13, 'twitter', $count = 0, $page = 1);
+        $replies = $dao->getAllReplies('13', 'twitter', $count = 0, $page = 1);
         $this->assertEqual(sizeof($replies), 0);
 
-        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
+        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 1);
         $this->assertEqual(sizeof($replies), 1);
 
-        $replies = $dao->getAllReplies(18, 'twitter', 10);
+        $replies = $dao->getAllReplies('18', 'twitter', 10);
+        if (sizeof($replies)>0) {
+            print_r($replies);
+        }
         $this->assertEqual(sizeof($replies), 0);
 
         // test default order_by
-        $replies = $dao->getAllReplies(13, 'twitter', 10, 1, "';-- SELECT");
+        $replies = $dao->getAllReplies('13', 'twitter', 10, 1, "';-- SELECT");
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
     }
@@ -2188,7 +2192,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testUniqueConstraint2() {
         $counter = 1002;
-        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        $pseudo_minute = str_pad(($counter-1000), 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
         'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
@@ -2570,7 +2574,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                       'joined' => '2010-04-25 05:04:38',
                       'url' => 'http://www.facebook.com/jacqueline.dey',
                       'network' => 'twitter',
-                      'last_post' => '2011-02-19 22:27:00'
+                      'last_post' => '2011-02-19 22:27:00',
+                      'last_post_id'=>'abc'
                       )
                       ),
             'in_retweet_of_post_id' => '39088587140108288'
@@ -2595,7 +2600,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'place' => null
                     );
                     $user_array = array (
-            'user_id' => 1106501,
+            'user_id' => '1106501',
             'user_name' => 'joanwalsh',
             'full_name' => 'Joan Walsh',
             'avatar' => 'http://a3.twimg.com/profile_images/1190090715/JW_1_inch_high_normal.png',
@@ -2608,9 +2613,10 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2007-03-13 18:38:05',
             'url' => 'http://www.salon.com/opinion/walsh/',
             'network' => 'twitter',
-            'last_post' => '2011-02-19 22:30:19'
-            );
-            return array($post, $entities, $user_array);
+            'last_post' => '2011-02-19 22:30:19',
+             'last_post_id'=>'abc'
+             );
+             return array($post, $entities, $user_array);
     }
 
     /**
@@ -2696,7 +2702,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2010-10-12 13:12:48',
             'url' => 'http://www.therainforestsite.com',
             'network' => 'twitter',
-            'last_post' => '2011-02-20 22:28:06'
+            'last_post' => '2011-02-20 22:28:06',
+            'last_post_id'=>'abc'
             );
             return array($post, $entities, $user_array);
     }
@@ -2746,7 +2753,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'place' => null
                             );
                             $user_array = array (
-            'user_id' => 140955302,
+            'user_id' => '140955302',
             'user_name' => 'DAaronovitch',
             'full_name' => 'David Aaronovitch',
             'avatar' => 'http://a2.twimg.com/profile_images/1145463210/75.manchester_normal.jpg',
@@ -2759,7 +2766,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2010-05-06 20:12:34',
             'url' => 'http://www.davidaaronovitch.com/',
             'network' => 'twitter',
-            'last_post' => '2011-02-19 22:24:50'
+            'last_post' => '2011-02-19 22:24:50',
+            'last_post_id'=>'abc'
             );
             return array($post, $entities, $user_array);
     }

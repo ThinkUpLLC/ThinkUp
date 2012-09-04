@@ -92,8 +92,8 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
 
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false) {
         $q  = "INSERT INTO ".$this->getTableName()." ";
-        $q .= "(network_user_id, network_username, network, network_viewer_id) ";
-        $q .= "VALUES (:user_id , :username, :network, :viewer_id) ";
+        $q .= "(network_user_id, network_username, network, network_viewer_id, last_post_id) ";
+        $q .= "VALUES (:user_id , :username, :network, :viewer_id, '') ";
         $vars = array(
             ':user_id'=>(string)$network_user_id,
             ':username'=>$network_username,
@@ -571,7 +571,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
     }
 
     public function getHoursSinceLastCrawlerRun() {
-        $q = "SELECT (unix_timestamp( NOW() ) - unix_timestamp(crawler_last_run )) / 3600 as hours_since_last_run ";
+        $q = "SELECT round((unix_timestamp( NOW() ) - unix_timestamp(crawler_last_run )) / 3600, 0) as hours_since_last_run ";
         $q .= "FROM ".$this->getTableName()." WHERE is_active=1 ORDER BY crawler_last_run ASC LIMIT 1";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);

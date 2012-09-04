@@ -351,10 +351,10 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         // make sure registration is closed
         $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::APP_OPTIONS,
         'option_name' => 'is_registration_open', 'option_value' => 'false'));
-        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '0123456789', 'created_time' => '-3s'));
+        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '012345678', 'created_time' => '-3s'));
 
         $_SERVER['HTTP_HOST'] = "mythinkup" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -372,10 +372,10 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         // make sure registration is closed
         $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::APP_OPTIONS,
         'option_name' => 'is_registration_open', 'option_value' => 'false'));
-        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '0123456789', 'created_time' => '-3s'));
+        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '012345678', 'created_time' => '-3s'));
 
         $_SERVER['HTTP_HOST'] = "mythinkup" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -393,10 +393,10 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         // make sure registration is closed
         $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::APP_OPTIONS,
         'option_name' => 'is_registration_open', 'option_value' => 'false'));
-        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '0123456789', 'created_time' => '-3s'));
+        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '012345678', 'created_time' => '-3s'));
 
         $_SERVER['HTTP_HOST'] = "mythinkup" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -432,10 +432,10 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         // make sure registration is closed
         $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::APP_OPTIONS,
         'option_name' => 'is_registration_open', 'option_value' => 'false'));
-        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '0123456789', 'created_time' => '-3s'));
+        $builders[] = FixtureBuilder::build('invites', array( 'invite_code' => '012345678', 'created_time' => '-3s'));
 
         $_SERVER['HTTP_HOST'] = "mythinkup" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -470,11 +470,11 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'false');
         $bdata = FixtureBuilder::build('options', $bvalues);
-        $bvalues1 = array( 'invite_code' => '0123456789', 'created_time' => '-8d');
-        $bdata1 = FixtureBuilder::build('invites', $bvalues);
+        $bvalues1 = array( 'invite_code' => '012345678', 'created_time' => '-8d');
+        $bdata1 = FixtureBuilder::build('invites', $bvalues1);
 
         $_SERVER['HTTP_HOST'] = "mythinkup/" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['Submit'] = 'Register';
         $_POST['email'] = 'angie@example.com';
@@ -500,11 +500,11 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'false');
         $bdata = FixtureBuilder::build('options', $bvalues);
-        $bvalues1 = array( 'invite_code' => '0123456789', 'created_time' => '-8d');
-        $bdata1 = FixtureBuilder::build('invites', $bvalues);
+        $bvalues1 = array( 'invite_code' => '012345678', 'created_time' => '-8d');
+        $bdata1 = FixtureBuilder::build('invites', $bvalues1);
 
         $_SERVER['HTTP_HOST'] = "mythinkup/" ;
-        $_GET['code'] = '0123456789' ;
+        $_GET['code'] = '012345678' ;
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['Submit'] = 'Register';
         $_POST['email'] = 'angie@example.com';
@@ -530,8 +530,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'false');
         $bdata = FixtureBuilder::build('options', $bvalues);
-        $bvalues1 = array( 'invite_code' => '0123456789', 'created_time' => '-8d');
-        $bdata1 = FixtureBuilder::build('invites', $bvalues);
+        $bvalues1 = array( 'invite_code' => '012345678', 'created_time' => '-8d');
+        $bdata1 = FixtureBuilder::build('invites', $bvalues1);
 
         $_SERVER['HTTP_HOST'] = "mythinkup/" ;
         $_GET['code'] = '9876543210' ;
@@ -560,8 +560,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'false');
         $bdata = FixtureBuilder::build('options', $bvalues);
-        $bvalues1 = array( 'invite_code' => '0123456789', 'created_time' => '-8d');
-        $bdata1 = FixtureBuilder::build('invites', $bvalues);
+        $bvalues1 = array( 'invite_code' => '012345678', 'created_time' => '-8d');
+        $bdata1 = FixtureBuilder::build('invites', $bvalues1);
 
         $_SERVER['HTTP_HOST'] = "mythinkup/" ;
         $_GET['code'] = '9876543210' ;

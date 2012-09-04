@@ -51,7 +51,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:48:05', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
         'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>70,

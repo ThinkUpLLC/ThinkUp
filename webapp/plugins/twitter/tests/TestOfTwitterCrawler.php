@@ -74,7 +74,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         // insert test follow
         $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'36823',
-        'last_seen'=>'-2y'));
+        'last_seen'=>'-730d'));
 
         $this->builders[] = FixtureBuilder::build('groups', array('group_id'=>'19994710',
         'group_name'=>'@userx/anotherlist', 'network' => 'twitter', 'is_active'=>1));
@@ -99,7 +99,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05'
         );
         $this->instance = new TwitterInstance($r);
 
@@ -120,7 +120,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05'
         );
         $this->instance = new TwitterInstance($r);
 
@@ -141,7 +141,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05'
         );
         $this->instance = new TwitterInstance($r);
 
@@ -174,7 +174,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
         'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05'
         );
         $this->instance = new TwitterInstance($r);
 
@@ -197,7 +197,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'favorites_profile' => '0',  'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'01-01-2009'
+        'earliest_post_in_system'=>'2009-01-01 13:48:05'
         );
         $this->instance = new TwitterInstance($r);
 
@@ -475,7 +475,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $twitter_crawler->fetchInstanceUserFollowers();
         $follow_dao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($follow_dao->followExists('36823', '119950880', 'twitter'), 'new follow exists');
+        $this->assertTrue($follow_dao->followExists('36823', '119950880', 'twitter'));
 
         $user_dao = DAOFactory::getDAO('UserDAO');
         $updated_user = $user_dao->getUserByName('meatballhat', 'twitter');

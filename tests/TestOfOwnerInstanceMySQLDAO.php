@@ -123,8 +123,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetOwnerInstance() {
-
-        $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20) );
+        $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('owner_id' => 20, 'instance_id'=>20) );
         $dao = new OwnerInstanceMySQLDAO();
 
         // no record
@@ -171,7 +170,8 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testDoesOwnerHaveAccessToInstance() {
         $oi_data = array('owner_id' => 2, 'instance_id' => 20);
         $oinstances_builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $oi_data);
-        $i_data = array('network_username' => 'mojojojo', 'id' => 20, 'network_user_id' =>'filler_data');
+        $i_data = array('network_username' => 'mojojojo', 'id' => 20, 'network_user_id' =>'filler_data',
+        'posts_per_day'=>10);
         $instances_builder = FixtureBuilder::build(self::TEST_TABLE_I,  $i_data);
 
         $dao = new OwnerInstanceMySQLDAO();
@@ -218,7 +218,8 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testDoesOwnerHaveAccessToPost() {
         $oi_data = array('owner_id' => 2, 'instance_id' => 20);
         $oinstances_builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $oi_data);
-        $i_data = array('id' => 20, 'network_username' => 'mojojojo', 'network_user_id' =>'10', 'network'=>'twitter');
+        $i_data = array('id' => 20, 'network_username' => 'mojojojo', 'network_user_id' =>'10', 'network'=>'twitter',
+        'posts_per_day'=>10);
         $instances_builder = FixtureBuilder::build(self::TEST_TABLE_I,  $i_data);
 
         $dao = new OwnerInstanceMySQLDAO();

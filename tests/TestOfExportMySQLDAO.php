@@ -63,19 +63,19 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:48:05', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>10, 'user_name'=>'ev_replies',
         'full_name'=>'Ev Williams\' replier', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:48:05', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>9, 'user_name'=>'ev_replies2',
         'full_name'=>'Ev Williams\' replier 2', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:48:05', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>8, 'user_name'=>'ev_retweeter',
         'full_name'=>'Ev Williams\' retweeter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
+        'last_updated'=>'2005-01-01 13:48:05', 'network'=>'twitter'));
 
         //Add straight text posts
         $counter = 0;

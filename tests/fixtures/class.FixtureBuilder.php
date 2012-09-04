@@ -224,7 +224,8 @@ class FixtureBuilder {
                 } else if (preg_match('/^decimal/', $column['Type'])) {
                     $column['value'] = $this->genDecimal($column['Type']);
                 } else if (preg_match('/^(int|tinyint)/', $column['Type'])) {
-                    $column['value'] = $this->genInt();
+                    preg_match('#\((.*?)\)#', $column['Type'], $int_length);
+                    $column['value'] = $this->genInt($int_length[1]);
                 } else if (preg_match('/^bigint/', $column['Type'])) {
                     $column['value'] = $this->genBigint();
                 } else if (preg_match('/^(times|date)/', $column['Type'])) {
@@ -362,8 +363,8 @@ class FixtureBuilder {
     public function genDecimal($values) {
         $values = preg_replace("/(decimal)\\(|\\)/i", '', $values);
         $values = preg_split('/,/', $values);
-        $left = mt_rand(0, pow(10, $values[0]) - 1);
-        $right = mt_rand(1, pow(10, $values[1]) - 1);
+        $left = mt_rand(0, pow(2, $values[0]) - 1);
+        $right = mt_rand(1, pow(2, $values[1]) - 1);
         $value = $left . '.' . $right;
         $value = $value + 0; // cast to a float;
         return $value;
