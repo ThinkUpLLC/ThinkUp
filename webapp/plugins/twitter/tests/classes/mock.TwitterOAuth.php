@@ -109,6 +109,6 @@ class TwitterOAuth {
     }
 
     public function getAccessToken(){
-        return 'fake access token';
+        return array('oauth_token'=>'fake oauth token', 'oauth_token_secret'=>'fake oauth token secret');
     }
 }

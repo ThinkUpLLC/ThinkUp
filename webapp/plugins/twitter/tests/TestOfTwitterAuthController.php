@@ -113,6 +113,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual('Success! dougw on Twitter has been added to ThinkUp!',
         $v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testLoggedInAllParamsServiceUserExists() {
@@ -142,5 +143,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $this->debug($results);
         $this->assertEqual('dougw on Twitter is already set up in ThinkUp! To add a different Twitter account, log '.
         'out of Twitter.com in your browser and authorize ThinkUp again.', $v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
     }
 }

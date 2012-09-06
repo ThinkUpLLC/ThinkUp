@@ -818,7 +818,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
     public function testPostRetweets() {
         $_GET['type'] = 'post_retweets';
-        $_GET['post_id'] = 134;
+        $_GET['post_id'] = '134';
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
@@ -827,10 +827,13 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         foreach($output as $post) {
             $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
-            $this->assertEqual($post->retweeted_status->id, 134);
+            $this->assertEqual($post->retweeted_status->id, '134');
         }
 
         $this->assertEqual(sizeof($output), 3);
+        if (sizeof($output) != 3) {
+            print_r($output);
+        }
 
         // test order_by
         $_GET['order_by'] = 'location';
@@ -841,7 +844,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $distance = $output[0]->reply_retweet_distance;
         foreach ($output as $post) {
             $this->assertTrue($post->reply_retweet_distance >= $distance, "Retweets not correctly ordered by ".
-     "distance. " . $post->reply_retweet_distance . " is not greater than " . $distance);
+            "distance. " . $post->reply_retweet_distance . " is not greater than " . $distance);
             $distance = $post->reply_retweet_distance;
         }
 
