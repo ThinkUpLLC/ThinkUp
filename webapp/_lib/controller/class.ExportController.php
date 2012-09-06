@@ -138,7 +138,7 @@ class ExportController extends ThinkUpAuthController {
         }
 
         // make sure the file name does not contain spaces.
-        $filename = str_replace(' ', '_', $filename);
+        $filename = str_replace(' ', '_', $filename).'.csv';
 
         if ( ! headers_sent() ) { // this is so our test don't barf on us
             header('Content-Type: text/csv');

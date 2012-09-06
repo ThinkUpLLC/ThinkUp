@@ -9,6 +9,10 @@ img.place-icon2 {position: relative;width: 32px;height: 32px;top: -146px;left: 5
 {if $all_checkins|@count >0}
     <div class="section">
         <h2>Your Checkins</h2>
+        <div class="header">
+        {if $logged_in_user and $display eq 'posts'}<a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network}">Export</a>{/if}
+        </div>
+
         {foreach from=$all_checkins item=post name=foo}
             {include file="_post.checkin.tpl"}
         {/foreach}
