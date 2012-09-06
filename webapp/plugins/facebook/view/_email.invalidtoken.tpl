@@ -5,7 +5,7 @@ you change your password or other authorization settings.
 The good news is, it's easy to fix. You'll just need to click on "Add a Facebook User" in ThinkUp's settings,
 at this link:
 
-http{if $smarty.server.HTTPS}s{/if}://{$server}{$site_root_path|escape:'urlpathinfo'}account/?p=facebook
+{$thinkup_site_url}account/?p=facebook
 
 (If you're not logged in, it'll ask you to log in to ThinkUp or Facebook, as needed.)
 
