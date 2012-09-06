@@ -11,7 +11,7 @@ Prerequisites
 -------------
 
 -  File-system access to a web host, preferably over FTP or SFTP.
--  `PHP 5.2 <http://php.net>`_ or higher with cURL, GD, JSON, and the PDO MySQL driver enabled.
+-  `PHP 5.2 <http://php.net>`_ or higher with cURL, input filters, GD, HASH, JSON, the PDO MySQL driver, session support, SimpleXML, and XML enabled.
 -  `MySQL 5.0.3 <http://mysql.com/>`_ or higher.
 -  A publicly available web server. (Twitter authorization requires a public callback URL, so you'll need to expose
    non-public servers to the internet for initial authorization; after that, the server no longer needs to be publicly
