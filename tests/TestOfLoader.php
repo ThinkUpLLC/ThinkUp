@@ -50,6 +50,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertEqual( Loader::getLookupPath(), array(
         THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . '_lib/controller/',
         THINKUP_WEBAPP_PATH . '_lib/exceptions/'
         ));
@@ -70,6 +71,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertEqual( Loader::getLookupPath(), array(
         THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . '_lib/controller/',
         THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests/classes'
@@ -90,6 +92,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertEqual( Loader::getLookupPath(), array(
         THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . '_lib/controller/',
         THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests',
@@ -127,6 +130,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertEqual( Loader::getLookupPath(), array(
         THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . '_lib/controller/',
         THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         ));
@@ -135,6 +139,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertEqual( Loader::getLookupPath(), array(
         THINKUP_WEBAPP_PATH . '_lib/',
         THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . '_lib/controller/',
         THINKUP_WEBAPP_PATH . '_lib/exceptions/',
         THINKUP_ROOT_PATH . 'tests/classes'

@@ -36,7 +36,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
 
-require_once THINKUP_WEBAPP_PATH.'_lib/model/class.OwnerInstanceMySQLDAO.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/dao/class.OwnerInstanceMySQLDAO.php';
 
 class TestOfPostController extends ThinkUpUnitTestCase {
     public function setUp(){

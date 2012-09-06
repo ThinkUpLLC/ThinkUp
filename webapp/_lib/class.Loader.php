@@ -85,6 +85,7 @@ class Loader {
         self::$lookup_path = array(
         THINKUP_WEBAPP_PATH . "_lib/",
         THINKUP_WEBAPP_PATH . "_lib/model/",
+        THINKUP_WEBAPP_PATH . "_lib/dao/",
         THINKUP_WEBAPP_PATH . "_lib/controller/",
         THINKUP_WEBAPP_PATH . "_lib/exceptions/"
         );

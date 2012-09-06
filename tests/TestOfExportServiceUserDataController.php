@@ -28,9 +28,9 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 if (!class_exists('ExportDAO')) {
-    require_once THINKUP_WEBAPP_PATH.'_lib/model/interface.ExportDAO.php';
+    require_once THINKUP_WEBAPP_PATH.'_lib/dao/interface.ExportDAO.php';
 }
-require_once THINKUP_WEBAPP_PATH.'_lib/model/class.ExportMySQLDAO.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/dao/class.ExportMySQLDAO.php';
 
 class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
 
