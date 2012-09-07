@@ -130,7 +130,8 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                      $this->api_hourly_limit = $status['hourly-limit'];//get this from API
                      $this->next_api_reset = $status['reset-time'];//get this from API
                  } else {
-                     throw new Exception('API status came back malformed');
+                     throw new Exception('Unable to obtain account status. Twitter API returned: "'.
+                     Utils::varDumpToString($status).'"');
                  }
                  //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls
                  //to leave unmade
