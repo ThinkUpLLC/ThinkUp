@@ -183,7 +183,7 @@ CREATE TABLE tu_instances (
   percentage_links decimal(4,2) DEFAULT NULL COMMENT 'Percent of an instance''s posts which contain links.',
   earliest_post_in_system datetime DEFAULT NULL COMMENT 'Date and time of the earliest post authored by the instance in the datastore.',
   earliest_reply_in_system datetime DEFAULT NULL COMMENT 'Date and time of the earliest reply authored by the instance in the datastore.',
-  is_archive_loaded_posts int(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not all the instance''s posts have been backfilled.',
+  is_archive_loaded_posts tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not all the instance''s posts have been backfilled.',
   is_archive_loaded_replies int(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not all the instance''s replies have been backfilled.',
   is_archive_loaded_follows int(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not all the instance''s follows have been backfilled.',
   is_public int(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not instance is public in ThinkUp, that is, viewable when no ThinkUp user is logged in.',
@@ -517,13 +517,13 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2012-09-06 22:35:57
+-- Dump completed on 2012-09-06 23:52:08
 
 --
 -- Insert DB Version
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
-VALUES ('application_options', 'database_version', '1.0.8.1', NOW(), NOW()); 
+VALUES ('application_options', 'database_version', '1.1', NOW(), NOW()); 
 
 --
 -- Insert default plugin(s)

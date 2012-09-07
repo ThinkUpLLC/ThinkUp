@@ -145,7 +145,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
-        $this->assertEqual(count($data), 215);
+        $this->assertEqual(count($data), $TOTAL_MIGRATION_COUNT);
     }
 
     /**
@@ -296,14 +296,13 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             chdir(dirname(__FILE__) . '/../');
             //Extract into test_installer directory and set necessary folder permissions
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;cd webapp/test_installer/;'.
-            'rm -rf thinkup/_lib/view/compiled_view;unzip -o ' . $zipfile.';');
+            'rm -rf thinkup/_lib;unzip -o ' . $zipfile.';');
             if (!file_exists($this->install_dir.'/thinkup/data/compiled_view')) {
                 if (!file_exists($this->install_dir.'/thinkup/data')) {
                     exec('mkdir thinkup/data;');
                 }
                 exec('mkdir thinkup/data/compiled_view;chmod -R 777 thinkup');
             }
-
             // run updates and migrations
             require dirname(__FILE__) . '/migration-assertions.php';
 
@@ -336,6 +335,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 'INSERT INTO tu_follows_b10 (SELECT', $msql);
                 file_put_contents($migration_10, $msql);
             }
+            //sleep(1000);
             $this->get($this->url.'/test_installer/thinkup/');
             $this->assertText("ThinkUp's database needs an upgrade");
             // token could be in 1 of 2 places, depending on what version is running

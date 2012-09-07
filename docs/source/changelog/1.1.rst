@@ -1,0 +1,23 @@
+1.1 - 10 Sept 2012
+==================
+
+*  New feature! The Foursquare plugin captures checkins, photos, and comments. The dashboard includes
+   a map of last week's checkins, the rate of checkins by hour over the last week compared to all time, pie charts
+   of the types of places you check into, and a list of checkins on this day in years past. You an also export your
+   checkins to a CSV file.
+*  New Twitter, Facebook, Google+ "Time Machine" dashboard module: Posts published on this day in years past.
+*  Bugfix: Fixed installation URL in Facebook reauthorization email notification text.
+*  Bugfix: Check if service user is marked as public in ThinkUp before displaying individual post page data.
+*  Bugfix: Improved error message when Twitter API endpoint is unreachable.
+*  Bugfix: All DAO queries function when MySQL strict mode is enabled (no more "General error: 1364 Field 'x' doesn't
+   have a default value" message).
+*  Bugfix: Fixed several bugs which resulted in PHP notices and errors.
+
+Developers:
+
+*  All MySQL tables are now fully commented.
+*  Moved DAO files into dedicated folder.
+*  Added Polygon and Point support to FixtureBuilder library.
+*  Added Travis PHP 5.4 testing in addition to PHP 5.2 and 5.3.
+*  Fixed bug in the Plugin Maker which called deprecated code. 
+*  Several code style fixes; added missing DAO profiler calls.

@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '1.0.8';
-$TOTAL_MIGRATION_COUNT = 218;
+$LATEST_VERSION = '1.1';
+$TOTAL_MIGRATION_COUNT = 240;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -826,9 +826,9 @@ $MIGRATIONS = array(
         'migrations' => 0,
      ),
 
-     /* 1.0.8 */
-    '1.0.8' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+     /* 1.0.8.1 */
+    '1.0.8.1' => array(
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.8.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -848,6 +848,70 @@ $MIGRATIONS = array(
                 array(
                     'query' => 'DESCRIBE tu_owner_instances auth_error;',
                     'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+            )
+        )
+     ),
+
+     /* 1.1 */
+    '1.1' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Changed tu_insights.text to text
+                    'query' => 'DESCRIBE tu_insights text;',
+                    'match' => "/text/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added prefix field to tu_insights
+                    'query' => 'DESCRIBE tu_insights prefix;',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added map image field to tu_places
+                    'query' => 'DESCRIBE tu_places map_image;',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added icon field to tu_places
+                    'query' => 'DESCRIBE tu_places icon;',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added is_archive_loaded_posts field to tu_instances
+                    'query' => 'DESCRIBE tu_instances is_archive_loaded_posts;',
+                    'match' => "/tinyint\(1\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Default value for tu_links expanded_url
+                    'query' => 'DESCRIBE tu_links expanded_url;',
+                    'match' => "/^$/",
+                    'column' => 'Default',
+                ),
+                array(
+                    // Default value for tu_users last_post_id
+                    'query' => 'DESCRIBE tu_users last_post_id;',
+                    'match' => "/^$/",
+                    'column' => 'Default',
+                ),
+                array(
+                    // Default value for tu_links image_src
+                    'query' => 'DESCRIBE tu_links image_src;',
+                    'match' => "/^$/",
+                    'column' => 'Default',
+                ),
+                array(
+                    // Created tu_insight_baselines table
+                    'query' => 'DESCRIBE tu_insight_baselines instance_id;',
+                    'match' => "/int\(11\)/",
                     'column' => 'Type',
                 ),
             )
