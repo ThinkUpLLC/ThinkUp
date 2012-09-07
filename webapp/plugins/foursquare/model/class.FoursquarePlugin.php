@@ -128,11 +128,12 @@ class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         // Set the view template to checkins.tpl
         $checkins_data_tpl = Utils::getPluginViewDirectory('foursquare').'checkins.tpl';
         // Add a checkins link to the list of pages on the left
-        $checkins_menu_item = new MenuItem("Checkins", "All checkins", $checkins_data_tpl);
+        $checkins_menu_item = new MenuItem("Checkins", "Your checkins", $checkins_data_tpl);
 
         // Get the data for our checkins link
         $checkins_menu_ds_1 = new Dataset("all_checkins", 'PostDAO', "getAllCheckins",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
+        $checkins_menu_ds_1->addHelp('userguide/listings/foursquare/dashboard_posts');
         $checkins_menu_item->addDataset($checkins_menu_ds_1);
 
         // Add the checkins to our array of items

@@ -14,6 +14,7 @@ Dashboard data listings apply to sets of posts or users.
 
    twitter/dashboard_listings.rst
    facebook/dashboard_listings.rst
+   foursquare/dashboard_listings.rst
    googleplus/dashboard_listings.rst
 
 Post Data Listings

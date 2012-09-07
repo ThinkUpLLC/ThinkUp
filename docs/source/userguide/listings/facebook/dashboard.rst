@@ -35,3 +35,9 @@ Friend Count by Day and Week
 ----------------------------
 
 If there's data, these line charts display your friend count history the past 5 days and 5 weeks.
+
+Flashback: On This Day In Years Past
+------------------------------------
+
+Status updates you posted on this day in past years. For example, your posts from 1 year ago, 2 years ago, and 3 years
+ago.

@@ -80,12 +80,12 @@
                     {include file="_dashboard.checkinsperhouralltime.tpl"}
                {/if}
 
-               {if $checkins_by_type|count_characters neq 0}
-                    {include file="_dashboard.checkinplacetypesalltime.tpl"}
-               {/if}
-
                {if $checkins_by_type_last_week|count_characters neq 0}
                    {include file="_dashboard.checkinplacetypeslastweek.tpl"}
+               {/if}
+
+               {if $checkins_by_type|count_characters neq 0}
+                    {include file="_dashboard.checkinplacetypesalltime.tpl"}
                {/if}
              {/if}
 
@@ -120,12 +120,24 @@
                 </div>
             {/if}
 
+            {if $instance->network eq "foursquare"}
+               <style type="text/css">
+                {literal}
+                .map-image-container { width: 130px; height: 130px; padding-bottom : 30px; }
+                img.map-image2 {float:left;margin:6px 0 0 0;width:150px;height:150px;}
+                img.place-icon2 {position: relative;width: 32px;height: 32px;top: -146px;left: 5px;}
+                {/literal}
+                </style>
+            {/if}
+
             {if $most_replied_to_1wk}
               <div class="section">
                 <h2>This Week's Most {if $instance->network eq 'google+'}Discussed{else}Replied-To{/if} Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
                     {if $instance->network eq "twitter"}
                         {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {elseif $instance->network eq 'foursquare'}
+                        {include file="_post.checkin.tpl" post=$t}
                     {else}
                         {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
                     {/if}
@@ -159,28 +171,6 @@
                 {/foreach}
               </div>
             {/if}
-            {if $posts_flashback|@count > 0 }
-            <div class="section">
-                <h2>Flashback: On This Day In Years Past</h2>
-                {if $instance->network eq 'foursquare'}
-                    <style type="text/css">
-                    {literal}
-                    .map-image-container { width: 130px; height: 130px; padding-bottom : 30px; }
-                    img.map-image2 {float:left;margin:6px 0 0 0;width:150px;height:150px;}
-                    img.place-icon2 {position: relative;width: 32px;height: 32px;top: -146px;left: 5px;}
-                    {/literal}
-                    </style>
-
-                    {foreach from=$posts_flashback item=post name=foo}
-                        {include file="_post.checkin.tpl"}
-                    {/foreach}
-                {else}
-                    {foreach from=$posts_flashback key=tid item=post name=foo}
-                      {include file="_post.counts_no_author.tpl" post=$post show_favorites_instead_of_retweets=false}
-                    {/foreach}
-                {/if}
-            </div>
-           {/if} 
 
             {if $instance->network eq 'twitter' }
                 <div class="section" style="float : left; clear : none; width : 345px;">
@@ -190,6 +180,22 @@
                     {include file="_dashboard.clientusage.tpl"}
                 </div>
             {/if}
+
+            {if $posts_flashback|@count > 0 }
+            <div class="section">
+                <h2>Flashback: On This Day In Years Past</h2>
+                {if $instance->network eq 'foursquare'}
+                    {foreach from=$posts_flashback item=post name=foo}
+                        {include file="_post.checkin.tpl" }
+                    {/foreach}
+                {else}
+                    {foreach from=$posts_flashback key=tid item=post name=foo}
+                      {include file="_post.counts_no_author.tpl" post=$post show_favorites_instead_of_retweets=false}
+                    {/foreach}
+                {/if}
+            </div>
+           {/if} 
+
           {/if} {* end if $data_template *}
          {/if}
         {/if}
