@@ -1,3 +1,6 @@
+--
+-- Create baselines table for comparative insights.
+--
 CREATE TABLE IF NOT EXISTS tu_insight_baselines (
   date date NOT NULL COMMENT 'Date of baseline statistic.',
   instance_id int(11) NOT NULL COMMENT 'Instance ID.',

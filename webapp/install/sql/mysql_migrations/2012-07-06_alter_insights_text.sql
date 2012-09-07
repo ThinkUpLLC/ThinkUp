@@ -1,1 +1,4 @@
-ALTER TABLE  tu_insights CHANGE  `text`  text TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  'Text content of the alert.';
+--
+-- Widen text field to accommadate longer insights.
+--
+ALTER TABLE  tu_insights CHANGE  `text`  text TEXT NOT NULL COMMENT  'Text content of the alert.';
