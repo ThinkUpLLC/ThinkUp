@@ -76,7 +76,7 @@ class TestOfFoursquarePlugin extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($menus), 1);
         $post_tab = $menus['posts'];
         $this->assertEqual($post_tab->name, "Checkins");
-        $this->assertEqual($post_tab->description, "All checkins");
+        $this->assertEqual($post_tab->description, "Your checkins");
         $post_tab_datasets = $post_tab->getDatasets();
         $this->assertEqual(count($post_tab_datasets), 1);
         $post_tab_dataset = $post_tab_datasets[0];
