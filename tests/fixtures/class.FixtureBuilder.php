@@ -290,7 +290,7 @@ class FixtureBuilder {
         "n","p","q","r","s","t","u","v","w","x","y","z",
         "A","B","C","D","E","F","G","H","J","K","L","M",
         "N","P","Q","R","S","T","U","V","W","X","Y","Z",
-        "1","2","3","4","5","6","7","8","9", "0", " ");
+        "1","2","3","4","5","6","7","8","9", " ");
 
         $length = $length > 0 ? $length : $this->DATA_DEFAULTS['varchar'];
         $length = rand(1, $length);
@@ -298,7 +298,7 @@ class FixtureBuilder {
         for($i = 0; $i < $length; $i++) {
             $string .= $characters[mt_rand(0, count($characters)-1)];
         }
-        return $string;
+        return strval($string);
     }
 
     /*
