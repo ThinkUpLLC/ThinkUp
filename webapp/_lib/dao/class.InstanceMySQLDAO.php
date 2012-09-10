@@ -540,6 +540,24 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         return $this->getDataIsReturned($ps);
     }
 
+    public function isInstancePublic($username, $network) {
+        $q  = "SELECT is_public ";
+        $q .= "FROM ".$this->getTableName()." ";
+        $q .= "WHERE network_username = :username AND network = :network ORDER BY is_public ASC LIMIT 1";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        if (isset($result['is_public'])) {
+            return ($result['is_public'] == 1);
+        } else {
+            return false;
+        }
+    }
+
     public function getByUserAndViewerId($network_user_id, $viewer_id, $network = 'facebook') {
         $q  = "SELECT ".$this->getFieldList();
         $q .= "FROM ".$this->getTableName()." ";

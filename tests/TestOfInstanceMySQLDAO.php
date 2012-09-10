@@ -663,6 +663,20 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result);
     }
 
+    public function testIsInstancePublic(){
+        // Test private instance
+        $result = $this->DAO->isInstancePublic("jack", "twitter");
+        $this->assertFalse($result);
+
+        // Test public instance
+        $result = $this->DAO->isInstancePublic("stuart", "twitter");
+        $this->assertTrue($result);
+
+        // Test non-existent instance
+        $result = $this->DAO->isInstancePublic("no one", "facebook");
+        $this->assertFalse($result);
+    }
+
     public function testGetByUserAndViewerId() {
         $this->DAO = new InstanceMySQLDAO();
         $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,

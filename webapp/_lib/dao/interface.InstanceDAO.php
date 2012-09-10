@@ -198,6 +198,14 @@ interface InstanceDAO {
     public function isUserConfigured($username, $network);
 
     /**
+     * Check if an instance is public.
+     * @param str $username
+     * @param str $network
+     * @return bool
+     */
+    public function isInstancePublic($username, $network);
+
+    /**
      * Get instance by user and viewer ID
      * @param int $network_user_id
      * @param int $viewer_id

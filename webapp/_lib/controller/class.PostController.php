@@ -57,8 +57,14 @@ class PostController extends ThinkUpController {
                     }
 
                     $viewer_has_access_to_post = false;
-                    if ( !$post->is_protected ) {
-                        $viewer_has_access_to_post = true;
+                    if ( !$post->is_protected ) { // post is public
+                        if ($this->isLoggedIn()) { // user is logged in
+                            $viewer_has_access_to_post = true;
+                        } else { //not logged in
+                            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+                            $viewer_has_access_to_post = $instance_dao->isInstancePublic($post->author_username,
+                            $post->network);
+                        }
                     } elseif ($this->isLoggedIn()) {
                         $owner_dao = DAOFactory::getDAO('OwnerDAO');
                         $owner = $owner_dao->getByEmail($this->getLoggedInUser());

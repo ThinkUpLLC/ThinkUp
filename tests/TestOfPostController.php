@@ -63,19 +63,24 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/Post not specified/", $results);
     }
 
-    public function testControlExistingPublicPostID() {
+    public function testControlExistingPostIDByPublicInstance() {
+        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'10', 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
         'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>0));
-        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>0,
         'network'=>'twitter'));
         $_GET["t"] = '1001';
         $controller = new PostController(true);
         $results = $controller->go();
+        //sleep(1000);
         $this->assertPattern( "/This is a test post/", $results);
     }
 
-    public function testControlExistingPublicPostIDWithLink() {
+    public function testControlExistingPostIDByPublicInstanceWithLink() {
+        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'10', 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
         $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1001', 'author_user_id'=>'10',
         'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>0));
@@ -301,10 +306,10 @@ class TestOfPostController extends ThinkUpUnitTestCase {
     public function testLoggedInPostWithViewsSpecified() {
         $builders = $this->buildPublicPostWithMixedAccessResponses();
         $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
-        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $i_data = array('id'=>2, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
         $instances_builder = FixtureBuilder::build('instances',  $i_data);
 
-        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oi_data = array('owner_id' => 1, 'instance_id' => 2);
         $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
 
         $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'13', 'follower_id'=>'20',
@@ -360,6 +365,8 @@ class TestOfPostController extends ThinkUpUnitTestCase {
     }
 
     public function testControlWithNonExistentPluginActivated() {
+        $data[] = FixtureBuilder::build('instances', array('network_user_id'=>'10', 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
         $data[] = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
         'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>0));
@@ -385,6 +392,10 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         if ($with_xss) {
             $post_text .= "<script>alert('wa');</script>";
         }
+
+        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'10', 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
+
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
         'author_username'=>'ev', 'post_text'=>$post_text, 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>'0'));
@@ -430,6 +441,6 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         return array($post_builder, $original_post_author_builder, $public_reply_author_builder1, $reply_builder1,
         $public_reply_author_builder2, $reply_builder2, $private_reply_author_builder1, $reply_builder3,
         $private_retweet_author_builder1, $retweet_builder1, $private_retweet_author_builder2, $retweet_builder2,
-        $public_retweet_author_builder1, $retweet_builder3);
+        $public_retweet_author_builder1, $retweet_builder3, $instance_builder);
     }
 }
