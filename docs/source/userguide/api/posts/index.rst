@@ -35,12 +35,16 @@ Refer to each API method's definition below to see its parameters and example re
    
    post
    post_replies
+   post_replies_in_range
    post_retweets
    related_posts
    user_mentions
+   user_mentions_in_range
    user_posts
    user_posts_in_range
    user_posts_most_replied_to
    user_posts_most_retweeted
    user_questions
+   user_questions_in_range
    user_replies
+   user_replies_in_range

@@ -1026,6 +1026,81 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testPostRepliesInRange() {
+        $_GET['type'] = 'post_replies_in_range';
+        $_GET['post_id'] = 41;
+        $_GET['from'] = '2006-02-01 00:00:00';
+        $_GET['until'] = '2006-03-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+            /**
+             * The following two assertions evaluate differently depending on whether your MySQL server supports
+             * SET timezone statement in PDODAO::connect function
+             */
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
+        }
+
+        $this->assertEqual(sizeof($output), 2);
+        $this->assertEqual($output[0]->id, 131);
+        $this->assertEqual($output[1]->id, 133);
+
+        // test order_by
+        $_GET['order_by'] = 'location';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        $distance = $output[0]->reply_retweet_distance;
+        foreach ($output as $post) {
+            $this->assertTrue($post->reply_retweet_distance >= $distance);
+            $distance = $post->reply_retweet_distance;
+        }
+
+        // test unit
+        $_GET['post_id'] = 41;
+        $_GET['unit'] = 'mi';
+        $controller = new PostAPIController(true);
+        $output_mi = json_decode($controller->go());
+        $_GET['unit'] = 'km';
+        $controller = new PostAPIController(true);
+        $output_km = json_decode($controller->go());
+
+        foreach ($output_km as $key=>$post) {
+            $this->assertEqual($output_mi[$key]->reply_retweet_distance,
+            round($output_km[$key]->reply_retweet_distance/1.609));
+        }
+
+        // test trim user
+        unset($_GET['count'], $_GET['page']);
+        $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 2);
+
+        foreach($output as $post) {
+            $this->assertEqual(sizeof($post->user), 1);
+        }
+
+        // test sql injection
+        $_GET = array('type' => 'post_replies');
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
+            $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            unset($_GET[$key]);
+        }
+        $installer_dao = DAOFactory::getDAO('InstallerDAO');
+        $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }
+
     public function testRelatedPosts() {
         $_GET['type'] = 'related_posts';
         $_GET['post_id'] = 41;
@@ -1638,6 +1713,169 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
 
+    public function testUserMentionsInRange() {
+        $_GET['type'] = 'user_mentions_in_range';
+        $_GET['user_id'] = 18;
+        $_GET['from'] = '2006-03-01 00:00:00';
+        $_GET['until'] = '2006-03-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+            /**
+             * The following two assertions evaluate differently depending on whether your MySQL server supports
+             * SET timezone statement in PDODAO::connect function
+             */
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
+        }
+
+        // test order_by
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) <= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) >= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) <= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) >= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->debug("Count ".$post->user->followers_count . ' <= ' . $count);
+            $this->assertTrue($post->user->followers_count <= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->debug($post->id . " - Count ".$post->user->followers_count . ' >= ' . $count);
+            $this->assertTrue($post->user->followers_count >= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) <= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) >= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) <= 0);
+            $str = $post->user->screen_name;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) >= 0);
+            $str = $post->user->screen_name;
+        }
+
+        // test tweet entities
+        $_GET['include_entities'] = true;
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 2);
+
+        // test trim user
+        unset($_GET['include_entities']);
+        $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 2);
+        $this->assertEqual(sizeof($output[0]->user), 1);
+
+        // test sql injection
+        $_GET = array('type' => 'user_mentions_in_range');
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
+            $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            unset($_GET[$key]);
+        }
+        $installer_dao = DAOFactory::getDAO('InstallerDAO');
+        $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+
+        // test posts contain a links object
+        $_GET['type'] = 'user_mentions_in_range';
+        $_GET['user_id'] = 18;
+        $_GET['from'] = '2006-03-01 00:01:00';
+        $_GET['until'] = '2006-03-01 00:23:01';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        foreach($output as $post) {
+            $this->assertTrue($post->links instanceof stdClass);
+        }
+    }
+
     public function testUserMentionsProtectedOnNetwork() {
         $_GET['type'] = 'user_mentions';
         $_GET['user_id'] = 24;
@@ -1845,6 +2083,145 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->error->message, "The requested user data is not available.");
     }
 
+    public function testUserRepliesInRange() {
+        $_GET['type'] = 'user_replies_in_range';
+        $_GET['user_id'] = 18;
+        $_GET['from'] = '2006-02-01 00:00:00';
+        $_GET['until'] = '2006-03-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+            $this->assertEqual($post->in_reply_to_user_id, 18);
+            /**
+             * The following two assertions evaluate differently depending on whether your MySQL server supports
+             * SET timezone statement in PDODAO::connect function
+             */
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
+        }
+
+        $this->assertEqual(sizeof($output), 2);
+
+        // test order_by
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) <= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) >= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) <= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) >= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->debug("Count ".$post->user->followers_count);
+            $this->assertTrue($post->user->followers_count <= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->assertTrue($post->user->followers_count >= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) <= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) >= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) <= 0);
+            $str = $post->user->screen_name;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) >= 0);
+            $str = $post->user->screen_name;
+        }
+
+        // test sql injection
+        $_GET = array('type' => 'user_replies');
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
+            $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            unset($_GET[$key]);
+        }
+        $installer_dao = DAOFactory::getDAO('InstallerDAO');
+        $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }
+
     public function testUserQuestions() {
         $_GET['type'] = 'user_questions';
         $_GET['user_id'] = 20;
@@ -1885,6 +2262,143 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output[0]->id, 150);
 
         unset($_GET['count'], $_GET['page']);
+
+        // test order_by
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) <= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) >= $date);
+            $date = strtotime($post->created_at);
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) <= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) >= 0);
+            $str = $post->source;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->assertTrue($post->user->followers_count <= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'follower_count';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $count = $output[0]->user->followers_count;
+        foreach ($output as $post) {
+            $this->assertTrue($post->user->followers_count >= $count);
+            $count = $post->user->followers_count;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) <= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) >= 0);
+            $str = $post->text;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) <= 0);
+            $str = $post->user->screen_name;
+        }
+
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) >= 0);
+            $str = $post->user->screen_name;
+        }
+
+        // test sql injection
+        $_GET = array('type' => 'user_questions');
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
+            $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            unset($_GET[$key]);
+        }
+        $installer_dao = DAOFactory::getDAO('InstallerDAO');
+        $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }
+
+    public function testUserQuestionsInRange() {
+        $_GET['type'] = 'user_questions_in_range';
+        $_GET['user_id'] = 20;
+        $_GET['from'] = '2006-03-01 00:00:00';
+        $_GET['until'] = '2006-03-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+            $this->assertEqual(preg_match('/\?/', $post->text), 1);
+            /**
+             * The following two assertions evaluate differently depending on whether your MySQL server supports
+             * SET timezone statement in PDODAO::connect function
+             */
+            $this->assertTrue(strtotime($post->created_at) >= strtotime($_GET['from']));
+            $this->assertTrue(strtotime($post->created_at) < strtotime($_GET['until']));
+        }
 
         // test order_by
         $_GET['order_by'] = 'date';

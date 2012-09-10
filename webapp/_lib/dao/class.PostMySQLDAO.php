@@ -207,6 +207,78 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
+    public function getRepliesToPostInRange($post_id, $network, $from, $until, $order_by = 'default', $unit = 'km',
+    $is_public = false, $count = 350, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
+        $q = "SELECT u.*, p.*, (CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
+        $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = :user_network ";
+        $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id AND pub_date BETWEEN :from AND :until ";
+        if ($is_public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+
+        $class_name = ucfirst($network) . 'Plugin';
+        $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
+        if (empty($ordering)) {
+            $ordering = 'pub_date ASC ';
+        } else {
+            $ordering .= ', pub_date ASC ';
+        }
+        $q .= 'ORDER BY ' . $ordering. ';';
+
+        $vars = array(
+            ':post_id'=>(string)$post_id,
+            ':network'=>$network,
+            ':user_network'=>($network == 'facebook page') ? 'facebook' : $network,
+            ':from' => $from,
+            ':until' => $until
+        );
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+
+        $replies = array();
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $location = array();
+            foreach ($all_post_rows as $post_row) {
+                if ($post_row['is_geo_encoded'] == 1) {
+                    $post_row['short_location'] = $this->processLocationRows($post_row['location']);
+                    if ($unit == 'mi') {
+                        $post_row['reply_retweet_distance'] =
+                        $this->calculateDistanceInMiles($post_row['reply_retweet_distance']);
+                    }
+                }
+
+                $post = new Post($post_row);
+                $user = new User($post_row, '');
+                $post->author = $user;
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $replies[] = $post;
+            }
+        }
+        return $replies;
+    }
+
     public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km',
     $is_public = false, $count = 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
@@ -911,6 +983,64 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getAllQuestionPostsInRange($author_id, $network, $count, $from, $until, $page=1,
+    $order_by = 'pub_date', $direction = 'DESC', $is_public = false) {
+
+        $order_by = $this->sanitizeOrderBy($order_by);
+
+        $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
+
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0';
+        } else {
+            $protected = '';
+        }
+
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "WHERE p.author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
+        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected) AS p ";
+        $q .= "WHERE post_text RLIKE :format1 OR post_text like :format2 ";
+        $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
+        $vars = array(
+            ':author_id'=>(string)$author_id,
+            ':network'=>$network,
+            ':format1'=>"\\?$",
+            ':format2'=>"%\\? %",
+            ':from' => $from,
+            ':until' => $until
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
     /**
      * Get all posts by a given user with configurable order by field and direction
      * @param int $author_id
@@ -1317,6 +1447,81 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getAllMentionsInRange($author_username, $count, $network = "twitter", $from, $until, $page=1,
+    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
+        return $this->getMentionsInRange($author_username, $count, $network, $from, $until, $iterator = false, $page,
+        $public, $include_rts, $order_by, $direction);
+    }
+
+    private function getMentionsInRange($author_username, $count, $network, $from, $until, $iterator, $page=1,
+    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
+        $start_on_record = ($page - 1) * $count;
+
+        $order_by = $this->sanitizeOrderBy($order_by);
+
+        $direction = ($direction == 'DESC') ? 'DESC' : 'ASC';
+
+        $author_username = '@'.$author_username;
+        $q = " SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts AS p ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
+       	$q .= "WHERE p.network = :network AND pub_date BETWEEN :from AND :until ";
+
+        if ( strlen($author_username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
+            $q .= "AND MATCH (`post_text`) AGAINST(:author_username IN BOOLEAN MODE) ";
+        } else {
+            $author_username = '%'.$author_username .'%';
+            $q .= "AND post_text LIKE :author_username ";
+        }
+        if ($public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+
+        if ($include_rts == false) {
+            $q .= 'AND p.in_retweet_of_post_id IS NULL ';
+        }
+        $q .= "ORDER BY $order_by $direction ";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':from' => $from,
+            ':until' => $until
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return (new PostIterator($ps));
+        }
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
     $is_public = false) {
         $start_on_record = ($page - 1) * $count;
@@ -1339,6 +1544,61 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record,
             ':limit'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
+    public function getAllRepliesInRange($user_id, $network, $count, $from, $until,$page = 1, $order_by = 'pub_date',
+    $direction = 'DESC', $is_public = false) {
+        $start_on_record = ($page - 1) * $count;
+
+        $order_by = $this->sanitizeOrderBy($order_by);
+
+        $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
+
+        $q = "SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
+        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':from' => $from,
+            ':until' => $until
+        );
+
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_post_rows = $this->getDataRowsAsArrays($ps);
