@@ -143,23 +143,14 @@ class DashboardModuleCacher {
             $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id,
             $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_all_time_count));
 
-            // Cache PostMySQLDAO::countCheckinsPerHourAllTime
-            $checkins_per_hour = $post_dao->countCheckinsPerHourAllTime($this->instance->network_user_id,
+            // Cache PostMySQLDAO::getPostsPerHourDataVis
+            $hourly_checkin_datavis = $post_dao->getPostsPerHourDataVis($this->instance->network_user_id,
             $this->instance->network);
             //delete existing
-            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsPerHourAllTime", $this->instance->id);
+            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getPostsPerHourDataVis", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::countCheckinsPerHourAllTime", $this->instance->id,
-            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour));
-
-            // Cache PostMySQLDAO::countCheckinsPerHourLastWeek
-            $checkins_per_hour_last_week = $post_dao->countCheckinsPerHourLastWeek($this->instance->network_user_id,
-            $this->instance->network);
-            //delete existing
-            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsPerHourLastWeek", $this->instance->id);
-            //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::countCheckinsPerHourLastWeek", $this->instance->id,
-            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($checkins_per_hour_last_week));
+            $insight_dao->insertInsight("PostMySQLDAO::getPostsPerHourDataVis", $this->instance->id,
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($hourly_checkin_datavis));
 
             // Cache PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap
             $checkins_map = $post_dao->getAllCheckinsInLastWeekAsGoogleMap($this->instance->network_user_id,

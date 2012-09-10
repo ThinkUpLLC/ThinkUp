@@ -288,15 +288,10 @@ class DashboardController extends ThinkUpController {
 
             // Foursquare items
             if ($this->instance->network == "foursquare") {
-                // Checkins per hour - all time
+                // Checkins per hour
                 $checkins_per_hour = $insight_dao->getPreCachedInsightData(
-                'PostMySQLDAO::countCheckinsPerHourAllTime', $this->instance->id, date('Y-m-d'));
-                $this->addToView('checkins_per_hour_all_time', $checkins_per_hour);
-
-                // Checkins per hour - last week
-                $checkins_per_hour_last_week = $insight_dao->getPreCachedInsightData(
-                'PostMySQLDAO::countCheckinsPerHourLastWeek', $this->instance->id, date('Y-m-d'));
-                $this->addToView('checkins_per_hour_last_week', $checkins_per_hour_last_week);
+                'PostMySQLDAO::getPostsPerHourDataVis', $this->instance->id, date('Y-m-d'));
+                $this->addToView('checkins_per_hour', $checkins_per_hour);
 
                 // Checkins by type of place - all time
                 $place_types = $insight_dao->getPreCachedInsightData(

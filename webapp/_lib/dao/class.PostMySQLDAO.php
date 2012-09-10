@@ -1822,7 +1822,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // Now encode this data as JSON for the Google Charts API
         $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
 
-        if(count($all_rows) > 0) {
+        if (count($all_rows) > 0) {
             return $visdata;
         } else {
             return "";
@@ -1868,15 +1868,61 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
          * So we know not to draw this graph on the dashboard.
          */
 
-        if(count($all_rows) > 0) {
+        if (count($all_rows) > 0) {
             return $visdata;
         } else {
             return "";
         }
     }
 
-    public function countCheckinsPerHourAllTime($author_id, $network) {
-        $q = "SELECT HOUR(pub_date) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+    public function getPostsPerHourDataVis($author_id, $network) {
+        $posts_per_hour_all_time = $this->getCheckinsPerHourAllTime($author_id, $network);
+        $posts_per_hour_last_week = $this->getCheckinsPerHourLastWeek($author_id, $network);
+
+        // Convert the results into Google Charts Format
+        $i = 0;
+        while ($i < 24) { // Hour 0 through 23
+            /* Data needs to be in format
+            {c:[{v: 'Hour'}, {v: Number of checkins at this hour}]}
+            e.g. [{c:[{v: '11'}, {v: 5}]}
+            */
+            foreach ($posts_per_hour_last_week as $row) {
+                if ($row['hour'] == $i) {
+                    $last_week_value = intval($row['total']);
+                    break;
+                }
+                $last_week_value = 0;
+            }
+
+            foreach ($posts_per_hour_all_time as $row) {
+                if ($row['hour'] == $i) {
+                    $all_time_value = intval($row['total']);
+                    break;
+                }
+                $all_time_value = 0;
+            }
+
+            $post_data[] = array('c' => array(
+            array('v' => $i),
+            array('v' => $last_week_value),
+            array('v' => $all_time_value),
+            ));
+            $i++;
+        }
+
+        // Set the meta values like titles etc.
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Hour of Day'),
+        array('type' => 'number', 'label' => 'Checkins Last Week'),
+        array('type' => 'number', 'label' => 'Checkins All Time'),
+        );
+
+        // Now encode this data as JSON for the Google Charts API
+        return json_encode(array('rows' => $post_data, 'cols' => $metadata));
+    }
+
+    private function getCheckinsPerHourAllTime($author_id, $network) {
+        $q = "SELECT HOUR(pub_date) AS hour, COUNT(HOUR(pub_date)) AS total FROM #prefix#posts ";
         $q .= "WHERE author_user_id=:author ";
         $q .= "AND network=:network AND in_reply_to_post_id IS null GROUP BY HOUR(pub_date)";
         $vars = array(
@@ -1885,38 +1931,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-
-        // Convert the results into Google Charts Format
-        foreach ($all_rows as $row) {
-            /* Data needs to be in format
-             {c:[{v: 'Hour'}, {v: Number of checkins at this hour}]}
-             e.g. [{c:[{v: '11'}, {v: 5}]}
-             */
-            $resultset[] = array('c' => array(
-            array('v' => $row['hour']),
-            array('v' => intval($row['counter']))
-            ));
-        }
-
-        // Set the meta values like titles etc.
-        $metadata = array(
-        array('type' => 'string', 'label' => 'Hour of Day'),
-        array('type' => 'number', 'label' => 'Number of Checkins'),
-        );
-
-        // Now encode this data as JSON for the Google Charts API
-        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
-
-        if(count($all_rows) > 0) {
-            return $visdata;
-        } else {
-            return "";
-        }
+        return $this->getDataRowsAsArrays($ps);
     }
 
-    public function countCheckinsPerHourLastWeek($author_id, $network) {
-        $q = "SELECT CAST(HOUR(pub_date) AS UNSIGNED) AS hour, COUNT(HOUR(pub_date)) AS counter FROM #prefix#posts ";
+    private function getCheckinsPerHourLastWeek($author_id, $network) {
+        $q = "SELECT CAST(HOUR(pub_date) AS UNSIGNED) AS hour, COUNT(HOUR(pub_date)) AS total FROM #prefix#posts ";
         $q .= "WHERE author_user_id=:author ";
         $q .= "AND network=:network AND YEARWEEK(pub_date) = YEARWEEK(CURRENT_DATE) AND in_reply_to_post_id IS null ";
         $q .= "GROUP BY HOUR(pub_date)";
@@ -1925,38 +1944,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             'network'=>$network);
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-
-        // Convert the results into Google Charts Format
-        foreach ($all_rows as $row) {
-            /* Data needs to be in format
-             {c:[{v: 'Hour'}, {v: Number of checkins at this hour}]}
-             e.g. [{c:[{v: '11'}, {v: 5}]}
-             */
-            $resultset[] = array('c' => array(
-            array('v' => intval($row['hour'])),
-            array('v' => intval($row['counter']))
-            ));
-        }
-
-        // Set the meta values like titles etc.
-        $metadata = array(
-        array('type' => 'string', 'label' => 'Hour of Day'),
-        array('type' => 'number', 'label' => 'Number of Checkins'),
-        );
-
-        // Now encode this data as JSON for the Google Charts API
-        $visdata = json_encode(array('rows' => $resultset, 'cols' => $metadata));
-
-        /* As we are getting posts from the last week, we might not have any so return a blank string in that instance
-         * So we know not to draw this graph on the dashboard.
-         */
-
-        if(count($all_rows) > 0) {
-            return $visdata;
-        } else {
-            return "";
-        }
+        return $this->getDataRowsAsArrays($ps);
     }
 
     public function getAllCheckinsInLastWeekAsGoogleMap($author_id, $network) {
@@ -1979,7 +1967,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $url .= '&sensor=false';
 
-        if(count($all_rows) > 0) {
+        if (count($all_rows) > 0) {
             return $url;
         } else {
             return "";

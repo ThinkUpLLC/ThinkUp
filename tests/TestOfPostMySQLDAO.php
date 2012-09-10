@@ -3248,26 +3248,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res, $valid_json);
     }
 
-    public function testCountCheckinsPerHourAllTime(){
-        // Query the database for the number of checkins per hour
-        $post_dao = new PostMySQLDAO();
-        $res = $post_dao->countCheckinsPerHourAllTime('20', 'foursquare');
-
-        $valid_json = '{"rows":[{"c":[{"v":"9"},{"v":1}]}],"cols":[{"type":"string","label":"Hour of Day"},';
-        $valid_json .= '{"type":"number","label":"Number of Checkins"}]}';
-
-        $this->assertEqual($res, $valid_json);
-    }
-
-    public function testCountCheckinsPerHourLastWeek(){
-        // Build the pub_date string which needs to be a date within the last week
+    public function testGetPostsPerHourDataVis(){
         $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
         $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
 
         $hour1 = date('G',  strtotime("now") );
         $hour2 = date('G',  strtotime("now +1 hour") );
 
-        // Add some foursquare checkins (done here due to time dependenacy of test)
+        // Add some foursquare checkins (done here due to time dependency of test)
         $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'998', 'author_user_id'=>'30',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$pub1, 'location'=>'England',
@@ -3286,9 +3274,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // Query the database for the number of checkins per hour
         $post_dao = new PostMySQLDAO();
-        $res = $post_dao->countCheckinsPerHourLastWeek('30', 'foursquare');
-        $valid_json = '{"rows":[{"c":[{"v":'.$hour1.'},{"v":1}]},{"c":[{"v":'.$hour2.'},{"v":1}]}],"cols":';
-        $valid_json .= '[{"type":"string","label":"Hour of Day"},{"type":"number","label":"Number of Checkins"}]}';
+        $res = $post_dao->getPostsPerHourDataVis('30', 'foursquare');
+        $valid_json = '{"rows":[{"c":[{"v":0},{"v":0},{"v":0}]},{"c":[{"v":1},{"v":0},{"v":0}]},{"c":[{"v":2},'.
+        '{"v":0},{"v":0}]},{"c":[{"v":3},{"v":1},{"v":1}]},{"c":[{"v":4},{"v":1},{"v":1}]},{"c":[{"v":5},{"v":0},'.
+        '{"v":0}]},{"c":[{"v":6},{"v":0},{"v":0}]},{"c":[{"v":7},{"v":0},{"v":0}]},{"c":[{"v":8},{"v":0},{"v":0}]},'.
+        '{"c":[{"v":9},{"v":0},{"v":0}]},{"c":[{"v":10},{"v":0},{"v":0}]},{"c":[{"v":11},{"v":0},{"v":0}]},'.
+        '{"c":[{"v":12},{"v":0},{"v":0}]},{"c":[{"v":13},{"v":0},{"v":0}]},{"c":[{"v":14},{"v":0},{"v":0}]},'.
+        '{"c":[{"v":15},{"v":0},{"v":0}]},{"c":[{"v":16},{"v":0},{"v":0}]},{"c":[{"v":17},{"v":0},{"v":0}]},'.
+        '{"c":[{"v":18},{"v":0},{"v":0}]},{"c":[{"v":19},{"v":0},{"v":0}]},{"c":[{"v":20},{"v":0},{"v":0}]},'.
+        '{"c":[{"v":21},{"v":0},{"v":0}]},{"c":[{"v":22},{"v":0},{"v":0}]},{"c":[{"v":23},{"v":0},{"v":0}]}],'.
+        '"cols":[{"type":"string","label":"Hour of Day"},{"type":"number","label":"Checkins Last Week"},'.
+        '{"type":"number","label":"Checkins All Time"}]}';
 
         $this->assertEqual($res, $valid_json);
     }

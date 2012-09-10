@@ -65,31 +65,30 @@
           {else} {* else if no $data_template *}
 
               {if $instance->network eq 'foursquare'}
-               {if $checkins_per_hour_last_week|count_characters neq 0}
+               {if $checkins_map|count_characters neq 0}
                    <div class="section">
-                       <h2>Where You Went This Week</h2>
-                       <center><img src={$checkins_map}></center>
+                       <h2>This Week's Checkins Map</h2>
+                       <div class="clearfix article">
+                       <center><img src="{$checkins_map}"></center>
+                       </div>
                    </div>
                {/if}
 
-               {if $checkins_per_hour_last_week|count_characters neq 0}
-                    {include file="_dashboard.checkinsperhourlastweek.tpl"}
+               {if $checkins_per_hour|count_characters neq 0}
+                    {include file="_dashboard.checkinsperhour.tpl"}
                {/if}
 
-               {if $checkins_per_hour_all_time|count_characters neq 0}
-                    {include file="_dashboard.checkinsperhouralltime.tpl"}
-               {/if}
-
-               {if $checkins_by_type_last_week|count_characters neq 0}
-                   {include file="_dashboard.checkinplacetypeslastweek.tpl"}
-               {/if}
-
-               {if $checkins_by_type|count_characters neq 0}
-                    {include file="_dashboard.checkinplacetypesalltime.tpl"}
+               {if $checkins_by_type_last_week|count_characters neq 0 && $checkins_by_type|count_characters neq 0}
+                   <div class="section" style="float : left; clear : none; width : 345px;">
+                       {include file="_dashboard.checkinplacetypeslastweek.tpl"}
+                   </div>
+                   <div class="section" style="float : left; clear : none;margin-left : 16px; width : 345px;">
+                       {include file="_dashboard.checkinplacetypesalltime.tpl"}
+                   </div>
                {/if}
              {/if}
 
-            {if $hot_posts_data}
+            {if $hot_posts_data && $instance->network neq 'foursquare'}
                 <div class="section">
                 {include file="_dashboard.responserates.tpl"}
                 </div>
@@ -130,7 +129,7 @@
                 </style>
             {/if}
 
-            {if $most_replied_to_1wk}
+            {if $most_replied_to_1wk && $instance->network neq 'foursquare'}
               <div class="section">
                 <h2>This Week's Most {if $instance->network eq 'google+'}Discussed{else}Replied-To{/if} Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
@@ -183,7 +182,7 @@
 
             {if $posts_flashback|@count > 0 }
             <div class="section">
-                <h2>Flashback: On This Day In Years Past</h2>
+                <h2>Time Machine: On This Day In Years Past</h2>
                 {if $instance->network eq 'foursquare'}
                     {foreach from=$posts_flashback item=post name=foo}
                         {include file="_post.checkin.tpl" }

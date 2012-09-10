@@ -592,26 +592,18 @@ interface PostDAO {
     public function countCheckinsToPlaceTypes($author_id, $network);
 
     /**
-     * Count the number of checkins per hour,
-     * @param str $author_id
-     * @param str $network
-     * @return array Hour, number of checkins at that hour pairs
-     */
-    public function countCheckinsPerHourAllTime($author_id, $network);
-
-    /**
-     * Count the number of checkins per hour in the last week.
-     * @param str $author_id
-     * @param str $network
-     * @return array Hour, number of checkins at that hour pairs
-     */
-    public function countCheckinsPerHourLastWeek($author_id, $network);
-
-    /**
      * Generate a map image URL for the checkins in the last week
      * @param str $author_id
      * @param str $network
      * @return string that is a URL to a image of the checkins on a google map
      */
     public function getAllCheckinsInLastWeekAsGoogleMap($author_id, $network);
+
+    /**
+     * Get Javascript data table of post rate per hour all time versus last week.
+     * @param $author_id
+     * @param $network
+     * @return str JavaScript data for Google chart
+     */
+    public function getPostsPerHourDataVis($author_id, $network);
 }

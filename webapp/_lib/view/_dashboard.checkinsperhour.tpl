@@ -1,6 +1,6 @@
 <div class="section">
-    <h2>Checkins Per Hour All Time</h2>
-      <div id="checkins_all_time"></div>
+    <h2>Checkins Per Hour</h2>
+      <div id="checkins_per_hour"></div>
     <script type="text/javascript">
     // Load the Visualization API and the standard charts
     google.load('visualization', '1');
@@ -10,15 +10,15 @@
     {literal}
     function drawCheckinsPerHourAllTimeChart() {
     {/literal}
-        var checkins_all_data = new google.visualization.DataTable({$checkins_per_hour_all_time});
+        var checkins_per_hour_data = new google.visualization.DataTable({$checkins_per_hour});
         {literal}
 
-        var checkins_per_hour_all_time = new google.visualization.ChartWrapper({
-            containerId: 'checkins_all_time',
+        var checkins_per_hour = new google.visualization.ChartWrapper({
+            containerId: 'checkins_per_hour',
             chartType: 'ColumnChart',
-            dataTable: checkins_all_data,
+            dataTable: checkins_per_hour_data,
             options: {
-                colors: ['#3c8ecc'],
+                colors: ['#3c8ecc', '#3e5d9a' ],
                 width: 708,
                 height: 300,
                 legend: 'none',
@@ -36,9 +36,9 @@
                 },
             }
         });
-        checkins_per_hour_all_time.draw();
+        checkins_per_hour.draw();
     }
 {/literal}
 </script>
-              
+
 </div>

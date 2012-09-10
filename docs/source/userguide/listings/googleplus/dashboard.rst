@@ -37,7 +37,7 @@ This Week's Most Reshared Posts
 
 The posts with the most reshares posted in the last 7 days, ordered by number of reshares descending.
 
-Flashback: On This Day In Years Past
-------------------------------------
+Time Machine: On This Day In Years Past
+---------------------------------------
 
 Posts you published on this day in past years. For example, your posts from 1 year ago, 2 years ago, and 3 years ago.

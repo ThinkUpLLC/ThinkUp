@@ -1,6 +1,8 @@
 <div class="section">
-      <h2>The Types Of Places You Visit</h2>
-      <div id="place_types"></div>
+      <h2>All-Time Places</h2>
+      <div class="article">
+        <div id="place_types"></div>
+      </div>
      <script type="text/javascript">
     // Load the Visualization API and the standard charts
     google.load('visualization', '1');
@@ -18,8 +20,8 @@
           dataTable: place_type_data,
           options: {
               titleTextStyle: {color: '#848884', fontSize: 19},
-              width: 708,
-              height: 300,
+              width: 320,
+              height: 320,
               sliceVisibilityThreshold: 1/100,
               pieSliceText: 'label',
           }
