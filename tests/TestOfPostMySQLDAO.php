@@ -3274,19 +3274,25 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // Query the database for the number of checkins per hour
         $post_dao = new PostMySQLDAO();
-        $res = $post_dao->getPostsPerHourDataVis('30', 'foursquare');
-        $valid_json = '{"rows":[{"c":[{"v":0},{"v":0},{"v":0}]},{"c":[{"v":1},{"v":0},{"v":0}]},{"c":[{"v":2},'.
-        '{"v":0},{"v":0}]},{"c":[{"v":3},{"v":1},{"v":1}]},{"c":[{"v":4},{"v":1},{"v":1}]},{"c":[{"v":5},{"v":0},'.
-        '{"v":0}]},{"c":[{"v":6},{"v":0},{"v":0}]},{"c":[{"v":7},{"v":0},{"v":0}]},{"c":[{"v":8},{"v":0},{"v":0}]},'.
-        '{"c":[{"v":9},{"v":0},{"v":0}]},{"c":[{"v":10},{"v":0},{"v":0}]},{"c":[{"v":11},{"v":0},{"v":0}]},'.
-        '{"c":[{"v":12},{"v":0},{"v":0}]},{"c":[{"v":13},{"v":0},{"v":0}]},{"c":[{"v":14},{"v":0},{"v":0}]},'.
-        '{"c":[{"v":15},{"v":0},{"v":0}]},{"c":[{"v":16},{"v":0},{"v":0}]},{"c":[{"v":17},{"v":0},{"v":0}]},'.
-        '{"c":[{"v":18},{"v":0},{"v":0}]},{"c":[{"v":19},{"v":0},{"v":0}]},{"c":[{"v":20},{"v":0},{"v":0}]},'.
-        '{"c":[{"v":21},{"v":0},{"v":0}]},{"c":[{"v":22},{"v":0},{"v":0}]},{"c":[{"v":23},{"v":0},{"v":0}]}],'.
-        '"cols":[{"type":"string","label":"Hour of Day"},{"type":"number","label":"Checkins Last Week"},'.
-        '{"type":"number","label":"Checkins All Time"}]}';
+        $result = $post_dao->getPostsPerHourDataVis('30', 'foursquare');
 
-        $this->assertEqual($res, $valid_json);
+        $valid_json = '{"rows":[';
+        $i = 0;
+        while ($i < 24) {
+            if ( $i == $hour1 || $i == $hour2 ) {
+                $valid_json .= '{"c":[{"v":'.$i.'},{"v":1},{"v":1}]}';
+            } else {
+                $valid_json .= '{"c":[{"v":'.$i.'},{"v":0},{"v":0}]}';
+            }
+            if ($i < 23 ) {
+                $valid_json .= ',';
+            } else {
+                $valid_json .= '],"cols":[{"type":"string","label":"Hour of Day"},{"type":"number","label":'.
+                '"Checkins Last Week"},{"type":"number","label":"Checkins All Time"}]}';
+            }
+            $i++;
+        }
+        $this->assertEqual($result, $valid_json);
     }
 
     public function testGetAllCheckinsInLastWeekAsGoogleMap() {
