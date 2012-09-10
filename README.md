@@ -1,8 +1,7 @@
 # ThinkUp, social media insights engine [![Build Status](https://secure.travis-ci.org/ginatrapani/ThinkUp.png?branch=master)](http://travis-ci.org/ginatrapani/ThinkUp)
 
-ThinkUp is a free, installable web application that captures the insights and expertise of your social network by 
-organizing replies to your conversations on Twitter, Facebook, Google+ and (soon!) other networks.
-Find out more at  [http://thinkupapp.com](http://thinkupapp.com)
+ThinkUp is a free, installable web application that gives you insights into your activity on social networks, including
+Twitter, Facebook, Foursquare, and Google+. Find out more at  [http://thinkupapp.com](http://thinkupapp.com).
 
 ## Support and Documentation
 
@@ -11,8 +10,7 @@ Refer to [ThinkUp's documentation](http://thinkupapp.com/docs/), or contact the 
 
 ## License
 
-ThinkUp's source code is licensed under the
-[GNU General Public License](http://www.gnu.org/licenses/gpl.html),
+ThinkUp's source code is licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html),
 except for the external libraries listed below.
 
 ## External Libraries
