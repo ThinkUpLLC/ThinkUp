@@ -177,7 +177,9 @@ class User {
             if (isset($val['last_post'])) {
                 $this->last_post = $val['last_post'];
             }
-            $this->joined = $val['joined'];
+            if (isset($val['joined'])) {
+                $this->joined = $val['joined'];
+            }
             $this->found_in = $found_in;
 
             if (isset($val['avg_tweets_per_day'])) {
