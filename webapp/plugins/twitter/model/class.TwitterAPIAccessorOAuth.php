@@ -338,7 +338,7 @@ class TwitterAPIAccessorOAuth {
                                 'post_count'      => (integer)$item->statuses_count,
                                 'network'         =>'twitter'
                                 );
-                                $current_index = current($parsed_payload);
+                                $current_index = (count($parsed_payload))-1;
 
                                 //If a user hasn't posted, there are no statuses
                                 if ( isset($item->status->created_at) ) {
@@ -374,7 +374,7 @@ class TwitterAPIAccessorOAuth {
                                 'post_count'          => (integer)$item->statuses_count,
                                 'network'             => 'twitter'
                                 );
-                                $current_index = current($parsed_payload);
+                                $current_index = (count($parsed_payload))-1;
                                 //If a user hasn't posted, there are no statuses
                                 if ( isset($item->status->created_at) ) {
                                     $parsed_payload[$current_index]['last_post'] = gmdate("Y-m-d H:i:s",
