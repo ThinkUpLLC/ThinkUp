@@ -329,9 +329,11 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      * test update/delete plugin options
      */
     public function testUpdateDeletePluginOption() {
-        // update two options out of three, third has same data
+        // update one option, delete another, leave third alone because it has same data
         $controller = $this->getController();
+        // create a plugin
         $builder = $this->buildPlugin();
+        // add three options for newly-made plugin
         $builder_pos = $this->buildPluginOptions($builder->columns[ 'last_insert_id' ]);
         $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
         $_GET['csrf_token'] = parent::CSRF_TOKEN;
@@ -348,7 +350,8 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertIsA($json_response, 'stdClass');
         // // {"status":"success","results":{"updated":1}}
         $this->assertEqual($json_response->status, 'success');
-        $this->assertEqual($json_response->results->updated, 2);
+        $this->assertEqual($json_response->results->updated, 1);
+        $this->assertEqual($json_response->results->deleted, 1);
 
         $sql = "select * from " . $this->table_prefix . "options where namespace = 'plugin_options-5'";
         $stmt = $this->pdo->query($sql);
