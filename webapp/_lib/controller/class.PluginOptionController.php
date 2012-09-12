@@ -70,7 +70,7 @@ class PluginOptionController extends ThinkUpAdminController {
         $plugin_folder_name = $plugin_dao->getPluginFolder($plugin_id);
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptions($plugin_folder_name);
-        $cnt = 0;
+        $updated_total = 0;
         $inserted = array();
         $deleted = 0;
         foreach ($_GET as $key => $value ) {
@@ -80,7 +80,7 @@ class PluginOptionController extends ThinkUpAdminController {
                 $name = preg_replace('/^option_/', '', $key);
                 $id_name = "id_option_" . $name;
                 if (isset($_GET[$id_name])) {
-                    foreach($options as $option) {
+                    foreach ($options as $option) {
                         //error_log($option->option_name . ' '  . $name);
                         if ($option->option_name == $name) {
                             if ( $option->option_value != $value ) {
@@ -90,8 +90,8 @@ class PluginOptionController extends ThinkUpAdminController {
                                     $deleted++;
                                 } else {
                                     $plugin_option_dao->updateOption($id, $name, $value);
+                                    $updated_total++;
                                 }
-                                $cnt++;
                             }
                         }
                     }
@@ -102,12 +102,12 @@ class PluginOptionController extends ThinkUpAdminController {
                         return;
                     } else {
                         $inserted[$name] = $insert_id;
-                        $cnt++;
+                        $updated_total++;
                     }
                 }
             }
         }
-        $this->json['results'] = array('updated' => $cnt, 'inserted' => $inserted, 'deleted' => $deleted);
+        $this->json['results'] = array('updated' => $updated_total, 'inserted' => $inserted, 'deleted' => $deleted);
         $this->json['status'] = 'success';
     }
 
