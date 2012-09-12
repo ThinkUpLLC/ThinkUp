@@ -39,8 +39,16 @@ require_once THINKUP_WEBAPP_PATH.'plugins/expandurls/model/class.ExpandURLsPlugi
 
 class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
+    var $plugin_id;
+
     public function setUp() {
         parent::setUp();
+
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'expandurls'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->plugin_id = $data['id'];
+
         $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $crawler_plugin_registrar->registerCrawlerPlugin('ExpandURLsPlugin');
     }
@@ -318,8 +326,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
 
         //use fake Flickr API key
-        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
-        'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
+        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-'.
+        $this->plugin_id, 'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
         $crawler_plugin_registrar->runRegisteredPluginsCrawl();
@@ -535,12 +543,12 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
 
         //use fake Bitly API key
-        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
-        'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-'.
+        $this->plugin_id, 'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
 
         //use fake Bitly login name
-        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
-        'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
+        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-'.
+        $this->plugin_id, 'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
 
         $this->simulateLogin('admin@example.com', true);
         $crawler_plugin_registrar->runRegisteredPluginsCrawl();

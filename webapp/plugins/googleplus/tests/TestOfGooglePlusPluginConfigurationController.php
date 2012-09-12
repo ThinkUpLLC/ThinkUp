@@ -185,8 +185,11 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
     private function buildController() {
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
-        $plugin_id = 3;
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
+        // Get plugin ID
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'googleplus'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'google_plus_client_id',
@@ -249,10 +252,12 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
     }
 
     private function buildPluginOptions() {
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-3';
+        // Get plugin ID
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'googleplus'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         $builders = array();
-        $builders[] = FixtureBuilder::build('plugins',
-        array('name' => 'Google+', 'folder_name' => 'googleplus', 'description' => "Google+ plugin") );
         $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'google_plus_client_id', 'option_value' => "id") );
         $builders[] = FixtureBuilder::build('options',

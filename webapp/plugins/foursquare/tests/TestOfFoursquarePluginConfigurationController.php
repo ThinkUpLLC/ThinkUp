@@ -58,13 +58,11 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
     private function buildController() {
         // Create an owner
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
-        // Create a plugin (required as foursquare isn't a default plugin)
-        $builder_plugin = FixtureBuilder::build('plugins', array('name' => 'foursquare',
-        'folder_name' => 'foursquare', 'is_active' => 1) );
-        // Set the plugin ID (the id of the last insert to the database (the call above)
-        $plugin_id = $builder_plugin->columns['last_insert_id'];
         // Set the name space to plugin_options-pluginid
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'foursquare'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         // Create the client id option
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
@@ -95,11 +93,11 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
     //  Insert the plugin options in the database
     private function buildPluginOptions() {
         $builders = array();
-        // Create a plugin
-        $builders[] = FixtureBuilder::build('plugins', array('name' => 'Foursquare', 'folder_name' => 'foursquare',
-        'is_active' => 1) );
         // Set the plugin ID
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .'5';
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'foursquare'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         // Create the client id option
         $builders[] = FixtureBuilder::build('options', array('namespace' => $namespace,
         'option_name' => 'foursquare_client_id', 'option_value' => "test_client_id") );
