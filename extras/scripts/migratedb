@@ -52,6 +52,9 @@ INSERT INTO tu_plugins (name , folder_name, description, author, homepage, versi
 VALUES ('Facebook', 'facebook', 'Facebook support', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
+VALUES ('Foursquare', 'foursquare', 'Foursquare support', 'Aaron Kalair', 'http://thinkupapp.com', '0.01', '1');
+
+INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
 VALUES ('Google+', 'googleplus', 'Google+ support', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
