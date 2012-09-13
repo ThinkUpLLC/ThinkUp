@@ -3,7 +3,7 @@
 
 *  New feature! The Foursquare plugin captures checkins, photos, and comments. The dashboard includes
    a map of last week's checkins, the rate of checkins by hour over the last week compared to all time, pie charts
-   of the types of places you check into, and a list of checkins on this day in years past. You an also export your
+   of the types of places you check into, and a list of checkins on this day in years past. You can also export your
    checkins to a CSV file.
 *  New Twitter, Facebook, Google+ "Time Machine" dashboard module: Posts published on this day in years past.
 *  Bugfix: Fixed installation URL in Facebook reauthorization email notification text.
