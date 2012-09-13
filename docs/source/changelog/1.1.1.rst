@@ -1,0 +1,6 @@
+1.1.1 - 12 Sept 2012
+====================
+
+*  Fix "Incorrect table name" MySQL error during upgrades from version 1.0.8 on MySQL versions lower than 5.1.6.
+*  Fix "Illegal offset type" PHP warning during Twitter crawl.
+*  Activate Foursquare plugin by default on installation.
