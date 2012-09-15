@@ -52,7 +52,7 @@ var TUApplicationSettings = function() {
 				if (tu_app_settings.DEBUG) {
 					console.debug("app settings tab selected");
 				}
-				tu_app_settings.load_settings()
+				tu_app_setteings.load_settings();
 			});
 		});
 
@@ -76,14 +76,14 @@ var TUApplicationSettings = function() {
 		if (document.location.href.match(/#app_settings/)) {
 			if (tu_app_settings.DEBUG) {
 				console
-				    .debug("app settings tab loaded with hash #app_settings");
+					.debug("app settings tab loaded with hash #app_settings");
 			}
 			setTimeout(function() {
 				tu_app_settings.load_settings();
 			}, 1000);
 		}
 
-	}
+	};
 
 	this.save_settings = function() {
 		$('#settings_error_message_error').hide();
@@ -98,7 +98,7 @@ var TUApplicationSettings = function() {
 		};
 		for (key in this.settings_data.app_config_settings) {
 			var setting = this.settings_data.app_config_settings[key];
-			var id = '#' + key
+			var id = '#' + key;
 			if (setting.type == 'checkbox') {
 				id += ':checked';
 				if ($(id).val()) {
@@ -139,11 +139,11 @@ var TUApplicationSettings = function() {
 						$('#settings_error_message_error').show();
 					},
 					success : function(data) {
-						tu_app_settings._save_settings(data)
+						tu_app_settings._save_settings(data);
 					}
 				});
 
-	}
+	};
 
 	this._save_settings = function(data) {
 		$('#app-settings-save').show();
@@ -154,7 +154,7 @@ var TUApplicationSettings = function() {
 				for (key in data.required) {
 					error_mess += '<li>' + data.required[key] + '</li>';
 				}
-				error_mess += '</ul>'
+				error_mess += '</ul>';
 				$('#settings_error_message').html(error_mess);
 				$('#settings_error_message_error').show();
 			}
@@ -165,7 +165,7 @@ var TUApplicationSettings = function() {
 				});
 			}, 500);
 		}
-	}
+	};
 	this.load_settings = function() {
 		if (!tu_app_settings.TAB_LOADED) {
 			if (this.DEBUG) {
@@ -185,7 +185,7 @@ var TUApplicationSettings = function() {
 							$('#settings_error_message_error').show();
 						},
 						success : function(data) {
-							tu_app_settings._load_settings(data)
+							tu_app_settings._load_settings(data);
 						}
 					});
 		} else {
@@ -193,7 +193,7 @@ var TUApplicationSettings = function() {
 				console.debug("app settings already loaded, not loading...");
 			}
 		}
-	}
+	};
 
 	this._load_settings = function(data) {
 		this.settings_data = data;
@@ -205,7 +205,7 @@ var TUApplicationSettings = function() {
 		});
 		for (key in data.app_config_settings) {
 			var setting = data.app_config_settings[key];
-			var id = '#' + key
+			var id = '#' + key;
 			if (data.values[key]) {
 				if (this.DEBUG) {
 					console.debug("loading %s with value %s", key,
@@ -215,7 +215,7 @@ var TUApplicationSettings = function() {
 						&& data.values[key]['option_value'] != 'false') {
 					if (this.DEBUG) {
 						console.debug("%s is a checkbox with value %s", key,
-								data.values[key]['option_value'])
+								data.values[key]['option_value']);
 					}
 					$(id).attr('checked', true);
 				} else {
@@ -237,15 +237,15 @@ var TUApplicationSettings = function() {
 				}
 			}
 			if (setting.dependencies && data.values[key]
-					&& data.values[key] != '') {
+					&& data.values[key] !== '') {
 				var id = '#' + key + '_deps';
 				if ($(id)) {
 					$(id).show();
 				}
 			}
 		}
-	}
-}
+	};
+};
 
 var tu_app_settings = new TUApplicationSettings();
 tu_app_settings.init();
