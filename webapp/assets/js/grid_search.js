@@ -40,7 +40,7 @@ var TUGridSearch = function() {
             }
         });
         // self.load_iframe();
-    }
+    };
 
     /**
 	 * @param Object
@@ -162,20 +162,20 @@ var TUGridSearch = function() {
             self.searchString = this.value;
             self.dataView.refresh();
         }
-    }
+    };
 
     /**
 	 * search filter
 	 */
     this.myFilter = function (item) {
         if(item['id'] == -1 || item['text'] == null) { return false; }
-        if (self.searchString != "" && 
+        if (self.searchString !== "" && 
         item["text"].toLowerCase().indexOf(self.searchString.toLowerCase()) == -1) {
             return false;
         } else {
             return true;
         }
-    }
+    };
 
     /**
 	 * 
@@ -185,9 +185,9 @@ var TUGridSearch = function() {
         // close grid search with escape key
         $(document).keyup( this.keyup );
 
-        if(self.loading) { return; };
+        if(self.loading) { return; }
         // close top 20 words if needed
-        if(typeof(tu_word_freq) != 'undefined') { tu_word_freq.close(); };
+        if(typeof(tu_word_freq) != 'undefined') { tu_word_freq.close(); }
         self.loading = true;
         if(window.GRID_TYPE && GRID_TYPE==1) {
             window.scroll(0,0);
@@ -208,7 +208,7 @@ var TUGridSearch = function() {
                 query_string = document.location.search;
                 query_string = query_string.replace(/^\?/, '').replace(/^v/, 'd');
             }
-            if(typeof(post_username) != 'undefined') { query_string+= '&u=' + escape(post_username); } 
+            if(typeof(post_username) != 'undefined') { query_string+= '&u=' + escape(post_username); }
             $('#grid_iframe').attr('src',
                     path + 'assets/html/grid.html?' + query_string + '&nolimit=' + nolimit
                     + '&cb=' + (new Date()).getTime());
@@ -217,7 +217,7 @@ var TUGridSearch = function() {
             }
             self.loading = false;
         });
-    }
+    };
     /**
 	 * 
 	 */
@@ -235,7 +235,7 @@ var TUGridSearch = function() {
             $('#older-posts-div').show();
         }
         $(document).unbind('keyup', this.keyup);
-    }
+    };
     
     /**
 	 * load xss script with post data callback
@@ -248,7 +248,7 @@ var TUGridSearch = function() {
         script.setAttribute("src", url);
         script.setAttribute("type", "text/javascript");
         document.getElementsByTagName('head')[0].appendChild(script);
-    }
+    };
     
     /**
 	 * Format numeric string with commas
@@ -263,7 +263,7 @@ var TUGridSearch = function() {
             x1 = x1.replace(rgx, '$1' + ',' + '$2');
         }
         return x1 + x2;
-    }
-}
+    };
+};
 var tu_grid_search = new TUGridSearch();
 tu_grid_search.init();
