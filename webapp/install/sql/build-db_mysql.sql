@@ -513,7 +513,8 @@ CREATE TABLE tu_users (
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
   favorites_count int(11) DEFAULT NULL COMMENT 'Total number of posts the user has favorited.',
   PRIMARY KEY (id),
-  UNIQUE KEY user_id (user_id,network)
+  UNIQUE KEY user_id (user_id,network),
+  KEY user_id_key (user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
