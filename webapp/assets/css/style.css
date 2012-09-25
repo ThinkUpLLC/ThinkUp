@@ -1,4 +1,4 @@
-/* RESETS 
+#na/* RESETS 
 ==============================*/
 html {
 color: #222;
@@ -1069,9 +1069,24 @@ background: #FFF; /* ending color */
 background: -moz-linear-gradient(top, #f3f3f3 0%, #FFF 100%);
 background: -webkit-linear-gradient(top, #f3f3f3 0%, #FFF 100%);
 background: linear-gradient(top, #f3f3f3 0%, #FFF 100%);
--moz-border-radius: 8px;
--webkit-border-radius: 8px;
-border-radius: 8px;
+}
+
+#nav ul li.selected:first-child {
+  -moz-border-top-left-radius: 8px;
+  -moz-border-top-right-radius: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+#nav ul li.selected:last-child {
+  -moz-border-bottom-left-radius: 8px;
+  -moz-border-bottom-right-radius: 8px;
+  -webkit-border-bottom-left-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 #nav ul li a,nav ul li a:visited {
