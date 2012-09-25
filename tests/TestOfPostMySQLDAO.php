@@ -192,8 +192,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_username'=>'user_123456', 'author_fullname'=>'User 123456', 'is_geo_encoded'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
-            'in_reply_to_user_id'=>''));
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
             $counter++;
         }
 
@@ -215,7 +214,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>19,
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter',
         'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web',
-        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'pub_date'=>'2006-03-03 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_reply_to_post_id'=>41, 'location'=>'Mumbai, Maharashtra, India', 'reply_retweet_distance'=>1500,
         'is_geo_encoded'=>1));
@@ -331,23 +330,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://alink1.com'));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://alink2.com'));
 
-        // Add a foursquare checkin
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'147', 'author_user_id'=>'20',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>'2011-02-21 09:50:00', 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'149', 'author_user_id'=>'21',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in again', 'source'=>'', 'pub_date'=>'2011-02-21 22:00:00', 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Garage', 'place_id'=>'12346',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
         return $builders;
     }
 
@@ -420,6 +402,78 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($questions[0]->post_text,
         'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?');
     }
+
+    /**
+     * Test getAllQuestionPostosInRange
+     */
+     public function testgetAllQuestionPostsInRange() {
+        $builders = array();
+        //Add a question
+        $post_builder = FixtureBuilder::build('posts', array('author_user_id'=>'13', 'author_username'=>'ev',
+        'post_text'=>'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 '.
+        'What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
+        'pub_date'=>'2006-02-01 00:05:00'));
+ 
+        array_push($builders, $post_builder);
+        $post_key = $post_builder->columns['last_insert_id'];
+
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah2'));
+
+        $dao = new PostMySQLDAO();
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-02 00:10:00');
+
+        $this->debug('Questions: ' . $questions);
+
+        $this->assertEqual(sizeof($questions), 1);
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
+        $this->assertEqual(sizeof($questions[0]->links), 2 );
+        $this->assertEqual($questions[0]->links[0]->url, 'http://bit.ly/blah' );
+        $this->assertEqual($questions[0]->links[1]->url, 'http://bit.ly/blah2' );
+
+        //Add another question
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Best sushi in NY? downtown', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 
+	'pub_date'=>'2006-02-01 00:06:00'));
+
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-01 00:10:00');
+        $this->assertEqual(sizeof($questions), 2);
+        $this->assertEqual($questions[0]->post_text, 'Best sushi in NY? downtown' );
+        $this->assertEqual($questions[1]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
+
+        //Messages with a question mark in between two characters (e.g. URLs) aren't necessarily questions
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Love this video: http://www.youtube.com/watch?v=PQu-zrE-k5s', 'network'=>'twitter',
+        'in_reply_to_post_id'=>0, 'pub_date'=>'2006-02-01 00:07:00'));
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-01 00:10:00');
+        $this->assertEqual(sizeof($questions), 2);
+        
+        // test ascending order
+        $posts = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:01:00',
+        $until = '2006-02-01 00:10:00',$page=1, $order_by = 'pub_date', $direction = 'ASC');
+        $this->assertEqual(sizeof($posts), 2);
+	foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        
+        // test range with no posts
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:10:00', 
+        $until= '2006-02-01 00:15:00');
+        $this->assertEqual(sizeof($questions), 0);
+
+        // test from greater than until
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:10:00', 
+        $until= '2006-01-01 00:15:00');
+        $this->assertEqual(sizeof($questions), 0);   
+    }
+
     /**
      * Test getOrphanReplies
      */
@@ -518,36 +572,84 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllReplies() {
         $dao = new PostMySQLDAO();
-        $replies = $dao->getAllReplies('13', 'twitter', 10);
+        $replies = $dao->getAllReplies(13, 'twitter', 10);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
         // test paging
-        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 1);
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
         // this query doesn't have a second page, so this should return nothing
-        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 2);
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 2);
         $this->assertEqual(sizeof($replies), 0);
 
         // test count
-        $replies = $dao->getAllReplies('13', 'twitter', $count = 0, $page = 1);
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 0, $page = 1);
         $this->assertEqual(sizeof($replies), 0);
 
-        $replies = $dao->getAllReplies('13', 'twitter', $count = 1, $page = 1);
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
         $this->assertEqual(sizeof($replies), 1);
 
-        $replies = $dao->getAllReplies('18', 'twitter', 10);
-        if (sizeof($replies)>0) {
-            print_r($replies);
-        }
+        $replies = $dao->getAllReplies(18, 'twitter', 10);
         $this->assertEqual(sizeof($replies), 0);
 
         // test default order_by
-        $replies = $dao->getAllReplies('13', 'twitter', 10, 1, "';-- SELECT");
+        $replies = $dao->getAllReplies(13, 'twitter', 10, 1, "';-- SELECT");
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
+    }
+    /**
+     * Test getAllRepliesInRange
+     */
+    public function testgetAllRepliesInRange() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getAllRepliesInRange(23, 'twitter', 200, $from = '2006-02-28 23:50:00',
+        $until = '2006-03-02 00:30:59', $order_by="pub_date", $direction="DESC");
+	$this->assertEqual(sizeof($posts),2);
+        // test date ordering and time range check
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertEqual($post->in_reply_to_user_id, 23);
+            $this->assertTrue(strtotime($post->pub_date) >= strtotime('2000-02-28 23:50:00'));
+            $this->assertTrue(strtotime($post->pub_date) < strtotime('2010-03-01 00:30:59'));
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test ascending order
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500,$from = '2006-02-28 23:50:00',
+	$until = '2006-03-01 00:30:59',  $order_by="pub_date", $direction="ASC");
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test filter protected posts
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-02-28 23:50:00',
+        $until = '2006-03-01 00:30:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = true);
+
+        foreach($posts as $post) {
+            $this->assertEqual($post->is_protected, false);
+        }
+
+        // test range with no posts
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-02-25 23:50:00',
+        $until = '2006-02-28 23:50:00',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = false);
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-03-01 23:50:00',
+        $until = '2006-02-28 23:50:00',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = false);;
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 
     /**
@@ -604,6 +706,46 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // test default order_by
         $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 1, false, true, "';-- SELECT");
         $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9');
+    }
+
+    /**
+     * Test getAllMentionsInRange
+     */
+    public function testgetAllMentionsInRange() {
+        $dao = new PostMySQLDAO();
+	$mentions = $dao->getAllMentionsInRange("ev", $count = 200, $network = 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+        
+        $this->assertEqual($mentions[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+	$this->assertEqual($mentions[2]->post_text, "Hey @ev and @jack should fix Twitter - post 7");
+	
+        $mentions = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($mentions), 10);
+
+
+	// test ascending order
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-02-28 23:59:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="ASC");
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test range with no posts
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 13:59:00',
+        $until = '2006-03-01 15:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 23:59:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 
     /**
@@ -959,6 +1101,56 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
         $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
 
+    }
+
+    /**
+     * Test getRepliesToPostInRange
+     */
+     public function testgetRepliesToPostInRange() {
+        $dao = new PostMySQLDAO();
+        // Default Sorting
+        $posts = $dao->getRepliesToPostInRange('41', 'twitter', $from = '2006-03-01 00:00:00',$until = '2006-03-02 23:30:59',
+        $order_by="pub_date");
+        $this->assertEqual(sizeof($posts), 2);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
+        $this->assertEqual($posts[1]->location,'Chennai, Tamil Nadu, India');
+        $this->assertEqual($posts[1]->post_id, '132', "post ID");
+
+        
+        // test date ordering and time range check
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertEqual($post->in_reply_to_post_id, 41);
+            $this->assertTrue(strtotime($post->pub_date) >= strtotime('2006-03-01 00:00:00'));
+            $this->assertTrue(strtotime($post->pub_date) < strtotime('2006-03-03 00:30:59'));
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test ascending order
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-02 00:30:59',  $order_by="pub_date", $direction="ASC", $iterator=false,
+        $is_public = false);
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test range with no posts
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '1970-01-02 00:00:00',
+        $until = '1971-01-02 00:59:59',  $order_by="pub_date");
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '2007-01-02 00:00:00',
+        $until = '2006-01-02 00:59:59',  $order_by="pub_date");
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 
     private function buildHotPostsWithMultipleLinks() {
@@ -1454,7 +1646,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['is_protected'] = 1;
 
         //add post with insufficient location data
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1469,7 +1661,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_reply_to_post_id']= '';
 
         //test add straight post that doesn't exist
-        $this->assertEqual($dao->addPost($vals), 20023);
+        $this->assertEqual($dao->addPost($vals), 20021);
         $post = $dao->getPost(250, 'twitter');
         $this->assertEqual($post->post_id, 250);
         $this->assertEqual($post->author_user_id, 22);
@@ -1499,7 +1691,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //test add reply, check cache count
         $vals['post_id']=251;
         $vals['in_reply_to_post_id']= 129;
-        $this->assertEqual($dao->addPost($vals), 20024);
+        $this->assertEqual($dao->addPost($vals), 20022);
         $post = $dao->getPost(129, 'twitter');
         $this->assertEqual($post->reply_count_cache, 1, "reply count got updated");
 
@@ -1507,7 +1699,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['post_id']=252;
         $vals['in_reply_to_post_id']= '';
         $vals['in_retweet_of_post_id']= 128;
-        $this->assertEqual($dao->addPost($vals), 20025);
+        $this->assertEqual($dao->addPost($vals), 20023);
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
         $this->assertEqual($post->retweet_count_cache, 0);
@@ -1529,7 +1721,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 0;
 
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1554,7 +1746,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 1;
 
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -2085,7 +2277,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 144);
+        $this->assertEqual(count($posts), 142);
         $this->assertIsA($posts, "array");
     }
 
@@ -2192,7 +2384,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testUniqueConstraint2() {
         $counter = 1002;
-        $pseudo_minute = str_pad(($counter-1000), 2, "0", STR_PAD_LEFT);
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
         'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg',
@@ -2574,8 +2766,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                       'joined' => '2010-04-25 05:04:38',
                       'url' => 'http://www.facebook.com/jacqueline.dey',
                       'network' => 'twitter',
-                      'last_post' => '2011-02-19 22:27:00',
-                      'last_post_id'=>'abc'
+                      'last_post' => '2011-02-19 22:27:00'
                       )
                       ),
             'in_retweet_of_post_id' => '39088587140108288'
@@ -2600,7 +2791,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'place' => null
                     );
                     $user_array = array (
-            'user_id' => '1106501',
+            'user_id' => 1106501,
             'user_name' => 'joanwalsh',
             'full_name' => 'Joan Walsh',
             'avatar' => 'http://a3.twimg.com/profile_images/1190090715/JW_1_inch_high_normal.png',
@@ -2613,10 +2804,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2007-03-13 18:38:05',
             'url' => 'http://www.salon.com/opinion/walsh/',
             'network' => 'twitter',
-            'last_post' => '2011-02-19 22:30:19',
-             'last_post_id'=>'abc'
-             );
-             return array($post, $entities, $user_array);
+            'last_post' => '2011-02-19 22:30:19'
+            );
+            return array($post, $entities, $user_array);
     }
 
     /**
@@ -2702,8 +2892,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2010-10-12 13:12:48',
             'url' => 'http://www.therainforestsite.com',
             'network' => 'twitter',
-            'last_post' => '2011-02-20 22:28:06',
-            'last_post_id'=>'abc'
+            'last_post' => '2011-02-20 22:28:06'
             );
             return array($post, $entities, $user_array);
     }
@@ -2753,7 +2942,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'place' => null
                             );
                             $user_array = array (
-            'user_id' => '140955302',
+            'user_id' => 140955302,
             'user_name' => 'DAaronovitch',
             'full_name' => 'David Aaronovitch',
             'avatar' => 'http://a2.twimg.com/profile_images/1145463210/75.manchester_normal.jpg',
@@ -2766,8 +2955,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'joined' => '2010-05-06 20:12:34',
             'url' => 'http://www.davidaaronovitch.com/',
             'network' => 'twitter',
-            'last_post' => '2011-02-19 22:24:50',
-            'last_post_id'=>'abc'
+            'last_post' => '2011-02-19 22:24:50'
             );
             return array($post, $entities, $user_array);
     }
@@ -2856,12 +3044,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->post_text, 'This is updated post 10');
     }
 
-    public function testGetOnThisDayFlashbackPostsNoFromDate(){
+    public function testGetOnThisDayFlashbackPosts(){
         // Generate the date string for 1 year ago today
         $year_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 year")));
 
         // Add a post from a year ago that's not a reply or retweet
-        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'148', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$year_ago_date, 'location'=>'England',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
@@ -2875,7 +3063,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // Add a post from 2 years ago that's not a reply or retweet
         $two_years_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -2 year")));
-        $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'151', 'author_user_id'=>'20',
+        $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'149', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_ago_date, 'location'=>'England',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
@@ -2890,7 +3078,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Add a post from today that's not a reply or retweet
         $today_date = date(date( 'Y-m-d H:i:s' , strtotime("today")));
 
-        $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'152', 'author_user_id'=>'20',
+        $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
         'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$today_date, 'location'=>'England',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
@@ -2902,28 +3090,44 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Add a link for this post
         $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
 
-        // Add the place information
-        $place['place_id'] = '12345a';
-        $place['place_type'] = "Park";
-        $place['name'] = "A Park";
-        $place['full_name'] = "The Greatest Park";
-        $place['country_code'] = "UK";
-        $place['country'] = "United Kingdom";
-        $place['icon'] = "http://www.iconlocation.com";
-        $place['network'] = "foursquare";
-        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
-        $place['map_image'] = "http://www.mapimage.com";
+        /* Add the place information for future foursquare checkin test (We do it this way due to the fixture builder
+         not being able to handle the MySQL point type
+         // Set all possible fields
+         $place['id'] = '12345a';
+         $place['place_type'] = "Park";
+         $place['name'] = "A Park";
+         $place['full_name'] = "The Greatest Park";
+         $place['country_code'] = "UK";
+         $place['country'] = "United Kingdom";
+         $place['icon'] = "http://www.iconlocation.com";
+         $place['lat_lng'] = 'POINT(51.514 -0.1167)';
+         //        $place['bounding_box'] = 'POLYGON((-0.213503 51.512805,-0.105303 51.512805,-0.105303 51.572068,'.
+         //         '-0.213503 51.572068, -0.213503 51.512805)))';
+         $place['bounding_box'] = array (
+         'type' => 'Polygon',
+         'coordinates' => array  (
+         array(
+         array(-97.73818308, 30.29930703),
+         array(-97.710741, 30.29930703),
+         array(-97.710741, 30.31480602),
+         array(-97.73818308, 30.31480602),
+         )
+         )
+         );
 
-        // Insert the place
-        $place_builder = FixtureBuilder::build('places', $place);
+         $place['map_image'] = "http://www.mapimage.com";
 
+         // Insert the place
+         $place_dao = new PlaceMySQLDAO();
+         $place_dao->insertPlace($place, '148', 'foursquare');
+         */
+        //sleep(1000);
         // Query the database for last year's post
         $post_dao = new PostMySQLDAO();
         // Get the year to query for
         $res = $post_dao->getOnThisDayFlashbackPosts(20, 'foursquare');
 
+        $this->debug(Utils::varDumpToString($res));
         // Check only the 1 checkin we inserted is returned
         $this->assertEqual(sizeof($res), 2);
         // Check the author user id was set correctly
@@ -2947,386 +3151,26 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Check the geo co ordinates were set correctly
         $this->assertEqual($res[0]->geo, '52.477192843264,-1.484333726346');
 
-        // Check the place id was set correctly
-        $this->assertEqual($res[0]->place_obj->place_id, '12345a');
-        // Check the place type was set correctly
-        $this->assertEqual($res[0]->place_obj->place_type, 'Park');
-        // Check the place name was set correctly
-        $this->assertEqual($res[0]->place_obj->name, 'A Park');
-        // Check the full name was set correctly
-        $this->assertEqual($res[0]->place_obj->full_name, 'The Greatest Park');
-        // Check the country code was set correctly
-        $this->assertEqual($res[0]->place_obj->country_code, 'UK');
-        // Check the country was set correctly
-        $this->assertEqual($res[0]->place_obj->country, 'United Kingdom');
-        // Check the icon was set correctly
-        $this->assertEqual($res[0]->place_obj->icon, 'http://www.iconlocation.com');
-        // Check the map image was set correctly
-        $this->assertEqual($res[0]->place_obj->map_image, 'http://www.mapimage.com');
+        /*
+         // Check the place id was set correctly
+         $this->assertEqual($res[0]->place_obj->place_id, '12345a');
+         // Check the place type was set correctly
+         $this->assertEqual($res[0]->place_obj->place_type, 'Park');
+         // Check the place name was set correctly
+         $this->assertEqual($res[0]->place_obj->name, 'A Park');
+         // Check the full name was set correctly
+         $this->assertEqual($res[0]->place_obj->full_name, 'The Greatest Park');
+         // Check the country code was set correctly
+         $this->assertEqual($res[0]->place_obj->country_code, 'UK');
+         // Check the country was set correctly
+         $this->assertEqual($res[0]->place_obj->country, 'United Kingdom');
+         // Check the icon was set correctly
+         $this->assertEqual($res[0]->place_obj->icon, 'http://www.iconlocation.com');
+         // Check the map image was set correctly
+         $this->assertEqual($res[0]->place_obj->map_image, 'http://www.mapimage.com');
+         */
 
         // Check the link URL was set correctly
         $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blahb');
-    }
-
-    public function testGetOnThisDayFlashbackPostsWithFromDate(){
-        // Generate the date string for 1 year and 1 day ago today
-        $year_and_day_ago_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 day", strtotime("today -1 year"))));
-
-        // Add a post from a year ago that's not a reply or retweet
-        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'150', 'author_user_id'=>'20',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$year_and_day_ago_date, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $post_key = $post_builder->columns['last_insert_id'];
-        // Add a link for this post
-        $link_builder = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
-
-        // Add a post from 2 years ago that's not a reply or retweet
-        $two_years_and_day_ago_date = date( 'Y-m-d H:i:s' , strtotime('today -1 day', strtotime("today -2 year")));
-        $post_builder2 = FixtureBuilder::build('posts', array('post_id'=>'151', 'author_user_id'=>'20',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$two_years_and_day_ago_date, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $post_key = $post_builder2->columns['last_insert_id'];
-        // Add a link for this post
-        $link_builder2 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
-
-        // Add a post from today that's not a reply or retweet
-        $yesterday_date = date(date( 'Y-m-d H:i:s' , strtotime("today -1 day")));
-
-        $post_builder3 = FixtureBuilder::build('posts', array('post_id'=>'152', 'author_user_id'=>'20',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$yesterday_date, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null, 'in_retweet_of_post_id'=>null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $post_key = $post_builder3->columns['last_insert_id'];
-        // Add a link for this post
-        $link_builder3 = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blahb'));
-
-        // Add the place information
-        $place['place_id'] = '12345a';
-        $place['place_type'] = "Park";
-        $place['name'] = "A Park";
-        $place['full_name'] = "The Greatest Park";
-        $place['country_code'] = "UK";
-        $place['country'] = "United Kingdom";
-        $place['icon'] = "http://www.iconlocation.com";
-        $place['network'] = "foursquare";
-        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
-        $place['map_image'] = "http://www.mapimage.com";
-
-        // Insert the place
-        $place_builder = FixtureBuilder::build('places', $place);
-
-        // Query the database for last year's post
-        $post_dao = new PostMySQLDAO();
-        // Get the year to query for
-        $res = $post_dao->getOnThisDayFlashbackPosts(20, 'foursquare', $yesterday_date);
-
-        // Check only the 1 checkin we inserted is returned
-        $this->assertEqual(sizeof($res), 2);
-        // Check the author user id was set correctly
-        $this->assertEqual($res[0]->author_user_id, '20');
-        // Check the username was set correctly
-        $this->assertEqual($res[0]->author_username, 'user1');
-        // Check the author fullname was set correctly
-        $this->assertEqual($res[0]->author_fullname, 'User 1');
-        // Check the network was set correctly
-        $this->assertEqual($res[0]->network, 'foursquare');
-        // Check the post text was set correctly
-        $this->assertEqual($res[0]->post_text, 'I just checked in');
-        // Check the pub date was set correctly
-        $this->assertEqual($res[0]->pub_date, $two_years_and_day_ago_date);
-        // Check the location was set correctly
-        $this->assertEqual($res[0]->location, 'England');
-        // Check the place was set correctly
-        $this->assertEqual($res[0]->place, 'The Park');
-        // Check the place id was set correctly
-        $this->assertEqual($res[0]->place_id, '12345a');
-        // Check the geo co ordinates were set correctly
-        $this->assertEqual($res[0]->geo, '52.477192843264,-1.484333726346');
-
-        // Check the place id was set correctly
-        $this->assertEqual($res[0]->place_obj->place_id, '12345a');
-        // Check the place type was set correctly
-        $this->assertEqual($res[0]->place_obj->place_type, 'Park');
-        // Check the place name was set correctly
-        $this->assertEqual($res[0]->place_obj->name, 'A Park');
-        // Check the full name was set correctly
-        $this->assertEqual($res[0]->place_obj->full_name, 'The Greatest Park');
-        // Check the country code was set correctly
-        $this->assertEqual($res[0]->place_obj->country_code, 'UK');
-        // Check the country was set correctly
-        $this->assertEqual($res[0]->place_obj->country, 'United Kingdom');
-        // Check the icon was set correctly
-        $this->assertEqual($res[0]->place_obj->icon, 'http://www.iconlocation.com');
-        // Check the map image was set correctly
-        $this->assertEqual($res[0]->place_obj->map_image, 'http://www.mapimage.com');
-
-        // Check the link URL was set correctly
-        $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blahb');
-    }
-
-    public function testGetAllCheckins(){
-        // Add place information for  foursquare checkins
-        $place['place_id'] = '12345a';
-        $place['place_type'] = "Park";
-        $place['name'] = "A Park";
-        $place['full_name'] = "The Greatest Park";
-        $place['country_code'] = "UK";
-        $place['country'] = "United Kingdom";
-        $place['icon'] = "http://www.iconlocation.com";
-        $place['network'] = "foursquare";
-        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
-        $place['map_image'] = "http://www.mapimage.com";
-
-        // Insert the place
-        $place_builder = FixtureBuilder::build('places', $place);
-
-        // Add A link for this checkin
-        $checkin_builder[] = FixtureBuilder::build('links', array('post_key'=>'20020', 'url'=>'http://bit.ly/blah'));
-
-        // Query the database for the checkin and check its returned
-        $post_dao = new PostMySQLDAO();
-        $res = $post_dao->getAllCheckins(20, 'foursquare');
-
-        // Check only the 2 checkins we inserted are returned
-        $this->assertEqual(sizeof($res), 1);
-        // Check the author user id was set correctly
-        $this->assertEqual($res[0]->author_user_id, '20');
-        // Check the username was set correctly
-        $this->assertEqual($res[0]->author_username, 'user1');
-        // Check the author fullname was set correctly
-        $this->assertEqual($res[0]->author_fullname, 'User 1');
-        // Check the network was set correctly
-        $this->assertEqual($res[0]->network, 'foursquare');
-        // Check the post text was set correctly
-        $this->assertEqual($res[0]->post_text, 'I just checked in');
-        // We use relative dates so we need to work out how manys are between the checkin date and the date the test
-        // is run
-
-        $this->assertEqual($res[0]->pub_date, "2011-02-21 09:50:00");
-        // Check the location was set correctly
-        $this->assertEqual($res[0]->location, 'England');
-        // Check the place was set correctly
-        $this->assertEqual($res[0]->place, 'The Park');
-        // Check the place id was set correctly
-        $this->assertEqual($res[0]->place_id, '12345a');
-        // Check the geo co ordinates were set correctly
-        $this->assertEqual($res[0]->geo, '52.477192843264,-1.484333726346');
-
-        // Check the place id was set correctly
-        $this->assertEqual($res[0]->place_obj->place_id, '12345a');
-        // Check the place type was set correctly
-        $this->assertEqual($res[0]->place_obj->place_type, 'Park');
-        // Check the place name was set correctly
-        $this->assertEqual($res[0]->place_obj->name, 'A Park');
-        // Check the full name was set correctly
-        $this->assertEqual($res[0]->place_obj->full_name, 'The Greatest Park');
-        // Check the country code was set correctly
-        $this->assertEqual($res[0]->place_obj->country_code, 'UK');
-        // Check the country was set correctly
-        $this->assertEqual($res[0]->place_obj->country, 'United Kingdom');
-        // Check the icon was set correctly
-        $this->assertEqual($res[0]->place_obj->icon, 'http://www.iconlocation.com');
-        // Check the map image was set correctly
-        $this->assertEqual($res[0]->place_obj->map_image, 'http://www.mapimage.com');
-
-        // Check the URL was set correctly
-        $this->assertEqual($res[0]->links[0]->url, 'http://bit.ly/blah');
-    }
-
-    public function testCountCheckinsToPlaceTypes(){
-        // Add place information for checkins
-        $place['place_id'] = '12345a';
-        $place['place_type'] = "Park";
-        $place['name'] = "A Park";
-        $place['full_name'] = "The Greatest Park";
-        $place['country_code'] = "UK";
-        $place['country'] = "United Kingdom";
-        $place['icon'] = "http://www.iconlocation.com";
-        $place['network'] = "foursquare";
-        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
-        $place['map_image'] = "http://www.mapimage.com";
-
-        // Insert the place
-        $place_builder = FixtureBuilder::build('places', $place);
-
-        // Query the database for the number of checkins per type of place
-        $post_dao = new PostMySQLDAO();
-        $res = $post_dao->countCheckinsToPlaceTypes('20', 'foursquare');
-
-        $valid_json = '{"rows":[{"c":[{"v":"Park","f":"Park"},{"v":1}]}],"cols":[{"type":"string","label":"Place Type"';
-        $valid_json .= '},{"type":"number","label":"Number of Checkins to this place type"}]}';
-
-        $this->assertEqual($res, $valid_json);
-    }
-
-    public function testCountCheckinsToPlaceTypesLastWeek(){
-        // Build the pub_date string which needs to be a date within the last week
-        $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
-        $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
-
-        $hour1 = date('H',  strtotime("now") );
-        $hour2 = date('H',  strtotime("now +1 hour") );
-
-        // Add some foursquare checkins (done here due to time dependenacy of test)
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'1000', 'author_user_id'=>'31',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$pub1, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345b',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'999', 'author_user_id'=>'31',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in again', 'source'=>'', 'pub_date'=>$pub2, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Garage', 'place_id'=>'12345c',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        // Add place information
-        $place1['place_id'] = '12345b';
-        $place1['place_type'] = "Park";
-        $place1['name'] = "A Park";
-        $place1['full_name'] = "The Greatest Park";
-        $place1['country_code'] = "UK";
-        $place1['country'] = "United Kingdom";
-        $place1['icon'] = "http://www.iconlocation.com";
-        $place1['network'] = "foursquare";
-        $place1['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place1['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
-        $place1['map_image'] = "http://www.mapimage.com";
-
-        // Insert the place
-        $place_builder1 = FixtureBuilder::build('places', $place1);
-
-        // Set all possible fields
-        $place2['place_id'] = '12345c';
-        $place2['place_type'] = "Garage";
-        $place2['network'] = "foursquare";
-        $place2['name'] = "A Garage";
-        $place2['full_name'] = "The Greatest Garage";
-        $place2['country_code'] = "UK";
-        $place2['country'] = "United Kingdom";
-        $place2['icon'] = "http://www.iconlocation.com";
-        $place2['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
-        $place2['bounding_box'] = "PolygonFromText( 'Polygon((-0.213503 51.512805,-0.105303 51.512805,".
-        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)))')";
-
-        // Insert the place
-        $place_builder2 = FixtureBuilder::build('places', $place2);
-
-        // Query the database for the number of checkins per type of place in the last week
-        $post_dao = new PostMySQLDAO();
-        $res = $post_dao->countCheckinsToPlaceTypes('31', 'foursquare');
-
-        $valid_json = '{"rows":[{"c":[{"v":"Garage","f":"Garage"},{"v":1}]},{"c":[{"v":"Park","f":"Park"},{"v":1}]}],';
-        $valid_json .= '"cols":[{"type":"string","label":"Place Type"},{"type":"number","label":"Number of Checkins to';
-        $valid_json .= ' this place type"}]}';
-
-        $this->assertEqual($res, $valid_json);
-    }
-
-    public function testGetPostsPerHourDataVis(){
-        $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
-        $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
-
-        $hour1 = date('G',  strtotime("now") );
-        $hour2 = date('G',  strtotime("now +1 hour") );
-
-        // Add some foursquare checkins (done here due to time dependency of test)
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'998', 'author_user_id'=>'30',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$pub1, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'999', 'author_user_id'=>'30',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in again', 'source'=>'', 'pub_date'=>$pub2, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Garage', 'place_id'=>'12346',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        // Query the database for the number of checkins per hour
-        $post_dao = new PostMySQLDAO();
-        $result = $post_dao->getPostsPerHourDataVis('30', 'foursquare');
-
-        $valid_json = '{"rows":[';
-        $i = 0;
-        while ($i < 24) {
-            if ( $i == $hour1 || $i == $hour2 ) {
-                $valid_json .= '{"c":[{"v":'.$i.'},{"v":1},{"v":1}]}';
-            } else {
-                $valid_json .= '{"c":[{"v":'.$i.'},{"v":0},{"v":0}]}';
-            }
-            if ($i < 23 ) {
-                $valid_json .= ',';
-            } else {
-                $valid_json .= '],"cols":[{"type":"string","label":"Hour of Day"},{"type":"number","label":'.
-                '"Checkins Last Week"},{"type":"number","label":"Checkins All Time"}]}';
-            }
-            $i++;
-        }
-        $this->assertEqual($result, $valid_json);
-    }
-
-    public function testGetAllCheckinsInLastWeekAsGoogleMap() {
-        // Build the pub_date string which needs to be a date within the last week
-        $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
-        $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
-
-        $hour1 = date('H',  strtotime("now") );
-        $hour2 = date('H',  strtotime("now +1 hour") );
-
-        // Add some foursquare checkins (done here due to time dependenacy of test)
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'30',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>$pub1, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        $checkin_builder[] = FixtureBuilder::build('posts', array('post_id'=>'1000', 'author_user_id'=>'30',
-        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
-        'post_text'=>'I just checked in again', 'source'=>'', 'pub_date'=>$pub2, 'location'=>'England',
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Garage', 'place_id'=>'12346',
-        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
-        'in_reply_to_user_id' =>null, 'in_reply_to_post_id' => null,
-        'geo'=>'52.477192843264,-1.484333726346'));
-
-        // Query the database for the number of checkins per hour
-        $post_dao = new PostMySQLDAO();
-        $res = $post_dao->GetAllCheckinsInLastWeekAsGoogleMap('30', 'foursquare');
-
-        $valid_url = 'http://maps.googleapis.com/maps/api/staticmap?size=708x500&maptype=roadmap&markers=color:';
-        $valid_url .= 'blue%7C|52.477192843264,-1.484333726346|52.477192843264,-1.484333726346&sensor=false';
-
-        $this->assertEqual($res, $valid_url);
     }
 }
