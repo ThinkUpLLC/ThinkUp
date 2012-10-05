@@ -1,0 +1,304 @@
+body {
+	background: #EBEBEB;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	/*margin: 0;*/
+	text-rendering: optimizelegibility;
+}
+
+h3 {
+	font-size: 18px;
+	line-height: 27px;
+}
+
+p {
+	margin: 0 0 9px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+.navbar-static-top {
+  margin-bottom: 20px;
+}
+    
+form .control-group {
+    margin : 6px;
+}
+
+.detail-btn {
+    margin-right : 6px;
+    margin-left : 12px;
+}
+  
+.metaroll {
+    color : #999;
+    display : inline;
+    font-size : small;
+    line-height : 100%;
+}
+
+
+.label {
+    padding: 1px 4px 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.insight-item .label, .insight-item .badge {
+  font-size: 14px;
+}
+
+.label .icon-white {
+    margin-top : 2px;
+}
+
+.alert p .label {
+    margin-left : -12px;
+    z-index: 999;
+}
+
+.alert p a {
+    font-weight : bolder;
+}
+
+.lead {
+    padding-left : 22px;
+    margin-right : 10px;
+    margin-bottom : 0px;
+    margin-top : 6px;
+    color : #666;
+    font-size: 20px;
+    line-height: 27px;
+}
+
+.white-card {
+  padding: 6px;
+  margin-bottom: 18px;
+  background-color: #fff;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;    
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  color: #000;
+}
+
+.alert.insight-item {
+	border: 0;
+}
+
+.alert-heading {
+  color: inherit;
+}
+.alert .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 18px;
+}
+.alert-success {
+  background-color: #dff0d8;
+  border-color: green;
+  color: #468847;
+}
+/*.alert-danger,
+.alert-error {
+  background-color: #f8f8b1;
+  border-color: #FFB300;
+  color: #b94a48;
+}*/
+.alert-info {
+  background-color: #ffffff;
+  border-color: #666;
+  color: #00AEEF;
+}
+.alert-block {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.alert-block > p,
+.alert-block > ul {
+  margin-bottom: 0;
+}
+.alert-block p + p {
+  margin-top: 5px;
+}
+
+.alert strong {
+color : #666;
+}
+
+.alert table {
+    margin-top : 10px;
+    width : 90%;
+    margin-left : 22px;
+}
+
+.alert table td {
+    border : 0;
+}
+
+.insight-item .chart {
+    padding-top : 12px;
+    margin-left : auto;
+    margin-right : auto;
+}
+
+.service-user-icons {
+    float : right;
+}
+
+.service-user-icons img {
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+    opacity:0.4;
+    padding-left : 6px;
+}
+
+.service-user-icons img:hover {
+    filter: none;
+    -webkit-filter: grayscale(0);
+    opacity:1;
+}
+
+.alert table img {
+    max-width : 200%;
+}
+
+.alert table .avatar2 {
+    padding-top : 6px;
+}
+
+.avatar-data {
+    width : 50px;
+}
+
+.avatar-data h3 {
+	margin: 0;
+}
+
+.alert table p {
+    color : #666;
+}
+
+.password-meter {
+}
+.password-meter-message {
+    color: #E41B17;
+    margin-left : 10px;
+}
+.password-meter-bg, .password-meter-bar {
+    height : 2px;
+}
+.password-meter-bg {
+    background: transparent;
+    width : 220px;
+}
+
+.password-meter-message-very-weak {
+    color: #aa0033;
+}
+.password-meter-message-weak {
+    color: #f5ac00;
+}
+.password-meter-message-good {
+    color: #6699cc;
+}
+.password-meter-message-strong {
+    color: #008000;
+}
+
+.password-meter-bg .password-meter-very-weak {
+    background: #aa0033;
+    width: 20%;
+}
+.password-meter-bg .password-meter-weak {
+    background: #f5ac00;
+    width: 30%;
+}
+.password-meter-bg .password-meter-good {
+    background: #6699cc;
+    width: 66%;
+}
+.password-meter-bg .password-meter-strong {
+    background: #008000;
+    width: 100%;
+}
+span.formError {
+    color: #E41B17;
+    margin-left : 10px;
+    padding-top : 4px;
+}
+
+#wrap {
+    background-color : transparent;
+}
+
+/**
+ * Embossed blocks
+ */
+
+.embossed-block ul {
+  list-style: none;
+  margin-left: 0;
+  background: #e2e2e2; /* starting color */
+  background: #cacaca; /* ending color */
+  background: -moz-linear-gradient(top, #e2e2e2 0%, #cacaca 100%);
+  background: -webkit-linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
+  background: -ms-linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#cacaca',GradientType=0 );
+  background: linear-gradient(top, #e2e2e2 0%,#cacaca 100%);
+    
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+
+  box-shadow: 0 1px 0 #fff, inset 0 0 0 1px rgba(0,0,0,0.1);
+  padding: 1px;
+  padding-bottom: 2px;
+}
+
+.embossed-block li {
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 1.125em;
+  text-align: center;
+}
+
+.embossed-block .nav-tabs li {
+  padding: 0;
+  text-align: left;
+  font-weight: normal;
+}
+
+.embossed-block .nav-tabs.nav-stacked > li > a {
+  border: 0;
+}
+
+.embossed-block .icon-chevron-right {
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
+  opacity: .25;
+}
+
+.embossed-block .nav-tabs .active .icon-chevron-right {
+  background-image: url(../img/glyphicons-halflings.png);
+  opacity: 1;
+}
+
+/* Settings */
+
+.section {
+  margin: 20px;
+}
+
+/* Footer */
+
+footer {
+  padding: 20px 0;
+  background: #fff;
+}

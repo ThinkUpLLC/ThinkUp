@@ -1,11 +1,10 @@
 {if $enable_bootstrap}
 
-    <div class="navbar">
+    <div class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container">
 
           <a href="{$site_root_path}{$logo_link}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
-          {if $logged_in_user}<a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="btn pull-left"><i class="icon-refresh"></i></a>{/if}
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
 
           <div class="nav-collapse">
@@ -13,9 +12,17 @@
       {if $logged_in_user}
 <ul class="nav pull-right">
         {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
-        <li><p class="navbar-text">{$logged_in_user}{if $user_is_admin} (admin){/if}</p></li>
-        <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage">Settings</a></li>
-        <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        {if $logged_in_user}<li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" ><i class="icon-refresh"></i></a></li>{/if}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              {$logged_in_user}{if $user_is_admin} <span class="label label-info">admin</span>{/if}
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage">Settings</a></li>
+              <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
+            </ul>
+        </li>
 </ul>   
       {else}
 <ul class="nav pull-right">

@@ -160,7 +160,7 @@
 
 {if $field}
     {if $success_msgs.$field}
-     <div class="alert helpful">
+     <div class="alert alert-success">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
            {if $success_msg_no_xss_filter}
@@ -172,7 +172,7 @@
      </div>
     {/if}
     {if $error_msgs.$field}
-     <div class="alert urgent">
+     <div class="alert alert-danger">
          <p>
            <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
            {if $error_msg_no_xss_filter}

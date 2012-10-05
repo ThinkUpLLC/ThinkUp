@@ -6,15 +6,13 @@
 
 <div class="row">
     <div class="span3">
-          <div class="sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="">
-                    Register
-               </li>
+          <div class="embossed-block">
+            <ul>
+              <li>Register</li>
             </ul>
-          </div><!--/.well -->
+          </div>
     </div><!--/span3-->
-    <div class="span9">
+    <div class="span6">
 
 
         {include file="_usermessage.tpl" enable_bootstrap="true"}
@@ -76,6 +74,11 @@
                     <div class="form-actions">
 
                             <input type="submit" name="Submit" id="login-save" class="btn btn-primary" value="Register">
+                            <span class="pull-right">
+                                <a href="login.php">Log In</a> |
+                                <a href="forgot.php">Forgot password</a> |
+                                {insert name="help_link" id='register'}
+                            </span>
                         
                     </div>
 
@@ -85,9 +88,7 @@
 {if !$success_msg}
                     <div class="control-group">
                         <div class="controls">
-                            <p class="help-block"><a href="login.php">Log In</a> |
-                                <a href="forgot.php">Forgot password</a> |
-                                {insert name="help_link" id='register'}</p>
+                            
                         </div>
                     </div>
 {/if}                                           
