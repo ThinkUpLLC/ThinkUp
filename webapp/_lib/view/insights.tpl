@@ -24,17 +24,17 @@
     {if $i->text neq ''}
         {if $cur_date neq $i->date}
     <div class="span3">
-          <div class="sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="">
-                  {if $i->date|relative_day eq "today" }
-                      {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
-                  {else}
-                      {$i->date|relative_day|ucfirst}
-                  {/if}
-              </li>
-            </ul>
-          </div><!--/.well -->
+      <div class="embossed-block">
+        <ul class="time">
+          <li>
+            {if $i->date|relative_day eq "today" }
+                {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
+            {else}
+                {$i->date|relative_day|ucfirst}
+            {/if}
+          </li>
+        </ul>
+      </div>
     </div><!--/span3-->
 
             {assign var='cur_date' value=$i->date}
@@ -45,7 +45,7 @@
         {/if}
 
     <div class="span9">
-        <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-info{/if} emphasis-{$i->emphasis} insight-item">
+        <div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-info{/if} emphasis-{$i->emphasis} insight-item white-card">
             <div class="service-user-icons"><img src="{$site_root_path}plugins/{$i->instance->network|get_plugin_path}/assets/img/favicon.png" alt="{$i->instance->network|capitalize}" class="favicon" /> <img src="{$i->instance->avatar}" width="16" height="16" alt="{$i->instance->network_username}"></div>
             <div class="insight-attachment-detail {$i->related_data_type}">
     <!-- begin {$i->related_data_type} attachment data -->

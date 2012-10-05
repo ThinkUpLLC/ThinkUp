@@ -1,148 +1,144 @@
-{include file="_header.tpl" enable_tabs=true}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_tabs="true" enable_bootstrap="true"}
+{include file="_statusbar.tpl" enable_bootstrap="true"}
 
-<div class="container_24">
+<div class="container">
 
-  <div role="application" id="tabs">
-    
-    <ul>
-      <li><a href="#plugins">Plugins</a></li>
-      {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings">Application</a></li>{/if}
-      <li><a href="#instances">Account</a></li>
-      {if $user_is_admin}<li><a href="#ttusers">Users</a></li>{/if}
-    </ul>
-    
-    <div class="section thinkup-canvas clearfix" id="plugins">
-      <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-
-        <div class="append_20 clearfix">
-        {include file="_usermessage.tpl" field="account"}
-          {if $installed_plugins}
-            {foreach from=$installed_plugins key=ipindex item=ip name=foo}
-              {if $smarty.foreach.foo.first}
-                <div class="clearfix header">
-                  <div class="grid_17 alpha">name</div>
-                  {if $user_is_admin}
-                  <div class="grid_4 omega">activate</div>
-                  {/if}
-                </div>
-              {/if}
-              {if $user_is_admin || $ip->is_active}
-              <div class="clearfix bt append prepend">
-                <div class="grid_18 small alpha">
-                    <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
-                    {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.5em 0.3em 0 0;"></span>{/if}{/if}
-                    <span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
-                    <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
-                    <span style="color:#666">{$ip->description}</span><br>
-                </div>
-                {if $user_is_admin}
-                <div class="grid_4 omega">
-                  <span id="spanpluginactivation{$ip->id}">
-                      <input type="submit" name="submit" class="linkbutton btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
-                  </span>
-                  <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
-                  </div>
-                {/if}
-              </div>
-              {/if}
-            {/foreach}
-          {else}
-            <a href="?m=manage" class="linkbutton">&laquo; Back to plugins</a>
-          {/if}
-        </div>
-        {if $body}
-          {$body}
-        {/if}
+<div class="row">
+    <div class="span3">
+      <div id="tabs" class="embossed-block">
+        <ul class="nav nav-tabs nav-stacked">
+          <li><a href="#plugins">Plugins <i class="icon-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings">Application <i class="icon-chevron-right"></i></a></li>{/if}
+          <li><a href="#instances">Account <i class="icon-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a href="#ttusers">Users <i class="icon-chevron-right"></i></a></li>{/if}
+        </ul>
       </div>
-    </div> <!-- end #plugins -->
+    </div><!--/span3-->
+    <div class="span9">
+    	<div class="white-card">
 
-    {if $user_is_admin}
-    <div class="section thinkup-canvas clearfix" id="app_settings">
-        <div style="text-align: center" id="app_setting_loading_div">
+        <div class="section" id="plugins">
+
+            {include file="_usermessage.tpl" field="account"}
+              {if $installed_plugins}
+                {foreach from=$installed_plugins key=ipindex item=ip name=foo}
+                  {if $smarty.foreach.foo.first}
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                          {if $user_is_admin}<th>Activate</th>{/if}
+                        </tr>
+                      </thead>
+                  {/if}
+                  {if $user_is_admin || $ip->is_active}
+                        <tr>
+                          <td>
+                            <span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
+                            {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.5em 0.3em 0 0;"></span>{/if}{/if}
+                          </td>
+                          <td>
+                            <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
+                            <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
+                            <span style="color:#666">{$ip->description}</span><br>
+                          </td>
+                    {if $user_is_admin}
+                      <td>
+                      <span id="spanpluginactivation{$ip->id}">
+                          <input type="submit" name="submit" class="btn btnToggle {if $ip->is_active}btn-danger{else}btn-success{/if}" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
+                      </span>
+                      <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
+                      </td>
+                    {/if}
+                      </tr>
+                  {/if}
+                {/foreach}
+                    </table>
+              {else}
+                <a href="?m=manage" class="linkbutton">&laquo; Back to plugins</a>
+              {/if}
+            {if $body}
+              {$body}
+            {/if}
+        </div> <!-- end #plugins -->
+
+        {if $user_is_admin}
+        <div class="section thinkup-canvas clearfix" id="app_settings">
+          <div style="text-align: center" id="app_setting_loading_div">
             Loading application settings...<br /><br />
             <img src="{$site_root_path}assets/img/loading.gif" width="50" height="50" />
-        </div>
-        <div id="app_settings_div" style="display: none;">
-         {include file="account.appconfig.tpl"}
-        </div>
-        <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
-        <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
-        
-   <div class="prepend_20">
-    {insert name="help_link" id='backup'}
-    <h1>Back Up and Export Data</h1>
+          </div>
+          <div id="app_settings_div" style="display: none;">
+            {include file="account.appconfig.tpl"}
+          </div>
+          <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
+          <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
+                
+          <span class="pull-right">{insert name="help_link" id='backup'}</span>
+          <h1>Back Up and Export Data</h1>
+          <p>
+            <a href="{$site_root_path}install/backup.php" class="btn">Back up ThinkUp's entire database</a>
+            Recommended before upgrading ThinkUp.
+          </p>
 
-    <p><br />
-    
-    <div style="margin: 0px 0px 30px 0px;">
-        <a href="{$site_root_path}install/backup.php" class="linkbutton emphasized">Back up ThinkUp's entire database</a>
-        <p style="padding-left : 20px; margin-top : 14px;">Recommended before upgrading ThinkUp.</p>
-      </div>
+          <p>
+            <a href="{$site_root_path}install/exportuserdata.php" class="btn">Export a single service user's data</a>
+            For transfer into another existing ThinkUp database.
+          </p>
+                
+        </div> <!-- end #app_setting -->
+        {/if}
 
-    <div style="margin: 0px 0px 30px 0px;">
-        <a href="{$site_root_path}install/exportuserdata.php" class="linkbutton emphasized">Export a single service user's data</a>
-        <p style="padding-left : 20px; margin-top : 14px;">For transfer into another existing ThinkUp database.</p>
-    </div>
-    </p>
-  </div>
-        
-    </div> <!-- end #app_setting -->
-    {/if}
-
-    <div class="sections" id="instances">
-      <div class="thinkup-canvas clearfix">
-        <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-        {include file="_usermessage.tpl" field='password'}
-        {insert name="help_link" id='account'}
-        <h1>Password</h1><br />
-          <form name="changepass" id="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
-            <div class="clearfix">
-              <div class="grid_7 prefix_1 right"><label for="oldpass">Current password:</label></div>
-              <div class="grid_7 left" style="margin: 0px 0px 10px 5px; width:360px;">
-                <input name="oldpass" type="password" id="oldpass" style="width:360px;">
-                {insert name="csrf_token"}<!-- reset password -->
+        <div class="section" id="instances">
+          {include file="_usermessage.tpl" field='password'}
+          <span class="pull-right">{insert name="help_link" id='account'}</span>
+          <h1>Password</h1>
+          <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
+            <div class="control-group">
+              <label for="oldpass" class="control-label">Current password</label>
+              <div class="controls">
+                <input name="oldpass" type="password" id="oldpass">
               </div>
             </div>
-            <div class="clearfix">
-              <div class="grid_7 prefix_1 right"><label for="pass1">New password:</label></div>
-              <div class="grid_12 left">
-                <input name="pass1" type="password" id="pass1" style="width:360px;"
-                onfocus="$('#password-meter').show();">
+              {insert name="csrf_token"}<!-- reset password -->
+            <div class="control-group">
+              <label for="pass1" class="control-label">New password</label>
+              <div class="controls">
+                <input name="pass1" type="password" id="pass1" onfocus="$('#password-meter').show();">
                 <div class="password-meter" style="display:none;" id="password-meter">
-                    <div class="password-meter-message"></div>
+                  <div class="password-meter-message"></div>
                     <div class="password-meter-bg">
                         <div class="password-meter-bar"></div>
                     </div>
                 </div>
-                <br>
               </div>
-              <div class="clearfix append_bottom" style="margin: 40px 0px 0px 0px;">
-                <div class="grid_7 prefix_1 right"><label for="pass2">Re-type new password:</label></div>
-                <div class="grid_7 left" style=" margin: 0px 0px 10px 5px;">
-                  <input name="pass2" type="password" id="pass2" style="width:360px;">
-                </div>
+            </div>
+            <div class="control-group">
+              <label for="pass2" class="control-label">Re-type new password</label>
+              <div class="controls">
+                <input name="pass2" type="password" id="pass2">
               </div>
-              <div class="prefix_8 grid_7 left">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="linkbutton emphasized">
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">
               </div>
             </div>
           </form>
-<br><br>
-{insert name="help_link" id='rss'}
-<h1>Automate ThinkUp Data Capture</h1><br />
-
-<p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
-
-<div style="text-align: center; padding: 20px 0px 20px 0px;width:100%;">
-<a href="{$rss_crawl_url}" class="linkbutton emphasized">Secret RSS Feed to Update ThinkUp</a>
-<div style="clear:all">&nbsp;<br><br><br></div>
-</div>
-
-<p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)
-<br /><br />
-<div><small><code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code></small>
-
+    <br><br>
+    <span class="pull-right">{insert name="help_link" id='rss'}</span>
+    <h1>Automate ThinkUp Data Capture</h1><br />
+    
+    <h3>RSS</h3>
+    <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
+    
+    <p><a href="{$rss_crawl_url}" class="btn">Secret RSS Feed to Update ThinkUp</a></p>
+    
+    <h3>Cron</h3>
+    <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
+    <p>
+      <code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code>
 
       <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
@@ -169,48 +165,36 @@
              wmode="opaque"
       />
       </object>
+    </p>
+    
 
-
-
-</div>
-<br /><br /><br/>
-</p>
-
-<h1>Your API Key</h1><br />
-{include file="_usermessage.tpl" field='api_key'}
-
-          <div style="padding: 20px 0px 20px 0px;">
-             <strong>Your Current ThinkUp API Key:</strong>
-             <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
-             <span id="show_api_key">
-             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
-             Click to view</a>
-             </span>
-          </div> 
-
-<p>Accidentally share your secret RSS URL?</p>
-
-          <form method="post" action="index.php?m=manage#instances" class="prepend_20 append_20" 
-          style="padding: 20px 0px 0px 0px;" id="api-key-form">
-      <div class="grid_10 prefix_9 left">
+              <h1>Your API Key</h1>
+              {include file="_usermessage.tpl" field='api_key'}
+              <strong>Your Current ThinkUp API Key:</strong>
+              <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
+              <span id="show_api_key">
+              <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
+              Click to view</a>
+              </span>
+    
+              <p>Accidentally share your secret RSS URL?</p>
+    
+              <form method="post" action="index.php?m=manage#instances" id="api-key-form">
                 <input type="hidden" name="reset_api_key" value="Reset API Key" />
                 <span id="apikey_conf" style="display: none;">
                 Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
                 </span>
                 <input type="button" value="Reset Your API Key" 
-                class="linkbutton"
+                class="btn"
                 {literal}
                 onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
                 {/literal}
-              </div>
-              {insert name="csrf_token"}<!-- reset api_key -->
-          </form>
-        </div>
-      </div>
-    </div> <!-- end #instances -->
-    
+                {insert name="csrf_token"}<!-- reset api_key -->
+              </form>
+        </div> <!-- end #instances -->
+
     {if $user_is_admin}
-      <div class="thinkup-canvas" id="ttusers">
+      <div class="section" id="ttusers">
 
      <div class="thinkup-canvas clearfix">
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
@@ -218,7 +202,7 @@
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="linkbutton emphasized">
+                class="btn btn-success">
           </form>
         </div>
 
@@ -279,10 +263,10 @@
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
 
+    	</div>
+	</div>
+</div>
 
-
-   
-  </div>
 </div>
 
 <script type="text/javascript">
@@ -372,17 +356,15 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanpluginactivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#messageactive' + u);
-          });
+          $('#messageactive' + u).html("Activated!").hide().fadeIn(250);
           $('#spanpluginnamelink' + u).css('display', 'inline');
           $('#' + u).val('Deactivate');
           $('#spanpluginnametext' + u).css('display', 'none');
-          $('#' + u).removeClass('btnActivate');
-          $('#' + u).addClass('btnDectivate');
+          $('#' + u).removeClass('btnActivate').addClass('btnDectivate');
           setTimeout(function() {
               $('#messageactive' + u).css('display', 'none');
-              $('#spanpluginactivation' + u).hide().fadeIn(1500);
+              $('#spanpluginactivation' + u).hide().fadeIn(250);
+              $('input#' + u).removeClass('btn-success').addClass('btn-danger');
             },
             2000
           );
@@ -399,17 +381,15 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanpluginactivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(1500, function() {
-            $('#messageactive' + u);
-          });
+          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(250);
           $('#spanpluginnamelink' + u).css('display', 'none');
           $('#spanpluginnametext' + u).css('display', 'inline');
           $('#' + u).val('Activate');
-          $('#' + u).removeClass('btnDeactivate');
-          $('#' + u).addClass('btnActivate');
+          $('#' + u).removeClass('btnDeactivate').addClass('btnActivate');
           setTimeout(function() {
               $('#messageactive' + u).css('display', 'none');
-              $('#spanpluginactivation' + u).hide().fadeIn(1500);
+              $('#spanpluginactivation' + u).hide().fadeIn(250);
+              $('input#' + u).removeClass('btn-danger').addClass('btn-success');
             },
             2000
           );
