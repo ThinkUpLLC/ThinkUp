@@ -6,7 +6,7 @@ var PluginOptions = function() {
     /**
 * @var boolean Enable for console logging
 */
-    this.DEBUG = false;
+    this.DEBUG = true;
 
     /**
 * Init our plugin options form

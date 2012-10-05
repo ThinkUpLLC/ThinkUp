@@ -24,17 +24,17 @@
     {if $i->text neq ''}
         {if $cur_date neq $i->date}
     <div class="span3">
-          <div class="sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="">
-                  {if $i->date|relative_day eq "today" }
-                      {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
-                  {else}
-                      {$i->date|relative_day|ucfirst}
-                  {/if}
-              </li>
-            </ul>
-          </div><!--/.well -->
+      <div class="embossed-block">
+        <ul class="time">
+          <li>
+            {if $i->date|relative_day eq "today" }
+                {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
+            {else}
+                {$i->date|relative_day|ucfirst}
+            {/if}
+          </li>
+        </ul>
+      </div>
     </div><!--/span3-->
 
             {assign var='cur_date' value=$i->date}
@@ -45,13 +45,11 @@
         {/if}
 
     <div class="span9">
-
         {if $i->filename neq ''}
             {assign var='tpl_filename' value=$i->filename|cat:'.tpl'}
             <!-- including {$tpl_path}{$tpl_filename} -->
             {include file=$tpl_path|cat:$tpl_filename}
         {/if}
-
     </div><!--/span9-->
    {/if}
 </div><!--/row-->
