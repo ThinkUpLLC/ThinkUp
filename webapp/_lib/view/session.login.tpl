@@ -37,17 +37,14 @@
 
                     <div class="form-actions">
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Log In">
+                            <span class="pull-right">
+                            	<a href="register.php">Register</a> |
+                            	<a href="forgot.php">Forgot password</a> |
+	                            {insert name="help_link" id='login'}
+                            </span>
                     </div>
 
                 </fieldset>
-
-                    <div class="control-group">
-                        <div class="controls">
-                            <p class="help-block"><a href="register.php">Register</a> |
-                                <a href="forgot.php">Forgot password</a> |
-                                {insert name="help_link" id='login'}</p>
-                        </div>
-                    </div>
 
             </form>
 
