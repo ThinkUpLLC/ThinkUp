@@ -43,7 +43,9 @@
             </form>
         </div>
         <div class="view-all">
+        {if !$closed}
         <a href="register.php">Register</a> |
+        {/if}
         <a href="forgot.php">Forgot password</a>
         </div>
     </div>

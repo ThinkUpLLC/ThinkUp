@@ -36,6 +36,14 @@ class LoginController extends ThinkUpController {
         $this->setViewTemplate('session.login.tpl');
         $this->view_mgr->addHelp('login', 'userguide/accounts/index');
         $this->disableCaching();
+        
+	    $config = Config::getInstance();
+	    $is_registration_open = $config->getValue('is_registration_open');
+	    
+	    if (!$is_registration_open) {
+	        $this->addToView('closed', true);
+        }
+	    
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
             $controller = new DashboardController(true);

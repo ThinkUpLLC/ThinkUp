@@ -139,4 +139,30 @@ Looks like you forgot your ThinkUp password. Go to this URL to reset it:
 https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset.php/';
         $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
     }
+    
+    public function testOfControllerWithRegistrationOpen() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        
+        $controller = new ForgotPasswordController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('closed'), false);
+    }
+    
+    public function testOfControllerWithRegistrationClosed() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        
+        $controller = new ForgotPasswordController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('closed'), true);
+    }
 }
