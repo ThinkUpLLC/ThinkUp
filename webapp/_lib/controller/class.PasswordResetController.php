@@ -38,6 +38,9 @@ class PasswordResetController extends ThinkUpController {
         $this->setViewTemplate('session.resetpassword.tpl');
         $this->disableCaching();
 
+        $config = Config::getInstance();
+        $this->addToView('is_registration_open', $config->getValue('is_registration_open'));
+
         if (!isset($_GET['token']) || !preg_match('/^[\da-f]{32}$/', $_GET['token']) ||
         (!$user = $owner_dao->getByPasswordToken($_GET['token']))) {
             // token is nonexistant or bad

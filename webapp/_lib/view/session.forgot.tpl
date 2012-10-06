@@ -42,7 +42,9 @@
     </form>
     </div>
     <div class="view-all">
-      <a href="register.php">Register</a> |
+        {if $is_registration_open}
+        <a href="register.php">Register</a> |
+        {/if}
       <a href="login.php">Log In</a>
     </div>
 

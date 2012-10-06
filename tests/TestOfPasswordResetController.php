@@ -209,4 +209,43 @@ SQL;
         $this->assertEqual($owner->account_status, '');
         $this->assertEqual($owner->failed_logins, 0);
     }
+
+    public function testOfControllerWithRegistrationOpen() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $time = strtotime('-1 hour');
+        $q = <<<SQL
+UPDATE #prefix#owners
+SET password_token = '{$this->token}_{$time}'
+WHERE id = 1;
+SQL;
+        $this->testdb_helper->runSQL($q);
+
+        $_GET['token'] = $this->token;
+
+
+        $controller = new PasswordResetController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('is_registration_open'), true);
+        $this->debug($result);
+        $this->assertPattern('/Register/', $result);
+    }
+
+    public function testOfControllerWithRegistrationClosed() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $controller = new PasswordResetController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('is_registration_open'), false);
+        $this->assertNoPattern('/Register/', $result);
+    }
 }

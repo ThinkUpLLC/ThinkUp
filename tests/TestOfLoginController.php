@@ -48,7 +48,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'is_activated'=>1, 'is_admin'=>1));
 
         $builders[] = FixtureBuilder::build('instances', array('id'=>1));
-         
+
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
         $test_salt = 'test_salt';
@@ -254,5 +254,33 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
             }
             $i = $i + 1;
         }
+    }
+
+    public function testOfControllerWithRegistrationOpen() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $controller = new LoginController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('is_registration_open'), true);
+        $this->assertPattern('/Register/', $result);
+    }
+
+    public function testOfControllerWithRegistrationClosed() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $controller = new LoginController(true);
+        $result = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('is_registration_open'), false);
+        $this->assertNoPattern('/Register/', $result);
     }
 }
