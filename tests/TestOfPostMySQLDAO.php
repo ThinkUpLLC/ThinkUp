@@ -192,8 +192,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_username'=>'user_123456', 'author_fullname'=>'User 123456', 'is_geo_encoded'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
-            'in_reply_to_user_id'=>''));
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
             $counter++;
         }
 
@@ -215,7 +214,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>19,
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter',
         'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web',
-        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'pub_date'=>'2006-03-03 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_reply_to_post_id'=>41, 'location'=>'Mumbai, Maharashtra, India', 'reply_retweet_distance'=>1500,
         'is_geo_encoded'=>1));
@@ -420,6 +419,78 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($questions[0]->post_text,
         'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?');
     }
+
+    /**
+     * Test getAllQuestionPostosInRange
+     */
+     public function testgetAllQuestionPostsInRange() {
+        $builders = array();
+        //Add a question
+        $post_builder = FixtureBuilder::build('posts', array('author_user_id'=>'13', 'author_username'=>'ev',
+        'post_text'=>'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 '.
+        'What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
+        'pub_date'=>'2006-02-01 00:05:00'));
+ 
+        array_push($builders, $post_builder);
+        $post_key = $post_builder->columns['last_insert_id'];
+
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah2'));
+
+        $dao = new PostMySQLDAO();
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-02 00:10:00');
+
+        $this->debug('Questions: ' . $questions);
+
+        $this->assertEqual(sizeof($questions), 1);
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
+        $this->assertEqual(sizeof($questions[0]->links), 2 );
+        $this->assertEqual($questions[0]->links[0]->url, 'http://bit.ly/blah' );
+        $this->assertEqual($questions[0]->links[1]->url, 'http://bit.ly/blah2' );
+
+        //Add another question
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Best sushi in NY? downtown', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 
+	'pub_date'=>'2006-02-01 00:06:00'));
+
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-01 00:10:00');
+        $this->assertEqual(sizeof($questions), 2);
+        $this->assertEqual($questions[0]->post_text, 'Best sushi in NY? downtown' );
+        $this->assertEqual($questions[1]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
+
+        //Messages with a question mark in between two characters (e.g. URLs) aren't necessarily questions
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Love this video: http://www.youtube.com/watch?v=PQu-zrE-k5s', 'network'=>'twitter',
+        'in_reply_to_post_id'=>0, 'pub_date'=>'2006-02-01 00:07:00'));
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:04:00', 
+        $until= '2006-02-01 00:10:00');
+        $this->assertEqual(sizeof($questions), 2);
+        
+        // test ascending order
+        $posts = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:01:00',
+        $until = '2006-02-01 00:10:00',$page=1, $order_by = 'pub_date', $direction = 'ASC');
+        $this->assertEqual(sizeof($posts), 2);
+	foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        
+        // test range with no posts
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:10:00', 
+        $until= '2006-02-01 00:15:00');
+        $this->assertEqual(sizeof($questions), 0);
+
+        // test from greater than until
+        $questions = $dao->getAllQuestionPostsInRange('13', 'twitter', '10', $from = '2006-02-01 00:10:00', 
+        $until= '2006-01-01 00:15:00');
+        $this->assertEqual(sizeof($questions), 0);   
+    }
+
     /**
      * Test getOrphanReplies
      */
@@ -549,6 +620,57 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
     }
+    /**
+     * Test getAllRepliesInRange
+     */
+    public function testgetAllRepliesInRange() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getAllRepliesInRange(23, 'twitter', 200, $from = '2006-02-28 23:50:00',
+        $until = '2006-03-02 00:30:59', $order_by="pub_date", $direction="DESC");
+	$this->assertEqual(sizeof($posts),2);
+        // test date ordering and time range check
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertEqual($post->in_reply_to_user_id, 23);
+            $this->assertTrue(strtotime($post->pub_date) >= strtotime('2000-02-28 23:50:00'));
+            $this->assertTrue(strtotime($post->pub_date) < strtotime('2010-03-01 00:30:59'));
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test ascending order
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500,$from = '2006-02-28 23:50:00',
+	$until = '2006-03-01 00:30:59',  $order_by="pub_date", $direction="ASC");
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test filter protected posts
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-02-28 23:50:00',
+        $until = '2006-03-01 00:30:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = true);
+
+        foreach($posts as $post) {
+            $this->assertEqual($post->is_protected, false);
+        }
+
+        // test range with no posts
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-02-25 23:50:00',
+        $until = '2006-02-28 23:50:00',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = false);
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500, $from = '2006-03-01 23:50:00',
+        $until = '2006-02-28 23:50:00',  $order_by="pub_date", $direction="DESC", $iterator=false,
+        $is_public = false);;
+
+        $this->assertEqual(sizeof($posts), 0);
+    }
 
     /**
      * Test getAllMentions
@@ -604,6 +726,46 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // test default order_by
         $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 1, false, true, "';-- SELECT");
         $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9');
+    }
+
+    /**
+     * Test getAllMentionsInRange
+     */
+    public function testgetAllMentionsInRange() {
+        $dao = new PostMySQLDAO();
+	$mentions = $dao->getAllMentionsInRange("ev", $count = 200, $network = 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+        
+        $this->assertEqual($mentions[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+	$this->assertEqual($mentions[2]->post_text, "Hey @ev and @jack should fix Twitter - post 7");
+	
+        $mentions = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($mentions), 10);
+
+
+	// test ascending order
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-02-28 23:59:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="ASC");
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test range with no posts
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 13:59:00',
+        $until = '2006-03-01 15:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter', $from = '2006-03-01 23:59:00',
+        $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date", $direction="DESC");
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 
     /**
@@ -959,6 +1121,56 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
         $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
 
+    }
+
+    /**
+     * Test getRepliesToPostInRange
+     */
+     public function testgetRepliesToPostInRange() {
+        $dao = new PostMySQLDAO();
+        // Default Sorting
+        $posts = $dao->getRepliesToPostInRange('41', 'twitter', $from = '2006-03-01 00:00:00',$until = '2006-03-02 23:30:59',
+        $order_by="pub_date");
+        $this->assertEqual(sizeof($posts), 2);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
+        $this->assertEqual($posts[1]->location,'Chennai, Tamil Nadu, India');
+        $this->assertEqual($posts[1]->post_id, '132', "post ID");
+
+        
+        // test date ordering and time range check
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertEqual($post->in_reply_to_post_id, 41);
+            $this->assertTrue(strtotime($post->pub_date) >= strtotime('2006-03-01 00:00:00'));
+            $this->assertTrue(strtotime($post->pub_date) < strtotime('2006-03-03 00:30:59'));
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test ascending order
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '2006-03-01 00:00:00',
+        $until = '2006-03-02 00:30:59',  $order_by="pub_date", $direction="ASC", $iterator=false,
+        $is_public = false);
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test range with no posts
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '1970-01-02 00:00:00',
+        $until = '1971-01-02 00:59:59',  $order_by="pub_date");
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getRepliesToPostInRange(41, 'twitter', $from = '2007-01-02 00:00:00',
+        $until = '2006-01-02 00:59:59',  $order_by="pub_date");
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 
     private function buildHotPostsWithMultipleLinks() {
