@@ -9,7 +9,7 @@
 cd `dirname $0`/../..
 source ./extras/scripts/test-pull-postback-conf
 
-output_file="webapp/_lib/view/compiled_view/test_results.tmp"
+output_file="webapp/data/test_results.tmp"
 
 if test -z "$3"; then
     echo "Usage: $0 [user_name] [branch_name] [pull_request_id]"
