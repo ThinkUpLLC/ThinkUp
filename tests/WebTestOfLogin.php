@@ -94,4 +94,9 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
             $i = $i + 1;
         }
     }
+
+    public function testAutofocusOnUserField() {
+        $this->get($this->url.'/session/login.php');
+        $this->assertPattern('/autofocus="autofocus"/');
+    }
 }
