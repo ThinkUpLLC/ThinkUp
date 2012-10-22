@@ -1,8 +1,8 @@
 PHP Code Style Guide
 ====================
 
-This is the Code Style guide for PHP. See the main :doc:`main page </contribute/developers/writecode/styleguide/index>` 
-page for general guidelines and guides specific to other languages.
+This is the Code Style guide for PHP. See the :doc:`main page </contribute/developers/writecode/styleguide/index>` 
+for general guidelines and guides specific to other languages.
 
 Assume we're using `the Drupal PHP coding style <http://drupal.org/coding-standards>`_ unless otherwise noted here.
 
