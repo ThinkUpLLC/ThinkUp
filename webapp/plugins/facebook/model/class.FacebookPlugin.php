@@ -113,9 +113,8 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
     private function sendInvalidOAuthEmailAlert($email, $username) {
         $mailer_view_mgr = new ViewManager();
         $mailer_view_mgr->caching=false;
-        $server = $_SERVER['HTTP_HOST'];
-        $mailer_view_mgr->assign('thinkup_site_url', Utils::getApplicationURL());
 
+        $mailer_view_mgr->assign('thinkup_site_url', Utils::getApplicationURL());
         $mailer_view_mgr->assign('email', $email );
         $mailer_view_mgr->assign('faceboook_user_name', $username);
         $message = $mailer_view_mgr->fetch(Utils::getPluginViewDirectory('facebook').'_email.invalidtoken.tpl');
