@@ -52,7 +52,7 @@ var TUApplicationSettings = function() {
 				if (tu_app_settings.DEBUG) {
 					console.debug("app settings tab selected");
 				}
-				tu_app_setteings.load_settings();
+				tu_app_settings.load_settings();
 			});
 		});
 

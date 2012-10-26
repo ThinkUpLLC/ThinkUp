@@ -139,6 +139,10 @@
         });
         // Simulate clicking the first tab
         $('#tabs li:first-child a').click();
+        // Load the tab if URL has a hash
+        if (window.location.hash) {
+            $('#tabs a[href="'+window.location.hash+'"]').click();
+        }
       });
     {/literal}
 </script>

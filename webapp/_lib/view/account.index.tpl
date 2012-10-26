@@ -202,64 +202,61 @@
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="btn btn-success">
+                class="btn btn-primary">
           </form>
         </div>
 
-      <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
       <h1>Registered Users</h1>
 
-        <div class="append_20 clearfix">
-        
+    <table class="table">
 {foreach from=$owners key=oid item=o name=oloop}
   {if $smarty.foreach.oloop.first}
-    <div class="clearfix header">
-      <div class="grid_14 alpha">name</div>
-      <div class="grid_3">activate</div>
-      <div class="grid_3 omega">admin</div>
-    </div>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Activate</th>
+          <th>Admin</th>
+        </tr>
+      </thead>
   {/if}
   
-  <div class="clearfix bt append prepend">
-    <div class="grid_14 small alpha">
-        <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
-        <small>{$o->email|filter_xss}</small>
-        <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
-         {if $o->instances neq null}
-         <br><br>Service users:
-         <span style="color:#666"><br><small>
-          {foreach from=$o->instances key=iid item=i}
-              {$i->network_username|filter_xss} | {$i->network|capitalize}
-              {if !$i->is_active} (paused){/if}<br>
-          {/foreach}
-        {else}
-           &nbsp;
-        {/if}
-        </small></span>
-    </div>
-        <div class="grid_4">
+      <tr>
+        <td>
+          <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
+          <small>{$o->email|filter_xss}</small>
+          <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
+           {if $o->instances neq null}
+           <br><br>Service users:
+           <span style="color:#666"><br><small>
+            {foreach from=$o->instances key=iid item=i}
+                {$i->network_username|filter_xss} | {$i->network|capitalize}
+                {if !$i->is_active} (paused){/if}<br>
+            {/foreach}
+          {else}
+             &nbsp;
+          {/if}
+          </small></span>
+        </td>
+        <td>
           {if $o->id neq $owner->id}
           <span id="spanowneractivation{$o->id}">
-          <input type="submit" name="submit" class="linkbutton toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          <input type="submit" name="submit" class="btn {if $o->is_activated}btn-danger{else}btn-success{/if} toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
           </span>
           <span style="display: none;" class="linkbutton" id="messageowneractive{$o->id}"></span>
           {/if}
-      </div>
-        <div class="grid_4 omega">
+        </td>
+        <td>
           {if $o->id neq $owner->id && $o->is_activated}
           <span id="spanowneradmin{$o->id}">
-          <input type="submit" name="submit" class="linkbutton toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
+          <input type="submit" name="submit" class="btn {if $o->is_admin}btn-danger{else}btn-success{/if} toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
           </span>
           <span style="display: none;" class="linkbutton" id="messageadmin{$o->id}"></span>
           {/if}
-      </div>
-  </div>
+        </td>
+      </tr>
 {/foreach}
-        </div>
-     </div>
+    </table>
 
-          
-        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
 
@@ -424,8 +421,7 @@ $(function() {
           $('#spanownernamelink' + u).css('display', 'inline');
           $('#user' + u).val('Deactivate');
           $('#spanownernametext' + u).css('display', 'none');
-          $('#user' + u).removeClass('btnActivate');
-          $('#user' + u).addClass('btnDectivate');
+          $('#user' + u).removeClass('btn-success').addClass('btn-danger');
           $('#userAdmin' + u).show();
           setTimeout(function() {
               $('#messageowneractive' + u).css('display', 'none');
@@ -454,8 +450,7 @@ $(function() {
           $('#spanownernamelink' + u).css('display', 'none');
           $('#spanownernametext' + u).css('display', 'inline');
           $('#user' + u).val('Activate');
-          $('#user' + u).removeClass('btnDeactivate');
-          $('#user' + u).addClass('btnActivate');
+          $('#user' + u).removeClass('btn-danger').addClass('btn-success');
           $('#userAdmin' + u).hide();
           setTimeout(function() {
               $('#messageowneractive' + u).css('display', 'none');
@@ -484,8 +479,7 @@ $(function() {
           $('#spanownernamelink' + u).css('display', 'inline');
           $('#userAdmin' + u).val('Demote');
           $('#spanownernametext' + u).css('display', 'none');
-          $('#userAdmin' + u).removeClass('btnActivate');
-          $('#userAdmin' + u).addClass('btnDectivate');
+          $('#userAdmin' + u).removeClass('btn-success').addClass('btn-danger');
           setTimeout(function() {
               $('#messageadmin' + u).css('display', 'none');
               $('#spanowneradmin' + u).hide().fadeIn(1500);
@@ -513,8 +507,7 @@ $(function() {
           $('#spanownernamelink' + u).css('display', 'none');
           $('#spanownernametext' + u).css('display', 'inline');
           $('#userAdmin' + u).val('Promote');
-          $('#userAdmin' + u).removeClass('btnDeactivate');
-          $('#userAdmin' + u).addClass('btnActivate');
+          $('#userAdmin' + u).removeClass('btn-danger').addClass('btn-success');
           setTimeout(function() {
               $('#messageadmin' + u).css('display', 'none');
               $('#spanowneradmin' + u).hide().fadeIn(1500);
@@ -548,4 +541,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" linkify="false"}
+{include file="_footer.tpl" linkify="false" enable_bootstrap="true"}
