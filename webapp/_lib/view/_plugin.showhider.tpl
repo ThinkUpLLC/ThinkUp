@@ -25,6 +25,5 @@ function show_settings() {
     <a href="#" onclick="show_settings(); return false"><img id="settings-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="settings-flip-prompt">Show</span> Settings</a>
 </p>
 {/if}
-<br><br>
 <div class="plugin-settings">
 <h2 class="subhead">Settings</h2>

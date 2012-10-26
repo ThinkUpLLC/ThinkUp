@@ -105,12 +105,12 @@ form .control-group {
   border-color: green;
   color: #468847;
 }
-.alert-danger,
+/*.alert-danger,
 .alert-error {
   background-color: #f8f8b1;
   border-color: #FFB300;
   color: #b94a48;
-}
+}*/
 .alert-info {
   background-color: #ffffff;
   border-color: #666;
@@ -243,6 +243,8 @@ span.formError {
  */
 
 .embossed-block ul {
+  list-style: none;
+  margin-left: 0;
   background: #e2e2e2; /* starting color */
   background: #cacaca; /* ending color */
   background: -moz-linear-gradient(top, #e2e2e2 0%, #cacaca 100%);
@@ -257,6 +259,19 @@ span.formError {
   box-shadow: 0 1px 0 #fff, inset 0 0 0 1px rgba(0,0,0,0.1);
   padding: 1px;
   padding-bottom: 2px;
+}
+
+.embossed-block li {
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 1.125em;
+  text-align: center;
+}
+
+.embossed-block .nav-tabs li {
+  padding: 0;
+  text-align: left;
+  font-weight: normal;
 }
 
 .embossed-block .nav-tabs.nav-stacked > li > a {
@@ -275,22 +290,15 @@ span.formError {
   opacity: 1;
 }
 
-.embossed-block .time {
-  list-style: none;
-  margin-left: 0;
-}
-
-.embossed-block .time li {
-  padding: 8px 12px;
-  font-weight: bold;
-  font-size: 1.125em;
-  text-align: center;
-}
-
-/**
- * Settings
- */
+/* Settings */
 
 .section {
   margin: 20px;
+}
+
+/* Footer */
+
+footer {
+  padding: 20px 0;
+  background: #fff;
 }
