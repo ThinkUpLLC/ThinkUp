@@ -6,15 +6,13 @@
 
 <div class="row">
     <div class="span3">
-          <div class="sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="">
-                    Reset Your Password
-               </li>
+          <div class="embossed-block">
+            <ul>
+              <li>Reset Your Password</li>
             </ul>
-          </div><!--/.well -->
+          </div>
     </div><!--/span3-->
-    <div class="span9">
+    <div class="span6">
 
 
 
@@ -39,18 +37,14 @@
                     
                     <div class="form-actions">
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Send Reset">
+                            <span class="pull-right">
+                                <a href="login.php">Log In</a> |
+                                <a href="register.php">Register</a> |
+                                {insert name="help_link" id='forgot'}
+                            </span>
                     </div>
 
                 </fieldset>
-
-                    <div class="control-group">
-                        <div class="controls">
-                            <p class="help-block"><a href="login.php">Log In</a> |
-                                <a href="register.php">Register</a> |
-                                {insert name="help_link" id='forgot'}</p>
-                        </div>
-                    </div>
-
             </form>
 
     </div><!-- end span9 -->
