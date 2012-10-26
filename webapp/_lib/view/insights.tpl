@@ -25,7 +25,7 @@
         {if $cur_date neq $i->date}
     <div class="span3">
       <div class="embossed-block">
-        <ul class="time">
+        <ul>
           <li>
             {if $i->date|relative_day eq "today" }
                 {if $i->instance->crawler_last_run eq 'realtime'}Updated in realtime{else}{$i->instance->crawler_last_run|relative_datetime|ucfirst} ago{/if}
