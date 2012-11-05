@@ -1958,7 +1958,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) AND ";
         $q .= "author_user_id=:author AND po.network=:network AND ";
         $q .= "in_reply_to_post_id IS null AND in_reply_to_user_id IS NULL AND ";
-        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL ";
+        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL AND ";
+        // Don't return posts without post text or place to display
+        $q .= "(post_text != '' || po.place != '') ";
         $q .= "ORDER BY pub_date DESC ";
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
