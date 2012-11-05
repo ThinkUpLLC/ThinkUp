@@ -1,28 +1,24 @@
 {if $hide_insight_header}
 
 {else}
-{if $i->slug|substr:24 eq 'replies_frequent_words_'}
-    <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-mini detail-btn" ><i class="icon-comment"></i></a></div>
-{/if}
-{if $i->slug eq 'geoencoded_replies'}
+    {if $i->slug|substr:24 eq 'replies_frequent_words_'}
+        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-mini detail-btn" ><i class="icon-comment"></i></a></div>
+    {/if}
+    {if $i->slug eq 'geoencoded_replies'}
+        <div class="pull-right detail-btn"><button class="btn btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
+    {/if}
 
-    <div class="pull-right detail-btn"><button class="btn btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker"></i></button></div>
-{/if}
-
-<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i> {$i->prefix}</span> 
-    
-    {$i->text}
+    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}retweet{/if}"></i> {$i->prefix}</span> 
+        {$i->text}
 {/if}
 
 <table class="table table-condensed lead">
-
     <tr>
         {if $i->instance->network_username != $post->author_username }
     <td class="avatar-data">
             <h3><a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
     </td>
         {/if}
-
     <td>
             {if $post->network eq 'twitter'}
                 {if $i->instance->network_username != $post->author_username}
@@ -39,8 +35,7 @@
                           {/if}
                          from {$post->location|truncate:60:' ...'}
                             </small>
-                        {/if}   
-                        
+                        {/if}
                     </h3>
                 {/if}
                 {if $post->post_text}
@@ -50,20 +45,17 @@
                         {/if}
                         {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
                     {else}
-                        {if $post->network == 'twitter'}
                         <div class="post">{$post->post_text|filter_xss|link_usernames_to_twitter}
-                        {else}
-                        <div class="post">{$post->post_text}
-                        {/if}
                     {/if}
                 {/if}
 
             {else}
-                <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> {$post->full_name}
-                    {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}                
+                <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> {$post->author_fullname}
+                    {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}
                     {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}
                 </h3>
                 <div class="post">
+                    {$post->post_text}
                     {if $post->network == 'foursquare'}From {$post->location}{/if}
             {/if}
 
