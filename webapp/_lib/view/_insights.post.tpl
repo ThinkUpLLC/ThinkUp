@@ -14,7 +14,6 @@
     {$i->text}
 {/if}
 
-
 <table class="table table-condensed lead">
 
     <tr>
@@ -23,12 +22,11 @@
             <h3><a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
     </td>
         {/if}
-   
-    <td>
 
+    <td>
             {if $post->network eq 'twitter'}
                 {if $i->instance->network_username != $post->author_username}
-                    <h3><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_username}">{$post->author_username}</a> <small>{$post->place}</small>
+                    <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_username}">{$post->author_username}</a> <small>{$post->place}</small>
 
                         {if $post->is_geo_encoded < 2}
                             <small>
@@ -52,25 +50,22 @@
                         {/if}
                         {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
                     {else}
-                        {if $post->network == 'google+'}
-                        <div class="post">{$post->post_text}
-                        {else}
+                        {if $post->network == 'twitter'}
                         <div class="post">{$post->post_text|filter_xss|link_usernames_to_twitter}
+                        {else}
+                        <div class="post">{$post->post_text}
                         {/if}
                     {/if}
                 {/if}
 
             {else}
-                <h3><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.png" class="service-icon2"/> {$post->full_name}
+                <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> {$post->full_name}
                     {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}                
                     {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}
                 </h3>
                 <div class="post">
-                
                     {if $post->network == 'foursquare'}From {$post->location}{/if}
             {/if}
-
-                    
 
             {if $post->link->expanded_url}
               {if $post->post_text != ''}<br>{/if}
@@ -80,14 +75,14 @@
                <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
               {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
             {/if}
-  
+
             {if !$post && $post->in_reply_to_post_id }
                 <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
             {/if}
 
             <span class="metaroll">
                 <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
-        
+
             {if $post->network == 'twitter'}
                 <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
                 <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
