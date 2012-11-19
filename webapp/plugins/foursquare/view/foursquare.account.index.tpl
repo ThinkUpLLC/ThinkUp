@@ -26,7 +26,7 @@
     <h2 >foursquare Accounts</h2>
 
     {include file="_usermessage.tpl" field='user_add'}
-    
+
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -58,7 +58,7 @@
 {include file="_usermessage.tpl" field="setup"}
 <p style="padding:5px">To set up the Foursquare plugin:</p>
 <ol style="margin-left:40px">
-<li><a href="https://foursquare.com/oauth/register" target="_blank"">Register a new consumer at the Foursquare web site</a>.</li>
+<li><a href="https://foursquare.com/developers/register" target="_blank"">Create a new app at the Foursquare web site</a>.</li>
 <li> Set the Application Name to <code>ThinkUp</code>.</li>
 <li> Set the Application URL to:<br />
 <small>
