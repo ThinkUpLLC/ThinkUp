@@ -94,7 +94,10 @@ class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                 // Check the OAuth tokens we have are valid
                 try {
                     $logger->logInfo("About to initializeInstanceUser", __METHOD__.','.__LINE__);
-                    $crawler->initializeInstanceUser($access_token, $current_owner->id);
+                    $user = $crawler->initializeInstanceUser($access_token, $current_owner->id);
+                    if (isset($user) && $user instanceof User) {
+                        $logger->logInfo("User initialized", __METHOD__.','.__LINE__);
+                    }
                     // Get the data we want and store it in the database
                     $logger->logInfo("About to fetchInstanceUserCheckins", __METHOD__.','.__LINE__);
                     $crawler->fetchInstanceUserCheckins();

@@ -195,7 +195,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the fullname was set
         $this->assertEqual($post->author_fullname, 'Bob Cats');
         // Check the avatar was set
-        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/blank_boy.png');
+        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/100x100/blank_boy.png');
         // Check the author used id was set
         $this->assertEqual($post->author_user_id, '113612142759476883204');
         // Check the publication date was set
@@ -253,7 +253,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the fullname was set
         $this->assertEqual($comment->author_fullname, 'Bob Cats');
         // Check the avatar was set
-        $this->assertEqual($comment->author_avatar, 'https://foursquare.com/img/blank_boy.png');
+        $this->assertEqual($comment->author_avatar, 'https://foursquare.com/img/100x100/blank_boy.png');
         // Check the author used id was set
         $this->assertEqual($comment->author_user_id, '113612142759476883204');
         // Check the publication date was set
@@ -331,7 +331,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the fullname was set
         $this->assertEqual($post->author_fullname, 'Bob Cats');
         // Check the avatar was set
-        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/blank_boy.png');
+        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/100x100/blank_boy.png');
         // Check the author used id was set
         $this->assertEqual($post->author_user_id, '113612142759476883204');
         // Check the publication date was set
@@ -388,7 +388,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the fullname was set
         $this->assertEqual($comment->author_fullname, 'Bob Cats');
         // Check the avatar was set
-        $this->assertEqual($comment->author_avatar, 'https://foursquare.com/img/blank_boy.png');
+        $this->assertEqual($comment->author_avatar, 'https://foursquare.com/img/100x100/blank_boy.png');
         // Check the author used id was set
         $this->assertEqual($comment->author_user_id, '113612142759476883204');
         // Check the publication date was set
@@ -449,7 +449,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the fullname was set
         $this->assertEqual($post->author_fullname, 'Bob Cats');
         // Check the avatar was set
-        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/blank_boy.png');
+        $this->assertEqual($post->author_avatar, 'https://foursquare.com/img/100x100/blank_boy.png');
         // Check the author used id was set
         $this->assertEqual($post->author_user_id, '113612142759476883204');
         // Check the publication date was set

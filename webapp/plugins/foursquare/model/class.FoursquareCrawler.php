@@ -141,7 +141,7 @@ class FoursquareCrawler {
         } else {
             // If something went wrong note this in the log
             $this->logger->logInfo("Error fetching ".$owner_id." ". $network."'s details from the foursquare API, ".
-                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
+            "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
         }
         // Return the user object
         return $user_object;
@@ -187,7 +187,8 @@ class FoursquareCrawler {
             $user_vals["user_name"] = isset($user_name) ? $user_name : 'email address withheld';
             $user_vals["full_name"] = $details->response->user->firstName." ".$details->response->user->lastName;
             $user_vals["user_id"] = $details->response->user->id;
-            $user_vals["avatar"] = $details->response->user->photo;
+            $user_vals["avatar"] = $details->response->user->photo->prefix . "100x100" .
+            $details->response->user->photo->suffix;
             $user_vals['url'] = 'http://www.foursquare.com/user/'.$details->response->user->id;
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = $details->response->user->homeCity;
@@ -286,7 +287,9 @@ class FoursquareCrawler {
                 // The author full name is the name they gave foursquare
                 $post['author_fullname'] = $user->response->user->firstName." ".$user->response->user->lastName;
                 // The avatar is the one they have set on foursquare
-                $post['author_avatar'] = $user->response->user->photo;
+                $post["author_avatar"] = $user->response->user->photo->prefix . "100x100" .
+                $user->response->user->photo->suffix;
+
                 // The author user id is there foursquare user ID
                 $post['author_user_id'] = $user->response->user->id;
                 // The date they checked in
@@ -360,7 +363,9 @@ class FoursquareCrawler {
                         // The author full name is the name they gave foursquare
                         $comment_store['author_fullname'] = $comment->user->firstName." ".$comment->user->lastName;
                         // The avatar is the one they have set on foursquare
-                        $comment_store['author_avatar'] = $comment->user->photo;
+                        $comment_store["author_avatar"] = $comment->user->photo->prefix . "100x100" .
+                        $comment->user->photo->suffix;
+
                         // The author user id is there foursquare user ID
                         $comment_store['author_user_id'] = $comment->user->id;
                         // The date they posted the comment
@@ -411,9 +416,11 @@ class FoursquareCrawler {
                     $places['place_type'] = $item->venue->categories[0]->name;
                     $places['name'] = $item->venue->name;
                     $places['full_name'] = $item->venue->name;
-                    $places['icon'] = $item->venue->categories[0]->icon;
+                    $places['icon'] = $item->venue->categories[0]->icon->prefix.'64'.
+                    $item->venue->categories[0]->icon->suffix;
                     $places['lat_lng'] = 'POINT('.$item->venue->location->lat." ".$item->venue->location->lng.')';
                     $places['map_image'] = $this->generateMap($item);
+
                     $place_dao->insertGenericPlace($places, 'foursquare');
                 }
 
