@@ -34,11 +34,14 @@ class GooglePlusAPIAccessor {
      * @var str
      */
     var $api_domain = 'https://www.googleapis.com/plus/v1/';
-
     /**
      * @var str
      */
-    var $data_location = 'webapp/plugins/googleplus/tests/testdata/';
+    var $access_token_request_url = "https://accounts.google.com/o/oauth2/token";
+    /**
+     * @var str
+     */
+    var $data_location = 'webapp/plugins/googleplus/tests/data/';
     /**
      * Make a Google+ API request.
      * @param str $path
@@ -81,9 +84,9 @@ class GooglePlusAPIAccessor {
     }
 
     /**
-     * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.googleplus.com/ at
-     * the start and the access token at the end as well as everything in between. It is literally the raw URL that
-     * needs to be passed in.
+     * Make a Graph API request with the absolute URL. This URL needs to include the
+     * https://www.googleapis.com/plus/v1/ at the start and the access token at the end as well as everything in
+     * between. It is literally the raw URL that needs to be passed in.
      *
      * @param str $path
      * @param bool $decode_json Defaults to true, if true returns decoded JSON
@@ -91,12 +94,18 @@ class GooglePlusAPIAccessor {
      */
     public function rawPostApiRequest($path, $fields, $decode_json=true) {
         $fields_string = '';
-        foreach($fields as $key=>$value) {
+        foreach ($fields as $key=>$value) {
             $fields_string .= $key.'='.$value.'&';
         }
-        rtrim($fields_string,'&');
 
-        return self::rawApiRequest($path.$fields_string, $decode_json);
+        // Replace the &'s in the string with a -
+        $fields_string = str_replace('&', '-', $fields_string);
+        $fields_string = rtrim($fields_string,'-');
+
+        $file_path = $path . $fields_string;
+
+        $debug = (getenv('TEST_DEBUG')!==false) ? true : false;
+        return self::rawApiRequest($file_path, $decode_json);
     }
 
     /**
@@ -113,10 +122,16 @@ class GooglePlusAPIAccessor {
         $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
         $url = preg_replace('/[\?\&]$/', '', $url);
         $url = str_replace($this->api_domain, '', $url);
+        $url = str_replace($this->access_token_request_url, 'tok-', $url);
         $url = str_replace(':', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
+        // If we are in debug mode report that were reading a local test file
+        if ($debug) {
+            echo "READING LOCAL TEST DATA FILE: ".$FAUX_DATA_PATH.$url. '
+';
+        }
         return self::decodeFileContents($FAUX_DATA_PATH.$url, $decode_json);
     }
 

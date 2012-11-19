@@ -158,8 +158,8 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         $fsc = new FoursquareCrawler($this->profile1_instance, 'secret', 10);
 
         // Test getting token
-        $tokens = $fsc->getOAuthTokens('test_client_id', 'test_client_secret',
-        'http://dev.thinkup.com/account/?p=foursquare', 'test-foursquare-provided-code');
+        $tokens = $fsc->getOAuthTokens('ci', 'cs',
+        'http://test/account/?p=foursquare', '5dn');
         $this->assertEqual($tokens->access_token, 'secret');
     }
 

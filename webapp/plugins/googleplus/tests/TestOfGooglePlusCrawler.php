@@ -31,7 +31,6 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/model/class.GooglePlusCrawler.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
-//require_once THINKUP_WEBAPP_PATH.'plugins/googleplus/tests/classes/mock.googleplus.php';
 
 class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
     /**
@@ -96,7 +95,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
 
     public function testInitializeInstanceUserFreshToken() {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'faux-access-token', 10);
-        $gpc->initializeInstanceUser('test_client_id', 'test_client_secret', 'valid_token', 'test_refresh_token', 1);
+        $gpc->initializeInstanceUser('ci', 'cs', 'valid_token', 'test_refresh_token', 1);
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'google+');
 
@@ -113,7 +112,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
 
     public function testInitializeInstanceUserExpiredToken() {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'faux-expired-access-token', 10);
-        $gpc->initializeInstanceUser('test_client_id', 'test_client_secret', 'valid_token', 'test_refresh_token', 1);
+        $gpc->initializeInstanceUser('ci', 'cs', 'valid_token', 'test_refresh_token', 1);
 
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'google+');
@@ -133,12 +132,12 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
 
         //test getting initial token
-        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code');
+        $tokens = $gpc->getOAuthTokens('ci', 'cs', 'tc1', 'authorization_code');
         $this->assertEqual($tokens->access_token, 'faux-access-token');
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token');
 
         //test refreshing token
-        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-refresh_token1',
+        $tokens = $gpc->getOAuthTokens('ci', 'cs', 'test-refresh_token1',
         'refresh_token');
         $this->assertEqual($tokens->access_token, 'faux-access-token');
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token');
@@ -148,13 +147,13 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
 
         //test getting token with HTTPS
-        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['SERVER_NAME'] = 'test';
         $_SERVER['HTTPS'] = 'y';
         $cfg = Config::getInstance();
         $cfg->setValue('site_root_path', '/');
         $redirect_uri = urlencode(Utils::getApplicationURL().'account/?p=google%2B');
 
-        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
+        $tokens = $gpc->getOAuthTokens('ci', 'cs', 'tc1', 'authorization_code',
         $redirect_uri);
         $this->assertEqual($tokens->access_token, 'faux-access-token-with-https');
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token-with-https');
@@ -163,7 +162,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $_SERVER['HTTPS'] = null;
         $redirect_uri = urlencode(Utils::getApplicationURL().'account/?p=google%2B');
 
-        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
+        $tokens = $gpc->getOAuthTokens('ci', 'cs', 'tc1', 'authorization_code',
         $redirect_uri);
         $this->assertEqual($tokens->access_token, 'faux-access-token-without-https');
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token-without-https');

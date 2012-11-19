@@ -46,7 +46,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         // Register the foursquare plugin
         $webapp_plugin_registrar->registerPlugin('foursquare', 'FoursquarePlugin');
         // Set the server name variable as we don't actually have a server
-        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['SERVER_NAME'] = 'test';
     }
 
     public function tearDown() {
@@ -67,12 +67,12 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'foursquare_client_id',
-        'option_value' => "test_client_id") );
+        'option_value' => "ci") );
         // Create the client secret option
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'foursquare_client_secret',
-         'option_value' => "test_client_secret") );
+         'option_value' => "cs") );
         // Log the user in
         $this->simulateLogin('me@example.com');
         // Get an owner DAO
@@ -100,10 +100,10 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         // Create the client id option
         $builders[] = FixtureBuilder::build('options', array('namespace' => $namespace,
-        'option_name' => 'foursquare_client_id', 'option_value' => "test_client_id") );
+        'option_name' => 'foursquare_client_id', 'option_value' => "ci") );
         // Create the client secret option
         $builders[] = FixtureBuilder::build('options', array('namespace' => $namespace,
-        'option_name' => 'foursquare_client_secret', 'option_value' => "test_client_secret") );
+        'option_name' => 'foursquare_client_secret', 'option_value' => "cs") );
         return $builders;
     }
 
@@ -161,14 +161,14 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         // Check the name of the client id option is foursquare_client_id
         $this->assertEqual($options_hash['foursquare_client_id']->option_name, 'foursquare_client_id');
         // Check the value is test_client_id
-        $this->assertEqual($options_hash['foursquare_client_id']->option_value, 'test_client_id');
+        $this->assertEqual($options_hash['foursquare_client_id']->option_value, 'ci');
 
         // Check the client secret is the 3rd option set
         $this->assertEqual($options_hash['foursquare_client_secret']->id, 3);
         // Check that the name of the client secret option is foursquare_client_secret
         $this->assertEqual($options_hash['foursquare_client_secret']->option_name, 'foursquare_client_secret');
         // Check the value of the client secret is test_client_secret
-        $this->assertEqual($options_hash['foursquare_client_secret']->option_value, 'test_client_secret');
+        $this->assertEqual($options_hash['foursquare_client_secret']->option_value, 'cs');
     }
 
     // Check all the correct options get added to the template for a non admin
@@ -285,13 +285,13 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         // Check they are all set correctly
         $this->assertEqual($options_hash['foursquare_client_id']->id, 2);
         $this->assertEqual($options_hash['foursquare_client_id']->option_name, 'foursquare_client_id');
-        $this->assertEqual($options_hash['foursquare_client_id']->option_value, 'test_client_id');
+        $this->assertEqual($options_hash['foursquare_client_id']->option_value, 'ci');
 
         // Get a single undefined option
         $this->assertFalse($controller->getPluginOption('not defined'));
 
         // Get a single defined option
-        $this->assertEqual($controller->getPluginOption('foursquare_client_id'), 'test_client_id');
+        $this->assertEqual($controller->getPluginOption('foursquare_client_id'), 'ci');
     }
 
     // Check the correct screen is presented to the users when the configuration is not complete
@@ -381,7 +381,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new FoursquarePluginConfigurationController($owner);
 
         // Set the code foursquare would return from a real request
-        $_GET['code'] = 'test-foursquare-provided-code';
+        $_GET['code'] = '5dn';
         // Check we get the tokens and tell the user it was a sucess
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -429,7 +429,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new FoursquarePluginConfigurationController($owner);
 
         // Set the return code from foursquare to anything not valid
-        $_GET['code'] = 'test-foursquare-provided-code-should-return-error';
+        $_GET['code'] = 'error5dn';
         // Check the user is told theres a problem
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();

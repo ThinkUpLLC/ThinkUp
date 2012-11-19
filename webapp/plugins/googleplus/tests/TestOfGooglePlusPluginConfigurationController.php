@@ -42,7 +42,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         parent::setUp();
         $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $webapp_plugin_registrar->registerPlugin('googleplus', 'GooglePlusPlugin');
-        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['SERVER_NAME'] = 'test';
     }
 
     public function tearDown(){
@@ -261,7 +261,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'google_plus_client_id', 'option_value' => "id") );
         $builders[] = FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'google_plus_client_secret', 'option_value' => "s3cr3t") );
+        array('namespace' => $namespace, 'option_name' => 'google_plus_client_secret', 'option_value' => "s3c") );
         return $builders;
     }
 
@@ -281,7 +281,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner);
 
-        $_GET['code'] = 'test-google-provided-code';
+        $_GET['code'] = 'tgpc';
 
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -318,7 +318,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner);
 
-        $_GET['code'] = 'test-google-provided-code-should-return-error';
+        $_GET['code'] = 'tgpc-error';
 
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -345,7 +345,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner);
 
-        $_GET['code'] = 'test-google-provided-code-user-profile-403-error';
+        $_GET['code'] = 'tgpc-403';
 
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
