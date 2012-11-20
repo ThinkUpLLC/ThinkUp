@@ -41,7 +41,7 @@ class GooglePlusAPIAccessor {
     /**
      * @var str
      */
-    var $data_location = 'webapp/plugins/googleplus/tests/data/';
+    var $data_location = 'webapp/plugins/googleplus/tests/apidata/';
     /**
      * Make a Google+ API request.
      * @param str $path
