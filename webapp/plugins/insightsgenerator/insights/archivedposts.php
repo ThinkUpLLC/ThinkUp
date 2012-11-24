@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Archived Posts
- Description: Every 100 ThinkUp captures, give user option to export.
+ Description: Notify user every 100 posts archived and offer option to export.
  */
 
 /**
@@ -36,34 +36,36 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $archived_posts_in_hundreds = intval($instance->total_posts_in_system / 100);
-        $insight_slug = "archived_posts_".$archived_posts_in_hundreds;
+        if ($archived_posts_in_hundreds > 0) {
+            $insight_slug = "archived_posts_".$archived_posts_in_hundreds;
 
-        if (!$this->insight_dao->doesInsightExist($insight_slug, $instance->id)) {
-            $config = Config::getInstance();
+            if (!$this->insight_dao->doesInsightExist($insight_slug, $instance->id)) {
+                $config = Config::getInstance();
 
-            switch ($instance->network) {
-                case "twitter":
-                    $posts_term = "tweets";
-                    $posts_list_slug = "tweets-all";
-                    break;
-                case "foursquare":
-                    $posts_term = "checkins";
-                    $posts_list_slug = "posts";
-                    break;
-                default:
-                    $posts_term = "posts";
-                    $posts_list_slug = "posts-all";
+                switch ($instance->network) {
+                    case "twitter":
+                        $posts_term = "tweets";
+                        $posts_list_slug = "tweets-all";
+                        break;
+                    case "foursquare":
+                        $posts_term = "checkins";
+                        $posts_list_slug = "posts";
+                        break;
+                    default:
+                        $posts_term = "posts";
+                        $posts_list_slug = "posts-all";
+                }
+
+                $export_link = '<a href="'.$config->getValue('site_root_path'). 'post/export.php?u='.
+                urlencode($instance->network_username).'&n='.urlencode($instance->network).'">';
+
+                $posts_list_link = '<a href="'.$config->getValue('site_root_path'). '?v='.
+                $posts_list_slug.'&n='.urlencode($instance->network).'&u='.urlencode($instance->network_username).'">';
+
+                $this->insight_dao->insertInsight($insight_slug, $instance->id, $this->insight_date, "Archived:",
+                "ThinkUp has captured over ".$posts_list_link. (number_format($archived_posts_in_hundreds * 100)).' '.
+                $posts_term . '</a>. '.$export_link. 'Export them now</a>.', Insight::EMPHASIS_MED);
             }
-
-            $export_link = '<a href="'.$config->getValue('site_root_path'). 'post/export.php?u='.
-            urlencode($instance->network_username).'&n='.urlencode($instance->network).'">';
-
-            $posts_list_link = '<a href="'.$config->getValue('site_root_path'). '?v='.
-            $posts_list_slug.'&n='.urlencode($instance->network).'&u='.urlencode($instance->network_username).'">';
-
-            $this->insight_dao->insertInsight($insight_slug, $instance->id, $this->insight_date, "Archived:",
-            "ThinkUp has captured over ".$posts_list_link. (number_format($archived_posts_in_hundreds * 100)).' '.
-            $posts_term . '</a>. '.$export_link. 'Export them now</a>.', Insight::EMPHASIS_MED);
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
