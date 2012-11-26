@@ -28,7 +28,8 @@
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, prefix, text, related_data, emphasis FROM #prefix#insights WHERE ";
+        $q = "SELECT date, instance_id, slug, prefix, text, related_data, filename, emphasis ";
+        $q .= "FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
@@ -62,18 +63,19 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
     }
 
-    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
-    $related_data=null) {
+    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $filename,
+    $emphasis=Insight::EMPHASIS_LOW, $related_data=null) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "prefix=:prefix, text=:text, emphasis=:emphasis, related_data=:related_data";
+            $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
             ':instance_id'=>$instance_id,
             ':prefix'=>$prefix,
             ':text'=>$text,
+            ':filename'=>$filename,
             ':emphasis'=>$emphasis,
             ':related_data'=>$related_data
             );
@@ -100,17 +102,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
             $insight->related_data = unserialize($insight->related_data);
-            if ($insight->related_data instanceof Post) {
-                $insight->related_data_type = "post";
-            } elseif (is_array($insight->related_data)) {
-                if ($insight->related_data[0] instanceof User) {
-                    $insight->related_data_type = "users";
-                } elseif ($insight->related_data[0] instanceof Post) {
-                    $insight->related_data_type = "posts";
-                } elseif (isset($insight->related_data['history'])) {
-                    $insight->related_data_type = "count_history";
-                }
-            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
         }
@@ -197,17 +188,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
         foreach ($insights as $insight) {
             $insight->related_data = unserialize($insight->related_data);
-            if ($insight->related_data instanceof Post) {
-                $insight->related_data_type = "post";
-            } elseif (is_array($insight->related_data)) {
-                if ($insight->related_data[0] instanceof User) {
-                    $insight->related_data_type = "users";
-                } elseif ($insight->related_data[0] instanceof Post) {
-                    $insight->related_data_type = "posts";
-                } elseif (isset($insight->related_data['history'])) {
-                    $insight->related_data_type = "count_history";
-                }
-            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
         }
@@ -240,19 +220,6 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
         foreach ($insights as $insight) {
             $insight->related_data = unserialize($insight->related_data);
-            if ($insight->related_data === false ) {
-                $insight->related_data_type = "none";
-            } elseif ($insight->related_data instanceof Post) {
-                $insight->related_data_type = "post";
-            } elseif (is_array($insight->related_data)) {
-                if ($insight->related_data[0] instanceof User) {
-                    $insight->related_data_type = "users";
-                } elseif ($insight->related_data[0] instanceof Post) {
-                    $insight->related_data_type = "posts";
-                } elseif (isset($insight->related_data['history'])) {
-                    $insight->related_data_type = "count_history";
-                }
-            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
         }

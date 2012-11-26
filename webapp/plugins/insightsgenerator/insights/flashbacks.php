@@ -50,7 +50,8 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                 $plural = ($number_of_years_ago > 1 )?'s':'';
                 $this->insight_dao->insertInsight("posts_on_this_day_flashback", $instance->id,
                 $this->insight_date, "Time machine:", $number_of_years_ago." year".
-                $plural. " ago today, you ".$publishing_term.": ", Insight::EMPHASIS_MED, serialize($flashback_posts));
+                $plural. " ago today, you ".$publishing_term.": ", basename(__FILE__, ".php"), Insight::EMPHASIS_MED,
+                serialize($flashback_posts));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

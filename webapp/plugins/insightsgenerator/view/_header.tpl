@@ -1,0 +1,2 @@
+<div class="alert {if $i->emphasis eq '1'}alert-info{elseif $i->emphasis eq '2'}alert-info{elseif $i->emphasis eq '3'}alert-error{else}alert-info{/if} emphasis-{$i->emphasis} insight-item">
+    <div class="service-user-icons"><img src="{$site_root_path}plugins/{$i->instance->network|get_plugin_path}/assets/img/favicon.png" alt="{$i->instance->network|capitalize}" class="favicon" /> <img src="{$i->instance->avatar}" width="16" height="16" alt="{$i->instance->network_username}"></div>

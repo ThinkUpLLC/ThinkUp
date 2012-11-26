@@ -60,10 +60,9 @@ class Insight {
      */
     var $emphasis;
     /**
-     * Non-persistent value indicating type of related data, for use in UI.
-     * @var str
+     * @var str Name of file that generates and displays insight.
      */
-    var $related_data_type;
+    var $filename;
     /**
      * High emphasis level.
      * @var int
@@ -93,6 +92,7 @@ class Insight {
             $this->related_data = $row['related_data'];
             $this->date = $row['date'];
             $this->emphasis = $row['emphasis'];
+            $this->filename = $row['filename'];
         }
     }
 }
