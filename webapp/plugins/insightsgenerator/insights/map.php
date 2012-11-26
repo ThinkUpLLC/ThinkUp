@@ -34,6 +34,7 @@ class MapInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $filename = basename(__FILE__, ".php");
 
         foreach ($last_week_of_posts as $post) {
             $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
@@ -45,7 +46,7 @@ class MapInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($options['gmaps_api_key']->option_value) && $post->is_geo_encoded == 1) {
                     $this->insight_dao->insertInsight('geoencoded_replies', $instance->id, $simplified_post_date,
                    "Going global!", "Your post got replies and retweets from locations all over the map.",
-                    Insight::EMPHASIS_LOW, serialize($post));
+                    $filename, Insight::EMPHASIS_LOW, serialize($post));
                 }
             }
         }

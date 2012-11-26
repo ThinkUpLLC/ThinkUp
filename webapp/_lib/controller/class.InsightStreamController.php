@@ -62,7 +62,7 @@ class InsightStreamController extends ThinkUpController {
                 $this->addToView('last_page', $page-1);
             }
         }
-        $this->addToView('developer_log', $config->getValue('is_log_verbose'));
+        $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         return $this->generateView();
     }
 }

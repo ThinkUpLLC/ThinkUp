@@ -35,6 +35,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $filename = basename(__FILE__, ".php");
 
         // Follower count history milestone
         $insight_date = new DateTime();
@@ -59,7 +60,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight_text .= '</strong> followers at your current growth rate.';
 
                 $this->insight_dao->insertInsight('follower_count_history_by_month_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_LOW,
+                $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_month));
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -85,7 +86,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 .__LINE__);
 
                 $this->insight_dao->insertInsight('follower_count_history_by_week_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, Insight::EMPHASIS_LOW,
+                $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_week));
             }
         }

@@ -158,6 +158,7 @@ CREATE TABLE tu_insights (
   related_data text COMMENT 'Serialized related insight data, such as a list of users or a post.',
   date date NOT NULL COMMENT 'Date of insight.',
   emphasis int(11) NOT NULL DEFAULT '0' COMMENT 'Level of emphasis for insight presentation.',
+  filename varchar(100) DEFAULT NULL COMMENT 'Name of file that generates and displays insight.',
   PRIMARY KEY (id),
   KEY instance_id (instance_id,slug,date)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Insights for a given service user.';
@@ -517,7 +518,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2012-12-26 23:10:06
+-- Dump completed on 2012-12-26 23:10:33
 
 --
 -- Insert DB Version

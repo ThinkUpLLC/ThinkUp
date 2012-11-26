@@ -1,6 +1,5 @@
 <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i> {$i->prefix}</span> 
                 {$i->text}
-
 {if $i->slug eq 'posts_on_this_day_flashback'}
     {foreach from=$i->related_data key=uid item=p name=bar}
 
@@ -20,7 +19,7 @@
             <div style="margin-top : 12px;"><!--<span class="label label-info"><i class="icon-white icon-time"></i> {$p->adj_pub_date|date_format:"%Y"} flashback:</span>-->  {$p->adj_pub_date|relative_datetime} ago, you posted:</div>
         {/if}
 
-        {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
+        {include file=$tpl_path|cat:"_post.tpl" post=$p hide_insight_header='1'}
 
         {* Close up hidden div if there is one *}
         {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.last}
@@ -31,11 +30,11 @@
     {/foreach}
 {elseif $i->slug eq 'favorites_year_ago_flashback'}
     {foreach from=$i->related_data key=uid item=p name=bar}
-        {include file="_insights.post.tpl" post=$p hide_insight_header='1'}
+        {include file=$tpl_path|cat:"_post.tpl" post=$p hide_insight_header='1'}
     {/foreach}
 {else}
     {foreach from=$i->related_data key=uid item=p name=bar}
-        {include file="_insights.post.tpl" post=$p}
+        {include file=$tpl_path|cat:"_post.tpl" post=$p}
     {/foreach}
 {/if}
 

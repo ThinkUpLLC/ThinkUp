@@ -35,6 +35,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $filename = basename(__FILE__, ".php");
 
         //get new group memberships per day
         $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
@@ -60,14 +61,14 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
                 "Made the list:", "You got added to ".sizeof($new_groups)." lists: ".$group_name_list.
                 ", bringing your total to ".number_format(end($list_membership_count_history_by_day['history'])).
-                ".", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                ".", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
             } else {
                 $new_groups[0]->setMetadata();
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
                 "Made the list:", "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                 $new_groups[0]->keyword."</a>, bringing your total to <strong>".
                 number_format(end($list_membership_count_history_by_day['history'])).
-                " lists</strong>.", Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
