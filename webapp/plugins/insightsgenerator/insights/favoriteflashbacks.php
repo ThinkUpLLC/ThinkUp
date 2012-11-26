@@ -48,7 +48,7 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                 if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
                     $this->insight_dao->insertInsight("favorites_year_ago_flashback", $instance->id,
                     $since_date, "Stuff you liked:", "On this day in years past, you liked: ",
-                    Insight::EMPHASIS_LOW, serialize($flashback_favs));
+                    basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($flashback_favs));
                 }
             }
             $days_ago++;

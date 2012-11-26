@@ -35,7 +35,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-
+        $filename = basename(__FILE__, ".php");
         // Least likely followers insights
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
@@ -52,10 +52,10 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
             if (sizeof($least_likely_followers) > 1) {
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
                 "Standouts:", sizeof($least_likely_followers)." interesting users followed you.",
-                Insight::EMPHASIS_LOW, serialize($least_likely_followers));
+                $filename, Insight::EMPHASIS_LOW, serialize($least_likely_followers));
             } else {
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
-                "Standout:", "An interesting user followed you.", Insight::EMPHASIS_LOW,
+                "Standout:", "An interesting user followed you.", $filename, Insight::EMPHASIS_LOW,
                 serialize($least_likely_followers));
             }
         }

@@ -38,6 +38,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
         $service_user = $user_dao->getDetails($instance->network_user_id, $instance->network);
+
         foreach ($last_week_of_posts as $post) {
             $big_reshares = $post_dao->getRetweetsByAuthorsOverFollowerCount($post->post_id, $instance->network,
             $service_user->follower_count);
@@ -62,8 +63,8 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
                 $this->insight_dao->insertInsight("big_reshare_".$post->id, $instance->id,
-                $simplified_post_date, "Big reshare!", $notification_text, Insight::EMPHASIS_HIGH,
-                serialize($big_reshares));
+                $simplified_post_date, "Big reshare!", $notification_text, basename(__FILE__, ".php"),
+                Insight::EMPHASIS_HIGH, serialize($big_reshares));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

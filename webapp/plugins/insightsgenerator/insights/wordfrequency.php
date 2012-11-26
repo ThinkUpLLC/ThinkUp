@@ -45,7 +45,7 @@ class WordFrequencyInsight extends InsightPluginParent implements InsightPlugin 
                 $simplified_post_date, "Conversation starter:",
                'Your post got '.$post->reply_count_cache.' replies. See <a href="'.$config->getValue('site_root_path').
                 'post/?t='.$post->post_id.'&n='.$post->network.'">the most frequently-mentioned reply words</a>.',
-                Insight::EMPHASIS_LOW, serialize($post));
+                basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($post));
             }
         }
     }
