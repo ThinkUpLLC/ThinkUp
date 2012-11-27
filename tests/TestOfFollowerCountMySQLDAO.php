@@ -119,7 +119,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetDayHistoryFromSpecificStartDate() {
         $builders = array();
-        $format = 'n/j';
+        $format = 'Y-m-d';
         $date = date ( $format );
 
         $todays_day_of_the_week = date('w');
