@@ -2,9 +2,19 @@
 
 {$i->text}
 
-<table class="table table-condensed">
-
 {foreach from=$i->related_data key=uid item=u name=bar}
+
+    {* Show more link if there are more posts after the first one *}
+    {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
+        <div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
+    {/if}
+
+    {* Hide posts after the first one *}
+    {if $smarty.foreach.bar.index eq 1}
+        <div class="collapse in" id="flashback-{$i->id}">
+    {/if}
+
+<table class="table table-condensed">
     <tr>
     <td class="avatar-data">
         {if $u->network eq 'twitter'}
@@ -13,7 +23,7 @@
             <h3><img src="{$u->avatar}" class="avatar2" width="48" height="48"/></h3>
         {/if}
     </td>
-    
+
     <td>
         {if $u->network eq 'twitter'}
             <h3><img src="{$site_root_path}plugins/{$u->network}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a>     <small>{$u->follower_count|number_format} followers</small></h3>
@@ -24,5 +34,11 @@
         {/if}
     </td>
     </tr>
-{/foreach}
 </table>
+
+    {* Close up hidden div if there is one *}
+    {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.last}
+        </div>
+    {/if}
+
+{/foreach}

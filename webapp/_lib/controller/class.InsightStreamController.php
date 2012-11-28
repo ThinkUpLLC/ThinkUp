@@ -42,19 +42,19 @@ class InsightStreamController extends ThinkUpController {
             if (Session::isLoggedIn()) {
                 if ($this->isAdmin()) {
                     ///show all insights for all service users
-                    $insights = $insight_dao->getAllInstanceInsights($page_count=20, $page);
+                    $insights = $insight_dao->getAllInstanceInsights($page_count=100, $page);
                     $this->addToView('insights', $insights);
                 } else {
                     //show only service users owner owns
                     $owner_dao = DAOFactory::getDAO('OwnerDAO');
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
-                    $insights = $insight_dao->getAllOwnerInstanceInsights($owner->id, $page_count=20, $page);
+                    $insights = $insight_dao->getAllOwnerInstanceInsights($owner->id, $page_count=100, $page);
                     $this->addToView('insights', $insights);
                 }
             } else {
                 //show just public service users in stream
-                $insights = $insight_dao->getPublicInsights($page_count=20, $page);
+                $insights = $insight_dao->getPublicInsights($page_count=100, $page);
                 $this->addToView('insights', $insights);
             }
             if (isset($insights) && sizeof($insights) > 0) {

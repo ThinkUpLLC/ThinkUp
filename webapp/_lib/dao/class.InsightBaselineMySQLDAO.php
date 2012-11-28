@@ -95,4 +95,17 @@ class InsightBaselineMySQLDAO  extends PDODAO implements InsightBaselineDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "InsightBaseline");
     }
+
+    public function doesInsightBaselineExist($slug, $instance_id) {
+        $q = "SELECT date, instance_id, slug, value FROM #prefix#insight_baselines WHERE ";
+        $q .= "slug=:slug AND instance_id=:instance_id";
+        $vars = array(
+            ':slug'=>$slug,
+            ':instance_id'=>$instance_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsObjects($ps, "InsightBaseline");
+        return (sizeof($result) > 0);
+    }
 }
