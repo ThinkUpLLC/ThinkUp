@@ -44,9 +44,20 @@ class MapInsight extends InsightPluginParent implements InsightPlugin {
                 $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
                 $options = $plugin_option_dao->getOptionsHash('geoencoder', true);
                 if (isset($options['gmaps_api_key']->option_value) && $post->is_geo_encoded == 1) {
-                    $this->insight_dao->insertInsight('geoencoded_replies', $instance->id, $simplified_post_date,
-                   "Going global!", "Your post got replies and retweets from locations all over the map.",
-                    $filename, Insight::EMPHASIS_LOW, serialize($post));
+                    //Get post's replies and loop through them to make sure at least 5 are indeed geoencoded
+                    $post_dao = DAOFactory::getDAO('PostDAO');
+                    $post_replies = $post_dao->getRepliesToPost($post->post_id, $post->network);
+                    $total_geoencoded_replies = 0;
+                    foreach ($post_replies as $reply) {
+                        if ($reply->is_geo_encoded == 1) {
+                            $total_geoencoded_replies++;
+                        }
+                    }
+                    if ($total_geoencoded_replies > 4) {
+                        $this->insight_dao->insertInsight('geoencoded_replies', $instance->id, $simplified_post_date,
+                        "Going global!", "Your post got responses from locations all over the map.",
+                        $filename, Insight::EMPHASIS_LOW, serialize($post));
+                    }
                 }
             }
         }
