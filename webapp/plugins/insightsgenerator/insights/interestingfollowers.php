@@ -42,13 +42,6 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         $instance->network, 0, 3);
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
-            //If followers have more followers than half of what the instance has, jack up emphasis
-            foreach ($least_likely_followers as $least_likely_follower) {
-                if ($least_likely_follower->follower_count > ($this->user->follower_count/2)) {
-                    $emphasis = Insight::EMPHASIS_LOW;
-                }
-            }
-
             if (sizeof($least_likely_followers) > 1) {
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
                 "Standouts:", sizeof($least_likely_followers)." interesting users followed you.",

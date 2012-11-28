@@ -61,4 +61,11 @@ interface InsightBaselineDAO {
      * @return bool
      */
     public function updateInsightBaseline($slug, $instance_id, $value, $date=null);
+    /**
+     * Check whether or not a insight baseline exists for an instance by slug.
+     * @param $slug
+     * @param $instance_id
+     * @return bool
+     */
+    public function doesInsightBaselineExist($slug, $instance_id);
 }

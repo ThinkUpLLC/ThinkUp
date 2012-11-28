@@ -254,47 +254,31 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $format = 'm/j';
         $date = date ( $format );
 
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-1d', 'count'=>140);
-        $builder1 = FixtureBuilder::build('follower_count', $follower_count);
+        //how many days ago was Saturday?  Sun is day 0, Saturday is day 6
+        $days_ago = date('w') + 1;
+        $this->debug($days_ago." days ago it was Saturday");
 
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-2d', 'count'=>139);
-        $builder2 = FixtureBuilder::build('follower_count', $follower_count);
+        $builders = array();
 
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-3d', 'count'=>138);
-        $builder3 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-4d', 'count'=>137);
-        $builder4 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-5d', 'count'=>136);
-        $builder5 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-6d', 'count'=>135);
-        $builder6 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-7d', 'count'=>134);
-        $builder7 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-8d', 'count'=>133);
-        $builder8 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-9d', 'count'=>132);
-        $builder9 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-10d', 'count'=>131);
-        $builder10 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-11d', 'count'=>130);
-        $builder11 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-12d', 'count'=>129);
-        $builder12 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-13d', 'count'=>128);
-        $builder13 = FixtureBuilder::build('follower_count', $follower_count);
-
-        $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-14d', 'count'=>127);
-        $builder14 = FixtureBuilder::build('follower_count', $follower_count);
+        //If yesterday wasn't Saturday, fill in the gap from yesterday to last Saturday
+        if ($days_ago > 1) {
+            $gap = 1;
+            while ($gap < $days_ago) {
+                $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-'.$gap.'d',
+                'count'=>145);
+                $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+                $gap++;
+            }
+        }
+        //Starting at last Saturday, fill in 14 days of follower counts
+        $day_counter = 0;
+        while ($day_counter < 14) {
+            $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-'.$days_ago.'d',
+            'count'=>(140-$day_counter) );
+            $builders[] = FixtureBuilder::build('follower_count', $follower_count);
+            $day_counter++;
+            $days_ago++;
+        }
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory('930061', 'twitter', 'WEEK', 3);
@@ -302,23 +286,31 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->debug(Utils::varDumpToString($result));
 
-        $todays_day_of_the_week = date('w');
-        $this->debug("It's currently ".$todays_day_of_the_week." day of the week. You can test all days except ".
-        "Sunday");
-        if ($todays_day_of_the_week != 0) {
-            //check history
-            $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
-        }
+        $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
 
-        $date_ago = date ($format, strtotime('-1 day'.$date));
-        $this->assertEqual($result['history'][$date_ago], 140);
+        if (date('w')  != 0) { //Don't test on Sunday
+            // Yesterday count was 145
+            $date_ago = date ($format, strtotime('-1 day'.$date));
+            $this->assertEqual($result['history'][$date_ago], 145);
 
-        //check trend
-        //$this->assertEqual($result['trend'], 3);
+            // Last Saturday count was 140
+            $days_ago_till_saturday = date('w') + 1;
+            $last_saturday= date ($format, strtotime('-'.$days_ago_till_saturday.' day'.$date));
+            $this->debug('Last Saturday was '.$last_saturday);
+            $this->assertEqual($result['history'][$last_saturday], 140);
 
-        //check milestone
-        if ($todays_day_of_the_week != 0) {
-            $this->assertEqual($result['milestone']['will_take'], 20);
+            // Saturday before last was 133
+            $days_ago_till_saturday = date('w') + 8;
+            $last_saturday= date ($format, strtotime('-'.$days_ago_till_saturday.' day'.$date));
+            $this->debug('Saturday before last was '.$last_saturday);
+            $this->assertEqual($result['history'][$last_saturday], 133);
+
+            // Trend is (145 - 133) / 3 = 4
+            $this->assertEqual($result['trend'], 4);
+
+            // latest follower count is 145, next milestone is 200 followers
+            // with a 4+/day trend, this should take 13.75 days, rounded to 14
+            $this->assertEqual($result['milestone']['will_take'], 14);
         }
     }
 

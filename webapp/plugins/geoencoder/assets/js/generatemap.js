@@ -69,9 +69,20 @@
         } else {
           var retweets = "retweets";
         }
-        var title = '<div style="float: right; padding-right:4px"><img src ="' + selectedicon.image + '">' +
-        '</div><strong>' + locations[i].name + '</strong><br> (' + locations[i].reply_count + ' ' + replies +
-        ' and ' + locations[i].retweet_count + ' ' + retweets + ')';
+        if (locations[i].reply_count > 0 && locations[i].retweet_count > 0) {
+            var title = '<div style="float: right; padding-right:4px"><img src ="' + selectedicon.image + '">' +
+            '</div><strong>' + locations[i].name + '</strong><br> (' + locations[i].reply_count + ' ' + replies +
+            ' and ' + locations[i].retweet_count + ' ' + retweets + ')';
+        } else if (locations[i].reply_count > 0 && locations[i].retweet_count == 0) {
+            var title = '<div style="float: right; padding-right:4px"><img src ="' + selectedicon.image + '">' +
+            '</div><strong>' + locations[i].name + '</strong><br> (' + locations[i].reply_count + ' ' + replies + ')';
+        } else if (locations[i].retweet_count > 0 && locations[i].reply_count == 0) {
+            var title = '<div style="float: right; padding-right:4px"><img src ="' + selectedicon.image + '">' +
+            '</div><strong>' + locations[i].name + '</strong><br> (' + locations[i].retweet_count + ' ' + retweets + ')';
+        } else {
+            var title = '<div style="float: right; padding-right:4px"><img src ="' + selectedicon.image + '">' +
+            '</div><strong>' + locations[i].name + '</strong>)';
+        }
         // Code for side panel
         var item = document.createElement("div");
         var tit = document.createElement("div");
@@ -98,8 +109,18 @@
 
    function markerClickFn(name, reply_count, retweet_count, posts, replies, retweets, latlng) {
      return function() {
-     var infoHtml = '<div class="infoBlock">' + reply_count + ' ' + replies + ' and '
-      + retweet_count + ' ' + retweets + ' from <strong>' + name + '</strong></div>';
+     if (reply_count > 0 && retweet_count > 0) {
+         var infoHtml = '<div class="infoBlock">' + reply_count + ' ' + replies + ' and '
+         + retweet_count + ' ' + retweets + ' from <strong>' + name + '</strong></div>';
+     } else if (reply_count > 0 && retweet_count == 0) {
+         var infoHtml = '<div class="infoBlock">' + reply_count + ' ' + replies + 
+         ' from <strong>' + name + '</strong></div>';
+     } else if (retweet_count > 0 && reply_count == 0) {
+         var infoHtml = '<div class="infoBlock">' + retweet_count + ' ' + retweets + ' from <strong>' 
+         + name + '</strong></div>';
+     } else {
+         var infoHtml = '<div class="infoBlock">From <strong>' + name + '</strong></div>';
+     }
      infoHtml += '<div class="enclosingBlock">' ;
      for (var i = 0; i < posts.length; i++) { 
          infoHtml += '<div class="infoBlock">' +
