@@ -98,11 +98,21 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
     }
 
     public function testNotLoggedInNoUserOrViewSpecifiedNoDefaultServiceUserSet() {
-        $builders = $this->buildData();
-        //Add another public instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>5, 'network_user_id'=>14,
+        //Add instances with various crawler_last_run days
+        $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'13',
+        'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d', 'network'=>'twitter'));
+
+        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'16',
+        'network_username'=>"Kim", 'is_public'=>0, 'crawler_last_run'=>'-2d', 'network'=>'google+'));
+
+        $instance_builder_3 = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'14',
+        'network_username'=>"Joe O'Malley", 'is_public'=>0, 'crawler_last_run'=>'-3d', 'network'=>'facebook'));
+
+        $instance_builder_4 = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'17',
+        'network_username'=>"kim@kim.com", 'is_public'=>1, 'crawler_last_run'=>'-4d', 'network'=>'foursquare'));
+
+        $instance_builder_5 = FixtureBuilder::build('instances', array('id'=>5, 'network_user_id'=>'14',
         'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
-        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5));
 
         $controller = new DashboardController(true);
         $results = $controller->go();
