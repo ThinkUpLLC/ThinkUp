@@ -313,12 +313,15 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $date_ago = date ($format, strtotime('-1 day'.$date));
         $this->assertEqual($result['history'][$date_ago], 140);
 
-        //check trend
-        //$this->assertEqual($result['trend'], 3);
+        // yesterday values is 140, Saturday before that is 136, Saturday before that is 129
+        // Trend is (140 - 129) / 3 = 3.666666
+        // round up to 4
+        $this->assertEqual($result['trend'], 4);
 
-        //check milestone
+        // latest follower count is 140, next milestone is 200 followers
+        // with a 4+/day trend, this should take 15 days
         if ($todays_day_of_the_week != 0) {
-            $this->assertEqual($result['milestone']['will_take'], 20);
+            $this->assertEqual($result['milestone']['will_take'], 15);
         }
     }
 
