@@ -20,9 +20,9 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Test of Hello ThinkUp Insight
+ * Test of MapInsight
  *
- * Test for the example Hello ThinkUp insight class (and others).
+ * Test for the MapInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2012 Gina Trapani
