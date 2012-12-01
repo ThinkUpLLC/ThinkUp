@@ -60,8 +60,9 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 }
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
                 "Made the list:", "You got added to ".sizeof($new_groups)." lists: ".$group_name_list.
-                ", bringing your total to ".number_format(end($list_membership_count_history_by_day['history'])).
-                ".", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                ", bringing your total to <strong>".
+                number_format(end($list_membership_count_history_by_day['history'])).
+                " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
             } else {
                 $new_groups[0]->setMetadata();
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
