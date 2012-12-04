@@ -37,9 +37,13 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
 
         $archived_posts_in_hundreds = intval($instance->total_posts_in_system / 100);
         if ($archived_posts_in_hundreds > 0) {
-            $insight_slug = "archived_posts_".$archived_posts_in_hundreds;
+            $insight_baseline_slug = "archived_posts_".$archived_posts_in_hundreds;
 
-            if (!$this->insight_dao->doesInsightExist($insight_slug, $instance->id)) {
+            $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+            if (!$insight_baseline_dao->doesInsightBaselineExist($insight_baseline_slug, $instance->id)) {
+                $insight_baseline_dao->insertInsightBaseline($insight_baseline_slug, $instance->id,
+                $archived_posts_in_hundreds);
+
                 $config = Config::getInstance();
 
                 switch ($instance->network) {
@@ -65,7 +69,7 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
                 $text = "ThinkUp has captured over ".$posts_list_link.
                 (number_format($archived_posts_in_hundreds * 100)).' '. $posts_term . '</a>. '.$export_link.
                 'Export them now</a>.';
-                $this->insight_dao->insertInsight($insight_slug, $instance->id, $this->insight_date, "Archived:",
+                $this->insight_dao->insertInsight("archived_posts", $instance->id, $this->insight_date, "Archived:",
                 $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
             }
         }
