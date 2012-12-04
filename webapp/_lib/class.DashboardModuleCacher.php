@@ -66,7 +66,8 @@ class DashboardModuleCacher {
         if (sizeof($hot_posts) > 3) {
             $hot_posts_data = self::getHotPostVisualizationData($hot_posts, $this->instance->network);
             //delete existing
-            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
+            //TODO Go back to deleting this existing data once insights stream doesn't reference it
+            //$insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getHotPosts", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
