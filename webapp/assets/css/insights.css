@@ -238,6 +238,24 @@ span.formError {
     background-color : transparent;
 }
 
+/* Buttons */
+
+.btn {
+    background-image: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #00AEEF;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color: #009dd6;
+}
+
 /**
  * Embossed blocks
  */
@@ -294,6 +312,17 @@ span.formError {
 
 .section {
   margin: 20px;
+}
+
+/* Plugin Settings */
+
+.plugin-info {
+  border-bottom: 1px solid #CACACA;
+  margin-bottom: 20px;
+}
+
+.add-account {
+  margin-bottom: 20px;
 }
 
 /* Footer */

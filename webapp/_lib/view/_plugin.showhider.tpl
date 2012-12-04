@@ -6,12 +6,12 @@ function show_settings() {
         $(".plugin-settings").hide();
         $('#settings-flip-prompt').html('Show');
         settings_visible = false;
-        $("#settings-icon").attr("src", site_root + "assets/img/slickgrid/actions.gif");
+        $("#settings-icon").removeClass('icon-chevron-up').addClass('icon-chevron-down');
     } else {
         $(".plugin-settings").show();
         $('#settings-flip-prompt').html('Hide');
         settings_visible = true;
-        $("#settings-icon").attr("src", site_root + "assets/img/slickgrid/actions_reverse.jpg");
+        $("#settings-icon").removeClass('icon-chevron-down').addClass('icon-chevron-up');
     }
 }
   $(document).ready(function() {
@@ -22,7 +22,7 @@ function show_settings() {
 
 {if $is_configured}
 <p>
-    <a href="#" onclick="show_settings(); return false"><img id="settings-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="settings-flip-prompt">Show</span> Settings</a>
+    <a href="#" onclick="show_settings(); return false" class="btn btn-small"><i id="settings-icon" class="icon-chevron-down"></i> <span id="settings-flip-prompt">Show</span> Settings</a>
 </p>
 {/if}
 <div class="plugin-settings">
