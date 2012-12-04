@@ -1,16 +1,21 @@
-<div class="append_20">
+<div class="plugin-info">
 
-<div class="alert helpful">
-    {insert name="help_link" id='expandurls'}
-    <h2>Expand URLs Plugin</h2>
-    <p>Expands shortened links, gathers link image thumbnails, and captures link clickthrough rates.</p><br>
+    <span class="pull-right">{insert name="help_link" id='expandurls'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/expandurls/assets/img/plugin_icon.png" class="plugin-image">
+    	Expand URLs Plugin
+    </h1>
+
+    <p>Expands shortened links, gathers link image thumbnails, and captures link clickthrough rates.</p>
     <p><strong>Important</strong>: To capture clickthrough rates, enter your Bitly API credentials in the Settings area below, and shorten URLs in your posts using Bitly.</p>
+
 </div>
+
+<div class="append_20">
 
 <div id="contact-admin-div" style="display: none; margin-top: 20px;">
 {include file="_plugin.admin-request.tpl"}
 </div>
-<br><br>
 
 {if $options_markup}
 {if $user_is_admin}

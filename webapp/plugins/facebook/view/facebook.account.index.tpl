@@ -1,28 +1,21 @@
-
 {include file="_usermessage.tpl"}
     
-<div class="append_20 alert helpful">
-    {insert name="help_link" id='facebook'}
-    <h2>Facebook Plugin</h2>
+<div class="plugin-info">
+
+    <span class="pull-right">{insert name="help_link" id='facebook'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/facebook/assets/img/facebook_icon.png" class="plugin-image">
+        Facebook Plugin
+    </h1>
     
-    <div class="">
     <p>The Facebook plugin collects posts and status updates for Facebook users and the Facebook pages those users like and manage.</p>
-    
-    </div>
-    
 
 </div>
 
-
-<div id="add-account-div" style="display: none; clear : left; margin-bottom : 35px;">
-<br />
-    {if $fbconnect_link}
-<br>
-     {include file="_usermessage.tpl" field="authorization"}
-<a href="{$fbconnect_link}" class="linkbutton emphasized">Add a Facebook User</a>
-    {/if}
-    
-</div>
+{if $fbconnect_link}
+{include file="_usermessage.tpl" field="authorization"}
+<a href="{$fbconnect_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Facebook User</a>
+{/if}
 
 {if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
 
@@ -31,21 +24,21 @@
     <h2>Facebook User Profiles</h2>
 
     {foreach from=$instances key=iid item=i name=foo}
-    <div class="clearfix article">
-        <div class="grid_4 right" style="padding-top:.5em;">
+    <div class="row-fluid">
+        <div class="span3">
             {if $i->auth_error}<span class="ui-icon ui-icon-alert" style="float: left; margin:0.25em 0 0 0;" id="facebook-auth-error"></span>{/if}
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
-        <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+        <div class="span3">
+            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
-        <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+        <div class="span3">
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
-        <div class="grid_8 right">
+        <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
-            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="linkbutton" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="delete" /></form></span>
         </div>
     </div>
     {/foreach}
