@@ -23,13 +23,13 @@ function show_advanced() {
         $(".advanced-option-input").hide();
         $('#adv-flip-prompt').html('Show');
         advanced_visible = false;
-        $("#advanced-icon").attr("src", site_root + "assets/img/slickgrid/actions.gif");
+        $("#advanced-icon").removeClass('icon-chevron-up').addClass('icon-chevron-down');
     } else {
         $(".advanced-option-label").show();
         $(".advanced-option-input").show();
         $('#adv-flip-prompt').html('Hide');
         advanced_visible = true;
-        $("#advanced-icon").attr("src", site_root + "assets/img/slickgrid/actions_reverse.jpg");
+        $("#advanced-icon").removeClass('icon-chevron-down').addClass('icon-chevron-up');
     }
 }
 {/literal}
@@ -65,8 +65,8 @@ function show_advanced() {
 {foreach from=$option_elements key=option_name item=option_obj}
     {if $option_obj.advanced and !isset($advanced_options)}
         <p>
-            <a href="#" onclick="show_advanced(); return false">
-            <img id="advanced-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="adv-flip-prompt">Show</span>
+            <a href="#" onclick="show_advanced(); return false" class="btn btn-small">
+            <i id="advanced-icon" class="icon-chevron-down"></i> <span id="adv-flip-prompt">Show</span>
             Advanced Options
             </a>
         </p>

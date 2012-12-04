@@ -1,6 +1,10 @@
-<div class="append_20 alert helpful">
-{insert name="help_link" id='twitterrealtime'}
-<h2>Twitter Realtime Plugin </h2>
+<div class="plugin-info">
+
+    <span class="pull-right">{insert name="help_link" id='twitterrealtime'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/twitterrealtime/assets/img/twitter_icon.png" class="plugin-image">
+        Twitter Realtime Plugin
+    </h1>
 
 {if count($owner_instances) > 0 }
     <p>The Twitter Realtime Plugin requires the <a href="./?p=twitter">Twitter plugin</a> to be configured with your
@@ -15,14 +19,13 @@
     account, as well as pausing the Twitter Realtime streaming. For streaming, the changes will take effect next
     time streaming is launched.</p>
     {foreach from=$owner_instances key=iid item=i name=foo}
-        <div class="clearfix">
-        <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
-        </div>
-        <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling and streaming{else}start crawling and streaming{/if}" /></span>
-        </div>
-
+        <div class="row-fluid">
+            <div class="span6">
+                <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
+            </div>
+            <div class="span6">
+                <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling and streaming{else}start crawling and streaming{/if}" /></span>
+            </div>
         </div>
     {/foreach}
 {/if}

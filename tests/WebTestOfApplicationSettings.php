@@ -56,7 +56,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->click("Settings");
         $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertText('me@example.com');
 
         // NOTE: this uses an ajax call, so we need to set up the post ourselves
         $response = $this->post($this->url . '/account/appconfig.php',
@@ -86,7 +86,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->click("Settings");
         $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertText('me@example.com');
 
         // we should have a global js token
         $this->assertPattern("/var csrf_token = '" . self::TEST_CSRF_TOKEN . "';/");
@@ -115,7 +115,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->click("Settings");
         $this->assertTitle("Configure Your Account | " . Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertText('me@example.com');
 
         //Test export link
         $this->click("Export a single service user's data");

@@ -60,19 +60,19 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-
         //Open setting page
         $this->click("Settings");
         $this->assertTitle("Configure Your Account | " .  Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertText('me@example.com');
 
         // look for global js token
         $this->assertPattern("/var csrf_token = '" . self::TEST_CSRF_TOKEN . "';/");
 
         // look for password form token
-        $this->assertPattern('/<input name="oldpass" type="password" id="oldpass" style="width:360px;">' .
-        '\s+<input type="hidden" name="csrf_token" value="'. self::TEST_CSRF_TOKEN .'" \/>/m');
+        $this->assertPattern('/<input name="oldpass" type="password" id="oldpass">'.
+        '<input type="hidden" name="csrf_token" value="'. self::TEST_CSRF_TOKEN.'" \/>/');
+
         // look for invite token
         $this->assertPattern('/<input type="hidden" name="csrf_token" value="'. self::TEST_CSRF_TOKEN .'" \/>' .
         '<input type="submit" id="login-save" name="invite"/');
