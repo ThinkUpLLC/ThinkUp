@@ -70,6 +70,7 @@ $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
 //Insights
 $plugin_tests->add(new TestOfMapInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
+$plugin_tests->add(new TestOfArchivedPostsInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());
