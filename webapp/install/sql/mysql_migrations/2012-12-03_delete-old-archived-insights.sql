@@ -1,0 +1,1 @@
+DELETE FROM tu_insights WHERE SUBSTR( slug, 1, LENGTH(  'archived_posts_' ) ) =  'archived_posts_';
