@@ -1,16 +1,27 @@
-<div class="append_20 alert helpful">
-    {insert name="help_link" id='insightsgenerator'}
-    <h2>Insights Generator Plugin</h2>
-    <div>
+<div class="plugin-info">
+
+    <span class="pull-right">{insert name="help_link" id='insightsgenerator'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/insightsgenerator/assets/img/plugin_icon.png" class="plugin-image">
+        Insights Generator Plugin
+    </h1>
+
     <p>{$message}</p>
-    </div>
+
 </div>
+
     <div>
     <p>The following is a list of currently installed and running insight plugins:</p>
-    <table style="border-spacing: 5px;">
-    <tr><th><b>Name</b></th><th><b>Description</b></th></tr>
+    <table class="table">
+        <tr>
+            <th><b>Name</b></th>
+            <th><b>Description</b></th>
+        </tr>
     {foreach from=$installed_plugins key=pid item=plugin name=foo}
-      <tr><td>{$plugin.name}</td><td>{$plugin.description}</td></tr>
+        <tr>
+            <td><b>{$plugin.name}</b></td>
+            <td>{$plugin.description}</td>
+        </tr>
     {/foreach}
     </table>
     </div>

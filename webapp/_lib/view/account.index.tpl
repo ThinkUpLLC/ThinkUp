@@ -98,10 +98,9 @@
             <div class="control-group">
               <label for="oldpass" class="control-label">Current password</label>
               <div class="controls">
-                <input name="oldpass" type="password" id="oldpass">
+                <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
-              {insert name="csrf_token"}<!-- reset password -->
             <div class="control-group">
               <label for="pass1" class="control-label">New password</label>
               <div class="controls">

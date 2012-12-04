@@ -1,9 +1,13 @@
-<div class="append_20 alert helpful">
+<div class="plugin-info">
 
-    {insert name="help_link" id='hellothinkup'}
-    <h2 class="subhead">Hello ThinkUp Plugin</h2>
+    <span class="pull-right">{insert name="help_link" id='hellothinkup'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/hellothinkup/assets/img/plugin_icon.png" class="plugin-image">
+        Hello ThinkUp Plugin
+    </h1>
     
     <p>{$message}</p>
+
 </div>
 
 <div class="append_20">
