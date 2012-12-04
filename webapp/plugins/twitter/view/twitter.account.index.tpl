@@ -1,47 +1,47 @@
 {include file="_usermessage.tpl"}
 
-<div class="append_20 alert helpful">
-{insert name="help_link" id='twitter'}
-<h2>Twitter Plugin </h2>
+<div class="plugin-info">
 
-    <div class="">
+    <span class="pull-right">{insert name="help_link" id='twitter'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/twitter/assets/img/twitter_icon.png" class="plugin-image">
+        Twitter Plugin
+    </h1>
+
     <p>The Twitter plugin captures and displays tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
-    
-    </div>
+
 </div>
 
 <div class="append_20">
 
 {if $oauthorize_link}
-<div id="add-account-div" style="display: none; padding-top : 20px;">
-<a href="{$oauthorize_link}" class="linkbutton emphasized">Add a Twitter account</a>
-<br /><br />
-</div>
+<a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Twitter account</a>
 {/if}
+
 {if count($owner_instances) > 0 }
 <br>
 <h2 class="subhead">Twitter Accounts</h2>
     {foreach from=$owner_instances key=iid item=i name=foo}
-        <div class="clearfix">
-        <div class="grid_4 right" style="padding-top:.5em;">
+    <div class="row-fluid">
+        <div class="span3">
             <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
-        <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" class="linkbutton
+        <div class="span3">
+            <span id="div{$i->id}"><input type="submit" name="submit" class="btn
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
-        <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+        <div class="span3">
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
-        <div class="grid_8 right">
+        <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
-            type="submit" name="action" class="linkbutton" 
+            type="submit" name="action" class="btn btn-danger" 
             value="delete" /></form></span>
         </div>
-        </div>
+    </div>
     {/foreach}
 {/if}
 </div>

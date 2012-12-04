@@ -1,14 +1,14 @@
 {include file="_usermessage.tpl"}
     
-<div class="append_20 alert helpful">
-    {insert name="help_link" id='foursquare'}
-    <h2>Foursquare Plugin</h2>
+<div class="plugin-info">
+
+    <span class="pull-right">{insert name="help_link" id='foursquare'}</span>
+    <h1>
+        <img src="{$site_root_path}plugins/foursquare/assets/img/foursquare_icon.png" class="plugin-image">
+        Foursquare Plugin
+    </h1>
     
-    <div class="">
     <p>The Foursquare plugin captures your Foursquare checkins, photos, and comments.</p>
-    
-    </div>
-    
 
 </div>
 
@@ -16,32 +16,30 @@
 <div class="append_20">
 
 {if $oauth_link}
-<br>
 {include file="_usermessage.tpl" field='authorization'}
-<a href="{$oauth_link}" class="linkbutton emphasized">Add a Foursquare User</a>
-<div style="clear:all">&nbsp;<br><br><br></div>
+<a href="{$oauth_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Foursquare User</a>
 {/if}
 
     {if count($owner_instances) > 0 }
-    <h2 >foursquare Accounts</h2>
+    <h2>Foursquare Accounts</h2>
 
     {include file="_usermessage.tpl" field='user_add'}
 
     {foreach from=$owner_instances key=iid item=i name=foo}
-    <div class="clearfix">
-        <div class="grid_4 right" style="padding-top:.5em;">
+    <div class="row-fluid">
+        <div class="span3">
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
-        <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+        <div class="span3">
+            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
-        <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+        <div class="span3">
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
-        <div class="grid_8 right">
+        <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=foursquare"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
-            <input onClick="return confirm('Do you really want to delete this Foursquare account from ThinkUp?');"  type="submit" name="action" class="linkbutton" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this Foursquare account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="delete" /></form></span>
         </div>
     </div>
     {/foreach}
@@ -58,7 +56,7 @@
 {include file="_usermessage.tpl" field="setup"}
 <p style="padding:5px">To set up the Foursquare plugin:</p>
 <ol style="margin-left:40px">
-<li><a href="https://foursquare.com/developers/register" target="_blank"">Create a new app at the Foursquare web site</a>.</li>
+<li><a href="https://foursquare.com/developers/register" target="_blank">Create a new app at the Foursquare web site</a>.</li>
 <li> Set the Application Name to <code>ThinkUp</code>.</li>
 <li> Set the Application URL to:<br />
 <small>
