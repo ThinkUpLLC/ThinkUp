@@ -85,4 +85,86 @@ class ShortLinkMySQLDAO extends PDODAO {
 
         return $this->getDataRowsAsArrays($ps);
     }
+
+    public function doesHaveClicksSinceDate(Instance $instance, $last_x_days, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+        $q  = "SELECT p.post_text, l.expanded_url, ls.short_url, ls.click_count, p.pub_date ";
+        $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
+        $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
+        $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
+        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL ";
+        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
+        $q .= "GROUP BY short_url ORDER BY p.pub_date DESC";
+        $vars = array(
+            ':author_username'=>$instance->network_username,
+            ':network'=>$instance->network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return (sizeof($result) > 0 );
+    }
+
+    public function getAverageClickCount(Instance $instance, $last_x_days, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+        $q  = "SELECT round(avg(ls.click_count)) as average_click_count ";
+        $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
+        $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
+        $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
+        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL AND p.in_reply_to_post_id IS NULL ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+        $vars = array(
+            ':author_username'=>$instance->network_username,
+            ':network'=>$instance->network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return $result[0]["average_click_count"];
+    }
+
+    public function getHighestClickCount(Instance $instance, $last_x_days, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+        $q  = "SELECT ls.click_count as highest_click_count ";
+        $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
+        $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
+        $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
+        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL AND p.in_reply_to_post_id IS NULL ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY) ";
+        $q .= "ORDER BY highest_click_count DESC LIMIT 1;";
+        $vars = array(
+            ':author_username'=>$instance->network_username,
+            ':network'=>$instance->network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return $result[0]["highest_click_count"];
+    }
+
+    public function getHighestClickCountByLinkID($link_id) {
+        $q  = "SELECT ls.click_count ";
+        $q .= "FROM #prefix#links_short ls ";
+        $q .= "WHERE ls.link_id = :link_id ";
+        $q .= "ORDER BY ls.click_count DESC LIMIT 1;";
+        $vars = array(
+            ':link_id'=>$link_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return $result[0]["click_count"];
+    }
 }

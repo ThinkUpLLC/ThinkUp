@@ -112,6 +112,7 @@ class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                 $dashboard_module_cacher->cacheDashboardModules();
 
                 $instance_dao->save($crawler->instance, 0, $logger);
+                Reporter::reportVersion($instance);
                 // Tell the user crawling was sucessful
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
                 ucwords($instance->network), __METHOD__.','.__LINE__);
