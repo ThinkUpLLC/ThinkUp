@@ -79,7 +79,8 @@ class DashboardModuleCacher {
         if (sizeof($click_stats) > 3) {
             $click_stats_data = self::getClickStatsVisualizationData($click_stats);
             //delete existing
-            $insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
+            //TODO Go back to deleting this existing data once insights stream doesn't reference it
+            //$insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($click_stats_data));

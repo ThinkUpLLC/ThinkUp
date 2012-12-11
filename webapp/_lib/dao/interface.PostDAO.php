@@ -663,7 +663,8 @@ interface PostDAO {
      */
     public function getPostsPerHourDataVis($author_id, $network);
 
-    /** Check if user has any posts with retweets on or before since_date minus last_x_days
+    /**
+     * Check if user has any posts with retweets on or before since_date minus last_x_days
      * @param str $author_username
      * @param str $network
      * @param int $last_x_days

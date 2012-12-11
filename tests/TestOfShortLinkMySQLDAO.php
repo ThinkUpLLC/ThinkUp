@@ -111,4 +111,119 @@ class TestOfShortLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($result, 'Array');
         $this->assertEqual(sizeof($result), 10);
     }
+
+    public function testDoesHaveClicksSinceDateWithLinks() {
+        //build posts and links
+        $counter = 1;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        while ($counter < 14) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>'web', 'pub_date'=>'-'.$counter.'d', 'reply_count_cache'=>0, 'is_protected'=>0,
+            'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            $builders[] = FixtureBuilder::build('links', array('id'=>$counter, 'post_key'=>$counter,
+            'short_url'=>'http://bit.ly/blah', 'expanded_url'=>'http://expandedurl.com/asfasdfadsf/adsfa'
+            ));
+
+            $builders[] = FixtureBuilder::build('links_short', array('id'=>$counter, 'link_id'=>$counter,
+            'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>$counter+2
+            ));
+            $counter++;
+        }
+        $instance = new Instance();
+        $instance->network_username = 'ev';
+        $instance->network = 'twitter';
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->doesHaveClicksSinceDate($instance, 5);
+        $this->assertTrue($result);
+
+        $result = $dao->doesHaveClicksSinceDate($instance, 5, '2011-01-01');
+        $this->assertFalse($result);
+    }
+
+    public function testDoesHaveClicksSinceDateNoLinks() {
+        //build posts and links
+        $counter = 1;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        while ($counter < 14) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>'web', 'pub_date'=>'-'.$counter.'d', 'reply_count_cache'=>0, 'is_protected'=>0,
+            'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+        $instance = new Instance();
+        $instance->network_username = 'ev';
+        $instance->network = 'twitter';
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->doesHaveClicksSinceDate($instance, 5);
+        $this->assertFalse($result);
+    }
+
+    public function testGetHighestClickCount() {
+        $counter = 1;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        while ($counter < 14) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>'web', 'pub_date'=>'-'.$counter.'d', 'reply_count_cache'=>0, 'is_protected'=>0,
+            'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            $builders[] = FixtureBuilder::build('links', array('id'=>$counter, 'post_key'=>$counter,
+            'short_url'=>'http://bit.ly/blah', 'expanded_url'=>'http://expandedurl.com/asfasdfadsf/adsfa'
+            ));
+
+            $builders[] = FixtureBuilder::build('links_short', array('id'=>$counter, 'link_id'=>$counter,
+            'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>$counter+2
+            ));
+            $counter++;
+        }
+        $instance = new Instance();
+        $instance->network_username = 'ev';
+        $instance->network = 'twitter';
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->getHighestClickCount($instance, 7);
+        $this->assertEqual($result, 9);
+
+        $result = $dao->getHighestClickCount($instance, 14);
+        $this->assertEqual($result, 15);
+    }
+
+    public function testGetHighestClickCountByLinkID() {
+        $counter = 1;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        while ($counter < 14) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>'web', 'pub_date'=>'-'.$counter.'d', 'reply_count_cache'=>0, 'is_protected'=>0,
+            'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            $builders[] = FixtureBuilder::build('links', array('id'=>$counter, 'post_key'=>$counter,
+            'short_url'=>'http://bit.ly/blah', 'expanded_url'=>'http://expandedurl.com/asfasdfadsf/adsfa'
+            ));
+
+            $builders[] = FixtureBuilder::build('links_short', array('id'=>$counter, 'link_id'=>$counter,
+            'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>$counter+2
+            ));
+            $counter++;
+        }
+        $instance = new Instance();
+        $instance->network_username = 'ev';
+        $instance->network = 'twitter';
+        $dao = DAOFactory::getDAO('ShortLinkDAO');
+        $result = $dao->getHighestClickCountByLinkID(7);
+        $this->assertEqual($result, 9);
+
+        $result = $dao->getHighestClickCount(17);
+        $this->assertNull($result);
+    }
 }
