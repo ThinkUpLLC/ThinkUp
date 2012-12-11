@@ -57,4 +57,38 @@ interface ShortLinkDAO {
      * @return array post_text, short_url, click_count
      */
     public function getRecentClickStats(Instance $instance, $limit);
+
+    /**
+     * Check if user has any links with clicks posted on or before since_date minus last_x_days
+     * @param Instance $instance
+     * @param int $last_x_days
+     * @param str $since Date in Y-m-d format, defaults to null (today)
+     * @return bool
+     */
+    public function doesHaveClicksSinceDate(Instance $instance, $last_x_days, $since=null);
+
+    /**
+     * Get the average short link click total for the past X days from since_date
+     * @param Instance $instance
+     * @param $last_x_days
+     * @param $since Date in Y-m-d format, defaults to null (today)
+     * @return Mixed int or bool False if no average
+     */
+    public function getAverageClickCount(Instance $instance, $last_x_days, $since=null);
+
+    /**
+     * Get the highest short link click total for the past X days from since_date
+     * @param Instance $instance
+     * @param $last_x_days
+     * @param $since Date in Y-m-d format, defaults to null (today)
+     * @return Mixed int or bool False if no average
+     */
+    public function getHighestClickCount(Instance $instance, $last_x_days, $since=null);
+
+    /**
+     * Get the highest click count total for a given link ID.
+     * @param $link_id
+     * @return int Null if no clik count available
+     */
+    public function getHighestClickCountByLinkID($link_id);
 }
