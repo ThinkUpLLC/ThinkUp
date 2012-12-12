@@ -117,8 +117,8 @@ class ShortLinkMySQLDAO extends PDODAO {
         $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
         $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
         $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
-        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL ";
-        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL AND p.in_reply_to_post_id IS NULL ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
         $vars = array(
             ':author_username'=>$instance->network_username,
             ':network'=>$instance->network,
@@ -139,8 +139,8 @@ class ShortLinkMySQLDAO extends PDODAO {
         $q .= "FROM #prefix#links_short ls INNER JOIN #prefix#links l ";
         $q .= "ON l.id = ls.link_id INNER JOIN #prefix#posts p ON p.id = l.post_key ";
         $q .= "WHERE p.author_username=:author_username AND p.network=:network ";
-        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL ";
-        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) ";
+        $q .= "AND ls.click_count > 0 AND p.in_retweet_of_post_id IS NULL AND p.in_reply_to_post_id IS NULL ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY) ";
         $q .= "ORDER BY highest_click_count DESC LIMIT 1;";
         $vars = array(
             ':author_username'=>$instance->network_username,

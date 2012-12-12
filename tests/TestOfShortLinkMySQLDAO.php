@@ -190,10 +190,10 @@ class TestOfShortLinkMySQLDAO extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $dao = DAOFactory::getDAO('ShortLinkDAO');
         $result = $dao->getHighestClickCount($instance, 7);
-        $this->assertEqual($result, 15);
+        $this->assertEqual($result, 9);
 
         $result = $dao->getHighestClickCount($instance, 14);
-        $this->assertNull($result);
+        $this->assertEqual($result, 15);
     }
 
     public function testGetHighestClickCountByLinkID() {
