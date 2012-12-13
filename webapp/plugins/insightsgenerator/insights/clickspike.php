@@ -76,8 +76,8 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
                         $this->insight_dao->insertInsight('click_high_365_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 365-day record!", "Viewers clicked your link ".$click_count.
-                        " times.", $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, "New 365-day record!", "Viewers clicked your link ".
+                        number_format($click_count). " times.", $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($link, $click_stats_data)));
 
                         $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
@@ -95,8 +95,8 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
                         $this->insight_dao->insertInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 30-day record!", "Viewers clicked your link ". $click_count.
-                        " times.", $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, "New 30-day record!", "Viewers clicked your link ".
+                        number_format( $click_count ). " times.", $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($link, $click_stats_data)));
 
                         $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
@@ -112,8 +112,8 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
                         $this->insight_dao->insertInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 7-day record!", "Viewers clicked your link ".$click_count.
-                        " times.", $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, "New 7-day record!", "Viewers clicked your link ".
+                        number_format($click_count). " times.", $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($link, $click_stats_data)));
 
                         $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
@@ -130,7 +130,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                         $multiplier = floor($click_count/$average_click_count_30_days->value);
                         $this->insight_dao->insertInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "Hot link:", "Viewers clicked your link ".$click_count.
+                        $simplified_post_date, "Hot link:", "Viewers clicked your link ".number_format($click_count).
                         " times, more than ".$multiplier. "x your 30-day average.", $filename,
                         Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
 
@@ -148,7 +148,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                         $multiplier = floor($click_count/$average_click_count_7_days->value);
                         $this->insight_dao->insertInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "Hot Link:", "Viewers clicked your link ".$click_count.
+                        $simplified_post_date, "Hot Link:", "Viewers clicked your link ".number_format($click_count).
                         " times, more than " .$multiplier. "x your 7-day average.",
                         $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
 
@@ -212,7 +212,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 //Save click high for last 30 days
-                $high_click_count_30_days = $shortlink_dao->getHighestClickCount($instance, 7, $since_date);
+                $high_click_count_30_days = $shortlink_dao->getHighestClickCount($instance, 30, $since_date);
                 if ($high_click_count_30_days != null ) {
                     $insight_baseline_dao->insertInsightBaseline('high_click_count_last_30_days', $instance->id,
                     $high_click_count_30_days, $since_date);
@@ -223,7 +223,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
             if ($shortlink_dao->doesHaveClicksSinceDate($instance, 365, $since_date)) {
                 //Save click high for last 365 days
-                $high_click_count_365_days = $shortlink_dao->getHighestClickCount($instance, 7, $since_date);
+                $high_click_count_365_days = $shortlink_dao->getHighestClickCount($instance, 365, $since_date);
                 if ($high_click_count_365_days != null ) {
                     $insight_baseline_dao->insertInsightBaseline('high_click_count_last_365_days', $instance->id,
                     $high_click_count_365_days, $since_date);
