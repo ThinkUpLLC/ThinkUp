@@ -67,7 +67,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         ));
 
         $builders[] = FixtureBuilder::build('links_short', array('id'=>28, 'link_id'=>'28',
-        'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>76 ));
+        'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>7609 ));
 
         // Get data ready that insight requires
         $post1_object = new Post($post1_builder->columns);
@@ -93,7 +93,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'click_high_7_day_28');
         $this->assertEqual($result->prefix, 'New 7-day record!');
         $this->assertEqual($result->filename, 'clickspike');
-        $this->assertPattern('/Viewers clicked your link 76 times/', $result->text);
+        $this->assertPattern('/Viewers clicked your link 7,609 times/', $result->text);
     }
 
     private function buildData() {
