@@ -124,7 +124,7 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $multiplier = floor($post->all_retweets/$average_retweet_count_30_days->value);
                 $this->insight_dao->insertInsight('retweet_spike_30_day_'.$post->id, $instance->id,
-                $simplified_post_date, "Amplified:", $post->all_retweets.
+                $simplified_post_date, "Going viral:", $post->all_retweets.
                 " people reshared your post, more than ".$multiplier. "x your 30-day average.", $filename,
                 Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
 
@@ -142,7 +142,7 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $multiplier = floor($post->all_retweets/$average_retweet_count_7_days->value);
                 $this->insight_dao->insertInsight('retweet_spike_7_day_'.$post->id, $instance->id,
-                $simplified_post_date, "Amplified:", $post->all_retweets.
+                $simplified_post_date, "Going viral:", $post->all_retweets.
                 " people reshared your post, more than " .$multiplier. "x your 7-day average.",
                 $filename, Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
 
