@@ -46,7 +46,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $most_responses = 0;
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
                 foreach ($flashback_posts as $post) {
-                    $total_responses = $post->reply_count_cache + $post->all_retweets;
+                    $total_responses = $post->reply_count_cache + $post->all_retweets + $post->favlike_count_cache;
                     if ($total_responses > 0 && $total_responses > $most_responses) {
                         $most_popular_post = $post;
                         $most_responses = $total_responses;
@@ -58,20 +58,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $number_of_years_ago = $current_year - $post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
-                    $response_counts = '';
-                    if ($post->reply_count_cache > 0 && $post->all_retweets > 0) {
-                        if ($post->reply_count_cache >= $post->all_retweets) {
-                            $response_counts = "$post->reply_count_cache replies and $post->all_retweets retweets";
-                        } else {
-                            $response_counts = "$post->all_retweets retweets and $post->reply_count_cache replies";
-                        }
-                    } else if ($post->reply_count_cache > 0 && $post->all_retweets == 0) {
-                        $response_counts = "$post->reply_count_cache replies";
-                    } else {
-                        $response_counts = "$post->all_retweets retweets";
-                    }
-                    $insight_text = "$number_of_years_ago year$plural ago today, your most popular post ".
-                    " got $response_counts.";
+                    $insight_text = "Your most popular post $number_of_years_ago year$plural ago today was:";
                     $this->insight_dao->insertInsight("posts_on_this_day_popular_flashback", $instance->id,
                     $this->insight_date, "Time machine:", $insight_text, basename(__FILE__, ".php"),
                     Insight::EMPHASIS_LOW, serialize($most_popular_post));
