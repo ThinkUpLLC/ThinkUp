@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Flashback
- Description: Posts you published on this day in years past.
+ Description: The most popular posts you published on this day in years past.
  */
 
 /**
@@ -42,16 +42,40 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $flashback_posts = $post_dao->getOnThisDayFlashbackPosts($instance->network_user_id,
             $instance->network, $this->insight_date);
+            $most_popular_post = null;
+            $most_responses = 0;
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
-                $publishing_term = ($instance->network == 'foursquare')?'checked in at':'posted';
-                $oldest_post_year = date(date( 'Y' , strtotime($flashback_posts[0]->pub_date)));
-                $current_year = date('Y');
-                $number_of_years_ago = $current_year - $oldest_post_year;
-                $plural = ($number_of_years_ago > 1 )?'s':'';
-                $this->insight_dao->insertInsight("posts_on_this_day_flashback", $instance->id,
-                $this->insight_date, "Time machine:", $number_of_years_ago." year".
-                $plural. " ago today, you ".$publishing_term.": ", basename(__FILE__, ".php"), Insight::EMPHASIS_MED,
-                serialize($flashback_posts));
+                foreach ($flashback_posts as $post) {
+                    $total_responses = $post->reply_count_cache + $post->all_retweets;
+                    if ($total_responses > 0 && $total_responses > $most_responses) {
+                        $most_popular_post = $post;
+                        $most_responses = $total_responses;
+                    }
+                }
+                if (isset($most_popular_post)) {
+                    $post_year = date(date( 'Y' , strtotime($most_popular_post->pub_date)));
+                    $current_year = date('Y');
+                    $number_of_years_ago = $current_year - $post_year;
+                    $plural = ($number_of_years_ago > 1 )?'s':'';
+
+                    $response_counts = '';
+                    if ($post->reply_count_cache > 0 && $post->all_retweets > 0) {
+                        if ($post->reply_count_cache >= $post->all_retweets) {
+                            $response_counts = "$post->reply_count_cache replies and $post->all_retweets retweets";
+                        } else {
+                            $response_counts = "$post->all_retweets retweets and $post->reply_count_cache replies";
+                        }
+                    } else if ($post->reply_count_cache > 0 && $post->all_retweets == 0) {
+                        $response_counts = "$post->reply_count_cache replies";
+                    } else {
+                        $response_counts = "$post->all_retweets retweets";
+                    }
+                    $insight_text = "$number_of_years_ago year$plural ago today, your most popular post ".
+                    " got $response_counts.";
+                    $this->insight_dao->insertInsight("posts_on_this_day_popular_flashback", $instance->id,
+                    $this->insight_date, "Time machine:", $insight_text, basename(__FILE__, ".php"),
+                    Insight::EMPHASIS_LOW, serialize($most_popular_post));
+                }
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
