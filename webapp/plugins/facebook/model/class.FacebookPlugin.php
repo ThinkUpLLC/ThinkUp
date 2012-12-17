@@ -99,6 +99,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             $dashboard_module_cacher->cacheDashboardModules();
 
             $instance_dao->save($facebook_crawler->instance, 0, $logger);
+            Reporter::reportVersion($instance);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
             ucwords($instance->network), __METHOD__.','.__LINE__);
         }
