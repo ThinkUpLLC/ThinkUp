@@ -103,6 +103,26 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testGetInsightByUsername() {
+        $builders = self::buildData();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'jo',
+        'network'=>'twitter'));
+
+        $dao = new InsightMySQLDAO();
+        $result = $dao->getInsightByUsername('jo', 'twitter', 'avg_replies_per_week', '2012-05-01');
+
+        $this->assertIsA($result, 'Insight');
+        $this->assertEqual($result->slug, 'avg_replies_per_week');
+        $this->assertEqual(date('Y-m-d', strtotime($result->date)), '2012-05-01');
+        $this->assertEqual($result->instance_id, 1);
+        $this->assertEqual($result->prefix, 'Booyah!');
+        $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+
+        $result = $dao->getInsightByUsername('jo', 'twitter', 'avg_replies_per_week', '2012-05-02');
+        $this->assertNull($result);
+    }
+
     public function testGetPreCachedInsightData() {
         $dao = new InsightMySQLDAO();
         $results = $dao->getPreCachedInsightData('avg_replies_per_week', 1, '2012-05-01');

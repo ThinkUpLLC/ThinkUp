@@ -42,7 +42,7 @@ class LoginController extends ThinkUpController {
 
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
-            $controller = new DashboardController(true);
+            $controller = new InsightStreamController(true);
             return $controller->go();
         } else  {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
@@ -107,7 +107,7 @@ class LoginController extends ThinkUpController {
                         $owner_dao->resetFailedLogins($user_email);
                         $owner_dao->clearAccountStatus($user_email);
                         if (!$this->redirect()) {
-                            $controller = new DashboardController(true);
+                            $controller = new InsightStreamController(true);
                             return $controller->go();
                         }
                     }

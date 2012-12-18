@@ -59,6 +59,10 @@ form .control-group {
     border-radius: 2px;
 }
 
+.label a {
+    color:white;
+}
+
 .insight-item .label, .insight-item .badge {
   font-size: 14px;
 }

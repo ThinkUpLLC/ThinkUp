@@ -383,7 +383,7 @@ CREATE TABLE tu_plugins (
   author varchar(255) DEFAULT NULL COMMENT 'Plugin author.',
   homepage varchar(255) DEFAULT NULL COMMENT 'Plugin homepage URL.',
   version varchar(255) DEFAULT NULL COMMENT 'Plugin version.',
-  is_active tinyint(4) NOT NULL COMMENT 'Whether or not the plugin is activated (1 if so, 0 if not.)',
+  is_active tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Whether or not the plugin is activated (1 if so, 0 if not.)',
   PRIMARY KEY (id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Application plugins.';
 
@@ -518,7 +518,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2012-12-30 10:28:31
+-- Dump completed on 2012-12-30 10:28:51
 
 --
 -- Insert DB Version

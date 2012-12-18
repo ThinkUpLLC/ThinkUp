@@ -48,8 +48,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle($cfg->getValue('app_title_prefix') . "ThinkUp");
+        $this->assertText('me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -65,8 +65,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword1');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | " . $cfg->getValue('app_title_prefix') . "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle($cfg->getValue('app_title_prefix') . "ThinkUp");
+        $this->assertText('me@example.com');
     }
 
     public function testChangePasswordWrongExistingPassword() {
@@ -75,8 +75,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
+        $this->assertText('me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -93,8 +93,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
+        $this->assertText('me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -110,8 +110,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
+        $this->assertText('me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -128,8 +128,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
+        $this->assertText('me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');

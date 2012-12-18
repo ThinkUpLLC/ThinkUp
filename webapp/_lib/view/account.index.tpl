@@ -15,7 +15,7 @@
       </div>
     </div><!--/span3-->
     <div class="span9">
-    	<div class="white-card">
+        <div class="white-card">
 
         <div class="section" id="plugins">
 
@@ -26,27 +26,25 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th></th>
                           <th>Name</th>
-                          {if $user_is_admin}<th>Activate</th>{/if}
+                          {if $user_is_admin}<th>Setup</th>{/if}
                         </tr>
                       </thead>
                   {/if}
                   {if $user_is_admin || $ip->is_active}
                         <tr>
                           <td>
-                            <span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
-                            {if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}{/if}
-                          </td>
-                          <td>
-                            <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
+                            <div style="float:left";"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="float-l" style="margin-right:10px"></span>
+                            </div>
+                            <a href="?p={$ip->folder_name|get_plugin_path}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>{if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}{/if}
                             <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
+                            
                             <span style="color:#666">{$ip->description}</span><br>
                           </td>
                     {if $user_is_admin}
                       <td>
                       <span id="spanpluginactivation{$ip->id}">
-                          <input type="submit" name="submit" class="btn btnToggle {if $ip->is_active}btn-danger{else}btn-success{/if}" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn">Configure</a>
                       </span>
                       <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                       </td>
@@ -259,8 +257,8 @@
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
 
-    	</div>
-	</div>
+        </div>
+    </div>
 </div>
 
 </div>
@@ -343,66 +341,7 @@ $(function() {
     });
   });
 
-  $(function() {
-    var activate = function(u) {
-      var dataString = 'pid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle plugin on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
-        data: dataString,
-        success: function() {
-          $('#spanpluginactivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Activated!").hide().fadeIn(250);
-          $('#spanpluginnamelink' + u).css('display', 'inline');
-          $('#' + u).val('Deactivate');
-          $('#spanpluginnametext' + u).css('display', 'none');
-          $('#' + u).removeClass('btnActivate').addClass('btnDectivate');
-          setTimeout(function() {
-              $('#messageactive' + u).css('display', 'none');
-              $('#spanpluginactivation' + u).hide().fadeIn(250);
-              $('input#' + u).removeClass('btn-success').addClass('btn-danger');
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
 
-    var deactivate = function(u) {
-      var dataString = 'pid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle plugin off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
-        data: dataString,
-        success: function() {
-          $('#spanpluginactivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(250);
-          $('#spanpluginnamelink' + u).css('display', 'none');
-          $('#spanpluginnametext' + u).css('display', 'inline');
-          $('#' + u).val('Activate');
-          $('#' + u).removeClass('btnDeactivate').addClass('btnActivate');
-          setTimeout(function() {
-              $('#messageactive' + u).css('display', 'none');
-              $('#spanpluginactivation' + u).hide().fadeIn(250);
-              $('input#' + u).removeClass('btn-danger').addClass('btn-success');
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    $(".btnToggle").click(function() {
-      if($(this).val() == 'Activate') {
-        activate($(this).attr("id"));
-      } else {
-        deactivate($(this).attr("id"));
-      }
-    });
-  });
-  
     $(function() {
     var activateOwner = function(u) {
       //removing the "user" from id here to stop conflict with plugin    
@@ -533,7 +472,6 @@ $(function() {
         demoteOwner($(this).attr("id"));
       }
     });
-
 
   });
 

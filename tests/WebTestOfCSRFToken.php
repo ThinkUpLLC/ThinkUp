@@ -82,8 +82,6 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
         $this->assertPattern('/&p=0&csrf_token=" \+ window.csrf_token; \/\/ toggle public off/');
         $this->assertPattern('/&p=1&csrf_token=" \+ window.csrf_token; \/\/ toggle active on/');
         $this->assertPattern('/&p=0&csrf_token=" \+ window.csrf_token; \/\/ toggle active off/');
-        $this->assertPattern('/&a=1&csrf_token=" \+ window.csrf_token; \/\/ toggle plugin on/');
-        $this->assertPattern('/&a=0&csrf_token=" \+ window.csrf_token; \/\/ toggle plugin off/');
         $this->assertPattern('/&a=1&csrf_token=" \+ window.csrf_token; \/\/ toggle owner active on/');
         $this->assertPattern('/&a=0&csrf_token=" \+ window.csrf_token; \/\/ toggle owner active off/');
     }

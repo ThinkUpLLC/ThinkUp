@@ -22,7 +22,7 @@
                     <div class="control-group">
                         <label class="control-label" for="email">Email</label>
                         <div class="controls">
-                            <input class="input-xlarge" type="text" name="email" id="email"{if isset($email)} value="{$email|filter_xss}"{/if}>
+                            <input class="input-xlarge" type="text" name="email" id="email"{if isset($email)} value="{$email|filter_xss}"{/if} autofocus="autofocus">
                         </div>
                     </div>
 

@@ -59,7 +59,6 @@ $controller_test_list = array(
 "TestOfToggleActiveInstanceController",
 "TestOfToggleActiveOwnerController",
 "TestOfToggleOwnerAdminController",
-"TestOfToggleActivePluginController",
 "TestOfTogglePublicInstanceController",
 "TestOfUserController",
 "TestOfPluginOptionController",

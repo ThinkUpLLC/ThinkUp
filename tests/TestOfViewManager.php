@@ -100,7 +100,6 @@ class TestOfViewManager extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
 
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), ($cfg->getValue('app_title_prefix')  . 'ThinkUp'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
         $this->assertEqual($v_mgr->cache_lifetime, 1200);
     }
@@ -131,7 +130,6 @@ class TestOfViewManager extends ThinkUpBasicUnitTestCase {
         $v_mgr = new ViewManager($cfg_array);
 
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'My ThinkUp');
-        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
         $this->assertEqual($v_mgr->cache_lifetime, 1000);
     }

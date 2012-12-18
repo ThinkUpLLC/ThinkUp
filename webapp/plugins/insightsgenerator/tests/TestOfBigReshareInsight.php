@@ -86,7 +86,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with 2x more followers than you reshared/', $result->text);
+        $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than you reshared/', $result->text);
     }
 
     public function testMultipleBigReshare() {

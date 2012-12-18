@@ -1,6 +1,5 @@
 {if $enable_bootstrap}
     {if $inline}
-        
         {if $field}
             {if $success_msgs.$field}
              <span class="label label-success">
@@ -28,7 +27,6 @@
             {if $success_msgs.$field OR $error_msgs.$field}<br />{/if}
             <span class="label label-info"> 
 
-                     
                      {if $info_msg_no_xss_filter}
                         {$info_msgs.$field|filter_xss}
                      {else}
@@ -64,7 +62,6 @@
                 {if $success_msg OR $error_msg}<br />{/if}
             <span class="label label-success"> 
 
-                     
                      {if $info_msg_no_xss_filter}
                         {$info_msg}
                      {else}
@@ -74,7 +71,6 @@
             </span>
             {/if}
         {/if}
-
 
     {else}
 
@@ -235,5 +231,4 @@
     </div>
     {/if}
 {/if}
-
 {/if}

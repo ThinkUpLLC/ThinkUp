@@ -48,7 +48,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         //$this->showSource();
-
+        $this->get($this->url.'/dashboard.php');
         $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix') ."ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
@@ -66,7 +66,9 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->click("Log Out");
 
         //assert you're logged out
-        $this->assertNoText('Logged in as admin: me@example.com');
+        $this->assertNoText('me@example.com');
+
+        $this->get($this->url.'/dashboard.php');
 
         //click on a nav link
         $this->click("Tweets");
@@ -85,6 +87,8 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
+        $this->get($this->url.'/dashboard.php');
+
         $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
         $this->get($this->url.'/user/index.php?i=thinkupapp&u=ev&n=twitter');
@@ -102,6 +106,8 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
+        $this->get($this->url.'/dashboard.php');
+
         $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
         $this->click("Settings");
@@ -119,9 +125,11 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
+        $this->get($this->url.'/dashboard.php');
+
         $this->assertTitle("thinkupapp's Dashboard | ". Config::getInstance()->getValue('app_title_prefix'). "ThinkUp");
 
-        $this->get($this->url.'/index.php?v=tweets-all&u=thinkupapp&n=twitter');
+        $this->get($this->url.'/dashboard.php?v=tweets-all&u=thinkupapp&n=twitter');
         //        $this->showSource();
         $this->assertText('Export');
 

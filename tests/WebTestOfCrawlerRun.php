@@ -49,20 +49,17 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
 
         $this->click("Log In");
 
-        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
-        "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
-        $this->assertText('thinkupapp');
-
-        $this->assertText('1 month ago');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
+        $this->assertText('me@example.com');
 
         //For the sake of time, set all instances to inactive so the crawler itself doesn't actually run
         $q = "UPDATE #prefix#instances SET is_active=0;";
         $this->testdb_helper->runSQL($q);
 
-        $this->click("1 month ago");
+        $this->clickLinkById('refresh-data');
         //$this->showHeaders();
-        $this->assertHeader('Content-Type', 'text/html; charset=UTF-8');
+        $this->assertHeader('Content-Type', 'text/html; charset=UTF-8; charset=UTF-8');
+        $this->assertText('Update ThinkUp Data');
     }
 
     public function testNotLoggedIn() {

@@ -80,7 +80,7 @@
 
 <div class="container clearfix">
   
-  <div id="app-title"><a href="{$site_root_path}{$logo_link}">
+  <div id="app-title"><a href="{$site_root_path}">
     <h1><span id="headerthink">Think</span><span id="headerup">Up</span></h1>
   </a></div> <!-- end #app-title -->
   

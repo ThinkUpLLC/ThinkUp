@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/account/toggle-pluginactive.php
+ * ThinkUp/webapp/dashboard.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -25,8 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  */
-chdir("..");
 require_once 'init.php';
 
-$controller = new ToggleActivePluginController();
+$controller = new DashboardController();
 echo $controller->go();

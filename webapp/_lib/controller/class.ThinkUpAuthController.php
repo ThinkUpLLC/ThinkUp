@@ -63,8 +63,8 @@ abstract class ThinkUpAuthController extends ThinkUpController {
     protected function bounce() {
         $config = Config::getInstance();
 
-        if (get_class($this)=='DashboardController' || get_class($this)=='PostController') {
-            $controller = new DashboardController(true);
+        if (get_class($this)=='InsightStreamController' || get_class($this)=='PostController') {
+            $controller = new InsightStreamController(true);
             return $controller->go();
         } else {
             throw new ControllerAuthException('You must log in to access this controller: ' . get_class($this));

@@ -56,8 +56,8 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                     $follower_count_multiple =
                     intval(($big_reshares[0]->follower_count) / $service_user->follower_count);
                     if ($follower_count_multiple > 1 ) {
-                        $notification_text = "Someone with ".$follower_count_multiple.
-                        "x more followers than you reshared ".$post_link."your post</a>.";
+                        $notification_text = "Someone with <strong>".$follower_count_multiple.
+                        "x</strong> more followers than you reshared ".$post_link."your post</a>.";
                     } else {
                         $notification_text = "Someone with lots of followers reshared ".$post_link."your post</a>.";
                     }

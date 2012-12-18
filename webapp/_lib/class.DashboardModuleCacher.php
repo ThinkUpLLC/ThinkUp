@@ -140,7 +140,7 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id);
             //insert new
             $insight_dao->insertInsight("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id,
-            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($posts_yearly_popular));
+            $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($posts_yearly_popular));
         }
 
         if ($this->instance->network == 'foursquare') {

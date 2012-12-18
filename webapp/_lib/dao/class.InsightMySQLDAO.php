@@ -41,6 +41,34 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return $this->getDataRowAsObject($ps, 'Insight');
     }
 
+    public function getInsightByUsername($network_username, $network, $slug, $date) {
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 AND ";
+        $q .= "i.slug=:slug AND i.date=:date AND su.network_username=:network_username AND su.network = :network ";
+        $vars = array(
+            ':slug'=>$slug,
+            ':date'=>$date,
+            ':network_username'=>$network_username,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $row = $this->getDataRowAsArray($ps);
+        if (isset($row)) {
+            $insight = new Insight($row);
+            $insight->related_data = unserialize($insight->related_data);
+            //assume insight came at same time of day as now for relative day notation
+            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
+            return $insight;
+        } else {
+            return null;
+        }
+    }
+
     public function doesInsightExist($slug, $instance_id) {
         $q = "SELECT date, instance_id, slug, prefix, text, related_data, emphasis FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND instance_id=:instance_id";
