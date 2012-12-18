@@ -36,9 +36,11 @@
                     <div class="form-actions">
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Log In">
                             <span class="pull-right">
-                            	<a href="register.php">Register</a> |
-                            	<a href="forgot.php">Forgot password</a> |
-	                            {insert name="help_link" id='login'}
+                                <div class="btn-group">
+                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini">Register</a>{else}<span class="btn btn-mini disabled">Registration closed</span>{/if}
+                                    <a href="forgot.php" class="btn btn-mini">Forgot password</a>
+                                    {insert name="help_link" id='login'}
+                                </div>
                             </span>
                     </div>
 
