@@ -43,6 +43,11 @@ class LoginController extends ThinkUpController {
         } else  {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
+            // set var for open registration
+            $config = Config::getInstance();
+            $is_registration_open = $config->getValue('is_registration_open');
+            $this->addToView('is_registration_open', $is_registration_open);
+
             if (isset($_POST['Submit']) && $_POST['Submit']=='Log In' && isset($_POST['email']) &&
             isset($_POST['pwd']) ) {
                 if ( $_POST['email']=='' || $_POST['pwd']=='') {
