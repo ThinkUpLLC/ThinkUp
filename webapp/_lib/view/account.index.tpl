@@ -36,7 +36,7 @@
                         <tr>
                           <td>
                             <span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
-                            {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.5em 0.3em 0 0;"></span>{/if}{/if}
+                            {if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}{/if}
                           </td>
                           <td>
                             <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>

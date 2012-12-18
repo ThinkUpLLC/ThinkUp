@@ -37,9 +37,9 @@ function show_advanced() {
 
 <form id="plugin_option_form" onsubmit="return false;">
 
-<div class="alert helpful"  id="plugin_options_success" style="display: none;">
+<div class="alert alert-success"  id="plugin_options_success" style="display: none;">
      <p>
-       <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+       <span class="icon-ok"></span>
        Saved!
      </p>
  </div> 
@@ -53,9 +53,9 @@ function show_advanced() {
 </div>
 
 <div id="plugin_option_error" 
-    class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
+    class="alert alert-error" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
     <p>
-        <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        <span class="icon-warning-sign"></span>
         Please complete all required fields
     </p>
 </div>
