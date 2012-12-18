@@ -43,6 +43,7 @@ class InsightStreamController extends ThinkUpController {
                 if ($this->isAdmin()) {
                     ///show all insights for all service users
                     $insights = $insight_dao->getAllInstanceInsights($page_count=100, $page);
+                    $insights = $this->eschewSecondPerson($insights);
                     $this->addToView('insights', $insights);
                 } else {
                     //show only service users owner owns
@@ -50,11 +51,13 @@ class InsightStreamController extends ThinkUpController {
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
                     $insights = $insight_dao->getAllOwnerInstanceInsights($owner->id, $page_count=100, $page);
+                    $insights = $this->eschewSecondPerson($insights);
                     $this->addToView('insights', $insights);
                 }
             } else {
                 //show just public service users in stream
                 $insights = $insight_dao->getPublicInsights($page_count=100, $page);
+                $insights = $this->eschewSecondPerson($insights);
                 $this->addToView('insights', $insights);
             }
             if (isset($insights) && sizeof($insights) > 0) {
@@ -65,4 +68,22 @@ class InsightStreamController extends ThinkUpController {
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         return $this->generateView();
     }
+
+    private function eschewSecondPerson($insights) {
+        foreach ($insights as $insight) {
+            $username = $insight->instance->network_username;
+            if ($insight->instance->network == 'twitter') {
+                $username = '@'.$username;
+            }
+            //your/Your
+            $new_text = str_replace('your', $username."'s", $insight->text);
+            $new_text = str_replace('Your', $username."'s", $new_text);
+            //you/You
+            $new_text = str_replace('you', $username, $new_text);
+            $new_text = str_replace('You', $username, $new_text);
+            $insight->text = $new_text;
+        }
+        return $insights;
+    }
+
 }
