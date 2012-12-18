@@ -47,6 +47,7 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
+        $this->get($this->url.'/dashboard.php');
 
         $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
@@ -71,6 +72,7 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
+        $this->get($this->url.'/dashboard.php');
         $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');

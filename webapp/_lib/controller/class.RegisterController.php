@@ -50,7 +50,7 @@ class RegisterController extends ThinkUpController {
 
     public function control(){
         if ($this->isLoggedIn()) {
-            $controller = new DashboardController(true);
+            $controller = new InsightStreamController(true);
             return $controller->go();
         } else {
             // register form validation

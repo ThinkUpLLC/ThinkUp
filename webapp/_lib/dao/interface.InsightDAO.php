@@ -50,6 +50,15 @@ interface InsightDAO {
      */
     public function getInsight($slug, $instance_id, $date);
     /**
+     * Retrieve insight from storage by username and network.
+     * @param str $network_username
+     * @param str $network
+     * @param str $slug
+     * @param str $date
+     * @return Insight
+     */
+    public function getInsightByUsername($network_username, $network, $slug, $date);
+    /**
      * Retrieve insight's related data from storage.
      * @param str $slug
      * @param int $instance_id

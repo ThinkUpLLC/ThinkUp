@@ -13,8 +13,6 @@
 </div>
 
 
-<div class="append_20">
-
 {if $oauth_link}
 {include file="_usermessage.tpl" field='authorization'}
 <a href="{$oauth_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Foursquare User</a>

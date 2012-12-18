@@ -11,7 +11,7 @@
         <div id="follower_count_history_by_day"></div>
     </div>
     <div class="view-all">
-    <a href="{$site_root_path}?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
+    <a href="{$site_root_path}dashboard.php?v={if $instance->network neq 'twitter'}friends{else}followers{/if}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a>
   </div>
   {/if}
 

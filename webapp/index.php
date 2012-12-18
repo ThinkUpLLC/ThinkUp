@@ -26,5 +26,6 @@
  * @copyright 2009-2013 Gina Trapani
  */
 require_once 'init.php';
-$controller = new DashboardController();
+
+$controller = new InsightStreamController();
 echo $controller->go();

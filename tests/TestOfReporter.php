@@ -40,7 +40,7 @@ class TestOfReporter extends ThinkUpUnitTestCase {
 
         //report version
         $result = Reporter::reportVersion($instance);
-        $this->assertEqual($result[0], "http://thinkupapp.com/version.php?v=1.1.1");
+        $this->assertPattern("/http:\/\/thinkupapp.com\/version.php\?v\=/", $result[0]);
         $this->assertEqual($result[1], "http://mytestthinkup/?u=danica+mckellar&n=twitter");
         $this->assertEqual($result[2], 200);
     }

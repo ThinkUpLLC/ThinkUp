@@ -13,8 +13,6 @@
 </div>
 
 
-<div class="append_20">
-
 {if $oauth_link}
 
 {include file="_usermessage.tpl" field='authorization'}
