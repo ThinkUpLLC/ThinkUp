@@ -315,7 +315,7 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
 
         $email = Mailer::getLastMail();
         $this->debug("Email contents: " . $email);
-        $this->assertPattern('/test%20url%20with%20spaces/', $email, 'Spaces found in activation URL.');
+        $this->assertPattern('/test\+url\+with\+spaces/', $email, 'Spaces found in activation URL.');
     }
 
     public function testSlashesInHostName() {
@@ -338,7 +338,7 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
 
         $email = Mailer::getLastMail();
         $this->debug("Email contents: " . $email);
-        $this->assertPattern('/test%20url%20with%20spaces\/and\/a%20few\/slashes\/too/', $email,
+        $this->assertPattern('/test\+url\+with\+spaces\/and\/a\+few\/slashes\/too/', $email,
         'Spaces properly escaped;slashes are not');
     }
 

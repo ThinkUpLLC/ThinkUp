@@ -332,8 +332,7 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
                 $to = join(',', $tos);
                 $upgrade_email = new ViewManager();
                 $upgrade_email->caching=false;
-                $server = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'; //supress test weirdness
-                $upgrade_email->assign('server', $server );
+                $upgrade_email->assign('application_url', Utils::getApplicationURL(false) );
                 $upgrade_email->assign('token', $md5_token );
                 $message = $upgrade_email->fetch('_email.upgradetoken.tpl');
                 $config = Config::getInstance();

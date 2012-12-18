@@ -115,10 +115,10 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
+        $this->debug($result);
         //system requirements have not been met
         $this->assertNoPattern('/Your system has everything it needs to run ThinkUp./', $result);
-        $this->assertPattern('/Your web server isn\'t set up to run ThinkUp. Please fix the problems below and try '.
-        'installation again./', $result);
+        $this->assertPattern('/Your web server isn\'t set up to run ThinkUp./', $result);
         $this->assertPattern('/ThinkUp needs the /', $result);
 
         //make sure install did not auto-progress to step 2 b/c
@@ -564,7 +564,10 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-        $this->assertPattern('/ThinkUp has been installed successfully./', $result);
+        $this->debug($result);
+        $this->assertPattern('/ThinkUp has been
+installed successfully. Check your email account; an account activation
+message has been sent./', $result);
         $this->restoreConfigFile();
         //echo $result;
     }

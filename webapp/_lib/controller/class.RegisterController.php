@@ -127,8 +127,7 @@ class RegisterController extends ThinkUpController {
                                 if ($activation_code != false) {
                                     $es = new ViewManager();
                                     $es->caching=false;
-                                    $server = $_SERVER['HTTP_HOST'];
-                                    $es->assign('server', $server );
+                                    $es->assign('application_url', Utils::getApplicationURL(false) );
                                     $es->assign('email', urlencode($_POST['email']) );
                                     $es->assign('activ_code', $activation_code );
                                     $message = $es->fetch('_email.registration.tpl');

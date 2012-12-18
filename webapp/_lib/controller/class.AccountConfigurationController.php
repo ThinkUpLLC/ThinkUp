@@ -109,7 +109,6 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $invite_added = $invite_dao->addInviteCode( $invite_code ) ;
 
             if ($invite_added == 1) { //invite generated and inserted
-                $server = $_SERVER['HTTP_HOST'];
                 $invite_link = Utils::getApplicationURL().'session/register.php?code='. $invite_code;
                 $this->addSuccessMessage("Invitation created!<br />Copy this link and send it to someone you want to ".
                 'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'" id="clippy_12345">'.

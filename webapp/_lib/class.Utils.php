@@ -304,6 +304,8 @@ class Utils {
             $server = ($server == 'localhost')?'127.0.0.1':$server;
         }
         $site_root_path = Config::getInstance()->getValue('site_root_path');
+        //URLencode everything except spaces in site_root_path
+        $site_root_path = str_replace('%2f', '/', strtolower(urlencode($site_root_path)));
         if  (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') { //non-standard port
             if (isset($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] == '443') { //account for standard https port
                 $port = '';

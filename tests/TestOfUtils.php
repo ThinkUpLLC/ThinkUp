@@ -273,5 +273,12 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $utils_url = Utils::getApplicationURL(true);
         $expected_url = 'http://127.0.0.1/my/path/to/thinkup/';
         $this->assertEqual($utils_url, $expected_url);
+
+        //with spaces in site_rooth_path
+        $_SERVER['HTTP_HOST'] = "localhost";
+        $cfg->setValue('site_root_path', '/my/path and this space/to/thinkup/');
+        $utils_url = Utils::getApplicationURL(false);
+        $expected_url = 'http://localhost/my/path+and+this+space/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
     }
 }
