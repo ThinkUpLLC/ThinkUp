@@ -1,63 +1,68 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_statusbar.tpl" enable_bootstrap="true"}
 
-<div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 30px;">
-      {if isset($error_msg)}
-        <div class="grid_18 alert urgent" style="margin-bottom : 20px; margin-left : 100px;">
-          {$error_msg}
-        </div>
-      {/if}
-      {if isset($success_msg)}
-        <div class="grid_18 alert helpful" style="margin-bottom : 20px; margin-left : 100px;">
-             <p>
-               <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-               {$success_msg}
-             </p>
-         </div> 
-      {/if}
 
-{if !isset($error_msg) && !isset($success_msg)}
-<div class="grid_18 section" style="margin-bottom : 100px; margin-left : 100px;">
-    {insert name="help_link" id='reset'}
+<div class="container">
 
-    <h2>Reset Your Password</h2>
+<div class="row">
+    <div class="span3">
+          <div class="embossed-block">
+            <ul>
+              <li>Reset Your Password</li>
+            </ul>
+          </div>
+    </div><!--/span3-->
+    <div class="span6">
 
-    <div class="article">
-    <form name="form1" method="post" action="" class="login append_20">
-      <div class="clearfix">
-        <div class="grid_6 prefix_2 right">
-            <label for="password">
-              New password:
-            </label>
-        </div>
-        <div class="grid_8 left">
-            <input type="password" name="password" id="password">
-        </div>
-      </div>
-      
-    <div class="clearfix">
-      <div class="grid_6 prefix_2 right">
-        <label for="password_confirm">
-          Retype password:
-        </label>
-      </div>
-      <div class="grid_8 left">
-        <input type="password" name="password_confirm" id="password_confirm">
-      </div>
-    </div>
-      <div class="clearfix">
-        <div class="grid_10 prefix_9 left">
-          <input type="submit" id="login-save" name="Submit" class="linkbutton emphasized" value="Submit">
-        </div>
-      </div>
-    </form>
-    </div>
-    <div class="view-all">
-      <a href="register.php">Register</a> |
-      <a href="login.php">Log In</a>
-    </div>
-</div>
-</div>
-{/if}
 
-{include file="_footer.tpl"}
+
+
+    {if isset($error_msg)}
+        <div class="alert alert-error"><p>{$error_msg}</p></div>
+    {/if}
+    {if isset($success_msg)}
+        <div class="alert alert-success"><p>{$success_msg}</p></div>
+    {/if}
+
+            {if !isset($error_msg) && !isset($success_msg)}
+            <form name="form1" method="post" action="" class="login form-horizontal">
+
+                <fieldset style="background-color : white; padding-top : 30px;">
+                    
+                    <div class="control-group">
+                        <label class="control-label" for="password">New password:</label>
+                        <div class="controls">
+                            <input class="input-xlarge" type="password" name="password" id="password">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="password_confirm">New password:</label>
+                        <div class="controls">
+                            <input class="input-xlarge" type="password" name="password_confirm" id="password_confirm">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Submit">
+                            <span class="pull-right">
+                                <div class="btn-group">
+                                    <a href="login.php" class="btn btn-mini">Log In</a>
+                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini">Register</a>{else}<span class="btn btn-mini disabled">Registration closed</span>{/if}
+                                    {insert name="help_link" id='reset'}
+                                </div>
+                            </span>
+                    </div>
+
+                </fieldset>
+
+            </form>
+            {/if}
+
+    </div><!-- end span9 -->
+
+</div><!-- end row -->
+
+
+</div> <!-- end container -->
+{include file="_footer.tpl" enable_bootstrap="true"}

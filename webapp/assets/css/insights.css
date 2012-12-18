@@ -24,6 +24,16 @@ p {
 .navbar-static-top {
   margin-bottom: 20px;
 }
+
+.navbar-static-top ul.nav.pull-right {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #fff;
+}
+
+.navbar-static-top ul.nav.pull-right > li > a {
+  border-left: 1px solid #fff;
+  border-right: 1px solid #ddd;
+}
     
 form .control-group {
     margin : 6px;
@@ -64,6 +74,10 @@ form .control-group {
 
 .alert p a {
     font-weight : bolder;
+}
+
+.alert p:last-child {
+    margin-bottom: 0;
 }
 
 .lead {
@@ -195,6 +209,7 @@ color : #666;
     height : 2px;
 }
 .password-meter-bg {
+    margin-top: 10px;
     background: transparent;
     width : 220px;
 }

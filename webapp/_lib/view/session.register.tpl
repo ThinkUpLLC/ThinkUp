@@ -75,9 +75,11 @@
 
                             <input type="submit" name="Submit" id="login-save" class="btn btn-primary" value="Register">
                             <span class="pull-right">
-                                <a href="login.php">Log In</a> |
-                                <a href="forgot.php">Forgot password</a> |
-                                {insert name="help_link" id='register'}
+                                <div class="btn-group">
+                                    <a href="login.php" class="btn btn-mini">Log In</a>
+                                    <a href="forgot.php" class="btn btn-mini">Forgot password</a>
+                                    {insert name="help_link" id='register'}
+                                </div>
                             </span>
                         
                     </div>
