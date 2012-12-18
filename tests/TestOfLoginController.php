@@ -163,7 +163,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/Logged in as admin: salt@example.com/", $results);
+        $this->assertPattern("/salt@example.com/", $results);
     }
 
     public function testCorrectUserPasswordAndNoUniqueSalt() {
@@ -175,7 +175,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->debug($results);
 
-        $this->assertPattern("/Logged in as admin: me@example.com/", $results);
+        $this->assertPattern("/me@example.com/", $results);
     }
 
     public function testAlreadyLoggedIn() {
@@ -184,7 +184,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertPattern('/Logged in as admin: me@example.com/', $results);
+        $this->assertPattern('/admin: me@example.com/', $results);
     }
 
     public function testFailedLoginIncrements() {

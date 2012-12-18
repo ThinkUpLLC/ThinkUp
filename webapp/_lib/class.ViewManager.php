@@ -79,8 +79,6 @@ class ViewManager extends Smarty {
      *  <code>
      *  //path of the ThinkUp installation site root as defined in config.inc.php
      *  {$site_root_path}
-     *  //file the ThinkUp logo links to, 'index.php' by default
-     *  {$logo_link}
      *  //application name
      *  {$app_title}
      *  </code>
@@ -117,7 +115,6 @@ class ViewManager extends Smarty {
 
         $this->assign('app_title', $app_title);
         $this->assign('site_root_path', $site_root_path);
-        $this->assign('logo_link', '');
     }
 
     /**

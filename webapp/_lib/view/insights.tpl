@@ -3,6 +3,8 @@
 
     <div id="main" class="container">
 
+{include file="_usermessage.tpl"}
+
 {if sizeof($insights) eq 0}
 
 <div class="row">

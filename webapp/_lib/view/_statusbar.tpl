@@ -4,7 +4,7 @@
       <div class="navbar-inner">
         <div class="container">
 
-          <a href="{$site_root_path}{$logo_link}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
+          <a href="{$site_root_path}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
 
           <div class="nav-collapse">
@@ -12,7 +12,7 @@
       {if $logged_in_user}
 <ul class="nav pull-right">
         {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
-        {if $logged_in_user}<li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" ><i class="icon-refresh"></i></a></li>{/if}
+        {if $logged_in_user}<li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>{/if}
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               {$logged_in_user}{if $user_is_admin} <span class="label label-info">admin</span>{/if}
@@ -73,7 +73,7 @@
           <option value="">-- Switch service user --</option>
           {foreach from=$instances key=tid item=i}
             {if $i->network_user_id != $instance->network_user_id}
-              <option value="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize}</option>
+              <option value="{$site_root_path}dashboard.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize}</option>
             {/if}
           {/foreach}
         </select>
@@ -90,7 +90,7 @@
   
   <div class="status-bar-right text-right">
     <ul> 
-        <li><a href="{$site_root_path}insights.php" class="linkbutton" style="background: #31C22D;color:white;">Insights (New!)</a></li>
+        <li><a href="{$site_root_path}" class="linkbutton" style="background: #31C22D;color:white;">Insights (New!)</a></li>
       {if $logged_in_user}
         <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
       {else}
@@ -107,7 +107,7 @@
 
 <div class="container clearfix">
   
-  <div id="app-title"><a href="{$site_root_path}{$logo_link}">
+  <div id="app-title"><a href="{$site_root_path}">
     <h1><span id="headerthink">Think</span><span id="headerup">Up</span></h1>
   </a></div> <!-- end #app-title -->
   

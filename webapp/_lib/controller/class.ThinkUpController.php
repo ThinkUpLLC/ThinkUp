@@ -116,8 +116,6 @@ abstract class ThinkUpController {
             SessionCache::isKeySet('selected_instance_username')) {
                 $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
                 $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
-                $this->addToView('logo_link', '?u='. urlencode(SessionCache::get('selected_instance_username'))
-                .'&n='. urlencode(SessionCache::get('selected_instance_network')));
             }
         } catch (Exception $e) {
             Loader::definePathConstants();

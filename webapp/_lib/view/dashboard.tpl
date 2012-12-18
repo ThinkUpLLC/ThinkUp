@@ -20,7 +20,7 @@
                 <li{if $smarty.get.v eq $smkey OR $parent eq $smkey} class="selected"{/if}>
                 {* TODO: Remove this logic from the view *}
                 {if $parent eq $smkey}{assign var="parent_name" value=$sidebar_menu_item->name}{/if}
-                <a href="{$site_root_path}?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$sidebar_menu_item->name}</a></li>
+                <a href="{$site_root_path}dashboard.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$sidebar_menu_item->name}</a></li>
              {/if}
             {/foreach}
 

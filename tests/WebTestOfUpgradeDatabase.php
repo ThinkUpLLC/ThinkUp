@@ -412,7 +412,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $this->get($token_url . '&migration_done=true');
                 $this->assertText('{ "migration_complete":true }');
                 $this->get($this->url.'/test_installer/thinkup/');
-                $this->assertText('Logged in');
                 $this->assertText('user@example.com');
             } else {
                 $this->assertText('Your database is up to date');

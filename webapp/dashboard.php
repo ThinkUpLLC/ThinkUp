@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/public.php
+ * ThinkUp/webapp/dashboard.php
  *
  * Copyright (c) 2009-2012 Gina Trapani
  *
@@ -24,6 +24,8 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
- *
  */
-require_once 'index.php';
+require_once 'init.php';
+
+$controller = new DashboardController();
+echo $controller->go();
