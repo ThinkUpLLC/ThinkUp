@@ -575,4 +575,24 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
     }
+
+    public function testStoreServerName() {
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+        $this->assertNull($current_stored_server_name);
+
+        $_SERVER['HTTP_HOST'] = 'mytestthinkup';
+        Installer::storeServerName();
+        $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+        $this->assertNotNull($current_stored_server_name);
+        $this->assertEqual($current_stored_server_name->option_value, 'mytestthinkup');
+        $this->assertEqual($current_stored_server_name->option_name, 'server_name');
+
+        $_SERVER['SERVER_NAME'] = 'myreallygoodtest';
+        Installer::storeServerName();
+        $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+        $this->assertNotNull($current_stored_server_name);
+        $this->assertEqual($current_stored_server_name->option_value, 'myreallygoodtest');
+        $this->assertEqual($current_stored_server_name->option_name, 'server_name');
+    }
 }

@@ -30,7 +30,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfUtils extends ThinkUpBasicUnitTestCase {
+class TestOfUtils extends ThinkUpUnitTestCase {
 
     public function testgetPluginViewDirectory() {
         $config = Config::getInstance();
@@ -219,11 +219,19 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
     }
 
     public function testGetApplicationURL() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('site_root_path', '/my/path/to/thinkup/');
+
+        //no $_SERVER vars set, but with application setting set
+        $builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'testservername') );
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://testservername/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
+
         //no SSL
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
         $_SERVER['HTTPS'] = null;
-        $cfg = Config::getInstance();
-        $cfg->setValue('site_root_path', '/my/path/to/thinkup/');
         $utils_url = Utils::getApplicationURL();
         $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
         $this->assertEqual($utils_url, $expected_url);

@@ -117,9 +117,17 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
 
     public function testRanUpdate() {
         $this->simulateLogin('me@example.com', true);
+        $_SERVER['SERVER_NAME'] = 'http://example.com';
         $_GET['ran_update'] = true;
         $controller = new MockUpgradeApplicationController(true);
         $results = $controller->go();
+
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+        $this->assertNotNull($current_stored_server_name);
+        $this->assertEqual($current_stored_server_name->option_value, 'http://example.com');
+        $this->assertEqual($current_stored_server_name->option_name, 'server_name');
+
         $this->assertPattern('/Success! You\'re running the latest version of ThinkUp./', $results);
     }
 

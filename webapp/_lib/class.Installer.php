@@ -756,4 +756,20 @@ class Installer {
         }
         return $table_names;
     }
+
+    /**
+     * Store the application's server name in application settings as last-resort use by command-line scripts.
+     */
+    public static function storeServerName() {
+        $server_name = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+        if ($server_name != '') {
+            $option_dao = DAOFactory::getDAO('OptionDAO');
+            $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+            if ($current_stored_server_name) {
+                $option_dao->updateOption($current_stored_server_name->option_id, $server_name);
+            } else {
+                $option_dao->insertOption(OptionDAO::APP_OPTIONS, 'server_name', $server_name);
+            }
+        }
+    }
 }

@@ -51,6 +51,9 @@ class UpgradeApplicationController extends ThinkUpAuthController {
                 $this->addErrorMessage($e->getMessage(), null, true);
             }
         } else if (isset($_GET['ran_update'])) {
+            //Update the application server name in app settings for access by command-line scripts
+            Installer::storeServerName();
+
             //Clear Smarty's compiled templates and cache to start fresh with newly upgraded app
             $this->view_mgr->clear_compiled_tpl();
             $this->view_mgr->clear_all_cache();

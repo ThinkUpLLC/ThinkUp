@@ -361,6 +361,9 @@ class InstallerController extends ThinkUpController {
         // if empty, we're ready to populate the database with ThinkUp tables
         $this->installer->populateTables($db_config);
 
+        //Set the application server name in app settings for access by command-line scripts
+        Installer::storeServerName();
+
         $owner_dao = DAOFactory::getDAO('OwnerDAO', $db_config);
         if ( !$owner_dao->doesAdminExist() && !$owner_dao->doesOwnerExist($email)) { // create admin if not exists
             $activation_code = $owner_dao->createAdmin($email, $password, $full_name);

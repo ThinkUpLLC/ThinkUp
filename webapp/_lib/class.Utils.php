@@ -299,7 +299,16 @@ class Utils {
      * @return str
      */
     public static function getApplicationURL($replace_localhost_with_ip = false) {
+        //First attempt to get the host name without querying the database
         $server = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+        //Then fall back to stored application setting set by Installer::storeServerName
+        if ($server == '') {
+            $option_dao = DAOFactory::getDAO('OptionDAO');
+            $server_app_setting = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+            if (isset($server_app_setting)) {
+                $server = $server_app_setting->option_value;
+            }
+        }
         if ($replace_localhost_with_ip) {
             $server = ($server == 'localhost')?'127.0.0.1':$server;
         }

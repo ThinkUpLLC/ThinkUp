@@ -565,9 +565,14 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
         $this->debug($result);
-        $this->assertPattern('/ThinkUp has been
-installed successfully. Check your email account; an account activation
-message has been sent./', $result);
+        $this->assertPattern('/ThinkUp has been installed successfully./', $result);
+
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+        $this->assertNotNull($current_stored_server_name);
+        $this->assertEqual($current_stored_server_name->option_value, 'http://example.com');
+        $this->assertEqual($current_stored_server_name->option_name, 'server_name');
+
         $this->restoreConfigFile();
         //echo $result;
     }
