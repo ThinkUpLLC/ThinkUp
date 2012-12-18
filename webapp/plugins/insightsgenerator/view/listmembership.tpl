@@ -4,7 +4,7 @@
 
 <span class="label label-{if $i->emphasis eq '1'}inverse{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-list"></i> {$i->prefix}</span> 
 
-{$i->text}
+{$i->text|link_usernames_to_twitter}
 
 {include file=$tpl_path|cat:'_counthistorychart.tpl'}
 
