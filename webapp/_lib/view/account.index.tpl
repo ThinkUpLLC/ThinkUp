@@ -26,7 +26,6 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th></th>
                           <th>Name</th>
                           {if $user_is_admin}<th>Activate</th>{/if}
                         </tr>
@@ -35,12 +34,11 @@
                   {if $user_is_admin || $ip->is_active}
                         <tr>
                           <td>
-                            <span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
-                            {if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}{/if}
-                          </td>
-                          <td>
-                            <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
+                            <div style="float:left";"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="float-l" style="margin-right:10px"></span>
+                            {/if}</div>
+                            <a href="?p={$ip->folder_name|get_plugin_path}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>{if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}
                             <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
+                            
                             <span style="color:#666">{$ip->description}</span><br>
                           </td>
                     {if $user_is_admin}
