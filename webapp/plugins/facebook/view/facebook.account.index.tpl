@@ -20,7 +20,7 @@
 {if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
 
 {if count($instances) > 0 }
-<div class="section">
+<div>
     <h2>Facebook User Profiles</h2>
 
     {foreach from=$instances key=iid item=i name=foo}
@@ -48,69 +48,62 @@
 
 
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
-<div class="section">
+<div>
     <h2>Facebook Pages</h2>
     <div class="article">
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
-    <div class="clearfix">
-        <div class="grid_4 right" style="padding-top:.5em;">
+    <div class="row-fluid">
+        <div class="span3">
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
-        <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+        <div class="span3">
+            <span id="div{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
-        <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+        <div class="span3">
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
-        <div class="grid_8 right">
+        <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete page csrf token -->
-            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="linkbutton" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn" value="delete" /></form></span>
         </div>
-
-    </div>{/foreach}
+    </div>
+    {/foreach}
     </div>
 </div>
     {/if}
 
-<div class="section">
+<div>
 <h2>Add a Facebook Page</h2>
 {foreach from=$instances key=iid item=i name=foo}
   {assign var='facebook_user_id' value=$i->network_user_id}
   {if $user_pages.$facebook_user_id or $user_admin_pages.$facebook_user_id}
-    <div class="clearfix article">
-        <div class="grid_4 right" style="padding-top:.5em;">
-            {$i->network_username}:
-        </div>
-        <form name="addpage" action="index.php?p=facebook">
-        <div class="grid_8">
+      <div class="row-fluid">
+        <div class="span6">
+          <form name="addpage" action="index.php?p=facebook">
             <input type="hidden" name="instance_id" value="{$i->id}">
             <input type="hidden" name="p" value="facebook">
             <input type="hidden" name ="viewer_id" value="{$i->network_user_id}" />
             <input type="hidden" name ="owner_id" value="{$owner->id}" />
             <select name="facebook_page_id">
                 {if $user_admin_pages.$facebook_user_id}
-                    <optgroup label="Pages You Manage">
+                    <optgroup label="Pages {$i->network_username} Manages">
                         {foreach from=$user_admin_pages.$facebook_user_id key=page_id item=page name=p}
                             <option value="{$page->id}">{if strlen($page->name)>27}{$page->name|substr:0:27}...{else}{$page->name}{/if}</option> <br />
                         {/foreach}
                     </optgroup>
                 {/if}
                 {if $user_pages.$facebook_user_id}
-                    <optgroup label="Pages You Like">
+                    <optgroup label="Pages {$i->network_username} Likes">
                     {foreach from=$user_pages.$facebook_user_id key=page_id item=page name=p}
                         <option value="{$page->id}">{if strlen($page->name)>27}{$page->name|substr:0:27}...{else}{$page->name}{/if}</option> <br />
                     {/foreach}
                     </optgroup>
                 {/if}
              </select>
+           <span id="divaddpage{$i->network_username}"><input type="submit" name="action" class="btn addPage"  id="{$i->network_username}" value="add page" /></span>
         </div>
-        <div class="grid_7">
-             <span id="divaddpage{$i->network_username}"><input type="submit" name="action" class="linkbutton
-addPage"  id="{$i->network_username}" value="add page" /></span>
-        </div>
-        </form>
-    </div>
+     </div>
     {else}
     <div class="article">
     To add a Facebook page to ThinkUp, create a new page on Facebook.com or "like" an existing one, and refresh this page.

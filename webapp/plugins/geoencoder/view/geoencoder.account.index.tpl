@@ -10,7 +10,6 @@
 
 </div>
 
-<div class="append_20">
 
 <div id="contact-admin-div" style="display: none; margin-top: 20px;">
 {include file="_plugin.admin-request.tpl"}
