@@ -6,9 +6,6 @@ Typically users purchase a web hosting plan and install ThinkUp on it the same w
 
 :doc:`Here's how to install ThinkUp </install/index>`.
 
-If you don't have access to a web server, you can `run ThinkUp for free on PHPFog
-<http://expertlabs.org/2011/12/php-fog-adds-free-thinkup-hosting.html>`_ or try
-our `ThinkUp Launcher for Amazon EC2 <http://expertlabs.aaas.org/thinkup-launcher/>`_. Alternately, power ThinkUp users
-have documented how to install ThinkUp
+ThinkUp developers have documented how to install ThinkUp
 on `Windows <https://github.com/ginatrapani/ThinkUp/wiki/Installation:-Windows>`_ and
 `Mac OS X <https://github.com/ginatrapani/ThinkUp/wiki/Installation:-Mac-OS-X>`_ on the community wiki.
