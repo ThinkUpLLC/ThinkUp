@@ -227,9 +227,10 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $tokens = $oid->getOAuthTokens($_GET["instance_id"]);
             $access_token = $tokens['oauth_access_token'];
 
-            $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
+            $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token,
+            "id,name,picture");
             self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"], $page_data->name,
-            $page_data->picture);
+            $page_data->picture->data->url);
         }
     }
     /**

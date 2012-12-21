@@ -1,14 +1,10 @@
 {
-   "id": "162504567094163",
-   "name": "ThinkUp",
-   "picture": "http://profile.ak.fbcdn.net/hprofile-ak-snc4/hs460.snc4/50195_162504567094163_8933_s.jpg",
-   "link": "http://www.facebook.com/pages/ThinkUp/162504567094163",
-   "category": "Technology",
-   "website": "http://thinkupapp.com",
-   "founded": "2009",
-   "company_overview": "ThinkUp lets you get insights from the time you spend on social networks like Twitter and Facebook.",
-   "mission": "ThinkUp captures your posts, replies, retweets, friends, followers, and links on social networks like Twitter and Facebook. We'll be adding more networks in the future. ThinkUp stores your social data in a database you control, and makes it easy to search, sort, filter, export, and visualize in useful ways.",
-   "products": "ThinkUp is an open source software project licensed under the GNU GPL, founded by Gina Trapani, sponsored by Expert Labs, used to help the White House, and built by an enthusiastic community of contributors like you.",
-   "fan_count": 54,
-   "can_post": true
+  "id": "162504567094163", 
+  "name": "ThinkUp", 
+  "picture": {
+    "data": {
+      "url": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/373014_162504567094163_16685399_q.jpg", 
+      "is_silhouette": false
+    }
+  }
 }
