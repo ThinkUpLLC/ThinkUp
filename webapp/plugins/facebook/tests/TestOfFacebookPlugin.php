@@ -168,6 +168,14 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
 
+        //assert invalid_oauth_email_sent_timestamp option is not set
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('facebook');
+        $last_email_timestamp = $option_dao->getOptionByName(OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id,
+        'invalid_oauth_email_sent_timestamp');
+        $this->assertNull($last_email_timestamp);
+
         //log in as that owner
         $this->simulateLogin('me@example.com');
 
@@ -191,5 +199,25 @@ message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon F
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
         $this->assertPattern($expected_reg_email_pattern, $actual_reg_email);
+
+        //assert invalid_oauth_email_sent_timestamp option has been set
+        $last_email_timestamp = $option_dao->getOptionByName(OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id,
+        'invalid_oauth_email_sent_timestamp');
+        $this->assertNotNull($last_email_timestamp);
+
+        //Delete last mail file
+        $test_email_file = FileDataManager::getDataPath(Mailer::EMAIL);
+        unlink($test_email_file);
+        $actual_reg_email = Mailer::getLastMail();
+        //Assert it's been deleted
+        $this->assertEqual($actual_reg_email, '');
+
+        //Crawl again
+        $fb_plugin->crawl();
+
+        //Assert email has not been resent
+        $actual_reg_email = Mailer::getLastMail();
+        $this->debug($actual_reg_email);
+        $this->assertEqual($actual_reg_email, '');
     }
 }

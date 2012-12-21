@@ -105,21 +105,43 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
     }
 
     /**
-     * Send user email alert about invalid OAuth tokens. In test mode, this will only write the message body to a file
-     * in the application data directory.
+     * Send user email alert about invalid OAuth tokens, at most one message per week.
+     * In test mode, this will only write the message body to a file in the application data directory.
      * @param str $email
      * @param str $username
      */
     private function sendInvalidOAuthEmailAlert($email, $username) {
-        $mailer_view_mgr = new ViewManager();
-        $mailer_view_mgr->caching=false;
+        //Determine whether or not an email about invalid tokens was sent in the past 7 days
+        $should_send_email = true;
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
 
-        $mailer_view_mgr->assign('thinkup_site_url', Utils::getApplicationURL());
-        $mailer_view_mgr->assign('email', $email );
-        $mailer_view_mgr->assign('faceboook_user_name', $username);
-        $message = $mailer_view_mgr->fetch(Utils::getPluginViewDirectory('facebook').'_email.invalidtoken.tpl');
+        $plugin_id = $plugin_dao->getPluginId('facebook');
+        $last_email_timestamp = $option_dao->getOptionByName(OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id,
+        'invalid_oauth_email_sent_timestamp');
+        if (isset($last_email_timestamp)) { //option exists, a message was sent
+            //a message was sent in the past week
+            if ($last_email_timestamp->option_value > strtotime('-1 week') ) {
+                $should_send_email = false;
+            } else {
+                $option_dao->updateOption($last_email_timestamp->option_id, time());
+            }
+        } else {
+            $option_dao->insertOption(OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id,
+            'invalid_oauth_email_sent_timestamp', time());
+        }
 
-        Mailer::mail($email, "Please re-authorize ThinkUp to access ". $username. " on Facebook", $message);
+        if ($should_send_email) {
+            $mailer_view_mgr = new ViewManager();
+            $mailer_view_mgr->caching=false;
+
+            $mailer_view_mgr->assign('thinkup_site_url', Utils::getApplicationURL());
+            $mailer_view_mgr->assign('email', $email );
+            $mailer_view_mgr->assign('faceboook_user_name', $username);
+            $message = $mailer_view_mgr->fetch(Utils::getPluginViewDirectory('facebook').'_email.invalidtoken.tpl');
+
+            Mailer::mail($email, "Please re-authorize ThinkUp to access ". $username. " on Facebook", $message);
+        }
     }
 
     public function renderConfiguration($owner) {
