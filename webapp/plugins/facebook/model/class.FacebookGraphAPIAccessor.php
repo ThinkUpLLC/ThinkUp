@@ -39,7 +39,11 @@ class FacebookGraphAPIAccessor {
      */
     public static function apiRequest($path, $access_token, $fields=null) {
         $api_domain = 'https://graph.facebook.com';
-        $url = $api_domain.$path.'?access_token='.$access_token;
+        if (strpos($path, '?')===false) {
+            $url = $api_domain.$path.'?access_token='.$access_token;
+        } else {
+            $url = $api_domain.$path.'&access_token='.$access_token;
+        }
         if ($fields != null ) {
             $url = $url.'&fields='.$fields;
         }
