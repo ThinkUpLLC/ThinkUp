@@ -189,6 +189,16 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         'Official source of information about the Google+ platform');
         $this->assertEqual($post->links[0]->image_src, '');
 
+        //test reshare with annotation
+        $post = $post_dao->getPost('z12pcfdr2wvyzjfff22iiz3pjrnws3lle', 'google+', true);
+        $this->assertIsA($post, 'Post');
+        $this->assertEqual($post->post_text, 'Really fun episode this week.');
+
+        //test reshare without annotation
+        $post = $post_dao->getPost('z12pxlfjxpujivy3e230t3aqawfoz1qf1', 'google+', true);
+        $this->assertIsA($post, 'Post');
+        $this->assertEqual($post->post_text, '');
+
         //now crawl on updated data and assert counts and post text get updated in database
         $gpc->api_accessor->setDataLocation('new_counts/');
         $gpc->fetchInstanceUserPosts();

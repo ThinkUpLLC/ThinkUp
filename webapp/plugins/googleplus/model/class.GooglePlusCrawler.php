@@ -207,7 +207,7 @@ class GooglePlusCrawler {
                     $post['post_text'] = $item->object->content;
                     $should_capture_post = true;
                 } elseif ($item->verb == "share") {
-                    $post['post_text'] = $item->annotation;
+                    $post['post_text'] = (isset($item->annotation))?$item->annotation:'';
                     $should_capture_post = true;
                 }
                 if ($should_capture_post) {

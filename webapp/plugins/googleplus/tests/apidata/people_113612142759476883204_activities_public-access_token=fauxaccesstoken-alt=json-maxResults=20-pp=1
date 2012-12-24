@@ -132,6 +132,82 @@
      }
     ]
    }
+  },
+  {
+   "kind": "plus#activity",
+   "etag": "\"sJt1VilOvxUfDlfPWeqwjvyqpgI/vJCDChTzTw4_qHet0YMlbA9GQlg\"",
+   "title": "Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Donner, Blitzen and Rudolf are getting ready for flight...",
+   "published": "2012-12-24T09:50:26.285Z",
+   "updated": "2012-12-24T09:50:26.285Z",
+   "id": "z12pxlfjxpujivy3e230t3aqawfoz1qf1",
+   "url": "https://plus.google.com/103583604759580854844/posts/JtVZPYPHLpS",
+   "actor": {
+    "id": "103583604759580854844",
+    "displayName": "Google UK",
+    "url": "https://plus.google.com/103583604759580854844",
+    "image": {
+     "url": "https://lh4.googleusercontent.com/-XnEk6v4rpj8/AAAAAAAAAAI/AAAAAAAACz8/XiYQ67Qp8N4/photo.jpg?sz=50"
+    }
+   },
+   "verb": "share",
+   "object": {
+    "objectType": "activity",
+    "id": "z12cvb2aikehtlkoq04cdd1opm3cjzlbjjk",
+    "actor": {
+     "id": "111401917971052287374",
+     "displayName": "Google Maps",
+     "url": "https://plus.google.com/111401917971052287374",
+     "image": {
+      "url": "https://lh4.googleusercontent.com/-EirTMc5lnZQ/AAAAAAAAAAI/AAAAAAAAAAA/KQhgaz4sCyk/photo.jpg?sz=50"
+     }
+    },
+    "content": "Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Donner, Blitzen and Rudolf are getting ready for flight: <a href=\"http://goo.gl/OOlFm\" class=\"ot-anchor\">http://goo.gl/OOlFm</a><br /><br />Things are getting exciting in the North Pole!",
+    "url": "https://plus.google.com/111401917971052287374/posts/SBCrk4LCNoi",
+    "replies": {
+     "totalItems": 0,
+     "selfLink": "https://www.googleapis.com/plus/v1/activities/z12pxlfjxpujivy3e230t3aqawfoz1qf1/comments"
+    },
+    "plusoners": {
+     "totalItems": 22,
+     "selfLink": "https://www.googleapis.com/plus/v1/activities/z12pxlfjxpujivy3e230t3aqawfoz1qf1/people/plusoners"
+    },
+    "resharers": {
+     "totalItems": 7,
+     "selfLink": "https://www.googleapis.com/plus/v1/activities/z12pxlfjxpujivy3e230t3aqawfoz1qf1/people/resharers"
+    },
+    "attachments": [
+     {
+      "objectType": "photo",
+      "id": "111401917971052287374.5825414938315818114",
+      "content": "Screen Shot 2012-12-24 at 12.40.43 AM.png",
+      "url": "https://plus.google.com/photos/111401917971052287374/albums/5825414933226050209/5825414938315818114?authkey=CKL77oGG2ayv5QE",
+      "image": {
+       "url": "https://lh3.googleusercontent.com/-JtJuN6W076g/UNgIBaORhII/AAAAAAAAXw4/Z3-wLvelaMU/w497-h373/Screen%2BShot%2B2012-12-24%2Bat%2B12.40.43%2BAM.png",
+       "type": "image/jpeg",
+       "height": 373,
+       "width": 497
+      },
+      "fullImage": {
+       "url": "https://lh3.googleusercontent.com/-JtJuN6W076g/UNgIBaORhII/AAAAAAAAXw4/Z3-wLvelaMU/Screen%2BShot%2B2012-12-24%2Bat%2B12.40.43%2BAM.png",
+       "type": "image/jpeg",
+       "height": 803,
+       "width": 1432
+      }
+     }
+    ]
+   },
+   "provider": {
+    "title": "Reshared Post"
+   },
+   "access": {
+    "kind": "plus#acl",
+    "description": "Public",
+    "items": [
+     {
+      "type": "public"
+     }
+    ]
+   }
   }
  ]
 }
