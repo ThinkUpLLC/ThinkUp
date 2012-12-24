@@ -23,8 +23,8 @@ In order for the tests to pass, you must:
 
 -  Have a ``tests/config.tests.inc.php`` file with the correct values
    set
--  Set the crawler log file in ``webapp/config.inc.php`` and make that
-   file writable
+-  Setup the crawler, stream and sql log files in ``webapp/config.inc.php``
+   and make those files writable
 -  Set the test database name to an empty tests database which the tests
    will destroy each run in ``webapp/config.inc.php``
 -  Set the test database user to a user with all privileges in the test
@@ -38,7 +38,7 @@ source code root folder, use this command:
 
 ::
 
-    $ php tests/TestOfUserDAO.php
+    $ php tests/TestOfUserMySQLDAO.php
 
 To run all the test suites, use:
 
@@ -56,7 +56,7 @@ To see all the available options, run:
 
 ::
 
-    $ php tests/all_tests -help
+    $ php tests/all_tests.php -help
 
 Writing Tests
 -------------
