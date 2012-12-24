@@ -859,6 +859,7 @@ border-radius: 6px;
 border: 1px outset #89b1c0;
 }
 
+
 a.linkbutton,a.linkbutton:visited {
 text-decoration: none;
 }
@@ -869,7 +870,9 @@ font-size: smaller;
 float: right;
 min-height: 16px;
 padding-top: 4px;
-margin: 0 6px 6px 6px;
+margin: 0 6px 6px 6px; 
+position: relative;
+bottom: 8px; 
 }
 
 .linkbutton.emphasized {
