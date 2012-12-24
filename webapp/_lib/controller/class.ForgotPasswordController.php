@@ -32,6 +32,12 @@
 class ForgotPasswordController extends ThinkUpController {
 
     public function control() {
+	    $config = Config::getInstance();
+	    $is_registration_open = $config->getValue('is_registration_open');
+	    if (!$is_registration_open) {
+	        $this->addToView('closed', true);
+        }
+        
         if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send Reset') {
             $this->disableCaching();
 
@@ -43,7 +49,6 @@ class ForgotPasswordController extends ThinkUpController {
                 $es = new ViewManager();
                 $es->caching=false;
 
-                $config = Config::getInstance();
                 $es->assign('apptitle', $config->getValue('app_title_prefix')."ThinkUp" );
                 $es->assign('recovery_url', "session/reset.php?token=$token");
                 $es->assign('application_url', Utils::getApplicationURL($false));
