@@ -22,7 +22,7 @@
                 </label>
               </div>
               <div class="grid_10 left">
-                <input type="text" name="email" id="email"{if isset($email)} value="{$email|filter_xss}"{/if}>
+                <input type="text" name="email" id="email"{if isset($email)} value="{$email|filter_xss}"{/if} autofocus="autofocus">
               </div>
             </div>
             <div class="clearfix">
