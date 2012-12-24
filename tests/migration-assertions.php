@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '1.1.1';
+$LATEST_VERSION = '1.2';
 $TOTAL_MIGRATION_COUNT = 240;
 
 $MIGRATIONS = array(
@@ -920,6 +920,12 @@ $MIGRATIONS = array(
 
      /* 1.1.1 */
     '1.1.1' => array(
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.1.1.zip',
+        'migrations' => 0,
+     ),
+
+     /* 1.2 */
+    '1.2' => array(
         'zip_url' => 'file://./build/thinkup.zip',
         'migrations' => 0,
      ),
