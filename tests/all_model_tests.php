@@ -21,7 +21,8 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com> 
+ * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Gina Trapani
  */
@@ -38,58 +39,25 @@ $model_tests->add(new TestOfDAOFactory());
 $model_tests->add(new TestOfConfig());
 $model_tests->add(new TestOfFileDataManager());
 $model_tests->add(new TestOfCrawler());
-$model_tests->add(new TestOfFollowMySQLDAO());
-$model_tests->add(new TestOfFollowerCountMySQLDAO());
-$model_tests->add(new TestOfGroupMySQLDAO());
-$model_tests->add(new TestOfGroupMemberMySQLDAO());
-$model_tests->add(new TestOfGroupMembershipCountMySQLDAO());
-$model_tests->add(new TestOfInsightBaselineMySQLDAO());
-$model_tests->add(new TestOfInsightMySQLDAO());
-$model_tests->add(new TestOfInstanceMySQLDAO());
-$model_tests->add(new TestOfInsightMySQLDAO());
 $model_tests->add(new TestOfDashboardModuleCacher());
 $model_tests->add(new TestOfInstaller());
-$model_tests->add(new TestOfInstallerMySQLDAO());
-$model_tests->add(new TestOfInviteMySQLDAO());
-$model_tests->add(new TestOfLinkMySQLDAO());
 $model_tests->add(new TestOfLoader());
-$model_tests->add(new TestOfLocationMySQLDAO());
 $model_tests->add(new TestOfMailer());
-$model_tests->add(new TestOfOptionMySQLDAO());
 $model_tests->add(new TestOfOwner());
-$model_tests->add(new TestOfOwnerMySQLDAO());
-$model_tests->add(new TestOfOwnerInstanceMySQLDAO());
 $model_tests->add(new TestOfPlugin());
-$model_tests->add(new TestOfPluginMySQLDAO());
-$model_tests->add(new TestOfPluginOptionMySQLDAO());
 $model_tests->add(new TestOfPluginRegistrar());
 $model_tests->add(new TestOfPost());
-$model_tests->add(new TestOfPostMySQLDAO());
-$model_tests->add(new TestOfExportMySQLDAO());
-$model_tests->add(new TestOfPostErrorMySQLDAO());
 $model_tests->add(new TestOfProfiler());
 $model_tests->add(new TestOfSession());
 $model_tests->add(new TestOfSessionCache());
 $model_tests->add(new TestOfViewManager());
-$model_tests->add(new TestOfUserMySQLDAO());
-$model_tests->add(new TestOfUserErrorMySQLDAO());
 $model_tests->add(new TestOfUtils());
 $model_tests->add(new TestOfWebapp());
 $model_tests->add(new TestOfMenuItem());
 $model_tests->add(new TestOfDataset());
 $model_tests->add(new TestOfPostIterator());
-$model_tests->add(new TestOfMutexMySQLDAO());
-$model_tests->add(new TestOfBackupMySQLDAO());
-$model_tests->add(new TestOfFavoritePostMySQLDAO());
-$model_tests->add(new TestOfStreamDataMySQLDAO());
-$model_tests->add(new TestOfStreamProcMySQLDAO());
-$model_tests->add(new TestOfHashtagMySQLDAO());
-$model_tests->add(new TestOfMentionMySQLDAO());
-$model_tests->add(new TestOfPlaceMySQLDAO());
 $model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfURLProcessor());
-$model_tests->add(new TestOfTableStatsMySQLDAO());
-$model_tests->add(new TestOfShortLinkMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
