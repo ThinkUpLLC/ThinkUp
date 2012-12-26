@@ -11,7 +11,7 @@
         {/if}
         {if $instance}
               <li{if $smarty.get.v eq ''} class="selected"{/if}>
-                <a href="{$site_root_path}?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
+                <a href="{$site_root_path}dashboard.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
               </li>
         {/if}
         {if $sidebar_menu}
@@ -101,7 +101,7 @@
                     {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
                 {/foreach}
                 <div class="clearfix view-all">
-                    <a href="{$site_root_path}?v=years_most_popular&u={$instance->network_username}&n={$instance->network}&y={$yearly_popular_year}">More...</a>
+                    <a href="{$site_root_path}dashboard.php?v=years_most_popular&u={$instance->network_username}&n={$instance->network}&y={$yearly_popular_year}">More...</a>
                 </div>
                 </div>
             {/if}
@@ -120,7 +120,7 @@
                 <br /><br /><br />
                 </div>
                 <div class="clearfix view-all">
-                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More...</a>
+                    <a href="{$site_root_path}dashboard.php?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More...</a>
                 </div>
                 </div>
             {/if}
