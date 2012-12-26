@@ -110,11 +110,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             // issue #813 -build more of a range of retweet_count_cache and old_retweet_count_cache values for the
             // retweet testing.
             $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
-            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
             'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
             'source'=>$source, 'pub_date'=>'2006-01-01 00:'. $pseudo_minute.':00',
             'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
-            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
@@ -3547,5 +3547,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $valid_url .= 'blue%7C|52.477192843264,-1.484333726346|52.477192843264,-1.484333726346&sensor=false';
 
         $this->assertEqual($res, $valid_url);
+    }
+
+    public function testGetMostPopularPostsOfTheYear() {
+        $post_dao = new PostMySQLDAO();
+        $posts = $post_dao->getMostPopularPostsOfTheYear('13', 'twitter', '2006');
+
+        $this->assertEqual(sizeof($posts), 25);
+        foreach ($posts as $post) {
+            $this->assertIsA($post, 'Post');
+            $this->assertNotNull($post->id);
+            $this->assertEqual($post->author_user_id, '13');
+            $this->assertEqual($post->author_username, 'ev');
+            $this->assertNull($post->in_reply_to_user_id);
+            $this->assertNull($post->in_retweet_of_post_id);
+            $this->assertNull($post->in_rt_of_user_id);
+            $this->assertEqual(date('Y', strtotime($post->pub_date)), '2006');
+        }
     }
 }

@@ -225,6 +225,18 @@ class DashboardController extends ThinkUpController {
                 $this->addToView('hot_posts_data', $hot_posts_data);
             }
 
+            $yearly_popular = $insight_dao->getPreCachedInsightData('PostMySQLDAO::getMostPopularPostsOfTheYear',
+            $this->instance->id, date('Y-m-d'));
+            if (isset($yearly_popular)) {
+                if (date('n') == 12) {
+                    $yearly_popular_year = date('Y');
+                } else {
+                    $yearly_popular_year = intval(date('Y'))-1;
+                }
+                $this->addToView('yearly_popular', $yearly_popular);
+                $this->addToView('yearly_popular_year', $yearly_popular_year);
+            }
+
             $click_stats_data = $insight_dao->getPreCachedInsightData( 'ShortLinkMySQLDAO::getRecentClickStats',
             $this->instance->id, date('Y-m-d'));
             if (isset($click_stats_data)) {

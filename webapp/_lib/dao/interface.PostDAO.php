@@ -652,4 +652,14 @@ interface PostDAO {
      * @return str JavaScript data for Google chart
      */
     public function getPostsPerHourDataVis($author_id, $network);
+
+    /**
+     * Get the top 25 posts with the most replies, reshares, and likes of a given year.
+     * @param str $author_user_id
+     * @param str $network
+     * @param str $year
+     * @param int $count Defaults to 25
+     * @return array of Post objects
+     */
+    public function getMostPopularPostsOfTheYear($author_user_id, $network, $year, $count=25);
 }

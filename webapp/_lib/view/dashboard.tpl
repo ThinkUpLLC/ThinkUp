@@ -94,6 +94,18 @@
                 </div>
             {/if}
 
+            {if $yearly_popular && $instance->network eq 'twitter'}
+                <div class="section">
+                <h2>Your Most Popular Tweets of {$yearly_popular_year}</h2>
+                {foreach from=$yearly_popular key=tid item=t name=foo}
+                    {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                {/foreach}
+                <div class="clearfix view-all">
+                    <a href="{$site_root_path}?v=years_most_popular&u={$instance->network_username}&n={$instance->network}&y={$yearly_popular_year}">More...</a>
+                </div>
+                </div>
+            {/if}
+
             {if $least_likely_followers}
               <div class="clearfix section">
                 <h2>This Week's Most Discerning Followers</h2>

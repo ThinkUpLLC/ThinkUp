@@ -391,6 +391,24 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $messagestab->addDataset($messagestabds);
         $menus["tweets-messages"] = $messagestab;
 
+        // Most popular tweets of the year
+        $current_year = intval(date('Y'));
+        $year = $current_year;
+        if (isset($_GET['y'])) {
+            if (is_numeric($_GET['y'])) {
+                $year_param = intval($_GET['y']);
+                if ($year_param >= 2005 && $year_param <= $current_year) {
+                    $year = $year_param;
+                }
+            }
+        }
+        $yearly_popular_tab = new MenuItem("Top 25 Posts of ".$year,
+        "Most retweeted and replied-to tweets of ".$year.".", $twitter_data_tpl, 'tweets');
+        $yearly_popular_tab_dataset =  new Dataset("years_most_popular", 'PostDAO', "getMostPopularPostsOfTheYear",
+        array($instance->network_user_id, $instance->network, $year, 25));
+        $yearly_popular_tab->addDataset($yearly_popular_tab_dataset);
+        $menus["years_most_popular"] = $yearly_popular_tab;
+
         $fvalltab = new MenuItem("Favorites", "All your favorites", $twitter_data_tpl, 'tweets');
         $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts",
         array($instance->network_user_id, 'twitter', 20, "#page_number#", !Session::isLoggedIn()),

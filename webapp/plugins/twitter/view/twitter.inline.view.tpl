@@ -115,6 +115,12 @@
   {/foreach}
 {/if}
 
+{if $years_most_popular}
+  {foreach from=$years_most_popular key=tid item=t name=foo}
+    {include file="_post.counts_no_author.tpl" post=$t}
+  {/foreach}
+{/if}
+
 {if ($display eq 'friends-mostactive' and not $people) or ($display eq 'friends-leastactive' and not $people) 
 or ($display eq 'friends-mostfollowed' and not $people) or ($display eq 'friends-former' and not $people)
 or ($display eq 'friends-notmutual' and not $people) 

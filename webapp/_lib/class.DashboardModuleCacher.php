@@ -124,6 +124,23 @@ class DashboardModuleCacher {
         $insight_dao->insertInsight("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id,
         $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($posts_flashback));
 
+        //if it's December or January, cache PostMySQLDAO::getMostPopularPostsOfTheYear
+        if (date('n') == 12 || date('n') == 1) {
+            if (date('n') == 12) {
+                $year = date('Y');
+            } else {
+                $year = intval(date('Y'))-1;
+            }
+            //Cache PostMySQLDAO::getMostPopularPostsOfTheYear
+            $posts_yearly_popular = $post_dao->getMostPopularPostsOfTheYear($this->instance->network_user_id,
+            $this->instance->network, $year, 5);
+            //delete existing
+            $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id);
+            //insert new
+            $insight_dao->insertInsight("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id,
+            $simplified_date, '', '', Insight::EMPHASIS_LOW, serialize($posts_yearly_popular));
+        }
+
         if ($this->instance->network == 'foursquare') {
             // Cache PostMySQLDAO::countCheckinsToPlaceTypesLastWeek
             $checkins_count = $post_dao->countCheckinsToPlaceTypesLastWeek($this->instance->network_user_id,

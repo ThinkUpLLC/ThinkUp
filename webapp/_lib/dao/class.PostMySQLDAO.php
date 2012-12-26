@@ -2233,4 +2233,30 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             return "";
         }
     }
+
+    public function getMostPopularPostsOfTheYear($author_user_id, $network, $year, $count=25) {
+        $vars = array(
+            ':network_user_id'=> $author_user_id,
+            ':network'=>$network,
+            ':year'=>$year,
+            ':count'=>$count
+        );
+        $q = "SELECT po.*, po.id AS post_key, po.pub_date + interval #gmt_offset# hour as adj_pub_date, ";
+        $q .= "(greatest(retweet_count_cache, retweet_count_api) + reply_count_cache + favlike_count_cache) ";
+        $q .= "AS total_responses FROM #prefix#posts po WHERE  YEAR(pub_date)=:year ";
+        $q .= "AND po.author_user_id=:network_user_id AND po.network=:network AND ";
+        $q .= "in_reply_to_post_id IS null AND in_reply_to_user_id IS NULL AND ";
+        $q .= "in_retweet_of_post_id IS NULL AND in_rt_of_user_id IS NULL ";
+        $q .= "ORDER BY total_responses DESC LIMIT :count";
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($post_rows as $row) {
+            $post = new Post($row);
+            $posts[] = $post;
+        }
+        return $posts;
+    }
 }
