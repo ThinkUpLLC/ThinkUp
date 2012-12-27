@@ -108,38 +108,40 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 arsort($average_replies);
                 $terminology = ($post->network == "twitter")?"retweets":"reshares";
                 foreach ($average_replies as $type => $average) {
+                    $sentence = "";
                     if ($average > $average_replies["all"] && $average_replies["all"] > 0) {
                         $multiplier_replies = floor($average/$average_replies["all"]);
                         if ($multiplier_replies > 1) {
-                            $insight_text .= " <strong>".ucfirst($type)."</strong> got <strong>".$multiplier_replies.
-                        "x</strong> more replies ";
+                            $sentence .= " <strong>".ucfirst($type)."</strong> got <strong>".$multiplier_replies.
+                            "x</strong> more replies ";
                         }
                         $multiplier_reshares = 0;
                         if ($average_reshares[$type] > $average_reshares["all"]) {
                             $multiplier_reshares = floor($average_reshares[$type]/$average_reshares["all"]);
                             if ($multiplier_reshares > 1) {
-                                $insight_text .= "and <strong>".$multiplier_reshares. "x</strong> more $terminology ";
+                                $sentence .= "and <strong>".$multiplier_reshares. "x</strong> more $terminology ";
                             }
                         }
                         if ($multiplier_replies > 1 || $multiplier_reshares > 1) {
-                            $insight_text .= "than average.";
+                            $sentence .= "than average.";
                         }
                     } else {
                         if ($average_reshares[$type] > $average_reshares["all"] && $average_reshares["all"] > 0) {
                             $multiplier = floor($average_reshares[$type]/$average_reshares["all"]);
                             if ($multiplier > 1) {
-                                $insight_text .= " <strong>".ucfirst($type)."</strong> got <strong>".$multiplier.
-                            "x</strong> more $terminology than average.";
+                                $sentence .= " <strong>".ucfirst($type)."</strong> got <strong>".$multiplier.
+                                "x</strong> more $terminology than average.";
                             }
                         }
                     }
+                    $insight_text .= $sentence;
                 }
 
                 $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
-            "Style stats:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                "Your posting style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
-            " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);
+                " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);
             }
         }
     }
