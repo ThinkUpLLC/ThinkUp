@@ -220,6 +220,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
+        $this->debug($output);
 
         //The mock API accessor reads the page likes JSON from the testdata/606837591_likes file
         $v_mgr = $controller->getViewManager();
@@ -229,7 +230,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'));
         $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'Array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('instances')), 1);
-        $this->assertPattern("/Pages You Like/", $output);
+        $this->assertPattern("/Pages Gina Trapani Likes/", $output);
         $this->assertPattern("/The Wire/", $output);
         $this->assertPattern("/Glee/", $output);
         $this->assertPattern("/Brooklyn, New York/", $output);
@@ -238,7 +239,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $managed_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
         $this->assertIsA($managed_pages, 'Array');
         $this->assertEqual($managed_pages[606837591][0]->name, 'Sample Cause');
-        $this->assertPattern("/Pages You Manage/", $output);
+        $this->assertPattern("/Pages Gina Trapani Manages/", $output);
         $this->assertPattern("/Sample Cause/", $output);
 
         //with auth error
@@ -288,7 +289,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $admin_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual(sizeof($liked_pages), 1);
-        $this->assertPattern("/Pages You Manage/", $output);
+        $this->debug($output);
+        $this->assertPattern("/Pages Gina Trapani Manage/", $output);
     }
 
     public function testConfiguredPluginWithOneFacebookUserNoLikedPagesNoManagedPages() {
@@ -309,7 +311,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $admin_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual(sizeof($liked_pages), 0);
-        $this->assertNoPattern("/Pages You Manage/", $output);
+        $this->assertNoPattern("/Pages Gina Trapani Manages/", $output);
     }
 
     private function buildPluginOptions() {

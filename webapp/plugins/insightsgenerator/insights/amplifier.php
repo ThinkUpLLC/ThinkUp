@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Amplifier
- Description: Notify user every 100 posts archived and offer option to export.
+ Description: Show how many more users a message has reached due to your retweet.
  */
 
 /**

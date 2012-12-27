@@ -83,7 +83,9 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertSubmit('delete');
 
         $this->click('Log Out');
-        $this->assertText('You have successfully logged out');
+        //        $this->assertText('You have successfully logged out');
+        //        $this->showSource();
+        $this->assertText("Log In");
 
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me2@example.com');

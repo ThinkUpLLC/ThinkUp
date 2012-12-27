@@ -184,7 +184,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertPattern('/admin: me@example.com/', $results);
+        $this->assertPattern('/me@example.com/', $results);
     }
 
     public function testFailedLoginIncrements() {

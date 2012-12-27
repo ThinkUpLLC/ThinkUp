@@ -71,7 +71,8 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $controller = new RegisterController(true);
         $results = $controller->go();
-        $this->assertPattern((Config::getInstance()->getValue('app_title_prefix') . "ThinkUp/"), $results);
+        $this->debug($results);
+        $this->assertPattern("/".(Config::getInstance()->getValue('app_title_prefix') . "ThinkUp/"), $results);
     }
 
     public function testAllMissingFields() {

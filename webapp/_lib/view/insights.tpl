@@ -5,14 +5,15 @@
 
 {include file="_usermessage.tpl"}
 
-{if sizeof($insights) eq 0}
+
+{if $message_header}
 
 <div class="row">
     <div class="span3">&nbsp;</div>
     <div class="span9">
         <div class="page-header">
-          <h1>ThinkUp doesn't have any insights for you yet.</h1>
-          <h2><small>Check back later, or click "Capture Data".</small></h2>
+          <h1>{$message_header}</h1>
+          <h2><small>{$message_body}</small></h2>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i> {$i->prefix}</span> 
+<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}inverse{/if}"><i class="icon-white icon-{if $i->emphasis eq '1'}time{elseif $i->emphasis eq '2'}thumbs-up{elseif $i->emphasis eq '3'}warning-sign{else}star{/if}"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
 {$i->text|link_usernames_to_twitter}
 {foreach from=$i->related_data key=uid item=p name=bar}
 
@@ -10,11 +10,6 @@
     {* Hide posts after the first one *}
     {if $smarty.foreach.bar.index eq 1}
         <div class="collapse in" id="flashback-{$i->id}">
-    {/if}
-
-    {* Show "X years ago you posted" text if post is from a different year than the last one *}
-    {if !$smarty.foreach.bar.first and $prev_post_year neq $p->adj_pub_date|date_format:"%Y"}
-        <div style="margin-top : 12px;"><!--<span class="label label-info"><i class="icon-white icon-time"></i> {$p->adj_pub_date|date_format:"%Y"} flashback:</span>-->  {$p->adj_pub_date|relative_datetime} ago, you posted:</div>
     {/if}
 
     {include file=$tpl_path|cat:"_post.tpl" post=$p hide_insight_header='1'}

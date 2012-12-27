@@ -3717,7 +3717,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testDoesUserHavePostsWithRetweetsSinceDate() {
         $post_dao = new PostMySQLDAO();
-        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('ev', 'twitter', 7);
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 7);
         $this->assertFalse($result);
 
         $counter = 0;
