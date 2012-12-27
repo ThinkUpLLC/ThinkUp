@@ -35,7 +35,7 @@ $TOTAL_MIGRATION_COUNT = 240;
 $MIGRATIONS = array(
     /* beta 0.1 */
     '0.1' => array(
-        'zip_url' => 'http://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.1.zip',
         'migration_assertions' => array(
             'sql' => array(
                 array(
@@ -49,7 +49,7 @@ $MIGRATIONS = array(
 
     /* beta 0.2 */
     '0.2' => array(
-        'zip_url' => 'http://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.2.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.2.zip',
         'migration_assertions' => array(
             'sql' => array(
                 array(
@@ -68,7 +68,7 @@ $MIGRATIONS = array(
 
     /* beta 0.3 */
     '0.3' => array(
-        'zip_url' => 'http://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.3.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.3.zip',
         'migration_assertions' => array(
             'sql' => array(
                 array(
@@ -112,7 +112,7 @@ $MIGRATIONS = array(
 
     /* beta 0.4 */
     '0.4' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.4.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.4.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -134,7 +134,7 @@ $MIGRATIONS = array(
 
     /* beta 0.5 */
     '0.5' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.5.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.5.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -156,7 +156,7 @@ $MIGRATIONS = array(
 
     /* beta 0.6 */
     '0.6' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.6.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.6.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -201,7 +201,7 @@ $MIGRATIONS = array(
 
     /* beta 0.7 */
     '0.7' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.7.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.7.zip',
         'migrations' => 1,
         'setup_sql' => array("DROP TABLE IF EXISTS tu_plugin_options",
                             "CREATE TABLE  `tu_plugin_options` (" .
@@ -247,7 +247,7 @@ $MIGRATIONS = array(
 
     /* beta 0.8 */
     '0.8' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.8.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.8.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -266,7 +266,7 @@ $MIGRATIONS = array(
 
     /* beta 0.9 */
     '0.9' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.9.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.9.zip',
         'migrations' => 1,
         'setup_sql' => array(
                       "INSERT INTO tu_plugins (name, folder_name) VALUES ('Flickr Thumbnails', 'flickthumbnails');"),
@@ -288,7 +288,7 @@ $MIGRATIONS = array(
 
     /* beta 0.10 */
     '0.10' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.10.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.10.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -347,7 +347,7 @@ $MIGRATIONS = array(
 
     /* beta 0.11 */
     '0.11' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.11.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.11.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -364,7 +364,7 @@ $MIGRATIONS = array(
 
     /* beta 0.12 */
     '0.12' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.12.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.12.1.zip',
         'migrations' => 1,
         'setup_sql' => array("INSERT INTO tu_plugins (name, folder_name) VALUES ('Embed Thread', 'embedthread');"),
         'migration_assertions' => array(
@@ -392,7 +392,7 @@ $MIGRATIONS = array(
 
     /* beta 0.13 */
     '0.13' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.13.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.13.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -415,7 +415,7 @@ $MIGRATIONS = array(
 
     /* beta 0.14 */
     '0.14' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.14.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.14.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -491,7 +491,7 @@ $MIGRATIONS = array(
 
     /* beta 0.15 */
     '0.15' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.15.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.15.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -542,7 +542,7 @@ $MIGRATIONS = array(
 
     /* beta 0.16 */
     '0.16' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.16.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.16.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -712,7 +712,7 @@ $MIGRATIONS = array(
 
      /* beta 0.17 */
     '0.17' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.17.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-0.17.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -737,25 +737,25 @@ $MIGRATIONS = array(
 
      /* 1.0 */
     '1.0' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.1 */
     '1.0.1' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.1.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.2 */
     '1.0.2' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.2.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.2.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.3 */
     '1.0.3' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.3.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.3.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -804,31 +804,31 @@ $MIGRATIONS = array(
 
      /* 1.0.4 */
     '1.0.4' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.4.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.4.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.5 */
     '1.0.5' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.5.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.5.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.6 */
     '1.0.6' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.6.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.6.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.7 */
     '1.0.7' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.7.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.7.zip',
         'migrations' => 0,
      ),
 
      /* 1.0.8.1 */
     '1.0.8.1' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.8.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.0.8.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -856,7 +856,7 @@ $MIGRATIONS = array(
 
      /* 1.1 */
     '1.1' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -920,7 +920,7 @@ $MIGRATIONS = array(
 
      /* 1.1.1 */
     '1.1.1' => array(
-        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.1.1.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.1.1.zip',
         'migrations' => 0,
      ),
 

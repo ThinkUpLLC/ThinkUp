@@ -203,8 +203,8 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
 
     // Don't run this test on every build b/c it makes live request
 //    public function testOfGetFinalURL() {
-//        $starting_url = "https://github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.5-beta.1.zip";
-//        $final_url = "http://cloud.github.com/downloads/ginatrapani/ThinkUp/thinkup_1.0.5-beta.1.zip";
+//        $starting_url = "https://thinkup.com/downloads/thinkup_1.0.5-beta.1.zip";
+//        $final_url = "https://thinkup.com/downloads/thinkup_1.0.5-beta.1.zip";
 //        $result = URLProcessor::getFinalURL($starting_url, false);
 //        $this->assertEqual($result, $final_url);
 //    }
