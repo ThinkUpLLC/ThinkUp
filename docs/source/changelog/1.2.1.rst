@@ -1,0 +1,5 @@
+1.2.1 - 28 Dec 2012
+===================
+
+*   Fixed bug where the account activation email message's URL was missing the site root path on installation.
+*   Fixed PHP error when fetching cached insight which was not yet precached.
