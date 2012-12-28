@@ -55,7 +55,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
 
     public function getPreCachedInsightData($slug, $instance_id, $date) {
         $insight = self::getInsight($slug, $instance_id, $date);
-        if ($insight->related_data != '') {
+        if (isset($insight->related_data) && $insight->related_data != '') {
             return unserialize($insight->related_data);
         } else {
             return null;
