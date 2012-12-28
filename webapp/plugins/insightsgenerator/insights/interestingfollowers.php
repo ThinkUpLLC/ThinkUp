@@ -44,7 +44,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
-                "Standouts:", sizeof($least_likely_followers)." interesting users followed you.",
+                "Standouts:", '<strong>'.sizeof($least_likely_followers)." interesting users</strong> followed you.",
                 $filename, Insight::EMPHASIS_LOW, serialize($least_likely_followers));
             } else {
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
