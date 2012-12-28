@@ -376,7 +376,7 @@ class InstallerController extends ThinkUpController {
             'cache_pages'=>false);
             $email_view = new ViewManager($cfg_array);
             $email_view->caching=false;
-            $email_view->assign('application_url', Utils::getApplicationURL(false) );
+            $email_view->assign('application_url', Utils::getApplicationURL() );
             $email_view->assign('email', urlencode($email) );
             $email_view->assign('activ_code', $activation_code );
             $message = $email_view->fetch('_email.registration.tpl');

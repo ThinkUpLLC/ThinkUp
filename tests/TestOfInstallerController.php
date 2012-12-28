@@ -559,7 +559,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "America/Los_Angeles";
 
-        $_SERVER['HTTP_HOST'] = "http://example.com";
+        $_SERVER['HTTP_HOST'] = "example.com";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -570,8 +570,13 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $option_dao = DAOFactory::getDAO('OptionDAO');
         $current_stored_server_name = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
         $this->assertNotNull($current_stored_server_name);
-        $this->assertEqual($current_stored_server_name->option_value, 'http://example.com');
+        $this->assertEqual($current_stored_server_name->option_value, 'example.com');
         $this->assertEqual($current_stored_server_name->option_name, 'server_name');
+
+        $install_email = Mailer::getLastMail();
+        $this->debug($install_email);
+        $this->assertPattern("/http:\/\/example.com\/session\/activate.php\?usr=you\%40example.com\&code\=/",
+        $install_email);
 
         $this->restoreConfigFile();
         //echo $result;
