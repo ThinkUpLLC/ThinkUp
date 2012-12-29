@@ -3,7 +3,7 @@
     <span class="pull-right">{insert name="help_link" id='expandurls'}</span>
     <h1>
         <img src="{$site_root_path}plugins/expandurls/assets/img/plugin_icon.png" class="plugin-image">
-    	Expand URLs Plugin
+        Expand URLs Plugin
     </h1>
 
     <p>Expands shortened links, gathers link image thumbnails, and captures link clickthrough rates.</p>
@@ -16,13 +16,10 @@
 {include file="_plugin.admin-request.tpl"}
 </div>
 
-{if $options_markup}
+{$options_markup}
+
 {if $user_is_admin}
-{include file="_plugin.showhider.tpl"}
-
+    {include file="_plugin.showhider.tpl"}
     {include file="_usermessage.tpl" field="setup"}
-    
-    {$options_markup}
-
 </div>
-{/if}{/if}
+{/if}

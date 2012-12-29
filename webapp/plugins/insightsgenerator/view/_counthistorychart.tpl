@@ -1,6 +1,6 @@
-
+{if !$expand }
 <div class="collapse in" id="chart-{$i->id}">
-
+{/if}
 <div id="count_history_{$i->id}" class="chart"></div>
 
 <script type="text/javascript">
@@ -51,5 +51,6 @@ function drawChart{/literal}{$i->id}() {literal}{
 {if $i->related_data.milestone.units_of_time && $i->related_data.trend && $i->related_data.trend != 0}
     Current growth rate: {if $i->related_data.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$i->related_data.trend|number_format}</span>/{$i->related_data.milestone.units_of_time|lower}
 {/if}
-
+{if !$expand}
 </div>
+{/if}

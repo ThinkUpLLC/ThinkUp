@@ -247,17 +247,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $stmt = PluginMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
-
-        //valid update inactive
-        $plugin = $this->createPlugin(array('name' => 'mojo jojo 222', 'folder_name' => 'awesomer, two too!!!',
-        'version' => '1.5.1.a', 'description' => null, 'is_active' => false));
-        $test_plugin_records = $builders_array[0]->columns;
-        $plugin->id = $test_plugin_records['last_insert_id'];
-        $this->assertTrue($dao->updatePlugin($plugin));
-        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
-        $stmt = PluginMySQLDAO::$PDO->query($sql);
-        $data = $stmt->fetch();
-        $this->verifyPluginData($data, $plugin);
     }
 
     public function testSetActive() {
@@ -370,7 +359,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($data['author'], $object->author);
         $this->assertEqual($data['homepage'], $object->homepage);
         $this->assertEqual($data['version'], $object->version);
-        $this->assertEqual($data['is_active'] ? true : false, $object->is_active);
+        $this->assertEqual($data['is_active'], 1);
     }
 
     protected function createPlugin($vars = array()) {

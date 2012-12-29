@@ -109,17 +109,24 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 $terminology = ($post->network == "twitter")?"retweets":"reshares";
                 foreach ($average_replies as $type => $average) {
                     $sentence = "";
+                    $has_replies_multiplier = false;
                     if ($average > $average_replies["all"] && $average_replies["all"] > 0) {
                         $multiplier_replies = floor($average/$average_replies["all"]);
                         if ($multiplier_replies > 1) {
                             $sentence .= " <strong>".ucfirst($type)."</strong> got <strong>".$multiplier_replies.
                             "x</strong> more replies ";
+                            $has_replies_multiplier = true;
                         }
                         $multiplier_reshares = 0;
                         if ($average_reshares[$type] > $average_reshares["all"]) {
                             $multiplier_reshares = floor($average_reshares[$type]/$average_reshares["all"]);
                             if ($multiplier_reshares > 1) {
-                                $sentence .= "and <strong>".$multiplier_reshares. "x</strong> more $terminology ";
+                                if ($has_replies_multiplier) {
+                                    $sentence .= "and <strong>".$multiplier_reshares. "x</strong> more $terminology ";
+                                } else {
+                                    $sentence .= " <strong>".ucfirst($type)."</strong> got <strong>".
+                                    $multiplier_reshares. "x</strong> more $terminology ";
+                                }
                             }
                         }
                         if ($multiplier_replies > 1 || $multiplier_reshares > 1) {
@@ -136,9 +143,13 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     }
                     $insight_text .= $sentence;
                 }
+                //TODO: Stop using the cached dashboard data and generate fresh here
+                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                $instance->id, date('Y-m-d'));
 
-                $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
-                "Your posting style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                $result =  $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
+                "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
+                serialize($hot_posts_data));
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);

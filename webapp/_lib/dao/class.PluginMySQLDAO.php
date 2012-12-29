@@ -65,7 +65,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 #prefix#plugins (name, folder_name, description, author, version, homepage, is_active)
             VALUES
                 (:name, :folder_name, :description, :author, :version, :homepage, :is_active)';
-        $is_active = $plugin->is_active ? 1 : 0;
+        $is_active = 1;
         $vars = array(
             ':name' => $plugin->name,
             'folder_name' => $plugin->folder_name,
@@ -102,7 +102,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 is_active = :is_active
             WHERE
                 id = :id';
-        $is_active = $plugin->is_active ? 1 : 0;
+        $is_active = 1;
         $vars = array(
             ':name' => $plugin->name,
             'folder_name' => $plugin->folder_name,

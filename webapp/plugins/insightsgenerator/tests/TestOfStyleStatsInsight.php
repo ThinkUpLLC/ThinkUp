@@ -85,7 +85,7 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('style_stats', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'style_stats');
-        $this->assertEqual($result->prefix, 'Your posting style:');
+        $this->assertEqual($result->prefix, 'Post style:');
         $this->assertEqual($result->filename, 'stylestats');
         $this->assertPattern('/of your posts this week were photos, none were links, none were quotations, and '.
         'none were questions./', $result->text);

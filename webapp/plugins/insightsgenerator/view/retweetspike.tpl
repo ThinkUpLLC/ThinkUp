@@ -1,5 +1,8 @@
 {include file=$tpl_path|cat:'_header.tpl'}
+
+{if  !$expand}
 <div class="pull-right detail-btn"><button class="btn btn-info btn-mini" data-toggle="collapse" data-target="#chart-{$i->id}"><i class="icon-signal icon-white"></i></button></div>
+{/if}
 
 <span class="label label-{if $i->emphasis eq '1'}inverse{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-list"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
 
@@ -9,7 +12,9 @@
     {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data[0] hide_insight_header=true}
 </div>
 
+{if  !$expand}
 <div class="collapse in" id="chart-{$i->id}">
+{/if}
 
     <div id="response_rates_{$i->id}"></div>
     <script type="text/javascript">
@@ -50,6 +55,9 @@
         }
         {/literal}
     </script>
+
+{if  !$expand}
 </div>
+{/if}
 
 {include file=$tpl_path|cat:'_footer.tpl'}

@@ -5,12 +5,12 @@
 {foreach from=$i->related_data key=uid item=u name=bar}
 
     {* Show more link if there are more posts after the first one *}
-    {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
+    {if !$expand and $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
         <div class="pull-right detail-btn"><button class="btn btn-info btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class="icon-chevron-down icon-white"></i></button></div>
     {/if}
 
     {* Hide posts after the first one *}
-    {if $smarty.foreach.bar.index eq 1}
+    {if  !$expand and $smarty.foreach.bar.index eq 1}
         <div class="collapse in" id="flashback-{$i->id}">
     {/if}
 
@@ -37,7 +37,7 @@
 </table>
 
     {* Close up hidden div if there is one *}
-    {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.last}
+    {if !$expand and $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.last}
         </div>
     {/if}
 
