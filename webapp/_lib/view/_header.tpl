@@ -163,3 +163,7 @@
 
 </head>
 <body>
+
+{if $enable_bootstrap}
+<div id="sticky-footer-fix-wrapper">
+{/if}
