@@ -15,11 +15,13 @@
           <p><a href="http://thinkup.com">ThinkUp{if $thinkup_version} {$thinkup_version}{/if}</a> &#8226; 
           <a href="http://thinkupapp.com/docs/">Documentation</a>  &#8226; 
           <a href="https://groups.google.com/forum/?fromgroups#!forum/thinkupapp">Mailing List</a> &#8226;
-          <a href="{$site_root_path}dashboard.php">Old-School Dashboard</a> &#8226;  
+          <a href="{$site_root_path}dashboard.php">Old-School Dashboard</a></p>  
+          <p>
           <a href="http://twitter.com/thinkup"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
-            <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
-            <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a></p>
-          <p>&copy; ThinkUp LLC 2012. It is nice to be nice.</p>
+          <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
+          <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a>
+          &copy; ThinkUp LLC 2012. It is nice to be nice.
+          </p>
         </div>
       </footer>
 

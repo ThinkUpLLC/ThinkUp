@@ -7,13 +7,13 @@
 <div class="row">
 
     <div class="span3">
-          <div class="sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="">
-                Update ThinkUp Data
-              </li>
-            </ul>
-          </div><!--/.well -->
+    <div class="embossed-block">
+        <ul>
+          <li>
+             Update ThinkUp Data
+          </li>
+        </ul>
+    </div>
     </div><!--/span3-->
     <div class="span9">
         <iframe width="100%" height="500px" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px"></iframe>

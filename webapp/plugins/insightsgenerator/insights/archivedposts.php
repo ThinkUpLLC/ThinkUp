@@ -57,12 +57,8 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
                         $posts_term = "posts";
                 }
 
-                $export_link = '<a href="'.$config->getValue('site_root_path'). 'post/export.php?u='.
-                urlencode($instance->network_username).'&n='.urlencode($instance->network).'">';
-
                 $text = "ThinkUp has captured over <strong>".
-                (number_format($archived_posts_in_hundreds * 100)).' '. $posts_term . '</strong>. '.$export_link.
-                'Export them now</a>.';
+                (number_format($archived_posts_in_hundreds * 100)).' '. $posts_term . '</strong>.';
                 $this->insight_dao->insertInsight("archived_posts", $instance->id, $this->insight_date, "Archived:",
                 $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
             }
