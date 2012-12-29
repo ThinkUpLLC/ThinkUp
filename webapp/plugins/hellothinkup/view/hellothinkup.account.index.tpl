@@ -18,6 +18,5 @@
     
     {$options_markup}
 
-{/if}{/if}
-
 </div>
+{/if}{/if}

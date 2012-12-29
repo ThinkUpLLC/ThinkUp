@@ -1,10 +1,7 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_statusbar.tpl" enable_bootstrap="true"}
 
-<div class="container_24 thinkup-canvas clearfix">
-  <div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
-{include file="_usermessage.tpl"}
-  </div>
-</div>
+<div class="container">
+{include file="_usermessage.tpl" enable_bootstrap="true"}
 
-{include file="_footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap="true"}
