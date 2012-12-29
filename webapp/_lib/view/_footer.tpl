@@ -4,7 +4,10 @@
 
 {if $enable_bootstrap}
 
-</div>
+    </div><!-- end container -->
+
+    <div id="sticky-footer-fix-clear"></div>
+</div><!-- #sticky-footer-fix-wrapper -->
 
       <footer>
         <div class="container footer">
@@ -17,7 +20,7 @@
             <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
             <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a></p>
           <p>&copy; ThinkUp LLC 2012. It is nice to be nice.</p>
-          </div>
+        </div>
       </footer>
 
 {else}

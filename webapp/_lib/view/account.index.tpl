@@ -255,9 +255,9 @@
     </table>
 
       </div> <!-- end #ttusers -->
-    {/if} <!-- end is_admin -->
 
         </div>
+    {/if} <!-- end is_admin -->
     </div>
 </div>
 

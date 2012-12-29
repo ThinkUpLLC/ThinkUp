@@ -38,4 +38,6 @@ if( ! required_values_set && ! is_admin) {
 {/literal}
 </script>
 {/if}
+{if $user_is_admin}
 </div>
+{/if}
