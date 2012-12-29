@@ -52,6 +52,4 @@
 
 </div><!-- end row -->
 
-
-</div> <!-- end container -->
 {include file="_footer.tpl" enable_bootstrap="true"}

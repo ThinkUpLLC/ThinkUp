@@ -34,6 +34,15 @@ p {
   border-left: 1px solid #fff;
   border-right: 1px solid #ddd;
 }
+
+.navbar-static-top #thinkup_version a {
+  border-left: 1px solid #fff;
+  border-right: 1px solid #ddd;
+  float: none;
+  display: block;
+  padding: 10px 15px 10px;
+  text-decoration: none;
+}
     
 form .control-group {
     margin : 6px;
@@ -94,14 +103,18 @@ form .control-group {
     line-height: 27px;
 }
 
-.white-card {
+.table.lead th, .table.lead td {
+    line-height: 27px;
+}
+
+.alert.insight-item, .white-card {
   padding: 6px;
   margin-bottom: 18px;
   background-color: #fff;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;    
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;    
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   color: #000;
 }
 
@@ -344,9 +357,26 @@ span.formError {
   margin-bottom: 20px;
 }
 
-/* Footer */
+/* Sticky Footer */
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#sticky-footer-fix-wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px;
+}
+
+#sticky-footer-fix-clear {
+    height: 100px;
+}
 
 footer {
-  padding: 20px 0;
-  background: #fff;
+    height: 60px;
+    padding: 20px 0;
+    background: #fff;
 }

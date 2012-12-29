@@ -4,7 +4,7 @@
 
     {* Show more link if there are more posts after the first one *}
     {if $smarty.foreach.bar.total gt 1 and $smarty.foreach.bar.first}
-        <div class="pull-right detail-btn"><button class="btn btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class=" icon-chevron-down"></i></button></div>
+        <div class="pull-right detail-btn"><button class="btn btn-info btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class="icon-chevron-down icon-white"></i></button></div>
     {/if}
 
     {* Hide posts after the first one *}
