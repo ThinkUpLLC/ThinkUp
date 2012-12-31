@@ -119,7 +119,7 @@ class URLProcessor {
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0");
         $response = curl_exec($ch);
         if ($response === false) {
-            throw new Exception ("cURL error fetching ".$url.": ".curl_error($ch));
+            throw new Exception ("cURL error fetching ".$url." - ".curl_error($ch));
         }
         curl_close($ch);
 
