@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '1.2';
+$LATEST_VERSION = '2.0-beta.1';
 $TOTAL_MIGRATION_COUNT = 240;
 
 $MIGRATIONS = array(
@@ -932,7 +932,29 @@ $MIGRATIONS = array(
 
      /* 1.2.1 */
     '1.2.1' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.2.1.zip',
         'migrations' => 0,
      ),
+
+     /* 2.0-beta.1 */
+    '2.0-beta.1' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations'  => array(
+            'sql' => array(
+                array(
+                    // Added tu_insights.filename
+                    'query' => 'DESCRIBE tu_insights filename;',
+                    'match' => "/varchar\(100\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Default value for tu_plugins is_active
+                    'query' => 'DESCRIBE tu_plugins is_active;',
+                    'match' => "/^$/",
+                    'column' => 'Default',
+                ),
+             )
+        )
+     ),
+
 );

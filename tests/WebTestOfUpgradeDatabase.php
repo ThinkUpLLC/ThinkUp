@@ -68,6 +68,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     public function tearDown() {
         //Clean up test installation files
         exec('rm -rf ' . THINKUP_WEBAPP_PATH.'test_installer/*' );
+        @exec('rmdir ' . THINKUP_WEBAPP_PATH.'test_installer/' );
 
         // Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';
