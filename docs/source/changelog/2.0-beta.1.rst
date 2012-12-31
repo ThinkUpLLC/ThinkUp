@@ -1,0 +1,14 @@
+2.0-beta.1 - 1 Jan 2013
+=======================
+
+ThinkUp 2.0 is a major functional and visual overhaul of the version 1.x application. An overview of changes includes:
+
+*  Replaced the dashboard with a reverse chronological stream of insights into the user's social data. Unlike the 
+   dashboard, this stream combines insights from all the service users set up on an installation in one view. Click on
+   an insight's permalink or the button on the far right to expand it and see more information.
+*  Added a new Insights Generator plugin which calculates and inserts these insights on each crawl. View a list of the
+   insights and what they do in Settings > Plugins > Insights Generator. Each insight is a plugin in and of itself.
+   View individual insight plugins in plugins/insightsgenerator/insights/ folder.
+*  Completely redesigned the login, registration, update data, and settings areas of the app using the Twitter Bootstrap
+   framework.
+*  Removed the ability to deactivate plugins. All plugins are activated by default to simplify the interface.

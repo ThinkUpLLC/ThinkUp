@@ -247,7 +247,9 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
         $dir_list = glob('{' . $dir . '/*.sql,' . $dir . '/*.migration}', GLOB_BRACE);
         $migrations = array();
         for ($i = 0; $i < count($dir_list); $i++) {
-            if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $dir_list[$i], $matches)) {
+            if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $dir_list[$i], $matches)
+            //TODO combine these into a single regex
+            || preg_match('/_v(\d+\.\d+(-beta\.\d+)?(\w+)?)\.sql(\.migration)?/', $dir_list[$i], $matches)) {
                 $migration_version = $matches[1];
                 // skip early pre beta 1 versions...
                 if (preg_match('/^0\.00/', $migration_version)) {
