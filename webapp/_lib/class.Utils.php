@@ -327,7 +327,7 @@ class Utils {
         } else {
             $port = '';
         }
-        return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.$port.$site_root_path;
+        return 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$server.$port.$site_root_path;
     }
 
     /**

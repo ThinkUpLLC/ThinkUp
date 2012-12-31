@@ -236,6 +236,12 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
         $this->assertEqual($utils_url, $expected_url);
 
+        //no SSL but with $_SERVER['HTTPS'] set to empty string
+        $_SERVER['HTTPS'] = '';
+        $utils_url = Utils::getApplicationURL();
+        $expected_url = 'http://mytestthinkup/my/path/to/thinkup/';
+        $this->assertEqual($utils_url, $expected_url);
+
         //with SSL
         $_SERVER['HTTPS'] = true;
         $utils_url = Utils::getApplicationURL();
