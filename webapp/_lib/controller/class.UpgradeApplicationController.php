@@ -95,7 +95,7 @@ class UpgradeApplicationController extends ThinkUpAuthController {
         $update_info = $update_client->getLatestVersionInfo();
         require(dirname(__FILE__) . '/../../install/version.php');
         $version = Config::GetInstance()->getvalue('THINKUP_VERSION');
-        if ( $update_info['version'] < $version) {
+        if ( version_compare($update_info['version'], $version) <= 0) {
             throw new Exception("You are running the latest version of ThinkUp.");
         }
 
