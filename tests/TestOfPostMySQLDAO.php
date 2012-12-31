@@ -1016,11 +1016,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->id, 10);
         $this->assertNotNull($post->author);
         $this->assertEqual($post->author->username, 'ev');
-        if (self::isTimeZoneSupported()) { //account for Daylight Saving Time
-            $this->assertEqual($post->author->last_updated, '2005-01-01 12:01:00');
-        } else {
-            $this->assertEqual($post->author->last_updated, '2005-01-01 13:01:00');
-        }
+        $this->assertEqual($post->author->last_updated, '2005-01-01 13:01:00');
 
         //links
         $post = $dao->getPost('40', 'twitter');

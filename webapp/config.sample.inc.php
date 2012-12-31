@@ -82,7 +82,7 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESS
     //    $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
     $THINKUP_CFG['cache_pages']               = false;
     $THINKUP_CFG['debug']                     = true;
-    $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
+    $THINKUP_CFG['timezone']                  = 'UTC';
     ini_set('error_reporting', E_STRICT);
 }
 
