@@ -45,6 +45,8 @@
                     textStyle: { color: '#000' },
                 },
                 vAxis: {
+                    minValue: 0,
+                    maxValue: 1,
                     textStyle: { color: '#666' },
                     gridlines: { color: '#ccc' },
                     format:'#,###%',
