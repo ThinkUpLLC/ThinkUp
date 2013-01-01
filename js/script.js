@@ -10,7 +10,7 @@ $(document).ready(function()
         content_height: 300,
         auto: true,
         continuous: true,
-        interval: 5000,
+        interval: 6000,
         fit_to_parent: true,
         buttons: false,
         arrows: false
