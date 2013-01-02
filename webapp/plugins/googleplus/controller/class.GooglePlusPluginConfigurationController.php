@@ -94,7 +94,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         //prep redirect URI
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
-        $redirect_uri = urlencode(Utils::getApplicationURL() .'account/?p=google%2B');
+        $redirect_uri = urlencode(Utils::getApplicationURL() .'account/?p=googleplus');
 
         //create OAuth link
         $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.
