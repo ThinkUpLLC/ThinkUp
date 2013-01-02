@@ -93,5 +93,10 @@ if (isset($_SESSION["RD_MODE"]) || getenv("RD_MODE")=="1") {
     //    $THINKUP_CFG['db_name']                   = $THINKUP_CFG['db_name'] . '_rd';
 }
 
+//Ensure https is correctly forwarded for apps behind a proxy and/or load balancer
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 //Set aggressive time limit for long crawls
 set_time_limit(500);
