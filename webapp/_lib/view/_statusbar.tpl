@@ -52,6 +52,7 @@
     <ul> 
       {if $logged_in_user}
         <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
+        <script>var logged_in_user = '{$logged_in_user}';</script>
       {else}
       
         <li><a href="http://thinkupapp.com/" class="linkbutton">Get ThinkUp</a> <a href="{$site_root_path}session/login.php" class="linkbutton"    >Log In</a></li>
