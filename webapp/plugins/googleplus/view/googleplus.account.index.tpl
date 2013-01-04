@@ -39,7 +39,7 @@
             <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
         <div class="grid_8 right">
-            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=google%2B"><input type="hidden" name="instance_id" value="{$i->id}">
+            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=googleplus"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
             <input onClick="return confirm('Do you really want to delete this Google+ account from ThinkUp?');"  type="submit" name="action" class="linkbutton" value="delete" /></form></span>
         </div>
@@ -63,7 +63,7 @@
 <li>
   Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to<br> 
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=google%2B</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=googleplus</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
