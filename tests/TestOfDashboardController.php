@@ -362,6 +362,20 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertNoPattern("/This is post <script>alert\('wa'\);<\/script>\d+/", $results);
         $this->assertPattern("/This is post &#60;script&#62;alert\(&#39;wa&#39;\);&#60;\/script&#62;\d+/", $results);
     }
+    
+    public function testLoggedInUserNoAutoLinkEmail() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] ='ev';
+        $_GET['n'] = 'twitter';
+        $_GET['v'] = '';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        $config = Config::getInstance();
+        $this->assertPattern('/<script>var logged_in_user = \'me@example.com\';<\/script>/', $results);
+    }
 
     private function buildData($with_xss = false) {
         //Add owner
