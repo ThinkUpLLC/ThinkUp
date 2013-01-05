@@ -230,7 +230,7 @@ class Installer {
     }
 
     /**
-     * Check if log and template directories are writeable
+     * Check if log and template directories are writable
      *
      * @param array $perms can be used for testing for failing
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
@@ -252,6 +252,15 @@ class Installer {
             $ret = $perms;
         }
         return $ret;
+    }
+
+    /**
+     * Check if session directory is writable
+     *
+     * @return bool
+     */
+    public function isSessionDirectoryWritable() {
+        return (is_writable(session_save_path()) );
     }
 
     /**
@@ -286,16 +295,19 @@ class Installer {
             $lib_depends_ret = $lib_depends_ret && $lib;
         }
 
-        $writeable_permission = $this->checkPermission();
-        $writeable_permission_ret = true;
-        foreach ($writeable_permission as $permission) {
-            $writeable_permission_ret = $writeable_permission_ret && $permission;
+        $writable_permission = $this->checkPermission();
+        $writable_permission_ret = true;
+        foreach ($writable_permission as $permission) {
+            $writable_permission_ret = $writable_permission_ret && $permission;
         }
+
+        $writable_session_permission = $this->isSessionDirectoryWritable();
+
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($pass) ) {
             $ret = $pass;
         } else {
-            $ret = ($version_compat && $lib_depends_ret && $writeable_permission_ret);
+            $ret = ($version_compat && $lib_depends_ret && $writable_permission_ret && $writable_session_permission);
         }
         return $ret;
     }
@@ -451,7 +463,7 @@ class Installer {
         if ( !$version_met ) {
             self::$error_messages['requirements'] = "Requirements are not met. " .
                 "Make sure your PHP version >= " . self::$required_version['php'] . ", " .
-                "you have cURL and GD extension installed, and template and log directories are writeable";
+                "you have cURL and GD extension installed, and template and log directories are writable";
             return false;
         }
 
@@ -696,7 +708,7 @@ class Installer {
         if ( !self::checkStep1() ) {
             throw new InstallerException(
                 "ThinkUp's requirements are not met. Make sure your PHP version >= " . self::$required_version['php'] .
-                ", you have the cURL and GD extension installed, and the template and log directories are writeable.",
+                ", you have the cURL and GD extension installed, and the template and log directories are writable.",
             self::ERROR_REQUIREMENTS);
         }
         return true;

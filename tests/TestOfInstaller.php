@@ -96,6 +96,33 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $this->assertTrue($perms['cache']);
     }
 
+    public function testIsSessionDirectoryWritable() {
+        //get whatever session save path is set to
+        $session_save_path = ini_get('session.save_path');
+
+        ini_set('session.save_path', FileDataManager::getDataPath());
+        $installer = Installer::getInstance();
+        $session_save_permission = $installer->isSessionDirectoryWritable();
+        $this->assertTrue($session_save_permission);
+
+        //reset back to what it was
+        ini_set('session.save_path', $session_save_path);
+    }
+
+    public function testIsInvalidSessionDirectoryWritable() {
+        $session_save_path = ini_get('session.save_path');
+        $installer = Installer::getInstance();
+
+        // set session save dir to something invalid
+        ini_set('session.save_path', '/someinvalidpath/wecantwriteto/');
+
+        $session_save_permission = $installer->isSessionDirectoryWritable();
+        $this->assertFalse($session_save_permission);
+
+        //reset back to what it was
+        ini_set('session.save_path', $session_save_path);
+    }
+
     public function testInstallerCheckPath() {
         $installer = Installer::getInstance();
         $this->assertTrue($installer->checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
