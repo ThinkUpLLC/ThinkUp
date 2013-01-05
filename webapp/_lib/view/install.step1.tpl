@@ -200,6 +200,28 @@
               <p>ThinkUp's <code>data</code> directory, located at <code>{$writeable_data_directory}</code>, must be writable for installation to complete. <a href="http://thinkupapp.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
             </div>
             {/if}
+            
+            <div class="clearfix append_20">
+              <div class="grid_6 prefix_5 right">
+                {if $session_permissions_compat}
+                <span class="label">Session directory writeable</span>
+                {else}
+                <span class="label no">Session directory writeable?</span>
+                {/if}
+              </div>
+              <div class="grid_8 prefix_1 left">
+                {if $session_permissions_compat}
+                <span class="value yes">Yes</span>
+                {else}
+                <span class="value no">No</span>
+                {/if}
+              </div>
+            </div>
+            {if !$session_permissions_compat}
+            <div class="clearfix append_20 info_message">
+              <p>The PHP <code>session.save_path</code> directory, located at <code>{$writeable_session_save_directory}</code>, must be writable for installation to complete. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder's permissions.</a></p>
+            </div>
+            {/if}
         {/if}
         
       </div>

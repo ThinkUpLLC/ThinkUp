@@ -95,6 +95,22 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $this->assertTrue($perms['data_dir']);
         $this->assertTrue($perms['cache']);
     }
+    
+    public function testInstallerCheckSessionPermission() {
+        $installer = Installer::getInstance();
+        $session_save_permission = $installer->checkSessionPermission();
+        $this->assertTrue($session_save_permission);
+    }
+    
+    public function testInstallerCheckSessionPermissionInvalid() {
+        $installer = Installer::getInstance();
+        
+        // set session save dir to something invalid
+        ini_set('session.save_path', '/someinvalidpath/wecantwriteto/');
+        
+        $session_save_permission = $installer->checkSessionPermission();
+        $this->assertFalse($session_save_permission);
+    }
 
     public function testInstallerCheckPath() {
         $installer = Installer::getInstance();

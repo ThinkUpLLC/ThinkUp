@@ -126,6 +126,35 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->restoreConfigFile();
     }
 
+    public function testFreshInstallStep1SessionReqNotMet() {
+        self::time(__METHOD__);
+        //remove config file
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        //drop DB
+        $this->testdb_helper->drop($this->test_database_name);
+
+        $reqs = array('curl'=>true, 'gd'=>true, 'pdo'=>true, 'pdo_mysql'=>true, 'json'=>true, 'hash'=>true,
+        'simplexml'=>true);
+        
+        //set session save path to invalid path
+        ini_set('session.save_path', '/someinvalidpath/wecantwriteto/');
+
+        $controller = new InstallerController(true, $reqs);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+
+        $this->debug($result);
+        //system requirements have not been met
+        $this->assertNoPattern('/Your system has everything it needs to run ThinkUp./', $result);
+        $this->assertPattern('/Your web server isn\'t set up to run ThinkUp./', $result);
+        $this->assertPattern('/The PHP <code>session.save_path<\/code> directory/', $result);
+
+        //make sure install did not auto-progress to step 2 b/c
+        $this->assertNoPattern('/Create Your ThinkUp Account/', $result);
+        $this->restoreConfigFile();
+    }
+    
     public function testFreshInstallStep1AllReqsMet() {
         self::time(__METHOD__);
         //remove config file
