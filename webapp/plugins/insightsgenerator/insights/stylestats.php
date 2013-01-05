@@ -147,9 +147,11 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                 $instance->id, date('Y-m-d'));
 
-                $result =  $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
-                "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
-                serialize($hot_posts_data));
+                if (isset($hot_posts_data)) {
+                    $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
+                    "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
+                    serialize($hot_posts_data));
+                }
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);

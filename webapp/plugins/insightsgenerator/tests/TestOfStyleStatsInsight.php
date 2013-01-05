@@ -68,6 +68,9 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links_short', array('id'=>28, 'link_id'=>'28',
         'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>7609 ));
 
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'PostMySQLDAO::getHotPosts',
+        'date'=>date ('Y-m-d'), 'instance_id'=>1));
+
         $post_dao = new PostMySQLDAO();
         $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy('ev', 'twitter', $count=0,
         $order_by="pub_date", $in_last_x_days = 7, $iterator = false, $is_public = false);

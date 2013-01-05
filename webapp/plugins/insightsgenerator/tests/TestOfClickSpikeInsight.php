@@ -69,6 +69,9 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links_short', array('id'=>28, 'link_id'=>'28',
         'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>7609 ));
 
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'ShortLinkMySQLDAO::getRecentClickStats',
+        'date'=>$yesterday, 'instance_id'=>1));
+
         // Get data ready that insight requires
         $post1_object = new Post($post1_builder->columns);
         $link1_object = new Link($link1_builder->columns);
@@ -87,7 +90,6 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
-        $yesterday = date ('Y-m-d', strtotime('-1 day'));
         $result = $insight_dao->getInsight('click_high_7_day_28', 1, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'click_high_7_day_28');

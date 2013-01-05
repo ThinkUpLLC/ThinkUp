@@ -75,91 +75,101 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $click_stats_data = $this->insight_dao->getPreCachedInsightData(
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
-                        $this->insight_dao->insertInsight('click_high_365_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 365-day record!", "Viewers clicked your link <strong>".
-                        number_format($click_count). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($link, $click_stats_data)));
+                        if (isset($click_stats_data)) {
+                            $this->insight_dao->insertInsight('click_high_365_day_'.$link->id, $instance->id,
+                            $simplified_post_date, "New 365-day record!", "Viewers clicked your link <strong>".
+                            number_format($click_count). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
+                            serialize(array($link, $click_stats_data)));
 
-                        $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                        }
                     } elseif (isset($high_click_count_30_days->value)
                     && $click_count >= $high_click_count_30_days->value) {
                         //TODO: Stop using the cached dashboard data and generate fresh here
                         $click_stats_data = $this->insight_dao->getPreCachedInsightData(
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
-                        $this->insight_dao->insertInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 30-day record!", "Viewers clicked your link <strong>".
-                        number_format( $click_count ). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($link, $click_stats_data)));
+                        if (isset($click_stats_data)) {
+                            $this->insight_dao->insertInsight('click_high_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date, "New 30-day record!", "Viewers clicked your link <strong>".
+                            number_format( $click_count ). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
+                            serialize(array($link, $click_stats_data)));
 
-                        $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                        }
                     } elseif (isset($high_click_count_7_days->value)
                     && $click_count >= $high_click_count_7_days->value) {
                         //TODO: Stop using the cached dashboard data and generate fresh here
                         $click_stats_data = $this->insight_dao->getPreCachedInsightData(
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
-                        $this->insight_dao->insertInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "New 7-day record!", "Viewers clicked your link <strong>".
-                        number_format($click_count). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($link, $click_stats_data)));
+                        if (isset($click_stats_data)) {
+                            $this->insight_dao->insertInsight('click_high_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date, "New 7-day record!", "Viewers clicked your link <strong>".
+                            number_format($click_count). " times</strong>.", $filename, Insight::EMPHASIS_HIGH,
+                            serialize(array($link, $click_stats_data)));
 
-                        $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                        }
                     } elseif (isset($average_click_count_30_days->value)
                     && $click_count > ($average_click_count_30_days->value*2)) {
                         //TODO: Stop using the cached dashboard data and generate fresh here
                         $click_stats_data = $this->insight_dao->getPreCachedInsightData(
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
-                        $multiplier = floor($click_count/$average_click_count_30_days->value);
-                        $this->insight_dao->insertInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "Hot link:", "Viewers clicked your link <strong>".
-                        number_format($click_count).
-                        " times</strong>, more than <strong>".$multiplier. "x</strong> your 30-day average.", $filename,
-                        Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
+                        if (isset($click_stats_data)) {
+                            $multiplier = floor($click_count/$average_click_count_30_days->value);
+                            $this->insight_dao->insertInsight('click_spike_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date, "Hot link:", "Viewers clicked your link <strong>".
+                            number_format($click_count).
+                             " times</strong>, more than <strong>".$multiplier. "x</strong> your 30-day average.",
+                            $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
 
-                        $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                        }
                     } elseif (isset($average_click_count_7_days->value)
                     && $click_count > ($average_click_count_7_days->value*2)) {
                         //TODO: Stop using the cached dashboard data and generate fresh here
                         $click_stats_data = $this->insight_dao->getPreCachedInsightData(
                         'ShortLinkMySQLDAO::getRecentClickStats', $instance->id, $simplified_post_date);
 
-                        $multiplier = floor($click_count/$average_click_count_7_days->value);
-                        $this->insight_dao->insertInsight('click_spike_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date, "Hot Link:", "Viewers clicked your link <strong>".
-                        number_format($click_count).
-                        " times</strong>, more than <strong>" .$multiplier. "x</strong> your 7-day average.",
-                        $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
+                        if (isset($click_stats_data)) {
+                            $multiplier = floor($click_count/$average_click_count_7_days->value);
+                            $this->insight_dao->insertInsight('click_spike_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date, "Hot Link:", "Viewers clicked your link <strong>".
+                            number_format($click_count).
+                            " times</strong>, more than <strong>" .$multiplier. "x</strong> your 7-day average.",
+                            $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
 
-                        $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
-                        $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_high_7_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                            $this->insight_dao->deleteInsight('click_spike_30_day_'.$link->id, $instance->id,
+                            $simplified_post_date);
+                        }
                     }
                 }
             }
