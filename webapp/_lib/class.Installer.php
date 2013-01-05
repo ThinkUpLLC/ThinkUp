@@ -254,6 +254,21 @@ class Installer {
         return $ret;
     }
 
+        /**
+     * Check if session directory is writeable
+     *
+     * @return boolean
+     */
+    public function checkSessionPermission() {
+        $session_save_dir = ini_get('session.save_path');
+        
+        if ( !is_writable($session_save_dir) ) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Check if Thinkup's paths exists.
      *
@@ -291,11 +306,14 @@ class Installer {
         foreach ($writeable_permission as $permission) {
             $writeable_permission_ret = $writeable_permission_ret && $permission;
         }
+        
+        $writeable_session_permission = $this->checkSessionPermission();
+        
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($pass) ) {
             $ret = $pass;
         } else {
-            $ret = ($version_compat && $lib_depends_ret && $writeable_permission_ret);
+            $ret = ($version_compat && $lib_depends_ret && $writeable_permission_ret && $writeable_session_permission);
         }
         return $ret;
     }
