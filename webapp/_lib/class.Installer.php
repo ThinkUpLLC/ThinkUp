@@ -254,6 +254,26 @@ class Installer {
         return $ret;
     }
 
+        /**
+     * Check if session directories are writeable
+     *
+     * @param array $perms can be used for testing for failing
+     * @return array 
+     */
+    public function checkSessionPermission($perms = array()) {
+        $session_save_dir = FileDataManager::getSessionSavePath();
+        $ret = array('session_save_dir' => false);
+        if ( is_writable($session_save_dir) ) {
+            $ret['session_save_dir'] = true;
+        }
+
+        // when testing
+        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($perms) ) {
+            $ret = $perms;
+        }
+        return $ret;
+    }
+    
     /**
      * Check if Thinkup's paths exists.
      *
@@ -291,11 +311,17 @@ class Installer {
         foreach ($writeable_permission as $permission) {
             $writeable_permission_ret = $writeable_permission_ret && $permission;
         }
+        
+        $writeable_session_permission = $this->checkSessionPermission();
+        $writeable_session_permission_ret = true;
+        foreach ($writeable_session_permission as $session_permission) {
+            $writeable_session_permission_ret = $writeable_session_permission_ret && $session_permission;
+        }
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($pass) ) {
             $ret = $pass;
         } else {
-            $ret = ($version_compat && $lib_depends_ret && $writeable_permission_ret);
+            $ret = ($version_compat && $lib_depends_ret && $writeable_permission_ret && $writeable_session_permission);
         }
         return $ret;
     }
