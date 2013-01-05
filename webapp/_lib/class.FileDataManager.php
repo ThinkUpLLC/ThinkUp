@@ -73,4 +73,17 @@ class FileDataManager {
         }
         return $path;
     }
+    
+    /**
+     * Get the path to the php session save path
+     * @param str $file File or directory to get the path of
+     * @return str Absolute path to file
+     */
+    public static function getSessionSavePath($str = null) {
+        $path = ini_get('session.save_path');
+        if ($str) {
+            $path = $path . $str;
+        }        
+        return $path;
+    }    
 }

@@ -155,9 +155,22 @@ class InstallerController extends ThinkUpController {
         }
         $this->addToView('permissions_compat', $permissions_compat);
         $this->addToView('writeable_data_directory', FileDataManager::getDataPath());
-
+        
+        // session save path permissions check
+        $session_permissions = $this->installer->checkSessionPermission();
+        $this->addToView('session_permission', $session_permissions);
+        $session_permissions_compat = true;
+        foreach ($session_permissions as $session_perm) {
+            if (!$session_perm) {
+                $session_permissions_compat = false;
+            }
+        }
+        
+        $this->addToView('session_permissions_compat', $session_permissions_compat);
+        $this->addToView('writeable_session_save_directory', FileDataManager::getSessionSavePath());
+        
         // other vars set to view
-        $requirements_met = ($php_compat && $libs_compat && $permissions_compat);
+        $requirements_met = ($php_compat && $libs_compat && $permissions_compat && $session_permissions_compat);
         $this->addToView('requirements_met', $requirements_met);
         $this->addToView('subtitle', 'Check System Requirements');
 

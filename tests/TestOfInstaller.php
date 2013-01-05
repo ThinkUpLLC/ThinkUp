@@ -95,6 +95,15 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $this->assertTrue($perms['data_dir']);
         $this->assertTrue($perms['cache']);
     }
+    
+    public function testInstallerCheckSessionPermission() {
+        $installer = Installer::getInstance();
+        $perms = $installer->checkSessionPermission();
+        $this->assertTrue($perms['session_save_dir']);
+        
+        $permsFail = $installer->checkSessionPermission(array('session_save_dir' => false));
+        $this->assertFalse($permsFail['session_save_dir']);
+    }
 
     public function testInstallerCheckPath() {
         $installer = Installer::getInstance();
