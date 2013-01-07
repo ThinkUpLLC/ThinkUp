@@ -141,6 +141,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $date_ago = date ($format, strtotime('-40 day'.$date));
+        $this->debug("Getting history starting on ".$date_ago);
         $result = $dao->getHistory('930061', 'twitter', 'DAY', 5, $date_ago);
         $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, trend, and milestone, and vis_data');
 
@@ -177,7 +178,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         //check milestone
         //latest follower count is 90, next milestone is 100 followers
-        //with a 20+/day trend, this should take 1 day
+        //with a 16+/day trend, this should take 1 day
         $this->debug(Utils::varDumpToString($result['milestone']));
         $this->assertEqual($result['milestone']["next_milestone"], 100);
         $this->assertEqual($result['milestone']["will_take"], 1);
@@ -288,7 +289,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
 
-        if (date('w')  != 0) { //Don't test on Sunday
+        if (date('w')  != 1) { //Don't test on Sunday
             // Yesterday count was 145
             $date_ago = date ($format, strtotime('-1 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 145);

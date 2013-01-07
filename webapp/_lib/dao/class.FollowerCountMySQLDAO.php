@@ -171,23 +171,29 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
                 if ($units=='DAY') {
                     $current_day_of_year = date('z');
                     $before_date_day_of_year = date('z', strtotime($before_date));
-                    $difference = $current_day_of_year - $before_date_day_of_year;
-                    if ($milestone['will_take'] > $difference) {
-                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    if (date('Y') == date('Y', strtotime($before_date))) {
+                        $difference = $current_day_of_year - $before_date_day_of_year;
+                        if ($milestone['will_take'] > $difference) {
+                            $milestone['will_take'] = $milestone['will_take'] + $difference;
+                        }
                     }
                 } elseif ($units=='WEEK') {
                     $current_week_of_year = date('W');
                     $before_date_week_of_year = date('W', strtotime($before_date));
-                    $difference = $current_week_of_year - $before_date_week_of_year;
-                    if ($milestone['will_take'] > $difference) {
-                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    if (date('Y') == date('Y', strtotime($before_date))) {
+                        $difference = $current_week_of_year - $before_date_week_of_year;
+                        if ($milestone['will_take'] > $difference) {
+                            $milestone['will_take'] = $milestone['will_take'] + $difference;
+                        }
                     }
                 } elseif ($units=='MONTH') {
                     $current_month_of_year = date('n');
                     $before_date_month_of_year = date('n', strtotime($before_date));
-                    $difference = $current_month_of_year - $before_date_month_of_year;
-                    if ($milestone['will_take'] > $difference) {
-                        $milestone['will_take'] = $milestone['will_take'] + $difference;
+                    if (date('Y') == date('Y', strtotime($before_date))) {
+                        $difference = $current_month_of_year - $before_date_month_of_year;
+                        if ($milestone['will_take'] > $difference) {
+                            $milestone['will_take'] = $milestone['will_take'] + $difference;
+                        }
                     }
                 }
             }
