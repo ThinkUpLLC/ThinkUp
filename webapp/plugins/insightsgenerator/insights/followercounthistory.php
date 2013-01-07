@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Follower Count
- Description: Upcoming follower count milestones (chart).
+ Description: Upcoming follower count milestones (chart). (1st of the month)
  */
 
 /**

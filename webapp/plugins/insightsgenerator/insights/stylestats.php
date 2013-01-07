@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Style Stats
- Description: Every Saturday, display stats on different types of posts in the past week.
+ Description: Stats on different types of posts in the past week. (Saturdays)
  */
 /**
  *

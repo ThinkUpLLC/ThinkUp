@@ -69,6 +69,7 @@ $plugin_tests->add(new TestOfFoursquareCrawler());
 $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
 //Insights
 $plugin_tests->add(new TestOfArchivedPostsInsight());
+$plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfMapInsight());
