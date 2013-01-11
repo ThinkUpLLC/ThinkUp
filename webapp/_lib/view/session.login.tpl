@@ -37,7 +37,7 @@
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Log In">
                             <span class="pull-right">
                                 <div class="btn-group">
-                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini">Register</a>{else}{/if}
+                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini hidden-phone">Register</a>{else}{/if}
                                     <a href="forgot.php" class="btn btn-mini">Forgot password</a>
                                     {insert name="help_link" id='login'}
                                 </div>
