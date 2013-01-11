@@ -44,7 +44,7 @@
 
         {else}
 
-    <div class="span3">&nbsp;</div>
+    <div class="span3"></div>
         {/if}
 
     <div class="span9">

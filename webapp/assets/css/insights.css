@@ -23,6 +23,7 @@ p {
 
 .navbar-static-top {
   margin-bottom: 20px;
+  margin-left : 0px;
 }
 
 .navbar-static-top ul.nav.pull-right {
@@ -379,4 +380,14 @@ footer {
     height: 60px;
     padding: 20px 0;
     background: #fff;
+}
+
+@media (max-width: 767px) {
+body {
+	padding-left: 6px;
+	padding-right: 6px;
+}
+.alert, .alert.insight-item, .white-card, .row {
+  margin-bottom: 6px;
+}
 }
