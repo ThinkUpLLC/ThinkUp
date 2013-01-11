@@ -40,7 +40,7 @@
                             <span class="pull-right">
                                 <div class="btn-group">
                                     <a href="login.php" class="btn btn-mini">Log In</a>
-                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini">Register</a>{else}<span class="btn btn-mini disabled">Registration closed</span>{/if}
+                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini hidden-phone">Register</a>{else}{/if}
                                     {insert name="help_link" id='forgot'}
                                 </div>
                             </span>
