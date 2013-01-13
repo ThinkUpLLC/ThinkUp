@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.URLProcessor.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh
+ * Copyright (c) 2009-2013 Gina Trapani, Amy Unruh
  *
  * LICENSE:
  *

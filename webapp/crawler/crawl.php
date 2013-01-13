@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/crawler/crawl.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2013 Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau
  */
 chdir(dirname(__FILE__) . "/..");
 require_once 'init.php';

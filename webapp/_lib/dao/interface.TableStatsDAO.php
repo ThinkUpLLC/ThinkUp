@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.TableStatsDAO.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie
+ * Copyright (c) 2009-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Table Stats Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2013 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 interface TableStatsDAO {

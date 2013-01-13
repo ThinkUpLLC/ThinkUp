@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfOwnerMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Michael Louis Thaler
+ * Copyright (c) 2009-2013 Gina Trapani, Michael Louis Thaler
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * Test of OwnerMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Michael Louis Thaler
+ * @copyright 2009-2013 Gina Trapani, Michael Louis Thaler
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/_lib/controller/class.StreamerAuthController.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  *
  * Runs crawler from the command line given valid command line credentials.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Amy Unruh
+ * @copyright 2011-2013 Amy Unruh
  * @author Amy Unruh
  */
 class StreamerAuthController extends ThinkUpController {

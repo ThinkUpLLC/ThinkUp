@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.StreamerPlugin.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Streamer Plugin interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Amy Unruh
+ * @copyright 2011-2013 Amy Unruh
  * @author Amy Unruh
  */
 interface StreamerPlugin extends GenericPlugin {

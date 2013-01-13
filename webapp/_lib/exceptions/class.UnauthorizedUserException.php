@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.UnauthorizedUserException.php
  *
- * Copyright (c) 2009-2012 Guillaume Boudreau
+ * Copyright (c) 2009-2013 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,6 +23,6 @@
  *
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Guillaume Boudreau
+ * @copyright 2009-2013 Guillaume Boudreau
  */
 class UnauthorizedUserException extends Exception {}

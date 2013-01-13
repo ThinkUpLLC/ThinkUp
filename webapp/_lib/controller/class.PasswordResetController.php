@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PasswordResetController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Michael Louis Thaler
+ * Copyright (c) 2009-2013 Gina Trapani, Michael Louis Thaler
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Given the correct hash, changes a ThinkUp user's password and activates a deactivated account.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author Michael Louis Thaler <michael.louis.thaler[at]gmail[dot]com>
  */
 class PasswordResetController extends ThinkUpController {

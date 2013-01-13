@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitterrealtime/model/class.StreamCollect.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *

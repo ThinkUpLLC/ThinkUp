@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfTestController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * Copyright (c) 2009-2013 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  *
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';

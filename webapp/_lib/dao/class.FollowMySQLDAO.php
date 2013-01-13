@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.FollowMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Follow MySQL Data Access Object Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Jason McPheron <jason[at]onebigword[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>

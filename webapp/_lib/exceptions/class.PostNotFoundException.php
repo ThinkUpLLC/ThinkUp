@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.PostNotFoundEception.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani <ginatrapani at gmail.com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  */
 class PostNotFoundException extends Exception {
     public function __construct() {

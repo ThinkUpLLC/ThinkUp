@@ -4,7 +4,7 @@
  *
  * ThinkUp/tests/TestOfPostAPIController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of PostAPIController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Sam Rose
+ * @copyright 2009-2013 Gina Trapani, Sam Rose
  * @author Sam Rose <samwho@lbak.co.uk>
  */
 require_once dirname(__FILE__) . '/init.tests.php';

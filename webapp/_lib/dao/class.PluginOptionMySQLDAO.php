@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.PluginOptionMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2013 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving plugin options.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2013 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */

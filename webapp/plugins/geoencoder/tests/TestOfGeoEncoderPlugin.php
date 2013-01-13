@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
+ * Copyright (c) 2009-2013 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of GeoEncoder ThinkUp plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *

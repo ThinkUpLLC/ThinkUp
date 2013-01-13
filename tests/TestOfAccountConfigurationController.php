@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfAccountConfigurationController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Terrance Shepherd
+ * Copyright (c) 2009-2013 Gina Trapani, Terrance Shepherd
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of AccountConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Terrance Shepherd
+ * @copyright 2009-2013 Gina Trapani, Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Terrance Shepherd
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PluginConfigurationController.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2013 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *
@@ -65,7 +65,7 @@
  *
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2013 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 

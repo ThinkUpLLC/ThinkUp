@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfGroupMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, SwellPath, Inc.
+ * Copyright (c) 2009-2013 Gina Trapani, SwellPath, Inc.
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @author Christian G. Warden <cwarden[at]xerus[dot]org>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, SwellPath, Inc.
+ * @copyright 2009-2013 Gina Trapani, SwellPath, Inc.
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

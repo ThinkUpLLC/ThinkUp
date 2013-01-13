@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/expandurls/model/class.BitlyAPIAccessor.php
  *
- * Copyright (c) 2011-2012 Randi Miller
+ * Copyright (c) 2011-2013 Randi Miller
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
 /**
  * @author Randi Miller <techrandy[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Randi Miller
+ * @copyright 2011-2013 Randi Miller
  */
 class BitlyAPIAccessor {
     /**

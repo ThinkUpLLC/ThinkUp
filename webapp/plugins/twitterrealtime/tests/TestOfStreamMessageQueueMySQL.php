@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/twitterrealtime/tests/TestOfStreamMessageQueueMySQL.php
  *
- * Copyright (c) 2011-2012 Amy Unruh, Mark Wilkie
+ * Copyright (c) 2011-2013 Amy Unruh, Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  * Test of StreamMessageQueueMySQL
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Amy Unruh, Mark Wilkie
+ * @copyright 2011-2013 Amy Unruh, Mark Wilkie
  * @author Amy Unruh
  *
  */

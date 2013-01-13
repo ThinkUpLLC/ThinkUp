@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.Session.php
  *
- * Copyright (c) 2009-2012 Christoffer Viken, Gina Trapani
+ * Copyright (c) 2009-2013 Christoffer Viken, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The object that manages logged-in ThinkUp users' sessions via the web and API calls.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Christoffer Viken, Gina Trapani
+ * @copyright 2009-2013 Christoffer Viken, Gina Trapani
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPostMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * Test of PostMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

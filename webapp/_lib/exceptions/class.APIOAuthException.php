@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/APIOAuthException.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,6 +23,6 @@
  *
  * @author Gina Trapani <ginatrapani at gmail dot com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  */
 class APIOAuthException extends Exception { }

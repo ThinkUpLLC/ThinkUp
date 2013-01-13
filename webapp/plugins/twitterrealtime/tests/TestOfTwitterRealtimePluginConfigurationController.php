@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterRealtimePluginConfigurationController
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of TwitterRealtimePluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Mark Wilkie
+ * @copyright 2011-2013 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/foursquare/model/mock.FoursquareAPIAccessor.php
  *
- * Copyright (c) 2012 Aaron Kalair
+ * Copyright (c) 2012-2013 Aaron Kalair
  *
  *
  * LICENSE:

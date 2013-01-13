@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ExpandURLsPluginConfigurationController.php
  *
- * Copyright (c) 2009-2012 Sam Rose
+ * Copyright (c) 2009-2013 Sam Rose
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * Expand URLs Plugin Configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Sam Rose
+ * @copyright 2009-2013 Sam Rose
  * @author Sam Rose
  */
 class ExpandURLsPluginConfigurationController extends PluginConfigurationController {

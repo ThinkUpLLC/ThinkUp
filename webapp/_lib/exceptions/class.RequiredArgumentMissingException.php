@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.RequiredArgumentMissingEception.php
  *
- * Copyright (c) 2009-2012 Sam Rose
+ * Copyright (c) 2009-2013 Sam Rose
  *
  * LICENSE:
  *
@@ -24,6 +24,6 @@
  *
  * @author Sam Rose <samwho@lbak.co.uk>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Sam Rose
+ * @copyright 2009-2013 Sam Rose
  */
 class RequiredArgumentMissingException extends Exception {}

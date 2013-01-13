@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfMapController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Ekansh Preet Singh
+ * Copyright (c) 2009-2013 Gina Trapani, Ekansh Preet Singh
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of Map Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Ekansh Preet Singh
+ * @copyright 2009-2013 Gina Trapani, Ekansh Preet Singh
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>

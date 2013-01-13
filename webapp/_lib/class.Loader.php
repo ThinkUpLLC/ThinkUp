@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.Loader.php
  *
- * Copyright (c) 2009-2012 Dwi Widiastuti, Gina Trapani
+ * Copyright (c) 2009-2013 Dwi Widiastuti, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Implements lazy loading of ThinkUp classes by registering _autoload method in this class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Dwi Widiastuti, Gina Trapani
+ * @copyright 2009-2013 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

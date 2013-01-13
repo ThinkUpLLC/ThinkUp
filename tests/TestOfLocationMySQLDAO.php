@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfLocationMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Ekansh Preet Singh
+ * Copyright (c) 2009-2013 Gina Trapani, Ekansh Preet Singh
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Ekansh Preet Singh
+ * @copyright 2009-2013 Gina Trapani, Ekansh Preet Singh
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

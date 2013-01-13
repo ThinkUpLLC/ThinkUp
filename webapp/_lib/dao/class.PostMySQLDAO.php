@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.PostMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving posts in the ThinkUp database
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2013 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PostMySQLDAO extends PDODAO implements PostDAO  {

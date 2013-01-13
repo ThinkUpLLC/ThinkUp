@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.UpgradeApplicationController.php
  *
- * Copyright (c) 2012 Mark Wilkie
+ * Copyright (c) 2012-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Web-based Application Update Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Mark Wilkie
+ * @copyright 2012-2013 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

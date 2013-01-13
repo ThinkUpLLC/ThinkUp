@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.TableStatsMySQLDAO.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie
+ * Copyright (c) 2009-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2013 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class TableStatsMySQLDAO extends PDODAO implements TableStatsDAO {

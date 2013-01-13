@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPluginOptionController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test TestOfPluginOptionController class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 

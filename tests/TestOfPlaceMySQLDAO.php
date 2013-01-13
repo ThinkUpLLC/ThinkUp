@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPlaceMySQLDAO.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Amy Unruh
+ * @copyright 2011-2013 Amy Unruh
  * @author Amy Unruh
  */
 require_once dirname(__FILE__).'/init.tests.php';

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.filter_xss.php
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    text
  * Example:  {$some_text|filter_xss}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Mark Wilkie
+ * @copyright 2011-2013 Mark Wilkie
  * @author   Mark Wilkie
  * @version 1.0
  * @param string

@@ -3,7 +3,7 @@
  *
  * ThinkUp/extras/wordpress/thinkup/classes/ThinkUpShortcodeHandler.class.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *

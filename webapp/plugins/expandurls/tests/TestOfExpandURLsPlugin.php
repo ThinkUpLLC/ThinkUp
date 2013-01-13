@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau, Christoffer Viken
+ * Copyright (c) 2009-2013 Gina Trapani, Guillaume Boudreau, Christoffer Viken
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of ExpandURLs Crawler plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau, Christoffer Viken
+ * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau, Christoffer Viken
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

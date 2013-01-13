@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.DAOFactory.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2013 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *
@@ -35,7 +35,7 @@
  * </code>
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2013 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.csrf_token.php
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    key
  * Example:  {insert name="csrf_token"}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Mark Wilkie
+ * @copyright 2011-2013 Mark Wilkie
  * @version 1.0
  */
 function smarty_insert_csrf_token($params, &$smarty) {

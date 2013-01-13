@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.PostIterator.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie
+ * Copyright (c) 2009-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Used to iterate through the cursor of SQL results for Posts.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie
+ * @copyright 2009-2013 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class PostIterator implements Iterator {

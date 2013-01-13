@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ToggleOwnerAdminController.php
  *
- * Copyright (c) 2011-2012 Gina Trapani
+ * Copyright (c) 2011-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Promote or demote an owner from/to admin status.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Gina Trapani
+ * @copyright 2011-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class ToggleOwnerAdminController extends ThinkUpAdminController {

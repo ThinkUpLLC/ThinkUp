@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfRSSController.php
  *
- * Copyright (c) 2009-2012 Guillaume Boudreau
+ * Copyright (c) 2009-2013 Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of RSSController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Guillaume Boudreau
+ * @copyright 2009-2013 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */

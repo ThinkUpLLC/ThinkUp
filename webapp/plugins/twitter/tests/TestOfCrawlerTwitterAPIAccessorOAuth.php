@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfCrawlerTwitterAPIAccessorOAuth.php
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
 /**
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Mark Wilkie
+ * @copyright 2011-2013 Mark Wilkie
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

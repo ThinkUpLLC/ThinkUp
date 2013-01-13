@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/twitterrealtime/tests/TestOfConsumerStreamProcess.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Amy Unruh, Mark Wilkie
+ * Copyright (c) 2009-2013 Gina Trapani, Amy Unruh, Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  * Test of TestOfConsumerUserStream
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Amy Unruh, Mark Wilkie
+ * @copyright 2009-2013 Gina Trapani, Amy Unruh, Mark Wilkie
  * @author Amy Unruh
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

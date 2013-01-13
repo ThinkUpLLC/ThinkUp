@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.CrawlerWebController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2013 Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * Runs crawler from the web for the logged-in user and outputs logging into a text area.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class CrawlerWebController extends ThinkUpAuthAPIController {

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
+ * Copyright (c) 2009-2013 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * ExpandURLs Crawler Plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
+ * @copyright 2009-2013 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

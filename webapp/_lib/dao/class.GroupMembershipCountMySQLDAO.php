@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.GroupMembershipCountMySQLDAO.php
  *
- * Copyright (c) 2011-2012 SwellPath, Inc.
+ * Copyright (c) 2011-2013 SwellPath, Inc.
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * (based on class.FollowerCountMySQLDAO.php)
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 SwellPath, Inc.
+ * @copyright 2011-2013 SwellPath, Inc.
  * @author Christian G. Warden <cwarden[at]xerus[dot]org>
  *
  */

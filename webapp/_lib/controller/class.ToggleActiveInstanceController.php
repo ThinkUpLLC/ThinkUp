@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ToggleActiveInstanceController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Toggle Active Instance Controller
  * Set an instance active or inactive.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class ToggleActiveInstanceController extends ThinkUpAdminController {

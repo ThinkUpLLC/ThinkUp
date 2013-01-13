@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.Config.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2013 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *
@@ -37,7 +37,7 @@
  *
  * @package     ThinkUp
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau
  * @author      Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author      Mark Wilkie
  */

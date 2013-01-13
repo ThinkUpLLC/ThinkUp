@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitterrealtime/model/class.StreamMessageQueue.php
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *

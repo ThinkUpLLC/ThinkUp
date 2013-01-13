@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/twitterrealtime/tests/TestOfTwitterJSONStreamParser.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  * Test of TestOfTwitterJSONStreamParser
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012  Amy Unruh
+ * @copyright 2011-2013  Amy Unruh
  * @author Amy Unruh
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

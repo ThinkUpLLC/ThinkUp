@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.LinkDAO.php
  *
- * Copyright (c) 2009-2012 Gina Trapani, Christoffer Viken
+ * Copyright (c) 2009-2013 Gina Trapani, Christoffer Viken
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Link Data Access Object Interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani, Christoffer Viken
+ * @copyright 2009-2013 Gina Trapani, Christoffer Viken
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */

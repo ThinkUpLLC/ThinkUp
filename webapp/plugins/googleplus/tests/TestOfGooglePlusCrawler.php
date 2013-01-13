@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/googleplus/tests/TestOfFacebookCrawler.php
  *
- * Copyright (c) 2011-2012 Henri Watson
+ * Copyright (c) 2011-2013 Henri Watson
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test of GooglePlusCrawler
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Henri Watson
+ * @copyright 2011-2013 Henri Watson
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

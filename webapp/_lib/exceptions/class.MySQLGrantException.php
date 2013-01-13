@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.MySQLGrantException.php
  *
- * Copyright (c) 2011-2012 Mark Wilkie
+ * Copyright (c) 2011-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Mark Wilkie <mwilkie@gmail.com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012 Mark Wilkie
+ * @copyright 2011-2013 Mark Wilkie
  */
 class MySQLGrantException extends Exception {
     public function __construct($message) {

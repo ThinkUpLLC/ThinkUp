@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/interface.TestAppPlugin.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Test Plugin for use with TestOfPluginRegistrar
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

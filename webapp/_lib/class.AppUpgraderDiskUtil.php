@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.AppUpgraderDiskUtil.php
  *
- * Copyright (c) 2012 Mark Wilkie
+ * Copyright (c) 2012-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Mark Wilkie
+ * @copyright 2012-2013 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class AppUpgraderDiskUtil {

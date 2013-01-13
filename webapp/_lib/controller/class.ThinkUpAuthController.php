@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ThinkUpAuthController.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * Parent controller for all logged-in user-only actions
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

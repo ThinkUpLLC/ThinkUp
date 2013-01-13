@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/foursquare/model/class.FoursquarePlugin.php
  *
- * Copyright (c) 2012 Aaron Kalair
+ * Copyright (c) 2012-2013 Aaron Kalair
  *
  *
  * LICENSE:
@@ -25,7 +25,7 @@
  *
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Aaron Kalair
+ * @copyright 2012-2013 Aaron Kalair
  */
 
 class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {

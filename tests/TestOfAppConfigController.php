@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfAppConfigController.php
  *
- * Copyright (c) 2009-2012 Mark Wilkie
+ * Copyright (c) 2009-2013 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test TestAppConfigController class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Mark Wilkie
+ * @copyright 2009-2013 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';

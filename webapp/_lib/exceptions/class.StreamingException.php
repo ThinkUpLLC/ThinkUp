@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.StreamingException.php
  *
- * Copyright (c) 2011-2012 Amy Unruh
+ * Copyright (c) 2011-2013 Amy Unruh
  *
  * LICENSE:
  *
@@ -22,6 +22,6 @@
  *
  * @author Amy Unruh
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2012  Amy Unruh
+ * @copyright 2011-2013  Amy Unruh
  */
 class StreamingException extends Exception {}
