@@ -3,19 +3,19 @@
 html {
   background: #EEEEEA;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size:14.5px;
+  font-size: 14.5px;
 }
 
 a,
 a:link,
 a:visited {
-  text-decoration: none;
   color: #0060E0;
+  text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
   color: red;
+  text-decoration: underline;
 }
 
 a:visited {
@@ -36,10 +36,10 @@ h3 {
 }
 
 .content {
-  width: 600px;
-  background-color: white;
+  background: #FFF;
   border: solid 1px grey;
   text-align: left;
+  width: 600px;
 }
 
 .tweetmeta {
@@ -58,8 +58,8 @@ small a:visited {
 /******* Tweet Formatting ********/
 
 .individual-tweet {
-  padding: 10px;
   margin-top: 10px;
+  padding: 10px;
 }
 
 .reply {
@@ -67,15 +67,15 @@ small a:visited {
 }
 
 .private {
-  border: 1px dotted #666;
   background-color: #EEE;
+  border: 1px dotted #666;
 }
 
 .person-info {
   float: left;
   margin-right: 10px;
-  width: 80px;
   text-align: center;
+  width: 80px;
 }
 
 li {
@@ -83,8 +83,8 @@ li {
 }
 
 li.individual-tweet h3 a {
-  font-size: x-small;
   color: #666;
+  font-size: x-small;
 }
 
 li.individual-tweet h4,
@@ -95,14 +95,14 @@ li.individual-tweet form {
 
 li.individual-tweet:hover h4,
 li.individual-tweet:hover form {
-  visibility: visible;
   color: #666;
+  visibility: visible;
 }
 
 li.individual-tweet h4.reply-count {
   font-size: medium;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
  
 li.individual-tweet:hover h3 a {
