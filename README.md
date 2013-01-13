@@ -1,7 +1,7 @@
 # ThinkUp, social media insights engine [![Build Status](https://secure.travis-ci.org/ginatrapani/ThinkUp.png?branch=master)](http://travis-ci.org/ginatrapani/ThinkUp)
 
 ThinkUp is a free, installable web application that gives you insights into your activity on social networks, including
-Twitter, Facebook, Foursquare, and Google+. Find out more at  [http://thinkupapp.com](http://thinkupapp.com).
+Twitter, Facebook, Foursquare, and Google+. Find out more at  [http://thinkup.com](http://thinkup.com).
 
 ## Support and Documentation
 
