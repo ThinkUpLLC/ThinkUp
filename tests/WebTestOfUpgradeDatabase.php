@@ -296,7 +296,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             chdir(dirname(__FILE__) . '/../');
             //Extract into test_installer directory and set necessary folder permissions
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;cd webapp/test_installer/;'.
-            'rm -rf thinkup/_lib;unzip -o ' . $zipfile.';');
+            'rm -rf thinkup/_lib;rm -rf thinkup/plugins;unzip -o ' . $zipfile.';');
             if (!file_exists($this->install_dir.'/thinkup/data/compiled_view')) {
                 if (!file_exists($this->install_dir.'/thinkup/data')) {
                     exec('mkdir thinkup/data;');
@@ -411,8 +411,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 }
                 $this->get($token_url . '&migration_done=true');
                 $this->assertText('{ "migration_complete":true }');
-                $this->get($this->url.'/test_installer/thinkup/');
-                $this->assertText('user@example.com');
             } else {
                 $this->assertText('Your database is up to date');
             }
