@@ -72,6 +72,7 @@ $plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
+$plugin_tests->add(new TestOfFrequencyInsight());
 $plugin_tests->add(new TestOfMapInsight());
 $plugin_tests->add(new TestOfStyleStatsInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
