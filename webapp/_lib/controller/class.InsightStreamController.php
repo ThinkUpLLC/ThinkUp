@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.InsightStreamController.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Displays a list of insights for authenticated service users.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.relative_day.php
  *
- * Copyright (c) 2009-2012 Gina Trapani
+ * Copyright (c) 2009-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    date to format
  * Example:  {$datetime|relative_day}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2012 Gina Trapani
+ * @copyright 2009-2013 Gina Trapani
  * @author   Eric Lamb <eric@ericlamb.net>
  * @version 1.0
  * @param string

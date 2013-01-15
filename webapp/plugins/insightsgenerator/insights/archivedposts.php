@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/archivedposts.pho
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012
+ * @copyright 2012-2013 Gina Trapani
  */
 
 class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin {

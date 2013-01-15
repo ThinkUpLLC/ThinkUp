@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/controller/class.InsightsGeneratorPluginConfigurationController.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Renders the Insights Generator plugin settings area.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 

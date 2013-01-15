@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfInsightsGeneratorPlugin.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  *
  * LICENSE:
@@ -25,7 +25,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  */
 
 require_once 'tests/init.tests.php';

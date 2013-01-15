@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/interestingfollowers.php
  *
- * Copyright (c) 2012 Gina Trapani
+ * Copyright (c) 2012-2013 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  */
 
