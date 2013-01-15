@@ -101,84 +101,89 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $instances = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
         'twitter');
         foreach ($instances as $instance) {
-            $logger->setUsername($instance->network_username);
-            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
-            __METHOD__.','.__LINE__);
-            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
-            $noauth = true;
-            $num_twitter_errors =
-            isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
-            $max_api_calls_per_crawl =
-            isset($options['max_api_calls_per_crawl']) ? $options['max_api_calls_per_crawl']->option_value : 350;
-            if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
-            && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
-                $noauth = false;
-            }
-            $api_calls_to_leave_unmade_per_minute =  isset($options['api_calls_to_leave_unmade_per_minute']) ?
-            $options['api_calls_to_leave_unmade_per_minute']->option_value : 2.0;
-
-            if ($noauth) {
-                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
-                $options['oauth_consumer_key']->option_value,
-                $options['oauth_consumer_secret']->option_value,
-                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
-                $num_twitter_errors, $max_api_calls_per_crawl);
-            } else {
-                $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
-                $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
-                $options['oauth_consumer_secret']->option_value,
-                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
-                $num_twitter_errors, $max_api_calls_per_crawl);
-            }
-
-            $twitter_crawler = new TwitterCrawler($instance, $api);
-            $dashboard_module_cacher = new DashboardModuleCacher($instance);
-
-            $api->init();
-
-            // budget our twitter calls
-            $call_limits = $this->budgetCrawlLimits($api->available_api_calls_for_crawler, $noauth);
-
-            $api->setCallerLimits($call_limits);
-
-            if ($api->available_api_calls_for_crawler > 0) {
-
-                $instance_dao->updateLastRun($instance->id);
-
-                // No auth for public Twitter users
-                $twitter_crawler->fetchInstanceUserTweets();
-
-                if (!$noauth) {
-                    // Auth req'd, for calling user only
-                    $twitter_crawler->fetchInstanceUserMentions();
-                    $twitter_crawler->fetchInstanceUserFriends();
-                    $twitter_crawler->fetchInstanceFavorites();
-                    $twitter_crawler->fetchInstanceUserFollowers();
-                    $twitter_crawler->fetchInstanceUserGroups();
-                    $twitter_crawler->fetchRetweetsOfInstanceUser();
-                    $twitter_crawler->cleanUpMissedFavsUnFavs();
-                    $twitter_crawler->updateStaleGroupMemberships();
+            try {
+                $logger->setUsername($instance->network_username);
+                $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
+                __METHOD__.','.__LINE__);
+                $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+                $noauth = true;
+                $num_twitter_errors =
+                isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
+                $max_api_calls_per_crawl =
+                isset($options['max_api_calls_per_crawl']) ? $options['max_api_calls_per_crawl']->option_value : 350;
+                if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
+                && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
+                    $noauth = false;
                 }
-
-                $twitter_crawler->fetchStrayRepliedToTweets();
-                $twitter_crawler->fetchUnloadedFollowerDetails();
-                $twitter_crawler->cleanUpFollows();
-                $twitter_crawler->fetchFriendTweetsAndFriends();
+                $api_calls_to_leave_unmade_per_minute =  isset($options['api_calls_to_leave_unmade_per_minute']) ?
+                $options['api_calls_to_leave_unmade_per_minute']->option_value : 2.0;
 
                 if ($noauth) {
-                    // No auth req'd
-                    $twitter_crawler->fetchSearchResults($instance->network_username);
+                    $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
+                    $options['oauth_consumer_key']->option_value,
+                    $options['oauth_consumer_secret']->option_value,
+                    $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
+                    $num_twitter_errors, $max_api_calls_per_crawl);
+                } else {
+                    $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
+                    $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
+                    $options['oauth_consumer_secret']->option_value,
+                    $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
+                    $num_twitter_errors, $max_api_calls_per_crawl);
                 }
 
-                $dashboard_module_cacher->cacheDashboardModules();
+                $twitter_crawler = new TwitterCrawler($instance, $api);
+                $dashboard_module_cacher = new DashboardModuleCacher($instance);
 
-                // Save instance
-                if (isset($twitter_crawler->user)) {
-                    $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
+                $api->init();
+
+                // budget our twitter calls
+                $call_limits = $this->budgetCrawlLimits($api->available_api_calls_for_crawler, $noauth);
+
+                $api->setCallerLimits($call_limits);
+
+                if ($api->available_api_calls_for_crawler > 0) {
+
+                    $instance_dao->updateLastRun($instance->id);
+
+                    // No auth for public Twitter users
+                    $twitter_crawler->fetchInstanceUserTweets();
+
+                    if (!$noauth) {
+                        // Auth req'd, for calling user only
+                        $twitter_crawler->fetchInstanceUserMentions();
+                        $twitter_crawler->fetchInstanceUserFriends();
+                        $twitter_crawler->fetchInstanceFavorites();
+                        $twitter_crawler->fetchInstanceUserFollowers();
+                        $twitter_crawler->fetchInstanceUserGroups();
+                        $twitter_crawler->fetchRetweetsOfInstanceUser();
+                        $twitter_crawler->cleanUpMissedFavsUnFavs();
+                        $twitter_crawler->updateStaleGroupMemberships();
+                    }
+
+                    $twitter_crawler->fetchStrayRepliedToTweets();
+                    $twitter_crawler->fetchUnloadedFollowerDetails();
+                    $twitter_crawler->cleanUpFollows();
+                    $twitter_crawler->fetchFriendTweetsAndFriends();
+
+                    if ($noauth) {
+                        // No auth req'd
+                        $twitter_crawler->fetchSearchResults($instance->network_username);
+                    }
+
+                    $dashboard_module_cacher->cacheDashboardModules();
+
+                    // Save instance
+                    if (isset($twitter_crawler->user)) {
+                        $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
+                    }
+                    Reporter::reportVersion($instance);
+                    $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
+                    __METHOD__.','.__LINE__);
                 }
-                Reporter::reportVersion($instance);
-                $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
-                __METHOD__.','.__LINE__);
+            } catch (Exception $e) {
+                $logger->logUserError("Error while crawling ".$instance->network_username." on Twitter: ".
+                $e->getMessage(), __METHOD__.','.__LINE__);
             }
         }
     }
