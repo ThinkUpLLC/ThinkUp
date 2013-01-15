@@ -384,10 +384,14 @@ footer {
 
 @media (max-width: 767px) {
 body {
-	padding-left: 6px;
-	padding-right: 6px;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 .alert, .alert.insight-item, .white-card, .row {
   margin-bottom: 6px;
+}
+.container {
+	padding-left: 6px;
+	padding-right: 6px;
 }
 }
