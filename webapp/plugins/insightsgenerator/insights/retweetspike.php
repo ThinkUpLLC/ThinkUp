@@ -40,132 +40,135 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
         $filename = basename(__FILE__, ".php");
 
         $simplified_post_date = "";
+        $share_verb = ($instance->network == 'twitter')?'retweeted':'reshared';
         foreach ($last_week_of_posts as $post) {
-            // First get spike/high 7/30/365 day baselines
-            if ($simplified_post_date != date('Y-m-d', strtotime($post->pub_date))) {
-                $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+            if ($post->all_retweets > 2) { //Only show insight for more than 2 reshares
+                // First get spike/high 7/30/365 day baselines
+                if ($simplified_post_date != date('Y-m-d', strtotime($post->pub_date))) {
+                    $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
-                $average_retweet_count_7_days =
-                $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_7_days', $instance->id,
-                $simplified_post_date);
-
-                $average_retweet_count_30_days =
-                $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_30_days', $instance->id,
-                $simplified_post_date);
-
-                $high_retweet_count_7_days =
-                $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_7_days', $instance->id,
-                $simplified_post_date);
-
-                $high_retweet_count_30_days =
-                $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_30_days', $instance->id,
-                $simplified_post_date);
-
-                $high_retweet_count_365_days =
-                $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_365_days', $instance->id,
-                $simplified_post_date);
-            }
-            // Next compare post retweet counts to baselines and store insights where there's a spike or high
-            if (isset($high_retweet_count_365_days->value)
-            && $post->all_retweets >= $high_retweet_count_365_days->value) {
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
-
-                if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsight('retweet_high_365_day_'.$post->id, $instance->id,
-                    $simplified_post_date, "New 365-day record!", "<strong>".number_format($post->all_retweets).
-                    " people</strong> reshared your post.", $filename, Insight::EMPHASIS_HIGH,
-                    serialize(array($post, $hot_posts_data)));
-
-                    $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                    $average_retweet_count_7_days =
+                    $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_7_days', $instance->id,
                     $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
+
+                    $average_retweet_count_30_days =
+                    $insight_baseline_dao->getInsightBaseline('avg_retweet_count_last_30_days', $instance->id,
                     $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+
+                    $high_retweet_count_7_days =
+                    $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_7_days', $instance->id,
                     $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+
+                    $high_retweet_count_30_days =
+                    $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_30_days', $instance->id,
+                    $simplified_post_date);
+
+                    $high_retweet_count_365_days =
+                    $insight_baseline_dao->getInsightBaseline('high_retweet_count_last_365_days', $instance->id,
                     $simplified_post_date);
                 }
-            } elseif (isset($high_retweet_count_30_days->value)
-            && $post->all_retweets >= $high_retweet_count_30_days->value) {
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
+                // Next compare post retweet counts to baselines and store insights where there's a spike or high
+                if (isset($high_retweet_count_365_days->value)
+                && $post->all_retweets >= $high_retweet_count_365_days->value) {
+                    //TODO: Stop using the cached dashboard data and generate fresh here
+                    $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                    $instance->id, $simplified_post_date);
 
-                if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsight('retweet_high_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date, "New 30-day record!", "<strong>".number_format($post->all_retweets).
-                    " people</strong> reshared your post.", $filename, Insight::EMPHASIS_HIGH,
-                    serialize(array($post, $hot_posts_data)));
+                    if (isset($hot_posts_data)) {
+                        $this->insight_dao->insertInsight('retweet_high_365_day_'.$post->id, $instance->id,
+                        $simplified_post_date, "New 365-day record!", "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb your post.", $filename, Insight::EMPHASIS_HIGH,
+                        serialize(array($post, $hot_posts_data)));
 
-                    $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                }
-            } elseif (isset($high_retweet_count_7_days->value)
-            && $post->all_retweets >= $high_retweet_count_7_days->value) {
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                    }
+                } elseif (isset($high_retweet_count_30_days->value)
+                && $post->all_retweets >= $high_retweet_count_30_days->value) {
+                    //TODO: Stop using the cached dashboard data and generate fresh here
+                    $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                    $instance->id, $simplified_post_date);
 
-                if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsight('retweet_high_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date, "New 7-day record!", "<strong>".number_format($post->all_retweets).
-                    " people</strong> reshared your post.", $filename, Insight::EMPHASIS_HIGH,
-                    serialize(array($post, $hot_posts_data)));
+                    if (isset($hot_posts_data)) {
+                        $this->insight_dao->insertInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date, "New 30-day record!", "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb your post.", $filename, Insight::EMPHASIS_HIGH,
+                        serialize(array($post, $hot_posts_data)));
 
-                    $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                }
-            } elseif (isset($average_retweet_count_30_days->value)
-            && $post->all_retweets > ($average_retweet_count_30_days->value*2)) {
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                    }
+                } elseif (isset($high_retweet_count_7_days->value)
+                && $post->all_retweets >= $high_retweet_count_7_days->value) {
+                    //TODO: Stop using the cached dashboard data and generate fresh here
+                    $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                    $instance->id, $simplified_post_date);
 
-                if (isset($hot_posts_data)) {
-                    $multiplier = floor($post->all_retweets/$average_retweet_count_30_days->value);
-                    $this->insight_dao->insertInsight('retweet_spike_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
-                    " people</strong> reshared your post, more than <strong>".$multiplier.
-                    "x</strong> your 30-day average.", $filename,
-                    Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
+                    if (isset($hot_posts_data)) {
+                        $this->insight_dao->insertInsight('retweet_high_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date, "New 7-day record!", "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb your post.", $filename, Insight::EMPHASIS_HIGH,
+                        serialize(array($post, $hot_posts_data)));
 
-                    $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                }
-            } elseif (isset($average_retweet_count_7_days->value)
-            && $post->all_retweets > ($average_retweet_count_7_days->value*2)) {
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                    }
+                } elseif (isset($average_retweet_count_30_days->value)
+                && $post->all_retweets > ($average_retweet_count_30_days->value*2)) {
+                    //TODO: Stop using the cached dashboard data and generate fresh here
+                    $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                    $instance->id, $simplified_post_date);
 
-                if (isset($hot_posts_data)) {
-                    $multiplier = floor($post->all_retweets/$average_retweet_count_7_days->value);
-                    $this->insight_dao->insertInsight('retweet_spike_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
-                    " people</strong> reshared your post, more than <strong>" .$multiplier.
-                    "x</strong> your 7-day average.", $filename, Insight::EMPHASIS_LOW,
-                    serialize(array($post, $hot_posts_data)));
+                    if (isset($hot_posts_data)) {
+                        $multiplier = floor($post->all_retweets/$average_retweet_count_30_days->value);
+                        $this->insight_dao->insertInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb your post, more than <strong>".$multiplier.
+                        "x</strong> your 30-day average.", $filename,
+                        Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
 
-                    $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
-                    $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
-                    $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                    }
+                } elseif (isset($average_retweet_count_7_days->value)
+                && $post->all_retweets > ($average_retweet_count_7_days->value*2)) {
+                    //TODO: Stop using the cached dashboard data and generate fresh here
+                    $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                    $instance->id, $simplified_post_date);
+
+                    if (isset($hot_posts_data)) {
+                        $multiplier = floor($post->all_retweets/$average_retweet_count_7_days->value);
+                        $this->insight_dao->insertInsight('retweet_spike_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb your post, more than <strong>" .$multiplier.
+                        "x</strong> your 7-day average.", $filename, Insight::EMPHASIS_LOW,
+                        serialize(array($post, $hot_posts_data)));
+
+                        $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('retweet_spike_30_day_'.$post->id, $instance->id,
+                        $simplified_post_date);
+                    }
                 }
             }
         }
