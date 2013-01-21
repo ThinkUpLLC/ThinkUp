@@ -1,3 +1,23 @@
+Welcome, ThinkUp contributor!
+
+Filing Issues
+=============
+
+When you file a ticket in ThinkUp's issue tracker, help us help you. First, make sure the issue has not already been filed. If you have a question or comment, discuss it on [the community mailing list](http://groups.google.com/group/thinkupapp) instead of filing a ticket.
+
+To report a bug, include:
+
+* The exact steps to reproduce the problem
+* Links to the problematic page and screenshots of what you're seeing
+* The version of ThinkUp you're running
+* Your web host and the PHP and MySQL version running on your web server
+* The full text of the error, and the contents of your Apache logs (if it's a PHP error) and the contents of ThinkUp's crawler log (if it's a crawler error)
+
+If it's a feature request, rather than file an issue, propose it on [the community mailing list](http://groups.google.com/group/thinkupapp).
+
+Pull Requests
+=============
+
 We love pull requests. We welcome contributors of all levels. Here's a quick guide:
 
 1. Fork the repo.
