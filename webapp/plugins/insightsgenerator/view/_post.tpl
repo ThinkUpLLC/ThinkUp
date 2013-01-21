@@ -33,7 +33,9 @@
                                 {$post->reply_retweet_distance|number_format} miles away in 
                               {/if}
                           {/if}
-                         from {$post->location|truncate:60:' ...'}
+                          {if $post->location}
+                          from {$post->location|truncate:60:' ...'}
+                          {/if}
                             </small>
                         {/if}
                     </h3>
