@@ -31,7 +31,7 @@
                     <div class="control-group">
                         <label class="control-label" for="email">Email:</label>
                         <div class="controls">
-                            <input class="input-xlarge" type="text" name="email" id="email">
+                            <input class="input-xlarge" type="email" name="email" id="email">
                         </div>
                     </div>
                     
