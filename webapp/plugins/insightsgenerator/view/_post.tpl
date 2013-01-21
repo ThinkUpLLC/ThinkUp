@@ -16,13 +16,13 @@
     <tr>
         {if $i->instance->network_username != $post->author_username }
     <td class="avatar-data">
-            <h3><a href="https://twitter.com/intent/user?user_id={$post->author_username}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
+            <h3><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
     </td>
         {/if}
     <td>
             {if $post->network eq 'twitter'}
                 {if $i->instance->network_username != $post->author_username}
-                    <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_username}">{$post->author_username}</a> <small>{$post->place}</small>
+                    <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">{$post->author_username}</a> <small>{$post->place}</small>
 
                         {if $post->is_geo_encoded < 2}
                             <small>
