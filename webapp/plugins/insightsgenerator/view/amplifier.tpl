@@ -1,6 +1,6 @@
 {include file=$tpl_path|cat:'_header.tpl'}
 
-<span class="label label-info"><i class="icon-white icon-star"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
+<span class="label label-info"><i class="icon-white icon-bullhorn"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
 
 {$i->text|link_usernames_to_twitter}
 
