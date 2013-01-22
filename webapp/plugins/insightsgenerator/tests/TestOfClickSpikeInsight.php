@@ -95,7 +95,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'click_high_7_day_28');
         $this->assertEqual($result->prefix, 'New 7-day record!');
         $this->assertEqual($result->filename, 'clickspike');
-        $this->assertPattern('/Viewers clicked your link \<strong\>7,609 times\<\/strong\>/', $result->text);
+        $this->assertPattern('/Viewers clicked \@ev\'s link \<strong\>7,609 times\<\/strong\>/', $result->text);
     }
 
     private function buildData() {

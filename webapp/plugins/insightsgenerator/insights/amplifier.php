@@ -56,8 +56,8 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     //if user exists and has fewer followers than instance user, build and insert insight
                     if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
                         $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $insight_text = "You broadcast this post to <strong>$add_audience</strong> more people than ".
-                        "its author originally reached.";
+                        $insight_text = "$this->username broadcast this post to <strong>$add_audience</strong> ".
+                        "more people than its author originally reached.";
 
                         $this->insight_dao->insertInsight('amplifier_'.$post->id, $instance->id,
                         $simplified_post_date, "Amplifier:", $insight_text, $filename, Insight::EMPHASIS_LOW,

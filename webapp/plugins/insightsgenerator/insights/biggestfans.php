@@ -53,8 +53,8 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->network, 30);
                 if (isset($fans) && sizeof($fans) > 0 ) {
                     $this->insight_dao->insertInsight("biggest_fans_last_30_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who liked your posts the most over the last 30 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+                    $since_date, "Biggest fans:", "People who liked $this->username's posts the most over the last ".
+                    "30 days: ", $filename, Insight::EMPHASIS_LOW, serialize($fans));
                 }
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -67,8 +67,8 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->network, 7);
                 if (isset($fans) && sizeof($fans) > 0 ) {
                     $this->insight_dao->insertInsight("biggest_fans_last_7_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who liked your posts the most over the last 7 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+                    $since_date, "Biggest fans:", "People who liked $this->username's posts the most over the last 7 ".
+                    "days: ", $filename, Insight::EMPHASIS_LOW, serialize($fans));
                 }
             }
         }

@@ -31,6 +31,7 @@ class InsightPluginParent {
         $this->insight_date = new DateTime();
         $this->insight_date = $this->insight_date->format('Y-m-d');
         $this->insight_dao = DAOFactory::getDAO('InsightDAO');
+        $this->username = ($instance->network == 'twitter')?'@'.$instance->network_username:$instance->network_username;
     }
 
     public function renderConfiguration($owner) {

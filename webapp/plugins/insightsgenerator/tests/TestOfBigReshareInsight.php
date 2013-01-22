@@ -75,6 +75,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_user_id = '22';
         $instance->network = 'twitter';
+        $instance->network_username = 'testeriffic';
         $bigreshare_insight_plugin = new BigReshareInsight();
         $bigreshare_insight_plugin->generateInsight($instance, $posts, 3);
 
@@ -86,7 +87,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than you reshared/', $result->text);
+        $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than \@testeriffic retweeted/',
+        $result->text);
     }
 
     public function testMultipleBigReshare() {
@@ -139,7 +141,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/People with lots of followers reshared/', $result->text);
+        $this->assertPattern('/People with lots of followers retweeted/', $result->text);
     }
 
     public function testSingleBigReshareWithLessThan2xFollowers() {
@@ -183,7 +185,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with lots of followers reshared/', $result->text);
+        $this->assertPattern('/Someone with lots of followers retweeted/', $result->text);
     }
 
     private function buildData() {

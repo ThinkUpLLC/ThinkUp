@@ -39,10 +39,10 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         if (date('w') == 1 || $in_test_mode ) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
-                $text = "You posted <strong>$count times</strong> in the past week";
+                $text = "$this->username posted <strong>$count times</strong> in the past week";
             } else {
                 $prefix = "Nudge, nudge:";
-                $text = "You didn't post anything new in the past week";
+                $text = "$this->username didn't post anything new in the past week";
             }
 
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
