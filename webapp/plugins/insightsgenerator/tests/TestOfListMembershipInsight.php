@@ -69,7 +69,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list7\"\>list7\<\/a\>/', $result->text);
+        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
     }
 
     public function testLessThan10NewListMembershipWithHighHistory() {
@@ -96,7 +96,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list7\"\>list7\<\/a\>/', $result->text);
+        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
         $this->assertPattern('/bringing your total to \<strong\>50 lists\<\/strong\>\./', $result->text);
     }
 
@@ -124,7 +124,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list7\"\>list7\<\/a\>/', $result->text);
+        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
         $this->assertNoPattern('/bringing your total to/', $result->text);
     }
 
@@ -166,13 +166,13 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         //Add 25 groups and memberships
         $counter = 0;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-        $todays_date = date('Y-m-d H:i:s');
+        $todays_date = date('Y-m-d H:i:');
         while ($counter < $total_lists) {
             $builders[] = FixtureBuilder::build('groups', array('group_id'=>$counter, 'network'=>'twitter',
             'is_active'=>1, 'first_seen'=>$todays_date, 'group_name'=>'@listmaker/list'.$counter) );
 
             $builders[] = FixtureBuilder::build('group_members', array('group_id'=>$counter, 'member_user_id'=>'13',
-            'network'=>'twitter', 'is_active'=>1, 'first_seen'=>$todays_date));
+            'network'=>'twitter', 'is_active'=>1, 'first_seen'=>$todays_date . (10+$counter)));
             $counter++;
         }
 
