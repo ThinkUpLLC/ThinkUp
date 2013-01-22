@@ -50,6 +50,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = array();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
 
@@ -60,7 +62,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You didn\'t post anything new in the past week/', $result->text);
+        $this->assertPattern('/\@testeriffic didn\'t post anything new in the past week/', $result->text);
         $this->assertPattern('/Nudge, nudge/', $result->prefix);
     }
 
@@ -69,6 +71,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
 
@@ -79,7 +83,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You posted/', $result->text);
+        $this->assertPattern('/\@testeriffic posted/', $result->text);
         $this->assertPattern('/5 times/', $result->text);
         $this->assertPattern('/Post rate:/', $result->prefix);
     }
@@ -89,6 +93,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
         // Add a baseline from prior week
@@ -104,7 +110,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You posted/', $result->text);
+        $this->assertPattern('/\@testeriffic posted/', $result->text);
         $this->assertPattern('/5 times/', $result->text);
         $this->assertPattern('/14 fewer times than the prior week/', $result->text);
         $this->assertPattern('/Slowing down:/', $result->prefix);
@@ -115,6 +121,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
         // Add a baseline from prior week
@@ -130,7 +138,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You posted /', $result->text);
+        $this->assertPattern('/\@testeriffic posted /', $result->text);
         $this->assertPattern('/5 times/', $result->text);
         $this->assertPattern('/2 more times than the prior week/', $result->text);
         $this->assertPattern('/Ramping up:/', $result->prefix);
@@ -141,6 +149,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
         // Add a baseline from prior week
@@ -156,7 +166,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You posted /', $result->text);
+        $this->assertPattern('/\@testeriffic posted /', $result->text);
         $this->assertPattern('/5 times/', $result->text);
         $this->assertNoPattern('/1 more times than the prior week/', $result->text);
         $this->assertPattern('/Post rate:/', $result->prefix);
@@ -167,6 +177,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
         // Add a baseline from prior week
@@ -182,7 +194,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/You posted/', $result->text);
+        $this->assertPattern('/\@testeriffic posted/', $result->text);
         $this->assertPattern('/5 times/', $result->text);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);

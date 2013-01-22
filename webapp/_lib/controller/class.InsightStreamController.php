@@ -91,7 +91,6 @@ class InsightStreamController extends ThinkUpController {
             $insight = $insight_dao->getInsightByUsername($_GET['u'], $_GET['n'], $_GET['s'], $_GET['d']);
             if (isset($insight)) {
                 $insights[] = $insight;
-                $insights = $this->eschewSecondPerson($insights);
                 $this->addToView('insights', $insights);
                 $this->addToView('expand', true);
             } else {
@@ -130,7 +129,6 @@ class InsightStreamController extends ThinkUpController {
                 $this->addToView('last_page', $page-1);
                 array_pop($insights);
             }
-            $insights = $this->eschewSecondPerson($insights);
             $this->addToView('insights', $insights);
         } else {
             if ($this->isLoggedIn()) {
@@ -156,27 +154,4 @@ class InsightStreamController extends ThinkUpController {
         }
         return true;
     }
-
-    /**
-     * Replace you and your in insight text with username.
-     * @param arr $insights Insight objects
-     * @return arr $insights Insight objects
-     */
-    private function eschewSecondPerson($insights) {
-        foreach ($insights as $insight) {
-            $username = $insight->instance->network_username;
-            if ($insight->instance->network == 'twitter') {
-                $username = '@'.$username;
-            }
-            //your/Your
-            $new_text = str_replace('your', $username."'s", $insight->text);
-            $new_text = str_replace('Your', $username."'s", $new_text);
-            //you/You
-            $new_text = str_replace('you', $username, $new_text);
-            $new_text = str_replace('You', $username, $new_text);
-            $insight->text = $new_text;
-        }
-        return $insights;
-    }
-
 }

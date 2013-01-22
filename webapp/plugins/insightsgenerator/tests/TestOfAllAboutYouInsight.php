@@ -75,6 +75,8 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
 
@@ -85,7 +87,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Your posts contained the words/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s posts contained the words/', $result->text);
         $this->assertPattern('/9 times/', $result->text);
     }
 
@@ -94,6 +96,8 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
@@ -109,7 +113,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Your posts contained the words/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s posts contained the words/', $result->text);
         $this->assertPattern('/9 times/', $result->text);
         $this->assertPattern('/10 fewer times than the prior week/', $result->text);
     }
@@ -119,6 +123,8 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
@@ -134,7 +140,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Your posts contained the words/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s posts contained the words/', $result->text);
         $this->assertPattern('/9 times/', $result->text);
         $this->assertPattern('/2 more times than the prior week/', $result->text);
     }
@@ -144,6 +150,8 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $posts = self::getTestPostObjects();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
@@ -159,7 +167,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Your posts contained the words/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s posts contained the words/', $result->text);
         $this->assertPattern('/9 times/', $result->text);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);

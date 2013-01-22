@@ -94,7 +94,8 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                         $insight_text .= "and ";
                     }
                     if ($insight_text == '') { //first item
-                        $insight_text .= (($total == 0)?"None":$total)." of your posts this week were $type";
+                        $insight_text .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
+                        "were $type";
                     } else {
                         $insight_text .= (($total == 0)?"none":$total)." were $type";
                     }
