@@ -11,7 +11,7 @@
 
       <footer>
         <div class="container footer">
-          <p class="pull-right"><a href="#">Back to top <i class="icon-chevron-up"></i></a></p>
+          <p class="pull-right"><a href="#">Back to top <i class="icon-chevron-up icon-white"></i></a></p>
           <p><a href="http://thinkup.com">ThinkUp{if $thinkup_version} {$thinkup_version}{/if}</a> <span class="hidden-phone hidden-tablet">&#8226; 
           <a href="http://thinkupapp.com/docs/">Documentation</a>  &#8226; 
           <a href="https://groups.google.com/forum/?fromgroups#!forum/thinkupapp">Mailing List</a> &#8226;
