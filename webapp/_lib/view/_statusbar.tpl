@@ -27,7 +27,7 @@
       {else}
 <ul class="nav pull-right">
     <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
-    <li><a href="{$site_root_path}session/login.php" >Log In</a></li>
+    <li><a class="login-link" href="{$site_root_path}session/login.php" >Log In</a></li>
 </ul>
       {/if}
           </div><!--/.nav-collapse -->

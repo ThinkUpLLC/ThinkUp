@@ -358,6 +358,44 @@ span.formError {
   margin-bottom: 20px;
 }
 
+/* Modal */
+
+.modal {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.modal-header {
+  border-bottom: 0;
+}
+
+.modal-footer {
+  border-top: 0;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.modal form {
+  margin: 0;
+}
+
+.modal .control-group {
+  margin-top: 20px;
+  margin-left: 0;
+}
+
+.modal .form-actions {
+  padding-top: 0;
+  padding-bottom: 0;
+  border: none;
+  background: transparent;
+}
+
 /* Sticky Footer */
 
 html, body {
