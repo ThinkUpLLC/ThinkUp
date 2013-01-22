@@ -76,9 +76,9 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                     }
                 }
-                $insight_text = "You're on ".sizeof($new_groups)." new lists: ".$group_name_list;
+                $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
                 if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
-                    $insight_text .=  ", bringing your total to <strong>".
+                    $insight_text .=  ", bringing the total to <strong>".
                     number_format(end($list_membership_count_history_by_day['history'])). " lists</strong>.";
                 } else {
                     $insight_text .= ".";
@@ -89,8 +89,8 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
             } else {
                 $new_groups[0]->setMetadata();
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                "Made the list:", "You got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
-                $new_groups[0]->keyword."</a>, bringing your total to <strong>".
+                "Made the list:", "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
+                $new_groups[0]->keyword."</a>, bringing the total to <strong>".
                 number_format(end($list_membership_count_history_by_day['history'])).
                 " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
             }

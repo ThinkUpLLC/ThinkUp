@@ -68,7 +68,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
+        $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
     }
 
@@ -95,9 +95,9 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
+        $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
-        $this->assertPattern('/bringing your total to \<strong\>50 lists\<\/strong\>\./', $result->text);
+        $this->assertPattern('/bringing the total to \<strong\>50 lists\<\/strong\>\./', $result->text);
     }
 
     public function testLessThan10NewListMembershipWithLowHistory() {
@@ -123,7 +123,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/You\'re on 8 new lists:/', $result->text);
+        $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
         $this->assertNoPattern('/bringing your total to/', $result->text);
     }
@@ -151,7 +151,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->prefix, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/You\'re on 26 new lists:/', $result->text);
+        $this->assertPattern('/\@ev is on 26 new lists:/', $result->text);
         $this->assertPattern('/and 16 more/', $result->text);
     }
 

@@ -90,7 +90,7 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'style_stats');
         $this->assertEqual($result->prefix, 'Post style:');
         $this->assertEqual($result->filename, 'stylestats');
-        $this->assertPattern('/of your posts this week were photos, none were links, none were quotations, and '.
+        $this->assertPattern('/of \@ev\'s posts this week were photos, none were links, none were quotations, and '.
         'none were questions./', $result->text);
         //sleep(1000);
     }

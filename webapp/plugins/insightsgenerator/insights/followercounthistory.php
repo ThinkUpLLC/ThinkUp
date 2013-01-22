@@ -55,9 +55,9 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
                     $insight_text .= 's';
                 }
-                $insight_text .= '</strong> till you reach <strong>'.
+                $insight_text .= "</strong> till $this->username reaches <strong>".
                 number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                $insight_text .= '</strong> followers at your current growth rate.';
+                $insight_text .= '</strong> followers at the current growth rate.';
 
                 $this->insight_dao->insertInsight('follower_count_history_by_month_milestone', $instance->id,
                 $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
@@ -79,9 +79,9 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
                     $insight_text .= 's';
                 }
-                $insight_text .= '</strong> till you reach <strong>'.
+                $insight_text .= "</strong> till $this->username reaches <strong>".
                 number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                $insight_text .= '</strong> followers at your current growth rate.';
+                $insight_text .= '</strong> followers at the current growth rate.';
                 $this->logger->logInfo("Storing insight ".$insight_text, __METHOD__.','
                 .__LINE__);
 
