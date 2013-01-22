@@ -43,26 +43,49 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         $this->insight_date);
         if (sizeof($new_groups) > 0 ) { //if not null, store insight
             $group_membership_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
-            $list_membership_count_history_by_day = $group_membership_count_dao->getHistory(
-            $instance->network_user_id, $instance->network, 'DAY', 15);
+            $list_membership_count_history_by_day = $group_membership_count_dao->getHistory($instance->network_user_id,
+            $instance->network, 'DAY', 15);
             if (sizeof($new_groups) > 1) {
                 $group_name_list = '';
+                $group_number = 0;
                 foreach ($new_groups as $group) {
-                    if ($group == end($new_groups)) {
-                        $group_name_list .= " and ";
-                    } else {
-                        if ($group_name_list != '') {
-                            $group_name_list .= ", ";
+                    if (sizeof($new_groups) > 10) { //If more than 10 lists, just display first 10
+                        if ($group_number >= 10) {
+                            if ($group_number == 10) {
+                                $group_name_list .= ", and ". (sizeof($new_groups) - 10)." more";
+                            }
+                        } else {
+                            if ($group_name_list != '') {
+                                $group_name_list .= ", ";
+                            }
                         }
+                        if ($group_number < 10 ) {
+                            $group->setMetadata();
+                            $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
+                        }
+                        $group_number++;
+                    } else  { //Display all lists
+                        if ($group == end($new_groups)) {
+                            $group_name_list .= " and ";
+                        } else {
+                            if ($group_name_list != '') {
+                                $group_name_list .= ", ";
+                            }
+                        }
+                        $group->setMetadata();
+                        $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                     }
-                    $group->setMetadata();
-                    $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
+                }
+                $insight_text = "You're on ".sizeof($new_groups)." new lists: ".$group_name_list;
+                if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                    $insight_text .=  ", bringing your total to <strong>".
+                    number_format(end($list_membership_count_history_by_day['history'])). " lists</strong>.";
+                } else {
+                    $insight_text .= ".";
                 }
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                "Made the list:", "You got added to ".sizeof($new_groups)." lists: ".$group_name_list.
-                ", bringing your total to <strong>".
-                number_format(end($list_membership_count_history_by_day['history'])).
-                " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                serialize($list_membership_count_history_by_day));
             } else {
                 $new_groups[0]->setMetadata();
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
