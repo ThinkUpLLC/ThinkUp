@@ -83,6 +83,7 @@ class SimpleTagBuilder {
                 'checkbox' => 'SimpleCheckboxTag',
                 'radio' => 'SimpleRadioButtonTag',
                 'text' => 'SimpleTextTag',
+                'email' => 'SimpleTextTag',
                 'hidden' => 'SimpleTextTag',
                 'password' => 'SimpleTextTag',
                 'file' => 'SimpleUploadTag');
@@ -182,7 +183,7 @@ class SimpleTag {
             $this->addTag($tag);
         }
     }
-    
+
     /**
      *    Accessor for tag name.
      *    @return string       Name of tag.
