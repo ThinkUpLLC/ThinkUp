@@ -1,0 +1,8 @@
+2.0-beta.2 - 24 Jan 2013
+=========================
+
+* Added two new insights: All About You and Frequency
+* Improved responsive design and mobile browser visuals and functionality
+* Fixed insight copy grammar
+* Upgraded design: added new insight and plugin icons, simplified insight label colors, darkened footer
+* Fixed several minor bugs
