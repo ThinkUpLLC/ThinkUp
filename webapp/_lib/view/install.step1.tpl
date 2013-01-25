@@ -219,7 +219,11 @@
             </div>
             {if !$session_permissions_compat}
             <div class="clearfix append_20 info_message">
+              {if $writable_session_save_directory neq ''}
               <p>The PHP <code>session.save_path</code> directory, located at <code>{$writable_session_save_directory}</code>, must be writable for installation to complete. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder's permissions.</a></p>
+              {else}
+              <p>The PHP <code>session.save_path</code> directory is not set. Please set it to a writable folder. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder path and permissions.</a></p>
+              {/if}
             </div>
             {/if}
         {/if}
