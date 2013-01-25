@@ -28,6 +28,53 @@
         </div>
       </footer>
 
+  <div id="login-modal" class="modal hide">
+    <form name="login-form" method="post" action="{$site_root_path}session/login.php" class="login form-horizontal">
+
+      <fieldset>
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Log In</h3>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="email">Email</label>
+          <div class="controls">
+            <input class="input-xlarge" type="email" name="email" id="email" autofocus="autofocus">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="pwd">Password</label>
+          <div class="controls">
+            <input class="input-xlarge" type="password" name="pwd" id="pwd">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Log In">
+        </div>
+
+        <div class="modal-footer">
+          <a href="{$site_root_path}session/register.php" class="btn btn-mini hidden-phone">Register</a>
+          <a href="{$site_root_path}session/forgot.php" class="btn btn-mini">Forgot password</a>
+          {insert name="help_link" id='login'}
+        </div>
+
+      </fieldset>
+
+    </form>
+  </div>
+  {literal}
+    <script type="text/javascript">
+      $('.login-link').click(function(e) {
+        e.preventDefault();
+        $('#login-modal').modal('show');
+      });
+    </script>
+  {/literal}
+
 {else}
 
   <div class="small center" id="footer">
