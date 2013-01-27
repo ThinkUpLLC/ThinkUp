@@ -2348,4 +2348,54 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         return $this->getDataRowsAsObjects($ps, 'User');
     }
+
+    public function searchPostsByUser(array $keywords, $network, $author_username, $page_number=1, $page_count=20) {
+        if (!is_array($keywords)) {
+            return null;
+        }
+        $start_on_record = ($page_number - 1) * $page_count;
+
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p WHERE  author_username=:author_username AND network = :network ";
+        $q .= "AND (";
+        $counter = 0;
+        foreach ($keywords as $keyword) {
+            $q .= " post_text LIKE :keyword".$counter." ";
+            if ($keyword != end($keywords)) {
+                $q .= "AND";
+            }
+            $counter++;
+        }
+        $q .= ") ORDER BY pub_date DESC ";
+        if ($page_count > 0) {
+            $q .= "LIMIT :start_on_record, :limit;";
+        } else {
+            $q .= ';';
+        }
+
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network
+        );
+        $counter = 0;
+        foreach ($keywords as $keyword) {
+            $vars[':keyword'.$counter] = '%'.$keyword.'%';
+            $counter++;
+        }
+        if ($page_count > 0) {
+            $vars[':limit'] = (int)$page_count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        $post_rows = $this->getDataRowsAsArrays($ps);
+
+        $posts = array();
+        foreach ($post_rows as $row) {
+            $post = new Post($row);
+            $posts[] = $post;
+        }
+        return $posts;
+    }
 }
