@@ -51,6 +51,11 @@ class InsightStreamController extends ThinkUpController {
                     return $controller->go();
                 }
             }
+            //Populate search dropdown with service users
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $this->addToView('instances', $instance_dao->getByOwner($owner));
         }
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         return $this->generateView();

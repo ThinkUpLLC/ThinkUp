@@ -690,4 +690,15 @@ interface PostDAO {
      * @return array User
      */
     public function getRetweetsByAuthorsOverFollowerCount($post_id, $network, $follower_count_threshold);
+
+    /**
+     * Search a service users's posts.
+     * @param arr $keywords
+     * @param str $network
+     * @param str $author_username
+     * @param int $page_number defaults to 1
+     * @param int $page_count defaults to 20
+     * @return arr of Post objects
+     */
+    public function searchPostsByUser(array $keywords, $network, $author_username, $page_number=1, $page_count=20);
 }

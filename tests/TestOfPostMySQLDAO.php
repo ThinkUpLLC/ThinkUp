@@ -3756,4 +3756,26 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($big_retweeters[2]->follower_count, 70);
         $this->assertEqual($big_retweeters[2]->username, 'linkbaiter');
     }
+
+    public function testSearchPostsByUsername() {
+        $post_dao = new PostMySQLDAO();
+        //should be first page of 20
+        $results = $post_dao->searchPostsByUser(array('post'), 'twitter', 'ev');
+        $this->assertEqual(sizeof($results), 20);
+
+        //page 2
+        $results = $post_dao->searchPostsByUser(array('post'), 'twitter', 'ev', 2);
+        $this->assertEqual(sizeof($results), 19);
+
+        //empty page 3
+        $results = $post_dao->searchPostsByUser(array('post'), 'twitter', 'ev', 3);
+        $this->assertEqual(sizeof($results), 0);
+
+        //test and
+        $results = $post_dao->searchPostsByUser(array('post', 'asdf'), 'twitter', 'ev');
+        $this->assertEqual(sizeof($results), 0);
+
+        $results = $post_dao->searchPostsByUser('keyword', 'twitter', 'ev');
+        $this->assertEqual(sizeof($results), 0);
+    }
 }
