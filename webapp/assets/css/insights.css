@@ -451,7 +451,6 @@ body {
 .dropdown-menu > .active > a > [class*=" icon-"],
 .dropdown-submenu:hover > a > [class^="icon-"],
 .dropdown-submenu:hover > a > [class*=" icon-"] {
-  background-image: url("../img/glyphicons-halflings-blue.png");
   margin-left : -34px;
   margin-right : 14px;
 }
