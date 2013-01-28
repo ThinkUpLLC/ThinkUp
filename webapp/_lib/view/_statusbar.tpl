@@ -15,7 +15,7 @@
 
 <ul class="nav pull-right" style="border-left : none;">
 
-    	<form class="navbar-search">
+    	<form class="navbar-search" action="#">
     		<input type="text" id="search-keywords" class="search-query" placeholder="Search" />
         	
         </form>
