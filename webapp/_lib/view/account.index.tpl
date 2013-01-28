@@ -7,10 +7,10 @@
     <div class="span3">
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
-          <li><a href="#plugins">Plugins <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings">Application <i class="icon-chevron-right"></i></a></li>{/if}
-          <li><a href="#instances">Account <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a href="#ttusers">Users <i class="icon-chevron-right"></i></a></li>{/if}
+          <li><a href="#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
+          <li><a href="#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a href="#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
     </div><!--/span3-->
@@ -36,7 +36,7 @@
                           <td>
                             <div style="float:left";"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="float-l" style="margin-right:10px"></span>
                             </div>
-                            <a href="?p={$ip->folder_name|get_plugin_path}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>{if $ip->is_active}{if !$ip->isConfigured()}<span class="icon-warning-sign"></span>{/if}{/if}
+                            {if $ip->is_active}{if !$ip->isConfigured()} <span class="icon-warning-sign"></span>{/if}{/if} <a href="?p={$ip->folder_name|get_plugin_path}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
                             <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
                             
                             <span style="color:#666">{$ip->description}</span><br>
@@ -76,12 +76,12 @@
           <span class="pull-right">{insert name="help_link" id='backup'}</span>
           <h1>Back Up and Export Data</h1>
           <p>
-            <a href="{$site_root_path}install/backup.php" class="btn">Back up ThinkUp's entire database</a>
+            <a href="{$site_root_path}install/backup.php" class="btn"><i class="icon icon-download-alt"></i> Back up ThinkUp's entire database</a>
             Recommended before upgrading ThinkUp.
           </p>
 
           <p>
-            <a href="{$site_root_path}install/exportuserdata.php" class="btn">Export a single service user's data</a>
+            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="icon icon-signout"></i> Export a single service user's data</a>
             For transfer into another existing ThinkUp database.
           </p>
                 
@@ -93,15 +93,17 @@
           <span class="pull-right">{insert name="help_link" id='account'}</span>
           <h1>Password</h1>
           <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-            <div class="control-group">
+            <div class="control-group input-prepend">
               <label for="oldpass" class="control-label">Current password</label>
               <div class="controls">
+              	<span class="add-on"><i class="icon-key"></i></span>
                 <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
-            <div class="control-group">
+            <div class="control-group input-prepend">
               <label for="pass1" class="control-label">New password</label>
               <div class="controls">
+              	<span class="add-on"><i class="icon-key"></i></span>
                 <input name="pass1" type="password" id="pass1" onfocus="$('#password-meter').show();">
                 <div class="password-meter" style="display:none;" id="password-meter">
                   <div class="password-meter-message"></div>
@@ -111,9 +113,10 @@
                 </div>
               </div>
             </div>
-            <div class="control-group">
+            <div class="control-group input-prepend">
               <label for="pass2" class="control-label">Re-type new password</label>
               <div class="controls">
+              	<span class="add-on"><i class="icon-key"></i></span>
                 <input name="pass2" type="password" id="pass2">
               </div>
             </div>
@@ -130,7 +133,7 @@
     <h3>RSS</h3>
     <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
     
-    <p><a href="{$rss_crawl_url}" class="btn">Secret RSS Feed to Update ThinkUp</a></p>
+    <p><a href="{$rss_crawl_url}" class="btn"><i class="icon icon-rss"></i> Secret ThinkUp Update Feed</a></p>
     
     <h3>Cron</h3>
     <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
