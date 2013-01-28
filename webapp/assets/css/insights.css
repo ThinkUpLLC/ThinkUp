@@ -180,8 +180,18 @@ color : #666;
     margin-right : auto;
 }
 
+.icon-googleplus:before          { content: "\f0d5"; }
+
+
 .service-user-icons {
     float : right;
+}
+
+.service-user-icons:hover {
+}
+
+.service-user-icons i.icon {
+	color : #ccc;
 }
 
 .service-user-icons img {
@@ -337,8 +347,6 @@ span.formError {
 }
 
 .embossed-block .nav-tabs .active .icon-chevron-right {
-  background-image: url(../img/glyphicons-halflings.png);
-  opacity: 1;
 }
 
 /* Settings */
