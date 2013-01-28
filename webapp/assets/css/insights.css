@@ -181,8 +181,18 @@ color : #666;
     margin-right : auto;
 }
 
+.icon-googleplus:before          { content: "\f0d5"; }
+
+
 .service-user-icons {
     float : right;
+}
+
+.service-user-icons:hover {
+}
+
+.service-user-icons i.icon {
+	color : #ccc;
 }
 
 .service-user-icons img {
@@ -353,8 +363,6 @@ span.formError {
 }
 
 .embossed-block .nav-tabs .active .icon-chevron-right {
-  background-image: url(../img/glyphicons-halflings.png);
-  opacity: 1;
 }
 
 /* Settings */
@@ -412,6 +420,37 @@ body {
 .alert, .alert.insight-item, .white-card, .row {
   margin-bottom: 6px;
 }
+.alert {
+    margin-left : 20px;
+}
+.alert .label {
+    color : black;
+    padding-left : 8px;
+}
+.detail-btn {
+    margin: 4px;
+}
+.detail-btn .btn .btn-info {
+    width : 30px;
+}
+
+.label .icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"] {
+  margin-left : -34px;
+  margin-right : 14px;
+}
+
 .container {
 	padding-left: 6px;
 	padding-right: 6px;
