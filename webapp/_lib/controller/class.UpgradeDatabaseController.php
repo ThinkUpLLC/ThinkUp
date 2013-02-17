@@ -30,7 +30,7 @@
  * Upgrade Controller
  *
  * Checks the current app version with a DB version option stored in the db. If that version option
- * does not exists, or it is older than the current version, we flag the app as in need of migration
+ * does not exist, or it is older than the current version, we flag the app as in need of migration
  * in the root ThinkUp controller, and notify web users that the app is in an upgrade state.
  *
  * If the user who loads the site update message page is not logged in, we generate an upgrade token file,

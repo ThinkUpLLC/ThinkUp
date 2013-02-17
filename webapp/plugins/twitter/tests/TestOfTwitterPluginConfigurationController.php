@@ -120,25 +120,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test user submission
-     */
-    public function testAddTwitterUserNoTwitterAuth() {
-        // build some options data
-        $options_arry = $this->buildPluginOptions();
-        $this->simulateLogin('me@example.com');
-        $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
-        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
-        $_GET["twitter_username"] = "anildash";
-        $_GET["p"]="twitter";
-        $output = $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Added anildash to ThinkUp.");
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
-        $this->assertTrue($v_mgr->getTemplateDataItem('oauthorize_link') != '', 'Authorization link set');
-    }
-
-    /**
      * Test config not admin
      */
     public function testConfigOptionsNotAdmin() {

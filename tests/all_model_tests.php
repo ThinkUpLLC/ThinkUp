@@ -51,6 +51,7 @@ $model_tests->add(new TestOfDashboardModuleCacher());
 $model_tests->add(new TestOfInstaller());
 $model_tests->add(new TestOfInstallerMySQLDAO());
 $model_tests->add(new TestOfInviteMySQLDAO());
+$model_tests->add(new TestOfJSONDecoder());
 $model_tests->add(new TestOfLinkMySQLDAO());
 $model_tests->add(new TestOfLoader());
 $model_tests->add(new TestOfLocationMySQLDAO());

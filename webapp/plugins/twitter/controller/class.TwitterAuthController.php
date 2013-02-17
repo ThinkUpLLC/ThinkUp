@@ -68,8 +68,7 @@ class TwitterAuthController extends ThinkUpAuthController {
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'],
                 $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value,
-                $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value,
-                false);
+                $options['num_twitter_errors']->option_value,  false);
 
                 $authed_twitter_user = $api->verifyCredentials();
                 //                echo "User ID: ". $authed_twitter_user['user_id'];
@@ -78,7 +77,8 @@ class TwitterAuthController extends ThinkUpAuthController {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
-                if ((int) $authed_twitter_user['user_id'] > 0) {
+                if ( isset($authed_twitter_user) && isset($authed_twitter_user['user_name'])
+                && isset($authed_twitter_user['user_id'])) {
                     $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
                     $instance = $instance_dao->getByUsername($authed_twitter_user['user_name'], 'twitter');
                     $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');

@@ -779,13 +779,15 @@ class PostAPIController extends ThinkUpController {
                          * made to fill in the missing details.
                          *
                          * Not 100% sure if this is a good idea but it works.
-                         */
-                        $user_api_call = json_decode(Utils::getURLContents(
-                                                'https://api.twitter.com/1/users/show.json?screen_name=' . $username));
+                         * Update, Feb 2013: This doesn't work with Twitter API v 1.1, commenting out.
 
-                        $mention->name = $user_api_call->name;
-                        $mention->id = $user_api_call->id;
-                        $mention->screen_name = $user_api_call->screen_name;
+                         $user_api_call = json_decode(Utils::getURLContents(
+                         'https://api.twitter.com/1/users/show.json?screen_name=' . $username));
+
+                         $mention->name = $user_api_call->name;
+                         $mention->id = $user_api_call->id;
+                         $mention->screen_name = $user_api_call->screen_name;
+                         */
                     } else {
                         $mention->name = $mentioned_user->full_name;
                         $mention->id = $mentioned_user->user_id;
