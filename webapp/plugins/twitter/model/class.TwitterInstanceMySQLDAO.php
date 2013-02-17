@@ -90,19 +90,15 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
         if ($lfi){
             $q .= "last_favorite_id, ";
         }
-        $q .= "last_page_fetched_replies, last_page_fetched_tweets, last_unfav_page_checked, ";
-        $q .= "last_page_fetched_favorites)";
+        $q .= "last_page_fetched_replies, last_page_fetched_tweets) ";
         $q .= "VALUES (:instance_id, ";
         if ($lfi){
             $q .= ":last_favorite_id, ";
         }
-        $q .= ":last_page_fetched_replies, :last_page_fetched_tweets, :last_unfav_page_checked, ";
-        $q .= ":last_page_fetched_favorites)";
+        $q .= ":last_page_fetched_replies, :last_page_fetched_tweets) ";
         $vars = array(
             ':instance_id'                  => $instance_object->id,
             ':last_favorite_id'             => $instance_object->last_favorite_id,
-            ':last_unfav_page_checked'      => $instance_object->last_unfav_page_checked,
-            ':last_page_fetched_favorites'  => $instance_object->last_page_fetched_favorites,
             ':last_page_fetched_replies'    => isset($instance_object->last_page_fetched_replies)?
         $instance_object->last_page_fetched_replies:1,
             ':last_page_fetched_tweets'     => isset($instance_object->last_page_fetched_tweets)?
@@ -128,15 +124,11 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
             $q .= "last_favorite_id = :lastfavid, ";
         }
         $q .= "last_page_fetched_replies = :lpfr, ";
-        $q .= "last_page_fetched_tweets = :lpft , ";
-        $q .= "last_unfav_page_checked = :lastunfav, ";
-        $q .= "last_page_fetched_favorites = :lpfv ";
+        $q .= "last_page_fetched_tweets = :lpft ";
         $q .= "WHERE id=:id;";
 
         $vars = array(
             ':lastfavid'     => $instance_object->last_favorite_id,
-            ':lastunfav'    => $instance_object->last_unfav_page_checked,
-            ':lpfv'         => $instance_object->last_page_fetched_favorites,
             ':lpfr'         => $instance_object->last_page_fetched_replies,
             ':lpft'         => $instance_object->last_page_fetched_tweets,
             ':id'           => $instance_object->id

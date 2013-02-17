@@ -31,132 +31,265 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitter/tests/classes/mock.TwitterOAut
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.CrawlerTwitterAPIAccessorOAuth.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterOAuthThinkUp.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIEndpoint.php';
 
 class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
 
-    public function testFriendsList() {
-        $to = new TwitterOAuth('', '', '', '');
-        $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
-        $this->assertPattern('/A or B/', $result);
+    var $test_data_path = 'webapp/plugins/twitter/tests/testdata/';
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
-        $users = $api->parseXML($result);
-        $next_cursor = $api->getNextCursor();
-        $this->assertTrue($next_cursor == '1305768756249357127');
+    public function testConstructor() {
+        $this->debug(__METHOD__);
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+        $this->assertNotNull($api);
+        $this->assertIsA($api, 'TwitterAPIAccessorOAuth');
     }
 
-    public function testIDsList() {
-        $to = new TwitterOAuth('', '', '', '');
-        $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
+    public function testVerifyCredentialsSuccess() {
+        $this->debug(__METHOD__);
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
-        $users = $api->parseXML($result);
-        $next_cursor = $api->getNextCursor();
-        $this->assertTrue($next_cursor == '1326272872342936860');
+        //Successful verify
+        $api->to->setDataPathFolder('testoftwitterapiaccessoroauth/testverifycredentials1/');
+        $result = $api->verifyCredentials();
+        $this->assertNotNull($result);
+        $this->assertIsA($result, 'array');
+        $this->assertEqual($result['user_name'], 'ginatrapani');
+        $this->assertEqual($result['user_id'], '930061');
     }
 
-    public function testSearchResults() {
-        $to = new TwitterOAuth('', '', '', '');
-        $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
+    public function testVerifyCredentialsEmptyResponse() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
-
-        $results = $api->parseJSON($twitter_data);
-
-        $this->assertEqual($results[0]['post_id'], 11837318124);
+        //JSON is an empty string
+        $api->to->setDataPathFolder('testoftwitterapiaccessoroauth/testverifycredentials2/');
+        $this->expectException('JSONDecoderException');
+        $result = $api->verifyCredentials();
+        $this->assertNull($result);
     }
 
-    public function testCreateParserFromStringMalformedMarkup() {
-        $data = <<<XML
-        <?xml version='1.0'?>
-<document>
- <title>Forty What?</title>
- <from>Joe</from>
- <to>Jane</to>
- <body>
-  I know that's the answer -- <but what's the question?
- </body>
-</document>
-XML;
-        $api = new TwitterAPIAccessorOAuth('111', '222', 'test-oauth_consumer_key', 'test-oauth_consumer_secret', 5,
-        350);
+    public function testVerifyCredentialsMalformedJSON() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $this->assertFalse($api->createParserFromString(utf8_encode($data)));
+        //Malformed JSON
+        $api->to->setDataPathFolder('testoftwitterapiaccessoroauth/testverifycredentials3/');
+        $this->expectException('JSONDecoderException');
+        $result = $api->verifyCredentials();
+        $this->assertNull($result);
     }
 
-    public function testParseXMLUser() {
-        $to = new TwitterOAuth('', '', '', '');
-        $twitter_data = $to->http('https://twitter.com/users/show/mcprivate.xml');
+    public function testVerifyCredentials404Response() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
-
-        $results = $api->parseXML($twitter_data);
-
-        $this->assertEqual($results[0]['user_name'], 'mcprivate');
-        $this->assertIsA($results[0]['is_protected'], 'int');
-        $this->assertEqual($results[0]['is_protected'], 1);
+        //Malformed JSON
+        $api->to->setDataPathFolder('testoftwitterapiaccessoroauth/testverifycredentials4/');
+        $this->expectException('APIErrorException');
+        $result = $api->verifyCredentials();
+        $this->assertNull($result);
     }
 
-    public function testParseXMLStatusesPrivate() {
-        $to = new TwitterOAuth('', '', '', '');
-        //Private statuses
-        $twitter_data = $to->http(
-        'https://twitter.com/statuses/user_timeline/mcprivate.xml?count=100&include_rts=true');
+    public function testParseJSONTweet() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/tweet.json');
 
-        $results = $api->parseXML($twitter_data);
+        $results = $api->parseJSONTweet($data);
 
         $this->debug(Utils::varDumpToString($results));
-
-        $this->assertEqual($results[0]['post_id'], '14846078418');
-        $this->assertIsa($results[0]['is_protected'], 'int');
-        $this->assertEqual($results[0]['is_protected'], 1);
+        $this->assertEqual($results["post_text"],
+        "Along with our new #Twitterbird, we've also updated our Display Guidelines: https://t.co/Ed4omjYs  ^JC");
+        $this->assertEqual($results["post_id"], "210462857140252672");
+        $this->assertEqual($results["user_id"], "6253282");
+        $this->assertEqual($results["user_name"], "twitterapi");
+        $this->assertEqual($results["author_fullname"], "Twitter API");
+        $this->assertEqual($results["location"], "San Francisco, CA");
+        $this->assertEqual($results["is_protected"], false);
     }
 
-    public function testParseXMLStatusesPublic() {
-        $to = new TwitterOAuth('', '', '', '');
-        //Public statuses
-        $twitter_data = $to->http(
-        'https://twitter.com/statuses/user_timeline/ginatrapani.xml?count=100');
+    public function testParseJSONTweetPrivate() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/tweet_private.json');
 
-        $results = $api->parseXML($twitter_data);
+        $results = $api->parseJSONTweet($data);
 
         $this->debug(Utils::varDumpToString($results));
-
-        $this->assertEqual($results[0]['post_id'], '14846078418');
-        $this->assertIsa($results[0]['is_protected'], 'int');
-        $this->assertEqual($results[0]['is_protected'], 0);
+        $this->assertEqual($results["post_text"],
+        "Along with our new #Twitterbird, we've also updated our Display Guidelines: https://t.co/Ed4omjYs  ^JC");
+        $this->assertEqual($results["post_id"], "210462857140252672");
+        $this->assertEqual($results["user_id"], "6253282");
+        $this->assertEqual($results["user_name"], "twitterapi");
+        $this->assertEqual($results["author_fullname"], "Twitter API");
+        $this->assertEqual($results["location"], "San Francisco, CA");
+        $this->assertEqual($results["is_protected"], true);
     }
 
-    public function testParseError() {
-        $to = new TwitterOAuth('', '', '', '');
-        //Test error XML with <hash> root
-        $twitter_data = $to->http(
-        'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
+    public function testParseJSONTweetWithGeo() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/tweet_geo.json');
 
-        $results = $api->parseError($twitter_data);
+        $results = $api->parseJSONTweet($data);
 
         $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["post_text"],
+        "If Jake Knotts weren't a goddamn coward, he'd visit Uday Singh Taunque's grave in Arlington & start talking ".
+        "about ragheads. Go for it, Jake.");
+        $this->assertEqual($results["post_id"], "15680112737");
+        $this->assertEqual($results["user_id"], "36823");
+        $this->assertEqual($results["user_name"], "anildash");
+        $this->assertEqual($results["author_fullname"], "Anil Dash");
+        $this->assertEqual($results["location"], "NYC: 40.739069,-73.987082");
+        $this->assertEqual($results["place"], "Stuyvesant Town, New York");
+        $this->assertEqual($results["geo"], "40.73410845 -73.97885982");
+        $this->assertEqual($results["retweet_count_api"], 11);
+    }
 
-        $this->assertEqual($results['error'], 'Not found');
-        $this->assertEqual($results['request'], '/statuses/user_timeline/ginatrasdfasdfasdapani.xml?count=100');
+    public function testParseJSONTweetRetweet() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
-        //Test error XML with <errors> root
-        $twitter_data = $to->http(
-        'https://twitter.com/statuses/user_timeline/ginatrasdfasdfasdapani_noerrorhash.xml?count=100');
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/retweet.json');
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
-
-        $results = $api->parseError($twitter_data);
+        $results = $api->parseJSONTweet($data);
 
         $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["post_text"],
+        "RT @errolmorris: Twitter never suggests that you might enjoy following no one. (Possibly an oversight.)");
+        $this->assertEqual($results["post_id"], "300464193944055808");
+        $this->assertEqual($results["user_id"], "2768241");
+        $this->assertEqual($results["user_name"], "amygdala");
+        $this->assertEqual($results["author_fullname"], "amy jo");
+        $this->assertEqual($results["in_retweet_of_post_id"], "297179577304875011");
+        $this->assertEqual($results["in_rt_of_user_id"], "14248315");
+        $this->assertEqual($results["retweet_count_api"], 0);
+        $this->assertEqual($results["retweeted_post"]["content"]["post_id"], "297179577304875011");
+        $this->assertEqual($results["retweeted_post"]["content"]["post_text"],
+        "Twitter never suggests that you might enjoy following no one. (Possibly an oversight.)");
+        $this->assertEqual($results["retweeted_post"]["content"]["retweet_count_api"], 114);
+    }
 
-        $this->assertEqual($results['error'], 'Sorry, that page does not exist');
-        $this->assertEqual($results['request'], '');
+    public function testParseJSONTweets() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/tweets.json');
+
+        $results = $api->parseJSONTweets($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results[0]["post_text"],
+        "A friendly reminder that this t.co length change will start today, and be in full effect by 2/20 ".
+        "https://t.co/nqvYxZAk   ^JC");
+        $this->assertEqual($results[0]["post_id"], "299212472030748672");
+        $this->assertEqual($results[0]["user_id"], "6253282");
+        $this->assertEqual($results[0]["user_name"], "twitterapi");
+        $this->assertEqual($results[0]["author_fullname"], "Twitter API");
+        $this->assertEqual($results[0]["location"], "San Francisco, CA");
+    }
+
+    public function testParseJSONUser() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/user.json');
+
+        $results = $api->parseJSONUser($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["user_id"], "795649");
+        $this->assertEqual($results["user_name"], "rsarver");
+        $this->assertEqual($results["full_name"], "Ryan Sarver");
+    }
+
+    public function testParseJSONUsers() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/userslist.json');
+
+        $results = $api->parseJSONUsers($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results[0]["user_id"], "14232986");
+        $this->assertEqual($results[0]["user_name"], "robbsala");
+        $this->assertEqual($results[0]["full_name"], "robbsala");
+
+        //@TODO Test No cursor
+        //$data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/users.json');
+        //$results = $api->parseJSONUser($data);
+    }
+
+    public function testParseJSONIDs() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/idslist.json');
+
+        $results = $api->parseJSONIDs($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results[0]["id"], 14232986);
+        $this->assertEqual($results[1]["id"], 12428572);
+        $this->assertEqual($results[2]["id"], 657693);
+
+        //@TODO Test No cursor
+        //$data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/ids.json');
+        //$results = $api->parseJSONIDs($data);
+    }
+
+    public function testParseJSONRelationship() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/relationship.json');
+
+        $results = $api->parseJSONRelationship($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["source_follows_target"], false);
+        $this->assertEqual($results["target_follows_source"], false);
+    }
+
+    public function testParseJSONLists() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/listslist.json');
+
+        $results = $api->parseJSONLists($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results[0]["group_id"], 31574522);
+        $this->assertEqual($results[0]["group_name"], "@lokkomotion/verktyg");
+        $this->assertEqual($results[0]["owner_name"], "lokkomotion");
+
+        //@TODO Test No cursor
+        //$data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/lists.json');
+        //$results = $api->parseJSONLists($data);
+    }
+
+    public function testParseJSONError() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/errors.json');
+
+        $results = $api->parseJSONError($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["error"], "Sorry, that page does not exist");
     }
 }

@@ -287,9 +287,9 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->debug(Utils::varDumpToString($result));
 
-        $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
-
         if (date('w')  != 1 && date('w')  != 0) { //Don't test on Sunday or Saturday
+            $this->assertEqual(sizeof($result['history']), 3);
+
             // Yesterday count was 145
             $date_ago = date ($format, strtotime('-1 day'.$date));
             $this->assertEqual($result['history'][$date_ago], 145);

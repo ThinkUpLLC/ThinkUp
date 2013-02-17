@@ -251,7 +251,7 @@ class AppUpgraderDiskUtil {
             throw new Exception("The deleteDir function is designed to remove a temporary thinkup directory: " . $file);
         }
         if (!file_exists($file)) {
-            throw new Exception("Trying to delete a directory or file that does not exists: $file");
+            throw new Exception("Trying to delete a directory or file that does not exist: $file");
         }
         if (!is_dir($file)) {
             return unlink($file);

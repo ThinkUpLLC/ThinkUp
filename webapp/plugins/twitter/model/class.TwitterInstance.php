@@ -45,14 +45,6 @@ class TwitterInstance extends Instance {
      * @var int Last favorite post ID of the instance saved.
      */
     var $last_favorite_id;
-    /**
-     * @var int Last page of older favorites checked for backfilling.
-     */
-    var $last_unfav_page_checked;
-    /**
-     * @var int Last page of favorites fetched.
-     */
-    var $last_page_fetched_favorites;
     public function __construct($row = false) {
         parent::__construct($row);
         if ($row) {
@@ -60,8 +52,6 @@ class TwitterInstance extends Instance {
             $this->last_page_fetched_replies = $row['last_page_fetched_replies'];
             $this->last_page_fetched_tweets = $row['last_page_fetched_tweets'];
             $this->last_favorite_id = $row['last_favorite_id'];
-            $this->last_unfav_page_checked = $row['last_unfav_page_checked'];
-            $this->last_page_fetched_favorites = $row['last_page_fetched_favorites'];
         }
     }
 }
