@@ -31,7 +31,9 @@
     <script src="{$site_root_path}assets/js/jquery.js"></script>
     <script src="{$site_root_path}assets/js/bootstrap.js"></script>
     <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
-    <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>  
+    {if $enable_geoencoder_iframe}
+    <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
+    {/if}  
 
   {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
