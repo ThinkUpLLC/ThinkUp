@@ -106,7 +106,7 @@ class TwitterCrawler {
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
         } catch (APICallLimitExceededException $e) {
-            $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
         }
         $this->logger->logInfo("Checking for deleted tweets", __METHOD__.','.__LINE__);
         if ($http_status == 200) {
@@ -130,7 +130,7 @@ class TwitterCrawler {
                         list($http_status, $tweet_data) = $this->api->apiRequest($endpoint, array(), $post->post_id,
                         true, true);
                     } catch (APICallLimitExceededException $e) {
-                        $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                        $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     }
                     if ($http_status == 404) {
                         $this->logger->logInfo( "Deleting post: " . $post->post_id . ' ' . $post->post_text,
@@ -192,7 +192,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
                 if ($http_status == 200) {
@@ -270,7 +270,7 @@ class TwitterCrawler {
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $tid);
             } catch (APICallLimitExceededException $e) {
-                $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
             }
             $status_message = "";
             if ($http_status == 200) {
@@ -321,7 +321,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
 
@@ -422,7 +422,7 @@ class TwitterCrawler {
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
             } catch (APICallLimitExceededException $e) {
-                $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
             }
             if ($http_status == 200) {
                 $tweets = $this->api->parseJSONTweets($payload);
@@ -432,7 +432,7 @@ class TwitterCrawler {
                         try {
                             $this->fetchStatusRetweets($tweet);
                         } catch (APICallLimitExceededException $e) {
-                            $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                             $continue = false;
                         }
                     }
@@ -481,7 +481,7 @@ class TwitterCrawler {
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
         } catch (APICallLimitExceededException $e) {
-            $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
         }
         if ($http_status == 200) {
             $count = 0;
@@ -572,7 +572,7 @@ class TwitterCrawler {
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
             } catch (APICallLimitExceededException $e) {
-                $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                 break;
             }
 
@@ -662,7 +662,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     $continue_fetching = false;
                     break;
                 }
@@ -737,7 +737,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
 
@@ -801,7 +801,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
 
@@ -897,7 +897,7 @@ class TwitterCrawler {
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
 
@@ -960,7 +960,7 @@ class TwitterCrawler {
                 try {
                     $this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id']);
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
             }
@@ -983,7 +983,7 @@ class TwitterCrawler {
                 try {
                     $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
                 } catch (APICallLimitExceededException $e) {
-                    $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
             }
@@ -1009,7 +1009,7 @@ class TwitterCrawler {
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
             } catch (APICallLimitExceededException $e) {
-                $this->logger->logError($e->getMessage(), __METHOD__.','.__LINE__);
+                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                 break;
             }
 
@@ -1062,7 +1062,9 @@ class TwitterCrawler {
         $endpoint = $this->api->endpoints['show_user'];
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $fid);
-        } catch (APICallLimitExceededException $e) {}
+        } catch (APICallLimitExceededException $e) {
+            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+        }
 
         if ($http_status == 200) {
             $user_arr = $this->api->parseJSONUser($payload);
@@ -1099,6 +1101,7 @@ class TwitterCrawler {
                     __METHOD__.','.__LINE__);
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
                 }
 
@@ -1214,7 +1217,9 @@ class TwitterCrawler {
         $args["since_id"] = $since_id;
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
-        } catch (APICallLimitExceededException $e) {}
+        } catch (APICallLimitExceededException $e) {
+            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+        }
         if ($http_status == 200) {
             // Parse the JSON file
             $tweets = $this->api->parseJSONTweets($payload);
