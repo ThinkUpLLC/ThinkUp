@@ -48,7 +48,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $controller = new TwitterAuthController(true);
         $this->assertTrue(isset($controller));
     }
-    //Test not logged in
+
     public function testNotLoggedIn() {
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
@@ -58,7 +58,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
-    //Test no params
     public function testLoggedInMissingParams() {
         $this->simulateLogin('me@example.com');
         $controller = new TwitterAuthController(true);
@@ -68,7 +67,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $this->assertEqual('Secret token not set.', $v_mgr->getTemplateDataItem('info_msg'), "Info msg set");
     }
 
-    //Test Session param but no Get param
     public function testLoggedInMissingToken() {
         $this->simulateLogin('me@example.com');
         SessionCache::put('oauth_request_token_secret', 'XXX');
@@ -79,7 +77,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $this->assertEqual('No OAuth token specified.', $v_mgr->getTemplateDataItem('info_msg'), "Info msg set");
     }
 
-    //Test Session param but no Get param
     public function testLoggedInMissingSessionWithGet() {
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
@@ -103,15 +100,15 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
         $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
-        $plugn_opt_builder4 = FixtureBuilder::build('options', array('namespace'=>$namespace,
-        'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
 
         $controller = new TwitterAuthController(true);
+        $this->debug('Controller has been instantiated');
         $results = $controller->go();
 
+        $this->debug($results);
         //sleep(100);
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual('Success! dougw on Twitter has been added to ThinkUp!',
+        $this->assertEqual('Success! ginatrapani on Twitter has been added to ThinkUp!',
         $v_mgr->getTemplateDataItem('success_msg'));
         $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
     }
@@ -129,10 +126,8 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
-        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
-        'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
-        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'1401881',
-        'network_username'=>'dougw', 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'930061',
+        'network_username'=>'ginatrapani', 'network'=>'twitter'));
         $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>10));
 
@@ -141,8 +136,9 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->debug($results);
-        $this->assertEqual('dougw on Twitter is already set up in ThinkUp! To add a different Twitter account, log '.
-        'out of Twitter.com in your browser and authorize ThinkUp again.', $v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertEqual('ginatrapani on Twitter is already set up in ThinkUp! To add a different Twitter account, '.
+        'log out of Twitter.com in your browser and authorize ThinkUp again.',
+        $v_mgr->getTemplateDataItem('success_msg'));
         $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
     }
 }

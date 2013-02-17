@@ -53,16 +53,16 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $pwd3 = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('pwd3', $salt);
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
-        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1, 
-        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888', 
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888',
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
-        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2, 
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2,
         'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'account_status'=>''));
-         
+
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
-        'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt, 
+        'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt,
         'account_status'=>''));
 
         return $builders;
@@ -95,7 +95,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      * Test getById();
      */
     public function testGetById() {
-        //owner does not exists
+        //owner does not exist
         $non_existing_owner = $this->DAO->getById(-99); // no such id
         $this->assertFalse(isset($non_existing_owner));
 

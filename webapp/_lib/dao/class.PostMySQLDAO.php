@@ -566,7 +566,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->incrementCacheCount($post_id, $network, "native_retweet");
     }
 
-
     /**
      * Increment either reply_count_cache, old_retweet_count_cache, retweet_count_cache, or favlike_count_cache
      * @param int $post_id
@@ -612,6 +611,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $result = true;
         foreach ($this->REQUIRED_FIELDS as $field) {
             if ( !isset($vals[$field]) ) {
+                $this->logger->logError("Missing post $field value", __METHOD__.','.__LINE__);
                 $result = false;
             }
         }
@@ -674,8 +674,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             // may show 0 rts. This is less common w/ the REST API than the streaming API, but does not hurt to
             // address it anyway. So, if we know there was a retweet, but the rt count is showing 0, set it to 1.
             // We know it is at least 1.
-            if (isset($retweeted_post_data['retweet_count_api']) &&
-            ($retweeted_post_data['retweet_count_api'] == 0 )) {
+            if (isset($retweeted_post_data['retweet_count_api']) && ($retweeted_post_data['retweet_count_api'] == 0 )) {
                 $retweeted_post_data['retweet_count_api'] = 1;
             }
             // since this was a retweet, process the original post first.
@@ -703,6 +702,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 $vals['in_reply_to_post_id'] = (string) $vals['in_reply_to_post_id'];
                 $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
                 if (isset($replied_to_post)) {
+                    $this->logger->logInfo("Found reply.", __METHOD__.','.__LINE__);
                     //check if reply author is followed by the original post author
                     $follow_dao = DAOFactory::getDAO('FollowDAO');
                     if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
@@ -791,16 +791,22 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                         " ID: ".$vals["post_id"]."; updating old-style retweet cache count";
                         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                     } else { // native retweet
-                        $this->incrementNativeRTCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+                        $count = $this->incrementNativeRTCountCache($vals['in_retweet_of_post_id'], $vals['network']);
                         $status_message = "Retweet of ".$vals['in_retweet_of_post_id']." by ".
-                        $vals["author_username"].
-                        " ID: ".$vals["post_id"]."; updating native retweet cache count";
+                        $vals["author_username"]. " ID: ".$vals["post_id"];
+                        if ($count > 0) {
+                            $status_message .= "; Updated native retweet cache count sucessfully.";
+                        } else {
+                            $status_message .= "; Attempt to update native retweet cache count failed";
+                        }
                         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                     }
                 }
             }
             return $res;
         } else {
+            $status_message = "Could not insert post ID ".$vals["post_id"].", missing values";
+            $this->logger->logError($status_message, __METHOD__.','.__LINE__);
             //doesn't have all req'd values
             return false;
         }
@@ -1470,7 +1476,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = " SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
-       	$q .= "WHERE p.network = :network AND pub_date BETWEEN :from AND :until ";
+        $q .= "WHERE p.network = :network AND pub_date BETWEEN :from AND :until ";
 
         if ( strlen($author_username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
             $q .= "AND MATCH (`post_text`) AGAINST(:author_username IN BOOLEAN MODE) ";
