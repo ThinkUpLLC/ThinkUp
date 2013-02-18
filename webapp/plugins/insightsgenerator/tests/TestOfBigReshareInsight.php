@@ -142,6 +142,9 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/People with lots of followers retweeted/', $result->text);
+        $sharers = unserialize($result->related_data);
+        $this->assertEqual($sharers[0]->description,
+        '"Be liberal in what you accept and conservative in what you send"');
     }
 
     public function testSingleBigReshareWithLessThan2xFollowers() {
@@ -186,6 +189,9 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->prefix, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with lots of followers retweeted/', $result->text);
+        $sharers = unserialize($result->related_data);
+        $this->assertEqual($sharers[0]->description,
+        '"Be liberal in what you accept and conservative in what you send"');
     }
 
     private function buildData() {
