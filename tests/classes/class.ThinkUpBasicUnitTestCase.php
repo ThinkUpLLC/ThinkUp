@@ -244,6 +244,17 @@ In order to test your ThinkUp installation without losing data, these database n
             }
         }
 
+        $cmd = "find . -type f -name '*:*'";
+        @exec($cmd, $filenames, $return_val);
+        if (is_array($filenames) && sizeof($filenames) > 1 ) {
+            $message = "Files in the repository have a colon in their names, an invalid character on Windows:
+";
+            foreach ($filenames as $filename) {
+                $message  .= $filename."
+";
+            }
+        }
+
         if (isset($message)) {
             echo "Stopping tests...Test environment isn't ready.
 ".$message."

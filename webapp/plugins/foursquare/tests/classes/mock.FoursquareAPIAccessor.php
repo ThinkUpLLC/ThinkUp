@@ -69,6 +69,7 @@ class FoursquareAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
+        $url = str_replace(':', '-', $url);
         // Decode the JSON in the reply
         return self::decodeFileContents($FAUX_DATA_PATH.$url);
     }
@@ -160,6 +161,7 @@ class FoursquareAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
+        $url = str_replace(':', '-', $url);
         return self::decodeFileContents($FAUX_DATA_PATH.$url, $decode_json);
     }
     /**
