@@ -95,9 +95,10 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     }
                     if ($insight_text == '') { //first item
                         $insight_text .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
-                        "were $type";
+                        (($total == 1)?"was a":"were")." ".(($total == 1)?substr($type, 0, -1):$type);
                     } else {
-                        $insight_text .= (($total == 0)?"none":$total)." were $type";
+                        $insight_text .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
+                        (($total == 1)?substr($type, 0, -1):$type);
                     }
                     if ($type == $last_type) {  //last item in list
                         $insight_text .= ".";

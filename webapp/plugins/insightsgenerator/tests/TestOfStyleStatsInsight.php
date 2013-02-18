@@ -53,7 +53,7 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
 
         $builders = self::buildData();
 
-        // Add post with a link that has lots of clicks
+        // Add post that's not a photo, link, quotation, or question
         $post1_builder = FixtureBuilder::build('posts', array('id'=>28, 'post_id'=>'28',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
         'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 28',
@@ -70,6 +70,14 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('insights', array('slug'=>'PostMySQLDAO::getHotPosts',
         'date'=>date ('Y-m-d'), 'instance_id'=>1));
+
+        // Add a question
+        $post2_builder = FixtureBuilder::build('posts', array('id'=>29, 'post_id'=>'29',
+        'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'Is this post 29?',
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
 
         $post_dao = new PostMySQLDAO();
         $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy('ev', 'twitter', $count=0,
@@ -90,8 +98,8 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'style_stats');
         $this->assertEqual($result->prefix, 'Post style:');
         $this->assertEqual($result->filename, 'stylestats');
-        $this->assertPattern('/of \@ev\'s posts this week were photos, none were links, none were quotations, and '.
-        'none were questions./', $result->text);
+        $this->assertPattern('/of \@ev\'s posts this week were photos, 1 was a question, none were quotations, and '.
+        'none were links/', $result->text);
         //sleep(1000);
     }
 
