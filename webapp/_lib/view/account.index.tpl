@@ -54,7 +54,7 @@
                 {/foreach}
                     </table>
               {else}
-                <a href="?m=manage" class="linkbutton">&laquo; Back to plugins</a>
+                <a href="?m=manage" class="btn btn-mini">&laquo; Back to plugins</a>
               {/if}
             {if $body}
               {$body}

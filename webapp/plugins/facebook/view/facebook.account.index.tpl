@@ -65,7 +65,7 @@
         <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete page csrf token -->
-            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn btn-danger" value="delete" /></form></span>
         </div>
     </div>
     {/foreach}
