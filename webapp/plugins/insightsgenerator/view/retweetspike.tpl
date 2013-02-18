@@ -12,11 +12,11 @@
     {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data[0] hide_insight_header=true}
 </div>
 
-{if  !$expand}
+{if !$expand}
 <div class="collapse in" id="chart-{$i->id}">
 {/if}
 
-    <div id="response_rates_{$i->id}"></div>
+    <div id="response_rates_chart_{$i->id}"></div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');

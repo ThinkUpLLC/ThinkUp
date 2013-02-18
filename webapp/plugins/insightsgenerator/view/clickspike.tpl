@@ -16,7 +16,7 @@
 <div class="collapse in" id="chart-{$i->id}">
 {/if}
 
-    <div id="click_totals_{$i->id}"></div>
+    <div id="click_totals_chart_{$i->id}"></div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
