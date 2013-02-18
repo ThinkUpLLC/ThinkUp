@@ -42,11 +42,11 @@ class SearchController extends ThinkUpAuthController {
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
 
         if ($this->shouldRefreshCache() ) {
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
             if (isset($_GET['q']) && isset($_GET['n']) && isset($_GET['u'])) {
-                $instance_dao = DAOFactory::getDAO('InstanceDAO');
-                $owner_dao = DAOFactory::getDAO('OwnerDAO');
-                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-                $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 $instance = $instance_dao->getByUsernameOnNetwork(stripslashes($_GET["u"]), $_GET['n']);
                 if (isset($instance) && $_GET['q'] != '') {
                     if ($owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
@@ -74,12 +74,12 @@ class SearchController extends ThinkUpAuthController {
                         $this->addErrorMessage("Uh-oh. Your search term is missing. Please try again.");
                     }
                 }
-                //Populate search dropdown with service users
-                $this->addToView('instances', $instance_dao->getByOwner($owner));
             } else {
-                $this->addErrorMessage("Uh-oh. ");
+                $this->addErrorMessage("Uh-oh. Missing your search term and user. Please try again.");
             }
-            return $this->generateView();
+            //Populate search dropdown with service users
+            $this->addToView('instances', $instance_dao->getByOwner($owner));
         }
+        return $this->generateView();
     }
 }

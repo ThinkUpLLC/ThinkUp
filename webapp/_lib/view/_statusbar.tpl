@@ -15,15 +15,15 @@
 
 <ul class="nav pull-right" style="border-left : none;">
 
-    	<form class="navbar-search" action="#">
-    		<input type="text" id="search-keywords" class="search-query" placeholder="Search" />
-        	
+        <form class="navbar-search" action="#">
+            <input type="text" id="search-keywords" class="search-query" placeholder="Search" />
+            
         </form>
     <li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
         <ul class="dropdown-menu">
         {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username}&n={$i->network}&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
         {/foreach}
         </ul>
      </li>
@@ -53,9 +53,6 @@
     </li>
 </ul> 
 
-    
-
-  
       {else}
 <ul class="nav pull-right">
     <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
