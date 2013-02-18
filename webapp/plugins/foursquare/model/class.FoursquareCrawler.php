@@ -187,8 +187,12 @@ class FoursquareCrawler {
             $user_vals["user_name"] = isset($user_name) ? $user_name : 'email address withheld';
             $user_vals["full_name"] = $details->response->user->firstName." ".$details->response->user->lastName;
             $user_vals["user_id"] = $details->response->user->id;
-            $user_vals["avatar"] = $details->response->user->photo->prefix . "100x100" .
-            $details->response->user->photo->suffix;
+            if (isset($details->response->user->photo->prefix) && isset($details->response->user->photo->suffix)) {
+                $user_vals["avatar"] = $details->response->user->photo->prefix . "100x100" .
+                $details->response->user->photo->suffix;
+            } elseif (isset($details->response->user->photo)) { //sometimes just photo is set, not prefix and suffix
+                $user_vals["avatar"] = $details->response->user->photo;
+            }
             $user_vals['url'] = 'http://www.foursquare.com/user/'.$details->response->user->id;
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = $details->response->user->homeCity;
