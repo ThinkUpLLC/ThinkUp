@@ -10,14 +10,17 @@
           <div class="nav-collapse">
 
       {if $logged_in_user}
-<ul class="nav pull-right">
-    {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
-    <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
 
 <!--search posts-->
-    <li><input type="text" id="search-keywords" style="margin:7px;width:100px" size="5" /></li>
+
+<ul class="nav pull-right" style="border-left : none;">
+
+    	<form class="navbar-search" action="#">
+    		<input type="text" id="search-keywords" class="search-query" placeholder="Search" />
+        	
+        </form>
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i></a> 
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
         <ul class="dropdown-menu">
         {foreach from=$instances key=tid item=i}
             <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username}&n={$i->network}&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
@@ -35,6 +38,9 @@
     </script>
   {/literal}
 
+    {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
+    <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
+
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           {$logged_in_user}{if $user_is_admin} <span class="label label-info">admin</span>{/if}
@@ -45,7 +51,11 @@
           <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
         </ul>
     </li>
-</ul>   
+</ul> 
+
+    
+
+  
       {else}
 <ul class="nav pull-right">
     <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
