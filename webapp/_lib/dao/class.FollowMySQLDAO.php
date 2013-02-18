@@ -500,11 +500,8 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         foreach ($keywords as $keyword) {
             if (substr($keyword, 0, strlen('name:')) == 'name:') {
                 $name_keywords[] = substr($keyword, strlen('name:'), strlen($keyword));
-            } elseif (substr($keyword, 0, strlen('description:')) == 'description:') {
-                $description_keywords[] = substr($keyword, strlen('description:'), strlen($keyword));
             } else {
                 $description_keywords[] = $keyword;
-                $name_keywords[] = $keyword;
             }
         }
 

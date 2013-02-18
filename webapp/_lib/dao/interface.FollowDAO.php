@@ -228,7 +228,7 @@ interface FollowDAO {
      */
     public function getFriendsNotFollowingBack($uid, $network);
     /**
-     * Search a user's followers names and bio using name:term and description:term.
+     * Search a user's followers names and bio. (Use name:term to search only name field.)
      * @param arr $keywords
      * @param str $network
      * @param str $user_id

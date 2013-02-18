@@ -328,7 +328,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testSearchFollowers(){
-        $result = $this->DAO->searchFollowers($keywords=array("description:Square", "name:jack"),
+        $result = $this->DAO->searchFollowers($keywords=array("Square", "name:jack"),
         $network="twitter", $user_id="1324567890");
 
         $this->debug(Utils::varDumpToString($result));
