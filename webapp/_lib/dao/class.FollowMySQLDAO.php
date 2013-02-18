@@ -492,4 +492,108 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
 
         return $this->getDataRowsAsArrays($ps);
     }
+
+    public function searchFollowers(array $keywords, $network, $user_id, $page_number=1, $page_count=20) {
+        //parse advanced operators
+        $name_keywords = array();
+        $description_keywords = array();
+        foreach ($keywords as $keyword) {
+            if (substr($keyword, 0, strlen('name:')) == 'name:') {
+                $name_keywords[] = substr($keyword, strlen('name:'), strlen($keyword));
+            } elseif (substr($keyword, 0, strlen('description:')) == 'description:') {
+                $description_keywords[] = substr($keyword, strlen('description:'), strlen($keyword));
+            } else {
+                $description_keywords[] = $keyword;
+                $name_keywords[] = $keyword;
+            }
+        }
+
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+        );
+
+        $q  = "SELECT u.*, ".$this->getAverageTweetCount()." ";
+        $q .= "FROM #prefix#users u ";
+        $q .= "INNER JOIN #prefix#follows f ON f.follower_id = u.user_id AND f.network = u.network ";
+        $q .= "WHERE f.user_id=:user_id AND u.network=:network AND (";
+
+        if (count($name_keywords)>0 && count($description_keywords) >0 ) {
+            $q .= "(";
+            $counter = 0;
+            foreach ($description_keywords as $keyword) {
+                $q .= " u.description LIKE :keyword_d".$counter." ";
+                if ($keyword != end($description_keywords)) {
+                    $q .= "AND";
+                }
+                $counter++;
+            }
+            $q .= ") AND ( ";
+            $counter = 0;
+            foreach ($name_keywords as $keyword) {
+                $q .= " u.full_name LIKE :keyword_n".$counter." ";
+                if ($keyword != end($name_keywords)) {
+                    $q .= "AND";
+                }
+                $counter++;
+            }
+            $q .= ")) ";
+            $counter = 0;
+            foreach ($description_keywords as $keyword) {
+                $vars[':keyword_d'.$counter] = '%'.$keyword.'%';
+                $counter++;
+            }
+            $counter = 0;
+            foreach ($name_keywords as $keyword) {
+                $vars[':keyword_n'.$counter] = '%'.$keyword.'%';
+                $counter++;
+            }
+        } elseif (count($name_keywords)>0 ) {
+            $counter = 0;
+            foreach ($name_keywords as $keyword) {
+                $q .= " u.full_name LIKE :keyword_n".$counter." ";
+                if ($keyword != end($name_keywords)) {
+                    $q .= "AND";
+                }
+                $counter++;
+            }
+            $q .= ") ";
+            $counter = 0;
+            foreach ($name_keywords as $keyword) {
+                $vars[':keyword_n'.$counter] = '%'.$keyword.'%';
+                $counter++;
+            }
+        } elseif (count($description_keywords)>0 ) {
+            $counter = 0;
+            foreach ($description_keywords as $keyword) {
+                $q .= " u.description LIKE :keyword_d".$counter." ";
+                if ($keyword != end($description_keywords)) {
+                    $q .= "AND";
+                }
+                $counter++;
+            }
+            $q .= ") ";
+            $counter = 0;
+            foreach ($description_keywords as $keyword) {
+                $vars[':keyword_d'.$counter] = '%'.$keyword.'%';
+                $counter++;
+            }
+        }
+        $q .= "ORDER BY first_seen DESC ";
+        if ($page_count > 0) {
+            $q .= "LIMIT :start_on_record, :limit;";
+        } else {
+            $q .= ';';
+        }
+
+        if ($page_count > 0) {
+            $vars[':limit'] = (int)$page_count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
 }

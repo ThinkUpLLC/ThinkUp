@@ -23,7 +23,10 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
         <ul class="dropdown-menu">
         {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+            {if $i->network eq 'twitter'}
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s followers</a></li>
+            {/if}
         {/foreach}
         </ul>
      </li>

@@ -58,7 +58,35 @@ class TestOfSearchController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
 
         $results = $controller->go();
+        $this->assertPattern('/Uh-oh. Your search terms are missing. Please try again/', $results);
+    }
+
+    public function testSearchPosts() {
+        $this->simulateLogin('admin@example.com', true, true);
+
+        $_GET['c'] = "posts";
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['q'] = "Apple";
+        $controller = new SearchController(true);
+        $this->assertTrue(isset($controller));
+
+        $results = $controller->go();
         $this->assertPattern('/No posts found/', $results);
+    }
+
+    public function testSearchFollowers() {
+        $this->simulateLogin('admin@example.com', true, true);
+
+        $_GET['c'] = "followers";
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['q'] = "name:Apple";
+        $controller = new SearchController(true);
+        $this->assertTrue(isset($controller));
+
+        $results = $controller->go();
+        $this->assertPattern('/No followers found/', $results);
     }
 
     protected function buildData() {

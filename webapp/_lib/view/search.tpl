@@ -17,14 +17,46 @@ Search results for "{$smarty.get.q}"
     </div><!--/span3-->
 
     <div class="span9">
-    {if $posts|@count > 0}
-    {foreach from=$posts key=pid item=post name=bar}
-        <div class="alert insight-item">
-        {include file=$tpl_path|cat:"_post.tpl" post=$post hide_insight_header='1'}
-        {include file=$tpl_path|cat:'_footer.tpl'}
-    {/foreach}
-    {else}
-     <h2>No posts found.</h2>
+    {if $smarty.get.c eq 'posts'}
+        {if $posts|@count > 0}
+        {foreach from=$posts key=pid item=post name=bar}
+            <div class="alert insight-item">
+            {include file=$tpl_path|cat:"_post.tpl" post=$post hide_insight_header='1'}
+            {include file=$tpl_path|cat:'_footer.tpl'}
+        {/foreach}
+        {else}
+         <h2>No posts found.</h2>
+        {/if}
+    {/if}
+    {if $smarty.get.c eq 'followers'}
+        {if $users|@count > 0}
+        {foreach from=$users key=uid item=u name=bar}
+            <div class="alert insight-item">
+                <table class="table table-condensed">
+                    <tr>
+                    <td class="avatar-data">
+                        {if $u->network eq 'twitter'}
+                            <h3><a href="https://twitter.com/intent/user?user_id={$u->user_id}" title="{$u->username} has {$u->follower_count|number_format} followers and {$u->friend_count|number_format} friends"><img src="{$u->avatar}" class="avatar2"  width="48" height="48"/></a></h3>
+                        {else}
+                            <h3><img src="{$u->avatar}" class="avatar2" width="48" height="48"/></h3>
+                        {/if}
+                    </td>
+                    <td>
+                        {if $u->network eq 'twitter'}
+                            <h3><img src="{$site_root_path}plugins/{$u->network}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a>     <small>{$u->follower_count|number_format} followers</small></h3>
+                            <p>{$u->description|link_usernames_to_twitter}<br />
+                            {$u->url}</p>
+                        {else}
+                            <h3><img src="{$site_root_path}plugins/{$u->network}/assets/img/favicon.png" class="service-icon2"/> {$u->full_name}    {if $u->other.total_likes}<small style="color:gray">{$u->other.total_likes|number_format} likes</small>{/if}</h3>
+                        {/if}
+                    </td>
+                    </tr>
+                </table>
+            </div>
+        {/foreach}
+        {else}
+         <h2>No followers found.</h2>
+        {/if}
     {/if}
     </div><!--/span9-->
 </div><!--/row-->

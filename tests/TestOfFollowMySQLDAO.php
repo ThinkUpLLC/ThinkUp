@@ -48,11 +48,12 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1234567890', 'user_name'=>'jack',
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
-        'is_protected'=>0));
+        'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1324567890', 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:58:25',
-        'follower_count'=>36000, 'is_protected'=>0));
+        'follower_count'=>36000, 'is_protected'=>0, 'network'=>'twitter',
+        'description'=>'Former Googler, Twitter creator'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
@@ -69,7 +70,8 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
         'error_text'=>'User not found', 'error_issued_to_user_id'=>'1324567890', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>1234567890,
+        //ev is followed by jack
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1234567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>14,
@@ -323,5 +325,16 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[1]['user_id'], 1324567890);
         $this->assertEqual($result[0]['user_id'], 1623457890);
+    }
+
+    public function testSearchFollowers(){
+        $result = $this->DAO->searchFollowers($keywords=array("description:Square", "name:jack"),
+        $network="twitter", $user_id="1324567890");
+
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertIsA($result, "array");
+        $this->assertIsA($result[0], "User");
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]->full_name, "Jack Dorsey");
     }
 }
