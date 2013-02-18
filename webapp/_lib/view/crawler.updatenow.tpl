@@ -10,7 +10,7 @@
     <div class="embossed-block">
         <ul>
           <li>
-             Update ThinkUp Data
+             Updating...
           </li>
         </ul>
     </div>
