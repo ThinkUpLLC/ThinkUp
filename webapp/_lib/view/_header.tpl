@@ -12,8 +12,9 @@
 
 {if $enable_bootstrap}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="ThinkUp">
+    <meta name="author" content="{$logged_in_user}">
+    <meta name="twitter:widgets:link-color" content="#00aeef">
 
     <!-- Le styles -->
     <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
@@ -31,6 +32,7 @@
     <script src="{$site_root_path}assets/js/jquery.js"></script>
     <script src="{$site_root_path}assets/js/bootstrap.js"></script>
     <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
+	<script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
   {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>

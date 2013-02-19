@@ -417,3 +417,8 @@ body {
 	padding-right: 6px;
 }
 }
+
+.alert iframe.twitter-tweet {
+    border : none !important;
+    box-shadow : none !important;
+}
