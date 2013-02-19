@@ -41,7 +41,6 @@ class InsightStreamController extends ThinkUpController {
         $config = Config::getInstance();
         $this->setViewTemplate('insights.tpl');
         $this->addToView('enable_bootstrap', true);
-        $this->addToView('enable_geoencoder_iframe', true);
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
 
         if ($this->shouldRefreshCache() ) {

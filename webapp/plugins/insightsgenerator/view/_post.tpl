@@ -5,7 +5,7 @@
         <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-mini detail-btn" ><i class="icon-comment icon-white"></i></a></div>
     {/if}
     {if $i->slug eq 'geoencoded_replies'}
-        <div class="pull-right detail-btn"><button class="btn btn-info btn-mini detail-btn" data-toggle="collapse" data-target="#map-{$i->id}"><i class="icon-map-marker icon-white"></i></button></div>
+        <div class="pull-right detail-btn"><a href="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post"><button class="btn btn-info btn-mini detail-btn" ><i class="icon-map-marker icon-white"></i></button></a></div>
     {/if}
 
     <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-{$icon}"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
@@ -89,12 +89,3 @@
     </td>
     </tr>
 </table>
-
-
-{if $i->slug eq 'geoencoded_replies'}
-    <div class="collapse in" id="map-{$i->id}">
-    <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
-    <iframe width="93%" frameborder="0" src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n=twitter&t=post" name="childframe" id="childframe" >
-    </iframe>
-    </div>
-{/if}
