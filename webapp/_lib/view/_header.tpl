@@ -15,15 +15,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Le styles -->
+    <!-- styles -->
     <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/insights.css" rel="stylesheet">
     {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
     {/foreach} 
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!-- IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->

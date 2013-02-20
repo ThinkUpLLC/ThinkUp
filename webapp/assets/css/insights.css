@@ -1,25 +1,25 @@
 body {
-	background: #EBEBEB;
-	font-size: 13px;
-	line-height: 18px;
+    background: #EBEBEB;
+    font-size: 13px;
+    line-height: 18px;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	/*margin: 0;*/
-	text-rendering: optimizelegibility;
+    /*margin: 0;*/
+    text-rendering: optimizelegibility;
 }
 
 h3 {
-	font-size: 18px;
-	line-height: 27px;
+    font-size: 18px;
+    line-height: 27px;
 }
 
 p {
-	margin: 0 0 9px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 13px;
-	line-height: 18px;
+    margin: 0 0 9px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
 }
 
 .navbar-static-top {
@@ -121,7 +121,7 @@ form .control-group {
 }
 
 .alert.insight-item {
-	border: 0;
+    border: 0;
 }
 
 .alert-heading {
@@ -181,8 +181,19 @@ color : #666;
     margin-right : auto;
 }
 
+.icon-googleplus:before {
+    content: "\f0d5";
+}
+
 .service-user-icons {
     float : right;
+}
+
+.service-user-icons:hover {
+}
+ 
+.service-user-icons i.icon {
+    color : #ccc;
 }
 
 .service-user-icons img {
@@ -211,7 +222,7 @@ color : #666;
 }
 
 .avatar-data h3 {
-	margin: 0;
+    margin: 0;
 }
 
 .alert table p {
@@ -353,8 +364,7 @@ span.formError {
 }
 
 .embossed-block .nav-tabs .active .icon-chevron-right {
-  background-image: url(../img/glyphicons-halflings.png);
-  opacity: 1;
+
 }
 
 /* Settings */
@@ -406,14 +416,45 @@ footer a, footer a:hover {
 
 @media (max-width: 767px) {
 body {
-	padding-left: 0px;
-	padding-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .alert, .alert.insight-item, .white-card, .row {
   margin-bottom: 6px;
 }
+.alert {
+    margin-left : 20px;
+}
+.alert .label {
+    color : black;
+    padding-left : 8px;
+}
+.detail-btn {
+    margin: 4px;
+}
+.detail-btn .btn .btn-info {
+    width : 30px;
+}
+ 
+.label .icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"] {
+  margin-left : -34px;
+  margin-right : 14px;
+}
+ 
 .container {
-	padding-left: 6px;
-	padding-right: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
 }
 }
