@@ -181,8 +181,13 @@ color : #666;
     margin-right : auto;
 }
 
-.icon-googleplus:before {
-    content: "\f0d5";
+.icon-muted{
+    color:#ccc
+}
+
+.icon-foursquare:before {
+    content:"\f046";
+    content:"\f041";
 }
 
 .service-user-icons {
