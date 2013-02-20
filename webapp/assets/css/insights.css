@@ -181,8 +181,11 @@ color : #666;
     margin-right : auto;
 }
 
-.icon-googleplus:before {
-    content: "\f0d5";
+.icon-muted{color:#ccc}
+
+.icon-foursquare:before {
+    content:"\f046";
+    content:"\f041";
 }
 
 .service-user-icons {
@@ -412,6 +415,12 @@ footer {
 
 footer a, footer a:hover {
     color: #89cff1;
+}
+
+input#search-keywords {
+    width : 200px;
+    margin-top : 8px;
+    margin-left : 8px;
 }
 
 @media (max-width: 767px) {

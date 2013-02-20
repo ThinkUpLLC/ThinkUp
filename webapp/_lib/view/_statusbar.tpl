@@ -15,12 +15,12 @@
     <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
 
 <!--search posts-->
-    <li><input type="text" id="search-keywords" style="margin:7px;width:100px" size="5" /></li>
+    <li><input type="text" id="search-keywords" size="5" /></li>
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i></a> 
         <ul class="dropdown-menu">
         {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username}&n={$i->network}&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username}&n={$i->network}&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if}"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
         {/foreach}
         </ul>
      </li>
@@ -41,8 +41,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage">Settings</a></li>
-          <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
+          <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage"><i class="icon-cog"></i> Settings</a></li>
+          <li><a href="{$site_root_path}session/logout.php"><i class="icon-signout"></i> Log Out</a></li>
         </ul>
     </li>
 </ul>   

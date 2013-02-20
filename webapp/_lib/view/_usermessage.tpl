@@ -14,7 +14,7 @@
             {/if}
             {if $error_msgs.$field}
              <span class="label label-error">
- 
+                    <i class="icon icon-warning-sign"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msgs.$field}
                    {else}
@@ -49,7 +49,7 @@
             {/if}
             {if $error_msg}
              <span class="label label-error" style="">
- 
+                    <i class="icon icon-warning-sign"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msg}
                    {else}
@@ -88,7 +88,7 @@
             {/if}
             {if $error_msgs.$field}
              <div class="alert alert-error">
-                 <p>
+                 <p><i class="icon icon-warning-sign"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msgs.$field}
                    {else}
@@ -124,7 +124,7 @@
             {/if}
             {if $error_msg}
              <div class="alert alert-error" style="">
-                 <p>
+                 <p><i class="icon icon-warning-sign"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msg}
                    {else}

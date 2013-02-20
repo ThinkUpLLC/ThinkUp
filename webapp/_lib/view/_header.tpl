@@ -74,7 +74,6 @@
                 $('#settingsTabs a:first').tab('show');
             })
 
-
         });
       </script>
     {/literal}

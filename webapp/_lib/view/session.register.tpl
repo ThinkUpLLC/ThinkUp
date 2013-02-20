@@ -30,20 +30,22 @@
                         </div>
                     </div>
                     
-                    <div class="control-group"> 
+                    <div class="control-group input-prepend"> 
                         
                         <label for="email" class="control-label">Email:</label>
                         <div class="controls">
+                            <span class="add-on"><i class="icon-envelope"></i></span>
                             <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}> {include file="_usermessage.tpl" field="email" enable_bootstrap="true" inline="true"}
                         </div>
                     </div>
                     
-                    <div class="control-group"> 
+                    <div class="control-group input-prepend"> 
                         
                         <label for="pass1" class="control-label">Password:</label>
                         <div class="controls">
 
                             <div class="password-meter">
+                                <span class="add-on"><i class="icon-key"></i></span>
                                 <input type="password" name="pass1" id="pass1" class="password"><span for="pass1" class="password-meter-message"> </span> {include file="_usermessage.tpl" field="password" enable_bootstrap="true" inline="true"}
                                 
                                 <div class="password-meter-bg">
@@ -55,9 +57,10 @@
                         
                     </div>
 
-                    <div class="control-group"> 
+                    <div class="control-group input-prepend"> 
                         <label for="pass2" class="control-label">Retype password:</label>
                         <div class="controls">
+                            <span class="add-on"><i class="icon-key"></i></span>
                             <input name="pass2" type="password" id="pass2" class="password">
                         </div>
                     </div>
