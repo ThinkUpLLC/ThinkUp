@@ -45,7 +45,7 @@
                     {if $user_is_admin}
                       <td>
                       <span id="spanpluginactivation{$ip->id}">
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn">Configure</a>
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn"><i class="icon-cog "></i> Configure</a>
                       </span>
                       <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                       </td>

@@ -26,16 +26,18 @@
 
                 <fieldset style="background-color : white; padding-top : 30px;">
                     
-                    <div class="control-group">
+                    <div class="control-group input-prepend">
                         <label class="control-label" for="password">New password:</label>
                         <div class="controls">
+                            <span class="add-on"><i class="icon-key"></i></span>
                             <input class="input-xlarge" type="password" name="password" id="password">
                         </div>
                     </div>
 
-                    <div class="control-group">
+                    <div class="control-group input-prepend">
                         <label class="control-label" for="password_confirm">New password:</label>
                         <div class="controls">
+                            <span class="add-on"><i class="icon-key"></i></span>
                             <input class="input-xlarge" type="password" name="password_confirm" id="password_confirm">
                         </div>
                     </div>
