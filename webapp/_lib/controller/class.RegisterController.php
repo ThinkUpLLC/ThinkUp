@@ -82,7 +82,7 @@ class RegisterController extends ThinkUpController {
                 $disable_xss = true;
                 $this->addErrorMessage('<p>Sorry, registration is closed on this installation of '.
                 $config->getValue('app_title_prefix')."ThinkUp.</p>".
-                '<p><a href="http://thinkupapp.com">Install ThinkUp on your own server.</a></p>', null, $disable_xss);
+                '<p><a href="http://thinkup.com" class="btn">Get your own ThinkUp account</a></p>', null, $disable_xss);
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $this->addToView('closed', false);
