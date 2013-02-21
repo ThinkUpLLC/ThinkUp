@@ -1,5 +1,7 @@
 {if $hide_insight_header}
 
+                    
+
 {else}
     {if $i->slug|substr:24 eq 'replies_frequent_words_'}
         <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-mini detail-btn" ><i class="icon-comment icon-white"></i></a></div>
@@ -15,15 +17,15 @@
 
 <table class="table table-condensed lead">
     <tr>
-        {if $i->instance->network_username != $post->author_username }
     <td class="avatar-data">
-            <h3><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
+            <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar}" class=""  width="48" height="48"/></a>
     </td>
-        {/if}
     <td>
             {if $post->network eq 'twitter'}
                 {if $i->instance->network_username != $post->author_username}
-                    <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">{$post->author_username}</a> <small>{$post->place}</small>
+
+                    <h4><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">{$post->author_fullname}</a></h4>
+                    <p class="twitter-bio-info"><i class="icon-twitter"></i> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">@{$post->author_username}</a> <small>{$post->place}</small>
 
                         {if $post->is_geo_encoded < 2}
                             <small>
@@ -39,7 +41,7 @@
                           {/if}
                             </small>
                         {/if}
-                    </h3>
+                    </p>
                 {/if}
                 {if $post->post_text}
                     {if $scrub_reply_username}
@@ -75,15 +77,23 @@
                 <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
             {/if}
 
-            <span class="metaroll">
-                <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
 
             {if $post->network == 'twitter'}
+                <p class="twitter-bio-info">
+                <a href="http://twitter.com/{$post->author_user_id}/statuses/{$post->post_id}">{$post->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}</a>
+                
+                &nbsp;&nbsp;
                 <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
                 <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
                 <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="icon icon-star-empty" title="favorite"></i></a>
-            {/if}
+                </p>
+            {else}
+
+            <span class="metaroll">
+                <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime}</a>
             </span>
+
+            {/if}
 
         </div> <!-- end body of post div -->
 

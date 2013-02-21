@@ -226,8 +226,13 @@ color : #666;
     width : 50px;
 }
 
-.avatar-data h3 {
+.avatar-data img {
     margin: 0;
+    padding-top : 0px;
+}
+
+.twitter-bio-info {
+    padding-top : 4px;
 }
 
 .alert table p {
