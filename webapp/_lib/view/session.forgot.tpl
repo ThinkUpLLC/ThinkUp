@@ -28,9 +28,10 @@
 
                 <fieldset style="background-color : white; padding-top : 30px;">
                     
-                    <div class="control-group">
+                    <div class="control-group input-prepend">
                         <label class="control-label" for="email">Email:</label>
                         <div class="controls">
+                            <span class="add-on"><i class="icon-envelope"></i></span>
                             <input class="input-xlarge" type="email" name="email" id="email">
                         </div>
                     </div>

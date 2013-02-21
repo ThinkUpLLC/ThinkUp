@@ -23,9 +23,9 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
         <ul class="dropdown-menu">
         {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
             {if $i->network eq 'twitter'}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#">{if $i->network eq 'twitter'}@{/if}{$i->network_username}'s followers</a></li>
+            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s followers</a></li>
             {/if}
         {/foreach}
         </ul>
@@ -50,8 +50,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage">Settings</a></li>
-          <li><a href="{$site_root_path}session/logout.php">Log Out</a></li>
+          <li class="{if $smarty.get.m eq "manage"}active{/if}"><a href="{$site_root_path}account/?m=manage"><i class="icon-cog icon-muted"></i> Settings</a></li>
+          <li><a href="{$site_root_path}session/logout.php"><i class="icon-signout icon-muted"></i> Log Out</a></li>
         </ul>
     </li>
 </ul> 
@@ -59,7 +59,7 @@
       {else}
 <ul class="nav pull-right">
     <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
-    <li><a href="{$site_root_path}session/login.php" >Log In</a></li>
+    <li><a href="{$site_root_path}session/login.php" ><i class="icon-signin icon-muted"></i> Log In</a></li>
 </ul>
       {/if}
           </div><!--/.nav-collapse -->
