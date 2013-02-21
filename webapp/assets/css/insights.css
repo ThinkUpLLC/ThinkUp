@@ -463,3 +463,14 @@ body {
     padding-right: 6px;
 }
 }
+
+.alert iframe.twitter-tweet {
+    border : none !important;
+    box-shadow : none !important;
+    border-width : 0px !important;
+    width : 100% !important;
+}
+
+iframe.twitter-tweet div.root .standalone-tweet, .standalone-tweet .subject {
+    padding : 0px !important;
+}

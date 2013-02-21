@@ -15,44 +15,23 @@
 
 <table class="table table-condensed lead">
     <tr>
-        {if $i->instance->network_username != $post->author_username }
-    <td class="avatar-data">
-            <h3><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
-    </td>
-        {/if}
     <td>
             {if $post->network eq 'twitter'}
-                {if $i->instance->network_username != $post->author_username}
-                    <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">{$post->author_username}</a> <small>{$post->place}</small>
 
-                        {if $post->is_geo_encoded < 2}
-                            <small>
-                          {if $show_distance}
-                              {if $unit eq 'km'}
-                                {$post->reply_retweet_distance|number_format} kms away
-                                {else}
-                                {$post->reply_retweet_distance|number_format} miles away in 
-                              {/if}
-                          {/if}
-                          {if $post->location}
-                          from {$post->location|truncate:60:' ...'}
-                          {/if}
-                            </small>
-                        {/if}
-                    </h3>
-                {/if}
-                {if $post->post_text}
-                    {if $scrub_reply_username}
-                        {if $reply_count && $reply_count > $top_20_post_min}
-                          <div class="reply_text post" id="reply_text-{$smarty.foreach.foo.iteration}">
-                        {/if}
-                        {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
-                    {else}
-                        <div class="post">{$post->post_text|filter_xss|link_usernames_to_twitter}
-                    {/if}
-                {/if}
+                    <blockquote class="twitter-tweet">
+                        <p>{$post->post_text}</p>
+                        &mdash; {$post->author_fullname} (@{$post->author_username}) <a href="https://twitter.com/twitterapi/status/{$post->post_id}" data-datetime="{$post->adj_pub_date}">{$post->adj_pub_date}</a>
+                    </blockquote>
 
             {else}
+            
+        {if $i->instance->network_username != $post->author_username }
+    <div class="avatar-data">
+            <h3><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar}" class="avatar2"  width="48" height="48"/></a></h3>
+    </div>
+        {/if}
+
+
                 <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> {$post->author_fullname}
                     {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}
                     {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}
@@ -77,12 +56,6 @@
 
             <span class="metaroll">
                 <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
-
-            {if $post->network == 'twitter'}
-                <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
-                <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
-                <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="icon icon-star-empty" title="favorite"></i></a>
-            {/if}
             </span>
 
         </div> <!-- end body of post div -->
