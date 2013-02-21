@@ -63,11 +63,7 @@
     {literal}
 
         $(document).ready(function() {
-            $(".post").hover(
-                function() { $(this).children(".metaroll").show(100); },
-                function() { $(this).children(".metaroll").hide(); }
-            );
-            $(".metaroll").hide();
+
             $(".collapse").collapse();
             $(function () {
                 $('#settingsTabs a:first').tab('show');
