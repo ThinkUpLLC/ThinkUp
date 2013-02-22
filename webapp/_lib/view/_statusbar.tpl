@@ -4,48 +4,44 @@
       <div class="navbar-inner">
         <div class="container">
 
-          <a href="{$site_root_path}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+          <a href="{$site_root_path}" class="brand span3"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
 
-          <div class="nav-collapse">
+
+            <a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+
+            {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances}
+
+                <!--search posts-->
+                <form class="navbar-search pull-left dropdown" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&n={$instances[0]->network|urlencode}&c=posts&q=');">
+
+                    <input type="text" id="search-keywords" class="search-query span4 dropdown-toggle" data-toggle="dropdown" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
+
+                    <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    {foreach from=$instances key=tid item=i}
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted icon-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}Foursquare check-ins{else}{$i->network|ucwords} posts{/if}</a></li>
+                        {if $i->network eq 'twitter'}
+                            <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n=twitter&c=followers&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
+                            <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n=twitter&c=followers&q=name:');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers for people named <span class="searchterm"></span></a></li>
+                        {/if}
+                    {/foreach}
+                    </ul>
+
+                </form>
+
+            {/if}
+
+
+            <div class="nav-collapse">
 
       {if $logged_in_user}
 
-<!--search posts-->
-
 <ul class="nav pull-right" style="border-left : none;">
-
-        <form class="navbar-search" action="#">
-            <input type="text" id="search-keywords" class="search-query" placeholder="Search" />
-            
-        </form>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
-        <ul class="dropdown-menu">
-        {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
-            {if $i->network eq 'twitter'}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s followers</a></li>
-            {/if}
-        {/foreach}
-        </ul>
-     </li>
-  {literal}
-    <script type="text/javascript">
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + _mu;
-        }
-      }
-    </script>
-  {/literal}
 
     {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
     <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
 
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="#" class="dropdown-toggle hidden-phone" data-toggle="dropdown">
           {$logged_in_user}{if $user_is_admin} <span class="label label-info">admin</span>{/if}
           <b class="caret"></b>
         </a>
@@ -63,12 +59,15 @@
 </ul>
       {/if}
           </div><!--/.nav-collapse -->
+
+
         </div>
       </div>
     </div>
 
 {else}
 
+ 
 {literal}
   <script type="text/javascript">
     $(document).ready(function() {

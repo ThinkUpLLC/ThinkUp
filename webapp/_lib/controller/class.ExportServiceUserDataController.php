@@ -94,10 +94,9 @@ This zip archive contains all the data related to a specific service user gather
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 $this->addToView('instances', $instance_dao->getByOwner($owner));
-                $this->addInfoMessage('To export and download a single service user\'s data, '.
-                'choose a service user and click on the Export User Data button. Extract the zip file '.
-                'and refer to the README.txt contained within for instructions on how to import the data '.
-                'into another ThinkUp database.' );
+                $this->addInfoMessage('Choose a user\'s data to export. '.
+                '(You\'ll find a README.txt file in the zip archive with instructions on how to import the data '.
+                'into another ThinkUp database.)' );
             }
         }
         return $this->generateView();
