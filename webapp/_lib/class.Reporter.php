@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -27,7 +27,7 @@
  */
 class Reporter {
     /**
-     * Report installation version back to thinkupapp.com. If usage reporting is enabled, include instance username
+     * Report installation version back to thinkup.com. If usage reporting is enabled, include instance username
      * and network.
      * @param Instance $instance
      * @return array ($report_back_url, $referer_url, $status, $contents)
@@ -35,7 +35,7 @@ class Reporter {
     public static function reportVersion(Instance $instance) {
         //Build URLs with appropriate parameters
         $config = Config::getInstance();
-        $report_back_url = 'http://thinkupapp.com/version.php?v='.$config->getValue('THINKUP_VERSION');
+        $report_back_url = 'http://thinkup.com/version.php?v='.$config->getValue('THINKUP_VERSION');
 
         //Explicity set referer for when this is called by a command line script
         $referer_url = Utils::getApplicationURL();

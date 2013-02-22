@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -488,7 +488,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this installation of Bo\'s ThinkUp.</p>'.
-        '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
+        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
         'server.</a></p>');
     }
 
@@ -518,7 +518,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this installation of ThinkUp.</p>'.
-        '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
+        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
         'server.</a></p>');
     }
 
@@ -548,7 +548,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this installation of Bo\'s ThinkUp.</p>'.
-        '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
+        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
         'server.</a></p>');
     }
 
@@ -578,7 +578,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this installation of ThinkUp.</p>'.
-        '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
+        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
         'server.</a></p>');
     }
 }

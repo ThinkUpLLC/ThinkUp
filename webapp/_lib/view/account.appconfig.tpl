@@ -59,7 +59,7 @@
       <label class="checkbox">
         <input type="checkbox" name="is_api_disabled" id="is_api_disabled" value="true"> Disable the JSON API
       </label>
-      <span class="help-block">Set whether or not your site's data is available via ThinkUp's JSON API. <a href="http://thinkupapp.com/docs/userguide/api/posts/index.html">Learn more...</a></span>
+      <span class="help-block">Set whether or not your site's data is available via ThinkUp's JSON API. <a href="http://thinkup.com/docs/userguide/api/posts/index.html">Learn more...</a></span>
 
       <label class="checkbox">
         <input type="checkbox" name="is_embed_disabled" id="is_embed_disabled" value="true"> Disable thread embeds
@@ -69,7 +69,7 @@
       <label class="checkbox">
         <input type="checkbox" name="is_opted_out_usage_stats" id="is_opted_out_usage_stats" value="true"> Disable usage reporting
       </label>
-      <span class="help-block">Usage reporting helps us improve ThinkUp. <a href="http://thinkupapp.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a></span>
+      <span class="help-block">Usage reporting helps us improve ThinkUp. <a href="http://thinkup.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a></span>
 
     <div style="text-align: center" id="save_setting_image">
         <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="50" height="50"  

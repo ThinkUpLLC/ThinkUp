@@ -25,7 +25,7 @@
     <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
         It looks like the MySQL user does not have the proper file permissions to export data. Please see the
-        <a href="http://thinkupapp.com/docs/troubleshoot/messages/mysqlfile.html">ThinkUp 
+        <a href="http://thinkup.com/docs/troubleshoot/messages/mysqlfile.html">ThinkUp 
         documentation</a> for more info on how to resolve this issue.
     </p>
 </div>
@@ -34,7 +34,7 @@
     <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
         It looks like the MySQL user does not have the proper permissions to export data. Please see the
-        <a href="http://thinkupapp.com/docs/troubleshoot/messages/mysqlgrant.html">ThinkUp 
+        <a href="http://thinkup.com/docs/troubleshoot/messages/mysqlgrant.html">ThinkUp 
         documentation</a> for more info on how to resolve this issue.
     </p>
 </div>

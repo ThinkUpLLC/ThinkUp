@@ -197,7 +197,7 @@
             </div>
             {if !$permissions_compat}
             <div class="clearfix append_20 info_message">
-              <p>ThinkUp's <code>data</code> directory, located at <code>{$writable_data_directory}</code>, must be writable for installation to complete. <a href="http://thinkupapp.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
+              <p>ThinkUp's <code>data</code> directory, located at <code>{$writable_data_directory}</code>, must be writable for installation to complete. <a href="http://thinkup.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
             </div>
             {/if}
             

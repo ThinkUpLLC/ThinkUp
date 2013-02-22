@@ -42,7 +42,7 @@
     
     
 <br /><br />
-<p><a href="http://thinkupapp.com/docs/troubleshoot/common/emaildisabled.html">Didn't get the email?</a></p>
+<p><a href="http://thinkup.com/docs/troubleshoot/common/emaildisabled.html">Didn't get the email?</a></p>
        </div>
              </div>
        

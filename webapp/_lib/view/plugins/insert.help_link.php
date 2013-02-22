@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -42,7 +42,7 @@
  */
 function smarty_insert_help_link($params, &$smarty) {
     if (isset($smarty->_tpl_vars['help'][$params['id']])){
-        return '<a href="http://thinkupapp.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
+        return '<a href="http://thinkup.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
         '.html" title="Learn more" class="btn btn-mini btn-help">Help <i class="icon-question-sign "></i></a>';
     } else {
         return '';

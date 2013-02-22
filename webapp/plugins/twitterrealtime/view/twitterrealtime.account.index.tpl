@@ -10,7 +10,7 @@
     <p>The Twitter Realtime Plugin requires the <a href="./?p=twitter">Twitter plugin</a> to be configured with your
     Twitter app's authorization information. If this is not set up, the Twitter Realtime Plugin will not run
     successfully. Currently, the only way to 
-    <a href="http://thinkupapp.com/docs/userguide/settings/plugins/twitterrealtime.html">initiate this plugin is at the command line</a>.</p>
+    <a href="http://thinkup.com/docs/userguide/settings/plugins/twitterrealtime.html">initiate this plugin is at the command line</a>.</p>
     
 </div>
 

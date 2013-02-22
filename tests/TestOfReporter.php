@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -40,7 +40,7 @@ class TestOfReporter extends ThinkUpUnitTestCase {
 
         //report version
         $result = Reporter::reportVersion($instance);
-        $this->assertPattern("/http:\/\/thinkupapp.com\/version.php\?v\=/", $result[0]);
+        $this->assertPattern("/http:\/\/thinkup.com\/version.php\?v\=/", $result[0]);
         $this->assertEqual($result[1], "http://mytestthinkup/?u=danica+mckellar&n=twitter");
         $this->assertEqual($result[2], 200);
     }
