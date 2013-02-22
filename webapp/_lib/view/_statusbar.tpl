@@ -5,19 +5,25 @@
         <div class="container">
 
           <a href="{$site_root_path}" class="brand span3"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
 
-          <div class="nav-collapse">
+
+            <a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+
+            {if $logged_in_user}
+
+                <!--search posts-->
+
+                <form class="navbar-search pull-left" action="#">
+                    <input type="text" id="search-keywords" class="search-query span4" placeholder="Search" />
+
+                </form>
+
+            {/if}
+
+
+            <div class="nav-collapse">
 
       {if $logged_in_user}
-
-<!--search posts-->
-
-          <form class="navbar-search" action="#">
-              <input type="text" id="search-keywords" class="search-query span4" placeholder="Search" />
-
-          </form>
-
 
 <ul class="nav pull-right" style="border-left : none;">
 
@@ -36,7 +42,7 @@
     <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
 
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="#" class="dropdown-toggle hidden-phone" data-toggle="dropdown">
           {$logged_in_user}{if $user_is_admin} <span class="label label-info">admin</span>{/if}
           <b class="caret"></b>
         </a>
@@ -54,6 +60,8 @@
 </ul>
       {/if}
           </div><!--/.nav-collapse -->
+
+
         </div>
       </div>
     </div>
