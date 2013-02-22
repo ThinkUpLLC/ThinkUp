@@ -21,8 +21,8 @@
             <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
             <p>
             <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-            It looks like your server setup does not support a library 
-            ( <a href="http://www.php.net/manual/en/book.zip.php">Zip</a> ) that is required to complete a backup 
+            It looks like your server setup does not support the
+            <code><a href="http://www.php.net/manual/en/book.zip.php">Zip</a></code> library that is required to complete a backup 
             through this interface.
             <br /><br />
             You can also try backing up your data using 
@@ -30,11 +30,7 @@
             </p>
             </div>
         {else}
-            <p>
-            Click on the button below to back up your ThinkUp database. This new ThinkUp feature is in testing; 
-            if it doesn't work, run a <a href="http://dev.mysql.com/doc/refman/5.1/en/mysqldump.html">mysqldump</a> manually on your ThinkUp server.
-            </p>
-            
+
             {if $high_table_row_count}
             <!-- too many db records, use CLI interface? -->
                 <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
@@ -47,23 +43,24 @@
                 </p>
                 </div>
             <br />
-        {/if}
-        
-        <input type="button" id="login-save" name="Submit" style="margin: 20px 0px 0px 20px;"
-        onclick="document.location.href='?backup=true'" 
-        class="linkbutton emphasized" value="Backup Now">
-        
-        <br /><br />
+            {/if}
 
         
-        <br /><br />
-        
+            <input type="button" id="login-save" name="Submit" style="margin: 20px 0px 30px 20px;"
+            onclick="document.location.href='?backup=true'" 
+            class="linkbutton emphasized" value="Backup Now">
+
+
+            <p>
+            If you have any issues using this backup feature, you can use <a href="http://dev.mysql.com/doc/refman/5.1/en/mysqldump.html">mysqldump</a> to manually back up your ThinkUp data if you have access to your server.
+            </p>
+
             <div class="prepend_20">
             <h1>Restore Your Thinkup Database</h1>
             </div>
         
         <p>
-        Import a ThinkUp database from file by uploading it below.</p>
+        Import a ThinkUp database from a file by uploading it here:</p>
         </p>
         
         

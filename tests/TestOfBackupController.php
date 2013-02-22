@@ -85,7 +85,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', true);
         $controller = new BackupController(true);
         $results = $controller->control();
-        $this->assertPattern('/setup does not support a library/', $results);
+        $this->assertPattern('/setup does not support/', $results);
     }
 
     public function testLoadBackupView() {
