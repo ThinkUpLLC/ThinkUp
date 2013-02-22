@@ -178,7 +178,7 @@
 {if $post->post_text} 
     <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
     <meta itemprop="description" content="{$post->post_text|strip_tags}">
-    <meta itemprop="image" content="http://thinkupapp.com/assets/img/thinkup-logo_sq.png">
+    <meta itemprop="image" content="http://thinkup.com/assets/img/thinkup-logo_sq.png">
 {/if}
 
 </head>

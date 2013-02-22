@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -38,9 +38,9 @@ class CheckVersionController extends ThinkUpAuthController {
         $is_in_beta = $config->getValue('is_subscribed_to_beta');
         $is_in_beta = isset($is_in_beta)?$is_in_beta:false;
         if ($is_in_beta) {
-            $upgrade_checker_url = 'http://thinkupapp.com/version.php?channel=beta&';
+            $upgrade_checker_url = 'http://thinkup.com/version.php?channel=beta&';
         } else {
-            $upgrade_checker_url = 'http://thinkupapp.com/version.php?';
+            $upgrade_checker_url = 'http://thinkup.com/version.php?';
         }
 
         $opt_out = $config->getValue('is_opted_out_usage_stats');

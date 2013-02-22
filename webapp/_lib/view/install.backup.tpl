@@ -43,7 +43,7 @@
                 Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table has 
                 <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
                 Since backing up such a big database can time out in the browser, we recommend that you use the 
-                <a href="http://thinkupapp.com/docs/install/backup.html"><b>command line backup tool</b></a> when backing up ThinkUp.
+                <a href="http://thinkup.com/docs/install/backup.html"><b>command line backup tool</b></a> when backing up ThinkUp.
                 </p>
                 </div>
             <br />

@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -32,7 +32,7 @@ class TestController extends ThinkUpController {
     public function control() {
         if (isset($_GET['json'])) {
             $this->setJsonData( array( 'aname' => 'a value', 'alist' => array('apple', 'pear', 'banana'), 'alink' =>
-                    'http://thinkupapp.com'));
+                    'http://thinkup.com'));
         } else if (isset($_GET['text'])) {
             $this->setContentType('text/plain');
         } else if (isset($_GET['png'])) {

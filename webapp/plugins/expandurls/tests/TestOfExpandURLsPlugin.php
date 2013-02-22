@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -101,7 +101,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         $link = $link_dao->getLinkById(5);
         $this->debug($link->url);
-        $this->assertEqual($link->expanded_url, 'http://thinkupapp.com/');
+        $this->assertEqual($link->expanded_url, 'http://thinkup.com/');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(6);
@@ -223,7 +223,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         // Valid URL with no path ending in a slash
         $builders[] = FixtureBuilder::build('links', array(
             'id' => 5,
-            'url' => 'http://thinkupapp.com/',
+            'url' => 'http://thinkup.com/',
             'expanded_url' => null,
             'title' => '',
             'clicks' => 0,

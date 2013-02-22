@@ -55,7 +55,7 @@
 
       {else}
 <ul class="nav pull-right">
-    <li><a href="http://thinkupapp.com/" >Get ThinkUp</a></li>
+    <li><a href="http://thinkup.com/" >Get ThinkUp</a></li>
     <li><a href="{$site_root_path}session/login.php" ><i class="icon-signin icon-muted"></i> Log In</a></li>
 </ul>
       {/if}
@@ -126,7 +126,7 @@
         <script>var logged_in_user = '{$logged_in_user}';</script>
       {else}
       
-        <li><a href="http://thinkupapp.com/" class="linkbutton">Get ThinkUp</a> <a href="{$site_root_path}session/login.php" class="linkbutton"    >Log In</a></li>
+        <li><a href="http://thinkup.com/" class="linkbutton">Get ThinkUp</a> <a href="{$site_root_path}session/login.php" class="linkbutton"    >Log In</a></li>
       {/if}
     </ul>
   </div> <!-- .status-bar-right -->

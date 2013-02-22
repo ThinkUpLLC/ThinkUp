@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -76,7 +76,7 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertNoPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this/', $results);
         $this->assertPattern('/var ROOT = \'thinkup_version\'/', $results);
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?usage=n\&v='.$THINKUP_VERSION.
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php\?usage=n\&v='.$THINKUP_VERSION.
         '/', $results);
     }
 
@@ -86,9 +86,9 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $controller = new CheckVersionController(true);
 
         $results = $controller->go();
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?v='.$THINKUP_VERSION.
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php\?v='.$THINKUP_VERSION.
         '/', $results);
-        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php?v='.$THINKUP_VERSION.
         '\&usage=n/', $results);
     }
 
@@ -102,9 +102,9 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $controller = new CheckVersionController(true);
 
         $results = $controller->go();
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?channel=beta\&v='.
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php\?channel=beta\&v='.
         $THINKUP_VERSION.'/', $results);
-        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php?v='.$THINKUP_VERSION.
         '\&usage=n/', $results);
     }
 
@@ -121,9 +121,9 @@ class TestOfCheckVersionController extends ThinkUpUnitTestCase {
         $controller = new CheckVersionController(true);
 
         $results = $controller->go();
-        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php\?channel=beta\&v='.
+        $this->assertPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php\?channel=beta\&v='.
         $THINKUP_VERSION.'/', $results);
-        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkupapp.com\/version.php?v='.$THINKUP_VERSION.
+        $this->assertNoPattern('/var CONTENT_URL = \'http:\/\/thinkup.com\/version.php?v='.$THINKUP_VERSION.
         '\&usage=n/', $results);
     }
 }

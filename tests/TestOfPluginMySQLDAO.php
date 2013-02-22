@@ -7,7 +7,7 @@
  *
  * LICENSE:
  *
- * This file is part of ThinkUp (http://thinkupapp.com).
+ * This file is part of ThinkUp (http://thinkup.com).
  *
  * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
@@ -382,7 +382,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugin1 = array(
             'name' => 'My Test Plugin', 'folder_name' => 'testplugin',
             'description' => 'Proof of concept plugin',
-            'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
+            'author' => 'Gina Trapani', 'homepage' => 'http://thinkup.com',
             'version' => '0.01', 'is_active' =>0
         );
         $builder1 = FixtureBuilder::build(self::TEST_TABLE,  $plugin1);
@@ -390,7 +390,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugin2 = array(
             'name' => 'My Test Plugin Activated', 'folder_name' => 'testpluginact',
             'description' => 'Proof of concept plugin',
-            'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
+            'author' => 'Gina Trapani', 'homepage' => 'http://thinkup.com',
             'version' => '0.01', 'is_active' => 1
         );
         $builder2 = FixtureBuilder::build(self::TEST_TABLE,  $plugin2);

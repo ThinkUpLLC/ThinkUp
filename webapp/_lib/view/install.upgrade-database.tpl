@@ -18,7 +18,7 @@
            <p>
             <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
             Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table  has <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
-            Since upgrading a large database can time out in the browser, we recommend that you use the <a href="http://thinkupapp.com/docs/install/upgrade.html">
+            Since upgrading a large database can time out in the browser, we recommend that you use the <a href="http://thinkup.com/docs/install/upgrade.html">
             <b>command line upgrade tool</b></a> when upgrading ThinkUp.
             </p>
         </div>
@@ -31,7 +31,7 @@
      <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-           Sweet! Your database is up to date. {if $thinkup_db_version}Here's <a href="http://thinkupapp.com/docs/changelog/{$thinkup_db_version}.html" target="_new">what's new in version <b>{$thinkup_db_version}</b></a>.{/if}
+           Sweet! Your database is up to date. {if $thinkup_db_version}Here's <a href="http://thinkup.com/docs/changelog/{$thinkup_db_version}.html" target="_new">what's new in version <b>{$thinkup_db_version}</b></a>.{/if}
         </p>
      </div> 
      <br>
@@ -45,7 +45,7 @@
         <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
         Your ThinkUp installation needs {$migrations|@count} database update{if $migrations|@count gt 1}s{/if}. {if $user_is_admin}Before you proceed, 
-        <a href="{$site_root_path}install/backup.php">back up your current ThinkUp database</a>.{else}<br />If you haven't already, <a href="http://thinkupapp.com/docs/install/backup.html">back up your current installation's data first</a>.{/if}
+        <a href="{$site_root_path}install/backup.php">back up your current ThinkUp database</a>.{else}<br />If you haven't already, <a href="http://thinkup.com/docs/install/backup.html">back up your current installation's data first</a>.{/if}
         </p>
         </div>
         <script type="text/javascript">
