@@ -59,6 +59,10 @@ p {
     padding-left : 0px;
 }
 
+input#search-keywords {
+    background-color : transparent;
+}
+
 .searchterm {
     font-weight: bold;
 }
@@ -446,6 +450,7 @@ body {
     padding-left: 0px;
     padding-right: 0px;
 }
+
 .alert, .alert.insight-item, .white-card, .row {
   margin-bottom: 6px;
 }
@@ -461,6 +466,14 @@ body {
 }
 .detail-btn .btn .btn-info {
     width : 30px;
+}
+
+.brand {
+    width: 100px;
+}
+
+#search-keywords {
+    width: 140px;
 }
  
 .label .icon-white,
