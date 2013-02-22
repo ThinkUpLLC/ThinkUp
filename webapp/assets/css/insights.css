@@ -45,7 +45,24 @@ p {
   padding: 10px 15px 10px;
   text-decoration: none;
 }
-    
+
+#search-refine .nav > li > a {
+    background-color : #eee;
+}
+#search-refine .nav > li > a:hover {
+    background-color : white;
+}
+
+#search-refine .lead {
+    margin-top : 0px;
+    margin-right : 0px;
+    padding-left : 0px;
+}
+
+.searchterm {
+    font-weight: bold;
+}
+
 form .control-group {
     margin : 6px;
 }

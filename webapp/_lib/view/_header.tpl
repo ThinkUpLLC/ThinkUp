@@ -70,6 +70,30 @@
             })
 
 
+    {/literal}
+        {if $logged_in_user}
+    {literal}
+
+        $("div#search-refine").hide();
+
+        $('#search-keywords').focus(function() {
+            $('#search-refine').slideDown('medium');
+            $('#search-refine').css('display','block');
+            if ($('#search-keywords').val()) {
+                $('#search-refine a span.searchterm').text('"' + $('#search-keywords').val() + '"');
+            }
+        }).blur(function() {
+            $('#search-refine').slideUp('medium');
+        });
+
+        $('#search-keywords').keyup(function() {
+            $('#search-refine a span.searchterm').text('"' + $('#search-keywords').val() + '"');
+        });
+
+    {/literal}
+        {/if}
+    {literal}
+
         });
       </script>
     {/literal}

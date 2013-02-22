@@ -4,7 +4,7 @@
       <div class="navbar-inner">
         <div class="container">
 
-          <a href="{$site_root_path}" class="brand"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
+          <a href="{$site_root_path}" class="brand span3"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
 
           <div class="nav-collapse">
@@ -13,23 +13,14 @@
 
 <!--search posts-->
 
+          <form class="navbar-search" action="#">
+              <input type="text" id="search-keywords" class="search-query span4" placeholder="Search" />
+
+          </form>
+
+
 <ul class="nav pull-right" style="border-left : none;">
 
-        <form class="navbar-search" action="#">
-            <input type="text" id="search-keywords" class="search-query" placeholder="Search" />
-            
-        </form>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border-left : none;"><i class="icon-search"></i></a>
-        <ul class="dropdown-menu">
-        {foreach from=$instances key=tid item=i}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
-            {if $i->network eq 'twitter'}
-            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted"></i> {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s followers</a></li>
-            {/if}
-        {/foreach}
-        </ul>
-     </li>
   {literal}
     <script type="text/javascript">
       function searchMe(_baseu) {
