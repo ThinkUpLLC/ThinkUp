@@ -1,6 +1,6 @@
 
   <span class="pull-right">{insert name="help_link" id='application_settings'}</span>
-  <h1>Application Settings</h1>
+  <h3><i class="icon icon-cogs icon-muted"></i> Application Settings</h3>
   {include file="_usermessage.tpl"}
 
  <div class="alert alert-error" id="settings_error_message_error" style="display: none;">
@@ -17,17 +17,19 @@
 <form id="app-settings-form" name="app_settings" method="post" action="{$site_root_path}session/app_settings.php"
   onsubmit="return false">
 
+<legend>Test Stuff Out</legend>
 
-      <label for="default_instance">
-        Default service user
+      <label class="checkbox">
+        <input type="checkbox" name="is_subscribed_to_beta" id="is_subscribed_to_beta" value="true"> Enable beta upgrades
       </label>
-      <select name="default_instance" id="default_instance">
-        <option value="0">Last updated</option>
-        {foreach from=$public_instances item=pi}
-          <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
-        {/foreach}
-      </select>
-      <span class="help-block">Set the service user to display by default. {insert name="help_link" id="default_service_user"}</span>
+      <span class="help-block">Test bleeding edge, beta upgrades. May require command line server access. Proceed at your own risk.</span>
+
+      <label class="checkbox">
+        <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true"> Enable developer log
+      </label>
+      <span class="help-block">See the verbose, unformatted developer log on the Capture Data screen.</span>
+
+<legend>Let People In</legend>
 
       <label class="checkbox">
         <input type="checkbox" name="is_registration_open" id="is_registration_open" value="true"> Open registration to new ThinkUp users
@@ -35,14 +37,22 @@
       <span class="help-block">Set whether or not your site's registration page is available and accepts new user registrations.</span>
 
       <label class="checkbox">
-        <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true"> Enable developer log
-      </label>
-      <span class="help-block">See the verbose, unformatted developer log on the Capture Data screen.</span>
-
-      <label class="checkbox">
         <input type="checkbox" name="recaptcha_enable" id="recaptcha_enable" value="true"> Enable reCAPTCHA
       </label>
       <span class="help-block">Add reCAPTCHA to ThinkUp's registration form. <a href="https://www.google.com/recaptcha">Get your reCAPTCHA keys here</a>.</span>
+
+      <label for="default_instance">
+        Default service user:
+
+      <select name="default_instance" id="default_instance">
+        <option value="0">Last updated</option>
+        {foreach from=$public_instances item=pi}
+          <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
+        {/foreach}
+      </select>
+      </label>
+      
+      <span class="help-block">Set the service user to display by default. {insert name="help_link" id="default_service_user"}</span>
 
       <div id="recaptcha_enable_deps" style="display: none; width: 470px; margin: 0 0 20px 0;">
         <label for="recaptcha_public_key">reCAPTCHA Public Key</label>
@@ -51,10 +61,7 @@
         <input type="text" name="recaptcha_private_key" id="recaptcha_private_key" value="">
       </div>
 
-      <label class="checkbox">
-        <input type="checkbox" name="is_subscribed_to_beta" id="is_subscribed_to_beta" value="true"> Enable beta upgrades
-      </label>
-      <span class="help-block">Test bleeding edge, beta upgrades. May require command line server access. Proceed at your own risk.</span>
+<legend>Don't Share Data</legend>
 
       <label class="checkbox">
         <input type="checkbox" name="is_api_disabled" id="is_api_disabled" value="true"> Disable the JSON API

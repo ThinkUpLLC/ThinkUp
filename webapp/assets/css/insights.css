@@ -54,7 +54,7 @@ p {
     color : #00aeef;
 }
 
-#search-refine .nav > li > a:hover i {
+#search-refine li > a:hover i {
     color : white;
 }
 
@@ -409,15 +409,53 @@ span.formError {
   margin: 20px;
 }
 
+.help-block {
+    padding-left : 20px;
+    padding-bottom : 8px;
+}
+
 /* Plugin Settings */
 
 .plugin-info {
-  border-bottom: 1px solid #CACACA;
   margin-bottom: 20px;
+}
+
+#plugins.section th {
+    text-align: center;
+    border-top : none;
+}
+
+#plugins.section td.action-button {
+    text-align: center;
+    padding-top : 18px;
 }
 
 .add-account {
   margin-bottom: 20px;
+}
+
+input#plugin_options_flickr_api_key, input#plugin_options_bitly_api_key {
+    width : 300px;
+}
+
+input#plugin_options_facebook_api_secret {
+    width : 250px;
+}
+
+input#plugin_options_foursquare_client_id, input#plugin_options_foursquare_client_secret {
+    width : 450px;
+}
+
+input#plugin_options_gmaps_api_key {
+    width : 325px;
+}
+
+input#plugin_options_google_plus_client_id {
+    width : 300px;
+}
+
+input#plugin_options_oauth_consumer_secret {
+    width : 350px;
 }
 
 /* Sticky Footer */
