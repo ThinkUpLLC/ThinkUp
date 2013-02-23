@@ -142,7 +142,7 @@ interface InstanceDAO {
      * @param bool $only_active Only return active instances
      * @return array Instance objects
      */
-    public function getByOwner($owner, $force_not_admin = false, $only_active=false);
+    public function getByOwner(Owner $owner, $force_not_admin = false, $only_active=false);
 
     /**
      * Get public instances
