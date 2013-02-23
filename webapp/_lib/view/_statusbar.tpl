@@ -9,7 +9,7 @@
 
             <a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
 
-            {if $logged_in_user}
+            {if $logged_in_user && !$smarty.get.m && !$smarty.get.p }
 
                 <!--search posts-->
 
@@ -18,9 +18,10 @@
 
                     <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     {foreach from=$instances key=tid item=i}
-                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted icon-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted icon-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}Foursquare check-ins{else}{$i->network|ucwords} posts{/if}</a></li>
                         {if $i->network eq 'twitter'}
-                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
+                            <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
+                            <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=name:');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers for people named <span class="searchterm"></span></a></li>
                         {/if}
                     {/foreach}
                     </ul>
