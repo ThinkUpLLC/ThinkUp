@@ -1,7 +1,5 @@
 {if $hide_insight_header}
 
-                    
-
 {else}
     {if $i->slug|substr:24 eq 'replies_frequent_words_'}
         <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-mini detail-btn" ><i class="icon-comment icon-white"></i></a></div>
@@ -81,20 +79,17 @@
             {if $post->network == 'twitter'}
                 <p class="twitter-bio-info">
                 <a href="http://twitter.com/{$post->author_user_id}/statuses/{$post->post_id}">{$post->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}</a>
-                
+
                 &nbsp;&nbsp;
                 <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
                 <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
                 <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="icon icon-star-empty" title="favorite"></i></a>
                 </p>
             {else}
-
-            <span class="metaroll">
-                <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime}</a>
-            </span>
-
+                <span class="metaroll">
+                    <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
+                </span>
             {/if}
-
         </div> <!-- end body of post div -->
 
     </td>
