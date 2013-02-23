@@ -13,8 +13,17 @@
 
                 <!--search posts-->
 
-                <form class="navbar-search pull-left" action="#">
-                    <input type="text" id="search-keywords" class="search-query span4" placeholder="Search" />
+                <form class="navbar-search pull-left dropdown" action="#">
+                    <input type="text" id="search-keywords" class="search-query span4 dropdown-toggle" data-toggle="dropdown" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
+
+                    <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    {foreach from=$instances key=tid item=i}
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted icon-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
+                        {if $i->network eq 'twitter'}
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
+                        {/if}
+                    {/foreach}
+                    </ul>
 
                 </form>
 
@@ -26,17 +35,6 @@
       {if $logged_in_user}
 
 <ul class="nav pull-right" style="border-left : none;">
-
-  {literal}
-    <script type="text/javascript">
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + _mu;
-        }
-      }
-    </script>
-  {/literal}
 
     {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
     <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
@@ -68,6 +66,7 @@
 
 {else}
 
+ 
 {literal}
   <script type="text/javascript">
     $(document).ready(function() {
