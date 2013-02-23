@@ -1,0 +1,20 @@
+2.0-beta.3 - 23 Feb 2013
+========================
+
+* Search! Search your tweets, posts, checkins or Twitter follower bios and/or names from status bar
+* Upgrade Twitter plugin to Twitter API version 1.1
+* Redesign insights stream to be even cleaner, simpler, and comply with Twitter display requirements
+* Upgrade jQuery and integrate FontAwesome icons throughout the app
+
+
+Bugfixes:
+
+* Fix 'Error starting crawler; another crawl is already in progress' bug
+* Fix verbose developer log setting on Update Data page
+* Fix missing insight charts in Firefox
+* Fix unstyled buttons and headers
+* Restore missing Foursquare avatar
+* Correct insight grammar (singular/plural in Post Style insight)
+* Fix mislaid-out Expand URLs settings area
+* Display reshared post text in big reshare insight
+* Include username in Archived posts insight

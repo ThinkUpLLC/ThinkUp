@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '2.0-beta.2';
-$TOTAL_MIGRATION_COUNT = 243;
+$LATEST_VERSION = '2.0-beta.3';
+$TOTAL_MIGRATION_COUNT = 248;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -965,8 +965,36 @@ $MIGRATIONS = array(
 
      /* 2.0-beta.2 */
     '2.0-beta.2' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://thinkup.com/downloads/beta/thinkup-2.0-beta.2.zip',
         'migrations' => 0,
      ),
 
+     /* 2.0-beta.3 */
+    '2.0-beta.3' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 3,
+        'setup_sql' => array("INSERT INTO tu_options (option_id, option_name, option_value) " .
+                            "VALUES (2345, 'favs_older_pages', 'test_plugin_value');".
+                            "INSERT INTO tu_options (option_id, option_name, option_value) " .
+                            "VALUES (2346, 'favs_cleanup_pages', 'test_plugin_value');"
+                            ),
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => "DESCRIBE tu_instances_twitter last_unfav_page_checked", // field dropped
+                    'no_match' => true,
+                ),
+                array(
+                    'query' => "DESCRIBE tu_instances_twitter last_page_fetched_favorites", // field dropped
+                    'no_match' => true,
+                ),
+                array(
+                    // Options no longer exist
+                    'query' => "SELECT * FROM tu_options WHERE option_name='favs_older_pages' OR ".
+                    "option_name='favs_cleanup_pages';",
+                    'no_match' => true,
+                ),
+             )
+        )
+     ),
 );
