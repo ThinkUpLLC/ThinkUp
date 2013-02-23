@@ -140,8 +140,11 @@ class InsightStreamController extends ThinkUpController {
             if ($this->isLoggedIn()) {
                 //if owner has no instances, show welcome message
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
-                $owned_instances = $instance_dao->getByOwner($this->getLoggedInUser(), $force_not_admin = false,
-                $only_active=true);
+                if (!isset($owner)) {
+                    $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                    $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                }
+                $owned_instances = $instance_dao->getByOwner($owner, $force_not_admin = false, $only_active=true);
                 $site_root_path = Config::getInstance()->getValue('site_root_path');
                 if (sizeof($owned_instances) > 0) {
                     $this->addToView('message_header', "ThinkUp doesn't have any insights for you yet.");
