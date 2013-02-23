@@ -45,11 +45,46 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testArchivedPostsInsight() {
+    public function testArchivedPostsInsightTwitter() {
         // Get data ready that insight requires
         $posts = array();
         $instance = new Instance();
         $instance->id = 10;
+        $instance->network = 'twitter';
+        $instance->network_username = 'marypoppins';
+        $instance->total_posts_in_system = 1500;
+        $insight_plugin = new ArchivedPostsInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/1,500 tweets/', $result->text);
+
+        // Increase number of posts in system for this instance
+        $instance->total_posts_in_system = 167676;
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/167,600 tweets/', $result->text);
+    }
+
+    public function testArchivedPostsInsightFacebook() {
+        // Get data ready that insight requires
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network = 'facebook';
+        $instance->network_username = 'Mary Poppins';
         $instance->total_posts_in_system = 1500;
         $insight_plugin = new ArchivedPostsInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -74,5 +109,71 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/ThinkUp has captured over/', $result->text);
         $this->assertPattern('/167,600 posts/', $result->text);
+    }
+
+    public function testArchivedPostsInsightGooglePlus() {
+        // Get data ready that insight requires
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network = 'google+';
+        $instance->network_username = 'Mary Poppins';
+        $instance->total_posts_in_system = 1500;
+        $insight_plugin = new ArchivedPostsInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/1,500 posts/', $result->text);
+
+        // Increase number of posts in system for this instance
+        $instance->total_posts_in_system = 167676;
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/167,600 posts/', $result->text);
+    }
+
+    public function testArchivedPostsInsightFoursquare() {
+        // Get data ready that insight requires
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network = 'foursquare';
+        $instance->network_username = 'mary@poppins.com';
+        $instance->total_posts_in_system = 1500;
+        $insight_plugin = new ArchivedPostsInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/1,500 checkins/', $result->text);
+
+        // Increase number of posts in system for this instance
+        $instance->total_posts_in_system = 167676;
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('archived_posts', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/167,600 checkins/', $result->text);
     }
 }

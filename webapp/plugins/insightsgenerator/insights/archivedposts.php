@@ -57,8 +57,8 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
                         $posts_term = "posts";
                 }
 
-                $text = "ThinkUp has captured over <strong>".
-                (number_format($archived_posts_in_hundreds * 100)).' '. $posts_term . '</strong>.';
+                $text = "ThinkUp has captured over <strong>". (number_format($archived_posts_in_hundreds * 100)).
+                ' '.$posts_term . '</strong> by '.$this->username.'.';
                 $this->insight_dao->insertInsight("archived_posts", $instance->id, $this->insight_date, "Archived:",
                 $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
             }
