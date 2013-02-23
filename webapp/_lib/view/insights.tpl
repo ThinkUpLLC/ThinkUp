@@ -50,7 +50,7 @@
     <div class="span9">
         {if $i->filename neq ''}
             {assign var='tpl_filename' value=$i->filename|cat:'.tpl'}
-            <!-- including {$tpl_path}{$tpl_filename} -->
+            <!-- including {$tpl_filename} -->
             {include file=$tpl_path|cat:$tpl_filename}
         {/if}
     </div><!--/span9-->

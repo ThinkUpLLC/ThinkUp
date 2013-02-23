@@ -17,15 +17,15 @@
 <div class="collapse in" id="chart-{$i->id}">
 {/if}
 
-    <div id="click_totals_{$i->id}"></div>
+    <div id="click_totals_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
         // Set a callback to run when the Google Visualization API is loaded.
-        google.setOnLoadCallback(drawResponseRatesChart{$i->id} );
+        google.setOnLoadCallback(drawChart{$i->id} );
 
         {literal}
-        function drawResponseRatesChart{/literal}{$i->id}{literal}() {
+        function drawChart{/literal}{$i->id}{literal}() {
         {/literal}
             var click_totals_data_{$i->id} = new google.visualization.DataTable({$i->related_data[1]});
 
