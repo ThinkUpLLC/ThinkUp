@@ -46,11 +46,16 @@ p {
   text-decoration: none;
 }
 
-#search-refine .nav > li > a {
-    background-color : #eee;
-}
-#search-refine .nav > li > a:hover {
+#search-refine li > a:hover {
     background-color : white;
+}
+
+#search-refine li > a i {
+    color : #00aeef;
+}
+
+#search-refine .nav > li > a:hover i {
+    color : white;
 }
 
 #search-refine .lead {

@@ -3,29 +3,7 @@
 
     <div id="main" class="container">
 
-    {if $logged_in_user}
-
-
-        <div class="row" id="search-refine">
-            <div class="span3">&nbsp;</div>
-            <div class="span9">
-
-                    <ul class="nav nav-tabs nav-stacked">
-                    {foreach from=$instances key=tid item=i}
-                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=posts&q=');" href="#"><i class="icon-{$i->network}{if $i->network eq 'google+'} icon-google-plus{/if} icon-muted icon-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}checkins{else}{$i->network|ucwords} posts{/if}</a></li>
-                        {if $i->network eq 'twitter'}
-                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}&c=followers&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
-                        {/if}
-                    {/foreach}
-                    </ul>
-
-            </div>
-        </div>
-
-    {/if}
-
 {include file="_usermessage.tpl"}
-
 
 {if $message_header}
 
