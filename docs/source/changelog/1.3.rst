@@ -1,0 +1,4 @@
+1.3 - 24 Feb 2013
+=================
+
+*   Upgrade Twitter plugin to Twitter API 1.1
