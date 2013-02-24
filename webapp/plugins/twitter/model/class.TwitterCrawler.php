@@ -1073,10 +1073,6 @@ class TwitterCrawler {
         $this->logger->logUserInfo("Checking for new favorites.", __METHOD__.','.__LINE__);
 
         $last_fav_id = $this->instance->last_favorite_id;
-        if ($last_fav_id == "") {
-            $last_fav_id = 0;
-        }
-
         $this->logger->logInfo("Owner favs: " . $this->user->favorites_count . ", instance owner favs in system: ".
         $this->instance->owner_favs_in_system, __METHOD__.','.__LINE__);
 
@@ -1130,7 +1126,9 @@ class TwitterCrawler {
         $args["screen_name"] = $this->user->username;
         $args["include_entities"] = "false";
         $args["count"] = 100;
-        $args["since_id"] = $since_id;
+        if ($since_id != "") {
+            $args["since_id"] = $since_id;
+        }
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
         } catch (APICallLimitExceededException $e) {
