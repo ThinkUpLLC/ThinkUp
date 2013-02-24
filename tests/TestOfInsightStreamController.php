@@ -282,7 +282,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         //do show public insight
-        $this->assertPattern('/Retweet spike! Jack\'s post privately got retweeted 110 times/', $results);
+        $this->assertPattern('/Retweet spike! Jack\'s post publicly got retweeted 110 times/', $results);
         //don't show no access message
         $this->assertNoPattern('/You don&#39;t have rights to view this service user/', $results);
         $this->debug($results);
