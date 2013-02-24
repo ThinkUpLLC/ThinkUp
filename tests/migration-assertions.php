@@ -932,7 +932,14 @@ $MIGRATIONS = array(
 
      /* 1.2.1 */
     '1.2.1' => array(
+        'zip_url' => 'https://thinkup.com/downloads/thinkup-1.2.1.zip',
+        'migrations' => 0,
+     ),
+
+     /* 1.3 */
+    '1.3' => array(
         'zip_url' => 'file://./build/thinkup.zip',
         'migrations' => 0,
      ),
+
 );
