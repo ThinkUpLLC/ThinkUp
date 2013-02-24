@@ -2,3 +2,8 @@
 =================
 
 *   Upgrade Twitter plugin to Twitter API 1.1
+*   Don't link user's email address in the status bar
+*   During upgrade, include cURL error number in error message and fix misleading URL linkification
+*   Improve installation SSL detection
+*   Fix scale on Twitter Post types Dashboard chart
+*   Check for writable session path during installation
