@@ -108,6 +108,9 @@ class PluginRegistrarCrawler extends PluginRegistrar {
         if ($lock_successful) {
             $this->emitObjectFunction('crawl');
             $mutex_dao->releaseMutex($mutex_name);
+            //clear cache so that insight stream updates
+            $v_mgr = new ViewManager();
+            $v_mgr->clear_all_cache();
         } else {
             throw new CrawlerLockedException("Error starting crawler; another crawl is already in progress.");
         }
