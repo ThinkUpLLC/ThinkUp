@@ -230,6 +230,9 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
     }
 
     public function getByOwner(Owner $owner, $force_not_admin = false, $only_active=false) {
+        if ($owner == null) {
+            return null;
+        }
         $admin_status = (!$force_not_admin && $owner->is_admin ? true : false);
         $vars = array(
             ':owner_id'=>$owner->id
