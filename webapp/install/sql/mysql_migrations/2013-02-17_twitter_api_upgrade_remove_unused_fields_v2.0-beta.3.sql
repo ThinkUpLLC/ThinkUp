@@ -1,6 +1,6 @@
 -- Instead of altering the table, create a new one, transfer rows, and drop old one
---ALTER TABLE tu_instances_twitter DROP last_unfav_page_checked;
---ALTER TABLE tu_instances_twitter DROP last_page_fetched_favorites;
+-- ALTER TABLE tu_instances_twitter DROP last_unfav_page_checked;
+-- ALTER TABLE tu_instances_twitter DROP last_page_fetched_favorites;
 
 CREATE TABLE tu_instances_twitter_20b3 (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
