@@ -1,0 +1,4 @@
+2.0-beta.4 - 25 Feb 2013
+========================
+
+Fixed bug which rendered insights stream blank when user was logged out
