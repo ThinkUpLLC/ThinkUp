@@ -105,7 +105,6 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     if (isset($twitter_crawler->user)) {
                         $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
                     }
-                    Reporter::reportVersion($instance);
                     $logger->logUserSuccess("Finished collecting data for ".$instance->network_username.
                     " on Twitter.", __METHOD__.','.__LINE__);
                 }
