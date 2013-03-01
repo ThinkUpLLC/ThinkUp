@@ -558,7 +558,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
         //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
         $this->restoreConfigFile();
-        ini_set("error_reporting", E_STRICT);
+        ini_set("error_reporting", E_ALL || E_STRICT);
     }
 
     public function testFreshInstallStep3SuccessfulInstall() {

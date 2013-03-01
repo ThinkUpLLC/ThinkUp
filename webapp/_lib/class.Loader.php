@@ -173,7 +173,6 @@ class Loader {
      * The second instantiation of the same class wouldn't call this method.
      *
      * @param string $class
-     * @param bool
      */
     public static function load($class) {
         // check if class is already in scope

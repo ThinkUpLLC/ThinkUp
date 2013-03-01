@@ -83,7 +83,7 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESS
     $THINKUP_CFG['cache_pages']               = false;
     $THINKUP_CFG['debug']                     = true;
     $THINKUP_CFG['timezone']                  = 'UTC';
-    ini_set('error_reporting', E_STRICT);
+    ini_set('error_reporting', E_ALL || E_STRICT);
 }
 
 //Test RAM disk database override: Set this to run tests against the RAM disk tests database

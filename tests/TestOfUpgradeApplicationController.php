@@ -193,7 +193,7 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
         }
         // reset
         AppUpgraderClient::$UPDATE_URL = $valid_url;
-        error_reporting( E_STRICT ); // reset error reporting
+        error_reporting( E_ALL || E_STRICT ); // reset error reporting
     }
 
     public function testGetLatestUpdateFile() {
@@ -225,7 +225,7 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
 
         // reset
         AppUpgraderClient::$UPDATE_URL = $valid_url;
-        error_reporting( E_STRICT ); // reset error reporting
+        error_reporting( E_ALL || E_STRICT ); // reset error reporting
     }
 
     public function testUpdate() {
@@ -258,7 +258,7 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
 
         // reset
         AppUpgraderClient::$UPDATE_URL = $valid_url;
-        error_reporting( E_STRICT ); // reset error reporting
+        error_reporting( E_ALL || E_STRICT ); // reset error reporting
         $config->setValue('THINKUP_VERSION', $proper_version);
     }
 }
