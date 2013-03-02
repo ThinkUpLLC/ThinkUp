@@ -10,6 +10,7 @@ Check out what's new, fixed, and updated in each version release of ThinkUp.
    2.0-beta.3
    2.0-beta.2
    2.0-beta.1
+   1.3.1
    1.3
    1.2.1
    1.2
