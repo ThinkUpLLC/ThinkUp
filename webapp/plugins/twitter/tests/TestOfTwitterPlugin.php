@@ -32,13 +32,18 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterCrawler.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterInstance.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIEndpoint.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.TwitterRealtimePlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterOAuthThinkUp.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.CrawlerTwitterAPIAccessorOAuth.php';
 
 class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $logger;
-    var $webapp_plugin_registrar;
-    var $crawler_plugin_registrar;
 
     public function setUp() {
         parent::setUp();
@@ -212,8 +217,6 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     public function testDeactivate() {
         $this->debug(__METHOD__);
         //all facebook and facebook page accounts should be set to inactive on plugin deactivation
-        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
-        $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
@@ -233,5 +236,37 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
         $this->assertEqual(sizeof($active_instances), 0);
+    }
+
+    public function testCrawlCompletion() {
+        $this->debug(__METHOD__);
+        $builders = array();
+
+        //Add instances
+        $instance_builder_1 = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'julie',
+        'network'=>'twitter', 'crawler_last_run'=>'-5d', 'is_activated'=>'1', 'is_public'=>'1'));
+        $instance_builder_2 = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'john',
+        'network'=>'twitter', 'crawler_last_run'=>'-5d', 'is_activated'=>'1', 'is_public'=>'1'));
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>1));
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>2));
+        //Add owner
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1, 'is_admin'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
+        'auth_error'=>''));
+
+        $this->simulateLogin('me@example.com', true, true);
+
+        $test = new TwitterInstanceMySQLDAO();
+        $twitter_plugin = new TwitterPlugin();
+        $twitter_plugin->crawl();
+
+        $instance_dao = new InstanceMySQLDAO();
+        $updated_instance = $instance_dao->get(1);
+        $this->debug(Utils::varDumpToString($updated_instance));
+        // crawler_last_run should have been updated
+        $this->assertNotEqual($instance_builder_1->columns['crawler_last_run'],$updated_instance->crawler_last_run );
     }
 }
