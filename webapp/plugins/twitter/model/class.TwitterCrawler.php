@@ -88,7 +88,7 @@ class TwitterCrawler {
                     $this->user->follower_count);
                 }
                 $this->logger->logUserSuccess("Successfully fetched ".$this->user->username.
-                "'s details from Twitter. Twitter's tweet count is ". $this->user->post_count,
+                "'s details from Twitter. Twitter's tweet count is ". number_format($this->user->post_count) .".",
                 __METHOD__.','.__LINE__);
             } else {
                 $this->logger->logUserError("Twitter didn't return information for " .$this->user->username,
@@ -215,15 +215,17 @@ class TwitterCrawler {
                         if ($tweet['post_id'] > $this->instance->last_post_id)
                         $this->instance->last_post_id = $tweet['post_id'];
                     }
-                    $status_message .= ' ' . count($tweets)." tweet(s) found and $count saved";
-                    $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
-                    $status_message = "";
+                    if (count($tweets) > 0 || $count > 0) {
+                        $status_message .= ' ' . count($tweets)." tweet(s) found and $count saved";
+                        $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+                        $status_message = "";
+                    }
 
                     //if you've got more than the Twitter API archive limit, stop looking for more tweets
                     if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
                         $this->instance->last_page_fetched_tweets = 1;
                         $continue_fetching = false;
-                        $overage_info = "Twitter only makes ".$this->api->archive_limit.
+                        $overage_info = "Twitter only makes ".number_format($this->api->archive_limit).
                         " tweets available, so some of the oldest ones may be missing.";
                     } else {
                         $overage_info = "";
@@ -231,16 +233,16 @@ class TwitterCrawler {
                     if ($this->user->post_count == $this->instance->total_posts_in_system) {
                         $this->instance->is_archive_loaded_tweets = true;
                     }
-                    $status_message .= $this->instance->total_posts_in_system." tweets are in ThinkUp; ".
-                    $this->user->username ." has ". $this->user->post_count." tweets according to Twitter.";
-                    $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
-                    if ($overage_info != '') {
-                        $this->logger->logUserError($overage_info, __METHOD__.','.__LINE__);
-                    }
                     $got_latest_page_of_tweets = true;
                 } else {
                     $continue_fetching = false;
                 }
+            }
+            $status_message .= number_format($this->instance->total_posts_in_system)." tweets are in ThinkUp; ".
+            $this->user->username ." has ". number_format($this->user->post_count)." tweets according to Twitter.";
+            $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
+            if ($overage_info != '') {
+                $this->logger->logUserError($overage_info, __METHOD__.','.__LINE__);
             }
 
             if ($this->instance->total_posts_in_system >= $this->user->post_count) {
@@ -546,8 +548,9 @@ class TwitterCrawler {
 
                 //find out how many new follows owner has compared to what's in db
                 $new_follower_count = $this->user->follower_count - $this->instance->total_follows_in_system;
-                $status_message = "New follower count is ".$this->user->follower_count." and ThinkUp has ".
-                $this->instance->total_follows_in_system."; ".$new_follower_count." new follows to load";
+                $status_message = "New follower count is ".number_format($this->user->follower_count).
+                " and ThinkUp has ". number_format($this->instance->total_follows_in_system).
+                "; ".number_format($new_follower_count)." follows to update.";
                 $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
 
                 if ($new_follower_count > 0) {
