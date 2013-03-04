@@ -8,7 +8,9 @@
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
-          <li><a href="#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a></li>
+          <li><a href="#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a>
+
+          </li>
           {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
           <li><a href="#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
           {if $user_is_admin}<li><a href="#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
@@ -27,25 +29,27 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Name</th>
-                          {if $user_is_admin}<th>Setup</th>{/if}
+                          <th>&nbsp;</th>
+                          <th><i class="icon icon-list-alt icon-2x icon-muted pull-left"></i></th>
+                          {if $user_is_admin}<th class="action-button"><i class="icon-cog icon-2x icon-muted"></i></th>{/if}
                         </tr>
                       </thead>
                   {/if}
                   {if $user_is_admin || $ip->is_active}
                         <tr>
-                          <td>
-                            <div style="float:left";"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="float-l" style="margin-right:10px"></span>
-                            </div>
-                            {if $ip->is_active}{if !$ip->isConfigured()} <span class="icon-warning-sign"></span>{/if}{/if} <a href="?p={$ip->folder_name|get_plugin_path}"><span {if !$ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnamelink{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span></a>
-                            <span {if $ip->is_active}style="display:none;padding:5px; color : #00BDF2;"{/if} id="spanpluginnametext{$ip->id}" style=" font-size : 1.4em;">{$ip->name}</span><br />
-                            
-                            <span style="color:#666">{$ip->description}</span><br>
-                          </td>
+                            <td>
+                                <img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="pull-right">
+                            </td>
+                            <td>
+                                <p class="lead" style="padding-left: 0px; margin : 0px;">
+                                <a href="?p={$ip->folder_name|get_plugin_path}"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+                                </p>
+                                <span class="muted">{$ip->description}</span>
+                            </td>
                     {if $user_is_admin}
-                      <td>
-                      <span id="spanpluginactivation{$ip->id}">
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn"><i class="icon-cog "></i> Configure</a>
+                      <td class="action-button">
+                      <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="icon-cog "></i> Configure{else}<i class="icon-warning-sign"></i> Set Up{/if}</a>
                       </span>
                       <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                       </td>
@@ -55,7 +59,7 @@
                 {/foreach}
                     </table>
               {else}
-                <a href="?m=manage" class="btn btn-mini">&laquo; Back to plugins</a>
+                <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
               {/if}
             {if $body}
               {$body}
@@ -64,9 +68,23 @@
 
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
-          <div style="text-align: center" id="app_setting_loading_div">
-            Loading application settings...<br /><br />
-            <img src="{$site_root_path}assets/img/loading.gif" width="50" height="50" />
+
+                
+          <span class="pull-right">{insert name="help_link" id='backup'}</span>
+          <h3><i class="icon-download icon-muted"></i> Back Up and Export Data</h3>
+          <p style="padding-left : 20px;">
+            <a href="{$site_root_path}install/backup.php" class="btn"><i class="icon icon-download-alt"></i> Back up ThinkUp's entire database</a>
+            Recommended before upgrading ThinkUp.
+          </p>
+
+          <p style="padding-left : 20px; padding-bottom : 30px;">
+            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="icon icon-user"></i> Export a single user account's data</a>
+                For transfer into another existing ThinkUp database.
+          </p>
+
+
+          <div class="alert" id="app_setting_loading_div">
+            <i class="icon-spinner icon-spin icon-2x"></i> Loading application settings...<br /><br />
           </div>
           <div id="app_settings_div" style="display: none;">
             {include file="account.appconfig.tpl"}
@@ -74,25 +92,13 @@
           <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
           <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
                 
-          <span class="pull-right">{insert name="help_link" id='backup'}</span>
-          <h1>Back Up and Export Data</h1>
-          <p>
-            <a href="{$site_root_path}install/backup.php" class="btn"><i class="icon icon-download-alt"></i> Back up ThinkUp's entire database</a>
-            Recommended before upgrading ThinkUp.
-          </p>
-
-          <p>
-            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="icon icon-signout"></i> Export a single service user's data</a>
-                For transfer into another existing ThinkUp database.
-          </p>
-                
         </div> <!-- end #app_setting -->
         {/if}
 
         <div class="section" id="instances">
           {include file="_usermessage.tpl" field='password'}
           <span class="pull-right">{insert name="help_link" id='account'}</span>
-          <h1>Password</h1>
+          <h3><i class="icon-key icon-muted"></i> Password</h3>
           <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
             <div class="control-group input-prepend">
               <label for="oldpass" class="control-label">Current password</label>
@@ -129,14 +135,14 @@
           </form>
     <br><br>
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
-    <h1>Automate ThinkUp Data Capture</h1><br />
+    <h3><i class="icon-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
     
-    <h3>RSS</h3>
+    <legend>RSS</legend>
     <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
     
     <p><a href="{$rss_crawl_url}" class="btn"><i class="icon icon-rss"></i> Secret ThinkUp Update Feed</a></p>
     
-    <h3>Cron</h3>
+    <legend>Scheduling</legend>
     <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
     <p>
       <code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code>
@@ -169,7 +175,7 @@
     </p>
     
 
-              <h1>Your API Key</h1>
+        <legend>Your API Key</legend>
               {include file="_usermessage.tpl" field='api_key'}
               <strong>Your Current ThinkUp API Key:</strong>
               <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
@@ -186,7 +192,7 @@
                 Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
                 </span>
                 <input type="button" value="Reset Your API Key" 
-                class="btn"
+                class="btn btn-warning"
                 {literal}
                 onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
                 {/literal}
@@ -199,7 +205,7 @@
 
      <div class="thinkup-canvas clearfix">
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-        <h1>Invite New User</h1>
+        <h3><i class="icon-user icon-muted"></i> Invite New User</h3>
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
@@ -207,7 +213,7 @@
           </form>
         </div>
 
-      <h1>Registered Users</h1>
+      <h3><i class="icon-group icon-muted"></i> Registered Users</h3>
 
     <table class="table">
 {foreach from=$owners key=oid item=o name=oloop}
