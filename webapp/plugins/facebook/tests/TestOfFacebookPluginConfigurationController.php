@@ -205,7 +205,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $this->debug($output);
 
-        $expected_pattern = '/add the Site URL:<br>
+        $expected_pattern = '/copy and paste this:<br>
     <small>
       <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
         $this->assertPattern($expected_pattern, $output);

@@ -6,7 +6,7 @@
 <p><a href="javascript: history.go(-1)" class="linkbutton">&larr;Back</a></p>
 
 {insert name="help_link" id='export_user_data'}
-<h1>Export Service User Data</h1>
+<h1>Export a single user account's data</h1>
 
         {include file="_usermessage.tpl"}
 
@@ -15,9 +15,7 @@
 <div class="alert urgent" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
     <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-        It looks like your server setup does not support a library 
-        ( <a href="http://www.php.net/manual/en/book.zip.php">Zip</a> ) that is required to complete an export 
-        through this interface.
+        It looks like your server setup doesn't support the <code><a href="http://www.php.net/manual/en/book.zip.php">Zip</a></code> library that you'll need to create an export.
     </p>
 </div>
 {elseif $mysql_file_perms}

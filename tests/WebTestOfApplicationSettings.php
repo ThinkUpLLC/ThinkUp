@@ -71,7 +71,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
 
         //Assert registration is open
         $this->get($this->url.'/session/register.php');
-        $this->assertText('Register Name:');
+        $this->assertText('Name:');
         $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
     }
 
@@ -118,17 +118,14 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->assertText('me@example.com');
 
         //Test export link
-        $this->click("Export a single service user's data");
-        $this->assertText('Export Service User Data');
-        $this->assertText("To export and download a single service user's data, choose a service user and click on ".
-        "the Export User Data button. Extract the zip file and refer to the README.txt contained within for ".
-        "instructions on how to import the data into another ThinkUp database.");
+        $this->click("Export a single user account's data");
+        $this->assertText("Export a single user account's data");
+        $this->assertText("Choose a user's data to export. (You'll find a README.txt file in the zip archive with instructions on how to import the data into another ThinkUp database.)");
 
         //Test backup link
         $this->click("Settings");
         $this->click("Back up ThinkUp's entire database");
         $this->assertText("Back Up Your ThinkUp Data");
-        $this->assertText("Click on the button below to back up your ThinkUp database. This new ThinkUp feature ".
-        "is in testing");
+        $this->assertText("If you have any issues using this backup feature, you can use mysqldump to manually back up your ThinkUp data if you have access to your server.");
     }
 }
