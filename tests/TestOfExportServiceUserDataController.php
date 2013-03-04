@@ -111,14 +111,14 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', true);
         $controller = new ExportServiceUserDataController(true);
         $results = $controller->control();
-        $this->assertPattern('/setup does not support a library/', $results);
+        $this->assertPattern('/setup doesn\'t support/', $results);
     }
 
     public function testLoadExportView() {
         $this->simulateLogin('me@example.com', true);
         $controller = new ExportServiceUserDataController(true);
         $results = $controller->control();
-        $this->assertPattern('/Export Service User Data/', $results);
+        $this->assertPattern('/Export User Data/', $results);
     }
 
     public function testExport() {
