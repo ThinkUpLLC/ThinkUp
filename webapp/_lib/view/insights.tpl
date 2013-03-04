@@ -5,7 +5,6 @@
 
 {include file="_usermessage.tpl"}
 
-
 {if $message_header}
 
 <div class="row">

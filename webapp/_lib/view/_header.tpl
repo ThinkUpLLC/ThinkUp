@@ -70,10 +70,44 @@
             })
 
 
+    {/literal}
+        {if $logged_in_user}
+    {literal}
+
+        $('#search-keywords').focus(function() {
+            $('#search-refine').dropdown();
+            if ($('#search-keywords').val()) {
+                $('#search-refine a span.searchterm').text($('#search-keywords').val());
+            }
+        }).blur(function() {
+            $('#search-refine').dropdown();
+        });
+
+        $('#search-keywords').keyup(function() {
+            $('#search-refine a span.searchterm').text($('#search-keywords').val());
+        });
+
+    {/literal}
+        {/if}
+    {literal}
+
         });
       </script>
     {/literal}
-    
+    {if $logged_in_user}
+	{literal}
+
+    <script type="text/javascript">
+      function searchMe(_baseu) {
+        var _mu = $("input#search-keywords").val();
+        if (_mu != "null") {
+          document.location.href = _baseu + _mu;
+        }
+      }
+    </script>
+	{/literal}
+	{/if}
+		
 {else} <!-- not bootstrap -->
   
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">

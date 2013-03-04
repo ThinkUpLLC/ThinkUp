@@ -132,7 +132,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                          type="application/x-shockwave-flash"
                          pluginspage="http://www.macromedia.com/go/getflashplayer"
                          FlashVars="id=clippy_12345&amp;copied=copied!&amp;copyto=copy to clipboard"
-                         bgcolor="#D5F0FC"
+                         bgcolor="#dff0d8"
                          wmode="opaque"/></object>
                 <br /> Good for one new registration. Expires in 7 days.', 'invite', true);
             } else {
