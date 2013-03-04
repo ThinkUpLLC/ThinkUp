@@ -69,9 +69,12 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('groups', array('group_id'=>'19554710', 'group_name'=>'@userx/anotherlist',
         'network' => 'twitter', 'is_active'=>1));
 
-        // Jack's in two groups
+        // Jack's in three groups
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
-        'group_id'=>'18864710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-1h', 'first_seen' => '-1h'));
+        'group_id'=>'18864710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-2d', 'first_seen' => '-2d'));
+
+        $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
+        'group_id'=>'19554710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-0h', 'first_seen' => '-0h'));
 
         // one stale
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
@@ -128,7 +131,7 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetTotalGroups() {
-        $this->assertEqual($this->DAO->getTotalGroups($user_id = '1234567890', 'twitter'), 2);
+        $this->assertEqual($this->DAO->getTotalGroups($user_id = '1234567890', 'twitter'), 3);
         $this->assertEqual($this->DAO->getTotalGroups($user_id = '1623457890', 'twitter', $active = false), 2);
         $this->assertEqual($this->DAO->getTotalGroups($user_id = '1623457890', 'twitter', $active = true), 1);
     }
@@ -139,11 +142,20 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testFindStalestMemberships() {
+        // first group
         $stale_group = $this->DAO->findStalestMemberships($user_id = '1234567890', 'twitter');
         $this->assertTrue(is_object($stale_group));
         $this->assertEqual(get_class($stale_group), 'Group');
         $this->assertEqual($stale_group->group_id, '19994710');
 
+        //second group
+        $this->DAO->update($user_id = '1234567890', $stale_group->group_id, 'twitter');
+        $stale_group = $this->DAO->findStalestMemberships($user_id = '1234567890', 'twitter');
+        $this->assertTrue(is_object($stale_group));
+        $this->assertEqual(get_class($stale_group), 'Group');
+        $this->assertEqual($stale_group->group_id, '18864710');
+
+        //third group
         $this->DAO->update($user_id = '1234567890', $stale_group->group_id, 'twitter');
         $stale_group = $this->DAO->findStalestMemberships($user_id = '1234567890', 'twitter');
         $this->assertNull($stale_group);
@@ -152,9 +164,9 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetNewMembershipsByDate() {
         $new_groups = $this->DAO->getNewMembershipsByDate('twitter', '1234567890');
         $this->assertEqual(count($new_groups), 1);
-        $this->assertEqual($new_groups[0]->id, 1);
-        $this->assertEqual($new_groups[0]->group_id, '18864710');
-        $this->assertEqual($new_groups[0]->group_name, '@someguy/a-list');
+        $this->assertEqual($new_groups[0]->id, 3);
+        $this->assertEqual($new_groups[0]->group_id, '19554710');
+        $this->assertEqual($new_groups[0]->group_name, '@userx/anotherlist');
         $this->assertEqual($new_groups[0]->is_active, 1);
     }
 }
