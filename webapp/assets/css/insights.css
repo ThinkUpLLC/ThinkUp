@@ -517,6 +517,7 @@ body {
 
 #search-keywords {
     width: 140px;
+    visibility : hidden;
 }
  
 .label .icon-white,
