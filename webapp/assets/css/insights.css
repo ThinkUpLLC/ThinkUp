@@ -515,9 +515,12 @@ body {
     width: 100px;
 }
 
+form.navbar-search {
+    display : none;
+}
+
 #search-keywords {
     width: 140px;
-    visibility : hidden;
 }
  
 .label .icon-white,
