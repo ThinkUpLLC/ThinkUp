@@ -341,7 +341,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         //build post published one year ago today
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
-        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-366d',
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-365d',
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
         'is_protected' => 0));
 
