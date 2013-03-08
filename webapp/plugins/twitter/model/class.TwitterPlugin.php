@@ -98,21 +98,21 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $twitter_crawler->fetchStrayRepliedToTweets();
                     $twitter_crawler->fetchUnloadedFollowerDetails();
                     $twitter_crawler->cleanUpFollows();
-
-                    $dashboard_module_cacher->cacheDashboardModules();
-
-                    // Save instance
-                    if (isset($twitter_crawler->user)) {
-                        $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
-                    }
-                    Reporter::reportVersion($instance);
-                    $logger->logUserSuccess("Finished collecting data for ".$instance->network_username.
-                    " on Twitter.", __METHOD__.','.__LINE__);
                 }
             } catch (Exception $e) {
                 $logger->logUserError(get_class($e) ." while crawling ".$instance->network_username." on Twitter: ".
                 $e->getMessage(), __METHOD__.','.__LINE__);
             }
+            $dashboard_module_cacher->cacheDashboardModules();
+
+            // Save instance
+            if (isset($twitter_crawler->user)) {
+                $instance_dao->save($instance, $twitter_crawler->user->post_count, $logger);
+            }
+            Reporter::reportVersion($instance);
+
+            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username.
+            " on Twitter.", __METHOD__.','.__LINE__);
         }
     }
 
