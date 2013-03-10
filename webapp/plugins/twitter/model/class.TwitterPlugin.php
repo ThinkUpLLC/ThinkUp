@@ -98,6 +98,8 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $twitter_crawler->fetchStrayRepliedToTweets();
                     $twitter_crawler->fetchUnloadedFollowerDetails();
                     $twitter_crawler->cleanUpFollows();
+                } else {
+                    throw new Exception('Missing Twitter OAuth tokens.');
                 }
             } catch (Exception $e) {
                 $logger->logUserError(get_class($e) ." while crawling ".$instance->network_username." on Twitter: ".
