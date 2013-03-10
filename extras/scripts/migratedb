@@ -46,19 +46,22 @@ echo "
 --
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Twitter', 'twitter', 'Twitter support', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1');
+VALUES ('Twitter', 'twitter', 'Twitter support', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Facebook', 'facebook', 'Facebook support', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1');
+VALUES ('Facebook', 'facebook', 'Facebook support', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Foursquare', 'foursquare', 'Foursquare support', 'Aaron Kalair', 'http://thinkupapp.com', '0.01', '1');
+VALUES ('Foursquare', 'foursquare', 'Foursquare support', 'Aaron Kalair', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Google+', 'googleplus', 'Google+ support', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1');
+VALUES ('Google+', 'googleplus', 'Google+ support', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 'http://thinkupapp.com', '0.01', '1'); " >> build-db_mysql.sql
+VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
+
+INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
+VALUES ('Insights Generator', 'insightsgenerator', 'Pluggable plugin populates the insights stream.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');" >> build-db_mysql.sql
 
 
 mv build-db_mysql.sql ../.
