@@ -279,7 +279,7 @@ class Utils {
      * @return str
      */
     public static function getSiteRootPathFromFileSystem() {
-        $dirs_under_root = array('account', 'post', 'session', 'user', 'install', 'tests');
+        $dirs_under_root = array('account', 'post', 'session', 'user', 'install', 'tests', 'crawler');
         if (isset($_SERVER['PHP_SELF'])) {
             $current_script_path = explode('/', $_SERVER['PHP_SELF']);
         } else {
