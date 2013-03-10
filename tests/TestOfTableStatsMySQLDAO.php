@@ -56,14 +56,14 @@ class TestOfTableStatsMySQLDAO extends ThinkUpUnitTestCase {
             if ($table['table'] == $this->table_prefix . 'options') {
                 $this->assertEqual($table['count'], 1);
             } else if ($table['table'] == $this->table_prefix . 'plugins') {
-                $this->assertEqual($table['count'], 5);
+                $this->assertEqual($table['count'], 6);
             } else {
                 $this->assertEqual($table['count'], 0);
             }
         }
 
         // are we sorted by count desc?
-        $this->assertEqual(5,$counts[0]['count']);
+        $this->assertEqual(6,$counts[0]['count']);
         $this->assertEqual(1,$counts[1]['count']);
         $this->assertEqual(0,$counts[2]['count']);
     }
