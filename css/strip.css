@@ -1,10 +1,12 @@
 body {	
     padding: 30px 0 0;
     border-top: 6px solid #00aeef;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #ebebeb;
 }
 
 p {
-	font: 14px/23px 'Open Sans', sans-serif;	
+	font: 14px/23px;	
     text-shadow: #ffffff 0 1px 0;	
 }
 
@@ -31,6 +33,9 @@ a:hover {
 	text-align: left;
 }
 
+strong {
+    color : #00aeef;
+}
 
 /*
 * headers
@@ -38,7 +43,8 @@ a:hover {
 
 h2 {
     text-align: center;
-    font: 400 44px/71px 'Open Sans', sans-serif;  
+    font: 44px/71px;
+    font-weight : 200;
     margin: 18px 0;
 }
 
@@ -48,27 +54,30 @@ h2 strong {
 
 h3 {
     text-align: center;
-	margin: 0px 0px 15px;
-    font: 400 28px/45px 'Open Sans', sans-serif;  
-   
+    margin: 0px 0px 15px;
+    font-weight : 200;
 }
 
 .subhead {
-    font-family: 'Merriweather', serif;
     font-weight: 400;
     color: #aaaaaa;	
 	margin-bottom: 40px;
 }
 
 h4 {
-    font: 600 16px/26px 'Open Sans', sans-serif;
+    font: 600 16px/26px;
 }
 
-.quotes {
-    font-family: 'Merriweather', serif;    
+.quotes {  
 	font-size: 24px;	
     color:#555555;		
 }
+
+.features {
+    background-color : white;
+    padding : 2%;
+}
+
 /*
 * navigation lists on both footer and nav-header
 */
@@ -89,7 +98,7 @@ h4 {
 
 .navbar .brand {
     font-weight: 700;
-    font-size: 24px;
+    font-size: 36px;
     padding: 0;
     margin-left: 0;
     color : #00aeef;
@@ -106,7 +115,7 @@ h4 {
 
 .navbar .nav li a,
 .footer-box a {   
-	font: 600 16px/26px 'Open Sans', sans-serif;
+	font: 600 16px/26px;
     padding: 6px 18px;
     color: #888888;
     text-shadow: 0 1px 0 #ffffff;    
@@ -175,7 +184,7 @@ h4 {
 .carousel .item > p,
 .carousel-caption p
 {		
-	font: 14px/23px 'Open Sans', sans-serif;	
+	font: 14px/23px;	
     text-shadow:#ffffff 0 1px 0;
 	color: #333333;
 	text-align: center;
@@ -186,7 +195,6 @@ h4 {
 */
 
 .section-box h3 {
-    font-family: 'Open Sans', sans-serif;
     font-weight:600;
     font-size: 24px;
     margin-bottom:15px;
@@ -257,10 +265,9 @@ h4 {
 * footer
 */
 
-.footer-box {	          
-    padding:30px 0;    
-	text-align:center;	
-	font-family: 'Open Sans', sans-serif;
+.footer-box {
+    padding:30px 0;
+	text-align:center;
 	font-size: 14px;
 	line-height: 26px;
 	color: #888888;
@@ -289,7 +296,7 @@ h4 {
 
 .big-btn {
     display: inline-block;
-    font: 400 24px/39px 'Open Sans', sans-serif;    
+    font: 400 24px/39px;    
     padding: 12px 36px;
 	margin: 8px 0px;
 	
@@ -404,7 +411,7 @@ h4 {
         font-size:32px;
         line-height:52px;
     }
-    
+
     h3 {
         font-size:20px;
         line-height:32px;
