@@ -244,7 +244,12 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
         $dir = THINKUP_WEBAPP_PATH . self::MIGRATION_DIR;
         $config = Config::getInstance();
         $table_prefix = $config->getValue('table_prefix');
-        $dir_list = glob('{' . $dir . '/*.sql,' . $dir . '/*.migration}', GLOB_BRACE);
+        // Next line doesn't work on Travis-CI
+        //        $dir_list = glob('{' . $dir . '/*.sql,' . $dir . '/*.migration}', GLOB_BRACE);
+        $dir_list_1 = glob($dir . '/*.sql', GLOB_BRACE);
+        $dir_list_2 = glob($dir . '/*.migration', GLOB_BRACE);
+        $dir_list = array_merge($dir_list_1, $dir_list_2);
+
         $migrations = array();
         for ($i = 0; $i < count($dir_list); $i++) {
             if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $dir_list[$i], $matches)
