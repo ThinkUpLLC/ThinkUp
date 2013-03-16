@@ -54,9 +54,8 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
     }
 
     public function updateOption($id, $name, $value) {
-
-        $cnt = $this->option_dao->updateOption($id, $value, $name);
-        if ($cnt > 0) {
+        $count = $this->option_dao->updateOption($id, $value, $name);
+        if ($count > 0) {
             return true;
         } else {
             return false;
