@@ -165,6 +165,10 @@ class ShortLinkMySQLDAO extends PDODAO {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowsAsArrays($ps);
-        return $result[0]["click_count"];
+        if (isset($result[0]["click_count"])) {
+            return $result[0]["click_count"];
+        } else {
+            return 0;
+        }
     }
 }
