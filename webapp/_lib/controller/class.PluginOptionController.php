@@ -89,8 +89,9 @@ class PluginOptionController extends ThinkUpAdminController {
                                     $plugin_option_dao->deleteOption($id);
                                     $deleted++;
                                 } else {
-                                    $plugin_option_dao->updateOption($id, $name, $value);
-                                    $updated_total++;
+                                    if ($plugin_option_dao->updateOption($id, $name, $value) ) {
+                                        $updated_total++;
+                                    }
                                 }
                             }
                         }

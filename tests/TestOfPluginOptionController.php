@@ -411,9 +411,9 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $builder1 = FixtureBuilder::build(self::TEST_TABLE, array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-' .
         $plugin_id));
         $builder2 = FixtureBuilder::build(self::TEST_TABLE, array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-' .
-        $plugin_id));
+        $plugin_id, 'option_value' => 'PaGrms'));
         $builder3 = FixtureBuilder::build(self::TEST_TABLE, array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-' .
-        $plugin_id));
+        $plugin_id, 'option_value' => 'p97nFy'));
         return array( $builder1, $builder2, $builder3);
     }
 }
