@@ -300,7 +300,12 @@ class Utils {
      */
     public static function getApplicationURL($replace_localhost_with_ip = false) {
         //First attempt to get the host name without querying the database
-        $server = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+        //Try SERVER_NAME
+        $server = empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME'];
+        //Try HTTP_HOST
+        if ($server == '' ) {
+            $server = empty($_SERVER['HTTP_HOST']) ? '' : $_SERVER['HTTP_HOST'];
+        }
         //Then fall back to stored application setting set by Installer::storeServerName
         if ($server == '') {
             $option_dao = DAOFactory::getDAO('OptionDAO');
