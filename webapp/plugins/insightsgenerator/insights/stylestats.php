@@ -72,18 +72,45 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                         }
                     }
                 }
-                $average_replies["all"] = round($total_replies["all"] / (sizeof($last_week_of_posts)) );
-                $average_reshares["all"] = round($total_reshares["all"] / (sizeof($last_week_of_posts)) );
+                if (sizeof($last_week_of_posts) > 0) {
+                    $average_replies["all"] = round($total_replies["all"] / (sizeof($last_week_of_posts)) );
+                    $average_reshares["all"] = round($total_reshares["all"] / (sizeof($last_week_of_posts)) );
+                } else {
+                    $average_replies["all"] = 0;
+                    $average_reshares["all"] = 0;
+                }
 
-                $average_replies["questions"] = round($total_replies["questions"] / $total_posts["questions"]);
-                $average_replies["quotations"] = round($total_replies["quotations"] / $total_posts["quotations"]);
-                $average_replies["links"] = round($total_replies["links"] / $total_posts["links"]);
-                $average_replies["photos"] = round($total_replies["photos"] / $total_posts["photos"]);
+                if ($total_posts["questions"] > 0 ) {
+                    $average_replies["questions"] = round($total_replies["questions"] / $total_posts["questions"]);
+                    $average_reshares["questions"] = round($total_reshares["questions"] / $total_posts["questions"]);
+                } else {
+                    $average_replies["questions"] = 0;
+                    $average_reshares["questions"] = 0;
+                }
 
-                $average_reshares["questions"] = round($total_reshares["questions"] / $total_posts["questions"]);
-                $average_reshares["quotations"] = round($total_reshares["quotations"] / $total_posts["quotations"]);
-                $average_reshares["links"] = round($total_reshares["links"] / $total_posts["links"]);
-                $average_reshares["photos"] = round($total_reshares["photos"] / $total_posts["photos"]);
+                if ($total_posts["quotations"] > 0) {
+                    $average_replies["quotations"] = round($total_replies["quotations"] / $total_posts["quotations"]);
+                    $average_reshares["quotations"] = round($total_reshares["quotations"] / $total_posts["quotations"]);
+                } else {
+                    $average_replies["quotations"] = 0;
+                    $average_reshares["quotations"] = 0;
+                }
+
+                if ($total_posts["links"] > 0) {
+                    $average_replies["links"] = round($total_replies["links"] / $total_posts["links"]);
+                    $average_reshares["links"] = round($total_reshares["links"] / $total_posts["links"]);
+                } else {
+                    $average_replies["links"] = 0;
+                    $average_reshares["links"] = 0;
+                }
+
+                if ($total_posts["photos"] > 0) {
+                    $average_replies["photos"] = round($total_replies["photos"] / $total_posts["photos"]);
+                    $average_reshares["photos"] = round($total_reshares["photos"] / $total_posts["photos"]);
+                } else {
+                    $average_replies["photos"] = 0;
+                    $average_reshares["photos"] = 0;
+                }
 
                 $insight_text = '';
                 arsort($total_posts);
