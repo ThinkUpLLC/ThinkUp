@@ -6,7 +6,7 @@
               <div class="grid_6 center keystats omega">
                 <div class="big-number">
                        {if $likes}
-                      <h1>{$likes|@count}</h2>
+                      <h1>{$likes|@count}</h1>
                       <h3>like{if $likes|@count neq 1}s{/if}
                     
                      in {$post->adj_pub_date|relative_datetime}</h3>
