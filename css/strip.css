@@ -341,6 +341,10 @@ h4 {
 	
 }
 
+iframe.twitter-tweet {
+    display : inline !important;
+}
+
 /*
 * shadows
 */

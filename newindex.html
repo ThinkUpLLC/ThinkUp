@@ -24,9 +24,13 @@
                 <ul class="nav">
                     <li class="active"><a href="#">Home </a></li>
                     <li><a href="http://thinkup.com/docs">Documentation</a></li>
-                    <li><a href="http://blog.thinkup.com/">Blog</a></li>
+                    <li>
+                        <form action="http://thinkupapp.com/docs/search.html" method="get" class="form-search"><input type="text" name="q" placeholder="Search Docs" class="search-query"><input type="hidden" name="check_keywords" value="yes"><input type="hidden" name="area" value="default"></form>
+                    
+                    </li>
                     <li><a href="http://twitter.com/thinkup"><i class="icon-twitter"></i></a></li>
-                </ul>
+                    <li><a href="http://blog.thinkup.com/">Blog</a></li>
+              </ul>
             </div>
         </div>
     </nav>
@@ -35,10 +39,13 @@
 <section class="container">
     <div class="row">
         <header class="highlight span12">
-            <h2>Get <strong>better</strong> at using your social networks.</h2>               
-            <img id="feature-screenshot" src="./img/iphone-stream.png" alt="ThinkUp screenshot" width="196" height="404">
-            <h3><a href="#" class="big-btn">Get on the List</a></h3>
-            <p>ThinkUp is <strong>free</strong>. If you want to get started now and are geeky, <a href="http://thinkupapp.com/download/">download ThinkUp</a> for your own web server.</p>     
+            <h2>We're going to spend <strong>years of our lives</strong><br /> with our thumbs on our phones.</h2>
+            <h3>Let's <strong>get more</strong> out of the time we spend on social networks.</h3>
+            <img id="feature-screenshot" src="./img/thinkup-gov-screenshot.png" width="707" height="817" alt="ThinkUp screenshot" />
+            <form action="" method="post">
+            <h3><input type="email" id="email" placeholder="youremail@example.com" /></h3>
+            <h3><button class="btn btn-large big-btn">Sign Up for FREE</button></h3>
+            <p>If you want to get started now and are geeky,<br /> <a href="http://thinkupapp.com/download/">download & install ThinkUp</a> on your own web server.</p>     
         </header>        
     </div>   
     <div class="row">
@@ -52,7 +59,29 @@
 	<div class="highlight row">    	
         <div id="myCarousel" class="carousel slide">
             <div class="carousel-inner">
-                <div class="item active">                	
+                <div class="item active">      
+                    <p>
+                        <img src="./img/iphone-stream.png" alt="ThinkUp iPhone" width="196" height="404">        
+                    </p>           
+                    <article class="carousel-caption">                  
+                        <h3>Throughout the day, ThinkUp tells you <strong>what's meaningful</strong> on your social networks.</h3>       
+                        <p class="center-align">Sure, we'll tell you about new friends and followers. But beyond the numbers, we'll show you when you're just generally kicking ass.</p>                                                   
+                    </article>
+                </div>
+
+                <div class="item">                	
+
+                        <blockquote class="twitter-tweet"><p>Most of the time though @<a href="https://twitter.com/thinkup">thinkup</a> showing me Tweets from 1 year ago cause me to say "Christ, what an asshole."</p>&mdash; Brett O'Connor (@negatendo) <a href="https://twitter.com/negatendo/status/314739686696443905">March 21, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>                
+      
+                    <article class="carousel-caption">                                         
+                        <h3>Every day, you can get a <strong>little bit better</strong> at using your social networks.</h3>
+                        <p class="center-align">No matter what your goals are on Twitter, Facebook or Google+, ThinkUp can show you the progress you're making.</p>  
+                    </article>                                        
+                </div>
+
+
+                <div class="item">                	
                     <p>
                         <img src="./img/thinkup-search-demo.gif" alt="Graph Search" width="323" height="208" />                     
                     </p>         
@@ -61,24 +90,15 @@
                         <p class="center-align">It's your stuff &mdash; you should be able to find your friends and activity.</p>  
                     </article>                                        
                 </div>
-                <div class="item">      
-                    <p>              	            
-                        <img src="./img/" alt="" />          
-                    </p>           
-                    <article class="carousel-caption">                  
-                        <h3>It's like a personal trainer for your social networks</h3>       
-                        <p class="center-align">No matter what your goals are online, ThinkUp can coach you to achieve them.</p>                                                   
-                    </article>
+
+                <div class="item">                	
+
+                    <article class="carousel-caption">                                         
+                        <h3>The next time a site or app <strong>creeps you out</strong>, you'll be ready.</h3>
+                        <p class="center-align">ThinkUp gives you a copy of your social networking activity that <strong>you control</strong>, no matter how they change their terms of service.</p>  
+                    </article>                                        
                 </div>
-                <div class="item">              	  
-                    <p>                    	        	            
-                        <img src="./img/illustration.png" alt="" width="692" height="255" />          
-                    </p>      
-                    <article class="carousel-caption">                        
-                        <h3>Bring all your information <strong>together</strong>.</h3>
-                        <p class="center-align">ThinkUp works with Facebook, Twitter, Google+ and Foursquare.</p>                            
-                    </article>
-                </div>
+
                
             </div> 
             <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
@@ -86,14 +106,11 @@
         </div> 
     </div>      
 </section>
-<div class="container">     	
-	<h3 class="subhead">We spend more and more of our time on social networks.<br />ThinkUp helps make sure that time spent is meaningful.</h3>
-</div>
 <section class="container features">     	
  
     <div class="row">        	
         <article class="span4 center-align">					
-            <img src="./img/responsive.png" alt="responsive"/>                    
+            <img src="./img/responsive.png" alt="On Any Device" width="300" height="131" />
             <h3>Works on all your devices.</h3>
             <p>
                 Once you're started with ThinkUp, you can get to it anywhere that you've got a web browser &mdash; your phone, your tablet, your laptop or your desktop. 
@@ -101,16 +118,17 @@
         </article>
         <article class="span4 center-align">
             <i class="icon-megaphone icon-4x"></i>
-            <img src="./img/" alt=""/>
+            <img src="./img/readwrite-logo.png" width="281" height="51" alt="ReadWrite" style="padding-bottom: 20px;"/>
             <h3>"...the social media management tool that matters most..."</h3>
             <p>
-                &mdash; <a href="http://www.readwriteweb.com/archives/own_your_social_network_data_with_thinkup_10.php">ReadWriteWeb</a>
+                &mdash; <a href="http://www.readwriteweb.com/archives/own_your_social_network_data_with_thinkup_10.php">ReadWriteWeb</a> recognized the importance of 
+                ThinkUp even in its earliest version, and we've come a long way since then.
             </p>
             
         </article>
         <article class="span4 center-align">
 
-            <img src="./img/heartwork.png" alt="heartwork" />
+            <img src="./img/github.png" alt="Octocat!" width="233" height="137"/>
             <h3>Open Source.</h3>
             <p>ThinkUp is built by a friendly community of people like you. 
             Many of our contributors made their first open source contribution 
@@ -118,7 +136,11 @@
             ThinkUp is free for you to use, for any purpose.
             </p>                
             <p>
-                <a href="http://github.com/ginatrapani/thinkup">Find us on GitHub</a>
+                <iframe src="http://ghbtns.com/github-btn.html?user=ginatrapani&repo=thinkup&type=watch&count=true"
+  allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+                <iframe src="http://ghbtns.com/github-btn.html?user=ginatrapani&repo=thinkup&type=fork&count=true"
+  allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+
             </p>
         </article>                    	
     </div>
@@ -128,33 +150,31 @@
 	<div class="row">
     	<div class="highlight span12">
             <h3>ThinkUp is for <strong>people</strong>, and companies and organizations like it too.</h3> 
-            <h3 class="subhead">These are some users we've been excited to have in the community.</h3> 
+            <p>These are some users we're excited to have in the community. We hope you'll join them!</p> 
             <div class="logo-list">
-            	<img src="./img/russ-and-daughter.png" alt="companyA"/>
-                <img src="./img/baratunde.png" alt="companyA"/>
-                <img src="./img/nytimes.png" alt="companyA"/>
+            	<a href="http://thinkup.com"><img src="https://si0.twimg.com/profile_images/1569829281/Russ_Daughters_JenSnow_bigger.jpg" alt="Russ & Daughters"/></a>
+                <a href="http://thinkup.com"><img src="https://si0.twimg.com/profile_images/3082817732/0018b02559ac3fd05b9d567775bed53b_bigger.png" alt="Baratunde Thurston"/></a>
+                <a href="http://demo.thinkup.com/gov"><img src="https://si0.twimg.com/profile_images/3126974103/6d3ed98eb2c38af272bcf712af235147_bigger.jpeg" alt="White House"/></a>
+                <a href="http://demo.thinkup.com/"><img src="https://si0.twimg.com/profile_images/20366132/SE_twitter_bigger.jpg" alt="Serious Eats"/></a>
+                <a href="http://demo.thinkup.com/"><img src="https://si0.twimg.com/profile_images/3185141124/3bc57ba3125e9bde9af2f8d9f25c1a82_bigger.png" alt="Digg"/></a>
+
             </div>            
-        	<h3><a href="#" class="big-btn">Get on the List</a></h3>            
-            <p>ThinkUp is <strong>free</strong>. We're adding new users as quickly as we can, so sign up now!</p>
 	    </div>
     </div>
 </section>
 
-<footer class="container footer-box">   
-    <hr class="shadow-line" />         
-    <nav class="links">             
-        <a href="#">About</a>
-        <a href="#">Tour</a>
-        <a href="#">Blog</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Support</a>                   
-    </nav>  
-    <nav class="links">   
+<footer class="container footer-box">
+    <hr class="shadow-line" />
+    <nav class="links">
+        <a href="#">Home </a>
+        <a href="http://thinkup.com/docs">Docs</a>
+        <a href="http://blog.thinkup.com/">Blog</a>             
+        <a href="http://thinkup.com/tos">Terms</a>             
         <a href="#"><i class="icon-twitter"></i></a>
         <a href="#"><i class="icon-facebook"></i></a>   
         <a href="#"><i class="icon-google-plus"></i></a>      
     </nav>                 
-    <p>It's nice to be nice.</p>           
+    <p>&copy; 2013 ThinkUp LLC. It's nice to be nice.</p>           
 </footer>
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
