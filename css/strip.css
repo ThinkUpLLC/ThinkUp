@@ -308,14 +308,14 @@ h4 {
     text-shadow: #3799ca 0 -1px 0;
     box-shadow: 0 1px 1px rgba(0,0,0,0.2) ;
 	
-	background-color: #0072bb;
-	background-image: -moz-linear-gradient(top, #4d90fe, #0072bb);
-	background-image: -ms-linear-gradient(top, #4d90fe, #0072bb);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4d90fe), to(#0072bb));
-	background-image: -webkit-linear-gradient(top, #4d90fe, #0072bb);
-	background-image: -o-linear-gradient(top, #4d90fe, #0072bb);
-	background-image: linear-gradient(top, #4d90fe, #0072bb);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d90fe', endColorstr='#0072bb', GradientType=0);
+	background-color: #00AEEF;
+	background-image: -moz-linear-gradient(top, #00AEEF, #0072EF);
+	background-image: -ms-linear-gradient(top, #00AEEF, #0072EF);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#00AEEF), to(#0072EF));
+	background-image: -webkit-linear-gradient(top, #00AEEF, #0072EF);
+	background-image: -o-linear-gradient(top, #00AEEF, #0072EF);
+	background-image: linear-gradient(top, #00AEEF, #0072EF);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00AEEF', endColorstr='#0072EF', GradientType=0);
 }
 
 .big-btn:link, 
