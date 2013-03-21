@@ -1036,7 +1036,8 @@ class TwitterCrawler {
                             $follow_dao->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
                         }
                     } else {
-                        $this->logger->logError("Got non-200 response for " .$endpoint, __METHOD__.','.__LINE__);
+                        $this->logger->logError("Got non-200 response for " .$endpoint->getShortPath(),
+                        __METHOD__.','.__LINE__);
                         if ($http_status == 404) {
                             $this->logger->logError("Marking follow inactive due to 404 response",
                             __METHOD__.','.__LINE__);
