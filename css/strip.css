@@ -21,6 +21,10 @@ a:hover {
     text-decoration:underline;    
 }
 
+.label a {
+    color:white;
+}
+
 .center-align {
     text-align: center;
 }
@@ -166,13 +170,25 @@ h4 {
 
 /*
 * carousel
-*/
+
 .carousel a {
 	color: #ffffff;
+}
+*/
+
+.carousel {
+    line-height: 18px;
+}
+
+.carousel-inner {
 }
 
 .carousel .item a {	
 	color: #3799ca;
+}
+
+.carousel .item .label a {	
+	color: white;
 }
 
 .carousel-caption 
@@ -189,6 +205,61 @@ h4 {
 	color: #333333;
 	text-align: center;
 }
+
+#insights-carousel .item {
+    height: 180px;
+}
+
+#myCarousel .item {
+}
+
+a.carousel-control {
+    color: white;
+}
+
+
+
+.vertical .carousel-inner {
+  height: 100%;
+}
+
+.carousel.vertical .item {
+  -webkit-transition: 0.6s ease-in-out top;
+     -moz-transition: 0.6s ease-in-out top;
+      -ms-transition: 0.6s ease-in-out top;
+       -o-transition: 0.6s ease-in-out top;
+          transition: 0.6s ease-in-out top;
+}
+
+.carousel.vertical .active {
+  top: 0;
+}
+
+.carousel.vertical .next {
+  top: 100%;
+}
+
+.carousel.vertical .prev {
+  top: -100%;
+}
+
+.carousel.vertical .next.left,
+.carousel.vertical .prev.right {
+  top: 0;
+}
+
+.carousel.vertical .active.left {
+  top: -100%;
+}
+
+.carousel.vertical .active.right {
+  top: 100%;
+}
+
+.carousel.vertical .item {
+    left: 0;
+}​
+
 
 /*
 * section-box
@@ -265,6 +336,12 @@ h4 {
 * footer
 */
 
+footer {
+    height: auto;
+    background: transparent;
+    box-shadow: none;
+}
+
 .footer-box {
     padding:30px 0;
 	text-align:center;
@@ -290,6 +367,9 @@ h4 {
     margin-top:30px;
 }
 
+.insights-carousel {
+}
+
 /*
 * big sign up button 
 */
@@ -297,7 +377,7 @@ h4 {
 .big-btn {
     display: inline-block;
     font: 400 24px/39px;    
-    padding: 12px 36px;
+    padding: 8px 12px;
 	margin: 8px 0px;
 	
     -webkit-border-radius: 8px;
@@ -324,6 +404,7 @@ h4 {
 }
 
 .big-btn:hover {	
+/*
     color: #ffffff;	
     text-decoration: none;	
 	
@@ -337,12 +418,13 @@ h4 {
 	
 	background-repeat: repeat-x;
   	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d90fe', endColorstr='#4787ed', GradientType=0);
-	
-	
+*/
 }
 
 iframe.twitter-tweet {
     display : inline !important;
+    margin-top: 125px !important;
+    margin-bottom: 125px !important;
 }
 
 /*
