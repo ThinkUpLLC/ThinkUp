@@ -377,6 +377,10 @@ footer {
 * big sign up button 
 */
 
+.btn-info {
+    background-color: #00AEEF;
+}
+
 .big-btn {
     display: inline-block;
     font: 400 24px/39px;    
