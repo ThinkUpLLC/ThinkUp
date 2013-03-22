@@ -85,6 +85,7 @@ class SearchController extends ThinkUpAuthController {
     private function searchPosts() {
         $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
         $keywords = explode(' ', $_GET['q']);
+        $this->addToView('current_page', $page_number);
 
         $post_dao = DAOFactory::getDAO('PostDAO');
         $posts = $post_dao->searchPostsByUser($keywords, $_GET['n'], $_GET['u'], $page_number,
