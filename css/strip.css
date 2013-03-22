@@ -82,6 +82,10 @@ h4 {
     padding : 2%;
 }
 
+#call-to-action {
+     style: padding-bottom: 100px;
+}
+
 /*
 * navigation lists on both footer and nav-header
 */
@@ -158,7 +162,6 @@ h4 {
 */
 
 .highlight { 
-	margin-top: 40px;   
     margin-bottom: 40px;
     text-align:center;
 }
@@ -469,20 +472,23 @@ iframe.twitter-tweet {
     }    
 	
     .navbar .brand {
-        float: none;
+        display: inline;
         margin-bottom: 15px;
+        font-size: 22px;
+        float: left;
+    }
+    
+    .navbar ul {
+        display: inline;
     }
     
     .navbar .nav {
-        clear: both;        
-        float: none;
-		margin-top: 15px;
+        float: right;
     }
     
-    .navbar .nav li {			
-        float: left;		
-        padding: 6px 36px 6px 0px;
-		margin: 4px 0px;
+    .navbar .nav li {
+        padding: 0px 10px 6px 0px;
+		margin: 0px 0px;
     }
     
     .navbar .nav li a {	
@@ -490,9 +496,38 @@ iframe.twitter-tweet {
         padding-left: 0px;		
         padding-right: 0px;
     }
+    
+    h2, .highlight h2 {
+        font-size:24px;
+        line-height:30px;
+    }
+
+    h3 {
+        font-size:20px;
+        line-height:30px;
+    }   
+    
+    #start-form button {
+        margin-top: 10px;
+    }
+    
+    #docs-search {
+        display: none;
+    }
+    
+    #insights-carousel .item {
+        height: auto;
+    }
+
+    #call-to-action {
+         style: padding-bottom: 20px;
+    }
+
 }
 
 @media (max-width: 480px) {
+
+    
     h2 {
         font-size:32px;
         line-height:52px;
@@ -502,4 +537,5 @@ iframe.twitter-tweet {
         font-size:20px;
         line-height:32px;
     }   
+
 }

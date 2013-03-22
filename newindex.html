@@ -22,13 +22,13 @@
             <div class="container">
                 <a href="/" class="brand">Think<span style="color : black; font-weight : 200;">Up</span></a>
                 <ul class="nav">
-                    <li class="active"><a href="#">Home </a></li>
-                    <li><a href="http://thinkup.com/docs">Documentation</a></li>
+                    <li><a href="http://thinkup.com/docs">Docs</a></li>
+                    <li><a href="http://blog.thinkup.com/">Blog</a></li>
                     <li>
-                        <form action="http://thinkupapp.com/docs/search.html" method="get" class="form-search"><input type="text" name="q" placeholder="Search Docs" class="search-query"><input type="hidden" name="check_keywords" value="yes"><input type="hidden" name="area" value="default"></form>
+                        <form action="http://thinkupapp.com/docs/search.html" method="get" class="form-search"><input type="text" name="q" placeholder="Search Docs" class="search-query" id="docs-search"><input type="hidden" name="check_keywords" value="yes"><input type="hidden" name="area" value="default"></form>
                     
                     </li>
-                    <li><a href="http://blog.thinkup.com/">Blog</a></li>
+
               </ul>
             </div>
         </div>
@@ -37,12 +37,13 @@
 
 <section class="container">
     <div class="row">
-        <header class="highlight span12">
-            <h2>We're going to spend <strong>years of our lives</strong><br /> with our thumbs on our phones.</h2>
+        <header class="highlight offset3 span6">
+            <h2>We're going to spend <strong>years of our lives</strong> with our thumbs on our phones.</h2>
             <h3>Let's <strong>get more</strong> out of the time we spend on social networks.<br />
             Here's what ThinkUp tells you:</h3>
 
-        </header>        
+        </header>
+        <div class="clearfix"></div>
 
 
 <div class="span2">&nbsp;</div>
@@ -419,10 +420,10 @@
         	<hr class="shadow-line"/>
         </div>
     </div>	 
-    <div class="row" style="padding-bottom: 100px;">
+    <div class="row" id="call-to-action">
    		<div class="text-center">
 
-<form method="post" action="https://www.thinkup.com/start/" class="form-inline">
+<form method="post" action="https://www.thinkup.com/start/" class="form-inline" id="start-form">
             <input type="email" id="email" name="email" placeholder="youremail@example.com" />&nbsp;<button class="btn btn-primary" type="submit">Get on the Waiting List</button>
 </form>
    		
