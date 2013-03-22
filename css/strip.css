@@ -83,7 +83,7 @@ h4 {
 }
 
 #call-to-action {
-     style: padding-bottom: 100px;
+     padding-bottom: 100px;
 }
 
 /*
@@ -520,7 +520,7 @@ iframe.twitter-tweet {
     }
 
     #call-to-action {
-         style: padding-bottom: 20px;
+         padding-bottom: 20px;
     }
 
 }
