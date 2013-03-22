@@ -10,7 +10,7 @@
       <div class="embossed-block">
         <ul>
           <li>
-Search results for "{$smarty.get.q}"
+{if $current_page eq 1}First {$posts|@count} s{else}S{/if}earch results for "{$smarty.get.q}"
           </li>
         </ul>
       </div>
