@@ -35,7 +35,7 @@ class InsightStreamController extends ThinkUpController {
      * Number of insights to display on a page
      * @var int
      */
-    const PAGE_INSIGHTS_COUNT = 50;
+    const PAGE_INSIGHTS_COUNT = 20;
 
     public function control() {
         $config = Config::getInstance();
