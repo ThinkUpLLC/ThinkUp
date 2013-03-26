@@ -231,7 +231,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($public_only) {
             $q .= "AND su.is_public = 1 ";
         }
-        $q .= " AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id DESC LIMIT :start_on_record, :limit;";
+        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, filename, i.id DESC ";
+        $q .= "LIMIT :start_on_record, :limit;";
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count
