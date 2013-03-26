@@ -26,6 +26,7 @@
 
             <fieldset>
                 <legend>Create your ThinkUp account</legend>
+                  
                 <div class="control-group">
                     <label class="control-label" for="full_name">Name</label>
                     <div class="controls">
@@ -96,7 +97,13 @@
             <fieldset style="padding-bottom : 0px;">
 
                 <legend>Connect ThinkUp to Your Database</legend>
-                  {include file="_usermessage.tpl" field="database" enable_bootstrap=1}
+ 
+                 <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        {include file="_usermessage.tpl" field="database" enable_bootstrap=1}
+                    </div>
+                </div>
                   
                 <div class="control-group">
                     <label class="control-label" for="db_host">Database Host</label>
