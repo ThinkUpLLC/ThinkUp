@@ -3023,7 +3023,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'hashtag_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') {continue;}
+            if ($key == 'type' || $key == 'app_session') { continue; }
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());

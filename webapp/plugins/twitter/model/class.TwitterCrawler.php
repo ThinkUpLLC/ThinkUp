@@ -1211,6 +1211,7 @@ class TwitterCrawler {
                                 $user = New User($tweet);
                                 $rowsUpdated = $user_dao->updateUser($user);
                                 if ($rowsUpdated > 0) { $user_count = $user_count + $rowsUpdated; }                                
+
                                 if (isset($tweet['retweeted_post']) && isset($tweet['retweeted_post']['content'])) {
                                     if (!$hashtag_dao->isHashtagPostInDB($hashtag->id,
                                             $tweet['retweeted_post']['content']['post_id'], 

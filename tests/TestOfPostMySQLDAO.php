@@ -4085,7 +4085,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $hashtags[] = 4;
         $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1,100);
         $this->assertEqual(sizeof($output), 0);
-        $this->assertTrue(is_array($output));
-                           
+        $this->assertTrue(is_array($output));                           
     }
+    
 }

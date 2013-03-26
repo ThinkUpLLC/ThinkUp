@@ -2444,7 +2444,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $vars[':start_on_record'] = (int)$start_on_record;
         }
     
-        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
                
         $all_post_rows = $this->getDataRowsAsArrays($ps);
@@ -2459,7 +2459,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         
             // Get links
             $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
-            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $ps = $this->execute($q);
             $all_link_rows = $this->getDataRowsAsArrays($ps);
         
@@ -2482,7 +2482,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "INNER JOIN #prefix#hashtags_posts hp ON t.post_id = hp.post_id ";
         $q .= "WHERE hp.hashtag_id=:hashtag_id;";
         $vars = array(':hashtag_id'=>$hashtag_id);
-        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
