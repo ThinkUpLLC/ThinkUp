@@ -197,7 +197,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('db_port', '');
         $this->addToView('tz_list', $this->getTimeZoneList());
         $this->addToView('current_tz', $current_tz);
-        $this->addToView('site_email', 'you@example.com');
+        $this->addToView('site_email', '');
     }
 
     /**
