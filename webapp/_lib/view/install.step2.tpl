@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <input type="submit" name="Submit" class="next_step linkbutton btn btn-primary" value="Set It Up &raquo">
+                    <input type="submit" name="Submit" class="next_step linkbutton btn btn-primary" id="nextstep" value="Set It Up &raquo">
                 </div>
                 
             </fieldset>
