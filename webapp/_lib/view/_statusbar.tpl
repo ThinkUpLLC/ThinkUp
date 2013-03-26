@@ -14,7 +14,7 @@
                 <!--search posts-->
                 <form class="navbar-search pull-left dropdown" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&n={$instances[0]->network|urlencode}&c=posts&q=');">
 
-                    <input type="text" id="search-keywords" class="search-query span4 dropdown-toggle" data-toggle="dropdown" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
+                    <input type="text" id="search-keywords" class="search-query span4 dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
 
                     <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     {foreach from=$instances key=tid item=i}
@@ -119,8 +119,10 @@
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">
-    <ul> 
+    <ul>
+      {if $instances|@count} 
         <li><a href="{$site_root_path}" class="linkbutton" style="background: #31C22D;color:white;">Insights (New!)</a></li>
+      {/if}
       {if $logged_in_user}
         <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
         <script>var logged_in_user = '{$logged_in_user}';</script>
