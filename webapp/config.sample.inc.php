@@ -83,6 +83,9 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESS
     $THINKUP_CFG['cache_pages']               = false;
     $THINKUP_CFG['debug']                     = true;
     $THINKUP_CFG['timezone']                  = 'UTC';
+    //$THINKUP_CFG['invalid_db_host']           = '127.0.0.2';
+    //$THINKUP_CFG['requires_proxy']            = '0';
+    //$THINKUP_CFG['proxy']                     = '';    
     ini_set('error_reporting', E_STRICT);
 }
 

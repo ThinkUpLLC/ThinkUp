@@ -50,12 +50,14 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
      * @param Instance $instance
      * @param int $archive_limit
      * @param int $num_twitter_errors
+     * @param bool $requires_proxy
+     * @param str $proxy
      * @return CrawlerTwitterAPIAccessorOAuth
      */
     public function __construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-    $archive_limit, $num_twitter_errors) {
+    $archive_limit, $num_twitter_errors, $requires_proxy=false, $proxy='') {
         parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-        $num_twitter_errors);
+        $num_twitter_errors,true,$requires_proxy,$proxy);
         $this->archive_limit = $archive_limit;
         self::initializeEndpointRateLimits();
     }
@@ -66,7 +68,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     public function initializeEndpointRateLimits() {
         $endpoint = $this->endpoints['rate_limits'];
         $args = array();
-        $args["resources"] = 'account,statuses,users,followers,lists,friends,favorites,friendships,application';
+        $args["resources"] = 'account,statuses,users,followers,lists,friends,favorites,friendships,application,search';
         list($http_status, $payload) = $this->apiRequest($endpoint, $args);
         $rate_limit_data_array = JSONDecoder::decode($payload, true);
         $rate_limit_data_array = $rate_limit_data_array["resources"];

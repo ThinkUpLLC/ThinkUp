@@ -31,4 +31,17 @@ if (!class_exists('twitterOAuth')) {
 }
 
 class TwitterOAuthThinkUp extends TwitterOAuth {
+    
+    /**
+     * Set proxy properties
+     */
+    function setProxy($_requires_proxy,$_proxy) {
+        $setproxy = (bool)$_requires_proxy;
+        if ($setproxy && (isset($_proxy)) && ($_proxy <> '')) {
+            $this->requires_proxy = true;
+            $this->proxy = $_proxy;
+        } else {
+            $this->requires_proxy = false;
+        }
+    }
 }

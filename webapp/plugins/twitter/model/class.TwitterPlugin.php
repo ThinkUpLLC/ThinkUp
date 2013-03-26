@@ -80,12 +80,13 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                     $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
                     $options['oauth_consumer_secret']->option_value, $options['archive_limit']->option_value,
-                    $num_twitter_errors);
+                    $num_twitter_errors,$options['requires_proxy']->option_value,
+                    $options['proxy']->option_value);
 
                     $twitter_crawler = new TwitterCrawler($instance, $api);
                     $dashboard_module_cacher = new DashboardModuleCacher($instance);
 
-                    $instance_dao->updateLastRun($instance->id);
+                    $instance_dao->updateLastRun($instance->id);                  
 
                     $twitter_crawler->fetchInstanceUserTweets();
                     $twitter_crawler->fetchInstanceUserMentions();
@@ -97,10 +98,21 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $twitter_crawler->updateStaleGroupMemberships();
                     $twitter_crawler->fetchStrayRepliedToTweets();
                     $twitter_crawler->fetchUnloadedFollowerDetails();
-                    $twitter_crawler->cleanUpFollows();
+                    $twitter_crawler->cleanUpFollows();                   
+
+                    //Retrieve for this instance the hashtags to search
+                    $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+                    $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+                    $instances_hashtags = $instance_hashtag_dao->getByInstance($instance->id);
+                    foreach ($instances_hashtags as $instance_hashtag) {
+                        $hashtag_id = $instance_hashtag->hashtag_id;
+                        $hashtag = $hashtag_dao->getByHashtag($hashtag_id);
+                        $twitter_crawler->fetchInstanceHashtagTweets($instance_hashtag_dao,$instance_hashtag,$hashtag);
+                    }
                 } else {
                     throw new Exception('Missing Twitter OAuth tokens.');
                 }
+
             } catch (Exception $e) {
                 $logger->logUserError(get_class($e) ." while crawling ".$instance->network_username." on Twitter: ".
                 $e->getMessage(), __METHOD__.','.__LINE__);
@@ -120,6 +132,11 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
     public function renderConfiguration($owner) {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        return $controller->go();
+    }
+    
+    public function renderHashtagConfiguration($owner, $active_user) {
+        $controller = new TwitterPluginHashtagConfigurationController($owner, 'twitter',$active_user);
         return $controller->go();
     }
 

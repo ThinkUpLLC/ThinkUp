@@ -36,6 +36,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
      * Timeout for downloading old thinkup version .zip files from GitHub
      */
     const FILE_DOWNLOAD_TIMEOUT = 60;
+    var $requires_proxy;
+    var $proxy;
 
     public function setUp() {
         Utils::setDefaultTimezonePHPini();
@@ -63,6 +65,15 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->tearDown();
         $this->restart();
         $this->latest_build_made = false; //so we only create th elatest build zip once...
+        
+        $this->requires_proxy = $config->getValue('requires_proxy');
+        if (!isset($this->requires_proxy)) {
+            $this->requires_proxy = '0';
+        }
+        $this->proxy = $config->getValue('proxy');
+        if (!isset($this->proxy)) {
+            $this->proxy = '';
+        }
     }
 
     public function tearDown() {
@@ -462,6 +473,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             curl_setopt($ch, CURLOPT_TIMEOUT, self::FILE_DOWNLOAD_TIMEOUT);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            if ($this->requires_proxy) {
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+            }
             $data = curl_exec($ch);
             if ( !$data) {
                 $zipfile = false;

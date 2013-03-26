@@ -44,6 +44,8 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.CrawlerTwitterAPIA
 
 class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $logger;
+    var $requires_proxy = '1';
+    var $proxy = '172.28.0.20:3128';
 
     public function setUp() {
         parent::setUp();
@@ -256,6 +258,14 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
         'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'requires_proxy',
+                'option_value'=> $this->requires_proxy  ));
+        $builders[] = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'proxy',
+                'option_value'=>$this->proxy));
 
         $this->simulateLogin('me@example.com', true, true);
 

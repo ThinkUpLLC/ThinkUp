@@ -130,4 +130,90 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
             return null;
         }
     }
+	    
+	public function getByHashtag($hashtag_id) {
+        $q = "SELECT
+                id, hashtag, network, count_cache
+            FROM
+                #prefix#hashtags
+            WHERE  id = :hashtag_id";
+        
+        $vars = array(':hashtag_id' => $hashtag_id);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $stmt = $this->execute($q, $vars);
+        $hashtag = $this->getDataRowAsObject($stmt, 'Hashtag');
+        return $hashtag;
+    }
+    
+    public function getByHashtagName($hashtag_name) {
+        $q = "SELECT
+                id, hashtag, network, count_cache
+            FROM
+                #prefix#hashtags
+            WHERE  hashtag = :hashtag_name";
+    
+        $vars = array(':hashtag_name' => $hashtag_name);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $stmt = $this->execute($q, $vars);
+        $hashtag = $this->getDataRowAsObject($stmt, 'Hashtag');
+        return $hashtag;
+    }
+
+    public function getByUsername($username) {
+        $q = "SELECT t.id, t.hashtag, t.network, t.count_cache " . 
+             "FROM #prefix#hashtags t " .
+             "INNER JOIN #prefix#instances_hashtags ih ON t.id=ih.hashtag_id " .
+             "INNER JOIN #prefix#instances i ON ih.instance_id = i.id " .
+             "WHERE i.network_username = :username";
+        $vars = array(':username' => $username);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $stmt = $this->execute($q, $vars);
+        $hashtag = $this->getDataRowsAsObjects($stmt, 'Hashtag');
+        return $hashtag;
+    }
+    
+    public function deleteHashtagByHashtagId($hashtag_id) {
+        $q  = "DELETE FROM #prefix#hashtags WHERE id=:hashtag_id;";
+        $vars = array(':hashtag_id'=>$hashtag_id);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDeleteCount($ps);
+    }
+    
+    public function deleteHashtagsPostsByHashtagId($hashtag_id) {
+        $q  = "DELETE FROM #prefix#hashtags_posts WHERE hashtag_id=:hashtag_id;";
+        $vars = array(':hashtag_id'=>$hashtag_id);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDeleteCount($ps);
+    }
+    
+    public function insertHashtagByHashtagName($hashtag, $network='twitter') {
+        $q  = "INSERT #prefix#hashtags ";
+        $q .= "(hashtag, network, count_cache) ";
+        $q .= "VALUES ( :hashtag, :network, :count) ";
+        $vars  = array(':hashtag'=>$hashtag,':network'=>$network,':count'=> 0);
+        $ps = $this->execute($q, $vars);
+        $hashtag_id = $this->getInsertId($ps);
+        if (!$hashtag_id) {
+            return 0;           
+        }
+        else {
+            return $hashtag_id;
+        }
+    }
+    
+    public function isHashtagPostInDB($hashtag_id, $post_id, $network) {
+        $q = "SELECT post_id FROM  #prefix#hashtags_posts ";
+        $q .= "WHERE hashtag_id = :hashtag_id AND post_id = :post_id AND network=:network;";
+        $vars = array(
+                ':hashtag_id'=>$hashtag_id,               
+                ':post_id'=>(string)$post_id,
+                ':network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataIsReturned($ps);
+    }
+
 }

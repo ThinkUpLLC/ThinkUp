@@ -3,9 +3,7 @@
 <div class="plugin-info">
 
     <span class="pull-right">{insert name="help_link" id='twitter'}</span>
-    <h2>
-        <i class="icon-twitter icon-muted"></i> Twitter 
-    </h2>
+    <h2><i class="icon-twitter icon-muted"></i> Twitter</h2>
 
 </div>
 
@@ -16,6 +14,7 @@
     <tr>
         <th><h4 class="pull-left">Account</h4></th>
         <th><i class="icon-lock icon-2x icon-muted"></i></th>
+        <th><i class="icon-tag icon-2x icon-muted"></i></th>
         <th><i class="icon-refresh icon-2x icon-muted"></i></th>
         <th><i class="icon-trash icon-2x icon-muted"></i></th>
     </tr>
@@ -28,6 +27,9 @@
         <td class="action-button">
             <span id="div{$i->id} input-prepend"><input type="submit" name="submit" class="btn
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
+        </td>
+        <td class="action-button">
+        	<a href="{$site_root_path}account/?p=twitter&u={$i->network_username}" class="btn btn-info btnHashtag">Search tweets</a>
         </td>
         <td class="action-button">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>

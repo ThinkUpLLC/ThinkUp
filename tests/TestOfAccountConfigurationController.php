@@ -771,4 +771,635 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
             ));
             return $builders;
     }
+    
+    public function testAddAndDeleteHashtagSearch() {
+        
+        //Add hashtag
+        $hashtag_dao = new HashtagMySQLDAO();
+        $instance_hashtag_dao = new InstanceHashtagMySQLDAO();    
+    
+        $this->simulateLogin('admin@example.com', true, true);        
+        $_POST['action'] = 'Save search';
+        $_POST['new_hashtag_name'] = '#Messi';
+        $_POST['instance_id'] = 1;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;                
+
+        $controller = new AccountConfigurationController(true);
+    
+        $hashtag = $hashtag_dao->getByHashtagName($_POST['new_hashtag_name']);
+        $this->assertNull($hashtag);
+        $instance_hashtag = $instance_hashtag_dao->getByInstance(1);
+        $this->assertEqual(sizeof($instance_hashtag),0);
+        
+        $controller->go();
+        
+        $hashtag = $hashtag_dao->getByHashtagName($_POST['new_hashtag_name']);
+        $this->assertNotNull($hashtag);
+        $this->assertEqual($hashtag->id,1);
+        $this->assertEqual($hashtag->hashtag,$_POST['new_hashtag_name']);
+        $this->assertEqual($hashtag->network,'twitter');
+        $this->assertEqual($hashtag->count_cache,0);
+        $instance_hashtag = $instance_hashtag_dao->getByInstance(1);
+        $this->assertNotNull($instance_hashtag);
+        $this->assertEqual(sizeof($instance_hashtag),1);
+        $this->assertEqual($instance_hashtag[0]->instance_id,1);        
+        $this->assertEqual($instance_hashtag[0]->hashtag_id,1);
+        $this->assertEqual($instance_hashtag[0]->last_post_id,0);
+        $this->assertEqual($instance_hashtag[0]->earliest_post_id,0);
+        $this->assertEqual($instance_hashtag[0]->last_page_fetched_tweets,1);
+        
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 
+        'Hashtag '. $_POST['new_hashtag_name'] .' inserted with id 1. 1 row inserted for relationship with instance 1');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+        
+        //Search tweets
+        $posts_dao = new PostMySQLDAO();
+        $links_dao = new LinkMySQLDAO();
+        $users_dao = new UserMySQLDAO();
+        $hashtags_posts = $hashtag_dao->getHashtagsForPost(1);
+        $this->assertEqual(sizeof($hashtags_posts),0);
+        $posts=$posts_dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($posts),0);        
+        $posts=$posts_dao->getAllPostsByUsername('vetcastellnou','twitter');
+        $this->assertEqual(sizeof($posts),0);
+        $links = $links_dao->getLinksForPost(1);
+        $this->assertEqual(sizeof($links),0);
+        $this->assertFalse($users_dao->isUserInDB(100,'twitter'));
+        $this->assertFalse($users_dao->isUserInDB(101,'twitter'));
+                
+        $builder = $this->buildSearchData();
+        
+        $hashtags_posts = $hashtag_dao->getHashtagsForPost(1);
+        $this->assertEqual(sizeof($hashtags_posts),1);
+        $posts=$posts_dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($posts),2);
+        $posts=$posts_dao->getAllPostsByUsername('vetcastellnou','twitter');
+        $this->assertEqual(sizeof($posts),1);
+        $links = $links_dao->getLinksForPost(1);
+        $this->assertEqual(sizeof($links),2);
+        $this->assertTrue($users_dao->isUserInDB(100,'twitter'));
+        $this->assertTrue($users_dao->isUserInDB(101,'twitter'));
+                        
+        //Delete hashtag
+        $new_hashtag_name = $_POST['new_hashtag_name'];
+        unset($_POST['new_hashtag_name']);
+        $_POST['action'] = 'delete';
+        $_POST['instance_id'] = 1;
+        $_POST['hashtag_id']=1;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+                
+        $controller = new AccountConfigurationController(true);
+        $controller->go(); 
+
+        $hashtags_posts = $hashtag_dao->getHashtagsForPost(1);
+        $this->assertEqual(sizeof($hashtags_posts),0);
+        $posts=$posts_dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($posts),0);
+        $posts=$posts_dao->getAllPostsByUsername('vetcastellnou','twitter');
+        $this->assertEqual(sizeof($posts),1);
+        $links = $links_dao->getLinksForPost(1);
+        //Don't delete links
+        $this->assertEqual(sizeof($links),2);
+        //Don't delete users
+        $this->assertTrue($users_dao->isUserInDB(100,'twitter'));
+        $this->assertTrue($users_dao->isUserInDB(101,'twitter'));        
+        $hashtag = $hashtag_dao->getByHashtagName($new_hashtag_name);
+        $this->assertNull($hashtag);
+        $instance_hashtag = $instance_hashtag_dao->getByInstance(1);
+        $this->assertEqual(sizeof($instance_hashtag),0);
+        
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Hashtags posts deleted = 2. Instances hashtags deleted = 1. ' .
+                'Hashtag deleted = 1');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));            
+        
+    }
+    
+    private function buildSearchData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('hashtags_posts',
+                array('post_id' => 1, 'hashtag_id' => 1, 'network' => 'twitter'));
+        $builders[] = FixtureBuilder::build('hashtags_posts',
+                array('post_id' => 3, 'hashtag_id' => 1, 'network' => 'twitter'));
+        
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '1',
+                        'author_user_id' => '100',
+                        'author_username' => 'ecucurella', 
+                        'author_fullname' => 'Eduard Cucurella',
+                        'author_avatar' => 'http://aa.com', 
+                        'author_follower_count' => 0,
+                        'post_text' => '#Messi is the best http://flic.kr/p/ http://flic.kr/a/',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '', 
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34', 
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0, 
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '2',
+                        'author_user_id' => '101',
+                        'author_username' => 'vetcastellnou',
+                        'author_fullname' => 'Veterans Castellnou',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 0,
+                        'post_text' => 'Post without any hashtag http://flic.kr/p/',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '3',
+                        'author_user_id' => '102',
+                        'author_username' => 'efectivament',
+                        'author_fullname' => 'efectivament',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 0,
+                        'post_text' => 'Post with #Messi hashtag http://flic.kr/p/',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+        
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '4',
+                        'author_user_id' => '102',
+                        'author_username' => 'efectivament',
+                        'author_fullname' => 'efectivament',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 0,
+                        'post_text' => 'Post without any hashtag 2',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+                
+        $builders[] = FixtureBuilder::build('links', array(
+                'url'=>'http://flic.kr/p/',
+                'title'=>'Link ',
+                'post_key'=>1,
+                'expanded_url'=>'', 
+                'error'=>'',
+                'image_src'=>'http://flic.kr/thumbnail.png'));
+        
+        $builders[] = FixtureBuilder::build('links', array(
+                'url'=>'http://flic.kr/a/',
+                'title'=>'Link ',
+                'post_key'=>1,
+                'expanded_url'=>'', 
+                'error'=>'',
+                'image_src'=>'http://flic.kr/thumbnail.png'));        
+        
+        $builders[] = FixtureBuilder::build('links', array(
+                'url'=>'http://flic.kr/p/',
+                'title'=>'Link ',
+                'post_key'=>2,
+                'expanded_url'=>'',
+                'error'=>'',
+                'image_src'=>'http://flic.kr/thumbnail.png'));
+        
+        $builders[] = FixtureBuilder::build('links', array(
+                'url'=>'http://flic.kr/p/',
+                'title'=>'Link ',
+                'post_key'=>3,
+                'expanded_url'=>'',
+                'error'=>'',
+                'image_src'=>'http://flic.kr/thumbnail.png'));
+                
+        $builders[] = FixtureBuilder::build('users', array(
+                'user_id'=>100, 
+                'user_name'=>'ecucurella',
+                'full_name'=>'Eduard Cucurella'));
+                
+        $builders[] = FixtureBuilder::build('users', array(
+                'user_id'=>101,
+                'user_name'=>'vetcastellnou',
+                'full_name'=>'Veterans Castellnou'));           
+
+        $builders[] = FixtureBuilder::build('users', array(
+                'user_id'=>102,
+                'user_name'=>'efectivament',
+                'full_name'=>'efectivament'));
+        
+        return $builders;
+    }
+    
+    public function testDeleteExistingInstanceWithTweetSearchAsAdmin() {
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_hashtag_dao = new InstanceHashtagMySQLDAO();
+    
+        //Admin: should delete also hashtag instance information
+        $this->simulateLogin('admin@example.com', true, true);
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 1;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+    
+        //before
+        $instance = $instance_dao->get(1);
+        $this->assertNotNull($instance);
+        $instances_hashtags = $instance_hashtag_dao->getByInstance($instance->id);
+        $this->assertEqual(sizeof($instances_hashtags),0);     
+        
+        $builder = $this->buildHashtagData(1);
+            
+        //hashtags posts should be deleted
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),1);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(2);
+        $this->assertEqual(sizeof($hashtags),1);
+        
+        //instances hashtags should be deleted       
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);
+        $this->assertEqual(sizeof($instances_hashtags),2);
+        
+        //hashtag should be deleted       
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),1);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),1);
+    
+        //process controller
+        $controller->go();
+        
+        //hashtags posts should be deleted
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),0);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),0);
+        
+        //instances hashtags should be deleted       
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);
+        $this->assertEqual(sizeof($instances_hashtags),0);
+        
+        //hashtag should be deleted       
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),0);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),0);
+            
+        //instance should be deleted
+        $instance = $instance_dao->get(1);
+        $this->assertNull($instance);
+    
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(1);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+    
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.Hashtag deleted = 1(1,1,1).'.
+                'Hashtag deleted = 2(1,1,1).');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }  
+
+    public function testDeleteExistingInstanceWithTweetSearchWithPrivilegesNoOtherOwners() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+                'network_username'=>'tuinstance', 'network'=>'twitter'));
+    
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
+                'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+        
+        //Not admin with access privs, no other owners (delete owner instance AND instance)
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_hashtag_dao = new InstanceHashtagMySQLDAO();
+        
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+        $instances_hashtags = $instance_hashtag_dao->getByInstance($instance->id);
+        $this->assertEqual(sizeof($instances_hashtags),0);
+        
+        $builder = $this->buildHashtagData(2);
+        
+        //after builder
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),1);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(2);
+        $this->assertEqual(sizeof($hashtags),1);
+        
+        //instances hashtags should be deleted
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(2);
+        $this->assertEqual(sizeof($instances_hashtags),2);
+        
+        //hashtag should be deleted
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),1);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),1);
+        
+        //Should delete the owner instance, and since there's no other owner, the instance itself
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+    
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+    
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+    
+        //process controller
+        $controller->go();
+        
+        //hashtags posts should be deleted
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),0);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(2);
+        $this->assertEqual(sizeof($hashtags),0);
+        
+        //instances hashtags should be deleted
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(2);
+        $this->assertEqual(sizeof($instances_hashtags),0);
+        
+        //hashtag should be deleted
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),0);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),0);
+    
+        //instance should be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNull($instance);
+    
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+    
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.Hashtag deleted = 1(1,1,1).'.
+                'Hashtag deleted = 2(1,1,1).');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }
+    
+    public function testDeleteExistingInstanceWithTweetSearchWithPrivilegesWithOtherOwners() {
+        //Not admin with access privs, with other owners (delete owner instance and NOT instance)
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+                'network_username'=>'tuinstance', 'network'=>'twitter'));
+    
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
+                'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+    
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+                'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+    
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_hashtag_dao = new InstanceHashtagMySQLDAO();
+        
+        //before builder
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+        $instances_hashtags = $instance_hashtag_dao->getByInstance($instance->id);
+        $this->assertEqual(sizeof($instances_hashtags),0);
+        
+        $builder = $this->buildHashtagData(2);
+        
+        //after builder
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),1);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(2);
+        $this->assertEqual(sizeof($hashtags),1);
+        
+        //instances hashtags should be deleted
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(2);
+        $this->assertEqual(sizeof($instances_hashtags),2);
+        
+        //hashtag should be deleted
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),1);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),1);        
+        
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+    
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+    
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+    
+        //process controller
+        $controller->go();
+        
+        //hashtags posts should be deleted
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($hashtags),1);
+        $hashtags = $hashtag_dao->getHashtagsForPostHID(2);
+        $this->assertEqual(sizeof($hashtags),1);
+        
+        //instances hashtags should NOT be deleted
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(2);
+        $this->assertEqual(sizeof($instances_hashtags),2);
+        
+        //hashtag should NOT be deleted
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual(sizeof($hashtag),1);
+        $hashtag = $hashtag_dao->getByHashtag(2);
+        $this->assertEqual(sizeof($hashtag),1);
+    
+        //instance should NOT be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+    
+        //just one owner_instance should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+    
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }
+    
+    private function buildHashtagData($instance) {
+        $builders = array();
+    
+        $builders[] = FixtureBuilder::build('hashtags',
+                array('hashtag' => 'first', 'network' => 'twitter', 'count_cache' => 0));     
+        $builders[] = FixtureBuilder::build('hashtags',
+                array('hashtag' => 'second', 'network' => 'twitter', 'count_cache' => 0)); 
+        $builders[] = FixtureBuilder::build('instances_hashtags',
+                array('instance_id' => $instance, 'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => 0, 
+                    'last_page_fetched_tweets' => 1));        
+        $builders[] = FixtureBuilder::build('instances_hashtags',
+                array('instance_id' => $instance, 'hashtag_id' => 2, 'last_post_id' => '0', 'earliest_post_id' => 0,
+                        'last_page_fetched_tweets' => 1));      
+        $builders[] = FixtureBuilder::build('hashtags_posts',
+                array('post_id' => 1, 'hashtag_id' => 1, 'network' => 'twitter'));
+        $builders[] = FixtureBuilder::build('hashtags_posts',
+                array('post_id' => 2, 'hashtag_id' => 2, 'network' => 'twitter'));
+        
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '1',
+                        'author_user_id' => '100',
+                        'author_username' => 'ecucurella',
+                        'author_fullname' => 'Eduard Cucurella',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 0,
+                        'post_text' => '#Messi is the best http://flic.kr/p/ http://flic.kr/a/',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+        
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '2',
+                        'author_user_id' => '101',
+                        'author_username' => 'vetcastellnou',
+                        'author_fullname' => 'Veterans Castellnou',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 0,
+                        'post_text' => 'Post without any hashtag http://flic.kr/p/',
+                        'is_protected' => 0,
+                        'source' => '<a href=""></a>',
+                        'location' => 'BCN',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+        
+        return $builders;
+    }
 }

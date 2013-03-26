@@ -292,4 +292,23 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->debug(Utils::varDumpToString($results));
         $this->assertEqual($results["error"], "Sorry, that page does not exist");
     }
+    
+    public function testParseJSONTweetsFromSearch() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+                $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);    
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/search_tweets.json');    
+        $results = $api->parseJSONTweetsFromSearch($data);    
+        $this->debug(Utils::varDumpToString($results));        
+        $this->assertEqual(sizeof($results),2);       
+        $this->assertEqual($results[0]["post_text"], "Resumen del #MWC2013 http://t.co/yPMZd3eTNb");
+        $this->assertEqual($results[0]["post_id"], "307436813180616704");
+        $this->assertEqual($results[0]["user_id"], "2485041");
+        $this->assertEqual($results[0]["user_name"], "GinaTost");
+        $this->assertEqual($results[0]["author_fullname"], "Gina Tost");
+        $this->assertEqual($results[0]["location"], "Barcelona");
+        $this->assertEqual($results[1]["pub_date"], "2013-03-01 10:26:24");
+        $this->assertEqual($results[1]["follower_count"], 506);
+        $this->assertEqual($results[1]["post_count"], 5848);
+        $this->assertEqual($results[1]["friend_count"], 713);        
+    }
 }

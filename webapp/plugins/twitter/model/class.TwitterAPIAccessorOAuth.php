@@ -88,16 +88,19 @@ class TwitterAPIAccessorOAuth {
      * @param str $oauth_consumer_secret
      * @param int $num_twitter_errors
      * @param bool $log Whether or not to log progress (don't on initial web auth, do on crawl)
+     * @param bool $requires_proxy
+     * @param str $proxy
      * @return TwitterAPIAccessorOAuth
      */
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
-    $oauth_consumer_secret, $num_twitter_errors, $log=true) {
+    $oauth_consumer_secret, $num_twitter_errors, $log=true, $requires_proxy=false, $proxy='') {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
         $this->log = $log;
 
         $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
         $this->$oauth_access_token_secret);
+        $this->to->setProxy($requires_proxy,$proxy);
         $this->endpoints = $this->prepAPI();
 
         $logger = Logger::getInstance();
@@ -150,7 +153,8 @@ class TwitterAPIAccessorOAuth {
             "following"=>"friends/list",
             "following_ids"=>"friends/ids",
             "show_friendship"=>"friendships/show",
-            "favorites"=>"favorites/list"
+            "favorites"=>"favorites/list",
+            "search_tweets"=>"search/tweets"
 
             //1.0 "favorites"=>"/favorites/:id",
         //1.0 "following"=>"/statuses/friends",
@@ -212,6 +216,22 @@ class TwitterAPIAccessorOAuth {
         return $parsed_payload;
     }
     /**
+     * Parse JSON list of tweets from Search.
+     * @param str $data JSON list of tweets.
+     * @return array Posts
+     */
+    public function parseJSONTweetsFromSearch($data) {
+        $json = JSONDecoder::decode($data);
+        //print_r($json);
+        $parsed_payload = array();
+        if (isset($json)) {
+            foreach ($json->statuses as $tweet) {
+                $parsed_payload[] = self::convertJSONtoTweetArray($tweet);
+            }
+        }
+        return $parsed_payload;
+    }
+    /**
      * Parse JSON tweet.
      * @param str $data JSON tweet data
      * @return array Post values
@@ -255,13 +275,17 @@ class TwitterAPIAccessorOAuth {
             'full_name'=>$json_tweet->user->name,
             'source'=>$json_tweet->source,
             'location'=>$json_tweet->user->location,
-            'url'=>$json_tweet->user->url,
+            'url'=>(isset($json_tweet->user->url)?$json_tweet->user->url:''),
             'description'=>$json_tweet->user->description,
             'is_protected'=>self::boolToInt($json_tweet->user->protected),
             'follower_count'=>$json_tweet->user->followers_count,
             'post_count'=>$json_tweet->user->statuses_count,
             'geo'=>$geo,
             'place'=>(isset($json_tweet->place->full_name))?$json_tweet->place->full_name:'',
+            'friend_count'=> (integer)$json_tweet->user->friends_count,
+            'joined'=> (string)gmdate("Y-m-d H:i:s", strToTime($json_tweet->user->created_at)),
+            'favorites_count'=>(integer)$json_tweet->user->favourites_count,
+            'favorited'=> (integer)self::boolToInt($json_tweet->favorited),
             'network'=>'twitter'
             );
 

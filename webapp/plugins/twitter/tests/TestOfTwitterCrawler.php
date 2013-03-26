@@ -82,6 +82,14 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // stale group membership
         $this->builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'36823',
         'group_id'=>'19994710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-3d'));
+        
+        // insert hashtags
+        $this->builders[] = FixtureBuilder::build('hashtags', array('id' => 1, 'hashtag' => '#mwc2013',
+                'network' => 'twitter', 'count_cache' => 0));
+        
+        // insert instances_hashtags
+        $this->builders[] = FixtureBuilder::build('instances_hashtags', array('id' => 1, 'instance_id' => 1,
+                'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => '0', 'last_page_fetched_tweets' => 1));
     }
 
     public function tearDown() {
@@ -553,5 +561,316 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         }
         $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 20);
+    }
+
+    private function setUpInstanceUserEduardCucurella() {
+        $r = array('id'=>1, 'network_username'=>'ecucurella', 'network_user_id'=>'13771532',
+                'network_viewer_id'=>'13771532', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+                'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+                'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+                'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+                'avg_replies_per_day'=>'0', 'is_public'=>'0', 'is_active'=>'1', 'network'=>'twitter',
+                'last_favorite_id' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0', 
+                'total_posts_by_owner'=>0, 'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50,
+                'percentage_links'=>50, 'earliest_post_in_system'=>'2009-01-01 13:48:05');
+        $this->instance = new TwitterInstance($r);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth($oauth_token='111', $oauth_token_secret='222',
+        $oauth_consumer_key = 'fake_key', $oauth_consumer_secret ='fake_secret', $archive_limit= 3200,
+        $num_twitter_errors=2);
+        $this->instance->is_archive_loaded_follows = true;
+    }
+    
+    public function testFetchInstanceHashtagTweets () {        
+        $this->debug(__METHOD__);   
+        self::setUpInstanceUserEduardCucurella();
+                  
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/searchtweets/');
+        $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);   
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $hashtag = $hashtag_dao->getByHashtag(1);  
+        $twitter_crawler->fetchInstanceHashtagTweets($instance_hashtag_dao,$instances_hashtags[0],$hashtag);
+            
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($post_dao->isPostInDB('307436651154665473', 'twitter'));
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('251219944', 'twitter'));
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $res = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual($res->hashtag, '#mwc2013');
+        $this->assertEqual($res->network, 'twitter');
+        $this->assertEqual($res->count_cache, 2); //2 tweets
+        $res = $hashtag_dao->getHashtagsForPostHID(1);   
+        $this->assertEqual(sizeof($res), 2); //2 tweets
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $res = $link_dao->getLinksForPost('307436813180616704','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/yPMZd3eTNb');                
+        $res = $link_dao->getLinksForPost('307436651154665473','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/8yet1gjfDm');        
+    }
+
+    public function testFetchInstanceHashtagTweetsPostAndUserExistInDB () {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserEduardCucurella();
+        
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        
+        //Post and User NOT exist
+        $this->assertFalse($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertFalse($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),0);
+        
+        $builder = $this->buildDataPostUser();
+        
+        //Post and User exist
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));     
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),1);
+        
+        //crawls
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/searchtweets/');
+        $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $twitter_crawler->fetchInstanceHashtagTweets($instance_hashtag_dao,$instances_hashtags[0],$hashtag);
+            
+        //Post exist
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));        
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),1);        
+        $this->assertTrue($post_dao->isPostInDB('307436651154665473', 'twitter'));        
+        $this->assertTrue($user_dao->isUserInDB('251219944', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('XerpaC','twitter'),1);
+        
+        //Hashtag
+        $res = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual($res->hashtag, '#mwc2013');
+        $this->assertEqual($res->network, 'twitter');
+        $this->assertEqual($res->count_cache, 2);
+        
+        //How many posts for hashtag_id 1 in tu_hashtags_posts
+        $res = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($res), 2);
+        $this->assertEqual($res[0]['post_id'],307436651154665473);
+        $this->assertEqual($res[1]['post_id'],307436813180616704);
+        
+        
+        $res = $link_dao->getLinksForPost('307436813180616704','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/yPMZd3eTNb');
+        $res = $link_dao->getLinksForPost('307436651154665473','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/8yet1gjfDm');
+    }
+    
+    public function testFetchInstanceHashtagTweetsOnlyPostExistInDB () {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserEduardCucurella();
+    
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+    
+        //Post and User NOT exist
+        $this->assertFalse($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertFalse($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),0);
+    
+        $builder = $this->buildDataPost();
+    
+        //Post exist and User NOT exist
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertFalse($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),1);
+    
+        //crawls
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/searchtweets/');
+        $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $twitter_crawler->fetchInstanceHashtagTweets($instance_hashtag_dao,$instances_hashtags[0],$hashtag);
+    
+        //Post exist
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),1);
+        $this->assertTrue($post_dao->isPostInDB('307436651154665473', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('251219944', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('XerpaC','twitter'),1);
+    
+        //Hashtag
+        $res = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual($res->hashtag, '#mwc2013');
+        $this->assertEqual($res->network, 'twitter');
+        $this->assertEqual($res->count_cache, 2);
+    
+        //How many posts for hashtag_id 1 in tu_hashtags_posts
+        $res = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($res), 2);
+        $this->assertEqual($res[0]['post_id'],307436651154665473);
+        $this->assertEqual($res[1]['post_id'],307436813180616704);
+    
+    
+        $res = $link_dao->getLinksForPost('307436813180616704','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/yPMZd3eTNb');
+        $res = $link_dao->getLinksForPost('307436651154665473','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/8yet1gjfDm');
+    }
+    
+    public function testFetchInstanceHashtagTweetsOnlyUserExistInDB () {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserEduardCucurella();
+    
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+    
+        //Post and User NOT exist
+        $this->assertFalse($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertFalse($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),0);
+    
+        $builder = $this->buildDataUser();
+    
+        //Post NOT exist and User exist
+        $this->assertFalse($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),0);
+    
+        //crawls
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/searchtweets/');
+        $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+        $instances_hashtags = $instance_hashtag_dao->getByInstance(1);
+        $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $hashtag = $hashtag_dao->getByHashtag(1);
+        $twitter_crawler->fetchInstanceHashtagTweets($instance_hashtag_dao,$instances_hashtags[0],$hashtag);
+    
+        //Post exist
+        $this->assertTrue($post_dao->isPostInDB('307436813180616704', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('2485041', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('GinaTost','twitter'),1);
+        $this->assertTrue($post_dao->isPostInDB('307436651154665473', 'twitter'));
+        $this->assertTrue($user_dao->isUserInDB('251219944', 'twitter'));
+        $this->assertEqual($post_dao->getTotalPostsByUser('XerpaC','twitter'),1);
+    
+        //Hashtag
+        $res = $hashtag_dao->getByHashtag(1);
+        $this->assertEqual($res->hashtag, '#mwc2013');
+        $this->assertEqual($res->network, 'twitter');
+        $this->assertEqual($res->count_cache, 2);
+    
+        //How many posts for hashtag_id 1 in tu_hashtags_posts
+        $res = $hashtag_dao->getHashtagsForPostHID(1);
+        $this->assertEqual(sizeof($res), 2);
+        $this->assertEqual($res[0]['post_id'],307436651154665473);
+        $this->assertEqual($res[1]['post_id'],307436813180616704);
+    
+    
+        $res = $link_dao->getLinksForPost('307436813180616704','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/yPMZd3eTNb');
+        $res = $link_dao->getLinksForPost('307436651154665473','twitter');
+        $this->assertEqual(sizeof($res), 1);
+        $this->assertEqual($res[0]->url, 'http://t.co/8yet1gjfDm');
+    }
+    
+    public function buildDataPostUser() {
+        $builders = array();        
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '307436813180616704',
+                        'author_user_id' => '2485041',
+                        'author_username' => 'GinaTost',
+                        'author_fullname' => 'Gina Tost',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 20166,
+                        'post_text' => 'Resumen del #MWC2013 http://t.co/yPMZd3eTNb',
+                        'is_protected' => 0,
+                        'source' => 'web',
+                        'location' => 'Barcelona',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+        $builders[] = FixtureBuilder::build('users', array(
+                'user_id'=>2485041,
+                'user_name'=>'GinaTost',
+                'full_name'=>'Gina Tost'));
+        return $builders;
+    }
+    
+    public function buildDataPost() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('posts',
+                array(
+                        'post_id' => '307436813180616704',
+                        'author_user_id' => '2485041',
+                        'author_username' => 'GinaTost',
+                        'author_fullname' => 'Gina Tost',
+                        'author_avatar' => 'http://aa.com',
+                        'author_follower_count' => 20166,
+                        'post_text' => 'Resumen del #MWC2013 http://t.co/yPMZd3eTNb',
+                        'is_protected' => 0,
+                        'source' => 'web',
+                        'location' => 'Barcelona',
+                        'place' => '',
+                        'place_id' => '',
+                        'geo' => '',
+                        'pub_date' => '2013-02-28 11:02:34',
+                        'in_reply_to_user_id' => '',
+                        'in_reply_to_post_id' => '',
+                        'reply_count_cache' => 1,
+                        'is_reply_by_friend' => 0,
+                        'in_retweet_of_post_id' => '',
+                        'old_retweet_count_cache' => 0,
+                        'is_retweet_by_friend' => 0,
+                        'reply_retweet_distance' => 0,
+                        'network' => 'twitter',
+                        'is_geo_encoded' => 0,
+                        'in_rt_of_user_id' => '',
+                        'retweet_count_cache' => 0,
+                        'retweet_count_api' => 0,
+                        'favlike_count_cache' => 0));
+        return $builders;
+    }
+    
+    public function buildDataUser() {
+        $builders = array();       
+        $builders[] = FixtureBuilder::build('users', array(
+                'user_id'=>2485041,
+                'user_name'=>'GinaTost',
+                'full_name'=>'Gina Tost'));
+        return $builders;
     }
 }

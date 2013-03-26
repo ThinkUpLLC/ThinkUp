@@ -701,4 +701,24 @@ interface PostDAO {
      * @return arr of Post objects
      */
     public function searchPostsByUser(array $keywords, $network, $author_username, $page_number=1, $page_count=20);
+    
+    /**
+     * Get all posts by a given hashtag with configurable order by field and direction
+     * @param int $hashtag_id
+     * @param str $network
+     * @param int $count
+     * @param str $order_by field name
+     * @param str $direction either "DESC" or "ASC
+     * @param int $page Page number, defaults to 1
+     * @param bool $is_public Whether or not these results are going to be displayed publicly. Defaults to false.
+     * @return array Posts with link object set
+     */
+    public function getAllPostsByHashtagId($hashtag_id, $network, $count, $order_by="pub_date", $direction="DESC",
+            $page=1, $is_public = false);
+    /**
+     * Delete Posts given a hashtag_id
+     * @param str $hashtag_id
+     * @return  int Total number of affected rows
+     */
+    public function deletePostsByHashtagId($hashtag_id);
 }

@@ -186,7 +186,15 @@ class DAOFactory {
             'mysql' => 'InsightBaselineMySQLDAO'),
         'InsightDAO' => array (
     //MySQL Version
-            'mysql' => 'InsightMySQLDAO')
+            'mysql' => 'InsightMySQLDAO'),
+	//Instance Hashtag MySQL DAO
+        'InstanceHashtagDAO' => array(
+    //MySQL Version
+            'mysql' => 'InstanceHashtagMySQLDAO' ),
+    //Hashtag DAO
+        'HashtagPostDAO' => array(
+    //MySQL Version
+            'mysql' => 'HashtagPostMySQLDAO' )
     );
 
     /*

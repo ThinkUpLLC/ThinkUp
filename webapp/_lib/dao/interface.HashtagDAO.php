@@ -62,4 +62,50 @@ interface HashtagDAO {
      * @return array hashtag_posts table array
      */
     public function getHashtagsForPostHID($hashtag_id);
+	/**
+     * Get hashtag by a hashtag id
+     * @param int hashtag_id
+     * @return hashtag object
+     */
+    public function getByHashtag($hashtag_id); 
+    /**
+     * Get hashtag by a hashtag name
+     * @param str hashtag_name
+     * @return hashtag object
+     */
+    public function getByHashtagName($hashtag_name);
+    /**
+     * Get hashtags by a username
+     * @param str username
+     * @return hashtag object
+     */
+    public function getByUsername($username);
+    /**
+     * Delete Hashtag given a hashtag_id
+     * @param str $hashtag_id
+     * @return  int Total number of affected rows
+     */
+    public function deleteHashtagByHashtagId($hashtag_id);
+    /**
+     * Delete Hashtags Posts given a hashtag_id
+     * @param str $hashtag_id
+     * @return  int Total number of affected rows
+     */
+    public function deleteHashtagsPostsByHashtagId($hashtag_id);
+    /**
+     * Insert a new hashtag by name
+     * @param str $hashtag
+     * @param str $network
+     * @return int Hashtag id inserted
+     */
+    public function insertHashtagByHashtagName($hashtag, $network='twitter');
+    /**
+     * Check to see if relationship Hashtag Post is in database
+     * @param int $hashtag_id
+     * @param str $post_id
+     * @param str $network
+     * @return bool true if hashtag post is in the database
+     */
+    public function isHashtagPostInDB($hashtag_id, $post_id, $network);    
+
 }

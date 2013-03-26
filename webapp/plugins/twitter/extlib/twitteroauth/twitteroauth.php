@@ -33,6 +33,10 @@ class TwitterOAuth {
   public $http_info;
   /* Set the useragnet. */
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
+  /* Requires proxy */
+  public $requires_proxy = false;
+  /* Set proxy */
+  public $proxy = '';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
 
@@ -212,7 +216,10 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
-
+    if ($this->requires_proxy) {
+        curl_setopt($ci, CURLOPT_PROXY, $this->proxy);
+    }
+    
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
@@ -229,6 +236,7 @@ class TwitterOAuth {
 
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
+    $error = curl_error($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
     $this->url = $url;
@@ -248,4 +256,17 @@ class TwitterOAuth {
     }
     return strlen($header);
   }
+  
+  /**
+   * Set proxy properties
+   */
+  function setProxy($_requires_proxy,$_proxy) {
+    $setproxy = (bool)$_requires_proxy;
+    if ($setproxy && (isset($_proxy)) && ($_proxy <> '')) {
+        $this->requires_proxy = true;
+        $this->proxy = $_proxy;
+    } else {
+        $this->requires_proxy = false;        
+    }
+  }  
 }

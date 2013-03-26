@@ -31,6 +31,9 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
 
+    var $requires_proxy;
+    var $proxy;
+    
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
@@ -39,6 +42,22 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'testconsumersecret'));
         $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
         'option_name'=>'oauth_consumer_key', 'option_value'=>'testconsumerkey'));
+        
+        $config = Config::getInstance();        
+        $this->requires_proxy = $config->getValue('requires_proxy');
+        if (!isset($this->requires_proxy)) {
+            $this->requires_proxy = '0';
+        }
+        $this->proxy = $config->getValue('proxy');
+        if (!isset($this->proxy)) {
+            $this->proxy = '';
+        }
+        
+        $invalid_db_host = $config->getValue('invalid_db_host');
+        $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
+                'option_name'=>'requires_proxy', 'option_value'=> $this->requires_proxy));
+        $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
+                'option_name'=>'proxy', 'option_value'=>$this->proxy));
     }
 
     public function tearDown() {

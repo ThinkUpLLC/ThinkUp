@@ -52,13 +52,18 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
         $archive_limit = $this->getPluginOption('archive_limit');
         $num_twitter_errors = $this->getPluginOption('num_twitter_errors');
-
+        $requires_proxy = $this->getPluginOption('requires_proxy');
+        $proxy = $this->getPluginOption('proxy');
+        
         $this->addToView('twitter_app_name', "ThinkUp ". $_SERVER['SERVER_NAME']);
         $this->addToView('thinkup_site_url', Utils::getApplicationURL(true));
 
         $plugin = new TwitterPlugin();
         if ($plugin->isConfigured()) {
             $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
+            $to->requires_proxy = $requires_proxy;
+            $to->proxy =$proxy;
+            
             /* Request tokens from twitter */
             $tok = $to->getRequestToken(Utils::getApplicationURL(true)."plugins/twitter/auth.php");
 
@@ -119,5 +124,14 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $tweet_count_per_call = array('name' => 'tweet_count_per_call', 'label' => $tweet_count_per_call_label,
         'default_value' => '100', 'advanced'=> true, 'size'=>3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $tweet_count_per_call);
+
+        $requires_proxy_label = 'Requires proxy to connect (Yes=1, No=0)';
+        $requires_proxy = array('name' => 'requires_proxy', 'label' => $requires_proxy_label,
+                'default_value' => '0', 'advanced'=> true, 'size'=>3);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $requires_proxy);
+        
+        $proxy_label = 'Specify proxy IP and PORT:';
+        $proxy = array('name' => 'proxy', 'label' => $proxy_label, 'default_value' => '', 'advanced'=> true, 'size'=>3);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $proxy);
     }
 }

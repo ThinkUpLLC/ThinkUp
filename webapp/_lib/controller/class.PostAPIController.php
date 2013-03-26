@@ -115,6 +115,24 @@ class PostAPIController extends ThinkUpController {
      */
     public $include_rts = false;
     /**
+     * The hashtag ID to use. No default value. In requests that require hashtag data,
+     * either this or hashtag_name or keyword_name must be set.
+     * @var int
+     */
+    public $hashtag_id;
+    /**
+     * The hashtag name to use. No default value. In requests that require hashtag data,
+     * either this or hashtag ID or Keyword_name must be set.
+     * @var str
+     */
+    public $hashtag_name;    
+    /**
+     * The keyword name to use. No default value. In requests that require hashtag data,
+     * either this or hashtag ID or hashtah name must be set.
+     * @var str
+     */
+    public $keyword_name; 
+    /**
      * A User object set when either the user_id or username variables are set. If you are using User data at any point
      * in this class, you should use this object.
      * @var User
@@ -130,6 +148,17 @@ class PostAPIController extends ThinkUpController {
      * @var UserDAO
      */
     private $user_dao;
+    /**
+     * A Hashtag object set when either the hashtag_id or hashtag_name variables are set.
+     * If you are using Hashtag data at any point in this class, you should use this object.
+     * @var hashtag
+     */
+    private $hashtag;
+    /**
+     *
+     * @var HashtagDAO
+     */
+    private $hashtag_dao;
     /**
      * Constructor
      *
@@ -199,7 +228,17 @@ class PostAPIController extends ThinkUpController {
         if (isset($_GET['include_rts'])) {
             $this->include_rts = $this->isTrue($_GET['include_rts']);
         }
-
+        if (isset($_GET['hashtag_id'])) {
+            if (is_numeric($_GET['hashtag_id'])) {
+                $this->hashtag_id = $_GET['hashtag_id'];
+            }
+        }
+        if (isset($_GET['hashtag_name'])) {
+            $this->hashtag_name = $_GET['hashtag_name'];
+        }
+        if (isset($_GET['keyword_name'])) {
+            $this->keyword_name = $_GET['keyword_name'];
+        }
         /*
          * END READ IN OF QUERY STRING VARS
          */
@@ -279,7 +318,8 @@ class PostAPIController extends ThinkUpController {
         // fetch the correct PostDAO and UserDAO from the DAOFactory
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->user_dao = DAOFactory::getDAO('UserDAO');
-
+        $this->hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        
         /*
          * Use the information gathered from the query string to retrieve a
          * User object. This will be the standard object with which to get
@@ -292,6 +332,22 @@ class PostAPIController extends ThinkUpController {
         } else {
             $this->user = null;
         }
+
+        /*
+        * Use the information gathered from the query string to retrieve a
+        * Hashtag object. This will be the standard object with which to get
+        * Hashtag information from in API calls.
+        */
+        if (!is_null($this->hashtag_id)) {
+            $this->hashtag = $this->hashtag_dao->getByHashtag($this->hashtag_id);
+        } else if (!is_null($this->hashtag_name)) {
+            $this->hashtag = $this->hashtag_dao->getByHashtagName('#'.$this->hashtag_name);
+        } else if (!is_null($this->keyword_name)) {
+            $this->hashtag = $this->hashtag_dao->getByHashtagName($this->keyword_name);
+        } else {
+            $this->hashtag = null;
+        }
+        
         //Privacy checks
         if (substr($this->type, 0, 4)=='user') { //user-related API call
             if (is_null($this->user)) {
@@ -590,7 +646,31 @@ class PostAPIController extends ThinkUpController {
                 $data = $this->post_dao->getAllRepliesInRange($this->user->user_id, $this->network, $this->count,
                 $this->from, $this->until, $this->page, $this->order_by, $this->direction, $this->is_public);
                 break;
-
+                
+                /*
+                * Gets posts that contains a hashtag.
+                *
+                * Required arguments: hashtag_id or hastag_name
+                *
+                * Optional arguments: network, count, page, order_by, direction, include_entities, trim_user
+                *
+                * Docs: http://thinkup.com/docs/userguide/api/posts/hashtag_posts.html
+                */
+                case 'hashtag_posts':
+                    if (is_null($this->hashtag) && (!is_null($this->hashtag_id) || !is_null($this->hashtag_name)
+                        || !is_null($this->keyword_name))) {
+                        throw new HashtagNotFoundException();
+                    }
+                    elseif (is_null($this->hashtag)) {
+                        $m = 'A request of type ' . $this->type . ' requires valid hashtag_id or hashtag_name ';
+                        $m .= 'parameters to be specified.';
+                        throw new RequiredArgumentMissingException($m);                        
+                    } 
+                    else {
+                        $data = $this->post_dao->getAllPostsByHashtagId($this->hashtag->id, $this->network,
+                        $this->count, $this->order_by, $this->direction, $this->page, $this->is_public);
+                    }
+                    break;   
                 /*
                  * Generate an error because the API call type was not recognized.
                  *

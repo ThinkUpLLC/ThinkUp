@@ -61,14 +61,17 @@ class TwitterAuthController extends ThinkUpAuthController {
             $options = $plugin_option_dao->getOptionsHash('twitter', true); //get cached
 
             $to = new TwitterOAuth($options['oauth_consumer_key']->option_value,
-            $options['oauth_consumer_secret']->option_value, $request_token, $request_token_secret);
-
+            $options['oauth_consumer_secret']->option_value, $request_token, $request_token_secret);            
+            $to->requires_proxy = $options['requires_proxy']->option_value;            
+            $to->proxy = $options['proxy']->option_value;
+                        
             $tok = $to->getAccessToken();
 
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'],
                 $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value,
-                $options['num_twitter_errors']->option_value,  false);
+                $options['num_twitter_errors']->option_value,  false,$options['requires_proxy']->option_value,
+                $options['proxy']->option_value);
 
                 $authed_twitter_user = $api->verifyCredentials();
                 //                echo "User ID: ". $authed_twitter_user['user_id'];

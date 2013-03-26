@@ -39,17 +39,21 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php'
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/controller/class.TwitterAuthController.php';
 
 class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
-
+    var $requires_proxy = '1';
+    var $proxy = '172.28.0.20:3128';
+    
     public function setUp(){
         parent::setUp();
     }
 
     public function testConstructor() {
+        $this->debug(__METHOD__);
         $controller = new TwitterAuthController(true);
         $this->assertTrue(isset($controller));
     }
 
     public function testNotLoggedIn() {
+        $this->debug(__METHOD__);
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -59,6 +63,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInMissingParams() {
+        $this->debug(__METHOD__);
         $this->simulateLogin('me@example.com');
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
@@ -68,6 +73,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInMissingToken() {
+        $this->debug(__METHOD__);
         $this->simulateLogin('me@example.com');
         SessionCache::put('oauth_request_token_secret', 'XXX');
         $controller = new TwitterAuthController(true);
@@ -78,6 +84,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInMissingSessionWithGet() {
+        $this->debug(__METHOD__);
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
         $controller = new TwitterAuthController(true);
@@ -88,6 +95,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInAllParams() {
+        $this->debug(__METHOD__);
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
         SessionCache::put('oauth_request_token_secret', 'XXX');
@@ -98,13 +106,30 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
         $plugn_opt_builder2 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
-        $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        $plugn_opt_builder3 = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'archive_limit',
+                'option_value'=> '3200'  ));
+        $plugn_opt_builder4 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
+        $plugn_opt_builder5 = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'tweet_count_per_call',
+                'option_value'=> '100' ));        
+        $plugn_opt_builder6 = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'requires_proxy',
+                'option_value'=> $this->requires_proxy  ));
+        $plugn_opt_builder7 = FixtureBuilder::build('options', array(
+                'namespace'=>'plugin_options-1',
+                'option_name'=>'proxy',
+                'option_value'=>$this->proxy));
 
         $controller = new TwitterAuthController(true);
         $this->debug('Controller has been instantiated');
         $results = $controller->go();
-
+        $this->debug('Controller go');
+        
         $this->debug($results);
         //sleep(100);
         $v_mgr = $controller->getViewManager();
@@ -114,6 +139,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInAllParamsServiceUserExists() {
+        $this->debug(__METHOD__);
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
         SessionCache::put('oauth_request_token_secret', 'XXX');

@@ -312,4 +312,14 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         return $this->getUpdateCount($ps);
     }
+    
+    public function deleteLinksByHashtagId($hashtag_id) {
+        $q  = "DELETE l.* FROM #prefix#links l INNER JOIN #prefix#posts t ON l.post_key =t.id ";
+        $q .= "INNER JOIN #prefix#hashtags_posts hp ON t.post_id = hp.post_id ";
+        $q .= "WHERE hp.hashtag_id=:hashtag_id;";
+        $vars = array(':hashtag_id'=>$hashtag_id);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);   
+        $ps = $this->execute($q, $vars);
+        return $this->getDeleteCount($ps);
+    }
 }

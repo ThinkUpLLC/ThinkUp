@@ -488,8 +488,9 @@ class Installer {
      */
     public function populateTables($config) {
         $install_queries = self::getInstallQueries($config['table_prefix']);
-        $expected_queries = self::$installer_dao->diffDataStructure($install_queries,
-        self::$installer_dao->getTables($config) );
+        $installer_dao_local = DAOFactory::getDAO('InstallerDAO', $config);
+        $expected_queries = $installer_dao_local->diffDataStructure($install_queries,             
+            $installer_dao_local->getTables($config) );
         foreach ($expected_queries['queries'] as $query) {
             PDODAO::$PDO->exec($query);
         }

@@ -76,6 +76,8 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
         $auth_from_twitter = '';
         if (isset($oauth_consumer_key) && isset($oauth_consumer_secret)) {
             $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
+            $to->setProxy($twitter_options['requires_proxy']->option_value,$twitter_options['proxy']->option_value);
+
             /* Request tokens from twitter */
             $tok = $to->getRequestToken();
             if (isset($tok['oauth_token'])) {
