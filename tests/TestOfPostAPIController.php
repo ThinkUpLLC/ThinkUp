@@ -884,7 +884,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'post');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1016,7 +1016,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'post_retweets');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1109,7 +1109,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'post_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1184,7 +1184,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'post_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1288,7 +1288,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'related_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1365,7 +1365,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_posts_most_replied_to');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1441,7 +1441,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_posts_most_retweeted');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1594,7 +1594,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1796,7 +1796,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_mentions');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -1948,7 +1948,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_mentions_in_range');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -2142,7 +2142,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -2305,7 +2305,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -2461,7 +2461,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_questions');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -2598,7 +2598,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_questions');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -2758,7 +2758,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'user_posts_in_range');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
@@ -3023,7 +3023,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET = array('type' => 'hashtag_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
         foreach(get_object_vars($controller) as $key => $value) {
-            if ($key == 'type' || $key == 'app_session') continue;
+            if ($key == 'type' || $key == 'app_session') {continue;}
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
             $controller = new PostAPIController(true);
             $output = json_decode($controller->go());

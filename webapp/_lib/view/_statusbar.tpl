@@ -24,6 +24,8 @@
                             <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n=twitter&c=followers&q=name:');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search @{$i->network_username}'s followers for people named <span class="searchterm"></span></a></li>
                         {/if}
                     {/foreach}
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n=twitter&c=searches&t=hashtag&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> View predefined search with hashtag #<span class="searchterm"></span></a></li>
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&n=twitter&c=searches&t=keyword&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> View predefined search with keyword <span class="searchterm"></span></a></li>
                     </ul>
 
                 </form>

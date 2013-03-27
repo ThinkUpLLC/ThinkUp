@@ -63,7 +63,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 WHERE
                     i.id = :id AND oi.owner_id = :owner_id';
             $vars = array(':owner_id' => $owner->id, ':id' => $instance->id);
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $stmt = $this->execute($q, $vars);
             return $this->getDataIsReturned($stmt);
         }
@@ -92,7 +92,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         if (isset(self::$post_access_query_cache[ $network_id_cache_key ])) {
             $owner_network_user_ids = self::$post_access_query_cache[ $network_id_cache_key ];
         } else {
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $stmt = $this->execute($q, $vars);
             $owner_network_user_ids = $this->getDataRowsAsArrays($stmt);
             self::$post_access_query_cache[ $network_id_cache_key ] = $owner_network_user_ids;
@@ -108,7 +108,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         if (isset(self::$post_access_query_cache[ $follower_id_cache_key ])) {
             $authed_network_user_ids = self::$post_access_query_cache[ $follower_id_cache_key ];
         } else {
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $stmt = $this->execute($q, $vars);
             $authed_network_user_ids = $this->getDataRowsAsArrays($stmt);
             self::$post_access_query_cache[ $follower_id_cache_key ] = $authed_network_user_ids;
@@ -133,7 +133,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 owner_id = :owner_id AND instance_id = :instance_id";
 
         $vars = array(':owner_id' => $owner_id, ':instance_id' => $instance_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         $owner_instance = $this->getDataRowAsObject($stmt, 'OwnerInstance');
         return $owner_instance;
@@ -147,7 +147,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             WHERE  instance_id = :instance_id";
 
         $vars = array(':instance_id' => $instance_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         $owner_instances = $this->getDataRowsAsObjects($stmt, 'OwnerInstance');
         return $owner_instances;
@@ -163,7 +163,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                       ':oauth_access_token' => $oauth_token,
                       ':oauth_access_token_secret' => $oauth_token_secret
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         if ( $this->getInsertCount($stmt) > 0) {
             return true;
@@ -179,7 +179,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             ':owner_id'=>$owner_id,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -190,7 +190,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         $vars = array(
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -207,7 +207,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                         ':oauth_access_token' => $oauth_token,
                         ':oauth_access_token_secret' => $oauth_token_secret
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         $insert_count = $this->getInsertCount($stmt);
         return ($insert_count > 0) ? true : false;
@@ -221,7 +221,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             ':instance_id' => $instance_id,
             ':auth_error' => $auth_error
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         $insert_count = $this->getInsertCount($stmt);
         return ($insert_count > 0) ? true : false;
@@ -234,7 +234,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             #prefix#owner_instances
             WHERE
             instance_id = :instance_id ORDER BY id ASC LIMIT 1";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, array(':instance_id' => $id));
         $tokens = $this->getDataRowAsArray($stmt);
         return $tokens;

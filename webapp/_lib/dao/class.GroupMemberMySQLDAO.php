@@ -43,7 +43,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getDataIsReturned($ps);
@@ -59,7 +59,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -74,7 +74,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -89,7 +89,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getInsertCount($ps);
@@ -105,7 +105,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -124,7 +124,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':count'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -141,7 +141,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
             ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowAsObject($ps, "Group");
@@ -165,7 +165,7 @@ class GroupMemberMySQLDAO extends PDODAO implements GroupMemberDAO {
         $q .= "AND (DAYOFMONTH(gm.first_seen)=DAYOFMONTH($from_date)) AND (MONTH(gm.first_seen)=MONTH($from_date)) ";
         $q .= "ORDER BY gm.first_seen DESC;";
 
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         $groups = $this->getDataRowsAsObjects($ps, "Group");
         return $groups;

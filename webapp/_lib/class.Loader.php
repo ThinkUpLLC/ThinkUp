@@ -125,7 +125,7 @@ class Loader {
      * @param string $path
      */
     public static function addPath($path) {
-        if (!isset(self::$lookup_path)) self::register();
+        if (!isset(self::$lookup_path)) {self::register();}
         self::$lookup_path[] = $path;
     }
 
@@ -177,7 +177,7 @@ class Loader {
      */
     public static function load($class) {
         // check if class is already in scope
-        if (class_exists($class, false)) return;
+        if (class_exists($class, false)) {return;}
 
         // if class is a standard ThinkUp object or interface
         foreach (self::$lookup_path as $path) {

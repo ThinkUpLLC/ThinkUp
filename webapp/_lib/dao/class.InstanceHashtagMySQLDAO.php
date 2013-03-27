@@ -38,7 +38,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
             WHERE  instance_id = :instance_id";
 
         $vars = array(':instance_id' => $instance_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod("select");
+        if ($this->profiler_enabled) {Profiler::setDAOMethod("select");}
         $stmt = $this->execute($q, $vars);
         $instances_hashtags = $this->getDataRowsAsObjects($stmt, 'InstanceHashtag');
         return $instances_hashtags;
@@ -52,7 +52,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
         $vars = array(':instance_id' => $instance_id,
                       ':hashtag_id' => $hashtag_id,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $stmt = $this->execute($q, $vars);
         return $this->getInsertCount($stmt); 
     }
@@ -64,7 +64,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
             ':instance_id'=>$instance_id,
             ':hashtag_id'=>$hashtag_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
@@ -75,7 +75,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
         $vars = array(
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod("delete");
+        if ($this->profiler_enabled) {Profiler::setDAOMethod("delete");}
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
@@ -89,7 +89,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
                 ':hashtag_id' => $hashtag_id,
                 ':last_post_id' => $last_post_id,
                 );
-        if ($this->profiler_enabled) Profiler::setDAOMethod("update");
+        if ($this->profiler_enabled) {Profiler::setDAOMethod("update");}
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -103,7 +103,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
                 ':hashtag_id' => $hashtag_id,
                 ':earliest_post_id' => $earliest_post_id,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod("update");
+        if ($this->profiler_enabled) {Profiler::setDAOMethod("update");}
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -117,7 +117,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
                 ':hashtag_id' => $hashtag_id,
                 ':last_page_fetched_tweets' => $last_page_fetched_tweets,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod("update");
+        if ($this->profiler_enabled) {Profiler::setDAOMethod("update");}
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }    
@@ -125,7 +125,7 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
     public function deleteInstancesHashtagsByHashtagId($hashtag_id){
         $q = "DELETE FROM #prefix#instances_hashtags WHERE hashtag_id=:hashtag_id;";
         $vars = array(':hashtag_id'=>$hashtag_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }

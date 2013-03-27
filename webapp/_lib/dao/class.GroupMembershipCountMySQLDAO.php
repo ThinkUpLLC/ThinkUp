@@ -39,7 +39,7 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
             ':network'=>$network,
             ':count'=>$count
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getInsertCount($ps);
     }
@@ -54,7 +54,7 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
             ':network_user_id'=>(string) $network_user_id,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getInsertCount($ps);
     }
@@ -84,7 +84,7 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
             ':network'=>$network,
             ':limit'=>(int)$limit
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);
 

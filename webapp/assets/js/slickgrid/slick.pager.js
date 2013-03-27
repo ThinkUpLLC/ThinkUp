@@ -124,10 +124,10 @@
             var state = getNavState();
 
             $container.find(".slick-pager-nav span").removeClass("ui-state-disabled");
-            if (!state.canGotoFirst) $container.find(".ui-icon-seek-first").addClass("ui-state-disabled");
-            if (!state.canGotoLast) $container.find(".ui-icon-seek-end").addClass("ui-state-disabled");
-            if (!state.canGotoNext) $container.find(".ui-icon-seek-next").addClass("ui-state-disabled");
-            if (!state.canGotoPrev) $container.find(".ui-icon-seek-prev").addClass("ui-state-disabled");
+            if (!state.canGotoFirst) { $container.find(".ui-icon-seek-first").addClass("ui-state-disabled"); }
+            if (!state.canGotoLast) { $container.find(".ui-icon-seek-end").addClass("ui-state-disabled"); }
+            if (!state.canGotoNext) { $container.find(".ui-icon-seek-next").addClass("ui-state-disabled"); }
+            if (!state.canGotoPrev) { $container.find(".ui-icon-seek-prev").addClass("ui-state-disabled"); }
 
 
             if (pagingInfo.pageSize == 0)

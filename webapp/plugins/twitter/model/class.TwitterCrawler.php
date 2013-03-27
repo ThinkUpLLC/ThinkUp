@@ -1174,9 +1174,9 @@ class TwitterCrawler {
                 //set max_id and since_id params for API call
                 if ($got_latest_page_of_tweets) {
                     //We have fetched all past tweets, now actual tweets
-                    if ($since_id == 0) $since_id = $instance_hashtag->last_post_id;                    
-                    if ($since_id > 0) $args["since_id"] = $since_id;
-                    if ($max_id > $since_id) $args["max_id"] = $max_id;
+                    if ($since_id == 0) { $since_id = $instance_hashtag->last_post_id; }                    
+                    if ($since_id > 0) { $args["since_id"] = $since_id; }
+                    if ($max_id > $since_id) { $args["max_id"] = $max_id; }
                 } else {
                     //We need to capture past tweets
                     if ($instance_hashtag->earliest_post_id > 0) {
@@ -1210,7 +1210,7 @@ class TwitterCrawler {
                                 $hp_dao->insertHashtag($hashtag->hashtag, $tweet['post_id'], $tweet['network']);
                                 $user = New User($tweet);
                                 $rowsUpdated = $user_dao->updateUser($user);
-                                if ($rowsUpdated > 0) $user_count = $user_count + $rowsUpdated;                                
+                                if ($rowsUpdated > 0) { $user_count = $user_count + $rowsUpdated; }                                
                                 if (isset($tweet['retweeted_post']) && isset($tweet['retweeted_post']['content'])) {
                                     if (!$hashtag_dao->isHashtagPostInDB($hashtag->id,
                                             $tweet['retweeted_post']['content']['post_id'], 
@@ -1221,7 +1221,7 @@ class TwitterCrawler {
                                                 $tweet['retweeted_post']['content']['network']);
                                         $user_retweet = New User($tweet['retweeted_post']['content']);
                                         $rowsRTUpdated = $user_dao->updateUser($user_retweet);
-                                        if ($rowsRetweetUpdated > 0) $user_count = $user_count + $rowsRTUpdated;
+                                        if ($rowsRetweetUpdated > 0) { $user_count = $user_count + $rowsRTUpdated; }
                                     }                                    
                                 }
                                 URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
@@ -1256,7 +1256,7 @@ class TwitterCrawler {
                             $instance_hashtag->hashtag_id, $instance_hashtag->last_page_fetched_tweets);                                     
     
                     //increase page fetched_tweets
-                    if (!$got_latest_page_of_tweets) $instance_hashtag->last_page_fetched_tweets += 1;
+                    if (!$got_latest_page_of_tweets) { $instance_hashtag->last_page_fetched_tweets += 1; }
                     
                     //Not to continue fetching if search not return the maxim number of tweets
                     if  (count($tweets) < $count_arg) {

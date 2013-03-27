@@ -49,7 +49,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':fav_of_user_id' => (string) $favoriter_id,
             ':network' => $vals['network']
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
@@ -62,7 +62,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':user_id' => (string) $user_id,
             ':network' => $network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
@@ -129,7 +129,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         if ($ubound > 0) {
             $vars[':ubound'] = $ubound;
         }
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -144,7 +144,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
 
             // Get links
             $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $ps = $this->execute($q);
             $all_link_rows = $this->getDataRowsAsArrays($ps);
 
@@ -203,7 +203,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $q .= " LIMIT :limit";
             $vars[':limit'] = (int)$count;
         }
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -218,7 +218,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
 
             // Get links
             $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $ps = $this->execute($q);
             $all_link_rows = $this->getDataRowsAsArrays($ps);
 
@@ -281,7 +281,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
           ':limit'=>$count,
           ':start_on_record'=>(int)$start_on_record
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         if ($iterator) {
             return (new PostIterator($ps));
@@ -296,7 +296,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
 
             // Get links
             $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
             $ps = $this->execute($q);
             $all_link_rows = $this->getDataRowsAsArrays($ps);
 
@@ -329,7 +329,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             ':post_id'=>(string) $post_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         return $all_rows;
@@ -353,7 +353,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $q .= "AND (DAYOFMONTH(pub_date)=DAYOFMONTH($from_date)) AND (MONTH(pub_date)=MONTH($from_date)) ";
         $q .= "ORDER BY pub_date DESC LIMIT 5 ";
 
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
 
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);
@@ -382,7 +382,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         );
 
         //echo Utils::mergeSQLVars($q, $vars);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
 
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);

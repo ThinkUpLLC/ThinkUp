@@ -57,6 +57,9 @@ class SearchController extends ThinkUpAuthController {
                             case "followers":
                                 self::searchFollowers($instance->network_user_id);
                                 break;
+                            case "searches":
+                                self::searchSearches();
+                                break;
                             default:
                                 self::searchPosts();
                         }
@@ -119,6 +122,62 @@ class SearchController extends ThinkUpAuthController {
                 array_pop($users);
             }
             $this->addToView('users', $users);
+        }
+    }
+    
+    /**
+     * Populate view with post search results from search hashtags or keywords
+     */
+    private function searchSearches() {
+        $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
+        $this->addToView('current_page', $page_number);
+        
+        $keywords = explode(' ', $_GET['q']);
+        if (isset($_GET['t'])) {  
+
+            $hashtags = array();
+            $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+            foreach ($keywords as $keyword) {
+                switch ($_GET["t"]) {
+                    case "hashtag":
+                        $hashtag = $hashtag_dao->getByHashtagName('#'.$keyword);
+                        break;
+                    case "keyword":
+                        $hashtag = $hashtag_dao->getByHashtagName($keyword);
+                        break;
+                    default:
+                        $hashtag = $hashtag_dao->getByHashtagName('#'.$keyword);                        
+                }
+                if (!is_null($hashtag)) {$hashtags[]=$hashtag->id;}
+            }
+            
+            if (count($hashtags)>0) {                
+                $post_dao = DAOFactory::getDAO('PostDAO');
+                $posts = $post_dao->searchPostsByHashtag($hashtags,$_GET['n'],$page_number,
+                        $page_count=(self::PAGE_RESULTS_COUNT+1));                
+                if (isset($posts) && sizeof($posts) > 0) {
+                    if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {
+                        $this->addToView('next_page', $page_number+1);
+                        $this->addToView('last_page', $page_number-1);
+                        array_pop($posts);
+                    }
+                    $this->addToView('posts', $posts);
+                }                
+            } else {
+                switch ($_GET["t"]) {
+                    case "hashtag":
+                        $this->addErrorMessage("Uh-oh. Hashtag #$keyword is not being searched. Please try again.");
+                        break;
+                    case "keyword":
+                        $this->addErrorMessage("Uh-oh. Keyword $keyword is not being searched. Please try again.");
+                        break;
+                    default:
+                        $this->addErrorMessage("Uh-oh. Hashtag #$keyword is not being searched. Please try again.");
+                 }
+            }
+
+        } else {
+            $this->addErrorMessage("Uh-oh. Your tweet search type is missing. Please try again.");
         }
     }
 }

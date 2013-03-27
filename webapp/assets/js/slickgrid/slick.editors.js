@@ -226,7 +226,7 @@
             };
 
             this.position = function(position) {
-                if (!calendarOpen) return;
+                if (!calendarOpen) {return;}
                 $.datepicker.dpDiv
                     .css("top", position.top + 30)
                     .css("left", position.left);
@@ -440,7 +440,7 @@
             var scope = this;
 
             function toggle(e) {
-                if (e.type == "keydown" && e.which != 32) return;
+                if (e.type == "keydown" && e.which != 32) {return;}
 
                 if ($input.css("opacity") == "1")
                     $input.css("opacity", 0.5);

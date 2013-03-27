@@ -38,7 +38,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             ':network'=>$network,
             ':count'=>$count
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         return $this->getInsertCount($ps);
     }
@@ -76,7 +76,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         }
         $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
         $q .= "ORDER BY history_counts.full_date ASC";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
 
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);

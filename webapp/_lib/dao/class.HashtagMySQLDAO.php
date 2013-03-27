@@ -139,7 +139,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
             WHERE  id = :hashtag_id";
         
         $vars = array(':hashtag_id' => $hashtag_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $stmt = $this->execute($q, $vars);
         $hashtag = $this->getDataRowAsObject($stmt, 'Hashtag');
         return $hashtag;
@@ -153,7 +153,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
             WHERE  hashtag = :hashtag_name";
     
         $vars = array(':hashtag_name' => $hashtag_name);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $stmt = $this->execute($q, $vars);
         $hashtag = $this->getDataRowAsObject($stmt, 'Hashtag');
         return $hashtag;
@@ -166,7 +166,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
              "INNER JOIN #prefix#instances i ON ih.instance_id = i.id " .
              "WHERE i.network_username = :username";
         $vars = array(':username' => $username);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $stmt = $this->execute($q, $vars);
         $hashtag = $this->getDataRowsAsObjects($stmt, 'Hashtag');
         return $hashtag;
@@ -175,7 +175,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
     public function deleteHashtagByHashtagId($hashtag_id) {
         $q  = "DELETE FROM #prefix#hashtags WHERE id=:hashtag_id;";
         $vars = array(':hashtag_id'=>$hashtag_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
@@ -183,7 +183,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
     public function deleteHashtagsPostsByHashtagId($hashtag_id) {
         $q  = "DELETE FROM #prefix#hashtags_posts WHERE hashtag_id=:hashtag_id;";
         $vars = array(':hashtag_id'=>$hashtag_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
@@ -211,7 +211,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
                 ':post_id'=>(string)$post_id,
                 ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
