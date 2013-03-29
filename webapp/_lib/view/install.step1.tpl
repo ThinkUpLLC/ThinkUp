@@ -1,234 +1,104 @@
-{include file="_install.header.tpl"}
-  <div class="container">
-    <div id="thinkup-tabs">
-      <div class="ui-tabs ui-widget ui-widget-content">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header alert stats">
-          <li id="step-tab-1" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
-            <div class="key-stat install_step">
-            <h1>1</h1>
-            <h3>Check System Requirements</h3>
-            </div>  
-          </li>
-          <li id="step-tab-2" class="ui-state-default ui-corner-top">
-            <div class="key-stat install_step">
-            <h1>2</h1>
-            <h3>Configure ThinkUp</h3>
-            </div>
-          </li>
-          <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
-            <div class="key-stat install_step">
-            <h1>3</h1>
-            <h3>Finish</h3>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+{include file="_header.tpl" enable_bootstrap=1}
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
-  <div id="installer-page" class="container_24 round-all">
-    <img id="dart1" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
-    <div class="clearfix append_20">
-      <div class="grid_22 push_1 clearfix">
-        <h2 class="clearfix step_title">Check System Requirements</h2>
-        {if $requirements_met}
-             <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-                 <h2>
-                   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                     <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
-                 </h2>
-             </div> 
-            <div class="clearfix">
-              <div class="grid_10 prefix_8 left">
-                <div class="next_step linkbutton ui-state-default ui-priority-secondary">
-                  <a href="index.php?step=2" style="color:black" id="nextstep">Let's Go &raquo;</a>
-                </div>
-              </div>
-            </div>
-        {else}
-            <div class="alert urgent" style="margin-bottom: 20px; padding: 0.5em 0.7em;">
-                 <p>
-                   <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                   <strong>Oops!</strong> Your web server isn't set up to run ThinkUp. Please fix the problems below and try installation again.
-                 </p>
-            </div>
-    
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label{if !$php_compat} no{/if}">PHP Version >= 5.2</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $php_compat}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$php_compat}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs PHP version greater or equal to v.{$php_required_version}</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label{if !$libs.curl} no{/if}">cURL installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.curl}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.curl}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label {if !$libs.gd} no{/if}">GD installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.gd}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.gd}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label {if !$libs.pdo OR !$libs.pdo_mysql} no{/if}">PDO installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.pdo AND $libs.pdo_mysql}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.pdo OR !$libs.pdo_mysql}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
-            </div>
-            {/if}
-    
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label{if !$libs.json} no{/if}">JSON installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.json}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.json}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label{if !$libs.hash} no{/if}">HASH Message Digest Framework installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.hash}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.hash}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://php.net/manual/en/book.hash.php" target="_blank">HASH Message Digest Framework PHP extension</a> installed on your system.</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                <span class="label{if !$libs.simplexml} no{/if}">SimpleXML installed</span>
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $libs.simplexml}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$libs.simplexml}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp needs the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">SimpleXML PHP extension</a> installed on your system.</p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                {if $permissions_compat}
-                <span class="label">Data directory writable</span>
-                {else}
-                <span class="label no">Data directory writable?</span>
-                {/if}
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $permissions_compat}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$permissions_compat}
-            <div class="clearfix append_20 info_message">
-              <p>ThinkUp's <code>data</code> directory, located at <code>{$writable_data_directory}</code>, must be writable for installation to complete. <a href="http://thinkup.com/docs/install/perms.html">Here's how to set that folder's permissions.</a></p>
-            </div>
-            {/if}
-            
-            <div class="clearfix append_20">
-              <div class="grid_6 prefix_5 right">
-                {if $session_permissions_compat}
-                <span class="label">Session directory writable</span>
-                {else}
-                <span class="label no">Session directory writable?</span>
-                {/if}
-              </div>
-              <div class="grid_8 prefix_1 left">
-                {if $session_permissions_compat}
-                <span class="value yes">Yes</span>
-                {else}
-                <span class="value no">No</span>
-                {/if}
-              </div>
-            </div>
-            {if !$session_permissions_compat}
-            <div class="clearfix append_20 info_message">
-              {if $writable_session_save_directory neq ''}
-              <p>The PHP <code>session.save_path</code> directory, located at <code>{$writable_session_save_directory}</code>, must be writable for installation to complete. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder's permissions.</a></p>
-              {else}
-              <p>The PHP <code>session.save_path</code> directory is not set. Please set it to a writable folder. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder path and permissions.</a></p>
-              {/if}
-            </div>
-            {/if}
-        {/if}
-        
-      </div>
+<div id="main" class="container">
+
+    <div class="navbar">
+        <div class="navbar-inner">
+        <span class="brand" style="margin-top: 12px;">Install ThinkUp:</span>
+        <ul class="nav pull-left">
+            <li class="active"><a> <h4><i class="icon-tasks "></i> Check System Requirements</h4></a></li>
+            <li><a class="disabled"> <h4><i class="icon-cogs"></i> Configure ThinkUp</h4></a></li>
+            <li><a class="disabled"> <h4><i class="icon-lightbulb"></i> Finish</h4></a></li>
+        </ul>
+        </div>
     </div>
-  </div>
-{include file="_install.footer.tpl"}
+
+    {if $requirements_met}
+    
+    
+    <div class="row">
+        <div class="span3">
+
+        </div>
+        <div class="span9">
+
+        <div class="alert alert-success">
+            <i class="icon-ok-circle"></i>
+            <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
+        </div>        
+
+        <a href="index.php?step=2" class="btn btn-large btn-success" id="nextstep">Let's Go <i class="icon-arrow-right"></i></a>
+        
+        </div>
+    </div>
+    
+    {else}
+    
+    <div class="row">
+        <div class="span3">
+
+        </div>
+        <div class="span9">
+    
+            <div class="alert alert-error">
+                <i class="icon-exclamation-sign"></i>
+                <strong>Oops!</strong> Your web server isn't set up to run ThinkUp. Please fix the problems below and try installation again.
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Component</th>
+                        <th>Status<th>
+                    <tr>
+                <thead>
+                <tbody>
+                    <tr class="{if $php_compat}success{else}error{/if}">
+                        <th>PHP Version >= 5.2</td>
+                        <td>{if $php_compat}Confirmed{else}ThinkUp needs PHP version greater or equal to v.{$php_required_version}{/if}</td>
+                    </tr>
+                    <tr class="{if $permissions_compat}success{else}error{/if}">
+                        <th>Data directory writable</td>
+                        <td>{if $permissions_compat}Confirmed{else}ThinkUp's <code>data</code> directory, located at <code>{$writable_data_directory}</code>, must be writable for installation to complete. <a href="http://thinkup.com/docs/install/perms.html">Here's how to set that folder's permissions.</a>{/if}<td>
+                    </tr>
+                    <tr class="{if $session_permissions_compat}success{else}error{/if}">
+                        <th>Session directory writable</td>
+                        <td>{if $session_permissions_compat}Confirmed{else}{if $writable_session_save_directory neq ''}The PHP <code>session.save_path</code> directory, located at <code>{$writable_session_save_directory}</code>, must be writable for installation to complete. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder's permissions.</a>
+              {else}The PHP <code>session.save_path</code> directory is not set. Please set it to a writable folder. <a href="http://php.net/manual/en/session.configuration.php#ini.session.save-path">Here's how to set that folder path and permissions.</a>{/if}{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.curl}success{else}error{/if}">
+                        <th>cURL Library</td>
+                        <td>{if $libs.curl}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.gd}success{else}error{/if}">
+                        <th>GD Library</td>
+                        <td>{if $libs.gd}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.pdo AND $libs.pdo_mysql}success{else}error{/if}">
+                        <th>PDO with MySQL Driver</td>
+                        <td>{if $libs.pdo AND $libs.pdo_mysql}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.json}success{else}error{/if}">
+                        <th>JSON Library</td>
+                        <td>{if $libs.json}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.hash}success{else}error{/if}">
+                        <th>HASH Message Digest Framework</td>
+                        <td>{if $libs.hash}Confirmed{else}ThinkUp needs the <a href="http://php.net/manual/en/book.hash.php" target="_blank">HASH Message Digest Framework PHP extension</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.simplexml}success{else}error{/if}">
+                        <th>SimpleXML Support</td>
+                        <td>{if $libs.simplexml}Confirmed{else}ThinkUp needs the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">SimpleXML PHP extension</a> installed on your system.{/if}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    {/if}
+        
+</div>
+  
+{include file="_footer.tpl" enable_bootstrap=1}

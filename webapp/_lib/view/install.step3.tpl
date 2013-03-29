@@ -1,51 +1,59 @@
-{include file="_install.header.tpl"}
-  <div class="container">
-    <div id="thinkup-tabs">
-      <div class="ui-tabs ui-widget ui-widget-content">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header alert stats">
-          <li id="step-tab-1" class="ui-state-default ui-corner-top">
-            <div class="key-stat install_step">
-            <h1><span class="pass_step" id="pass-step-1">1</span></h1>
-            <h3>Check System Requirements</h3>
-            </div>  
-          </li>
-          <li id="step-tab-2" class="ui-state-default ui-corner-top">
-            <div class="key-stat install_step">
-            <h1><span class="pass_step" id="pass-step-2">2</span></h1>
-            <h3>Configure ThinkUp</h3>
-            </div>
-          </li>
-          <li id="step-tab-3" class="no-border ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
-            <div class="key-stat install_step">
-            <h1>{if empty($errors)}<span class="pass_step" id="pass-step-3">3</span>{else}3{/if}</h1>
-            <h3>Finish</h3>
-            </div>
-          </li>
+{include file="_header.tpl" enable_bootstrap=1}
+{include file="_statusbar.tpl" enable_bootstrap=1}
+
+<div id="main" class="container">
+
+    <div class="navbar">
+        <div class="navbar-inner">
+        <span class="brand" style="margin-top: 12px;">Install ThinkUp:</span>
+        <ul class="nav pull-left">
+            <li><a> <h4><i class="icon-ok-circle "></i> Check System Requirements</h4></a></li>
+            <li><a class="disabled"> <h4><i class="icon-ok-circle"></i> Configure ThinkUp</h4></a></li>
+            <li class="active"><a class="disabled"> <h4><i class="icon-lightbulb"></i> Finish</h4></a></li>
         </ul>
-      </div>
+        </div>
     </div>
-  </div>
+    
+    <div class="row">
+        <div class="span3">
+            <div class="embossed-block">
+                <ul>
+                    <li>Congratulations!</li>
+                </ul>
+            </div>            
+        </div>
+        <div class="span9">
+            <div class="alert alert-success">
+                <div><i class="icon-check"></i> ThinkUp has been installed successfully. Check your email account; an account activation message has been sent.</div>
+                
+                <a href="{$site_root_path}session/login.php" class="btn btn-success btn-large" style="margin-top: 16px; clear: left;" ><i class="icon-signin icon-white"></i> Log In</a>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="span3">
+            <div>&nbsp;
+
+            </div>            
+        </div>
+        <div class="span9">
+            <div class="alert alert-info insight-item">
+
+
+            <div class="insight-attachment-detail none">
+        
+                    <i class="icon-envelope icon-muted"></i>
+                    <a href="http://thinkup.com/docs/troubleshoot/common/emaildisabled.html">Didn't get the email?</a>
+            </div>
+
+            </div>
+
+        </div>
+    </div>
+
+        
+</div>
   
-  <div id="installer-page" class="container_24 round-all">
-    <img id="dart3" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
-    <div class="clearfix prepend_20 append_20">
-      <div class="grid_22 push_1 clearfix">
-      <h2 class="clearfix step_title">Congratulations!</h2>
-
-     <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-         <p>
-           <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-            ThinkUp has been installed successfully. Check your email account; an account activation message has been sent.
-         </p>
-     </div> 
-
-    
-    
-<br /><br />
-<p><a href="http://thinkup.com/docs/troubleshoot/common/emaildisabled.html">Didn't get the email?</a></p>
-       </div>
-             </div>
-       
-    </div>
-  </div>
-{include file="_install.footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap=1}
