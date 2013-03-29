@@ -19,55 +19,12 @@
 
 {/if}
 
-{assign var='is_start_multiple' value=false}
-{assign var='is_mid_multiple' value=false}
-{assign var='is_end_multiple' value=false}
-{assign var='prev_filename' value=''}
+
 {assign var='cur_date' value=''}
 {foreach from=$insights key=tid item=i name=foo}
-
-{if $i->emphasis < 2 and $i->text neq ''}
-    {if $i->filename eq $prev_filename}
-        {if $is_start_multiple}
-            {assign var='is_mid_multiple' value=true}
-        {else}
-            {assign var='is_start_multiple' value=true}
-            {assign var='is_mid_multiple' value=false}
-        {/if}
-    {else}
-        {if $is_start_multiple or $is_mid_multiple}
-            {assign var='is_end_multiple' value=true}
-            {assign var='is_mid_multiple' value=false}
-            {assign var='is_start_multiple' value=false}
-        {/if}
-    {/if}
-{/if}
-
-{if $cur_date neq $i->date}
-    {assign var='is_start_multiple' value=false}
-    {assign var='is_mid_multiple' value=false}
-{/if}
-
-{if $is_start_multiple}
-    {if $is_mid_multiple}
-<!--mid-more collapse-->
-    {else}
-<div class="row">
-    <div class="span3"></div>
-    <div class="span9" style="text-align:center;margin-top:-15px;margin-bottom:3px">
-        <a data-toggle="collapse" data-target="#more{$i->id}"><i class="icon-reorder icon-white"></i></a>
-    </div>
-</div>
-<!--start collapse in--> <div class="collapse in" id="more{$i->id}">
-{/if}{/if}
-{if $is_end_multiple}{assign var="is_end_multiple" value=false}</div> <!--end collapse in--> {/if}
-
-
 <div class="row">
     {if $i->text neq ''}
         {if $cur_date neq $i->date}
-        {assign var='is_start_multiple' value=false}
-        {assign var='is_mid_multiple' value=false}
     <div class="span3">
       <div class="embossed-block">
         <ul>
@@ -95,15 +52,10 @@
             <!-- including {$tpl_filename} -->
             {include file=$tpl_path|cat:$tpl_filename}
         {/if}
-
     </div><!--/span9-->
    {/if}
 </div><!--/row-->
-{assign var='prev_filename' value=$i->filename}
 {/foreach}
-
-{* Close up any remaining More.. divs before the paging row *}
-{if $i->filename eq $prev_filename}</div> <!--end collapse in--> {/if}
 
 <div class="row">
     <div class="span3">&nbsp;</div>
