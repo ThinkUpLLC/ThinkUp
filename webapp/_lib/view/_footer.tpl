@@ -20,9 +20,9 @@
           
           </p>  
           <p class="hidden-phone hidden-tablet">
-          <a href="http://twitter.com/thinkup"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a>
-          <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
-          <a href="http://gplus.to/thinkup"><img src="{$site_root_path}assets/img/favicon_googleplus.png"></a>
+          <a href="http://twitter.com/thinkup"><i class="icon-twitter icon-white"></i></a>
+          <a href="http://facebook.com/thinkupapp"><i class="icon-facebook icon-white"></i></a>
+          <a href="http://gplus.to/thinkup"><i class="icon-google-plus icon-white"></i></a>
           &copy; ThinkUp LLC 2012-2013. It is nice to be nice.
           </p>
         </div>
