@@ -153,9 +153,32 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 if (!empty($sub_accounts->data)) {
                     $user_admin_pages[$instance->network_user_id] = array();
                     foreach ($sub_accounts->data as $act) {
-                        if (self::isAccountPage($act->id, $access_token)) {
+                       // In some cases we've detected errors with the access_token
+                       // So we propose replace the original code:
+                       //  
+                       // if (self::isAccountPage($act->id, $access_token)) {
+                       //     $user_admin_pages[$instance->network_user_id][] = $act;
+                       // }
+                       // 
+                       // with this one:
+                       //
+                        $addIt = false;
+                        try {
+                            $addIt = self::isAccountPage($act->id, $act->access_token);
+                            if (! $addIt) {
+                                $addIt = self::isAccountPage($act->id, null);
+                            }
+                        } catch (Exception $e) {
+                            try {
+                                $addIt = self::isAccountPage($act->id, null);
+                            } catch (Exception $e) {
+                                $addIt = false;
+                            }
+                        }
+                        if ($addIt) {
                             $user_admin_pages[$instance->network_user_id][] = $act;
                         }
+                       // until here
                     }
                 }
             }

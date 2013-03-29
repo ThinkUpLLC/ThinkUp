@@ -38,14 +38,29 @@ class FacebookGraphAPIAccessor {
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://graph.facebook.com';
-        if (strpos($path, '?')===false) {
-            $url = $api_domain.$path.'?access_token='.$access_token;
-        } else {
-            $url = $api_domain.$path.'&access_token='.$access_token;
+        // In order to have a more robust code we propose replace the original
+//        $api_domain = 'https://graph.facebook.com';
+//        if (strpos($path, '?')===false) {
+//            $url = $api_domain.$path.'?access_token='.$access_token;
+//        } else {
+//            $url = $api_domain.$path.'&access_token='.$access_token;
+//        }
+//        if ($fields != null ) {
+//            $url = $url.'&fields='.$fields;
+//        }
+        // with this version
+        $url = $api_domain.$path;
+        if (strpos($url,"?"))
+                $mark="&";
+        else
+                $mark="?";
+        
+        if ($access_token != null) {
+            $url = $url.$mark.'access_token='.$access_token;
+            $mark = "&";
         }
-        if ($fields != null ) {
-            $url = $url.'&fields='.$fields;
+        if ($fields != null ) {            
+            $url = $url.$mark.'fields='.$fields;
         }
         $result = Utils::getURLContents($url);
         return json_decode($result);

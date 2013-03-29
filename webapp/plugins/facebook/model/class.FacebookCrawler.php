@@ -158,9 +158,18 @@ class FacebookCrawler {
         //Determine 'since', datetime of oldest post in datastore
         $post_dao = DAOFactory::getDAO('PostDAO');
         $since_post = $post_dao->getAllPosts($id, $network, 1, 1, true, 'pub_date', 'ASC');
-        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
-        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
-        ($since < 0)?$since=0:$since=$since;
+        // We propose replace this code
+//        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
+//        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+//        ($since < 0)?$since=0:$since=$since;
+        // With this more readable version
+        if (isset($since_post[0])) {
+            // last post minus one day, just to be safe
+            $since = strtotime($since_post[0]->pub_date) - (60 * 60 * 24); 
+            if ($since < 0) $since=0;
+        } else {
+            $since = 0;
+        }
 
         while ($fetch_next_page) {
             $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
@@ -317,7 +326,7 @@ class FacebookCrawler {
                         ));
                         array_push($thinkup_links, $link);
                     }
-                    $total_links_addded = $total_links_added + $this->storeLinks($thinkup_links);
+                    $total_links_added = $total_links_added + $this->storeLinks($thinkup_links);
                     if ($total_links_added > 0 ) {
                         $this->logger->logUserSuccess("Collected $total_links_added new links",
                         __METHOD__.','.__LINE__);
@@ -338,7 +347,7 @@ class FacebookCrawler {
                         if (isset($p->comments->data)) {
                             $post_comments = $p->comments->data;
                             $post_comments_count = isset($post_comments)?sizeof($post_comments):0;
-                            if (is_array($post_comments) && sizeof($post_comments) > 0) {
+                            if (is_array($post_comments) && ($post_comments_coun > 0)) {
                                 foreach ($post_comments as $c) {
                                     if (isset($c->from)) {
                                         $comment_id = explode("_", $c->id);
@@ -368,7 +377,8 @@ class FacebookCrawler {
 
                         if (is_int($comments_difference) && $post_comments_added >= $comments_difference) {
                             $must_process_comments = false;
-                            if (isset($comments_stream->paging->next)) {
+                            // comments_stream is not defined, maybe is $post_comments
+                            if (isset($post_comments->paging->next)) {
                                 $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
                                 $comments_difference." comments; stopping comment processing", __METHOD__.','.__LINE__);
                             }
@@ -450,7 +460,7 @@ class FacebookCrawler {
                         if (isset($p->likes->data)) {
                             $post_likes = $p->likes->data;
                             $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
-                            if (is_array($post_likes) && sizeof($post_likes) > 0) {
+                            if (is_array($post_likes) && ($post_likes_count > 0) ) {
                                 foreach ($post_likes as $l) {
                                     if (isset($l->name) && isset($l->id)) {
                                         //Get users
@@ -479,7 +489,8 @@ class FacebookCrawler {
 
                         if (is_int($likes_difference) && $post_likes_added >= $likes_difference) {
                             $must_process_likes = false;
-                            if (isset($likes_stream->paging->next)) {
+                            // $likes_stream is not defined, maybe is $post_likes
+                            if (isset($post_likes->paging->next)) {
                                 $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
                                 $likes_difference." likes; stopping like processing", __METHOD__.','.__LINE__);
                             }
@@ -566,10 +577,9 @@ class FacebookCrawler {
 
     private function storePostsAndAuthors($posts, $posts_source){
         $total_added_posts = 0;
-        $added_post = 0;
         foreach ($posts as $post) {
             $added_post_key = $this->storePostAndAuthor($post, $posts_source);
-            if ($added_post !== false) {
+            if ($added_post_key !== false) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
                 $total_added_posts = $total_added_posts ++;
@@ -577,7 +587,6 @@ class FacebookCrawler {
                 $this->logger->logInfo("Didn't add post ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
             }
-            $added_post = 0;
         }
         return $total_added_posts;
     }
@@ -671,8 +680,10 @@ class FacebookCrawler {
             }
             //totals in follower_count table
             $follower_count_dao->insert($user_id, $network, count($friends->data));
-        } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
-            throw new APIOAuthException($stream->error->message);
+        } 
+        // $stream is not defined, maybe $friend
+        elseif (isset($friends->error->type) && ($friends->error->type == 'OAuthException')) {
+            throw new APIOAuthException($friends->error->message);
         }
     }
 }
