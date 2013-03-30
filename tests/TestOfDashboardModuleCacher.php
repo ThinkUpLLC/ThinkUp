@@ -41,7 +41,7 @@ class TestOfDashboardModuleCacher extends ThinkUpUnitTestCase {
     public function testGetHotPostVisualizationData() {
         $hot_posts = array(
         (object)array(
-                'post_text' => 'First Post',
+                'post_text' => 'First Û Post',
                 'favlike_count_cache' => 1,
                 'all_retweets' => 2,
                 'reply_count_cache' => 3,
@@ -66,7 +66,7 @@ class TestOfDashboardModuleCacher extends ThinkUpUnitTestCase {
         $this->assertEqual($visualization_object->cols[2]->label, 'Retweets');
         $this->assertEqual($visualization_object->cols[3]->label, 'Favorites');
 
-        $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First Post...');
+        $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First  Post...');
         $this->assertEqual($visualization_object->rows[0]->c[1]->v, 3);
         $this->assertEqual($visualization_object->rows[0]->c[2]->v, 2);
         $this->assertEqual($visualization_object->rows[0]->c[3]->v, 1);
