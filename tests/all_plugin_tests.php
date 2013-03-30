@@ -44,7 +44,6 @@ $plugin_tests->add(new TestOfGeoEncoderPluginConfigurationController());
 $plugin_tests->add(new TestOfMapController());
 $plugin_tests->add(new TestOfTwitterAPIAccessorOAuth());
 $plugin_tests->add(new TestOfTwitterAPIEndpoint());
-$plugin_tests->add(new TestOfTwitterAuthController());
 $plugin_tests->add(new TestOfTwitterCrawler());
 $plugin_tests->add(new TestOfTwitterInstanceMySQLDAO());
 $plugin_tests->add(new TestOfTwitterPlugin());
