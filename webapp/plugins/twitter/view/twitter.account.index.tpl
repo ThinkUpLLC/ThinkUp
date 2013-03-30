@@ -25,7 +25,7 @@
             <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="{$site_root_path}?u={$i->network_username}">@{$i->network_username}</a></h3>
         </td>
         <td class="action-button">
-            <span id="div{$i->id} input-prepend"><input type="submit" name="submit" class="btn
+            <span id="div{$i->id}"><input type="submit" name="submit" class="btn
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
         </td>
         <td class="action-button">
