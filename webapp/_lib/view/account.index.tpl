@@ -285,9 +285,9 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
-          $('#message' + u).html("Set to public!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#div' + u).html("<span class='alert alert-success' id='messagepub" + u + "'></span>");
+          $('#messagepub' + u).html("Set to public!").hide().fadeIn(1500, function() {
+            $('#messagepub' + u);
           });
         }
       });
@@ -303,9 +303,9 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
-          $('#message' + u).html("Set to private!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#div' + u).html("<span class='alert alert-success' id='messagepriv" + u + "'></span>");
+          $('#messagepriv' + u).html("Set to private!").hide().fadeIn(1500, function() {
+            $('#messagepriv' + u);
           });
         }
       });
@@ -323,9 +323,9 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
-          $('#message' + u).html("Started!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#divactivate' + u).html("<span class='alert alert-success' id='messageplay" + u + "'></span>");
+          $('#messageplay' + u).html("Started!").hide().fadeIn(1500, function() {
+            $('#messageplay' + u);
           });
         }
       });
@@ -341,9 +341,9 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='linkbutton' id='message" + u + "'></span>");
-          $('#message' + u).html("Paused!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#divactivate' + u).html("<span class='alert alert-success' id='messagepause" + u + "'></span>");
+          $('#messagepause' + u).html("Paused!").hide().fadeIn(1500, function() {
+            $('#messagepause' + u);
           });
         }
       });
