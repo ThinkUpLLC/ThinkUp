@@ -236,7 +236,9 @@ class DashboardModuleCacher {
 
             // Concat text and clean up any encoding snags
             $text_shortened = substr($post_text_label, 0, 100) . '...';
-            $text_clean = iconv("UTF-8", "ISO-8859-1//IGNORE", $text_shortened);
+            // Doesn't work as expected on PHP 5.4
+            //$text_clean = iconv("UTF-8", "ISO-8859-1//IGNORE", $text_shortened);
+            $text_clean= mb_convert_encoding($text_shortened, 'UTF-8', 'UTF-8');
 
             $result_set[] = array('c' => array(
             array('v' => $text_clean),
