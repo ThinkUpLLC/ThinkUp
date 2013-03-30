@@ -263,7 +263,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         //Check if a URL was passed
         $auth_link = $v_mgr->getTemplateDataItem('oauthorize_link');
         $this->assertEqual("test_auth_URL_".urlencode("http://127.0.0.1".$THINKUP_CFG['site_root_path'].
-        "plugins/twitter/auth.php"), $auth_link);
+        "account/?p=twitter"), $auth_link);
     }
 
     /**
@@ -281,5 +281,59 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'num_twitter_errors', 'option_value' => "5") );
         return array($plugin_options1, $plugin_options2, $plugin_options3);
+    }
+
+    public function testLoggedInAuthorizeUserAllParams() {
+        $this->simulateLogin('me@example.com');
+        $_GET['oauth_token'] = 'XXX';
+        SessionCache::put('oauth_request_token_secret', 'XXX');
+
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $plugn_opt_builder1 = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
+        $plugn_opt_builder2 = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
+        $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
+
+        $controller = new TwitterPluginConfigurationController(null, 'twitter');
+        $this->debug('Controller has been instantiated');
+        $results = $controller->go();
+
+        $this->debug($results);
+        //sleep(100);
+        $v_mgr = $controller->getViewManager();
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual('Success! ginatrapani on Twitter has been added to ThinkUp!', $msgs['user_add']);
+        $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testLoggedInAuthorizeExistingUserAllParams() {
+        $this->simulateLogin('me@example.com');
+        $_GET['oauth_token'] = 'XXX';
+        SessionCache::put('oauth_request_token_secret', 'XXX');
+
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
+        $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>1));
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'930061',
+        'network_username'=>'ginatrapani', 'is_public'=>1));
+        //Add instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+
+        $controller = new TwitterPluginConfigurationController(null, 'twitter');
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->debug($results);
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual('ginatrapani on Twitter is already set up in ThinkUp! To add a different Twitter account, '.
+        'log out of Twitter.com in your browser and authorize ThinkUp again.', $msgs['user_add']);
+        $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
     }
 }
