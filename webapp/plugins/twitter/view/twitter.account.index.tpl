@@ -1,11 +1,13 @@
-{include file="_usermessage.tpl"}
-
 <div class="plugin-info">
 
     <span class="pull-right">{insert name="help_link" id='twitter'}</span>
     <h2><i class="icon-twitter icon-muted"></i> Twitter</h2>
 
 </div>
+
+{include file="_usermessage.tpl"}
+
+{if count($owner_instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
 
 {if count($owner_instances) > 0 }
 
@@ -100,7 +102,7 @@
     <br />
     Callback URL:
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}plugins/twitter/auth.php</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=twitter</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"

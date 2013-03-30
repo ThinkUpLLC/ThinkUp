@@ -65,12 +65,14 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
             $to->proxy =$proxy;
             
             /* Request tokens from twitter */
-            $tok = $to->getRequestToken(Utils::getApplicationURL(true)."plugins/twitter/auth.php");
+            $tok = $to->getRequestToken(Utils::getApplicationURL(true)."account/?p=twitter");
 
             if (isset($tok['oauth_token'])
             || (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") { //testing
                 $token = $tok['oauth_token'];
                 SessionCache::put('oauth_request_token_secret', $tok['oauth_token_secret']);
+
+                self::addAuthorizedUser($oauth_consumer_key, $oauth_consumer_secret, $num_twitter_errors);
 
                 /* Build the authorization URL */
                 $oauthorize_link = $to->getAuthorizeURL($token);
@@ -133,5 +135,75 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $proxy_label = 'Specify proxy IP and PORT:';
         $proxy = array('name' => 'proxy', 'label' => $proxy_label, 'default_value' => '', 'advanced'=> true, 'size'=>3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $proxy);
+    }
+
+    /**
+     * Add user who just returned from Twitter.com OAuth authorization and populate view with error/success messages.
+     * @param str $oauth_consumer_key
+     * @param str $oauth_consumer_secret
+     * @param str $num_twitter_errors
+     * @return void
+     */
+    private function addAuthorizedUser($oauth_consumer_key, $oauth_consumer_secret, $num_twitter_errors) {
+        if (isset($_GET['oauth_token'])  && SessionCache::isKeySet('oauth_request_token_secret')) {
+            $request_token = $_GET['oauth_token'];
+            $request_token_secret = SessionCache::get('oauth_request_token_secret');
+
+            $twitter_oauth = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret, $request_token,
+            $request_token_secret);
+            $tok = $twitter_oauth->getAccessToken();
+
+            if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
+                $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $oauth_consumer_key,
+                $oauth_consumer_secret, $num_twitter_errors, false);
+
+                $authed_twitter_user = $api->verifyCredentials();
+                //                echo "User ID: ". $authed_twitter_user['user_id']."<br>";
+                //                echo "User name: ". $authed_twitter_user['user_name']."<br>";
+
+                $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+
+                if ( isset($authed_twitter_user) && isset($authed_twitter_user['user_name'])
+                && isset($authed_twitter_user['user_id'])) {
+                    $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+                    $instance = $instance_dao->getByUsername($authed_twitter_user['user_name'], 'twitter');
+                    $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                    if (isset($instance)) {
+                        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+                        if ($owner_instance != null) {
+                            $owner_instance_dao->updateTokens($owner->id, $instance->id, $tok['oauth_token'],
+                            $tok['oauth_token_secret']);
+                            $this->addSuccessMessage($authed_twitter_user['user_name'].
+                            " on Twitter is already set up in ThinkUp! To add a different Twitter account, ".
+                            "log out of Twitter.com in your browser and authorize ThinkUp again.", 'user_add');
+                        } else {
+                            if ($owner_instance_dao->insert($owner->id, $instance->id, $tok['oauth_token'],
+                            $tok['oauth_token_secret'])) {
+                                $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].
+                                " on Twitter has been added to ThinkUp!", "user_add");
+                            } else {
+                                $this->addErrorMessage("Error: Could not create an owner instance.", "user_add");
+                            }
+                        }
+                    } else {
+                        $instance_dao->insert($authed_twitter_user['user_id'], $authed_twitter_user['user_name']);
+                        $instance = $instance_dao->getByUsername($authed_twitter_user['user_name']);
+                        if ($owner_instance_dao->insert( $owner->id, $instance->id, $tok['oauth_token'],
+                        $tok['oauth_token_secret'])) {
+                            $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].
+                            " on Twitter has been added to ThinkUp!", "user_add");
+                        } else {
+                            $this->addErrorMessage("Error: Could not create an owner instance.", "user_add");
+                        }
+                    }
+                }
+            } else {
+                $msg = "Error: Twitter authorization did not complete successfully. Check if your account already ".
+                " exists. If not, please try again.";
+                $this->addErrorMessage($msg, "user_add");
+            }
+            $this->view_mgr->clear_all_cache();
+        }
     }
 }
