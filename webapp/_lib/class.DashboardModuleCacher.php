@@ -234,8 +234,12 @@ class DashboardModuleCacher {
                 $post_text_label = date("M j",  date_format (date_create($post->pub_date), 'U' ));
             }
 
+            // Concat text and clean up any encoding snags
+            $text_shortened = substr($post_text_label, 0, 100) . '...';
+            $text_clean = iconv("UTF-8", "ISO-8859-1//IGNORE", $text_shortened);
+
             $result_set[] = array('c' => array(
-            array('v' => substr($post_text_label, 0, 100) . '...'),
+            array('v' => $text_clean),
             array('v' => intval($post->reply_count_cache)),
             array('v' => intval($post->all_retweets)),
             array('v' => intval($post->favlike_count_cache)),
