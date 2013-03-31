@@ -197,7 +197,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('db_port', '');
         $this->addToView('tz_list', $this->getTimeZoneList());
         $this->addToView('current_tz', $current_tz);
-        $this->addToView('site_email', 'you@example.com');
+        $this->addToView('site_email', '');
     }
 
     /**
@@ -343,14 +343,14 @@ class InstallerController extends ThinkUpController {
                 "following commands:<br /><code>sudo touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
                 "</code><br /><code>sudo chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH .
                 "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" .
-                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-                "<br /><br />Click the <strong>Next Step</strong> button below once you have done either.",
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file, show the contents of your config file below," .
+                " and copy and paste the text into the <code>config.inc.php</code> file.",
                 null, $disable_xss);
             } else {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "You will need to create the <code>" .
-                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-                "<br /><br />Click the <strong>Next Step</strong> button once this is done.", null, $disable_xss);
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.",
+                null, $disable_xss);
             }
             $this->addToView('config_file_contents', $config_file_contents_str );
             $this->addToView('_POST', $_POST);
