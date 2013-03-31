@@ -76,11 +76,57 @@ form .control-group {
     margin : 6px;
 }
 
+form legend {
+    background-color : #f5f5f5;
+    font-weight: 200;
+}
+
+form legend:before {
+    content: '\a0 \a0 \a0 \a0 ';
+}
+
+form fieldset .alert-error {
+    margin-top: 12px;
+    width: 60%;
+}
+
+form .help-inline ul {
+    list-style-type: none;
+    margin: 5px;
+    display: inline;
+}
+
+form .help-block ul {
+    list-style-type: none;
+}
+
+form .help-inline ul li {
+    display: inline;
+}
+
+div.white-card form legend {
+    background-color: transparent;
+}
+
+div.white-card form legend:before {
+    content: '';
+}
+
+fieldset {
+    background-color: white;
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+form.login fieldset {
+    padding-bottom: 0px;
+}
+
 .detail-btn {
     margin-right : 6px;
     margin-left : 12px;
 }
-  
+
 .metaroll {
     color : #999;
     display : inline;
@@ -340,6 +386,10 @@ span.formError {
 
 .btn-primary:active {
     background-color: #3a87ad;
+}
+
+.btn-info {
+    background-color : #00AEEF;
 }
 
 .btn.active,
