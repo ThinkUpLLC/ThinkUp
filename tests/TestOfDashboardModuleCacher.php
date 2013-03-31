@@ -66,7 +66,12 @@ class TestOfDashboardModuleCacher extends ThinkUpUnitTestCase {
         $this->assertEqual($visualization_object->cols[2]->label, 'Retweets');
         $this->assertEqual($visualization_object->cols[3]->label, 'Favorites');
 
-        $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First  Post...');
+        //Different PHP versions handle this differently
+        if (version_compare(phpversion(), '5.4', '<')) {
+            $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First  Post...');
+        } else {
+            $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First ? Post...');
+        }
         $this->assertEqual($visualization_object->rows[0]->c[1]->v, 3);
         $this->assertEqual($visualization_object->rows[0]->c[2]->v, 2);
         $this->assertEqual($visualization_object->rows[0]->c[3]->v, 1);
