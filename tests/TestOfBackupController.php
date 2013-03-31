@@ -92,14 +92,14 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', true);
         $controller = new BackupController(true);
         $results = $controller->control();
-        $this->assertPattern('/Back Up Your ThinkUp Data/', $results);
+        $this->assertPattern('/Back up ThinkUp\'s entire database/', $results);
     }
 
     public function testLoadBackupViewCLIWarn() {
         $this->simulateLogin('me@example.com', true);
         $controller = new BackupController(true);
         $results = $controller->control();
-        $this->assertPattern('/Back Up Your ThinkUp Data/', $results);
+        $this->assertPattern('/Back up ThinkUp\'s entire database/', $results);
         $v_mgr = $controller->getViewManager();
         $this->assertNull($v_mgr->getTemplateDataItem('high_table_row_count') ) ;
 

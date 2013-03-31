@@ -126,7 +126,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         //Test backup link
         $this->click("Settings");
         $this->click("Back up ThinkUp's entire database");
-        $this->assertText("Back Up Your ThinkUp Data");
+        $this->assertText("Back up ThinkUp's entire database");
         $this->assertText("If you have any issues using this backup feature, you can use mysqldump to manually back ".
         "up your ThinkUp data if you have access to your server.");
     }
