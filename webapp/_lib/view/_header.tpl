@@ -9,7 +9,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
-
 {if $enable_bootstrap}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -33,34 +32,23 @@
     <script src="{$site_root_path}assets/js/bootstrap.js"></script>
     <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
 
-  {foreach from=$header_scripts item=script}
+    {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-  {/foreach}
+    {/foreach}
+
+    {if $register_form}
+    <script src="{$site_root_path}assets/js/jqBootstrapValidation.js"></script>
+    <script type="text/javascript" src="{$site_root_path}assets/js/jstz-1.0.4.min.js"></script>
+    <script>
+        {literal}
+        $(function () { $("input").not("[type=submit]").jqBootstrapValidation(); } );
+        {/literal}
+    </script>
+
+    {/if}
 
     {literal}
       <script type="text/javascript">
-    {/literal}
-        {if $register_form}
-    {literal}
-            $.validator.setDefaults({
-                errorElement: "span",
-                errorClass: "formError",
-                wrapper: "span"
-            });
-        
-            $.validator.passwordRating.messages = {
-                "similar-to-username": "Too similar to your name",
-                "too-short": "Too short",
-                "very-weak": "Very weak",
-                "weak": "Weak",
-                "good": "Good",
-                "strong": "Strong"
-            };
-
-    {/literal}
-        {/if}
-
-    {literal}
 
         $(document).ready(function() {
 
@@ -95,7 +83,7 @@
       </script>
     {/literal}
     {if $logged_in_user}
-	{literal}
+    {literal}
 
     <script type="text/javascript">
       function searchMe(_baseu) {
@@ -105,9 +93,9 @@
         }
       }
     </script>
-	{/literal}
-	{/if}
-		
+    {/literal}
+    {/if}
+        
 {else} <!-- not bootstrap -->
   
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
