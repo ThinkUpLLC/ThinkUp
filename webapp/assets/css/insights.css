@@ -519,6 +519,14 @@ form.navbar-search {
     display : none;
 }
 
+.navbar-static-top ul.nav.pull-right {
+  border: none;
+}
+
+.navbar-static-top ul.nav.pull-right > li > a {
+  border: none;
+}
+
 #search-keywords {
     width: 140px;
 }
