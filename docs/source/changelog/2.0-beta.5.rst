@@ -1,0 +1,18 @@
+2.0-beta.5 - 1 Apr 2013
+=======================
+
+*  **Search improvements:** Search dropdown fills in search options as you type, disabled autocomplete, show number of
+   results on page
+*  **Redesigned installation:** Installation, export, and backup pages all upgraded to latest 2.0 design
+*  **Faster page load:** Reduced total insights per page to 20
+*  **Streamlined Twitter authorization:** Redirect directly to plugin settings page to avoid extra page/click
+
+
+Bugfixes:
+
+* Fix Older/Newer links in search results
+* Fix set private/set public button success messages in plugin settings
+* Don't halt Twitter crawl if an Exception is thrown or if it encounters a 404 (user deleted/not found)
+* Fix broken register/forgot password links when redirected to log in
+* Fix "No insights to display" message/automatically activate Insights Generator plugin
+* Fix multiple PHP Notices
