@@ -80,9 +80,9 @@ Launch the Installer
 .. image:: imgs/launchinstaller.png
 
 You're ready to begin the installation process. If you put the ThinkUp installation in the root document folder of your
-web site, then visit the following URL (replacing yoursite.com with the appropriate domain name):
+web site, then visit the following URL (replacing example.com with the appropriate domain name):
 
-``http://yoursite.com/thinkup/``
+``http://example.com/thinkup/``
 
 If you put ThinkUp into a different folder than the site root, you may need to add additional folders to the URL.
 
