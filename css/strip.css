@@ -214,6 +214,7 @@ h4 {
 }
 
 #myCarousel .item {
+    height: 540px;
 }
 
 a.carousel-control {
