@@ -120,8 +120,9 @@ Requirements Check
 .. image:: imgs/reqcheck.png
 
 The first screen in the install process is a requirements check, to ensure your environment matches the requirements
-listed above. If you see any "No" items here, you will probably need to speak to your web hosting company about
-getting additional PHP modules enabled.
+listed above. If any of ThinkUp's requirements aren't provided by your system, you'll see a detailed message like the 
+one above. You will probably need to speak to your web hosting company about resolving these issues by getting 
+additional PHP modules enabled or making sure your system is configured correctly.
 
 Configuration Details
 ---------------------
@@ -132,28 +133,28 @@ The second screen asks you for some information to help configure ThinkUp.
 
 The opening section creates your administrative account for the system:
 
--  Type your name into the *Name* field.
--  Type your preferred email address into the *Email Address* field. (Note that you will need to receive an email to
-   activate your account, so don't type just anything here.)
--  Enter your preferred password twice, once in *Choose Password* and again into *Confirm Password*.
--  Select the nearest city to you in "Your Time Zone".
+-  Type your name into the **Name** field.
+-  Type your preferred email address into the **Email Address** field. (Note that you will need to receive an email to
+   activate your account, so make sure this is your real address.)
+-  Enter your preferred password twice, once in **Password** and again into **Confirm Password**.
+-  Select the nearest city to you in **Time Zone**, if it isn't selected already.
 
 .. image:: imgs/configdb.png
 
 The second section is where ThinkUp needs the details about your database:
 
--  Under *Database Host*, enter the address of the server for your database.
--  Under *Database Name*, type the name of the database you created earlier, *or* the name of the database you plan on
-   reusing, *or* the name of the database you'd like to create (if you have permissions to create them directly through
-   MySQL).
--  Under *User Name*, type the MySQL user name you have been given to access the database.
--  Under *Password*, type the MySQL password you have been given to access the database.
+-  Under **Database Host**, enter the address of the server for your database. This is often "localhost".
+-  Under **Database Name**, type the name of the database you'll use for ThinkUp. You may have created this database 
+   earlier, or you can enter the name of the database you'd like to create (if your database user has permissions to 
+   create them directly through MySQL).
+-  Under **User Name**, type inthe MySQL user name you have been given to access the database.
+-  Under **Password**, type the MySQL password you have been given to access the database.
 
 .. image:: imgs/configadvanced.png
 
 A third section is available, entitled "Advanced Options", which  may be necessary for some hosting environments where
-you are given a specific MySQL socket or port to connect against. This section also allows you to set a *table prefix*,
-which can be very useful if you're reusing an existing database. Most people can leave this section alone.
+you are given a specific MySQL socket or port that is needed to connect. This section also allows you to set a **table 
+prefix**, which can be very useful if you're reusing an existing database. Most people can leave this section alone.
 
 Activate Your Account
 ---------------------
