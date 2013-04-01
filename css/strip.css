@@ -38,7 +38,7 @@ a:hover {
 }
 
 strong {
-    color : #00aeef;
+    color: #00aeef;
 }
 
 /*
@@ -473,7 +473,11 @@ iframe.twitter-tweet {
     .container {
         padding-left: 8px;
         padding-right: 8px;
-    }    
+    }
+    
+    .navbar {
+        margin-bottom: 0px;
+    }
 	
     .navbar .brand {
         display: inline;
@@ -501,14 +505,19 @@ iframe.twitter-tweet {
         padding-right: 0px;
     }
     
+    .highlight {
+        margin-bottom: 6px;
+    }
+    
     h2, .highlight h2 {
         font-size:24px;
         line-height:30px;
+        margin-top: 0px;
     }
 
     h3 {
-        font-size:20px;
-        line-height:30px;
+        font-size:16px;
+        line-height:24px;
     }   
     
     #start-form button {
@@ -520,7 +529,8 @@ iframe.twitter-tweet {
     }
     
     #insights-carousel .item {
-        height: auto;
+        height: 175px;
+        overflow: hidden;
     }
 
     #call-to-action {
@@ -532,14 +542,18 @@ iframe.twitter-tweet {
 @media (max-width: 480px) {
 
     
+    .highlight {
+        margin-bottom: 6px;
+    }
+    
     h2 {
         font-size:32px;
         line-height:52px;
     }
 
     h3 {
-        font-size:20px;
-        line-height:32px;
+        font-size:16px;
+        line-height:24px;
     }   
     
     #start-form button {
