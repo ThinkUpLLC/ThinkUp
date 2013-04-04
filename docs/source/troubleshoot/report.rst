@@ -8,7 +8,7 @@ to get help or feedback most efficiently.
 Step 1: Search
 --------------
 
-To avoid duplicate work, search `ThinkUp's documentation <http://thinkupapp.com/docs/>`_, 
+To avoid duplicate work, search `ThinkUp's documentation <http://thinkup.com/docs/>`_, 
 `mailing list archive <https://groups.google.com/forum/?pli=1#!forum/thinkupapp>`_ and
 `issue tracker <https://github.com/ginatrapani/ThinkUp/issues>`_ to make sure your
 problem or idea hasn't already been documented, discussed or reported. If it has, follow up on the existing mailing

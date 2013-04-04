@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ThinkUp'
-copyright = u'2012, Gina Trapani and the ThinkUp community'
+copyright = u'2013, Gina Trapani, ThinkUp LLC and the ThinkUp community'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -104,7 +104,7 @@ How to Report a Security Bug
 ----------------------------
 
 If you find a security bug in ThinkUp, send an email with a descriptive subject line to 
-**thinkup-security[at]expertlabs.org**. If you think you've found a serious vulnerability, please do not file a public
+**thinkup-security[at]thinkup.com**. If you think you've found a serious vulnerability, please do not file a public
 issue or post to ThinkUp's public mailing lists.
 
 Your report will go to the core ThinkUp development team. You will receive acknowledgement of the report in 24-48
