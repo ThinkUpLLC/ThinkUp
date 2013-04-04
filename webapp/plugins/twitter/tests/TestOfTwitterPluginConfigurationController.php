@@ -286,6 +286,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testLoggedInAuthorizeUserAllParams() {
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
+        $_GET['oauth_verifier'] = 'YYY';
         SessionCache::put('oauth_request_token_secret', 'XXX');
 
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
@@ -311,6 +312,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testLoggedInAuthorizeExistingUserAllParams() {
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
+        $_GET['oauth_verifier'] = 'YYY';
         SessionCache::put('oauth_request_token_secret', 'XXX');
 
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
