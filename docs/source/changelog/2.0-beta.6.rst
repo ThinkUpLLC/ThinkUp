@@ -1,0 +1,4 @@
+2.0-beta.6 - 4 Apr 2013
+=======================
+
+When adding a Twitter account, fix "Twitter authorization did not complete successfully" error.
