@@ -137,7 +137,11 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
             $twitter_oauth = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret, $request_token,
             $request_token_secret);
-            $tok = $twitter_oauth->getAccessToken();
+            if (isset($_GET['oauth_verifier'])) {
+                $tok = $twitter_oauth->getAccessToken($_GET['oauth_verifier']);
+            } else {
+                $tok = null;
+            }
 
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $oauth_consumer_key,
