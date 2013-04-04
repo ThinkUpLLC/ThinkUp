@@ -198,7 +198,11 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
 
         $this->get('index.php?step=2');
-        $this->assertText('Create Your ThinkUp Account');
+        if (version_compare($version, '2.0-beta.5', '>=')) {
+            $this->assertText('Create your ThinkUp account');
+        } else {
+            $this->assertText('Create Your ThinkUp Account');
+        }
 
         $this->setField('full_name', 'ThinkUp J. User');
         $this->setField('site_email', 'user@example.com');
