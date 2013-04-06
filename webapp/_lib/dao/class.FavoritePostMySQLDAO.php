@@ -40,7 +40,15 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             throw new Exception("Error: favoriter/author user ID not set");
         }
         // first add the post (if need be-- this post may have already been inserted).
-        $retval = $this->addPostAndAssociatedInfo($vals, $entities, $user_array);
+        $post = $this->getPost($vals['post_id'], $vals['network']);
+        if (!$post) {
+            $added_post = $this->addPostAndAssociatedInfo($vals, $entities, $user_array);
+            if (!$added_post) {
+                throw new Exception("Error: favorited post ID ". $vals['post_id'] .
+                " is not in storage and could not be inserted.");
+            }
+        }
+
         $q = "INSERT IGNORE INTO #prefix#favorites (post_id, author_user_id, fav_of_user_id, network) ";
         $q .= "VALUES ( :post_id, :user_id, :fav_of_user_id, :network) ";
         $vars = array(
