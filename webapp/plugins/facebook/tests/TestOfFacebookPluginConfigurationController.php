@@ -148,6 +148,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         // we have a text form element with proper data
+        $this->assertNoPattern('/Pause crawling/', $output);
+        $this->assertNoPattern('/Start crawling/', $output);
         $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_facebook_app_id/', $output); // should have no app id
         $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
@@ -177,6 +179,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->debug($output);
 
         // we have a text form element with proper data
+        $this->assertPattern('/Pause crawling/', $output);
         $this->assertPattern('/Save Settings/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_message_facebook_api_secret/', $output); // secret option
         $this->assertPattern('/plugin_options_max_crawl_time/', $output); // advanced option
