@@ -57,7 +57,8 @@ class RSSController extends ThinkUpAuthAPIController {
             $crawler_plugin_registrar_last_run = strtotime($freshest_instance->crawler_last_run);
         }
         if ($freshest_instance && $crawler_plugin_registrar_last_run < time() - $rss_crawler_refresh_rate*60) {
-            $crawler_plugin_registrar_run_url = $base_url.'crawler/run.php?'.sprintf('un=%s&as=%s', $email, $owner->api_key);
+            $crawler_plugin_registrar_run_url = $base_url.'crawler/run.php?'.sprintf('un=%s&as=%s',
+            $email, $owner->api_key);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $crawler_plugin_registrar_run_url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // seconds
@@ -93,6 +94,41 @@ class RSSController extends ThinkUpAuthAPIController {
             $items[] = self::createRSSItem($title, $link, $description);
         }
         $items = array_merge($items, $this->getAdditionalItems($base_url));
+
+        //Add insights to RSS feed
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        if ($this->isAdmin()) {
+            ///show all insights for all service users
+            $insights = $insight_dao->getAllInstanceInsights($page_count=(InsightStreamController::PAGE_INSIGHTS_COUNT
+            +1), 1);
+        } else {
+            //show only service users owner owns
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+
+            $insights = $insight_dao->getAllOwnerInstanceInsights($owner->id,
+            $page_count=(InsightStreamController::PAGE_INSIGHTS_COUNT+1), 1);
+        }
+        if (sizeof($insights) == 0) {
+            $title = 'No insights exist on ' . date('Y-m-d H:i:s');
+            $link = $base_url.'rss.php?d='.urlencode(date('Y-m-d H:i:s'));
+            $description = "ThinkUp doesn't have any insights to show you. Check your crawler log to make sure ".
+            "ThinkUp is capturing data.";
+            $items[] = self::createRSSItem($title, $link, $description);
+        } else {
+            foreach ($insights as $insight) {
+                $username_in_title = (($insight->instance->network == 'twitter')?'@':'') .
+                $insight->instance->network_username;
+                $title = str_replace(':', '', $insight->prefix). " (".$username_in_title .")";
+                $link = $base_url.'?u='.$insight->instance->network_username.'&n='
+                .urlencode($insight->instance->network). '&d='.urlencode(date('Y-m-d', strtotime($insight->date))).
+                '&s='.urlencode($insight->slug);
+                $description = $insight->prefix." ". $insight->text. '<br><a href="'.$link.'">Link</a>';
+                $time = strtotime($insight->date);
+                $items[] = self::createRSSItem($title, $link, $description, $time);
+            }
+        }
+
         $this->addToView('items', $items);
         $this->addToView('logged_in_user', htmlspecialchars($this->getLoggedInUser()));
         $this->addToView('rss_crawler_refresh_rate', htmlspecialchars($rss_crawler_refresh_rate));
@@ -129,14 +165,15 @@ class RSSController extends ThinkUpAuthAPIController {
      * @param string $title
      * @param string $link
      * @param string $description
+     * @param int $time Use current time if not specified
      * @return array RSS item
      */
-    private static function createRSSItem($title, $link, $description) {
+    private static function createRSSItem($title, $link, $description, $time=null) {
         return array(
             'title'       => htmlspecialchars($title),
             'link'        => htmlspecialchars($link),
             'description' => htmlspecialchars($description),
-            'pubDate'     => htmlspecialchars(date('D, d M Y H:i:s T')),
+            'pubDate'     => htmlspecialchars( (isset($time))?date('D, d M Y H:i:s T', $time):date('D, d M Y H:i:s T')),
             'guid'        => htmlspecialchars($link)
         );
     }

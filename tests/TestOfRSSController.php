@@ -53,7 +53,9 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $config->setValue('log_location', false);
         $results = $controller->go();
+        $this->debug($results);
         $this->assertPattern("/ThinkUp crawl started/", $results);
+        $this->assertPattern("/No insights exist/", $results);
         $this->assertPattern("/<rss version=\"2.0\"/", $results);
     }
 
@@ -68,6 +70,7 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $_SERVER['HTTP_HOST'] = 'http://localhost';
         $results = $controller->go();
         $this->assertPattern("/Error: crawler log is not writable/", $results);
+        $this->assertPattern("/No insights exist/", $results);
     }
 
     public function testPerOwnerRefreshRate() {
@@ -78,6 +81,7 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $results = $controller->go();
         $this->assertPattern("/ThinkUp crawl started/", $results);
+        $this->assertPattern("/No insights exist/", $results);
 
         $instanceDAO = new InstanceMySQLDAO();
         $instanceDAO->updateLastRun(1);
@@ -89,6 +93,31 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $_GET['as'] = 'a34e120dc6807e0dffc0d2b973b9d55b';
         $results = $controller->go();
         $this->assertPattern("/ThinkUp crawl started/", $results);
+        $this->assertPattern("/No insights exist/", $results);
+    }
+
+    public function testInsightsInFeed() {
+        $builders = $this->buildData();
+        $builders_insights = $this->buildDataInsights();
+        $controller = new RSSController(true);
+        $_GET['un'] = 'me@example.com';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertNoPattern("/No insights exist/", $results);
+        $this->assertPattern("/Hello/", $results);
+        $this->assertPattern("/This is a test of a hello world insight/", $results);
+    }
+
+    private function buildDataInsights() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('insights', array(
+            'prefix' => 'Hello:',
+            'text' => 'This is a test of a hello world insight',
+            'instance_id' => 1 ));
+
+        return $builders;
     }
 
     private function buildData() {
@@ -99,8 +128,7 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
             'email' => 'me@example.com',
             'pwd' => 'XXX',
             'is_activated' => 1,
-            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
-        ));
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c' ));
         array_push($builders, $owner1_builder);
 
         $owner2_builder = FixtureBuilder::build('owners', array(
@@ -108,36 +136,31 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
             'email' => 'me@example.net',
             'pwd' => 'YYY',
             'is_activated' => 1,
-            'api_key' => 'a34e120dc6807e0dffc0d2b973b9d55b'
-        ));
+            'api_key' => 'a34e120dc6807e0dffc0d2b973b9d55b' ));
         array_push($builders, $owner2_builder);
 
         $instance1_builder = FixtureBuilder::build('instances', array(
             'id' => 1,
             'network_username' => 'jack',
             'crawler_last_run' => '-2h',
-            'network' => 'twitter'
-        ));
+            'network' => 'twitter' ));
         array_push($builders, $instance1_builder);
 
         $instance2_builder = FixtureBuilder::build('instances', array(
             'id' => 2,
             'network_username' => 'fred',
             'crawler_last_run' => '-2h',
-            'network' => 'twitter'
-        ));
+            'network' => 'twitter' ));
         array_push($builders, $instance2_builder);
 
         $owner_instance1_builder = FixtureBuilder::build('owner_instances', array(
             'owner_id' => 1,
-            'instance_id' => 1
-        ));
+            'instance_id' => 1 ));
         array_push($builders, $owner_instance1_builder);
 
         $owner_instance2_builder = FixtureBuilder::build('owner_instances', array(
             'owner_id' => 2,
-            'instance_id' => 2
-        ));
+            'instance_id' => 2 ));
         array_push($builders, $owner_instance2_builder);
 
         return $builders;
