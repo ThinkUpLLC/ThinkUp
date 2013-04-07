@@ -18,7 +18,7 @@
     <tr>
         <th><h4 class="pull-left">Account</h4></th>
         <th><i class="icon-lock icon-2x icon-muted"></i></th>
-        <th><i class="icon-refresh icon-2x icon-muted"></i></th>
+        {if $user_is_admin}<th><i class="icon-refresh icon-2x icon-muted"></i></th>{/if}
         <th><i class="icon-trash icon-2x icon-muted"></i></th>
     </tr>
         
@@ -31,16 +31,18 @@
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
         </td>
+        {if $user_is_admin}
         <td class="action-button">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause crawling{else}Start crawling{/if}" /></span>
         </td>
+        {/if}
         <td class="action-button">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
             type="submit" name="action" class="btn btn-danger" 
-            value="delete" /></form></span>
+            value="Delete" /></form></span>
         </td>
     </tr>
     {/foreach}

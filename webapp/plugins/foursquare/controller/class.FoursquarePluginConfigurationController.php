@@ -79,7 +79,7 @@ class FoursquarePluginConfigurationController extends PluginConfigurationControl
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field);
         // Set a message saying this field is required
         $this->addPluginOptionRequiredMessage('foursquare_client_secret',
-        'A client secret is requried to use foursquare');
+        'A client secret is required to use foursquare');
 
         // Get a data access object so we can get the options for the plugin from the database
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');

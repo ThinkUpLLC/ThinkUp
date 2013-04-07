@@ -122,7 +122,6 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $doc = new DOMDocument();
         // parse our html
         $doc->loadHTML("<html><body>" . $options_markup . "</body></html>");
-
     }
 
     public function testAddTextOptionIsAdmin() {
@@ -135,6 +134,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // just name, is admin, so form should be enabled
         $output = $controller->go();
+        $this->debug($output);
         $this->assertNotNull( $controller->option_elements);
         $this->assertEqual( count($controller->option_elements), 2);
         $this->assertNotNull( $controller->option_elements['google_plus_client_id']);
@@ -160,9 +160,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $input_field = $this->getElementById($doc, 'plugin_options_google_plus_client_secret');
         $this->assertEqual($input_field->getAttribute('value'), $plugin_option[1]->columns['option_value']);
 
-        // var_dump("<html><body>" . $options_markup . "</body></html>");
-
-        // submit and elemnts should be disbaled
+        // submit and elemnts should be disabled
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
         $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
@@ -355,5 +353,92 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         '<a href="http://code.google.com/apis/console#access">In the Google APIs console</a>, in Services, flip the '.
         'Google+ API Status switch to \'On\' and try again.');
         $this->debug(Utils::varDumpToString($msgs));
+    }
+
+    public function testConfigOptionsNotAdmin() {
+        self::buildInstanceData();
+        // build some options data
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertNoPattern('/Pause crawling/', $output);
+        $this->assertNoPattern('/Start crawling/', $output);
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
+        $this->assertNoPattern('/plugin_options_error_facebook_app_id/', $output); // should have no app id
+        $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
+        $this->assertNoPattern('/plugin_options_max_crawl_time/', $output); // no advanced option
+        $this->assertPattern('/var is_admin = false/', $output); // not a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'googleplus'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        $controller = new GooglePlusPluginConfigurationController($owner);
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    public function testConfigOptionsIsAdmin() {
+        $builders = self::buildInstanceData();
+        // build some options data
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner);
+        $output = $controller->go();
+
+        $this->debug($output);
+
+        // we have a text form element with proper data
+        $this->assertPattern('/Pause crawling/', $output);
+        $this->assertPattern('/Save Settings/', $output); // should have submit option
+        $this->assertPattern('/plugin_options_error_google_plus_client_secret/', $output); // secret option
+        $this->assertPattern('/plugin_options_error_message_google_plus_client_id/', $output); // advanced option
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'googleplus'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        $controller = new GooglePlusPluginConfigurationController($owner);
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    private function buildInstanceData() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1));
+
+        //Add instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'606837591',
+        'network_username'=>'Gina Trapani', 'network'=>'google+', 'is_active'=>1));
+
+        //Add owner instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
+        'oauth_access_token'=>'faux-access-token1', 'auth_error'=>'Token has expired.'));
+
+        //Add second instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'668406218',
+        'network_username'=>'Penelope Caridad', 'network'=>'google+', 'is_active'=>1));
+
+        //Add second owner instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+        'oauth_access_token'=>'faux-access-token2', 'auth_error'=>''));
+
+        return $builders;
     }
 }

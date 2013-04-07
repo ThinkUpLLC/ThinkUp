@@ -131,6 +131,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         // we have a text form element with proper data
+        $this->assertNoPattern('/Pause crawling/', $output);
+        $this->assertNoPattern('/Start crawling/', $output);
         $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_oauth_consumer_secret/', $output); // should have no secret option
         $this->assertNoPattern('/plugin_options_archive_limit/', $output); // should have no limit option
@@ -151,6 +153,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         // we have a text form element with proper data
+        $this->assertPattern('/Pause crawling/', $output);
         $this->assertPattern('/Save Settings/', $output); // should have no submit option
         $this->assertPattern('/plugin_options_oauth_consumer_secret/', $output); // should have secret option
         $this->assertPattern('/plugin_options_archive_limit/', $output); // should have limit option

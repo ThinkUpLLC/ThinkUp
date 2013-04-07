@@ -18,7 +18,7 @@
 
 {if count($instances) > 0 }
 <div>
-    <h2>Facebook User Profiles</h2>
+    <h2>Users</h2>
 
     {foreach from=$instances key=iid item=i name=foo}
     <div class="row-fluid">
@@ -27,15 +27,17 @@
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
         <div class="span3">
-            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="Set {if $i->is_public}private{else}public{/if}" /></span>
         </div>
+        {if $user_is_admin}
         <div class="span3">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
+        {/if}
         <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
-            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="Delete" /></form></span>
         </div>
     </div>
     {/foreach}
@@ -46,7 +48,7 @@
 
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
 <div>
-    <h2>Facebook Pages</h2>
+    <h2>Pages</h2>
     <div class="article">
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="row-fluid">
@@ -54,15 +56,17 @@
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
         <div class="span3">
-            <span id="div{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+            <span id="div{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="Set {if $i->is_public}private{else}public{/if}" /></span>
         </div>
+        {if $user_is_admin}
         <div class="span3">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
+        {/if}
         <div class="span3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete page csrf token -->
-            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn btn-danger" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn btn-danger" value="Delete" /></form></span>
         </div>
     </div>
     {/foreach}

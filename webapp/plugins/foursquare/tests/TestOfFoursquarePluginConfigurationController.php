@@ -118,7 +118,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
 
     public function testOutput() {
         // Not logged in, no owner set
-        $controller = new FoursquarePluginConfigurationController(null, 'foursquare');
+        $controller = new FoursquarePluginConfigurationController(null);
         // Run the plugin configuration controller
         $output = $controller->go();
         // Get a view manager
@@ -145,6 +145,91 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $output = $controller->go();
         // Get a view manager
         $v_mgr = $controller->getViewManager();
+    }
+
+    public function testConfigOptionsNotAdmin() {
+        self::buildInstanceData();
+        // build some options data
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FoursquarePluginConfigurationController($owner);
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertNoPattern('/Pause crawling/', $output);
+        $this->assertNoPattern('/Start crawling/', $output);
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
+        $this->assertNoPattern('/plugin_options_foursquare_client_id_label/', $output); // should have no app id
+        $this->assertNoPattern('/plugin_options_foursquare_client_secret_label/', $output); // no secret
+        $this->assertPattern('/var is_admin = false/', $output); // not a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'foursquare'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        $controller = new FoursquarePluginConfigurationController($owner);
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    public function testConfigOptionsIsAdmin() {
+        $builders = self::buildInstanceData();
+        // build some options data
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FoursquarePluginConfigurationController($owner);
+        $output = $controller->go();
+
+        // we have a text form element with proper data
+        $this->assertPattern('/Pause crawling/', $output);
+        $this->assertPattern('/Save Settings/', $output); // should have submit option
+        $this->assertPattern('/plugin_options_foursquare_client_id/', $output); // should have no app id
+        $this->assertPattern('/plugin_options_foursquare_client_secret/', $output); // no secret
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'foursquare'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
+        OwnerMySQLDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
+        $controller = new FoursquarePluginConfigurationController($owner);
+        $output = $controller->go();
+        $this->debug($output);
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    private function buildInstanceData() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1));
+
+        //Add instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'606837591',
+        'network_username'=>'Gina Trapani', 'network'=>'foursquare', 'is_active'=>1));
+
+        //Add owner instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
+        'oauth_access_token'=>'faux-access-token1', 'auth_error'=>'Token has expired.'));
+
+        //Add second instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'668406218',
+        'network_username'=>'Penelope Caridad', 'network'=>'foursquare', 'is_active'=>1));
+
+        //Add second owner instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+        'oauth_access_token'=>'faux-access-token2', 'auth_error'=>''));
+
+        return $builders;
     }
 
     // Check the options were inserted correctly into the database
