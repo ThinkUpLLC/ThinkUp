@@ -47,7 +47,7 @@ strong {
 
 h1 {
     color: #00aeef;
-    font: 44px/71px;
+    font-size: 2em;
     font-weight: 700;
 }
 
@@ -95,6 +95,9 @@ h4 {
      padding-bottom: 100px;
 }
 
+.documentation .alert-info p {
+    color: black;
+}
 /*
 * navigation lists on both footer and nav-header
 */
