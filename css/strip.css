@@ -45,11 +45,20 @@ strong {
 * headers
 */
 
+h1 {
+    color: #00aeef;
+    font: 44px/71px;
+    font-weight: 700;
+}
+
 h2 {
-    text-align: center;
     font: 44px/71px;
     font-weight : 200;
     margin: 18px 0;
+}
+
+.highlight h2 {
+    text-align: center;
 }
 
 h2 strong {
