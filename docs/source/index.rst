@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-ThinkUp: Get more from the time you spend online.
-=======================================
+ThinkUp: Get more from the time you spend on social networks.
+=============================================================
 
 Welcome! This is the official documentation for `ThinkUp <http://thinkup.com>`_, a social media insights
 engine. 

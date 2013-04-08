@@ -25,10 +25,8 @@ Prerequisites
 Download
 --------
 
-.. image:: imgs/download.png
-
 You can download the
-`latest distribution <http://github.com/ginatrapani/ThinkUp/downloads>`_ of ThinkUp from GitHub. The most recent
+`latest distribution <http://thinkup.com/download/>`_ of ThinkUp from ThinkUp.com. The most recent
 packages are located at the top of the page.
 
 Extract
