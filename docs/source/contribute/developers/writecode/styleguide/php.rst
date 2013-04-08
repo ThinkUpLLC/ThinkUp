@@ -42,7 +42,7 @@ Include Docblocks on All New Code
 ---------------------------------
 
 ThinkUp uses PHPDocumentor to ease code maintenance and `auto-generate class documentation 
-<http://thinkupapp.com/docs/>`_. Include PHPDoc-style “docblocks” in all of your PHP code. When writing your
+<http://thinkup.com/docs/>`_. Include PHPDoc-style “docblocks” in all of your PHP code. When writing your
 documentation, please use `PHPDocumentor's 
 syntax <http://github.com/ginatrapani/ThinkUp/wiki/ThinkUp-and-PHPDocumentor-(PHPDoc)>`_.
 

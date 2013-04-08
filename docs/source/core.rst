@@ -8,13 +8,13 @@ Core Team
 
 **Gina Trapani** started building ThinkUp in the summer of 2009 as a personal weekend project. She served as Project
 Director at ThinkUp's incubator, `Expert Labs <http://expertlabs.org>`_, from February of 2010 until March of 2012.
-Today, she is the cofounder of the ThinkUp company, leading application development.
+Since then, she has been the cofounder of ThinkUp LLC, leading application development.
 
 *   `ginatrapani on GitHub <https://github.com/ginatrapani>`_
 *   `@ginatrapani on Twitter <https://twitter.com/ginatrapani>`_
 *   `+Gina Trapani on Google+ <https://plus.google.com/113612142759476883204>`_
 
-**Anil Dash** founded ThinkUp's incubator, `Expert Labs <http://expertlabs.org>`_, and cofounded the ThinkUp company
+**Anil Dash** founded ThinkUp's incubator, `Expert Labs <http://expertlabs.org>`_, and cofounded ThinkUp LLC
 with Gina Trapani. He is responsible for ThinkUp's look and feel. `See Anil's 
 ThinkUp contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=anildash>`_.
 
@@ -31,7 +31,7 @@ contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=mwil
 *   `@mwilkie on Twitter <https://twitter.com/mwilkie>`_
 
 **Andy Baio** worked on ThinkUp through Expert Labs from November of 2010 until March 2012, responsible for data
-analysis and visualization. Now he advises the ThinkUp company. `See Andy's ThinkUp
+analysis and visualization. Now he advises ThinkUp LLC. `See Andy's ThinkUp
 contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=waxpancake>`_.
 
 *   `waxpancake on GitHub <https://github.com/waxpancake>`_

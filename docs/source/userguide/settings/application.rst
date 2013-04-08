@@ -63,7 +63,7 @@ embed code. When this box is checked, the code will not be available for use.
 Disable usage reporting
 -----------------------
 
-ThinkUp sends usage information to `thinkupapp.com <http://thinkupapp.com>`_ when it checks if there's
+ThinkUp sends usage information to `thinkup.com <http://thinkup.com>`_ when it checks if there's
 a new version available. Collecting this usage information enables ThinkUp's :doc:`core development team </core>` to
 gain insight into what features are in use, and make data-informed decisions about how to improve the application.
 
