@@ -42,7 +42,7 @@ Manual Upgrade
 
 If you're unable to run the web-based upgrader, upgrade ThinkUp manually.
 
-First, `download ThinkUp's latest release <http://thinkupapp.com/download/>`_ and extract the zip archive on your
+First, `download ThinkUp's latest release <http://thinkup.com/download/>`_ and extract the zip archive on your
 computer.  Then, log into your ThinkUp installation as an administrator. 
 
 Using your favorite FTP program, connect to your web hosting provider, and rename your existing ThinkUp folder to
