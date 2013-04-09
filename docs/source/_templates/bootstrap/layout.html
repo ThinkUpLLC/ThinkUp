@@ -1,83 +1,57 @@
 {% extends "basic/layout.html" %}
-{% set script_files = script_files + ['_static/bootstrap-dropdown.js', '_static/bootstrap-scrollspy.js'] %}
-{% set css_files = ['_static/bootstrap.css', '_static/bootstrap-sphinx.css'] + css_files %}
+
+{%- block doctype -%}
+<!DOCTYPE html>
+{%- endblock %}
 
 {# Sidebar: Rework into our Boostrap nav section. #}
 {% macro navBar() %}
-  <div class="topbar" data-scrollspy="scrollspy" >
-    <div class="topbar-inner">
-      <div class="container">
-        <a class="brand" href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a>
-        <ul class="nav">
-          {% block sidebartoc %}
-            {% include "globaltoc.html" %}
-          {% endblock %}
-        </ul>
-        <ul class="nav secondary-nav">
-          {% block sidebarsearch %}
-            {% include "searchbox.html" %}
-          {% endblock %}
-        </ul>
-      </div>
+
+<section class="container">
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a href="/" class="brand">Think<span style="color : black; font-weight : 200;">Up</span></a>
+                <ul class="nav">
+                    <li><a href="http://thinkup.com/docs/">Docs</a></li>
+                    <li><a href="http://blog.thinkup.com/">Blog</a></li>
+                    <li><a href="http://twitter.com/thinkup"><i class="icon-twitter"></i></a></li>
+                    <li>
+                        <form action="http://thinkupapp.com/docs/search.html" method="get" class="form-search"><input type="text" name="q" placeholder="Search Docs" class="search-query" id="docs-search"><input type="hidden" name="check_keywords" value="yes"><input type="hidden" name="area" value="default"></form>
+                    
+                    </li>
+
+              </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<div class="container documentation">
+
+<div class="row">
+    <div class="span3">
+
+
+        <div id="tabs" class="embossed-block">
+
+            {% block sidebartoc %}
+                {% include "globaltoc.html" %}
+            {% endblock %}
+        </div>
+
     </div>
-  </div>
+    <div class="span9">
+        <div class="alert alert-info">
+
 {% endmacro %}
 
 {%- block extrahead %}
-<script type="text/javascript">
-(function () {
-  /**
-   * Patch TOC list.
-   *
-   * Will mutate the underlying span to have a correct ul for nav.
-   *
-   * @param $span: Span containing nested UL's to mutate.
-   * @param minLevel: Starting level for nested lists. (1: global, 2: local).
-   */
-  var patchToc = function ($span, minLevel) {
-    var $tocList = $("<ul/>").attr('class', "dropdown-menu"),
-      findA;
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://thinkup.com/css/insights.css" type="text/css">
+    <link rel="stylesheet" href="https://thinkup.com/css/strip.css" type="text/css">
 
-    // Find all a "internal" tags, traversing recursively.
-    findA = function ($elem, level) {
-      var level = level || 0,
-        $items = $elem.find("> li > a.internal, > ul, > li > ul");
-
-      // Iterate everything in order.
-      $items.each(function (index, item) {
-        var $item = $(item),
-          tag = item.tagName.toLowerCase(),
-          pad = 10 + ((level - minLevel) * 10);
-
-        if (tag === 'a' && level >= minLevel) {
-          // Add to existing padding.
-          $item.css('padding-left', pad + "px");
-          // Add list element.
-          $tocList.append($("<li/>").append($item));
-        } else if (tag === 'ul') {
-          // Recurse.
-          findA($item, level + 1);
-        }
-      });
-    };
-
-    // Start construction and return.
-    findA($span);
-
-    // Wipe out old list and patch in new one.
-    return $span.empty("ul").append($tocList);
-  };
-
-  $(document).ready(function () {
-    // Patch the global and local TOC's to be bootstrap-compliant.
-    patchToc($("span.globaltoc"), 1);
-    patchToc($("span.localtoc"), 2);
-
-    // Activate.
-    $('#topbar').dropdown();
-  });
-}());
-</script>
 {% endblock %}
 
 {% block header %}{{ navBar() }}{% endblock %}
@@ -90,48 +64,71 @@
 
 {%- block content %}
 
-<div class="container">
-<br/>
-<a href="{{ pathto(master_doc) }}">ThinkUp v{{ version }}</a>
-{%- for parent in parents %}
-     &rarr; <a href="{{ parent.link|e }}">{{ parent.title }}</a>
-{%- endfor %}
-</div>
-<hr/>
-<div class="container">
    {% block body %} {% endblock %}
-</div>
+
 {%- endblock %}
 
 {%- block footer %}
-<footer class="footer">
-  <div class="container">
-     {% block sidebarrel %}
-       {% include "relations.html" %}
-     {% endblock %}
-  </div>
-  <br/>
-  <div class="container">
-    <p class="pull-right"><a href="#">Back to top</a></p>
-    <p>
-    {%- if show_copyright %}
-      {%- if hasdoc('copyright') %}
-        {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}<br/>
-      {%- else %}
-        {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}<br/>
-      {%- endif %}
-    {%- endif %}
-    {%- if last_updated %}
-      {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}<br/>
-    {%- endif %}
-    {%- if show_sphinx %}
-      {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}<br/>
-    {%- endif %}
-      {% block sidebarsourcelink %}
-        {% include "sourcelink.html" %}
-      {% endblock %}
-    </p>
-  </div>
+        
+        </div><!-- end alert -->
+
+            <div class="container">
+                {% block sidebarrel %}
+                    {% include "relations.html" %}
+                {% endblock %}
+            </div>
+    
+    </div>
+</div>
+</div><!-- end container -->
+
+<footer class="container footer-box">
+    <nav class="links">
+        <a href="#">Home </a>
+        <a href="http://thinkup.com/docs">Docs</a>
+        <a href="http://blog.thinkup.com/">Blog</a>
+        <a href="http://groups.google.com/group/thinkupapp">Mailing List</a>
+        <!--
+        <a href="http://thinkup.com/tos">Terms</a>
+        -->
+        <a href="http://twitter.com/thinkup"><i class="icon-twitter"></i></a>
+        <a href="http://facebook.com/thinkupapp"><i class="icon-facebook"></i></a>   
+        <a href="http://gplus.to/thinkup"><i class="icon-google-plus"></i></a>      
+    </nav>                 
+    <p>&copy; 2013 ThinkUp LLC. It is nice to be nice.</p>           
 </footer>
+
+
+<script src="https://thinkup.com/js/jquery-1.9.1.min.js"></script>
+<script src="https://thinkup.com/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-76614-5");
+pageTracker._trackPageview();
+} catch(err) {}
+
+var _sf_async_config={uid:2383,domain:"thinkup.com"};
+(function(){
+  function loadChartbeat() {
+    window._sf_endpt=(new Date()).getTime();
+    var e = document.createElement('script');
+    e.setAttribute('language', 'javascript');
+    e.setAttribute('type', 'text/javascript');
+    e.setAttribute('src',
+       (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/": "http://static.chartbeat.com/") +
+       "js/chartbeat.js");
+    document.body.appendChild(e);
+  }
+  var oldonload = window.onload;
+  window.onload = (typeof window.onload != 'function') ?
+     loadChartbeat: function() { oldonload(); loadChartbeat(); };
+})();
+</script>
+
 {%- endblock %}
 

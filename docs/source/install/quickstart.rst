@@ -7,7 +7,7 @@ LAMP-based hosting plans.
 
 Once you have access to a public web server to install ThinkUp, you install it in three easy steps.
 
-1. `Download the latest distribution of ThinkUp <http://thinkupapp.com/download/>`_.
+1. `Download the latest distribution of ThinkUp <http://thinkup.com/download/>`_.
 2. Extract the zip file into a web-accessible folder on your web server via FTP.
 3. Visit that URL in your browser to proceed through ThinkUp's simple installer.
 

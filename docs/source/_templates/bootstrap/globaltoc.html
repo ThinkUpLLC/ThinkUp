@@ -1,5 +1,2 @@
-<li class="dropdown" data-dropdown="dropdown">
-  <a href="{{ pathto(master_doc) }}"
-     class="dropdown-toggle">{{ _('Index') }}</a>
-  <span class="globaltoc">{{ toctree(maxdepth=1) }}</span>
-</li>
+
+{{ toctree(maxdepth=2)|replace("<ul>", "<ul class=\"nav nav-tabs nav-stacked\">")|replace("<ul class=\"current\">", "<ul class=\"nav nav-tabs nav-stacked\">")|replace("current", "active") }}

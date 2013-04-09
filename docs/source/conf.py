@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ThinkUp'
-copyright = u'2012, Gina Trapani and the ThinkUp community'
+copyright = u'2013, Gina Trapani, ThinkUp LLC and the ThinkUp community'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -220,5 +220,5 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'thinkup', u'ThinkUp Documentation',
-     [u'Gina Trapani and the ThinkUp community'], 1)
+     [u'Gina Trapani, ThinkUp LLC and the ThinkUp community'], 1)
 ]

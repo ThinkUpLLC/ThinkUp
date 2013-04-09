@@ -98,4 +98,4 @@ Here's a file that Gina's already added PHPDocumentor comments to:
 https://github.com/ginatrapani/ThinkUp/blob/master/webapp/_lib/model/class.Post.php
 
 This is what the documentation page that PHPDoc created looks like:
-http://thinkupapp.com/docs/ThinkUp/PublicTimelineController.html
+http://thinkup.com/docs/ThinkUp/PublicTimelineController.html
