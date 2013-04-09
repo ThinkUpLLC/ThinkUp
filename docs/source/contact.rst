@@ -29,9 +29,9 @@ Blog, Facebook, and Twitter
 
 You can also find ThinkUp community members on various channels across the web:
 
-* On Twitter, follow `@thinkupapp <http://twitter.com/thinkupapp>`_
+* On Twitter, follow `@thinkup <http://twitter.com/thinkup>`_
 * Like `ThinkUp's Facebook Page <http://facebook.com/thinkupapp>`_
-* Follow the `ThinkUp blog <http://blog.thinkupapp.com>`_
+* Follow the `ThinkUp blog <http://blog.thinkup.com>`_
 
 Live Community Conference Call and Podcast
 ------------------------------------------

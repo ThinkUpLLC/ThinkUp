@@ -9,7 +9,7 @@ Introduction
     You're reading the very beginning of that effort. This documentation is an incomplete, work-in-progress. Please 
     join us and help :doc:`fill in the gaps </contribute/documentation>`.
 
-`ThinkUp <http://thinkupapp.com>`_ is a free, open source web application that captures your posts, tweets, replies,
+`ThinkUp <http://thinkup.com>`_ is a free, open source web application that captures your posts, tweets, replies,
 retweets, friends, followers and links on social networks like Twitter and Facebook. With ThinkUp, you can store your
 social activity in a database that YOU control, making it easy to search, sort, analyze, publish and display activity
 from your network. All you need is a web server that can run a PHP application.

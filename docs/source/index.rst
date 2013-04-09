@@ -3,19 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-ThinkUp: A Social Media Insights Engine
-=======================================
+ThinkUp: Get more from the time you spend on social networks.
+=============================================================
 
-Welcome! This is the official documentation for `ThinkUp <http://thinkupapp.com>`_, a social media insights
+Welcome! This is the official documentation for `ThinkUp <http://thinkup.com>`_, a social media insights
 engine. 
-
-.. sidebar:: ThinkUp Screencast
-
-    .. raw:: html
-
-        <iframe title="YouTube video player" style="width: 100%; height:250px; border: 0;" src="http://www.youtube.com/embed/PnVe9NYolDU?rel=0"></iframe>
-
-    Find out more at the `ThinkUp project page <http://thinkupapp.com>`_. 
 
 .. toctree::
    :maxdepth: 2
