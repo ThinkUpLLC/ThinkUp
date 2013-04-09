@@ -169,6 +169,13 @@ h4 {
     text-shadow:0 1px 0 #ffffff;  
 }
 
+ul.nav.nav-tabs.nav-stacked ul {
+    margin-left: 20px;
+    background-color: transparent;
+    box-shadow: none;
+    background: none;
+}
+
 /*
 * highlight section
 */
