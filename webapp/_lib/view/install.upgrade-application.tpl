@@ -50,4 +50,4 @@
     </div>
 </div>
 
-{include file="_footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap=1}
