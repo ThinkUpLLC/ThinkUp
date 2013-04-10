@@ -59,4 +59,4 @@
       </div>
     </div>
   </div>
-{include file="_install.footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap=1}
