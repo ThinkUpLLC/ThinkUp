@@ -30,3 +30,9 @@ Add a Google+ user to ThinkUp
 
 Click on the "Authorize ThinkUp on Google+" button to add your Google+ user account to ThinkUp. This button will only
 appear if the Google+ plugin is configured.
+
+Google+ Pages
+-----------------------------
+
+APIs for Google+ Pages are not yet open for public usage and hence not supported on ThinkUp. They are 
+`granted to partners on a company by company basis <https://developers.google.com/+/api/pages-signup>`_.
