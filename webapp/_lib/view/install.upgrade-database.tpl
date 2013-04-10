@@ -1,5 +1,5 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" enable_bootstrap=1 }
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 <div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 10px;">
 
