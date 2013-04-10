@@ -1,4 +1,5 @@
-{include file="_install.header.tpl"}
+{include file="_header.tpl" enable_bootstrap=1 }
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 <!-- end #menu-bar --></div>
 <!-- end .container -->
