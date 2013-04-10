@@ -102,4 +102,4 @@ var upgrade_token = '{$upgrade_token}';
 <script type="text/javascript" src="{$site_root_path}assets/js/upgrade.js"></script>
 
 
-{include file="_footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap=1}
