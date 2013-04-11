@@ -124,6 +124,16 @@ SQL;
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
+	
+    public function getIsActivated($email) {
+        $q = " SELECT is_activated  FROM #prefix#owners  WHERE email=:email";
+        $vars = array(
+            ':email'=>$email
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowAsArray($ps);
+    }
 
     public function activateOwner($email) {
         $this->updateActivation($email, true);
