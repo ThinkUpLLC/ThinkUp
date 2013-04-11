@@ -62,8 +62,28 @@ class ActivateAccountController extends ThinkUpController {
             $acode = $owner_dao->getActivationCode($_GET['usr']);
 
             if ($_GET['code'] == $acode['activation_code']) {
-                $owner_dao->activateOwner($_GET['usr']);
-                $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
+                $owner_ia = $owner_dao->getIsActivated($_GET['usr']);
+                if ($owner_ia['is_activated'] == 1) {
+                    $controller->addSuccessMessage("You have already activated your account. Please log in.");
+                } else {
+                    $owner_dao->activateOwner($_GET['usr']);
+                    $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
+
+                    // send activation email
+                    $cfg_array =  array(
+                        'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
+                        'source_root_path'=>THINKUP_ROOT_PATH,
+                        'debug'=>false,
+                        'app_title_prefix'=>"",
+                        'cache_pages'=>false);
+                    $email_view = new ViewManager($cfg_array);
+                    $email_view->caching=false;
+                    $email_view->assign('application_url', Utils::getApplicationURL() );
+                    $email_view->assign('email', urlencode($email) );
+                    $message = $email_view->fetch('_email.activation.tpl');
+
+                    Mailer::mail($_GET['usr'], "Your New ThinkUp Account Successfully Activated", $message);
+                }
             } else {
                 $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
             }
