@@ -68,6 +68,21 @@ class ActivateAccountController extends ThinkUpController {
                 } else {
                     $owner_dao->activateOwner($_GET['usr']);
                     $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
+
+                    // send activation email
+                    $cfg_array =  array(
+                        'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
+                        'source_root_path'=>THINKUP_ROOT_PATH,
+                        'debug'=>false,
+                        'app_title_prefix'=>"",
+                        'cache_pages'=>false);
+                    $email_view = new ViewManager($cfg_array);
+                    $email_view->caching=false;
+                    $email_view->assign('application_url', Utils::getApplicationURL() );
+                    $email_view->assign('email', urlencode($email) );
+                    $message = $email_view->fetch('_email.activation.tpl');
+
+                    Mailer::mail($_GET['usr'], "Your New ThinkUp Account Successfully Activated", $message);
                 }
             } else {
                 $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
