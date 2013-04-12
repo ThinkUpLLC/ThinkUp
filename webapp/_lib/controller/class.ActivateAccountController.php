@@ -62,8 +62,17 @@ class ActivateAccountController extends ThinkUpController {
             $acode = $owner_dao->getActivationCode($_GET['usr']);
 
             if ($_GET['code'] == $acode['activation_code']) {
-                $owner_dao->activateOwner($_GET['usr']);
-                $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
+                $owner = $owner_dao->getByEmail($_GET['usr']);
+                if (isset($owner) && isset($owner->is_activated)) {
+                    if ($owner->is_activated == 1) {
+                        $controller->addSuccessMessage("You have already activated your account. Please log in.");
+                    } else {
+                        $owner_dao->activateOwner($_GET['usr']);
+                        $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
+                    }
+                } else {
+                    $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
+                }
             } else {
                 $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
             }
