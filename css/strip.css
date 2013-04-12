@@ -489,6 +489,10 @@ iframe.twitter-tweet {
 }
 
 @media (max-width: 767px) {
+
+    body {
+        border-top: none;
+    }
     	 
     .container {
         padding-left: 8px;
