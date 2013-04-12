@@ -21,13 +21,14 @@ Prerequisites
 -  A publicly available web server. (Twitter authorization requires a public callback URL, so you'll need to expose
    non-public servers to the internet for initial authorization; after that, the server no longer needs to be publicly
    available.)
+-  The ability to send email. If your web server cannot send email, you will not be able to activate your ThinkUp
+   account, or recover your account should you forget your password.
 
 Download
 --------
 
-You can download the
-`latest distribution <http://thinkup.com/download/>`_ of ThinkUp from ThinkUp.com. The most recent
-packages are located at the top of the page.
+Download the `latest distribution of ThinkUp<http://thinkup.com/download/>`_.
+
 
 Extract
 -------

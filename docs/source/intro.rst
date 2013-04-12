@@ -21,7 +21,7 @@ by Anil Dash and Gina Trapani.
 ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and 
 is available on `GitHub <http://github.com/ginatrapani/ThinkUp>`_.
 
-Find out more at http://thinkupapp.com.
+Find out more at http://thinkup.com.
 
 Who ThinkUp Is For
 ------------------
