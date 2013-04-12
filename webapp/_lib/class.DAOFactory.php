@@ -96,6 +96,10 @@ class DAOFactory {
         'LocationDAO' => array(
     //MySQL Version
             'mysql' => 'LocationMySQLDAO' ),
+	//SessionData DAO
+        'SessionDataDAO' => array(
+    //MySQL Version
+            'mysql' => 'SessionDataMySQLDAO' ),
     //Link DAO
         'LinkDAO' => array(
     //MySQL Version

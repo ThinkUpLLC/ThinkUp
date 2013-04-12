@@ -28,6 +28,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011-2013 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Hemant Kumar Singh <unizen01[at]gmail[dot]com>
  *
  */
 class SessionCache {
@@ -37,8 +38,20 @@ class SessionCache {
      * @param str $value
      */
     public static function put($key, $value) {
-        $config = Config::getInstance();
-        $_SESSION[$config->getValue('source_root_path')][$key] = $value;
+	
+	$config = Config::getInstance();
+	$_SESSION[$config->getValue('source_root_path')][$key] = $value;
+	 if(isset($_SESSION[$config->getValue('source_root_path')]['session_key']))
+	 {
+        
+        
+		
+		$session_key=$_SESSION[$config->getValue('source_root_path')]['session_key'];
+		$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$get_session_data=$session_dao->getSessionData($session_key);
+		$get_session_data[$key]=$value;
+		$session_dao->addSessionData($session_key,$get_session_data);
+		}
     }
 
     /**
@@ -48,8 +61,16 @@ class SessionCache {
      */
     public static function get($key) {
         $config = Config::getInstance();
-        if (self::isKeySet($key)) {
-            return $_SESSION[$config->getValue('source_root_path')][$key];
+        if (self::isKeySet($key)) {     
+		
+		
+		$session_key=$_SESSION[$config->getValue('source_root_path')]['session_key'];
+		$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$get_session_data=$session_dao->getSessionData($session_key);
+		
+		//return $_SESSION[$config->getValue('source_root_path')][$key];
+		
+		return $get_session_data[$key];
         } else {
             return null;
         }
@@ -61,16 +82,45 @@ class SessionCache {
      * @return bool
      */
     public static function isKeySet($key) {
-        $config = Config::getInstance();
-        return isset($_SESSION[$config->getValue('source_root_path')][$key]);
+	$config = Config::getInstance();
+	if(isset($_SESSION[$config->getValue('source_root_path')]['session_key']))
+       { 
+		$session_key=$_SESSION[$config->getValue('source_root_path')]['session_key'];
+		$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$get_session_data=$session_dao->getSessionData($session_key);
+		if(empty($get_session_data))
+		return false;
+		else
+		return (array_key_exists($key,$get_session_data));
+		}
+		else 
+		return false;
+        //return isset($_SESSION[$config->getValue('source_root_path')][$key]);
     }
 
     /**
      * Unset key's value in ThinkUp's $_SESSION
      * @param str $key
      */
-    public static function unsetKey($key) {
-        $config = Config::getInstance();
-        unset($_SESSION[$config->getValue('source_root_path')][$key]);
+    public static function unsetKey($key) {	
+		$config = Config::getInstance();
+		$session_key=$_SESSION[$config->getValue('source_root_path')]['session_key'];
+		$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$get_session_data=$session_dao->getSessionData($session_key);
+		unset($get_session_data[$key]);
+		$session_dao->addSessionData($session_key,$get_session_data);
+			
+       unset($_SESSION[$config->getValue('source_root_path')][$key]);
+    }
+	
+	public static function delete_session() {
+		echo "delete session";
+		$config = Config::getInstance();
+		$session_key=$_SESSION[$config->getValue('source_root_path')]['session_key'];
+		$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$session_dao->clearSessionData($session_key);
+		
     }
 }
+
+	
