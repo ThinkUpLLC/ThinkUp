@@ -1,4 +1,6 @@
-{include file="_install.header.tpl"}
+{include file="_header.tpl" enable_bootstrap=1 }
+{include file="_statusbar.tpl" enable_bootstrap=1}
+
   <div id="installer-page" class="container_24 round-all">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
@@ -57,4 +59,4 @@
       </div>
     </div>
   </div>
-{include file="_install.footer.tpl"}
+{include file="_footer.tpl" enable_bootstrap=1}
