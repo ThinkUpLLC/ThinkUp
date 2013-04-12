@@ -142,6 +142,13 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
         $this->assertText('Success! Your account has been activated. Please log in.');
 
+        //Try to activate again
+        $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
+        $activation_code);
+        $this->assertNoText('Houston, we have a problem: Account activation failed.');
+        $this->assertNoText('Success! Your account has been activated. Please log in.');
+        $this->assertText('You have already activated your account. Please log in.');
+
         //Log into ThinkUp
         $this->clickLink('Log in');
 

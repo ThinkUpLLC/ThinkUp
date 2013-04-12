@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- * 
+ *
  * Test of ActivateAccountController
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -74,5 +74,10 @@ class TestOfActivateAccountController extends ThinkUpUnitTestCase {
         $controller = new ActivateAccountController(true);
         $results = $controller->go();
         $this->assertTrue(strpos( $results, "Success! Your account has been activated. Please log in.") > 0, $results );
+
+        //Try to activate again
+        $controller = new ActivateAccountController(true);
+        $results = $controller->go();
+        $this->assertTrue(strpos( $results, "You have already activated your account. Please log in.") > 0, $results );
     }
 }
