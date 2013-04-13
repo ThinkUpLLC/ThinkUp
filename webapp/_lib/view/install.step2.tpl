@@ -53,7 +53,7 @@
                         <span class="input-prepend">
                             <span class="add-on"><i class="icon-key"></i></span>
                             <input type="password" name="password" id="password"{if isset($password)} value="{$password}"{/if}
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$"{/literal} class="password" required 
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
                             data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
                         </span>
