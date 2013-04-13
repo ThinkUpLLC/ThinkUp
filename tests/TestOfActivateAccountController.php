@@ -41,35 +41,27 @@ class TestOfActivateAccountController extends ThinkUpUnitTestCase {
     }
 
     public function testInvalidActivation() {
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_code'=>'1001', 'is_activated'=>0);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_token'=>'3d6dcb88324b7e22557da36419932a18', 'is_activated'=>0);
         $builder1 = FixtureBuilder::build('owners', $owner);
-        $_GET['usr'] = 'me@example.com';
-        $_GET['code'] = 'invalidcode';
 
+        $_GET['token'] = 'invalidtoken';
+		
         $controller = new ActivateAccountController(true);
         $results = $controller->go();
         $this->assertTrue(strpos( $results, "Houston, we have a problem: Account activation failed.") > 0 );
 
-        $_GET['usr'] = 'idontexist@example.com';
-        $_GET['code'] = 'invalidcode';
-
-        $controller = new ActivateAccountController(true);
-        $results = $controller->go();
-        $this->assertTrue(strpos( $results, "Houston, we have a problem: Account activation failed.") > 0 );
-
-        $_GET['usr'] = 'me@example.com';
-        $_GET['code'] = '10011';
-
+        $_GET['token'] = '3d6dcb88324b7e22557da36419932a18X';
+		
         $controller = new ActivateAccountController(true);
         $results = $controller->go();
         $this->assertTrue(strpos( $results, "Houston, we have a problem: Account activation failed.") > 0 );
     }
 
     public function testValidActivation() {
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_code'=>'1001', 'is_activated'=>0);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_token'=>'3d6dcb88324b7e22557da36419932a18', 'is_activated'=>0);
         $builder1 = FixtureBuilder::build('owners', $owner);
-        $_GET['usr'] = 'me@example.com';
-        $_GET['code'] = '1001';
+        
+        $_GET['token'] = '3d6dcb88324b7e22557da36419932a18';
 
         $controller = new ActivateAccountController(true);
         $results = $controller->go();

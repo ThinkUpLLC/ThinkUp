@@ -321,7 +321,7 @@ CREATE TABLE tu_owners (
   pwd varchar(255) DEFAULT NULL COMMENT 'Hash of the owner password',
   pwd_salt varchar(255) NOT NULL COMMENT 'Salt for securely hashing the owner password',
   email varchar(200) NOT NULL COMMENT 'User email.',
-  activation_code int(10) NOT NULL DEFAULT '0' COMMENT 'User activation code.',
+  activation_token varchar(64) DEFAULT NULL COMMENT 'Activation token.',
   joined date NOT NULL DEFAULT '0000-00-00' COMMENT 'Date user registered for an account.',
   is_activated int(1) NOT NULL DEFAULT '0' COMMENT 'If user is activated, 1 for true, 0 for false.',
   is_admin int(1) NOT NULL DEFAULT '0' COMMENT 'If user is an admin, 1 for true, 0 for false.',
