@@ -207,7 +207,16 @@ SQL;
         $owner = $dao->getByEmail('zaphod@hog.com');
         $this->assertTrue($owner->is_activated);
         $this->assertEqual($owner->account_status, '');
+        $this->assertEqual($owner->password_token, '');
         $this->assertEqual($owner->failed_logins, 0);
+		
+        // Trying to use the same password reset token
+        $controller = new PasswordResetController(true);
+        $result = $controller->go();
+
+        // Error message should appear
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'You have reached this page in error.');
     }
 
     public function testOfControllerWithRegistrationOpen() {
