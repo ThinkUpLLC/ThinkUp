@@ -35,7 +35,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         if ($is_active != "") {
             $q .= ' where p.is_active = 1';
         }
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q);
         return $this->getDataRowsAsObjects($stmt, 'Plugin');
     }
@@ -47,7 +47,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     public function isPluginActive($id) {
         $q = 'SELECT is_active FROM #prefix#plugins p WHERE p.id = :id';
         $status = false;
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, array(':id' => $id));
         $plugin = $this->getDataRowAsObject($stmt, 'Plugin');
         if ($plugin && $plugin->is_active == 1) {
@@ -74,7 +74,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             ':version' => $plugin->version,
             ':homepage' => $plugin->homepage,
             ':is_active' => $is_active);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
         if ( $this->getInsertCount($stmt) > 0) {
             return $this->getInsertId($stmt);
@@ -112,7 +112,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             ':homepage' => $plugin->homepage,
             ':is_active' => $is_active,
             ':id' => $plugin->id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
         if ( $this->getUpdateCount($stmt) > 0) {
             return true;
@@ -123,7 +123,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
 
     public function getPluginId($folder_name) {
         $q = "SELECT id FROM #prefix#plugins WHERE folder_name = :folder_name";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, array(':folder_name' => $folder_name) );
         $row = $this->getDataRowAsArray($stmt);
         // get the id if there is one
@@ -133,7 +133,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
 
     public function getPluginFolder($plugin_id) {
         $q = "SELECT folder_name FROM #prefix#plugins WHERE id = :plugin_id";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, array(':plugin_id' => $plugin_id) );
         $row = $this->getDataRowAsArray($stmt);
         // get the id if there is one
@@ -152,7 +152,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 is_active = :active
             WHERE
                 id = :id";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, array(':active' => $active, ':id' => $id));
         return $this->getUpdateCount($stmt);
     }
@@ -245,7 +245,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     public function isValidPluginId($plugin_id) {
         $q = 'SELECT id FROM  #prefix#plugins where id = :id';
         $data = array(':id' => $plugin_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $data);
         return $this->getDataIsReturned($stmt);
     }

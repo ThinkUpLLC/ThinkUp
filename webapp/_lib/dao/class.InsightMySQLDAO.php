@@ -36,7 +36,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':date'=>$date,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, 'Insight');
     }
@@ -53,7 +53,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':network_username'=>$network_username,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if (isset($row)) {
@@ -76,7 +76,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':slug'=>$slug,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowsAsArrays($ps);
         return (sizeof($result) > 0);
@@ -107,7 +107,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':emphasis'=>$emphasis,
             ':related_data'=>$related_data
             );
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $ps = $this->execute($q, $vars);
             $result = $this->getUpdateCount($ps);
             return ($result > 0);
@@ -125,7 +125,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
@@ -144,7 +144,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':date'=>$date,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
@@ -163,7 +163,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':related_data'=>$related_data,
             ':emphasis'=>$emphasis
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
         return ($result > 0);
@@ -176,7 +176,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':slug'=>$slug,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
 
         $ps = $this->execute($q, $vars);
         $result = $this->getUpdateCount($ps);
@@ -204,7 +204,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ":limit"=>(int)$page_count,
             ":owner_id"=>(int)$owner_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);
         $insights = array();
@@ -237,7 +237,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);
         $insights = array();

@@ -41,7 +41,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
     public function createExportedPostsTable() {
         $q = "CREATE TABLE #prefix#".self::$exported_posts_table_name." LIKE #prefix#posts;";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q);
         $q = "ALTER TABLE #prefix#".self::$exported_posts_table_name." DROP  id";
         $stmt = $this->execute($q);
@@ -50,7 +50,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
     public function doesExportedPostsTableExist() {
         $q = "SHOW TABLES LIKE '#prefix#" . self::$exported_posts_table_name . "'";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q);
         $tables = $this->getDataRowAsArray($stmt);
         return !empty($tables);
@@ -58,7 +58,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
     public function dropExportedPostsTable() {
         if ( self::doesExportedPostsTableExist() ) {
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $q = "DROP TABLE #prefix#".self::$exported_posts_table_name;
             $stmt = $this->execute($q);
         }
@@ -67,14 +67,14 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
     public function createExportedFollowsTable() {
         $q = "CREATE TABLE #prefix#".self::$exported_follows_table_name." LIKE #prefix#follows;";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q);
         return $this->doesExportedFollowsTableExist();
     }
 
     public function doesExportedFollowsTableExist() {
         $q = "SHOW TABLES LIKE '#prefix#" . self::$exported_follows_table_name . "'";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q);
         $tables = $this->getDataRowAsArray($stmt);
         return !empty($tables);
@@ -82,7 +82,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
     public function dropExportedFollowsTable() {
         if ( self::doesExportedFollowsTableExist() ) {
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $q = "DROP TABLE #prefix#".self::$exported_follows_table_name;
             $stmt = $this->execute($q);
         }
@@ -103,7 +103,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             ':network'=>$service
         );
 
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
         return $this->getUpdateCount($stmt);
     }
@@ -153,7 +153,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             ':author_username'=>$author_username,
             ':network'=>$service
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
         return $this->getUpdateCount($stmt);
     }
@@ -176,7 +176,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
                 ':post_id'=>$post['post_id'],
                 ':network'=>$service
                 );
-                if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+                if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
                 $stmt = $this->execute($q, $vars);
                 $total_posts_inserted = $total_posts_inserted + $this->getUpdateCount($stmt);
             }
@@ -196,7 +196,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             ':author_username'=>$username,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($stmt);
     }

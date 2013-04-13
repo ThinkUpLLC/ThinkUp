@@ -39,7 +39,7 @@ class GroupMySQLDAO extends PDODAO implements GroupDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
         return $this->getDataIsReturned($ps);
@@ -70,7 +70,7 @@ class GroupMySQLDAO extends PDODAO implements GroupDAO {
             ':network'=>$network,
             ':group_name'=>$group_name,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -84,7 +84,7 @@ class GroupMySQLDAO extends PDODAO implements GroupDAO {
             ':group_id'=>(string)$group_id,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -99,7 +99,7 @@ class GroupMySQLDAO extends PDODAO implements GroupDAO {
             ':group_name'=>$group_name,
             ':network'=>$network,
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
         return $this->getInsertId($ps);

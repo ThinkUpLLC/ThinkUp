@@ -103,7 +103,7 @@ class InsightBaselineMySQLDAO  extends PDODAO implements InsightBaselineDAO {
             ':slug'=>$slug,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowsAsObjects($ps, "InsightBaseline");
         return (sizeof($result) > 0);
