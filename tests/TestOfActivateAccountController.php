@@ -74,5 +74,9 @@ class TestOfActivateAccountController extends ThinkUpUnitTestCase {
         $controller = new ActivateAccountController(true);
         $results = $controller->go();
         $this->assertTrue(strpos( $results, "Success! Your account has been activated. Please log in.") > 0, $results );
+        
+        $controller = new ActivateAccountController(true);
+        $results = $controller->go();
+        $this->assertTrue(strpos( $results, "You have already activated your account. Please log in.") > 0, $results );
     }
 }
