@@ -29,7 +29,7 @@ for (i=0; el=res.snapshotItem(i); i++) {
 		//create a link and put it in the span
 		a=document.createElement('a');
 		a.appendChild(document.createTextNode(l));
-		if (-1==l.indexOf('://')) l='mailto:'+l;
+		if (-1==l.indexOf('://')) { l='mailto:'+l; }
 		a.setAttribute('href', l);
 		span.appendChild(a);
 		p=m.index+m[0].length;

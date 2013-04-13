@@ -13,7 +13,7 @@
   }
 
   this.serverResponse = function( data ) {
-    if (!data[0].version) return;
+    if (!data[0].version) {return;}
     var div = document.getElementById(ROOT);
     var txt = '';
 //    console.debug(data);

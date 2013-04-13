@@ -404,7 +404,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                             $index_columns = '';
                             // For each column in the index
                             foreach ($index_data['columns'] as $column_data) {
-                                if ($index_columns != '') $index_columns .= ',';
+                                if ($index_columns != '') {$index_columns .= ',';}
                                 // Add the field to the column list string
                                 $index_columns .= $column_data['fieldname'];
                                 if ($column_data['subpart'] != '') {

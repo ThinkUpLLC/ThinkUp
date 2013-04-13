@@ -75,7 +75,7 @@ function EventHelper() {
         }
 
         function setItems(data, objectIdProperty) {
-            if (objectIdProperty !== undefined) idProperty = objectIdProperty;
+            if (objectIdProperty !== undefined) { idProperty = objectIdProperty; }
             items = data;
             refreshIdxById();
             refresh();
@@ -101,9 +101,9 @@ function EventHelper() {
             sortAsc = ascending;
             sortComparer = comparer;
             fastSortField = null;
-            if (ascending === false) items.reverse();
+            if (ascending === false) { items.reverse(); }
             items.sort(comparer);
-            if (ascending === false) items.reverse();
+            if (ascending === false) { items.reverse(); }
             refreshIdxById();
             refresh();
         }
@@ -121,10 +121,10 @@ function EventHelper() {
             Object.prototype.toString = (typeof field == "function")?field:function() { return this[field] };
             // an extra reversal for descending sort keeps the sort stable
             // (assuming a stable native sort implementation, which isn't true in some cases)
-            if (ascending === false) items.reverse();
+            if (ascending === false) { items.reverse(); }
             items.sort();
             Object.prototype.toString = oldToString;
-            if (ascending === false) items.reverse();
+            if (ascending === false) { items.reverse(); }
             refreshIdxById();
             refresh();
         }
@@ -169,7 +169,7 @@ function EventHelper() {
             if (idxById[id] === undefined || id !== item[idProperty])
                 throw "Invalid or non-matching id";
             items[idxById[id]] = item;
-            if (!updated) updated = {};
+            if (!updated) { updated = {}; }
             updated[id] = true;
             refresh();
         }
@@ -233,7 +233,7 @@ function EventHelper() {
         }
 
         function refresh() {
-            if (suspend) return;
+            if (suspend) { return; }
 
             var countBefore = rows.length;
             var totalRowsBefore = totalRows;
@@ -249,9 +249,9 @@ function EventHelper() {
 
             updated = null;
 
-            if (totalRowsBefore != totalRows) onPagingInfoChanged.notify(getPagingInfo());
-            if (countBefore != rows.length) onRowCountChanged.notify({previous:countBefore, current:rows.length});
-            if (diff.length > 0) onRowsChanged.notify(diff);
+            if (totalRowsBefore != totalRows) { onPagingInfoChanged.notify(getPagingInfo()); }
+            if (countBefore != rows.length) { onRowCountChanged.notify({previous:countBefore, current:rows.length}); }
+            if (diff.length > 0) { onRowsChanged.notify(diff); }
         }
 
 

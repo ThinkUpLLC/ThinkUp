@@ -1013,7 +1013,7 @@ if (!jQuery.fn.drag) {
                     total += growSize;
                     widths[i] += growSize;
                 }
-                if (previousTotal == total) break; // if total is not changing, will result in infinite loop
+                if (previousTotal == total) { break; } // if total is not changing, will result in infinite loop
                 previousTotal = total;
             }
 
@@ -1514,7 +1514,7 @@ if (!jQuery.fn.drag) {
                 $secondaryHeaderScroller[0].scrollLeft = scrollLeft;
             }
 
-            if (!scrollDist) return;
+            if (!scrollDist) { return; }
 
             scrollDir = prevScrollTop < scrollTop ? 1 : -1;
             prevScrollTop = scrollTop;
@@ -1589,7 +1589,7 @@ if (!jQuery.fn.drag) {
                 var $cell = $(rowsCache[row]).children().eq(cell);
 
                 function toggleCellClass(times) {
-                    if (!times) return;
+                    if (!times) { return; }
                     setTimeout(function() {
                         $cell.queue(function() {
                             $cell.toggleClass(options.cellFlashingCssClass).dequeue();
@@ -1837,7 +1837,7 @@ if (!jQuery.fn.drag) {
         }
 
         function handleHover(e) {
-            if (!options.enableAutoTooltips) return;
+            if (!options.enableAutoTooltips) { return; }
             var $cell = $(e.target).closest(".slick-cell",$canvas);
             if ($cell.length) {
                 if ($cell.innerWidth() < $cell[0].scrollWidth) {
@@ -2130,7 +2130,7 @@ if (!jQuery.fn.drag) {
             return absBox($container[0])
         }
         function handleCurrentCellPositionChange() {
-            if (!currentCellNode) return;
+            if (!currentCellNode) { return; }
             var cellBox;
 
             if (self.onCurrentCellPositionChanged){

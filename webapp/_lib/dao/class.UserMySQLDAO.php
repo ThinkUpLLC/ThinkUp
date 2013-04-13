@@ -46,7 +46,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -59,7 +59,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':username'=>$username,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -147,7 +147,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if ($has_last_post_id) {
             $vars[':last_post_id'] = $user->last_post_id;
         }
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
         return $results;
@@ -161,7 +161,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }
@@ -174,7 +174,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_name'=>$user_name,
             ':network'=>$network
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }
