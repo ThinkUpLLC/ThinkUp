@@ -115,14 +115,12 @@ SQL;
         }
     }
 
-    public function getActivationCode($email) {
-        $q = " SELECT activation_code  FROM #prefix#owners  WHERE email=:email";
-        $vars = array(
-            ':email'=>$email
-        );
+    public function getByActivationToken($token) {
+        $q = "SELECT * FROM #prefix#owners WHERE activation_token LIKE :token";
+        $vars = array(':token' => $token);
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsArray($ps);
+        return $this->getDataRowAsObject($ps, 'Owner');
     }
 
     public function activateOwner($email) {
@@ -177,13 +175,13 @@ SQL;
 
     private function createOwner($email, $pwd, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $activation_code = rand(1000, 9999);
+            $activation_token = $this->generateToken();
             $pwd_salt = $this->generateSalt($email);
             $api_key = $this->generateAPIKey();
             $hashed_pwd = $this->hashPassword($pwd, $pwd_salt);
 
             $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:hashed_pwd, pwd_salt=:pwd_salt, joined=NOW(), ";
-            $q .= "activation_code=:activation_code, full_name=:full_name, api_key=:api_key";
+            $q .= "activation_token=:activation_token, full_name=:full_name, api_key=:api_key";
 
             if ($is_admin) {
                 $q .= ", is_admin=1";
@@ -192,7 +190,7 @@ SQL;
                 ':email'=>$email,
                 ':hashed_pwd'=>$hashed_pwd,
                 ':pwd_salt'=>$pwd_salt,
-                ':activation_code'=>$activation_code,
+                ':activation_token'=>$activation_token,
                 ':full_name'=>$full_name,
                 ':api_key'=>$api_key
             );
@@ -331,6 +329,10 @@ SQL;
      */
     private function generateAPIKey() {
         return md5(uniqid(mt_rand(), true)); // generate random api key
+    }
+	
+    private function generateToken() {
+        return md5(uniqid(mt_rand(), true)); // generate random token key
     }
 
     /**
