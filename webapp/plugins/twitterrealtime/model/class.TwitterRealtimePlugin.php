@@ -85,4 +85,8 @@ class TwitterRealtimePlugin extends Plugin implements StreamerPlugin {
         $controller = new TwitterRealtimePluginConfigurationController($owner, 'twitterrealtime');
         return $controller->go();
     }
+
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
 }

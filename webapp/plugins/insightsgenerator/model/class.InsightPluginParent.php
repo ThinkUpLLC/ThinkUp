@@ -37,6 +37,9 @@ class InsightPluginParent {
     public function renderConfiguration($owner) {
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+    }
+
     public function activate() {
     }
 

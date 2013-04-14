@@ -74,6 +74,10 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
         return $controller->go();
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     /**
      * Run when the crawler does
      */
