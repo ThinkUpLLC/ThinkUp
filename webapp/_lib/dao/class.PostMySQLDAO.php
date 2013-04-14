@@ -644,9 +644,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     $vals['network']);
                 }
                 if (isset($entities['hashtags'])) {
-                    $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
-                    $hashtag_dao->setLoggerInstance($this->logger);
-                    $hashtag_dao->insertHashtags($entities['hashtags'], $vals['post_id'], $vals['network']);
+                    $hashtagpost_dao = DAOFactory::getDAO('HashtagPostDAO');
+                    $hashtagpost_dao->setLoggerInstance($this->logger);
+                    $hashtagpost_dao->insertHashtagPosts($entities['hashtags'], $vals['post_id'], $vals['network']);
                 }
 
                 if (isset($entities['place'])) {
@@ -2394,6 +2394,129 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
 
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $post_rows = $this->getDataRowsAsArrays($ps);
+
+        $posts = array();
+        foreach ($post_rows as $row) {
+            $post = new Post($row);
+            $posts[] = $post;
+        }
+        return $posts;
+    }
+
+    /**
+     * Get all posts by a given hashtag with configurable order by field and direction
+     * @param int $hashtag_id
+     * @param str $network
+     * @param int $count
+     * @param str $order_by field name
+     * @param str $direction either "DESC" or "ASC
+     * @param int $page Page number, defaults to 1
+     * @param bool $is_public Whether or not these results are going to be displayed publicly. Defaults to false.
+     * @return array Posts with link object set
+     */
+    public function getAllPostsByHashtagId($hashtag_id, $network, $count, $order_by="pub_date", $direction="DESC",
+    $page=1, $is_public = false) {
+
+        $direction = $direction=="DESC" ? "DESC": "ASC";
+        $start_on_record = ($page - 1) * $count;
+        $order_by = $this->sanitizeOrderBy($order_by);
+
+        $q = "SELECT p.*, p.pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p, #prefix#hashtags_posts hp, #prefix#hashtags h ";
+        $q .= "WHERE  p.post_id= hp.post_id AND hp.hashtag_id = h.id AND h.id = :hashtag_id AND p.network=:network ";
+
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+
+        $q .= "ORDER BY p.$order_by $direction ";
+
+        $vars = array(
+                ':hashtag_id'=>$hashtag_id,
+                ':network'=>$network,
+        );
+
+        if (isset($count) && $count > 0) {
+            $q .= "LIMIT :start_on_record, :limit";
+            $vars[':limit'] = (int)$count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
+    public function deletePostsByHashtagId($hashtag_id) {
+        $q  = "DELETE t.* FROM #prefix#posts t ";
+        $q .= "INNER JOIN #prefix#hashtags_posts hp ON t.post_id = hp.post_id ";
+        $q .= "WHERE hp.hashtag_id=:hashtag_id;";
+        $vars = array(':hashtag_id'=>$hashtag_id);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDeleteCount($ps);
+    }
+
+    public function searchPostsByHashtag(array $hashtags, $network, $page_number=1, $page_count=20) {
+        if (!is_array($hashtags)) {
+            return null;
+        }
+        $start_on_record = ($page_number - 1) * $page_count;
+
+        $q = "SELECT p.*, p.pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p, #prefix#hashtags_posts hp, #prefix#hashtags h ";
+        $q .= "WHERE  p.post_id= hp.post_id AND hp.hashtag_id = h.id AND p.network=:network AND (h.id IN (";
+
+        foreach ($hashtags as $hashtag) {
+            $q .= $hashtag ;
+            if ($hashtag != end($hashtags)) {$q .= ",";}
+        }
+        $q .= ")) ORDER BY pub_date DESC ";
+        if ($page_count > 0) {
+            $q .= "LIMIT :start_on_record, :limit;";
+        } else {
+            $q .= ';';
+        }
+
+        $vars = array(
+                ':network'=>$network
+        );
+        if ($page_count > 0) {
+            $vars[':limit'] = (int)$page_count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+
+        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
         $ps = $this->execute($q, $vars);
         $post_rows = $this->getDataRowsAsArrays($ps);
 

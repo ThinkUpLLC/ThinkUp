@@ -178,4 +178,15 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }
+
+    public function deleteUsersByHashtagId($hashtag_id){
+        $q = "DELETE u.* ";
+        $q .= "FROM #prefix#users u INNER JOIN #prefix#posts t ON u.user_id=t.author_user_id ";
+        $q .= "INNER JOIN #prefix#hashtags_posts hp ON t.post_id = hp.post_id ";
+        $q .= "WHERE hp.hashtag_id= :hashtag_id;";
+        $vars = array(':hashtag_id'=>$hashtag_id);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDeleteCount($ps);
+    }
 }

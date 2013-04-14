@@ -77,4 +77,11 @@ interface InstanceHashtagDAO {
      * @return int Total instance hashtags deleted
      */
     public function deleteInstanceHashtagsByHashtagId($hashtag_id);
+    /**
+     * Get hashtags by a username and network.
+     * @param str $username
+     * @param str $network
+     * @return array Hashtag objects
+     */
+    public function getByUsername($username, $network);
 }

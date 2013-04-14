@@ -116,4 +116,18 @@ class InstanceHashtagMySQLDAO extends PDODAO implements InstanceHashtagDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
+
+    public function getByUsername($username, $network) {
+        $q = "SELECT t.id, t.hashtag, t.network, t.count_cache " .
+             "FROM #prefix#hashtags t " .
+             "INNER JOIN #prefix#instances_hashtags ih ON t.id=ih.hashtag_id " .
+             "INNER JOIN #prefix#instances i ON ih.instance_id = i.id " .
+             "WHERE i.network_username = :username AND i.network = :network;";
+        $vars = array(
+            ':username' => $username,
+            ':network' => $network
+        );
+        $stmt = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($stmt, 'Hashtag');
+    }
 }

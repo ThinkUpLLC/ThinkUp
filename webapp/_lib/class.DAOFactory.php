@@ -191,6 +191,10 @@ class DAOFactory {
         'InstanceHashtagDAO' => array(
     //MySQL Version
             'mysql' => 'InstanceHashtagMySQLDAO' ),
+    //Hashtag Post DAO
+        'HashtagPostDAO' => array(
+    //MySQL Version
+            'mysql' => 'HashtagPostMySQLDAO' )
     );
 
     /*

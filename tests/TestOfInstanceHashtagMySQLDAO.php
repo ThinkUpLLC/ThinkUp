@@ -84,6 +84,21 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($res);
     }
 
+    public function testGetByUsername() {
+        //does not exist
+        $res = $this->dao->getByUsername('ecucurella', 'facebook');
+        $this->assertIsA($res, 'array');
+        $this->assertEqual(sizeof($res), 0);
+
+        //two exist
+        $res = $this->dao->insert(1,1);
+        $res = $this->dao->insert(1,2);
+        $res = $this->dao->getByUsername('nun', 'twitter');
+        $this->assertIsA($res, 'array');
+        $this->assertEqual(sizeof($res) ,2);
+        $this->assertIsA($res[0], 'Hashtag');
+    }
+
     public function testDelete() {
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 0);
