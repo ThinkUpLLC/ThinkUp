@@ -164,6 +164,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
@@ -242,6 +243,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
@@ -356,6 +358,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
@@ -438,6 +441,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
@@ -476,16 +480,20 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
         $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
         $config->getValue('table_prefix')."insights," .
+        $config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."links_short," .
         $config->getValue('table_prefix')."mentions," .
         $config->getValue('table_prefix')."mentions_posts, " .
         $config->getValue('table_prefix')."owner_instances, ".
@@ -510,7 +518,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         foreach ($tables as $k => $v) {
             $expected[$config_array['table_prefix'].$v] = "Created table {$config_array['table_prefix']}$v";
         }
-        //$this->assertEqual($log_verbose, $expected);
+        $this->assertEqual($log_verbose, $expected);
 
         // test on existent tables that's not recognized as a ThinkUp table
         $this->DAO = new InstallerMySQLDAO($config_array);
@@ -525,6 +533,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_hashtags, ".
         $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
         $config->getValue('table_prefix')."insight_baselines," .
@@ -596,7 +605,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
         'group_members', 'groups', 'hashtags', 'hashtags_posts',
-        'insight_baselines', 'insights', 'instances',  'instances_twitter', 'invites',
+        'insight_baselines', 'insights', 'instances', 'instances_hashtags', 'instances_twitter', 'invites',
         'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'places','places_posts',
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');

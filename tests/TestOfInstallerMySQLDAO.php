@@ -82,7 +82,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 30);
+        $this->assertEqual(sizeof($result), 31);
         $this->assertEqual($result[0], $config_array["table_prefix"].'encoded_locations');
     }
     public function testCheckTable() {
@@ -128,6 +128,8 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         // test on fully installed tables
         $install_queries = file_get_contents(THINKUP_ROOT_PATH."webapp/install/sql/build-db_mysql.sql");
 
+        $this->debug(Utils::varDumpToString($install_queries));
+
         //clean SQL: diffDataStructure requires two spaces after PRIMARY KEY, and a space between key name and (field)
         $install_queries = str_replace('PRIMARY KEY (', 'PRIMARY KEY  (', $install_queries);
 
@@ -142,6 +144,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual(sizeof($output['for_update']), 0 );
         //var_dump($output);
+        //$this->debug(Utils::varDumpToString($output));
         $expected = "/INSERT INTO ".$config_array["table_prefix"]."options/i";
         $this->assertPattern( $expected, $output['queries'][0] );
 
