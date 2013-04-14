@@ -44,6 +44,10 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         return $controller->go();
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     public function crawl() {
         $logger = Logger::getInstance();
         $config = Config::getInstance();

@@ -150,6 +150,10 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         return $controller->go();
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     public function getDashboardMenuItems($instance) {
         $menus = array();
 

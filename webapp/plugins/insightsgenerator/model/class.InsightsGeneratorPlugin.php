@@ -50,6 +50,10 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         return $controller->go();
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     public function crawl() {
         $logger = Logger::getInstance();
 

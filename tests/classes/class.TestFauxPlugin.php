@@ -48,6 +48,13 @@ class TestFauxPlugin implements TestAppPlugin {
         return "this is my configuration screen HTML";
     }
 
+    /**
+     * For testing purposes
+     */
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return "this is my instance-specific configuration screen HTML";
+    }
+
 }
 
 /**

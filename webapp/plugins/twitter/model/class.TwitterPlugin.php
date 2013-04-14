@@ -123,6 +123,10 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         return $controller->go();
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     public function getDashboardMenuItems($instance) {
 
         // determine if the Twitter Realtime plugin is active.

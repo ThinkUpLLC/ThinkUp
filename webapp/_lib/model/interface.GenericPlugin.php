@@ -29,11 +29,19 @@
  */
 interface GenericPlugin {
     /**
-     * Render the configuration screen in the webapp
+     * Render the configuration screen in the webapp.
      * @param Owner $owner
      * @return str HTML markup of configuration panel
      */
     public function renderConfiguration($owner);
+    /**
+     * Render an instance-specific configuration screen in the webapp.
+     * @param Owner $owner
+     * @param str $instance_username
+     * @param str $instance_network
+     * @return str HTML markup of configuration panel for a given instance
+     */
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network);
     /**
      * Activation callback, triggered when user deactivates plugin.
      */

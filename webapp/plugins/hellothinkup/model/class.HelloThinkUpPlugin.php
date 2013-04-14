@@ -70,6 +70,10 @@ class HelloThinkUpPlugin extends Plugin implements CrawlerPlugin, PostDetailPlug
         */
     }
 
+    public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
+        return '';
+    }
+
     public function getPostDetailMenuItems($post) {
         $template_path = Utils::getPluginViewDirectory('hellothinkup').'hellothinkup.inline.view.tpl';
         $menu_items = array();
