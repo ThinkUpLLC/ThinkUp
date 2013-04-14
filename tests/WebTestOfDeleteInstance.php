@@ -62,7 +62,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
         $this->assertLink('@shutterbug');
-        $this->assertSubmit('delete');
+        $this->assertSubmit('Delete');
 
         //delete existing instance
         $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'3',
@@ -71,7 +71,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
         $this->assertNoLink('@shutterbug');
-        $this->assertSubmit('delete');
+        $this->assertSubmit('Delete');
 
         //delete non-existent instance
         $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'231',
@@ -79,7 +79,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertText("Instance doesn't exist.");
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
-        $this->assertSubmit('delete');
+        $this->assertSubmit('Delete');
 
         $this->click('Log Out');
         //        $this->assertText('You have successfully logged out');
