@@ -163,6 +163,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $instance->auth_error = $tokens['auth_error'];
             }
         }
+
+        function cmp( $a, $b ) { 
+            if(  $a->name ==  $b->name ){ return 0 ; } 
+            return ($a->name < $b->name) ? -1 : 1;
+        } 
+        usort($user_pages[$instance->network_user_id],'cmp');
+        usort($user_admin_pages[$instance->network_user_id],'cmp');
+
         $this->addToView('user_pages', $user_pages);
         $this->addToView('user_admin_pages', $user_admin_pages);
 
