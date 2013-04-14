@@ -92,6 +92,7 @@ $model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfURLProcessor());
 $model_tests->add(new TestOfTableStatsMySQLDAO());
 $model_tests->add(new TestOfShortLinkMySQLDAO());
+$model_tests->add(new TestOfHashtagPostMySQLDAO());
 $model_tests->add(new TestOfInstanceHashtagMySQLDAO());
 
 $tr = new TextReporter();

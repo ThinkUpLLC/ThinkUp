@@ -27,39 +27,29 @@
  */
 interface HashtagDAO {
     /**
-     * Insert a new hashtag or update an existing hashtag's count.
-     * @param str $hashtag
-     * @param int $post_id
-     * @param str $network
-     * @throws Exception
-     */
-    public function insertHashtag($hashtag, $post_id, $network);
-    /**
-     * Insert or update multiple hashtags.
-     * @param  array $hashtags
-     * @param  int $post_id
-     * @param  string $network
-     * @throws Exception
-     */
-    public function insertHashtags(array $hashtags, $post_id, $network);
-    /**
-     * Get hashtag count by hashtag.
+     * Get hashtag by content and network.
      * @param str $hashtag
      * @param str $network
-     * @return array hashtags table array
+     * @return Hashtag
      */
-    public function getHashtagInfoForTag($hashtag, $network = 'twitter');
+    public function getHashtag($hashtag, $network);
     /**
-     * Get the hashtag(s) which appear in a given post.
-     * @param int $post_id
+     * Get hashtag by ID.
+     * @param int $hashtag_id
+     * @return Hashtag
+     */
+    public function getHashtagByID($hashtag_id);
+    /**
+     * Delete hashtag by ID.
+     * @param int $hashtag_id
+     * @return bool Whether or not deletion was successful
+     */
+    public function deleteHashtagByID($hashtag_id);
+    /**
+     * Insert hashtag.
+     * @param str $hashtag
      * @param str $network
-     * @return array hashtag_posts table array
+     * @return mixed New hashtag ID or false if insertion was unsuccessful
      */
-    public function getHashtagsForPost($post_id, $network = 'twitter');
-    /**
-     * Get an array of post IDs where a hashtag appears by hashtag ID.
-     * @param int $hashtag_id Hashtag ID
-     * @return array hashtag_posts table array
-     */
-    public function getHashtagsForPostHID($hashtag_id);
+    public function insertHashtag($hashtag, $network);
 }

@@ -347,6 +347,98 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
         'geo'=>'52.477192843264,-1.484333726346'));
 
+        // add instance 7
+        $builders[] = FixtureBuilder::build('instances',
+        array('network_user_id' => '100', 'network_viewer_id' => '100', 'network_username' => 'userhashtag',
+                        'last_post_id'  => '1', 'crawler_last_run' => '2013-02-28 15:21:16', 'total_posts_by_owner' => 0,
+                        'total_posts_in_system' => 0, 'total_replies_in_system' => 0, 'total_follows_in_system' => 0,
+                        'posts_per_day' => 0, 'posts_per_week' => 0, 'percentage_replies' => 0, 'percentage_links' => 0,
+                        'earliest_post_in_system' => '2013-02-28 15:21:16',
+                        'earliest_reply_in_system' => '2013-02-28 15:21:16', 'is_archive_loaded_posts' => 0,
+                        'is_archive_loaded_replies' => 0, 'is_archive_loaded_follows' => 0, 'is_public' => 0,
+                        'is_active' => 0, 'network' => 'twitter', 'favorites_profile' => 0, 'owner_favs_in_system' => 0));
+
+        // add instance_twitter
+        $builders[] = FixtureBuilder::build('instances_twitter',
+        array('last_page_fetched_replies' => 1, 'last_page_fetched_tweets' => 1));
+
+        // add hashtags 1 i 2
+        $builders[] = FixtureBuilder::build('hashtags',
+        array('hashtag' => 'first', 'network'=>'twitter', 'count_cache' => 0));
+        $builders[] = FixtureBuilder::build('hashtags',
+        array('hashtag' => '#second', 'network'=>'twitter', 'count_cache' => 0));
+
+        // add instances_hashtags 1
+        $builders[] = FixtureBuilder::build('instances_hashtags',
+        array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0,
+                        'last_page_fetched_tweets' => 1));
+
+        // add users
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 101,
+                'user_name' => 'userhashtag1',
+                'full_name' => 'User Hashtag1',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 101));
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 102,
+                'user_name' => 'userhashtag2',
+                'full_name' => 'User Hashtag2',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 102));
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 103,
+                'user_name' => 'userhashtag3',
+                'full_name' => 'User Hashtag3',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 103));
+        $counter = 300;
+        while ($counter <= 359) {
+            $pseudo_minute = substr($counter, 1,2);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+                $userid = 1;
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+                $userid = 2;
+            } else {
+                $source = 'web';
+                $userid = 3;
+            }
+            $username = 'userhashtag'.$userid;
+            $userfullname = 'User Hashtag'.$userid;
+            $builders[] = FixtureBuilder::build( 'posts', array(
+                    'post_id' => $counter,
+                    'author_user_id' => $userid,
+                    'author_username' => $username,
+                    'author_fullname' => $userfullname,
+                    'author_avatar' => 'avatar.jpg',
+                    'post_text' => 'This is post ' . $counter,
+                    'source' => $source,
+                    'pub_date' => '2013-03-05 16:' . $pseudo_minute . ':00',
+                    'reply_count_cache' => rand(0, 4),
+                    'retweet_count_cache' => 5,
+                    'network' => 'twitter',
+                    'old_retweet_count_cache' => 0,
+                    'in_rt_of_user_id' => null,
+                    'in_reply_to_post_id' => null,
+                    'in_retweet_of_post_id' => null,
+                    'is_geo_encoded' => 0,
+                    'is_protected'=>0));
+            if ($counter % 2 == 0) {
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter, 'hashtag_id' => 2, 'network' => 'twitter'));
+            }
+            else {
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter, 'hashtag_id' => 1, 'network' => 'twitter'));
+            }
+            $counter++;
+        }
+
         return $builders;
     }
 
@@ -518,6 +610,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetStrayRepliedToPosts() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getStrayRepliedToPosts(23, 'twitter');
+        $this->debug(Utils::varDumpToString($posts));
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]["in_reply_to_post_id"], 250);
         $this->assertEqual($posts[1]["in_reply_to_post_id"], 251);
@@ -1669,7 +1762,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['is_protected'] = 1;
 
         //add post with insufficient location data
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20082);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1684,7 +1777,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_reply_to_post_id']= '';
 
         //test add straight post that doesn't exist
-        $this->assertEqual($dao->addPost($vals), 20023);
+        $this->assertEqual($dao->addPost($vals), 20083);
         $post = $dao->getPost(250, 'twitter');
         $this->assertEqual($post->post_id, 250);
         $this->assertEqual($post->author_user_id, 22);
@@ -1714,7 +1807,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //test add reply, check cache count
         $vals['post_id']=251;
         $vals['in_reply_to_post_id']= 129;
-        $this->assertEqual($dao->addPost($vals), 20024);
+        $this->assertEqual($dao->addPost($vals), 20084);
         $post = $dao->getPost(129, 'twitter');
         $this->assertEqual($post->reply_count_cache, 1, "reply count got updated");
 
@@ -1722,7 +1815,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['post_id']=252;
         $vals['in_reply_to_post_id']= '';
         $vals['in_retweet_of_post_id']= 128;
-        $this->assertEqual($dao->addPost($vals), 20025);
+        $this->assertEqual($dao->addPost($vals), 20085);
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
         $this->assertEqual($post->retweet_count_cache, 0);
@@ -1744,7 +1837,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 0;
 
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20082);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1769,7 +1862,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 1;
 
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20082);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -2300,7 +2393,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 144);
+        $this->assertEqual(count($posts), 204);
         $this->assertIsA($posts, "array");
     }
 
@@ -2517,17 +2610,18 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post_rt->old_retweet_count_cache, 0);
         $this->assertEqual($post_rt->in_retweet_of_post_id, '39088587140108288');
         $this->assertEqual($post_rt->in_rt_of_user_id, '136881432');
-        $h_dao = new HashTagMySQLDAO();
+        $hashtag_dao = new HashtagMySQLDAO();
+        $hashtagpost_dao = new HashtagPostMySQLDAO();
         $m_dao = new MentionMySQLDAO();
-        $h = $h_dao->getHashtagInfoForTag('Clinton');
-        $this->assertEqual($h['count_cache'], 2);
-        $hp = $h_dao->getHashtagsForPost('39088587140108288');
+        $h = $hashtag_dao->getHashtag('Clinton', 'twitter');
+        $this->assertEqual($h->count_cache, 2);
+        $hp = $hashtagpost_dao->getHashtagsForPost('39088587140108288', 'twitter');
         $this->assertEqual(sizeof($hp), 1);
         $this->assertEqual($hp[0]['post_id'], '39088587140108288');
-        $hp = $h_dao->getHashtagsForPost('39089424620978176');
+        $hp = $hashtagpost_dao->getHashtagsForPost('39089424620978176', 'twitter');
         $this->assertEqual($hp[0]['post_id'], '39089424620978176');
-        $this->assertEqual($hp[0]['hashtag_id'], 1);
-        $hph = $h_dao->getHashtagsForPostHID(1);
+        $this->assertEqual($hp[0]['hashtag_id'], 3);
+        $hph = $hashtagpost_dao->getHashtagPostsByHashtagID(3);
         $this->assertEqual(sizeof($hph), 2);
         $this->assertEqual($hph[1]['post_id'], '39089424620978176');
 
@@ -3777,5 +3871,209 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $results = $post_dao->searchPostsByUser('keyword', 'twitter', 'ev');
         $this->assertEqual(sizeof($results), 0);
+    }
+    /**
+     * Test getAllPostsByHashtagId
+     */
+    public function testGetAllPostsByHashtagId() {
+        $dao = new PostMySQLDAO();
+        $output = $dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 20);
+
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof Post);
+            $this->assertEqual($post->protected, false);
+        }
+        //test page
+        $output = $dao->getAllPostsByHashtagId(1, 'twitter', 20,'post_id', 'ASC',1);
+        $this->assertEqual(sizeof($output), 20);
+        $counter=301;
+        foreach($output as $post) {
+            $this->assertEqual($post->post_id, $counter);
+            $counter = $counter+2;
+        }
+        $output = $dao->getAllPostsByHashtagId(1, 'twitter', 20,'post_id', 'ASC',2);
+        $this->assertEqual(sizeof($output), 10);
+        $counter=341;
+        foreach($output as $post) {
+            $this->assertEqual($post->post_id, $counter);
+            $counter = $counter+2;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 20);
+
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof Post);
+            $this->assertEqual($post->protected, false);
+        }
+
+        // test count
+        for ($count = 1; $count <= 20; $count++) {
+            $output = $dao->getAllPostsByHashtagId(2, 'twitter', $count);
+            $this->assertEqual(sizeof($output), $count);
+        }
+
+        // test order_by
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'date','DESC');
+        $this->assertEqual(sizeof($output), 20);
+        $date = strtotime($output[0]->pub_date);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'date','ASC');
+        $this->assertEqual(sizeof($output), 20);
+        $date = strtotime($output[0]->pub_date);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'source','DESC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) <= 0);
+            $str = $post->source;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'source','ASC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) >= 0);
+            $str = $post->source;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'post_text','DESC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->post_text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->post_text, $str) <= 0);
+            $str = $post->post_text;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'post_text','ASC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->post_text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->post_text, $str) >= 0);
+            $str = $post->post_text;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'author_username','DESC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->author_username;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->author_username, $str) <= 0);
+            $str = $post->author_username;
+        }
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20,'author_username','ASC');
+        $this->assertEqual(sizeof($output), 20);
+        $str = $output[0]->author_username;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->author_username, $str) >= 0);
+            $str = $post->author_username;
+        }
+    }
+
+    public function testDeletePostsByHashtagId() {
+        $dao = new PostMySQLDAO();
+
+        $output = $dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 20);
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 20);
+
+        $output = $dao->deletePostsByHashtagId(1);
+        $this->assertEqual($output, 30);
+
+        $output = $dao->deletePostsByHashtagId(2);
+        $this->assertEqual($output, 30);
+
+        $output = $dao->getAllPostsByHashtagId(1, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 0);
+
+        $output = $dao->getAllPostsByHashtagId(2, 'twitter', 20);
+        $this->assertEqual(sizeof($output), 0);
+    }
+
+    public function testSearchPostsByHashtag() {
+        $dao = new PostMySQLDAO();
+
+        $hashtags = array();
+        $hashtags[] = 1;
+
+        //First search hashtag that exists
+        $output = $dao->searchPostsByHashtag($hashtags, 'twitter');
+        $this->assertEqual(sizeof($output), 20);
+        $this->assertTrue(is_array($output));
+        $counter=359;
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof Post);
+            $this->assertEqual($post->post_id, $counter);
+            $counter = $counter-2;
+        }
+
+        //Test page_count
+        for ($i=30;$i>1;$i--) {
+            $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1, $i);
+            $this->assertEqual(sizeof($output), $i);
+            $counter=359;
+            foreach($output as $post) {
+                $this->assertEqual($post->post_id, $counter);
+                $counter = $counter-2;
+            }
+        }
+
+        //Test page
+        for ($i=1;$i<4;$i++) {
+            $output = $dao->searchPostsByHashtag($hashtags, 'twitter',$i);
+            switch ($i) {
+                case 1:
+                    $this->assertEqual(sizeof($output), 20);
+                    break;
+                case 2:
+                    $this->assertEqual(sizeof($output), 10);
+                    break;
+                case 3:
+                    $this->assertEqual(sizeof($output), 0);
+                    break;
+            }
+        }
+
+        //test second hashtag search that exists
+        $hashtags = array();
+        $hashtags[] = 2;
+        $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1,60);
+        $this->assertEqual(sizeof($output), 30);
+        $this->assertTrue(is_array($output));
+        $counter=358;
+        foreach($output as $post) {
+            $this->assertEqual($post->post_id, $counter);
+            $counter = $counter-2;
+        }
+
+        //test two hashtags search that exists
+        $hashtags = array();
+        $hashtags[] = 1;
+        $hashtags[] = 2;
+        $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1,100);
+        $this->assertEqual(sizeof($output), 60);
+        $this->assertTrue(is_array($output));
+        $counter=359;
+        foreach($output as $post) {
+            $this->assertEqual($post->post_id, $counter);
+            $counter = $counter-1;
+        }
+
+        $this->assertTrue(is_array($output));
     }
 }

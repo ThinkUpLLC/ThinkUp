@@ -74,5 +74,11 @@ interface UserDAO {
      * @return User User object
      */
     public function getUserByName($user_name, $network);
-}
 
+    /**
+     * Delete users given a hashtag ID.
+     * @param str $hashtag_id
+     * @return int Total number of affected rows
+     */
+    public function deleteUsersByHashtagId($hashtag_id);
+}

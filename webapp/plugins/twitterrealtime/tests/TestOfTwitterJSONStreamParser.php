@@ -79,6 +79,10 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
      * @var HashtagDAO
      */
     var $hashtag_dao;
+    /**
+     * @var HashtagPostDAO
+     */
+    var $hashtagpost_dao;
 
     public function setUp() {
         parent::setUp();
@@ -98,6 +102,7 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
         $this->mention_dao = DAOFactory::getDAO('MentionDAO');
         $this->mention_dao->setLoggerInstance($this->logger);
         $this->hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $this->hashtagpost_dao = DAOFactory::getDAO('HashtagPostDAO');
         $this->hashtag_dao->setLoggerInstance($this->logger);
     }
 
@@ -233,24 +238,23 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
         $this->json_parser->parseJSON($item);
         $item = $this->getJSONStringFromFile("hashtags4.json");
         $this->json_parser->parseJSON($item);
-        $res = $this->hashtag_dao->getHashtagInfoForTag("egypt");
-        $this->assertEqual($res['count_cache'], 2);
-        $res = $this->hashtag_dao->getHashtagsForPost('36358312584806400');
-
+        $res = $this->hashtag_dao->getHashtag("egypt", 'twitter');
+        $this->assertEqual($res->count_cache, 2);
+        $res = $this->hashtagpost_dao->getHashtagsForPost('36111321078439936', 'twitter');
+        $this->assertEqual(sizeof($res), 2);
     }
 
     public function testHashtagsMult() {
         $item = $this->getJSONStringFromFile("hashtags.json");
         $this->json_parser->parseJSON($item);
-        $res = $this->hashtag_dao->getHashtagInfoForTag("kanban");
-        $this->assertEqual($res['count_cache'], 2);
-        $res = $this->hashtag_dao->getHashtagInfoForTag("scrum");
-        $this->assertEqual($res['count_cache'], 2);
-        $this->assertEqual(sizeof($res), 4);
+        $res = $this->hashtag_dao->getHashtag("kanban", 'twitter');
+        $this->assertEqual($res->count_cache, 2);
+        $res = $this->hashtag_dao->getHashtag("scrum", 'twitter');
+        $this->assertEqual($res->count_cache, 2);
         // the original post
-        $res = $this->hashtag_dao->getHashtagsForPost('36601038500925440');
+        $res = $this->hashtagpost_dao->getHashtagsForPost('36601038500925440', 'twitter');
         $this->assertEqual(sizeof($res), 8);
-        $res = $this->hashtag_dao->getHashtagsForPost('36601109074157568');
+        $res = $this->hashtagpost_dao->getHashtagsForPost('36601109074157568', 'twitter');
         // the retweet drops one hashtag, truncates another...
         $this->assertEqual(sizeof($res), 7);
     }
@@ -260,9 +264,9 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
         $item = $this->getJSONStringFromFile("hashtags2.json");
         $this->json_parser->parseJSON($item);
         // this will check case-insensitivity also
-        $res = $this->hashtag_dao->getHashtagInfoForTag("ribs");
-        $this->assertEqual($res['count_cache'], 1);
-        $res = $this->hashtag_dao->getHashtagsForPost('36555750721458176');
+        $res = $this->hashtag_dao->getHashtag("ribs", 'twitter');
+        $this->assertEqual($res->count_cache, 1);
+        $res = $this->hashtagpost_dao->getHashtagsForPost('36555750721458176', 'twitter');
         $this->assertEqual(sizeof($res), 1);
     }
 

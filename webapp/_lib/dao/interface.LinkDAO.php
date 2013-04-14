@@ -127,4 +127,10 @@ interface LinkDAO {
      * @return array of links table row arrays
      */
     public function getLinksForPost($post_id, $network = 'twitter');
+    /**
+     * Delete links given a hashtag ID.
+     * @param int $hashtag_id
+     * @return int Total number of affected rows
+     */
+    public function deleteLinksByHashtagId($hashtag_id);
 }
