@@ -48,6 +48,7 @@ $plugin_tests->add(new TestOfTwitterCrawler());
 $plugin_tests->add(new TestOfTwitterInstanceMySQLDAO());
 $plugin_tests->add(new TestOfTwitterPlugin());
 $plugin_tests->add(new TestOfTwitterPluginConfigurationController());
+$plugin_tests->add(new TestOfTwitterPluginHashtagConfigurationController());
 $plugin_tests->add(new TestOfCrawlerTwitterAPIAccessorOAuth());
 $plugin_tests->add(new TestOfRetweetDetector());
 $plugin_tests->add(new TestOfHelloThinkUpPluginConfigurationController());

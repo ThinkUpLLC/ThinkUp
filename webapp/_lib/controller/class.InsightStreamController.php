@@ -57,7 +57,14 @@ class InsightStreamController extends ThinkUpController {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
-                $this->addToView('instances', $instance_dao->getByOwner($owner));
+                $instances = $instance_dao->getByOwner($owner);
+                $this->addToView('instances', $instances);
+                $saved_searches = array();
+                if (sizeof($instances) > 0) {
+                    $instancehashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+                    $saved_searches = $instancehashtag_dao->getHashtagsByInstances($instances);
+                }
+                $this->addToView('saved_searches', $saved_searches);
             }
         }
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');

@@ -150,7 +150,8 @@ class TwitterAPIAccessorOAuth {
             "following"=>"friends/list",
             "following_ids"=>"friends/ids",
             "show_friendship"=>"friendships/show",
-            "favorites"=>"favorites/list"
+            "favorites"=>"favorites/list",
+            "search_tweets"=>"search/tweets"
 
             //1.0 "favorites"=>"/favorites/:id",
         //1.0 "following"=>"/statuses/friends",
@@ -212,6 +213,22 @@ class TwitterAPIAccessorOAuth {
         return $parsed_payload;
     }
     /**
+     * Parse JSON list of tweets from search results.
+     * @param str $data JSON list of tweets.
+     * @return array Posts
+     */
+    public function parseJSONTweetsFromSearch($data) {
+        $json = JSONDecoder::decode($data);
+        //print_r($json);
+        $parsed_payload = array();
+        if (isset($json)) {
+            foreach ($json->statuses as $tweet) {
+                $parsed_payload[] = self::convertJSONtoTweetArray($tweet);
+            }
+        }
+        return $parsed_payload;
+    }
+    /**
      * Parse JSON tweet.
      * @param str $data JSON tweet data
      * @return array Post values
@@ -255,13 +272,17 @@ class TwitterAPIAccessorOAuth {
             'full_name'=>$json_tweet->user->name,
             'source'=>$json_tweet->source,
             'location'=>$json_tweet->user->location,
-            'url'=>$json_tweet->user->url,
+            'url'=>(isset($json_tweet->user->url)?$json_tweet->user->url:''),
             'description'=>$json_tweet->user->description,
             'is_protected'=>self::boolToInt($json_tweet->user->protected),
             'follower_count'=>$json_tweet->user->followers_count,
             'post_count'=>$json_tweet->user->statuses_count,
             'geo'=>$geo,
             'place'=>(isset($json_tweet->place->full_name))?$json_tweet->place->full_name:'',
+            'friend_count'=> (integer)$json_tweet->user->friends_count,
+            'joined'=> (string)gmdate("Y-m-d H:i:s", strToTime($json_tweet->user->created_at)),
+            'favorites_count'=>(integer)$json_tweet->user->favourites_count,
+            'favorited'=> (integer)self::boolToInt($json_tweet->favorited),
             'network'=>'twitter'
             );
 

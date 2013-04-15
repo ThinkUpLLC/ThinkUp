@@ -140,7 +140,7 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res, 0);
     }
 
-    public function testUpdateLastPostId() {
+    public function testUpdateLastPostID() {
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 0);
         $res=$this->dao->insert(1,1);
@@ -154,7 +154,7 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[0]->earliest_post_id, '0');
 
         //successful update
-        $res=$this->dao->updateLastPostId(1,1,'1001');
+        $res=$this->dao->updateLastPostID(1,1,'1001');
         $this->assertTrue($res);
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 1);
@@ -163,11 +163,11 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[0]->last_post_id, '1001');
 
         //unsuccessful update
-        $res = $this->dao->updateLastPostId(10,10,'1001');
+        $res = $this->dao->updateLastPostID(10,10,'1001');
         $this->assertFalse($res);
     }
 
-    public function testUpdateEarliestPostId() {
+    public function testUpdateEarliestPostID() {
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 0);
         $res=$this->dao->insert(1,1);
@@ -181,7 +181,7 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[0]->earliest_post_id, '0');
 
         //successful update
-        $res=$this->dao->updateEarliestPostId(1,1,'501');
+        $res=$this->dao->updateEarliestPostID(1,1,'501');
         $this->assertTrue($res);
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 1);
@@ -190,11 +190,11 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[0]->earliest_post_id, '501');
 
         //unsuccessful update
-        $res=$this->dao->updateEarliestPostId(15,15,'501');
+        $res=$this->dao->updateEarliestPostID(15,15,'501');
         $this->assertFalse($res);
     }
 
-    public function testDeleteInstanceHashtagsByHashtagId() {
+    public function testDeleteInstanceHashtagsByHashtagID() {
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 0);
         $res=$this->dao->insert(1,1);
@@ -206,22 +206,31 @@ class TestOfInstanceHashtagMySQLDAO extends ThinkUpUnitTestCase {
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 3);
 
-        //successful deletes
-        $res=$this->dao->deleteInstanceHashtagsByHashtagId(1);
+        //successful delete
+        $res=$this->dao->deleteInstanceHashtagsByHashtagID(1);
         $this->assertEqual($res, 1);
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 2);
-        $res=$this->dao->deleteInstanceHashtagsByHashtagId(2);
+        $res=$this->dao->deleteInstanceHashtagsByHashtagID(2);
         $this->assertEqual($res, 1);
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 1);
-        $res=$this->dao->deleteInstanceHashtagsByHashtagId(3);
+        $res=$this->dao->deleteInstanceHashtagsByHashtagID(3);
         $this->assertEqual($res, 1);
         $res=$this->dao->getByInstance(1);
         $this->assertEqual(sizeof($res), 0);
 
         //unsuccessful delete
-        $res=$this->dao->deleteInstanceHashtagsByHashtagId(100);
+        $res=$this->dao->deleteInstanceHashtagsByHashtagID(100);
         $this->assertEqual($res, 0);
+    }
+
+    public function testIsHashtagSaved() {
+        $res = $this->dao->isHashtagSaved(1);
+        $this->assertFalse($res);
+
+        $builder = FixtureBuilder::build('instances_hashtags', array('instance_id'=>'1', 'hashtag_id'=>'1'));
+        $res = $this->dao->isHashtagSaved(1);
+        $this->assertTrue($res);
     }
 }

@@ -19,6 +19,7 @@
         <th><h4 class="pull-left">Account</h4></th>
         <th><i class="icon-lock icon-2x icon-muted"></i></th>
         {if $user_is_admin}<th><i class="icon-refresh icon-2x icon-muted"></i></th>{/if}
+        <th><i class="icon-tag icon-2x icon-muted"></i></th>
         <th><i class="icon-trash icon-2x icon-muted"></i></th>
     </tr>
         
@@ -36,6 +37,9 @@
             <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause crawling{else}Start crawling{/if}" /></span>
         </td>
         {/if}
+        <td class="action-button">
+            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter" class="btn btn-info btnHashtag">Saved searches</a>
+        </td>
         <td class="action-button">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter">
             <input type="hidden" name="instance_id" value="{$i->id}">

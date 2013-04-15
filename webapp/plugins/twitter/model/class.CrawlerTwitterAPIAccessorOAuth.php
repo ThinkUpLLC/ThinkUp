@@ -66,7 +66,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     public function initializeEndpointRateLimits() {
         $endpoint = $this->endpoints['rate_limits'];
         $args = array();
-        $args["resources"] = 'account,statuses,users,followers,lists,friends,favorites,friendships,application';
+        $args["resources"] = 'account,statuses,users,followers,lists,friends,favorites,friendships,application,search';
         list($http_status, $payload) = $this->apiRequest($endpoint, $args);
         $rate_limit_data_array = JSONDecoder::decode($payload, true);
         $rate_limit_data_array = $rate_limit_data_array["resources"];
