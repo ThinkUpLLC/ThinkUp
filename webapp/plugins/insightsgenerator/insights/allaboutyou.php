@@ -43,8 +43,13 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $count += self::countFirstPersonReferences($post->post_text);
             }
             if ($count > 1) {
-                $text = "$this->username's posts contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\"".
-                " <strong>" .$count. ' times</strong> in the last week';
+                
+                $text = "$this->username's posts contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\"";
+                " <strong>" ;
+                if($count=1)
+                $text=$count. ' time</strong> in the last week';
+                else
+                $text=$count. ' times</strong> in the last week';
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("all_about_you", $instance->id, $count,
@@ -55,17 +60,26 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $last_sunday = date('Y-m-d', strtotime('-7 day'));
                 $last_sunday_insight_baseline = $insight_baseline_dao->getInsightBaseline("all_about_you",
                 $instance->id, $last_sunday);
-                if (isset($last_sunday_insight_baseline) ) {
+                 if (isset($last_sunday_insight_baseline) ) {
                     //compare it to this Sunday's number, and add a sentence comparing it.
                     if ($last_sunday_insight_baseline->value > $count ) {
                         $difference = $last_sunday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer times than the prior week.";
+                        $text .= ", $difference fewer ";
+ 					                  if($difference>1)
+					                    $text.="times than the prior week.";
+					                   else
+					                    $text.="time than the prior week.";
                     } elseif ($last_sunday_insight_baseline->value < $count ) {
                         $difference = $count - $last_sunday_insight_baseline->value;
-                        $text .= ", $difference more times than the prior week.";
+                        $text .= ", $difference more ";
+						                  if($difference>1)
+					                    $text.="times than the prior week.";
+					                   else
+					                    $text.="time than the prior week.";
                     } else {
                         $text .= ".";
                     }
+					  
                 } else {
                     $text .= ".";
                 }
