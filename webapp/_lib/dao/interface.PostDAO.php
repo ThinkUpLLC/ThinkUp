@@ -725,11 +725,12 @@ interface PostDAO {
 
     /**
      * Search a service users's tweet search.
-     * @param arr $hashtags
+     * @param arr $keywords
+     * @param Hashtag $hashtag
      * @param str $network
      * @param int $page_number defaults to 1
      * @param int $page_count defaults to 20
      * @return arr of Post objects
      */
-    public function searchPostsByHashtag(array $hashtags, $network, $page_number=1, $page_count=20);
+    public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
 }

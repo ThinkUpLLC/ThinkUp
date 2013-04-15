@@ -57,6 +57,9 @@ class SearchController extends ThinkUpAuthController {
                             case "followers":
                                 self::searchFollowers($instance->network_user_id);
                                 break;
+                            case "searches":
+                                self::searchSearches();
+                                break;
                             default:
                                 self::searchPosts();
                         }
@@ -75,7 +78,14 @@ class SearchController extends ThinkUpAuthController {
                 $this->addErrorMessage("Uh-oh. Your search terms are missing. Please try again.");
             }
             //Populate search dropdown with service users
-            $this->addToView('instances', $instance_dao->getByOwner($owner));
+            $instances = $instance_dao->getByOwner($owner);
+            $this->addToView('instances', $instances);
+            $saved_searches = array();
+            if (sizeof($instances) > 0) {
+                $instancehashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+                $saved_searches = $instancehashtag_dao->getHashtagsByInstances($instances);
+            }
+            $this->addToView('saved_searches', $saved_searches);
         }
         return $this->generateView();
     }
@@ -119,6 +129,34 @@ class SearchController extends ThinkUpAuthController {
                 array_pop($users);
             }
             $this->addToView('users', $users);
+        }
+    }
+    /**
+     * Populate view with post search results from search hashtags or keywords.
+     */
+    private function searchSearches() {
+        $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
+        $this->addToView('current_page', $page_number);
+
+        $keywords = explode(' ', $_GET['q']);
+        if (isset($_GET['k'])) {
+            $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+            $hashtag = $hashtag_dao->getHashtag($_GET['k'], $_GET['n']);
+            if (isset($hashtag)) {
+                $post_dao = DAOFactory::getDAO('PostDAO');
+                $posts = $post_dao->searchPostsByHashtag($keywords, $hashtag, $_GET['n'], $page_number,
+                $page_count=(self::PAGE_RESULTS_COUNT+1));
+                if (isset($posts) && sizeof($posts) > 0) {
+                    if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {
+                        $this->addToView('next_page', $page_number+1);
+                        $this->addToView('last_page', $page_number-1);
+                        array_pop($posts);
+                    }
+                    $this->addToView('posts', $posts);
+                }
+            } else {
+                $this->addErrorMessage("Uh-oh. ".$_GET['k']." is not a saved search. Please try again.");
+            }
         }
     }
 }

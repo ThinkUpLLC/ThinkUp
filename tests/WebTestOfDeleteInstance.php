@@ -65,7 +65,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertSubmit('Delete');
 
         //delete existing instance
-        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'3',
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'3',
         'csrf_token' => self::TEST_CSRF_TOKEN));
         $this->assertText('Account deleted.');
         $this->assertLink('@thinkupapp');
@@ -74,7 +74,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertSubmit('Delete');
 
         //delete non-existent instance
-        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'231',
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'231',
         'csrf_token' => self::TEST_CSRF_TOKEN));
         $this->assertText("Instance doesn't exist.");
         $this->assertLink('@thinkupapp');
@@ -92,7 +92,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->click("Log In");
 
         //delete instance with no privileges
-        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'2',
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'2',
         'csrf_token' => self::TEST_CSRF_TOKEN));
 
         $this->assertText("Insufficient privileges.");

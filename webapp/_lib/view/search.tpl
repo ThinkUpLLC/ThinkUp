@@ -28,6 +28,17 @@
          <h2>No posts found.</h2>
         {/if}
     {/if}
+    {if $smarty.get.c eq 'searches'}
+        {if $posts|@count > 0}
+        {foreach from=$posts key=pid item=post name=bar}
+            <div class="alert insight-item">
+            {include file=$tpl_path|cat:"_post.tpl" post=$post hide_insight_header='1'}
+            {include file=$tpl_path|cat:'_footer.tpl'}
+        {/foreach}
+        {else}
+         <h2>No posts found.</h2>
+        {/if}
+    {/if}
     {if $smarty.get.c eq 'followers'}
         {if $users|@count > 0}
         {foreach from=$users key=uid item=u name=bar}
@@ -68,12 +79,12 @@
         <ul class="pager">
         {if $next_page}
           <li class="previous">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}{if $smarty.get.c}c={$smarty.get.c}&{/if}{if $smarty.get.q}q={$smarty.get.q}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="icon-arrow-left"></i> Older</a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="icon-arrow-left"></i> Older</a>
           </li>
         {/if}
         {if $last_page}
           <li class="next">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}{if $smarty.get.c}c={$smarty.get.c}&{/if}{if $smarty.get.q}q={$smarty.get.q}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="icon-arrow-right"></i></a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="icon-arrow-right"></i></a>
           </li>
         {/if}
         </ul>

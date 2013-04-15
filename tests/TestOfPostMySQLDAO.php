@@ -4008,11 +4008,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testSearchPostsByHashtag() {
         $dao = new PostMySQLDAO();
 
-        $hashtags = array();
-        $hashtags[] = 1;
+        $hashtag = new Hashtag();
+        $hashtag->id = 1;
 
         //First search hashtag that exists
-        $output = $dao->searchPostsByHashtag($hashtags, 'twitter');
+        $output = $dao->searchPostsByHashtag(array(), $hashtag, 'twitter');
         $this->assertEqual(sizeof($output), 20);
         $this->assertTrue(is_array($output));
         $counter=359;
@@ -4024,7 +4024,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         //Test page_count
         for ($i=30;$i>1;$i--) {
-            $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1, $i);
+            $output = $dao->searchPostsByHashtag(array(), $hashtag, 'twitter', 1, $i);
             $this->assertEqual(sizeof($output), $i);
             $counter=359;
             foreach($output as $post) {
@@ -4035,7 +4035,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         //Test page
         for ($i=1;$i<4;$i++) {
-            $output = $dao->searchPostsByHashtag($hashtags, 'twitter',$i);
+            $output = $dao->searchPostsByHashtag(array(), $hashtag, 'twitter',$i);
             switch ($i) {
                 case 1:
                     $this->assertEqual(sizeof($output), 20);
@@ -4050,9 +4050,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         }
 
         //test second hashtag search that exists
-        $hashtags = array();
-        $hashtags[] = 2;
-        $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1,60);
+        $hashtag = new Hashtag();
+        $hashtag->id = 2;
+        $output = $dao->searchPostsByHashtag(array(), $hashtag, 'twitter',1,60);
         $this->assertEqual(sizeof($output), 30);
         $this->assertTrue(is_array($output));
         $counter=358;
@@ -4060,20 +4060,5 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual($post->post_id, $counter);
             $counter = $counter-2;
         }
-
-        //test two hashtags search that exists
-        $hashtags = array();
-        $hashtags[] = 1;
-        $hashtags[] = 2;
-        $output = $dao->searchPostsByHashtag($hashtags, 'twitter',1,100);
-        $this->assertEqual(sizeof($output), 60);
-        $this->assertTrue(is_array($output));
-        $counter=359;
-        foreach($output as $post) {
-            $this->assertEqual($post->post_id, $counter);
-            $counter = $counter-1;
-        }
-
-        $this->assertTrue(is_array($output));
     }
 }

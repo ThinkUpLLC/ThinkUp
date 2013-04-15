@@ -1138,4 +1138,137 @@ class TwitterCrawler {
         }
         return array($tweets, $http_status, $payload);
     }
+    /**
+     * Retrieve tweets in search results for a keyword/hashtag.
+     * @param InstanceHashtag $instance_hashtag
+     * @return void
+     */
+    public function fetchInstanceHashtagTweets($instance_hashtag) {
+        if (isset($this->instance)){
+            $status_message = "";
+            $continue_fetching = true;
+            $since_id = 0;
+            $max_id = 0;
+            $instance_hashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $hashtagpost_dao = DAOFactory::getDAO('HashtagPostDAO');
+            $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+
+            //Get hashtag
+            $hashtag = $hashtag_dao->getHashtagByID($instance_hashtag->hashtag_id);
+
+            while ($continue_fetching) {
+                $endpoint = $this->api->endpoints['search_tweets'];
+                $args = array();
+                $args["q"] = $hashtag->hashtag;
+                $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                $this->twitter_options['tweet_count_per_call']->option_value:100;
+                $args["count"] = $count_arg;
+                $args["include_entities"] = "true";
+
+                if ($since_id == 0) {
+                    $since_id = $instance_hashtag->last_post_id;
+                }
+                if ($since_id > 0) {
+                    $args["since_id"] = $since_id;
+                }
+                if ($max_id > $since_id) {
+                    $args["max_id"] = $max_id;
+                }
+
+                try {
+                    list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
+                } catch (APICallLimitExceededException $e) {
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+                    break;
+                }
+                if ($http_status == 200) {
+                    $this->logger->logDebug('Search tweets 200 '.$endpoint->getPath(),__METHOD__.','.__LINE__);
+                    $count = 0;
+                    $user_count = 0;
+                    $tweets = $this->api->parseJSONTweetsFromSearch($payload);
+                    foreach ($tweets as $tweet) {
+                        $this->logger->logDebug('Processing '.$tweet['post_id'],__METHOD__.','.__LINE__);
+                        $this->logger->logDebug('Processing '.Utils::varDumpToString($tweet),__METHOD__.','.__LINE__);
+                        $inserted_post_key = $post_dao->addPost($tweet, $this->user, $this->logger);
+                        //We need to check if post exists before add relationship between post and hashtag
+                        if ( $post_dao->isPostInDB($tweet['post_id'],'twitter')) {
+                            if (!$hashtagpost_dao->isHashtagPostInStorage($hashtag->id,$tweet['post_id'], 'twitter')) {
+                                $count = $count + 1;
+                                $hashtagpost_dao->insertHashtagPost($hashtag->hashtag, $tweet['post_id'], 'twitter');
+                                $user = new User($tweet);
+                                $rows_updated = $user_dao->updateUser($user);
+                                if ($rows_updated > 0) {
+                                    $user_count = $user_count + $rows_updated;
+                                }
+                                $this->logger->logDebug('User has been updated',__METHOD__.','.__LINE__);
+
+                                if (isset($tweet['retweeted_post']) && isset($tweet['retweeted_post']['content'])) {
+                                    $this->logger->logDebug('Retweeted post info set', __METHOD__.','.__LINE__);
+                                    if (!$hashtagpost_dao->isHashtagPostInStorage($hashtag->id,
+                                    $tweet['retweeted_post']['content']['post_id'], 'twitter')) {
+                                        $this->logger->logDebug('Retweeted post not in storage',
+                                        __METHOD__.','.__LINE__);
+                                        $count++;
+                                        $hashtagpost_dao->insertHashtagPost($hashtag->hashtag,
+                                        $tweet['retweeted_post']['content']['post_id'], 'twitter');
+                                        $user_retweet = new User($tweet['retweeted_post']['content']);
+                                        $rows_retweet_updated = $user_dao->updateUser($user_retweet);
+                                        if ($rows_retweet_updated > 0) {
+                                            $user_count = $user_count + $rows_retweet_updated;
+                                        }
+                                    } else {
+                                        $this->logger->logDebug('Retweeted post in storage',__METHOD__.','.__LINE__);
+                                    }
+                                } else {
+                                    $this->logger->logDebug('Retweeted post info not set', __METHOD__.','.__LINE__);
+                                }
+                                $this->logger->logDebug('About to process URLs',__METHOD__.','.__LINE__);
+                                URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                                $this->logger);
+                                $this->logger->logDebug('URLs have been processed',__METHOD__.','.__LINE__);
+                            }
+                        }
+                        if ($tweet['post_id'] > $instance_hashtag->last_post_id) {
+                            $instance_hashtag->last_post_id = $tweet['post_id'];
+                        }
+                        if ($instance_hashtag->earliest_post_id == 0
+                        || $tweet['post_id'] < $instance_hashtag->earliest_post_id) {
+                            $instance_hashtag->earliest_post_id = $tweet['post_id'];
+                        }
+                        if ($max_id == 0 || $tweet['post_id'] < $max_id) {
+                            $max_id = $tweet['post_id'];
+                        }
+                        $this->logger->logDebug('Instance hashtag markers updated',__METHOD__.','.__LINE__);
+                    }
+
+                    //Status message for tweets and users
+                    $status_message = ' ' . count($tweets)." tweet(s) found and $count saved";
+                    $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+                    $status_message = ' ' . count($tweets)." tweet(s) found and $user_count users saved";
+                    $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+
+                    //Save instance_hashtag important values
+                    if ($instance_hashtag->last_post_id > 0) {
+                        $instance_hashtag_dao->updateLastPostID($instance_hashtag->instance_id,
+                        $instance_hashtag->hashtag_id, $instance_hashtag->last_post_id);
+                    }
+                    if ($instance_hashtag->earliest_post_id > 0) {
+                        $instance_hashtag_dao->updateEarliestPostID($instance_hashtag->instance_id,
+                        $instance_hashtag->hashtag_id, $instance_hashtag->earliest_post_id);
+                    }
+
+                    //Not to continue fetching if search not return the maxim number of tweets
+                    if  (count($tweets) < $count_arg) {
+                        $continue_fetching = false;
+                    }
+                } else {
+                    $status_message = "Stop fetching tweets. cURL_status = " . $cURL_status;
+                    $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+                    $continue_fetching = false;
+                }
+            }
+        }
+    }
 }

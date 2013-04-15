@@ -2487,36 +2487,45 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getDeleteCount($ps);
     }
 
-    public function searchPostsByHashtag(array $hashtags, $network, $page_number=1, $page_count=20) {
-        if (!is_array($hashtags)) {
-            return null;
-        }
+    public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20) {
         $start_on_record = ($page_number - 1) * $page_count;
-
         $q = "SELECT p.*, p.pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p, #prefix#hashtags_posts hp, #prefix#hashtags h ";
-        $q .= "WHERE  p.post_id= hp.post_id AND hp.hashtag_id = h.id AND p.network=:network AND (h.id IN (";
-
-        foreach ($hashtags as $hashtag) {
-            $q .= $hashtag ;
-            if ($hashtag != end($hashtags)) {$q .= ",";}
+        $q .= "WHERE  p.post_id= hp.post_id AND hp.hashtag_id = h.id AND p.network=:network AND h.id = :hashtag_id ";
+        if (sizeof($keywords) > 0) {
+            $q .= "AND (";
+            $counter = 0;
+            foreach ($keywords as $keyword) {
+                $q .= " post_text LIKE :keyword".$counter." ";
+                if ($keyword != end($keywords)) {
+                    $q .= "AND";
+                }
+                $counter++;
+            }
+            $q .= ") ";
         }
-        $q .= ")) ORDER BY pub_date DESC ";
+        $q .= "ORDER BY pub_date DESC ";
         if ($page_count > 0) {
             $q .= "LIMIT :start_on_record, :limit;";
         } else {
             $q .= ';';
         }
-
         $vars = array(
-                ':network'=>$network
+            ':network'=>$network,
+            ':hashtag_id'=>$hashtag->id
         );
+        if (sizeof($keywords) > 0) {
+            $counter = 0;
+            foreach ($keywords as $keyword) {
+                $vars[':keyword'.$counter] = '%'.$keyword.'%';
+                $counter++;
+            }
+        }
         if ($page_count > 0) {
             $vars[':limit'] = (int)$page_count;
             $vars[':start_on_record'] = (int)$start_on_record;
         }
-
-        if ($this->profiler_enabled) {Profiler::setDAOMethod(__METHOD__);}
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $post_rows = $this->getDataRowsAsArrays($ps);
 
