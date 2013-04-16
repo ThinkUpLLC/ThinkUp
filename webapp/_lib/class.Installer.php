@@ -207,7 +207,7 @@ class Installer {
             $ret['simplexml'] = true;
         }
         // check ZipArchive
-        if ( class_exists('ZipArchive') ) {
+        if ( class_exists('ZipArchive')) {
             $ret['ZipArchive'] = true;
         }
         // when testing
