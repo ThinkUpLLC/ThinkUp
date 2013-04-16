@@ -90,7 +90,10 @@
                         <th>SimpleXML Support</td>
                         <td>{if $libs.simplexml}Confirmed{else}ThinkUp needs the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">SimpleXML PHP extension</a> installed on your system.{/if}</td>
                     </tr>
-
+                    <tr class="{if $libs.ZipArchive}success{else}error{/if}">
+                        <th>ZipArchive Support</td>
+                        <td>{if $libs.ZipArchive}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/class.ziparchive.php" target="_blank">ZipArchive PHP class</a> installed on your system.{/if}</td>
+                    </tr>
                 </tbody>
             </table>
 
