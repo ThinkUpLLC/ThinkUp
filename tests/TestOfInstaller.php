@@ -87,6 +87,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $this->assertTrue($dependency['json'], 'json lib is installed');
         $this->assertTrue($dependency['hash'], 'hash lib is installed');
         $this->assertTrue($dependency['simplexml'], 'simplexml lib is installed');
+        $this->assertTrue($dependency['ZipArchive'], 'ZipArchive lib is installed');
     }
 
     public function testInstallerCheckPermission() {
