@@ -317,12 +317,14 @@ class Utils {
         if ($replace_localhost_with_ip) {
             $server = ($server == 'localhost')?'127.0.0.1':$server;
         }
+        //domain name is always lowercase
+        $server = strtolower($server);
         $site_root_path = Config::getInstance()->getValue('site_root_path');
         if (!isset($site_root_path)) { //config file not written yet (during install)
             $site_root_path = self::getSiteRootPathFromFileSystem();
         }
         //URLencode everything except spaces in site_root_path
-        $site_root_path = str_replace('%2f', '/', strtolower(urlencode($site_root_path)));
+        $site_root_path = preg_replace('/(%2f|%2F)/', '/', urlencode($site_root_path));
         if  (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') { //non-standard port
             if (isset($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] == '443') { //account for standard https port
                 $port = '';
