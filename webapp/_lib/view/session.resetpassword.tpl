@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap="true" register_form="true"}
 {include file="_statusbar.tpl" enable_bootstrap="true"}
 
 
@@ -25,22 +25,35 @@
             <form name="form1" method="post" action="" class="login form-horizontal">
 
                 <fieldset style="background-color : white; padding-top : 30px;">
-                    
-                    <div class="control-group input-prepend">
-                        <label class="control-label" for="password">New password:</label>
-                        <div class="controls">
+                    <div class="control-group">
+                    <label class="control-label" for="password">New Password</label>
+                    <div class="controls">
+                        <span class="input-prepend">
                             <span class="add-on"><i class="icon-key"></i></span>
-                            <input class="input-xlarge" type="password" name="password" id="password">
-                        </div>
-                    </div>
+                            <input type="password" name="password" id="password" 
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
+                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
+                        </span>
+                        <span class="help-inline"></span>
 
-                    <div class="control-group input-prepend">
-                        <label class="control-label" for="password_confirm">New password:</label>
-                        <div class="controls">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input class="input-xlarge" type="password" name="password_confirm" id="password_confirm">
                         </div>
-                    </div>
+	                </div>
+	                <div class="control-group">
+	                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
+	                    <div class="controls">
+	                        <span class="input-prepend">
+	                            <span class="add-on"><i class="icon-key"></i></span>            
+	                            <input type="password" name="password_confirm" id="confirm_password" required 
+	                             class="password" 
+	                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
+	                            data-validation-match-match="password" 
+	                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
+	                        </span>
+	                        <span class="help-block"></span>
+	                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
+	                    </div>
+	                </div>
                     
                     <div class="form-actions">
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Submit">
