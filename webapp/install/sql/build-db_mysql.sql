@@ -159,8 +159,6 @@ CREATE TABLE tu_insights (
   date date NOT NULL COMMENT 'Date of insight.',
   emphasis int(11) NOT NULL DEFAULT '0' COMMENT 'Level of emphasis for insight presentation.',
   filename varchar(100) DEFAULT NULL COMMENT 'Name of file that generates and displays insight.',
-  time_generated datetime NOT NULL COMMENT 'Date and time when insight was generated.',
-  time_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Time when the insight was last updated.',
   PRIMARY KEY (id),
   KEY instance_id (instance_id,slug,date)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Insights for a given service user.';
