@@ -97,6 +97,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
             $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data";
+            $q .= "time_generated='".date("Y-m-d H:i:s")."'";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
