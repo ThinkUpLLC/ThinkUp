@@ -72,24 +72,26 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         //public insights
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jack\'s post publicly got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>date("Y-m-d H:i:s")));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jack\'s post publicly got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>date("Y-m-d H:i:s")));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'3', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>date("Y-m-d H:i:s")));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'3', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>date("Y-m-d H:i:s")));
 
         //private insights
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
-        'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
+        'time_generated'=>date("Y-m-d H:i:s")));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
-        'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike'));
+        'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
+        'time_generated'=>date("Y-m-d H:i:s")));
         return $builders;
     }
 

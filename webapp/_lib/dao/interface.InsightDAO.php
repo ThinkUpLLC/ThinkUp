@@ -117,6 +117,15 @@ interface InsightDAO {
      */
     public function getAllInstanceInsights($page_count=10, $page_number=1);
     /**
+     * Get a page of insights for all users in a specified time range, public and private.
+     * @param int $from
+     * @param int $until
+     * @param int $page_count
+     * @param int $page_number
+     * @return array Insights
+     */
+    public function getAllInstanceInsightsInRange($from=0, $until=null, $page_count=10, $page_number=1);
+    /**
      * Get a page of insights by instances associated with an owner.
      * @param int $owner_id
      * @param int $page_count
