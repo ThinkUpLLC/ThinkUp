@@ -54,7 +54,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1,
-        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888',
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_token'=>'87781ba59d7104a57b9e6c3079b32991',
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
@@ -182,11 +182,11 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetActivationCode() {
         //owner who doesn't exist
-        $result = $this->DAO->getActivationCode('idontexist@example.com');
+        $result = $this->DAO->getByActivationToken('invalidtoken');
         $this->assertTrue(!isset($result));
         //owner who is not activated
-        $result = $this->DAO->getActivationCode('ttuser@example.com');
-        $this->assertEqual($result['activation_code'], '8888');
+        $result = $this->DAO->getByActivationToken('87781ba59d7104a57b9e6c3079b32991');
+        $this->assertEqual($result->email, 'ttuser@example.com');
     }
 
     public function testActivate() {

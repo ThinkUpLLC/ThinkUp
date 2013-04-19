@@ -371,7 +371,7 @@ class InstallerController extends ThinkUpController {
 
         $owner_dao = DAOFactory::getDAO('OwnerDAO', $db_config);
         if ( !$owner_dao->doesAdminExist() && !$owner_dao->doesOwnerExist($email)) { // create admin if not exists
-            $activation_code = $owner_dao->createAdmin($email, $password, $full_name);
+            $activation_token = $owner_dao->createAdmin($email, $password, $full_name);
             // view for email
             $cfg_array =  array(
             'site_root_path'=>Utils::getSiteRootPathFromFileSystem(),
@@ -382,8 +382,7 @@ class InstallerController extends ThinkUpController {
             $email_view = new ViewManager($cfg_array);
             $email_view->caching=false;
             $email_view->assign('application_url', Utils::getApplicationURL() );
-            $email_view->assign('email', urlencode($email) );
-            $email_view->assign('activ_code', $activation_code );
+            $email_view->assign('activ_token', $activation_token );
             $message = $email_view->fetch('_email.registration.tpl');
 
             Mailer::mail($email, "Activate Your New ThinkUp  Account", $message);
