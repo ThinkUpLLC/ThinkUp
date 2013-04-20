@@ -59,7 +59,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                     //compare it to this Sunday's number, and add a sentence comparing it.
                     if ($last_sunday_insight_baseline->value > $count ) {
                         $difference = $last_sunday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer time".($difference>1?"s":"")."than the prior week.";
+                        $text .= ", $difference fewer time".($difference>1?"s":"")." than the prior week.";
                     } elseif ($last_sunday_insight_baseline->value < $count ) {
                         $difference = $count - $last_sunday_insight_baseline->value;
                         $text .= ", $difference more time".($difference>1?"s":"")." than the prior week.";
