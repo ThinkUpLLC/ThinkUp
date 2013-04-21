@@ -132,4 +132,15 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
 
         $this->assertFalse(isset($output->error));
     }
+
+    public function testInsightNotFound() {
+        $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $_GET['until'] = strtotime('2012-04-01');
+
+        $controller = new InsightAPIController(true);
+        $output = json_decode($controller->go());
+
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output->error->type, "InsightNotFoundException");
+    }
 }
