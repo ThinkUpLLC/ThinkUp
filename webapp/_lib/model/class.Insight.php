@@ -64,6 +64,14 @@ class Insight {
      */
     var $filename;
     /**
+     * @var str Date and time when insight was generated.
+     */
+    var $time_generated;
+    /**
+     * @var str Time when the insight was last updated.
+     */
+    var $time_updated;
+    /**
      * High emphasis level.
      * @var int
      */

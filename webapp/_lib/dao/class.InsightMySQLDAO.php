@@ -96,7 +96,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data";
+            $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data, ";
+            $q .= "time_generated='".date("Y-m-d H:i:s")."'";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
@@ -191,6 +192,10 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return self::getInsightsForInstances($page_count, $page_number, $public_only = false);
     }
 
+    public function getAllInstanceInsightsInRange($from=0, $until=null, $page_count=10, $page_number=1) {
+        return self::getInsightsForInstancesInRange($from, $until, $page_count, $page_number, $public_only = false);
+    }
+
     public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page_number=1) {
         $start_on_record = ($page_number - 1) * $page_count;
         $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
@@ -234,6 +239,47 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, filename, i.id DESC ";
         $q .= "LIMIT :start_on_record, :limit;";
         $vars = array(
+            ":start_on_record"=>(int)$start_on_record,
+            ":limit"=>(int)$page_count
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $insights = array();
+        foreach ($rows as $row) {
+            $insight = new Insight($row);
+            $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
+            $insights[] = $insight;
+        }
+        foreach ($insights as $insight) {
+            $insight->related_data = unserialize($insight->related_data);
+            //assume insight came at same time of day as now for relative day notation
+            $insight->date = $insight->date. " ".date('H').":".date('i');
+        }
+        return $insights;
+    }
+
+    private function getInsightsForInstancesInRange($from=0,$until=null,$page_count=10, $page_number=1,
+    $public_only = true) {
+        if (is_null($until)) {
+            $until = time();
+        }
+        $start_on_record = ($page_number - 1) * $page_count;
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 ";
+        if ($public_only) {
+            $q .= "AND su.is_public = 1 ";
+        }
+        $q .= "AND i.time_updated >= :from ";
+        $q .= "AND i.time_updated <= :until ";
+        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, filename, i.id DESC ";
+        $q .= "LIMIT :start_on_record, :limit;";
+        $vars = array(
+            ":from"=>date("Y-m-d H:i:s",$from),
+            ":until"=>date("Y-m-d H:i:s",$until),
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count
         );
