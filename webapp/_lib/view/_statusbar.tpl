@@ -1,4 +1,4 @@
-{if $enable_bootstrap}
+{if $enable_bootstrap eq 1}
 
     <div class="navbar navbar-static-top">
       <div class="navbar-inner">

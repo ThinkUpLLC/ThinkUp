@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
-{if $enable_bootstrap}
+{if $enable_bootstrap eq 1}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -182,6 +182,6 @@
 </head>
 <body>
 
-{if $enable_bootstrap}
+{if $enable_bootstrap eq 1}
 <div id="sticky-footer-fix-wrapper">
 {/if}
