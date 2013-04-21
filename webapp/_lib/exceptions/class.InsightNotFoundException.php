@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/exceptions/class.PostNotFoundEception.php
+ * ThinkUp/webapp/_lib/model/exceptions/class.InsightNotFoundEception.php
  *
  * Copyright (c) 2012-2013 Gina Trapani, Nilaksh Das
  *
