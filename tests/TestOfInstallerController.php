@@ -111,8 +111,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
 
-        $reqs = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
-        'simplexml'=>false);
+        $reqs = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false);
 
         $controller = new InstallerController(true, $reqs);
         $this->assertTrue(isset($controller));
@@ -140,8 +139,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
 
-        $reqs = array('curl'=>true, 'gd'=>true, 'pdo'=>true, 'pdo_mysql'=>true, 'json'=>true, 'hash'=>true,
-        'simplexml'=>true);
+        $reqs = array('curl'=>true, 'gd'=>true, 'pdo'=>true, 'pdo_mysql'=>true, 'json'=>true, 'hash'=>true);
 
         //set session save path to invalid path
         ini_set('session.save_path', '/someinvalidpath/wecantwriteto/');

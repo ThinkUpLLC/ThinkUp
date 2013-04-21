@@ -176,7 +176,7 @@ class Installer {
      */
     public function checkDependency($libs = array()) {
         $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
-        'simplexml'=>false, 'ZipArchive'=>false);
+        'ZipArchive'=>false);
 
         // check curl
         if ( self::curlDependenciesMet() ) {
@@ -201,10 +201,6 @@ class Installer {
         // check php5-hash
         if ( extension_loaded('hash') ) {
             $ret['hash'] = true;
-        }
-        // check php5-simplexml
-        if ( extension_loaded('simplexml') ) {
-            $ret['simplexml'] = true;
         }
         // check ZipArchive
         if ( class_exists('ZipArchive')) {
