@@ -104,12 +104,7 @@ abstract class ThinkUpController {
             }
             $this->view_mgr = new ViewManager();
             if ($this->isLoggedIn()) {
-                $email = $this->getLoggedInUser();
-                $this->addToView('logged_in_user', $email);
-
-                $owner_dao = DAOFactory::getDAO('OwnerDAO');
-                $owner = $owner_dao->getByEmail($email);
-                $this->addToView('thinkup_api_key', $owner->api_key);
+                $this->addToView('logged_in_user', $this->getLoggedInUser());
             }
             if ($this->isAdmin()) {
                 $this->addToView('user_is_admin', true);
