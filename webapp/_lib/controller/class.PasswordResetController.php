@@ -36,6 +36,8 @@ class PasswordResetController extends ThinkUpController {
 
         $this->view_mgr->addHelp('reset', 'userguide/accounts/index');
         $this->setViewTemplate('session.resetpassword.tpl');
+        $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
+        $this->addHeaderJavaScript('assets/js/validate-fields.js');
         $this->disableCaching();
 
         $config = Config::getInstance();

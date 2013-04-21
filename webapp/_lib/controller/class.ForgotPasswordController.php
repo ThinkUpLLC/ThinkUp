@@ -62,6 +62,9 @@ class ForgotPasswordController extends ThinkUpController {
         }
         $this->view_mgr->addHelp('forgot', 'userguide/accounts/index');
         $this->setViewTemplate('session.forgot.tpl');
+        $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
+        $this->addHeaderJavaScript('assets/js/validate-fields.js');
+
         return $this->generateView();
     }
 }

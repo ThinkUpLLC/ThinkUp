@@ -179,6 +179,9 @@ class InstallerController extends ThinkUpController {
      */
     private function step2() {
         $this->setViewTemplate('install.step2.tpl');
+        $this->addHeaderJavaScript('assets/js/jstz-1.0.4.min.js');
+        $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
+        $this->addHeaderJavaScript('assets/js/validate-fields.js');
 
         // make sure we have passed step 1
         if ( !$this->installer->checkStep1() ) {

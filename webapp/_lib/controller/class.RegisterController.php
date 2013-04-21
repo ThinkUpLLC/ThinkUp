@@ -45,6 +45,8 @@ class RegisterController extends ThinkUpController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('session.register.tpl');
+        $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
+        $this->addHeaderJavaScript('assets/js/validate-fields.js');
         $this->setPageTitle('Register');
     }
 
@@ -53,7 +55,6 @@ class RegisterController extends ThinkUpController {
             $controller = new InsightStreamController(true);
             return $controller->go();
         } else {
-
             $config = Config::getInstance();
             $is_registration_open = $config->getValue('is_registration_open');
 

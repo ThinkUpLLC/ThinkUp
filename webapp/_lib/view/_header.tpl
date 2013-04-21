@@ -36,17 +36,6 @@
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
     {/foreach}
 
-    {if $register_form}
-    <script src="{$site_root_path}assets/js/jqBootstrapValidation.js"></script>
-    <script type="text/javascript" src="{$site_root_path}assets/js/jstz-1.0.4.min.js"></script>
-    <script>
-        {literal}
-        $(function () { $("input").not("[type=submit]").jqBootstrapValidation(); } );
-        {/literal}
-    </script>
-
-    {/if}
-
     {literal}
       <script type="text/javascript">
 

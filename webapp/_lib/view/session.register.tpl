@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_bootstrap=1 register_form="true"}
+{include file="_header.tpl" enable_bootstrap=1}
 {include file="_statusbar.tpl" enable_bootstrap=1}
 
 
