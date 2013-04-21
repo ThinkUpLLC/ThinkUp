@@ -1,5 +1,5 @@
-{include file="_header.tpl" enable_tabs="true" enable_bootstrap="true"}
-{include file="_statusbar.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_tabs="true" enable_bootstrap=1}
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 <div class="container">
 
@@ -488,4 +488,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" linkify="false" enable_bootstrap="true"}
+{include file="_footer.tpl" linkify="false" enable_bootstrap=1}

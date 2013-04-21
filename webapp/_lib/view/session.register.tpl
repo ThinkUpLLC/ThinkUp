@@ -1,5 +1,5 @@
-{include file="_header.tpl" enable_bootstrap="true" register_form="true"}
-{include file="_statusbar.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap=1 register_form="true"}
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 
 <div class="container">
@@ -15,7 +15,7 @@
     <div class="span6">
 
 
-        {include file="_usermessage.tpl" enable_bootstrap="true"}
+        {include file="_usermessage.tpl" enable_bootstrap=1}
         
         {if !$closed and !$has_been_registered}
 
@@ -35,7 +35,7 @@
                         <label for="email" class="control-label">Email:</label>
                         <div class="controls">
                             <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}> {include file="_usermessage.tpl" field="email" enable_bootstrap="true" inline="true"}
+                            <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}> {include file="_usermessage.tpl" field="email" enable_bootstrap=1 inline="true"}
                         </div>
                     </div>
                     
@@ -46,7 +46,7 @@
 
                             <div class="password-meter">
                                 <span class="add-on"><i class="icon-key"></i></span>
-                                <input type="password" name="pass1" id="pass1" class="password"><span for="pass1" class="password-meter-message"> </span> {include file="_usermessage.tpl" field="password" enable_bootstrap="true" inline="true"}
+                                <input type="password" name="pass1" id="pass1" class="password"><span for="pass1" class="password-meter-message"> </span> {include file="_usermessage.tpl" field="password" enable_bootstrap=1 inline="true"}
                                 
                                 <div class="password-meter-bg">
                                     <div class="password-meter-bar"></div>
@@ -69,7 +69,7 @@
                         
                         <label for="user_code" class="control-label">Prove you&rsquo;re human:</label>
                         <div class="controls">
-                            {$captcha} {include file="_usermessage.tpl" field="captcha" enable_bootstrap="true" inline="true"}
+                            {$captcha} {include file="_usermessage.tpl" field="captcha" enable_bootstrap=1 inline="true"}
                             
                         </div>
                     </div>
@@ -105,4 +105,4 @@
     </div>
 </div>
 
-{include file="_footer.tpl" enable_bootstrap="true"}
+{include file="_footer.tpl" enable_bootstrap=1}

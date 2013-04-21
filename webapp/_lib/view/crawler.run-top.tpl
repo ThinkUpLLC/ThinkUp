@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap=1}
 
   <style type="text/css">
   {literal}

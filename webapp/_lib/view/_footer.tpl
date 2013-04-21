@@ -2,7 +2,7 @@
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   {/if}
 
-{if $enable_bootstrap}
+{if $enable_bootstrap eq 1}
 
     </div><!-- end container -->
 

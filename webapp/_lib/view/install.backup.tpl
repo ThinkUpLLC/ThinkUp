@@ -1,6 +1,6 @@
 
-{include file="_header.tpl" enable_bootstrap="true"}
-{include file="_statusbar.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap=1}
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 <div class="container">
 
@@ -33,7 +33,7 @@
 
         </div>
 
-        {include file="_usermessage.tpl" enable_bootstrap="true"}
+        {include file="_usermessage.tpl" enable_bootstrap=1}
 
 
             {if $no_zip_support}
@@ -121,4 +121,4 @@
 </div>
 
 
-{include file="_footer.tpl" linkify="false" enable_bootstrap="true"}
+{include file="_footer.tpl" linkify="false" enable_bootstrap=1}

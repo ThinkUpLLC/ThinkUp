@@ -1,5 +1,5 @@
-{include file="_header.tpl" enable_bootstrap="true"}
-{include file="_statusbar.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap=1}
+{include file="_statusbar.tpl" enable_bootstrap=1}
 
 <div class="container">
 
@@ -13,7 +13,7 @@
     </div><!--/span3-->
     <div class="span6">
 
-        {include file="_usermessage.tpl" enable_bootstrap="true"}
+        {include file="_usermessage.tpl" enable_bootstrap=1}
 
             <form name="login-form" method="post" action="{$site_root_path}session/login.php" class="login form-horizontal">
 
@@ -54,4 +54,4 @@
 
 </div><!-- end row -->
 
-{include file="_footer.tpl" enable_bootstrap="true"}
+{include file="_footer.tpl" enable_bootstrap=1}

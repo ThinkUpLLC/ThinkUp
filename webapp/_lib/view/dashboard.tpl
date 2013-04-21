@@ -236,7 +236,7 @@
 
 
 {if $smarty.get.v eq "insights"}
-    {include file="_footer.tpl" enable_bootstrap="true"}
+    {include file="_footer.tpl" enable_bootstrap=1}
 {else}
     {include file="_footer.tpl"}
 {/if}

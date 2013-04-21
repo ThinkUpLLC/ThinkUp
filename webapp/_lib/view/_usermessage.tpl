@@ -1,4 +1,4 @@
-{if $enable_bootstrap}
+{if $enable_bootstrap eq 1}
     {if $inline}
         {if $field}
             {if $success_msgs.$field}
