@@ -112,7 +112,7 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
     public function testAPIOAuth() {
         // test missing api_key
         $controller = new InsightAPIController(true);
-        $output = json_decode($output);
+        $output = json_decode($controller->go());
 
         $this->assertEqual($output->error->type, 'APIOAuthException');
 
@@ -120,7 +120,7 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $_GET['api_key'] = 'abcd';
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($output);
+        $output = json_decode($controller->go());
 
         $this->assertEqual($output->error->type, 'APIOAuthException');
 
@@ -128,7 +128,7 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($output);
+        $output = json_decode($controller->go());
 
         $this->assertFalse(isset($output->error));
     }
