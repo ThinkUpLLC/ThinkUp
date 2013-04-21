@@ -65,7 +65,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
             // Check their old password is correct
             if (!$owner_dao->isOwnerAuthorized($this->getLoggedInUser(), $_POST['oldpass']) )  {
-                $this->addErrorMessage("Old password does not match or empty.", 'password');
+                $this->addErrorMessage("Password is incorrect.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
                 $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
             } elseif (!preg_match("/(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])/", $_POST['pass1'])) {
