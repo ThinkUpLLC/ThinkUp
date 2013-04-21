@@ -115,7 +115,9 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('insights', array(
             'prefix' => 'Hello:',
             'text' => 'This is a test of a hello world insight',
-            'instance_id' => 1 ));
+            'instance_id' => 1,
+            'time_generated' => date("Y-m-d H:i:s")
+        ));
 
         return $builders;
     }
