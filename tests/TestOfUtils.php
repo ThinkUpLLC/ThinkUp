@@ -303,5 +303,19 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $utils_url = Utils::getApplicationURL(false);
         $expected_url = 'http://localhost/my/path+and+this+space/to/thinkup/';
         $this->assertEqual($utils_url, $expected_url);
+
+        //with capital letters in site_root_path
+        $_SERVER['HTTP_HOST'] = "localhost";
+        $cfg->setValue('site_root_path', '/ThinkUp/');
+        $utils_url = Utils::getApplicationURL(false);
+        $expected_url = 'http://localhost/ThinkUp/';
+        $this->assertEqual($utils_url, $expected_url);
+
+        //with capital letters and spaces in site_root_path
+        $_SERVER['HTTP_HOST'] = "localhost";
+        $cfg->setValue('site_root_path', '/Think Up/');
+        $utils_url = Utils::getApplicationURL(false);
+        $expected_url = 'http://localhost/Think+Up/';
+        $this->assertEqual($utils_url, $expected_url);
     }
 }
