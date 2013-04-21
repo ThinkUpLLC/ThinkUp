@@ -76,7 +76,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         // Test correct number of insights were retrieved
         $this->assertEqual(count($output), 4);
@@ -87,7 +89,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
 
         // test default option
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertFalse(isset($output->error));
 
@@ -96,7 +100,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $option_dao->insertOption(OptionDAO::APP_OPTIONS, 'is_api_disabled', 'true');
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertEqual($output->error->type, 'APIDisabledException');
 
@@ -104,7 +110,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $option_dao->updateOptionByName(OptionDAO::APP_OPTIONS, 'is_api_disabled', 'false');
         
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertFalse(isset($output->error));
     }
@@ -112,7 +120,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
     public function testAPIOAuth() {
         // test missing api_key
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertEqual($output->error->type, 'APIOAuthException');
 
@@ -120,15 +130,18 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $_GET['api_key'] = 'abcd';
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
-
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
         $this->assertEqual($output->error->type, 'APIOAuthException');
 
         // test correct api_key
         $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertFalse(isset($output->error));
     }
@@ -138,7 +151,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $_GET['until'] = strtotime('2012-04-01');
 
         $controller = new InsightAPIController(true);
-        $output = json_decode($controller->go());
+        $output = $controller->go();
+        $this->debug($output);
+        $output = json_decode($output);
 
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output->error->type, "InsightNotFoundException");
