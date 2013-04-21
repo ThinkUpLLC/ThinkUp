@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_tabs="true" enable_bootstrap=1}
+{include file="_header.tpl" enable_tabs="true" enable_bootstrap=1 register_form=1}
 {include file="_statusbar.tpl" enable_bootstrap=1}
 
 <div class="container">
@@ -107,26 +107,35 @@
                 <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
-            <div class="control-group input-prepend">
-              <label for="pass1" class="control-label">New password</label>
-              <div class="controls">
-                <span class="add-on"><i class="icon-key"></i></span>
-                <input name="pass1" type="password" id="pass1" onfocus="$('#password-meter').show();">
-                <div class="password-meter" style="display:none;" id="password-meter">
-                  <div class="password-meter-message"></div>
-                    <div class="password-meter-bg">
-                        <div class="password-meter-bar"></div>
+            <div class="control-group">
+                    <label class="control-label" for="password">New Password</label>
+                    <div class="controls">
+                        <span class="input-prepend">
+                            <span class="add-on"><i class="icon-key"></i></span>
+                            <input type="password" name="pass1" id="password"
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
+                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
+                        </span>
+                        <span class="help-inline"></span>
+
                     </div>
                 </div>
-              </div>
-            </div>
-            <div class="control-group input-prepend">
-              <label for="pass2" class="control-label">Re-type new password</label>
-              <div class="controls">
-                <span class="add-on"><i class="icon-key"></i></span>
-                <input name="pass2" type="password" id="pass2">
-              </div>
-            </div>
+                <div class="control-group">
+                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
+                    <div class="controls">
+                        <span class="input-prepend">
+                            <span class="add-on"><i class="icon-key"></i></span>            
+                            <input type="password" name="pass2" id="confirm_password" required 
+                             class="password" 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
+                            data-validation-match-match="pass1" 
+                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
+                        </span>
+                        <span class="help-block"></span>
+                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
+                    </div>
+                </div>
             <div class="control-group">
               <div class="controls">
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">

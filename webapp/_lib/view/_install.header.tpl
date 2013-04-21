@@ -10,12 +10,8 @@
   
   <!-- jquery -->
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/validate_password.css">
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
-  <script type="text/javascript" src="{$site_root_path}assets/js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="{$site_root_path}assets/js/jquery.validate.password.js"></script>
-  <script type="text/javascript" src="{$site_root_path}assets/js/validate_password.js"></script>  
 
   {literal}
   <script type="text/javascript">
