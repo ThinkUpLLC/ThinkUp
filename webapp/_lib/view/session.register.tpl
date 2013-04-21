@@ -49,7 +49,7 @@
                     <div class="controls">
                         <span class="input-prepend">
                             <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="pass1" id="password"
+                            <input type="password" name="pass1" id="pass1"
                             {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
                             data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
@@ -58,11 +58,11 @@
                     </div>
                 </div>
                     <div class="control-group">
-                    <label class="control-label" for="confirm_password">Confirm&nbsp;Password</label>
+                    <label class="control-label" for="pass2">Confirm&nbsp;Password</label>
                     <div class="controls">
                         <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>            
-                            <input type="password" name="pass2" id="confirm_password" required 
+                            <span class="add-on"><i class="icon-key"></i></span>
+                            <input type="password" name="pass2" id="pass2" required 
                             class="password" 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
                             data-validation-match-match="pass1" 
@@ -74,16 +74,13 @@
                 </div>
                     
                     <div class="control-group">
-                        
                         <label for="user_code" class="control-label">Prove you&rsquo;re human:</label>
                         <div class="controls">
                             {$captcha} {include file="_usermessage.tpl" field="captcha" enable_bootstrap=1 inline="true"}
-                            
                         </div>
                     </div>
-                
-                    <div class="form-actions">
 
+                    <div class="form-actions">
                             <input type="submit" name="Submit" id="login-save" class="btn btn-primary" value="Register">
                             <span class="pull-right">
                                 <div class="btn-group">
