@@ -56,13 +56,7 @@ class InsightAPIController extends ThinkUpAuthAPIController {
      * @var str
      */
     private $api_key;
-    /**
-     * A User object set when either the user_id or username variables are set. If you are using User data at any point
-     * in this class, you should use this object.
-     * @var User
-     */
-    private $user;
-    /**
+   /**
      * @var InsightDAO
      */
     private $insight_dao;
@@ -137,8 +131,10 @@ class InsightAPIController extends ThinkUpAuthAPIController {
             throw new APIOAuthException($m);
         }
 
-        $data = $this->insight_dao->getInsightsForInstancesInRange($this->from, $this->until,
-        $this->count, $this->page, false);
+        $data = $this->insight_dao->getAllInstanceInsightsInRange($this->from,$this->until,$this->count,$this->page);
+        if (!count($data)) {
+            throw new InsightNotFoundException();
+        }
 
         $this->setJsonData($data);
         return $this->generateView();
