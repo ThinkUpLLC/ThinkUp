@@ -506,7 +506,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($error_msgs['password'], 'Old password does not match or empty.');
+        $this->assertEqual($error_msgs['password'], 'Password is incorrect.');
 
         //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
@@ -535,7 +535,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($error_msgs['password'], 'Old password does not match or empty.');
+        $this->assertEqual($error_msgs['password'], 'Password is incorrect.');
 
         //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));

@@ -133,7 +133,6 @@
                             data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
                         </span>
                         <span class="help-block"></span>
-                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
                     </div>
                 </div>
             <div class="control-group">
