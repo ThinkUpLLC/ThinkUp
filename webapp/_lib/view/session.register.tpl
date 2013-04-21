@@ -26,44 +26,53 @@
                     <div class="control-group">
                         <label for="full_name" class="control-label">Name:</label>
                         <div class="controls">
-                            <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name|filter_xss}"{/if}>
+                            <input type="text" name="full_name" id="full_name" required {if isset($full_name)} value="{$full_name}"{/if} 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Name can't be blank.">
+                        	<span class="help-inline"></span>
                         </div>
                     </div>
                     
-                    <div class="control-group input-prepend"> 
-                        
-                        <label for="email" class="control-label">Email:</label>
-                        <div class="controls">
+                <div class="control-group">
+                    <label class="control-label" for="email">Email&nbsp;Address</label>
+                    <div class="controls">
+                        <span class="input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}> {include file="_usermessage.tpl" field="email" enable_bootstrap="true" inline="true"}
-                        </div>
+                            <input type="email" name="email" id="email" required 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
+                        </span>
+                        <span class="help-inline"></span>
+                        {include file="_usermessage.tpl" field="email" enable_bootstrap=1}
                     </div>
-                    
-                    <div class="control-group input-prepend"> 
-                        
-                        <label for="pass1" class="control-label">Password:</label>
-                        <div class="controls">
-
-                            <div class="password-meter">
-                                <span class="add-on"><i class="icon-key"></i></span>
-                                <input type="password" name="pass1" id="pass1" class="password"><span for="pass1" class="password-meter-message"> </span> {include file="_usermessage.tpl" field="password" enable_bootstrap="true" inline="true"}
-                                
-                                <div class="password-meter-bg">
-                                    <div class="password-meter-bar"></div>
-                                </div>
-                            </div>                   
-                            
-                        </div>
-                        
-                    </div>
-
-                    <div class="control-group input-prepend"> 
-                        <label for="pass2" class="control-label">Retype password:</label>
-                        <div class="controls">
+                </div>
+                    <div class="control-group">
+                    <label class="control-label" for="password">Password</label>
+                    <div class="controls">
+                        <span class="input-prepend">
                             <span class="add-on"><i class="icon-key"></i></span>
-                            <input name="pass2" type="password" id="pass2" class="password">
-                        </div>
+                            <input type="password" name="pass1" id="password"
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
+                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
+                        </span>
+                        <span class="help-inline"></span>
+
                     </div>
+                </div>
+                    <div class="control-group">
+                    <label class="control-label" for="confirm_password">Confirm&nbsp;Password</label>
+                    <div class="controls">
+                        <span class="input-prepend">
+                            <span class="add-on"><i class="icon-key"></i></span>            
+                            <input type="password" name="pass2" id="confirm_password" required 
+                            class="password" 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
+                            data-validation-match-match="pass1" 
+                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
+                        </span>
+                        <span class="help-block"></span>
+                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
+                    </div>
+                </div>
                     
                     <div class="control-group">
                         

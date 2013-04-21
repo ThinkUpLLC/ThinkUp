@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_bootstrap="true"}
+{include file="_header.tpl" enable_bootstrap="true" register_form="true"}
 {include file="_statusbar.tpl" enable_bootstrap="true"}
 
 
@@ -27,14 +27,22 @@
             <form name="forgot-form" method="post" action="" class="login form-horizontal">
 
                 <fieldset style="background-color : white; padding-top : 30px;">
-                    
-                    <div class="control-group input-prepend">
-                        <label class="control-label" for="email">Email:</label>
-                        <div class="controls">
+                
+                
+                <div class="control-group">
+                    <label class="control-label" for="site_email">Email&nbsp;Address</label>
+                    <div class="controls">
+                        <span class="input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input class="input-xlarge" type="email" name="email" id="email">
-                        </div>
+                            <input type="email" name="email" id="email" required 
+                            data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
+                        </span>
+                        <span class="help-inline"></span>
+                        {include file="_usermessage.tpl" field="email" enable_bootstrap=1}
                     </div>
+                </div>
+                    
+                    
                     
                     <div class="form-actions">
                             <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Send Reset">
