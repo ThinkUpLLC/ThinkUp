@@ -41,7 +41,6 @@ $controller_test_list = array(
 "TestOfCrawlerAuthController",
 "TestOfDashboardController",
 "TestOfInsightStreamController",
-"TestOfInsightAPIController",
 "TestOfThinkUpEmbedController",
 "TestOfThreadJSController",
 "TestOfExportController",
