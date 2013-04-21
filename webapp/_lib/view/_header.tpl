@@ -126,7 +126,7 @@
 
 {/if}
 
-{if $enable_tabs}
+{if $enable_tabs eq 1}
 <script type="text/javascript">
     {literal}
       $(function() {

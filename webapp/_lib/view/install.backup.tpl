@@ -121,4 +121,4 @@
 </div>
 
 
-{include file="_footer.tpl" linkify="false" enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
