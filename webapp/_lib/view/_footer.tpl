@@ -1,4 +1,4 @@
-  {if $linkify neq 'false'}
+  {if $linkify neq 0}
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   {/if}
 
