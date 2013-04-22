@@ -41,39 +41,8 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         $this->builders = null;
-        //parent::tearDown();
+        parent::tearDown();
     }
-
-    // protected static function buildData() {
-    //     $builders = array();
-
-    //     $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("oldpassword");
-
-    //     // Add owner
-        // $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        // 'email'=>'me@example.com', 'is_activated'=>1, 'is_admin'=>1, 'pwd'=>$hashed_pass,
-        // 'pwd_salt'=> OwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
-
-    //     // Add instance
-    //     $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
-
-    //     // Add insights
-        // $time_now = date("Y-m-d H:i:s");
-        // $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        // 'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        // 'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        // $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
-        // 'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        // 'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        // $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'another_slug',
-        // 'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        // 'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        // $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-04', 'slug'=>'another_slug',
-        // 'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        // 'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-
-    //     return $builders;
-    // }
 
     protected static function buildData() {
         $builders = array();
