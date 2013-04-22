@@ -61,9 +61,17 @@ interface OwnerDAO {
     public function getPass($email);
 
     /**
-     * Get activation code for an owner
+     * Get activation token for an owner
      * @param str $email
-     * @return str Activation code
+     * @return str Activation token
+     */
+	 
+    public function getActivationToken($email);
+	
+    /**
+     * Get owner by activation token
+     * @param str $token
+     * @return Owner
      */
     public function getByActivationToken($token);
 
