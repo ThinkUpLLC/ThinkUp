@@ -44,7 +44,7 @@ if (strtolower($_GET['m']) == "tests") {
     echo " mode";
 }
 
-if (strtolower($_GET['rd'])) {
+if (isset($_GET['rd'])) {
     putenv("RD_MODE=1");
     $_SESSION["RD_MODE"] = "1";
 }
