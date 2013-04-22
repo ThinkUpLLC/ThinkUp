@@ -118,15 +118,14 @@ class RegisterController extends ThinkUpController {
                                 $this->addErrorMessage("User account already exists.", 'email');
                             } else {
                                 // Insert the details into the database
-                                $activation_code =  $owner_dao->create($_POST['email'], $_POST['pass2'],
+                                $activation_token =  $owner_dao->create($_POST['email'], $_POST['pass2'],
                                 $_POST['full_name']);
 
-                                if ($activation_code != false) {
+                                if ($activation_token != false) {
                                     $es = new ViewManager();
                                     $es->caching=false;
                                     $es->assign('application_url', Utils::getApplicationURL(false) );
-                                    $es->assign('email', urlencode($_POST['email']) );
-                                    $es->assign('activ_code', $activation_code );
+                                    $es->assign('activ_token', $activation_token );
                                     $message = $es->fetch('_email.registration.tpl');
 
                                     Mailer::mail($_POST['email'], "Activate Your Account on ".

@@ -33,7 +33,7 @@ class ActivateAccountController extends ThinkUpController {
      * Required query string parameters
      * @var array usr = instance email address, code = activation code
      */
-    var $REQUIRED_PARAMS = array('usr', 'code');
+    var $REQUIRED_PARAMS = array('token');
     /**
      *
      * @var boolean
@@ -59,22 +59,22 @@ class ActivateAccountController extends ThinkUpController {
             $controller->addErrorMessage('Invalid account activation credentials.');
         } else {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
-            $acode = $owner_dao->getActivationCode($_GET['usr']);
-
-            if ($_GET['code'] == $acode['activation_code']) {
-                $owner = $owner_dao->getByEmail($_GET['usr']);
+            if (!isset($_GET['token']) || !preg_match('/^[\da-f]{32}$/', $_GET['token']) || 
+            (!$owner = $owner_dao->getByActivationToken($_GET['token']))) {
+                // token is nonexistant or bad
+                $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
+            }
+            else {
                 if (isset($owner) && isset($owner->is_activated)) {
                     if ($owner->is_activated == 1) {
                         $controller->addSuccessMessage("You have already activated your account. Please log in.");
                     } else {
-                        $owner_dao->activateOwner($_GET['usr']);
+                        $owner_dao->activateOwner($owner->email);
                         $controller->addSuccessMessage("Success! Your account has been activated. Please log in.");
                     }
                 } else {
                     $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
                 }
-            } else {
-                $controller->addErrorMessage('Houston, we have a problem: Account activation failed.');
             }
         }
         return $controller->go();

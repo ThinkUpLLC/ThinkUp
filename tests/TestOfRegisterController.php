@@ -212,7 +212,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 subject: Activate Your Account on Bo\'s ThinkUp
 message: Click on the link below to activate your new account on Bo&#39;s ThinkUp:
 
-http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
+http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?token=/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
@@ -251,7 +251,7 @@ http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activa
 subject: Activate Your Account on ThinkUp
 message: Click on the link below to activate your new account on ThinkUp:
 
-http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
+http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?token=/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
@@ -288,7 +288,7 @@ http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activa
 subject: Activate Your Account on Bo\'s ThinkUp
 message: Click on the link below to activate your new account on Bo&#39;s ThinkUp:
 
-https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
+https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?token=/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
@@ -416,7 +416,7 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
 subject: Activate Your Account on Bo\'s ThinkUp
 message: Click on the link below to activate your new account on Bo&#39;s ThinkUp:
 
-http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
+http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?token=/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
@@ -455,7 +455,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
 subject: Activate Your Account on ThinkUp
 message: Click on the link below to activate your new account on ThinkUp:
 
-http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
+http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?token=/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);

@@ -616,7 +616,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
         $install_email = Mailer::getLastMail();
         $this->debug($install_email);
-        $this->assertPattern("/http:\/\/example.com\/session\/activate.php\?usr=you\%40example.com\&code\=/",
+        $this->assertPattern("/http:\/\/example.com\/session\/activate.php\?token\=/",
         $install_email);
 
         $this->restoreConfigFile();
