@@ -53,11 +53,15 @@ class InsightStreamController extends ThinkUpController {
                 }
             }
             if ($this->isLoggedIn()) {
-                //Populate search dropdown with service users
+                //Populate search dropdown with service users and add thinkup_api_key for desktop notifications.
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                $this->addToView('thinkup_api_key', $owner->api_key);
+                
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
                 $this->addToView('instances', $instance_dao->getByOwner($owner));
+
+                $this->addHeaderJavaScript('assets/js/notify-insights.js');
             }
         }
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
