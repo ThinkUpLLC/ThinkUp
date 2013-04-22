@@ -90,6 +90,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->builders = null;
         parent::tearDown();
     }
+    
     public function testGetInsight() {
         $dao = new InsightMySQLDAO();
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-01');
@@ -360,8 +361,8 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new InsightMySQLDAO();
         $from = 0;
         $until = time();
-        $results = $dao->getAllInstanceInsights($from, $until, $page_count=10, $page_number=1);
-        $this->assertEqual(sizeof($results), 7);
+        $results = $dao->getAllInstanceInsightsInRange($from, $until, $page_count=10, $page_number=1);
+        $this->assertEqual(count($results), 7);
         foreach ($results as $result) {
             $this->assertTrue(isset($result->instance));
         }
