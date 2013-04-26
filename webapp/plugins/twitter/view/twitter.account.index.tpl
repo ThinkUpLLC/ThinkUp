@@ -26,7 +26,7 @@
     {foreach from=$owner_instances key=iid item=i name=foo}
     <tr>
         <td>
-            <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="{$site_root_path}?u={$i->network_username}">@{$i->network_username}</a></h3>
+            <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
         </td>
         <td class="action-button">
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn
