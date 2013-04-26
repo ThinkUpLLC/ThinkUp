@@ -42,12 +42,24 @@
                         dataType: "json",
                         success: function(data) {
                             if (typeof data.error === 'undefined') {
-                                var icon = site_root_path + "assets/img/favicon.png",
-                                title = "New insight at ThinkUp!",
-                                message = "ThinkUp has an exciting new insight waiting for you."
-                                + " Head to the ThinkUp home to check it out!";
-                                notification = window.webkitNotifications.createNotification(icon, title, message);
-                                notification.show();
+                                for (var i = 0 ; i < data.length; i++) {
+                                    var insight = data[i];
+                                    var icon = site_root_path + "assets/img/favicon.png",
+                                    title = insight.prefix,
+                                    message = $(document.createElement('div')).hide().append(insight.text).text().replace(':', '...');
+                                    notification = window.webkitNotifications.createNotification(icon, title, message);
+                                    notification.onclick = function(x) { 
+                                        window.open(
+                                            document.URL 
+                                            + "?u=" + insight.instance.network_username
+                                            + "&n=" + insight.instance.network
+                                            + "&d=" + insight.date.substr(0,10)
+                                            + "&s=" + insight.slug
+                                        );
+                                        this.cancel(); 
+                                    };
+                                    notification.show();
+                                }
                                 timecheck = Math.round(+new Date()/1000);
                             }
                         },
