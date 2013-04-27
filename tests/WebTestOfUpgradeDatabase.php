@@ -227,12 +227,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         //Get activation code for user from database
         Utils::setDefaultTimezonePHPini();
         $owner_dao = new OwnerMySQLDAO();
-        $code = $owner_dao->getActivationCode('user@example.com');
-        $activation_code = $code['activation_code'];
+        $code = $owner_dao->getActivationToken('user@example.com');
+        $activation_token = $code['activation_token'];
 
         //Visit activation page
-        $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
-        $activation_code);
+        $this->get($this->url.'/test_installer/thinkup/session/activate.php?token='.
+        $activation_token);
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
         $this->assertText('Success! Your account has been activated. Please log in.');
 

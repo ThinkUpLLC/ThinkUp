@@ -205,7 +205,7 @@ SQL;
             );
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $ps = $this->execute($q, $vars);
-            return substr ($activation_token, 0, 32);
+            return $activation_token;
         } else {
             return false;
         }

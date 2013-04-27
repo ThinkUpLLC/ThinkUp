@@ -1,1 +1,1 @@
-ALTER TABLE tu_owners CHANGE activation_code activation_token varchar(32) DEFAULT NULL COMMENT 'Activation token.';
+ALTER TABLE tu_owners CHANGE activation_code activation_token varchar(64) DEFAULT NULL COMMENT 'Activation token.';
