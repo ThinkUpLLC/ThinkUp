@@ -63,9 +63,9 @@
                                 timecheck = Math.round(+new Date()/1000);
                             }
                         },
-                        timeout: 30000
+                        timeout: 120000 // Kill request after 2 minutes
                     });
-                    setTimeout(poll,(30*1000)); // Wait 30s before polling again
+                    setTimeout(poll,(300000)); // Wait 5 mins before polling again
                 })();
                 break;
                 
