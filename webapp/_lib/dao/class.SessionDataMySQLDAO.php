@@ -104,4 +104,30 @@ class SessionDataMySQLDAO extends PDODAO implements SessionDataDAO{
 		
 		return $this->getDeleteCount($ps);
     }
+	
+		public function isSessionKeyDuplicate($session_key) {
+		
+        $q = "SELECT session_data FROM #prefix#session_data WHERE ";
+		$q .= "session_key = :session_key";
+		$vars = array(
+            ':session_key'=>$session_key            
+        );
+		
+        $ps = $this->execute($q, $vars);
+		$result=$this->fetchAndClose($ps);	
+		if(empty($result))
+		{
+		
+		return FALSE;		
+		}
+		else
+		{		
+		
+        return TRUE;
+		}
+	   
+	   
+	   
+    }
+}
 }

@@ -76,7 +76,21 @@ class Session {
     public static function completeLogin($owner) {
 		
 		$config = Config::getInstance();
-		$_SESSION[$config->getValue('source_root_path')]['session_key']=md5(microtime().$_SERVER[REMOTE_ADDR]) ;
+		
+		//to generate unique key
+		$generate_key=md5(microtime().$_SERVER[REMOTE_ADDR]);
+		$unique_key=FALSE;
+		while(!($unique_key))
+		{$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$is_duplicate=$session_dao->checkDuplicateSessionKey($generate_key);
+		if($is_duplicate)
+		$generate_key=md5(microtime().$_SERVER[REMOTE_ADDR]);
+		else
+		$unique_key=TRUE;
+		}
+		
+		
+		$_SESSION[$config->getValue('source_root_path')]['session_key']=$generate_key ;
         SessionCache::put('user', $owner->email);
         SessionCache::put('user_is_admin', $owner->is_admin);
         // set a CSRF token

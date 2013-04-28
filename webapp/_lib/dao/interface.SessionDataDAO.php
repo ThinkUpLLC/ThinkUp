@@ -43,4 +43,19 @@ interface SessionDataDAO {
      * @return session data as array
      */
    public function getSessionData($session_key);
+   
+   /**
+     * Clears session data
+     * 
+     */
+   
+   
+   public function clearSessionData($session_key);
+      /**
+     * Checks for duplicate key
+     * 
+     */
+   
+   
+   public function isSessionKeyDuplicate($session_key);
 }
