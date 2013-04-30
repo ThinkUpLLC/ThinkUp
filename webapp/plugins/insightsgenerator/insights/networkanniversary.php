@@ -52,7 +52,7 @@ class NetworkAnniversaryInsight extends InsightPluginParent implements InsightPl
             // Get posts
             $post_dao = DAOFactory::getDAO('PostDAO');
             
-            $posts_it = $post_dao->getAllPostsIterator(13, 'twitter', 0);
+            $posts_it = $post_dao->getAllPostsIterator($instance->network_user_id, 'twitter', 0);
             
             $n_statuses = $user_obj->post_count;
             $n_smileys = 0;
