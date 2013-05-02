@@ -94,7 +94,16 @@ class SearchController extends ThinkUpAuthController {
      */
     private function searchPosts() {
         $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
-        $keywords = explode(' ', $_GET['q']);
+        $keywords = array();
+        $terms = explode(' ', $_GET['q']);
+        $unique_terms = array_unique($terms);
+        foreach ($unique_terms as $term) {
+            $keyword = $term;
+            for ($i = 1; $i < count(array_keys($terms,$term)); $i++) {
+                $keyword .= '%'.$term;
+            }
+            $keywords[] = $keyword;
+        }
         $this->addToView('current_page', $page_number);
 
         $post_dao = DAOFactory::getDAO('PostDAO');

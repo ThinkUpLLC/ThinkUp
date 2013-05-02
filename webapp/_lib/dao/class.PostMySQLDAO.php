@@ -2365,7 +2365,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p WHERE  author_username=:author_username AND network = :network ";
         $q .= "AND (";
         $counter = 0;
-        $keywords = array_unique($keywords);
         foreach ($keywords as $keyword) {
             $q .= " post_text LIKE :keyword".$counter." ";
             if ($keyword != end($keywords)) {
