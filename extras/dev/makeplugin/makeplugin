@@ -152,24 +152,27 @@ END
 
 # Plugin Config Controller view
 cat<< END >>'webapp/plugins/'$plugin_name_lcase'/view/account.index.tpl'
-<div class="append_20 alert helpful">
-    {insert name="help_link" id='$plugin_name_lcase'}
-    <h2>$1 Plugin</h2>
-    <div>
+<div class="plugin-info">
+
+    <span class="pull-right">{insert name="help_link" id='$plugin_name_lcase'}</span>
+    <h1>
+        <img src="{\$site_root_path}plugins/$plugin_name_lcase/assets/img/plugin_icon.png" class="plugin-image">
+        $1 Plugin
+    </h1>
+    
     <p>{\$message}</p>
-    </div>
+
 </div>
 
-<div class="append_20">
+{if \$user_is_admin}
+{include file="_plugin.showhider.tpl"}
 
-{if \$options_markup}
-    {if \$user_is_admin}
-        {include file="_plugin.showhider.tpl"}
-        {include file="_usermessage.tpl" field="setup"}
-        {\$options_markup}
-    {/if}
+    {include file="_usermessage.tpl" field="setup"}
+
+    {\$options_markup}
+
+</div>
 {/if}
-</div>
 
 END
 
