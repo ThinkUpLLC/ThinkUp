@@ -2367,7 +2367,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $counter = 0;
         foreach ($keywords as $keyword) {
             $q .= " post_text LIKE :keyword".$counter." ";
-            if ($keyword != end($keywords)) {
+            if (($counter + 1) != count($keywords)) {
                 $q .= "AND";
             }
             $counter++;
