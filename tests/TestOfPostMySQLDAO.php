@@ -3871,6 +3871,10 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $results = $post_dao->searchPostsByUser('keyword', 'twitter', 'ev');
         $this->assertEqual(sizeof($results), 0);
+
+        //test with repeated keywords
+        $results = $post_dao->searchPostsByUser(array('post','post'), 'twitter', 'ev');
+        $this->assertEqual(sizeof($results), 0);
     }
     /**
      * Test getAllPostsByHashtagId
