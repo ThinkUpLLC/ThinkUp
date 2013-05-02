@@ -2365,9 +2365,16 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p WHERE  author_username=:author_username AND network = :network ";
         $q .= "AND (";
         $counter = 0;
-        foreach ($keywords as $keyword) {
+        $search_terms = array();
+        $unique_keywords = array_unique($keywords);
+        foreach ($unique_keywords as $keyword) {
+            $term = $keyword;
+            for ($i = 1; $i < count(array_keys($keywords,$keyword)); $i++) {
+                $term .= '%'.$keyword;
+            }
+            $search_terms[] = $term;
             $q .= " post_text LIKE :keyword".$counter." ";
-            if ($keyword != end($keywords)) {
+            if ($keyword != end($unique_keywords)) {
                 $q .= "AND";
             }
             $counter++;
@@ -2384,8 +2391,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':network'=>$network
         );
         $counter = 0;
-        foreach ($keywords as $keyword) {
-            $vars[':keyword'.$counter] = '%'.$keyword.'%';
+        foreach ($search_terms as $term) {
+            $vars[':keyword'.$counter] = '%'.$term.'%';
             $counter++;
         }
         if ($page_count > 0) {
