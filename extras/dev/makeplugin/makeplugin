@@ -36,11 +36,11 @@ cat<< END >$2
  *
  * Description of what this class does
  *
- * Copyright (c) 2012 (Your Name)
+ * Copyright (c) 2013 (Your Name)
  * 
  * @author Your Name  Your Email
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 (Your Name)
+ * @copyright 2013 (Your Name)
  */
 END
 }
@@ -211,11 +211,11 @@ cat<< END >>'webapp/plugins/'$plugin_name_lcase'/controller/'$plugin_name_lcase'
  *
  * Description of what this class does
  *
- * Copyright (c) 2012 (Your Name)
+ * Copyright (c) 2013 (Your Name)
  * 
  * @author Your Name  Your Email
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012 (Your Name)
+ * @copyright 2013 (Your Name)
  */
  
 \$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
