@@ -241,7 +241,7 @@ class TwitterCrawler {
             $status_message .= number_format($this->instance->total_posts_in_system)." tweets are in ThinkUp; ".
             $this->user->username ." has ". number_format($this->user->post_count)." tweets according to Twitter.";
             $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
-            if ($overage_info != '') {
+            if (isset($overage_info) && $overage_info != '') {
                 $this->logger->logUserError($overage_info, __METHOD__.','.__LINE__);
             }
 
