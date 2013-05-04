@@ -91,7 +91,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
                 "Made the list:", "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                 $new_groups[0]->keyword."</a>, bringing the total to <strong>".
-                number_format(end($list_membership_count_history_by_day['history'])).
+                (number_format(end($list_membership_count_history_by_day['history']))==0)?1:number_format(end($list_membership_count_history_by_day['history'])).
                 " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
             }
         }
