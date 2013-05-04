@@ -1,8 +1,8 @@
 {%- if prev %}
 <a href="{{ prev.link|e }}"
-         title="{{ _('previous chapter') }}" class="btn">{{ "&laquo;"|safe }} Previous: {{ prev.title }}</a> &nbsp;
+         title="{{ _('previous chapter') }}" class="btn pagination_prev">{{ "&laquo;"|safe }} Previous: {{ prev.title }}</a> &nbsp;
 {%- endif %}
 {%- if next %}
   &nbsp;<a href="{{ next.link|e }}"
-       title="{{ _('next chapter ') }}" class="btn">Next: {{ next.title }} {{ "&raquo;"|safe }}</a>
+       title="{{ _('next chapter ') }}" class="btn pagination_next">Next: {{ next.title }} {{ "&raquo;"|safe }}</a>
 {%- endif %}
