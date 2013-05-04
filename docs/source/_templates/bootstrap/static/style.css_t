@@ -1,0 +1,26 @@
+h2 {
+  font-size: 1.5em;
+  margin: 0 0 0.5em 0;
+}
+
+li {
+  color: #000;
+}
+
+.pagination_prev,
+.pagination_next {
+  margin-top: 1em;
+}
+
+.section {
+  margin: 0;  
+}
+
+.version {
+  display: block;
+  text-align: left;
+}
+
+h3 {
+text-align: left;
+}
