@@ -41,7 +41,8 @@
 <ul class="nav pull-right" style="border-left : none;">
 
     {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
-    <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data"><i class="icon-refresh"></i></a></li>
+    <li><a href="#" id="notify-insights" title="Enable desktop notifications of new insights!" style="display:none;"><i class="icon-bell"></i></a></li>
+    <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data" title="Refresh data"><i class="icon-refresh"></i></a></li>
 
     <li class="dropdown">
         <a href="#" class="dropdown-toggle hidden-phone" data-toggle="dropdown">

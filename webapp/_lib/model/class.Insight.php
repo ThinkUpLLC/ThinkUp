@@ -64,6 +64,14 @@ class Insight {
      */
     var $filename;
     /**
+     * @var str Date and time when insight was generated.
+     */
+    var $time_generated;
+    /**
+     * @var str Time when the insight was last updated.
+     */
+    var $time_updated;
+    /**
      * High emphasis level.
      * @var int
      */
@@ -93,6 +101,8 @@ class Insight {
             $this->date = $row['date'];
             $this->emphasis = $row['emphasis'];
             $this->filename = $row['filename'];
+            $this->time_generated = $row['time_generated'];
+            $this->time_updated = $row['time_updated'];
         }
     }
 }
