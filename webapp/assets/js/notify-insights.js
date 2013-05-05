@@ -49,13 +49,8 @@
                                     message = $(document.createElement('div')).hide().append(insight.text).text().replace(':', '...');
                                     notification = window.webkitNotifications.createNotification(icon, title, message);
                                     notification.onclick = function(x) { 
-                                        window.open(
-                                            document.URL 
-                                            + "?u=" + insight.instance.network_username
-                                            + "&n=" + insight.instance.network
-                                            + "&d=" + insight.date.substr(0,10)
-                                            + "&s=" + insight.slug
-                                        );
+                                        location.reload();
+                                        window.focus();
                                         this.cancel(); 
                                     };
                                     notification.show();

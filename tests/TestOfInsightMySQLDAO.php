@@ -421,6 +421,61 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         }
     }
 
+    public function testGetAllOwnerInstanceInsightsInRange() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        //insert a non-active instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'jane', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>0, 'is_public'=>1));
+
+        //insert instance owner
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'Owner 1',
+        'email'=>'owner@example.com'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+
+        //insert 2 insights for a private instance and 3 for a public instance
+        $time_now = date("Y-m-d H:i:s");
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        //insight with no text shouldn't be returned
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+        'instance_id'=>'1', 'text'=>'',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+
+        //assert that page of insights includes from both private and public
+        $dao = new InsightMySQLDAO();
+        $from = 0;
+        $until = time();
+        $results = $dao->getAllOwnerInstanceInsightsInRange(1, $from, $until, $page_count=10, $page_number=1);
+        $this->assertEqual(sizeof($results), 7);
+        foreach ($results as $result) {
+            $this->assertTrue(isset($result->instance));
+        }
+    }
+
     public function testDoesInsightExist() {
         $dao = new InsightMySQLDAO();
         $result = $dao->doesInsightExist("avg_replies_per_week", 1);

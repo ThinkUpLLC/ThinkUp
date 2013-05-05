@@ -134,6 +134,15 @@ interface InsightDAO {
      */
     public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page=1);
     /**
+     * Get a page of insights by instances associated with an owner in a specified time range.
+     * @param int $owner_id
+     * @param int $page_count
+     * @param int $page
+     * @return array Insights
+     */
+    public function getAllOwnerInstanceInsightsInRange($owner_id, $from=0, $until=null,
+    $page_count=20, $page_number=1);
+    /**
      * Check whether or not a insight exists for an instance by slug.
      * @param $slug
      * @param $instance_id

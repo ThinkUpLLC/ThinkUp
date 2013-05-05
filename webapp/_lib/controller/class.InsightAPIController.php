@@ -131,7 +131,8 @@ class InsightAPIController extends ThinkUpAuthAPIController {
             throw new APIOAuthException($m);
         }
 
-        $data = $this->insight_dao->getAllInstanceInsightsInRange($this->from,$this->until,$this->count,$this->page);
+        $data = $this->insight_dao->getAllOwnerInstanceInsightsInRange($owner->id, $this->from, $this->until,
+        $this->count, $this->page);
         if (!count($data)) {
             throw new InsightNotFoundException();
         }

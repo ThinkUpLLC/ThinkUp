@@ -53,14 +53,27 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
                             'id'=>1,
                             'full_name'=>'ThinkUp J. User',
                             'email'=>'me@example.com', 'is_activated'=>1,
-                            'is_admin'=>1,
+                            'is_admin'=>0,
                             'pwd'=>$hashed_pass,
                             'pwd_salt'=> OwnerMySQLDAO::$default_salt,
                             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
+
+        $builders[] = FixtureBuilder::build( 'owners', array(
+                            'id'=>2,
+                            'full_name'=>'Another ThinkUp J. User',
+                            'email'=>'me2@example.com', 'is_activated'=>1,
+                            'is_admin'=>0,
+                            'pwd'=>$hashed_pass,
+                            'pwd_salt'=> OwnerMySQLDAO::$default_salt,
+                            'api_key' => '989e519fd28e2c1b79c9bbb7404c9bd2'));
         
         $builders[] = FixtureBuilder::build('owner_instances', array(
                             'owner_id' => 1,
                             'instance_id' => 1));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array(
+                            'owner_id' => 2,
+                            'instance_id' => 2));
 
 
         $builders[] = FixtureBuilder::build( 'users', array(
@@ -789,6 +802,22 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
                             'slug'=>'another_slug',
                             'instance_id'=>'1',
                             'text'=>'Retweet spike! Your post got retweeted 110 times',
+                            'emphasis'=>Insight::EMPHASIS_HIGH,
+                            'time_generated'=>$time_now));
+
+        $builders[] = FixtureBuilder::build('insights', array(
+                            'date'=>'2012-05-04',
+                            'slug'=>'another_slug',
+                            'instance_id'=>'2',
+                            'text'=>'Retweet spike! Your post got retweeted 110 times',
+                            'emphasis'=>Insight::EMPHASIS_HIGH,
+                            'time_generated'=>$time_now));
+
+        $builders[] = FixtureBuilder::build('insights', array(
+                            'date'=>'2012-05-04',
+                            'slug'=>'another_slug',
+                            'instance_id'=>'3',
+                            'text'=>'2,931 people retweeted your post.',
                             'emphasis'=>Insight::EMPHASIS_HIGH,
                             'time_generated'=>$time_now));
 
