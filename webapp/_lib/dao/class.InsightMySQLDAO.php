@@ -96,7 +96,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $insight = self::getInsight($slug, $instance_id, $date);
         if ($insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data";
+            $q .= "prefix=:prefix, text=:text, filename=:filename, emphasis=:emphasis, related_data=:related_data, ";
+            $q .= "time_generated='".date("Y-m-d H:i:s")."'";
             $vars = array(
             ':slug'=>$slug,
             ':date'=>$date,
@@ -251,6 +252,30 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->related_data = unserialize($insight->related_data);
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
+        }
+        return $insights;
+    }
+
+    public function getAllOwnerInstanceInsightsSince($owner_id, $since) {
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id AND time_generated > :since ";
+        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id;";
+        $vars = array(
+            ":owner_id"=>(int)$owner_id,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        $insights = array();
+        foreach ($rows as $row) {
+            $insight = new Insight($row);
+            $insight->instance = new Instance($row);
+            $insight->instance->avatar = $row['avatar'];
+            $insights[] = $insight;
         }
         return $insights;
     }
