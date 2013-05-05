@@ -15,3 +15,14 @@ webapp/test_installer/*
 webapp/plugins/twitterrealtime/streaming/*.pid
 build/
 extras/dev/ramdisk/osx_make_ramdisk_db.conf
+
+webapp/plugins/*
+!webapp/plugins/expandurls/
+!webapp/plugins/facebook/
+!webapp/plugins/foursquare/
+!webapp/plugins/geoencoder/
+!webapp/plugins/googleplus/
+!webapp/plugins/hellothinkup/
+!webapp/plugins/insightsgenerator/
+!webapp/plugins/twitter/
+!webapp/plugins/twitterrealtime/
