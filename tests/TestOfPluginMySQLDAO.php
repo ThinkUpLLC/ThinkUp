@@ -45,15 +45,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
-    /**
-     * For PHP 5.2 compatibility, this method must be public so that we can call usort($plugins,
-     * 'TestOfPluginMySQLDAO::pluginSort')
-     * private/self::pluginSort doesn't work in PHP 5.2
-     */
-    public static function pluginSort($a, $b) {
-        return strcmp($a->name, $b->name);
-    }
-
     public function testGetInstalledPlugins() {
         // build our data
         $builders_array = $this->buildData();
@@ -61,35 +52,40 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins();
-        $this->assertEqual(count($plugins), 9);
+        $this->assertTrue(count($plugins) >= 9);
 
-        usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
-        $this->assertEqual($plugins[0]->name,"Expand URLs");
-        $this->assertEqual($plugins[0]->folder_name,"expandurls");
+        $plugin_names = array();
+        $plugin_folder_names = array();
+        foreach ($plugins as $plugin) {
+            $plugin_names[] = $plugin->name;
+            $plugin_folder_names[] = $plugin->folder_name;
+        }
+        $this->assertTrue(in_array('Expand URLs', $plugin_names));
+        $this->assertTrue(in_array('expandurls', $plugin_folder_names));
 
-        $this->assertEqual($plugins[1]->name,"Facebook");
-        $this->assertEqual($plugins[1]->folder_name,"facebook");
+        $this->assertTrue(in_array('Facebook', $plugin_names));
+        $this->assertTrue(in_array('facebook', $plugin_folder_names));
 
-        $this->assertEqual($plugins[2]->name,"Foursquare");
-        $this->assertEqual($plugins[2]->folder_name,"foursquare");
+        $this->assertTrue(in_array('Foursquare', $plugin_names));
+        $this->assertTrue(in_array('foursquare', $plugin_folder_names));
 
-        $this->assertEqual($plugins[3]->name, "GeoEncoder");
-        $this->assertEqual($plugins[3]->folder_name, "geoencoder");
+        $this->assertTrue(in_array('GeoEncoder', $plugin_names));
+        $this->assertTrue(in_array('geoencoder', $plugin_folder_names));
 
-        $this->assertEqual($plugins[4]->name,"Google+");
-        $this->assertEqual($plugins[4]->folder_name,"googleplus");
+        $this->assertTrue(in_array('Google+', $plugin_names));
+        $this->assertTrue(in_array('googleplus', $plugin_folder_names));
 
-        $this->assertEqual($plugins[5]->name,"Hello ThinkUp");
-        $this->assertEqual($plugins[5]->folder_name,"hellothinkup");
+        $this->assertTrue(in_array('Hello ThinkUp', $plugin_names));
+        $this->assertTrue(in_array('hellothinkup', $plugin_folder_names));
 
-        $this->assertEqual($plugins[6]->name,"Insights Generator");
-        $this->assertEqual($plugins[6]->folder_name,"insightsgenerator");
+        $this->assertTrue(in_array('Insights Generator', $plugin_names));
+        $this->assertTrue(in_array('insightsgenerator', $plugin_folder_names));
 
-        $this->assertEqual($plugins[7]->name,"Twitter");
-        $this->assertEqual($plugins[7]->folder_name,"twitter");
+        $this->assertTrue(in_array('Twitter', $plugin_names));
+        $this->assertTrue(in_array('twitter', $plugin_folder_names));
 
-        $this->assertEqual($plugins[8]->name,"Twitter Realtime");
-        $this->assertEqual($plugins[8]->folder_name,"twitterrealtime");
+        $this->assertTrue(in_array('Twitter Realtime', $plugin_names));
+        $this->assertTrue(in_array('twitterrealtime', $plugin_folder_names));
     }
 
     public function testInsertPlugin() {
