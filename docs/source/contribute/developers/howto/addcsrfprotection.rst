@@ -20,7 +20,9 @@ Then you must add the CSRF token to your view in one of two ways, depending on w
 are using a web form, a Smarty modifier can generate a hidden input field with the name csrf_token in your
 form. Do so by adding this to your view template file inside the form:
 
-``{insert name="csrf_token"}``
+::
+
+    {insert name="csrf_token"}
 
 If you are simply making a request with $_GET URL parameters, add ``&csrf_token=" + window.csrf_token``
 to your JavaScript-based request. 
