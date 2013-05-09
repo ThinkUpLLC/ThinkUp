@@ -93,4 +93,4 @@
 </div>
 
 
-{include file="_footer.tpl"}
+{include file="_footer.tpl" linkify=1}
