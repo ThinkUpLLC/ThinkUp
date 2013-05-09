@@ -48,7 +48,7 @@ class ForgotPasswordController extends ThinkUpController {
 
                 $es->assign('apptitle', $config->getValue('app_title_prefix')."ThinkUp" );
                 $es->assign('recovery_url', "session/reset.php?token=$token");
-                $es->assign('application_url', Utils::getApplicationURL($false));
+                $es->assign('application_url', Utils::getApplicationURL(false));
                 $es->assign('site_root_path', $config->getValue('site_root_path') );
                 $message = $es->fetch('_email.forgotpassword.tpl');
 
