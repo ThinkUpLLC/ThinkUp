@@ -14,7 +14,7 @@ img.place-icon2 {position: relative;width: 32px;height: 32px;top: -146px;left: 5
           {if $description}<h3>{$description}</h3>{/if}
         </div>
         <div class="header">
-        {if $logged_in_user and $display eq 'posts'}<a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network}">Export</a>{/if}
+        {if $logged_in_user and $display eq 'posts'}<a href="{$site_root_path}post/export.php?user_id={$instance->network_user_id|urlencode}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
         </div>
 
         {foreach from=$all_checkins item=post name=foo}
