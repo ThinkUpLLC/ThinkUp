@@ -78,8 +78,9 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 }
                 $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
                 if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
-                    $insight_text .=  ", bringing the total to <strong>".
-                    number_format(end($list_membership_count_history_by_day['history'])). " lists</strong>.";
+                    $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
+                    $insight_text .=  ", bringing the total to <strong>". number_format($total_lists).
+                    " lists</strong>.";
                 } else {
                     $insight_text .= ".";
                 }
@@ -88,11 +89,17 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 serialize($list_membership_count_history_by_day));
             } else {
                 $new_groups[0]->setMetadata();
+                $insight_text = "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
+                $new_groups[0]->keyword."</a>";
+                if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                    $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
+                    $insight_text .= ", bringing the total to <strong>". number_format($total_lists). " lists</strong>";
+                }
+                $insight_text .= ".";
+
                 $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                "Made the list:", "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
-                $new_groups[0]->keyword."</a>, bringing the total to <strong>".
-                number_format(end($list_membership_count_history_by_day['history'])).
-                " lists</strong>.", $filename, Insight::EMPHASIS_LOW, serialize($list_membership_count_history_by_day));
+                "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                serialize($list_membership_count_history_by_day));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
