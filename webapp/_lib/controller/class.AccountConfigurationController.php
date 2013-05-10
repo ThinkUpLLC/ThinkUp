@@ -241,22 +241,28 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $instance_id = $_POST['instance_id'];
             $new_hashtag_name=$_POST['new_hashtag_name'];
 
-            $instance_dao = DAOFactory::getDAO('InstanceDAO');
-            $instance = $instance_dao->get($instance_id);
-            if ( isset($instance) ) {
-                $hashtag = $hashtag_dao->getHashtag($new_hashtag_name, $instance->network);
-                if (!isset($hashtag)) {
-                    $hashtag_id = $hashtag_dao->insertHashtag($new_hashtag_name, $instance->network);
-                    $row_inserted = $instancehashtag_dao->insert($instance_id, $hashtag_id);
-                    $message = "Saved search for " . $new_hashtag_name . ".";
-                    $this->addSuccessMessage($message,'account');
+            //Check if $new_hashtag_name is an individual word (no spaces)
+            if (strpos(" ", $new_hashtag_name) !== false) {
+                $instance_dao = DAOFactory::getDAO('InstanceDAO');
+                $instance = $instance_dao->get($instance_id);
+                if ( isset($instance) ) {
+                    $hashtag = $hashtag_dao->getHashtag($new_hashtag_name, $instance->network);
+                    if (!isset($hashtag)) {
+                        $hashtag_id = $hashtag_dao->insertHashtag($new_hashtag_name, $instance->network);
+                        $row_inserted = $instancehashtag_dao->insert($instance_id, $hashtag_id);
+                        $message = "Saved search for " . $new_hashtag_name . ".";
+                        $this->addSuccessMessage($message,'account');
+                    } else {
+                        $row_inserted = $instancehashtag_dao->insert($instance_id, $hashtag->id);
+                        $message = "Saved search for " . $new_hashtag_name . ".";
+                        $this->addSuccessMessage($message,'account');
+                    }
                 } else {
-                    $row_inserted = $instancehashtag_dao->insert($instance_id, $hashtag->id);
-                    $message = "Saved search for " . $new_hashtag_name . ".";
-                    $this->addSuccessMessage($message,'account');
+                    $this->addErrorMessage('Instance doesn\'t exist.','account');
                 }
             } else {
-                $this->addErrorMessage('Instance doesn\'t exist.','account');
+                $this->addErrorMessage('You can only search for an individual keyword or hashtag, not a phrase. '.
+                'Please try again.','account');
             }
         }
         $this->view_mgr->clear_all_cache();
