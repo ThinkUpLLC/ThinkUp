@@ -52,7 +52,7 @@ class SavedSearchResultsInsight extends InsightPluginParent implements InsightPl
                 $hashtag = $hashtag_dao->getHashtagByID($instance_hashtag->hashtag_id);
                 $link = 'search.php?u='.$instance->network_username.'&n='.$instance->network.
                 '&c=searches&k='.urlencode($hashtag->hashtag).'&q='.urlencode($hashtag->hashtag);
-                $text = $total_new_posts." new ".$post_term." contain <b><a href=\"".$link."\">".
+                $text = number_format($total_new_posts)." new ".$post_term." contain <b><a href=\"".$link."\">".
                 $hashtag->hashtag."</a></b>.";
                 // Insert insight
                 $this->insight_dao->insertInsight("saved_search_results_".$instance_hashtag->hashtag_id, $instance->id,
