@@ -242,7 +242,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $new_hashtag_name=$_POST['new_hashtag_name'];
 
             //Check if $new_hashtag_name is an individual word (no spaces)
-            if (strpos(" ", $new_hashtag_name) !== false) {
+            if (strpos($new_hashtag_name, " ") === false) {
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
                 $instance = $instance_dao->get($instance_id);
                 if ( isset($instance) ) {

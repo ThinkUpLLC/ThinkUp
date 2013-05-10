@@ -834,7 +834,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
 
         $controller = new AccountConfigurationController(true);
-        $controller->go();
+        $results = $controller->go();
+        $this->debug($results);
 
         $hashtag = $hashtag_dao->getHashtag($_POST['new_hashtag_name'], 'twitter');
         $this->assertNotNull($hashtag);
