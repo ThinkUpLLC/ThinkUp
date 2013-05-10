@@ -126,8 +126,8 @@ class FoursquarePluginConfigurationController extends PluginConfigurationControl
         // If the server supports ssl add an s to our URL path
         $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
         // Generate the redirect URL
-        $redirect_uri = urlencode('http'.$ssl.'://'.$_SERVER['SERVER_NAME'].
-        $site_root_path.'account/?p=foursquare');
+        $app_url = Utils::getApplicationURL();
+        $redirect_uri = urlencode($app_url.'account/?p=foursquare');
 
         // Create the OAuth link based on foursquares instructions here: https://developer.foursquare.com/overview/auth
         $oauth_link = "https://foursquare.com/oauth2/authenticate?client_id=".$client_id."&response_type=code";
