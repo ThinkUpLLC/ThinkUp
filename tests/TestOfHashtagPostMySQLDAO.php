@@ -48,16 +48,16 @@ class TestOfHashtagPostMySQLDAO extends ThinkUpUnitTestCase {
     protected function buildData() {
         $builders[] = FixtureBuilder::build('hashtags',
         array('hashtag' => 'exist_yet', 'network'=>'twitter', 'count_cache' => 100));
-        $builders[] = FixtureBuilder::build('posts',
-        array('post_id' => '1', 'author_user_id' => '1', 'author_username' => 'aun', 'author_fullname' => 'afn',
-                     'author_avatar' => 'http://aa.com', 'author_follower_count' => 0, 'post_text' => 'pt',
-                     'is_protected' => 0, 'source' => '<a href=""></a>', 'location' => 'BCN', 'place' => '',
-                     'place_id' => '', 'geo' => '', 'pub_date' => '2013-02-28 11:02:34', 'in_reply_to_user_id' => '1',
-                     'in_reply_to_post_id' => '1', 'reply_count_cache' => 1, 'is_reply_by_friend' => 0,
-                     'in_retweet_of_post_id' => '', 'old_retweet_count_cache' => 0, 'is_retweet_by_friend' => 0,
-                     'reply_retweet_distance' => 0, 'network' => 'twitter', 'is_geo_encoded' => 0,
-                     'in_rt_of_user_id' => '', 'retweet_count_cache' => 0, 'retweet_count_api' => 0,
-                     'favlike_count_cache' => 0));
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '1', 'author_user_id' => '1',
+            'author_username' => 'aun', 'author_fullname' => 'afn',
+            'author_avatar' => 'http://aa.com', 'author_follower_count' => 0, 'post_text' => 'pt',
+            'is_protected' => 0, 'source' => '<a href=""></a>', 'location' => 'BCN', 'place' => '',
+            'place_id' => '', 'geo' => '', 'pub_date' => '2013-02-28 11:02:34', 'in_reply_to_user_id' => '1',
+            'in_reply_to_post_id' => '1', 'reply_count_cache' => 1, 'is_reply_by_friend' => 0,
+            'in_retweet_of_post_id' => '', 'old_retweet_count_cache' => 0, 'is_retweet_by_friend' => 0,
+            'reply_retweet_distance' => 0, 'network' => 'twitter', 'is_geo_encoded' => 0,
+            'in_rt_of_user_id' => '', 'retweet_count_cache' => 0, 'retweet_count_api' => 0,
+            'favlike_count_cache' => 0));
         return $builders;
     }
 
@@ -146,4 +146,55 @@ class TestOfHashtagPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($this->hashtagpost_dao->isHashtagPostInStorage(2,1,'twitter'));
         $this->debug("End testIsHashtagPostInStorage");
     }
+
+    public function testGetTotalPostsByHashtagAndDate() {
+        $this->debug("Begin testGetTotalPostsByHashtagAndDate");
+        $builders = array();
+        $builders[] = FixtureBuilder::build('hashtags',
+        array('id'=>102, 'hashtag' => 'thinkupsavedsearch', 'network'=>'facebook'));
+
+        //Test specified date
+        $count = 0;
+        while ($count < 12) { // Add 12 posts for a hashtag on 4/1
+            $builders[] = FixtureBuilder::build('posts', array('post_id' => $count+2, 'author_user_id' => '1',
+                'author_username' => 'aun', 'author_fullname' => 'afn',
+                'author_avatar' => 'http://aa.com', 'author_follower_count' => 0, 'post_text' => 'pt',
+                'is_protected' => 0, 'source' => '<a href=""></a>', 'location' => 'BCN', 'place' => '',
+                'place_id' => '', 'geo' => '', 'pub_date' => '2013-04-01 11:02:34', 'in_reply_to_user_id' => '1',
+                'in_reply_to_post_id' => '1', 'reply_count_cache' => 1, 'is_reply_by_friend' => 0,
+                'in_retweet_of_post_id' => '', 'old_retweet_count_cache' => 0, 'is_retweet_by_friend' => 0,
+                'reply_retweet_distance' => 0, 'network' => 'facebook', 'is_geo_encoded' => 0,
+                'in_rt_of_user_id' => '', 'retweet_count_cache' => 0, 'retweet_count_api' => 0,
+                'favlike_count_cache' => 0));
+            $builders[] = FixtureBuilder::build('hashtags_posts', array('post_id' => $count+2, 'hashtag_id' => 102,
+                'network'=>'facebook'));
+            $count++;
+        }
+        $count = $this->hashtagpost_dao->getTotalPostsByHashtagAndDate(102, '2013-04-01');
+        $this->assertEqual($count, 12);
+
+        //Test today
+        $today = date('Y-m-d H:i:s');
+        $count = 0;
+        while ($count < 7) { // Add 7 posts for a hashtag today
+            $builders[] = FixtureBuilder::build('posts', array('post_id' => $count+14, 'author_user_id' => '1',
+                'author_username' => 'aun', 'author_fullname' => 'afn',
+                'author_avatar' => 'http://aa.com', 'author_follower_count' => 0, 'post_text' => 'pt',
+                'is_protected' => 0, 'source' => '<a href=""></a>', 'location' => 'BCN', 'place' => '',
+                'place_id' => '', 'geo' => '', 'pub_date' => $today, 'in_reply_to_user_id' => '1',
+                'in_reply_to_post_id' => '1', 'reply_count_cache' => 1, 'is_reply_by_friend' => 0,
+                'in_retweet_of_post_id' => '', 'old_retweet_count_cache' => 0, 'is_retweet_by_friend' => 0,
+                'reply_retweet_distance' => 0, 'network' => 'facebook', 'is_geo_encoded' => 0,
+                'in_rt_of_user_id' => '', 'retweet_count_cache' => 0, 'retweet_count_api' => 0,
+                'favlike_count_cache' => 0));
+            $builders[] = FixtureBuilder::build('hashtags_posts', array('post_id' => $count+14, 'hashtag_id' => 102,
+                'network'=>'facebook'));
+            $count++;
+        }
+        $count = $this->hashtagpost_dao->getTotalPostsByHashtagAndDate(102);
+        $this->assertEqual($count, 7);
+
+        $this->debug("End testGetTotalPostsByHashtagAndDate");
+    }
+
 }

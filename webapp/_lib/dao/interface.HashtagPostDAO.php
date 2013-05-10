@@ -70,4 +70,11 @@ interface HashtagPostDAO {
      * @return bool true if hashtag post is in the database
      */
     public function isHashtagPostInStorage($hashtag_id, $post_id, $network);
+    /**
+     * Get count of posts published on a given date which contain the saved search.
+     * @param int $hashtag_id
+     * @param str $for_date Defaults to null, if null then today
+     * @return arr Post objects
+     */
+    public function getTotalPostsByHashtagAndDate($hashtag_id, $for_date=null);
 }
