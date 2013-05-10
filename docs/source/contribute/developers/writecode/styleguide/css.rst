@@ -12,7 +12,7 @@ Use an indent of 2 spaces, with no tabs.
 Names & Capitalization
 ----------------------
 
-ID names should be in lowerCamelCase.
+ID names should be in lowerCamelCase. 
 
 ::
 
@@ -76,8 +76,8 @@ may be added after a property-value pair, preceded with a space.
       property: value; /* Comment about this property-value pair. */
     }
 
-Only C style comments (/\* Comment goes here. \*/) are valid for CSS
-code. Do not use C++ style comments (// Comment goes here.).
+Only C style comments (``/* Comment goes here. */``) are valid for CSS
+code. Do not use C++ style comments (``// Comment goes here.``).
 
 Selectors
 ---------
@@ -152,7 +152,7 @@ property.
     }
 
 For properties with multiple values, separate each value with a single
-space following the comma (s).
+space following the comma(s).
 
 ::
 

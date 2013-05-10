@@ -1,8 +1,8 @@
 JavaScript Code Style Guide
 ===========================
 
-This is the Code Style guide for JavaScript. See the main
-:doc:`main page </contribute/developers/writecode/styleguide/index>` page for other languages.
+This is the Code Style guide for JavaScript. See the 
+:doc:`main page </contribute/developers/writecode/styleguide/index>` for other languages.
 
 Indentation
 -----------
@@ -29,9 +29,9 @@ Semicolons
 ----------
 
 To avoid semicolon insertion (Q: What's that? A: `See
-Wikipedia <http://en.wikipedia.org/wiki/JavaScript_syntax#Whitespace_and_semicolons)>`_,
-end all statements with a semicolon, except for for, function, if,
-switch, try, and while.
+Wikipedia <http://en.wikipedia.org/wiki/JavaScript_syntax#Whitespace_and_semicolons)>`_),
+end all statements with a semicolon, except for ``for``, ``function``, ``if``,
+``switch``, ``try``, and ``while``.
 
 For the same reason, a function's return value expression must start on
 the same line as the return keyword.
@@ -55,10 +55,9 @@ and do-while control statements:
 Comments
 --------
 
-Non-documentation comments [STRIKEOUT:- that is, explanatory “what does
-this block of code do?”]type comments — are strongly encouraged.
+Non-documentation comments (the explanatory “what does this block of code do?" type) are strongly encouraged.
 Concerned about performance? Don't worry, comments can be removed by
-Javascript compression utilities for use on production servers.
+JavaScript compression utilities for use on production servers.
 
 Comments should use capitalized sentences with punctuation. Comments
 should be on a separate line immediately before the code line or block
@@ -79,8 +78,8 @@ readability.
     var parameter2 = 'barbaz';         // Parameter 2 comment goes here.
     var parameter3 = 'someothervalue'; // Parameter 3 comment goes here.
 
-C style comments (/\* Comment goes here. \*/) and C++ style comments (//
-Comment goes here.) are both fine.
+C style comments (``/* Comment goes here. */``) and C++ style comments (``//
+Comment goes here.``) are both fine.
 
 Operators
 ---------
@@ -108,7 +107,7 @@ number they are operating on.
       action();
     }
 
-Javascript has one ternary operator (operators that operate on three
+JavaScript has one ternary operator (operators that operate on three
 values) called the conditional operator. The ternary operator should
 have a space on either side of the ? and the :.
 
@@ -221,5 +220,5 @@ indented one level.
 jQuery Snippet Formatting
 -------------------------
 
-TODO (some of the above style rules for straight Javascript might not
+TODO (some of the above style rules for straight JavaScript might not
 make sense for jQuery snippets.)
