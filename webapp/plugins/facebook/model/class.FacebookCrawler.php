@@ -79,7 +79,7 @@ class FacebookCrawler {
         $user_object = null;
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website':'';
+            $fields = $network!='facebook page'?'id,name,about,location,website,verified':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
             if (isset($user_details)) {
                 $user_details->network = $network;
@@ -128,6 +128,7 @@ class FacebookCrawler {
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = isset($details->location->name)?$details->location->name:'';
             $user_vals["description"] = isset($details->about)?$details->about:'';
+            $user_vals["is_verifed"] = isset($details->verified)?$details->verified:'';
             $user_vals["is_protected"] = 1; //for now, assume a Facebook user is private
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
