@@ -61,7 +61,8 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
         if (empty($as)) {
             parent::control();
         } else {
-            $this->setContentType("text/plain; charset=UTF-8");
+            //$this->setContentType("text/plain; charset=UTF-8");
+            $this->setContentType('application/json');
             throw new UnauthorizedUserException("Unauthorized API call");
         }
     }

@@ -38,7 +38,8 @@
                     $.ajax({
                         url: site_root_path + "api/v1/insight.php"
                         + "?since=" + timecheck
-                        + "&api_key=" + thinkup_api_key,
+                        + "&un=" + encodeURI(owner_email)
+                        + "&as=" + thinkup_api_key,
                         dataType: "json",
                         success: function(data) {
                             if (typeof data.error === 'undefined') {

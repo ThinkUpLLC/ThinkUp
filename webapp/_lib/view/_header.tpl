@@ -32,7 +32,10 @@
     <script src="{$site_root_path}assets/js/bootstrap.js"></script>
     <script type="text/javascript">
         var site_root_path = '{$site_root_path}';
+        var owner_email = '{$logged_in_user}';
+        {if $thinkup_api_key}
         var thinkup_api_key = '{$thinkup_api_key}';
+        {/if}
     </script>
 
     {foreach from=$header_scripts item=script}
@@ -110,10 +113,6 @@
           );
           $(".metaroll").hide();
         });
-      </script>
-      <script type="text/javascript">
-        var site_root_path = '{$site_root_path}';
-        var thinkup_api_key = '{$thinkup_api_key}';
       </script>
     {/literal}
 

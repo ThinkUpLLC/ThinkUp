@@ -58,8 +58,9 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
             'pwd_salt'=> OwnerMySQLDAO::$default_salt,
             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
-        $builders[] = FixtureBuilder::build('owner_instances', array( 'owner_id' => 1, 'instance_id' => 1));
+        $builders[] = FixtureBuilder::build( 'instances', array('id'=>1));
 
+        $builders[] = FixtureBuilder::build('owner_instances', array( 'owner_id' => 1, 'instance_id' => 1));
 
         $builders[] = FixtureBuilder::build( 'users', array(
             'user_id' => 13,
@@ -793,20 +794,21 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
 
     public function testInsight() {
         $_GET['un'] = 'me@example.com';
-        $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         $controller = new InsightAPIController(true);
         $output = $controller->go();
-        $this->debug($output);
+        $this->debug( Utils::varDumpToString($output));
         $output = json_decode($output);
 
+        $this->debug($output);
         // Test correct number of insights were retrieved
         $this->assertEqual(count($output), 4);
     }
 
     public function testAPIDisabled() {
         $_GET['un'] = 'me@example.com';
-        $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         // test default option
         $controller = new InsightAPIController(true);
@@ -838,18 +840,18 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $this->assertFalse(isset($output->error));
     }
 
-    public function testAPIOAuth() {
+    public function testAPIAuth() {
         $_GET['un'] = 'me@example.com';
 
         // test missing api_key
-        unset($_GET['api_key']);
+        $_GET['as'] = "add";
 
         $controller = new InsightAPIController(true);
         $output = $controller->go();
         $this->debug($output);
         $output = json_decode($output);
 
-        $this->assertEqual($output->error->type, 'APIOAuthException');
+        $this->assertEqual($output->error->type, 'UnauthorizedUserException');
 
         // test incorrect api_key
         $_GET['api_key'] = 'abcd';
@@ -859,10 +861,10 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
         $this->debug($output);
         $output = json_decode($output);
 
-        $this->assertEqual($output->error->type, 'APIOAuthException');
+        $this->assertEqual($output->error->type, 'UnauthorizedUserException');
 
         // test correct api_key
-        $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
 
         $controller = new InsightAPIController(true);
         $output = $controller->go();
@@ -874,7 +876,7 @@ class TestOfInsightAPIController extends ThinkUpUnitTestCase {
 
     public function testInsightNotFound() {
         $_GET['un'] = 'me@example.com';
-        $_GET['api_key'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $_GET['since'] = time() + (7 * 24 * 60 * 60);
         $this->debug(date('D, d M Y H:i:s', time() + (7 * 24 * 60 * 60)));
 

@@ -31,9 +31,17 @@
  */
 class InsightAPIController extends ThinkUpAuthAPIController {
 
-    public function control() {
-        $this->setContentType('application/json');
-        $this->view_mgr->cache_lifetime = 600;
+    public function authControl() {
+        /**
+         * Check if the API is disabled and, if it is, throw the appropriate exception.
+         *
+         * Docs: http://thinkup.com/docs/userguide/api/errors/apidisabled.html
+         */
+        $is_api_disabled = Config::getInstance()->getValue('is_api_disabled');
+        if ($is_api_disabled) {
+            $this->setContentType('application/json');
+            throw new APIDisabledException();
+        }
 
         if (isset($_GET['since'])) {
             $since = $_GET['since'];
@@ -41,49 +49,27 @@ class InsightAPIController extends ThinkUpAuthAPIController {
         } else {
             $since = time();
         }
-        if (isset($_GET['api_key'])) {
-            $api_key = $_GET['api_key'];
-        } else {
-            $api_key = null;
-        }
         /*
          * Check if the view is cached and, if it is, return the cached version before any of the application login
          * is executed.
          */
-        if ($this->view_mgr->isViewCached()) {
-            if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
-                // set the json data to keep the ThinkUpController happy.
-                $this->setJsonData(array());
-                return $this->generateView();
+        if ($this->shouldRefreshCache()) {
+            $owner_email = $this->getLoggedInUser();
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($owner_email);
+
+            // Fetch the correct InsightDAO from the DAOFactory
+            $this->insight_dao = DAOFactory::getDAO('InsightDAO');
+            $data = $this->insight_dao->getAllOwnerInstanceInsightsSince($owner->id, $since);
+            if (!count($data)) {
+                $this->setContentType('application/json');
+                throw new InsightNotFoundException();
             }
-        }
-        /*
-         * Check if the API is disabled and, if it is, throw the appropriate exception.
-         *
-         * Docs: http://thinkup.com/docs/userguide/api/errors/apidisabled.html
-         */
-        $is_api_disabled = Config::getInstance()->getValue('is_api_disabled');
-        if ($is_api_disabled) {
-            throw new APIDisabledException();
+            $this->setJsonData($data);
+        } else {
+            $this->setJsonData(array());
         }
 
-        // Fetch the correct InsightDAO from the DAOFactory
-        $this->insight_dao = DAOFactory::getDAO('InsightDAO');
-
-        //Privacy checks
-        $email = $this->getLoggedInUser();
-        $owner = parent::getOwner($email);
-        if ($api_key != $owner->api_key) {
-            $m = 'An insight request requires a valid ThinkUp API Key to be specified.';
-            throw new APIOAuthException($m);
-        }
-
-        $data = $this->insight_dao->getAllOwnerInstanceInsightsSince($owner->id, $since);
-        if (!count($data)) {
-            throw new InsightNotFoundException();
-        }
-
-        $this->setJsonData($data);
         return $this->generateView();
     }
 }
