@@ -64,11 +64,11 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $this->assertPattern('/You must <a href="'.$escaped_site_root_path.
         'session\/login.php">log in<\/a> to do this./', $results);
 
-
         // Wrong API secret provided
         $_GET['as'] = 'fail_me';
         $results = $controller->go();
-        $this->assertPattern("/UnauthorizedUserException: Unauthorized API call/", $results);
+        $this->assertPattern("/UnauthorizedUserException/", $results);
+        $this->assertPattern("/Unauthorized API call/", $results);
 
         $controller = new TestAuthAPIController(true);
 
@@ -76,7 +76,8 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $_GET['un'] = 'fail_me';
         $results = $controller->go();
-        $this->assertPattern("/UnauthorizedUserException: Unauthorized API call/", $results);
+        $this->assertPattern("/UnauthorizedUserException/", $results);
+        $this->assertPattern("/Unauthorized API call/", $results);
 
         // Working request
         $_GET['un'] = 'me@example.com';
@@ -138,9 +139,9 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
 
     private function buildData() {
         $owner_builder = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'me@example.com', 
-            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c', 
+            'id' => 1,
+            'email' => 'me@example.com',
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c',
             'is_activated' => 1
         ));
 
@@ -151,7 +152,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
             ));
 
             $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
-            'owner_id' => 1, 
+            'owner_id' => 1,
             'instance_id' => 1
             ));
 
