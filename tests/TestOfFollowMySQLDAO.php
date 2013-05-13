@@ -256,7 +256,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getVerifiedFollowersByDay(789456123, 'twitter', 1);
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
-        $this->assertEqual($result[0]["user_id"], 1234567890);
+        $this->assertEqual($result[0]->user_id, 1234567890);
     }
 
     public function testGetEarliestJoinerFollowers(){
