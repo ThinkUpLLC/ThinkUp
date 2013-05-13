@@ -352,7 +352,8 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             $vars['end_days_ago'] = $end_days_ago;
         }
         $q .= "AND f.user_id = :user_id AND f.network = :network AND u.network=f.network AND active=1 ";
-        $q .= "AND u.is_verified = 1;";
+        $q .= "AND u.is_verified = 1 ";
+        $q .= "LIMIT :limit;";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, 'User');

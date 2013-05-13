@@ -1,14 +1,14 @@
 <?php
 /*
- Plugin Name: Interesting Followers
- Description: New discerning followers.
+ Plugin Name: Verified Followers
+ Description: New verified followers.
  */
 
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/insights/interestingfollowers.php
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/verifiedfollowers.php
  *
- * Copyright (c) 2013 Nilaksh Das
+ * Copyright (c) 2013 Gina Trapani, Nilaksh Das
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@ class VerifiedFollowersInsight extends InsightPluginParent implements InsightPlu
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
-        // Least likely followers insights
+        // Verified followers insights
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $verified_followers = $follow_dao->getVerifiedFollowersByDay($instance->network_user_id,
         $instance->network, 0);
