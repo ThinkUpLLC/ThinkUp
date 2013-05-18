@@ -156,6 +156,7 @@ class TwitterJSONStreamParser {
         $user_array['full_name'] = $user['name'];
         $user_array['avatar'] = $user['profile_image_url'];
         $user_array['follower_count'] = $user['followers_count'];
+        $user_array['is_verified'] = $user['verified'];
         $user_array['is_protected'] = $user['protected'];
         $user_array['location'] = $user['location'];
         $user_array['description'] = $user['description'];

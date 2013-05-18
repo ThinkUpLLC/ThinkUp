@@ -227,7 +227,7 @@ class FoursquarePluginConfigurationController extends PluginConfigurationControl
             // Create an array with this users information
             $r = array('user_id'=>$foursquare_user_id, 'user_name'=>$foursquare_username,
             'full_name'=>'', 'avatar'=>'', 'location'=>'', 'description'=>'',
-            'url'=>'http://www.foursquare.com/user/'.$foursquare_user_id, 'is_protected'=>'0',
+            'url'=>'http://www.foursquare.com/user/'.$foursquare_user_id, 'is_verified'=>'0', 'is_protected'=>'0',
             'follower_count'=>null, 'friend_count'=>null, 'post_count'=>null, 'last_updated'=>'', 'last_post'=>null,
             'joined'=>'', 'last_post_id'=>'', 'network'=>'foursquare' );
             // Create a new user with this information

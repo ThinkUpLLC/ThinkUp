@@ -44,7 +44,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco',
-        'network'=>'twitter'));
+        'is_verified'=>1, 'network'=>'twitter'));
 
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'zuck',
@@ -130,8 +130,8 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $user_array = array('user_id'=>'13', 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter',
-        'last_post_id'=>'abc102');
+        'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
+        'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc102');
         $user = new User($user_array, 'Test Insert');
         $this->assertEqual($user_dao->updateUser($user), 1, "1 user inserted");
         $user_from_db = $user_dao->getDetails('13', 'twitter');
@@ -142,7 +142,8 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $user_array = array('user_id'=>13, 'user_name'=>'ginatrapanichanged', 'full_name'=>'Gina Trapani ',
         'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
+        'is_verified'=>0, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
+        'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
         $this->assertEqual($user_dao->updateUser($user1), 1, "1 row updated");
         $user_from_db = $user_dao->getDetails(13, 'twitter');
@@ -154,7 +155,8 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         //Test no username set
         $user_array = array('user_id'=>13, 'user_name'=>null, 'full_name'=>'Gina Trapani ',
         'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
+        'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05',
+        'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
         $this->assertEqual($user_dao->updateUser($user1), 0);
     }
@@ -167,13 +169,13 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $user_array1 = array('id'=>2, 'user_id'=>'13', 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter',
-        'last_post_id'=>'abc123');
+        'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
+        'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc123');
         $user1 = new User($user_array1, 'Test');
         $user_array2 = array('id'=>3, 'user_id'=>'14', 'user_name'=>'anildash', 'full_name'=>'Anil Dash',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter',
-        'last_post_id'=>'abc456');
+        'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
+        'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc456');
         $user2 = new User($user_array2, 'Test');
 
         $users_to_update = array($user1, $user2);
