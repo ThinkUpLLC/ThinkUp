@@ -105,7 +105,7 @@ class InsightsGeneratorPluginSettingsController extends ThinkUpAuthController {
                 $this->setJsonData( array( 'status' => 'failed', 'required' => $required));
             } else {
                 // save our data
-				$this->view_mgr->clear_cache('.htinsights.tpl');
+				$this->view_mgr->clear_cache();
                 $saved = 0;
                 $deleted = 0;
 				$plugin_dao = DAOFactory::getDAO('PluginDAO');
