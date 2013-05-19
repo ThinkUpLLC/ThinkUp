@@ -196,6 +196,7 @@ class FoursquareCrawler {
             $user_vals['url'] = 'http://www.foursquare.com/user/'.$details->response->user->id;
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = $details->response->user->homeCity;
+            $user_vals["is_verified"] = 0;
             $user_vals["is_protected"] = 0;
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;

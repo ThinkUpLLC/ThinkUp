@@ -48,7 +48,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1234567890', 'user_name'=>'jack',
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
-        'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1324567890', 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:58:25',
@@ -242,6 +242,21 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
         $this->assertEqual($result[0]["user_id"], 1623457890);
+    }
+
+    public function testGetVerifiedFollowersByDay() {
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'789456123', 'user_name'=>'twitteruser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:58:25',
+        'follower_count'=>36000, 'is_protected'=>0, 'network'=>'twitter',
+        'description'=>'A test Twitter User'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'789456123', 'follower_id'=>'1234567890',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getVerifiedFollowersByDay(789456123, 'twitter', 1);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]->user_id, 1234567890);
     }
 
     public function testGetEarliestJoinerFollowers(){
