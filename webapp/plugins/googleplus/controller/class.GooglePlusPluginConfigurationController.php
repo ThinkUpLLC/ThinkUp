@@ -189,8 +189,8 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
 
         if (!$user_dao->isUserInDB($gplus_user_id, 'google+')) {
             $r = array('user_id'=>$gplus_user_id, 'user_name'=>$gplus_username,'full_name'=>$gplus_username,
-            'avatar'=>'', 'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
-            'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
+            'avatar'=>'', 'location'=>'', 'description'=>'', 'url'=>'', 'is_verified'=>'', 'is_protected'=>'',
+            'follower_count'=>0, 'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
             'last_post_id'=>'', 'network'=>'facebook' );
             $u = new User($r, 'Owner info');
             $user_dao->updateUser($u);
