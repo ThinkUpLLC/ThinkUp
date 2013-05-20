@@ -30,6 +30,7 @@ rm -rf build/thinkup/config.inc.php
 # Clean out dev/alpha plugins which shouldn't go to users
 rm -rf build/thinkup/plugins/hellothinkup/
 rm -rf build/thinkup/plugins/twitterrealtime/
+rm -rf build/thinkup/plugins/pushover/
 
 # Zip it up
 cd build/
