@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '2.0-beta.6';
-$TOTAL_MIGRATION_COUNT = 248;
+$LATEST_VERSION = '2.0-beta.7';
+$TOTAL_MIGRATION_COUNT = 252;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -1012,8 +1012,37 @@ $MIGRATIONS = array(
 
      /* 2.0-beta.6 */
     '2.0-beta.6' => array(
+        'zip_url' => 'https://thinkup.com/downloads/beta/thinkup-2.0-beta.6.zip',
+        'migrations' => 0,
+     ),
+
+     /* 2.0-beta.7 */
+    '2.0-beta.7' => array(
         'zip_url' => 'file://./build/thinkup.zip',
         'migrations' => 0,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Created tu_instances_hashtags table
+                    'query' => 'DESCRIBE tu_instances_hashtags id;',
+                    'match' => "/int\(20\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added time_generated field
+                    'query' => 'DESCRIBE tu_insights time_generated;',
+                    'match' => "/datetime/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Added time_generated field
+                    'query' => 'DESCRIBE tu_insights time_updated;',
+                    'match' => "/timestamp/",
+                    'column' => 'Type',
+                ),
+             )
+        )
+
      ),
 
 );

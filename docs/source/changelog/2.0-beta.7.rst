@@ -1,0 +1,43 @@
+2.0-beta.7 - 20 May 2013
+========================
+
+
+New features:
+-------------
+
+* **Save searches** for a hashtag or keyword on Twitter. See daily search result totals in your insights stream, and
+  search within results from the search box.
+* **Get notified** by your browser when new insights are available (you must enable browser notifications and have your 
+  browser tab open, supported in Chrome, Firefox, Safari).
+* See **insights in your crawler RSS feed**.
+
+
+Developer improvements:
+-----------------------
+
+* **New Insights API** exposes insights stream as JSON (available for use by things like the alpha ThinkUp Chrome extension
+  - https://github.com/ginatrapani/ThinkUp-Notifier-for-Chrome).
+* makeplugin script upgrade generates stubs for latest data input source plugin architecture.
+* Easily build **instance-specific configuration panels** in plugin settings area.
+* **Test suite upgrades** enable it to pass when non-core plugins are installed.
+
+
+Bugfixes:
+---------
+
+* Fix incorrect plural wording in All About You insight.
+* Fix Foursquare authorization error on installations using non-standard port.
+* Fix bug when searching for duplicate terms.
+* Correct List Membership insight miscount.
+* Avoid PHP Notice of Undefined indexes.
+* Reset password token when password has been changed.
+* Allow owner password field to contain special chars (not only letter and numbers).
+* Prevent multiple ThinkUp account activations.
+* Standardize password validation frontend across registration and change password screens.
+* During installation, remove SimpleXML check, require ZipArchive.
+* Fix application URL in account activation email for on installations with uppercase characters in the folder name.
+* Remove pause/start crawling buttons for non-admin users.
+* Fix broken username link in Twitter plugin settings.
+* Redesign documentation.
+* Clean up and streamline code.
+

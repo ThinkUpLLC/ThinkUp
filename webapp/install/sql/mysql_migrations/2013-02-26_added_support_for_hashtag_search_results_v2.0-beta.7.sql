@@ -2,9 +2,7 @@
 -- Table structure for table tu_instances_hashtags
 --
 
-DROP TABLE IF EXISTS tu_instances_hashtags;
-
-CREATE TABLE tu_instances_hashtags (
+CREATE TABLE IF NOT EXISTS tu_instances_hashtags (
   id INT(20) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   instance_id INT(11) NOT NULL COMMENT 'Instance ID.',
   hashtag_id INT(11) NOT NULL COMMENT 'Hashtag ID.',
