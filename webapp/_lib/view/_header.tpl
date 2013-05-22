@@ -19,9 +19,6 @@
     <link href="{$site_root_path}assets/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/insights.css" rel="stylesheet">
-    {foreach from=$header_css item=css}
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
-    {/foreach} 
 
     <!-- IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -30,17 +27,6 @@
 
     <script src="{$site_root_path}assets/js/jquery.js"></script>
     <script src="{$site_root_path}assets/js/bootstrap.js"></script>
-    <script type="text/javascript">
-        var site_root_path = '{$site_root_path}';
-        var owner_email = '{$logged_in_user}';
-        {if $thinkup_api_key}
-        var thinkup_api_key = '{$thinkup_api_key}';
-        {/if}
-    </script>
-
-    {foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-    {/foreach}
 
     {literal}
       <script type="text/javascript">
@@ -52,58 +38,47 @@
                 $('#settingsTabs a:first').tab('show');
             })
 
-
     {/literal}
         {if $logged_in_user}
     {literal}
+            $('#search-keywords').focus(function() {
+                $('#search-refine').dropdown();
+                if ($('#search-keywords').val()) {
+                    $('#search-refine a span.searchterm').text($('#search-keywords').val());
+                }
+            }).blur(function() {
+                $('#search-refine').dropdown();
+            });
 
-        $('#search-keywords').focus(function() {
-            $('#search-refine').dropdown();
-            if ($('#search-keywords').val()) {
+            $('#search-keywords').keyup(function() {
                 $('#search-refine a span.searchterm').text($('#search-keywords').val());
-            }
-        }).blur(function() {
-            $('#search-refine').dropdown();
+            });
         });
 
-        $('#search-keywords').keyup(function() {
-            $('#search-refine a span.searchterm').text($('#search-keywords').val());
-        });
-
-    {/literal}
-        {/if}
-    {literal}
-
-        });
-      </script>
-    {/literal}
-    {if $logged_in_user}
-    {literal}
-
-    <script type="text/javascript">
       function searchMe(_baseu) {
         var _mu = $("input#search-keywords").val();
         if (_mu != "null") {
           document.location.href = _baseu + _mu;
         }
       }
-    </script>
+    {/literal}
+    {else}
+    {literal}
+        });
     {/literal}
     {/if}
-        
+    </script>
+
 {else} <!-- not bootstrap -->
-  
+
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-    {foreach from=$header_css item=css}
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
-    {/foreach}
     <!-- jquery -->
     <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
 
     <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
     <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
-  
+
     {literal}
       <script type="text/javascript">
       $(document).ready(function() {
@@ -126,11 +101,26 @@
         
     </style>
     {/literal}
-  {foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-  {/foreach}
-
 {/if}
+
+{foreach from=$header_css item=css}
+    <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
+{/foreach}
+
+{foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
+{/foreach}
+
+<script type="text/javascript">
+    var site_root_path = '{$site_root_path}';
+    {if $logged_in_user}
+    var owner_email = '{$logged_in_user}';
+    {/if}
+    {if $thinkup_api_key}
+    var thinkup_api_key = '{$thinkup_api_key}';
+    {/if}
+</script>
+
 
 {if $enable_tabs eq 1}
 <script type="text/javascript">
