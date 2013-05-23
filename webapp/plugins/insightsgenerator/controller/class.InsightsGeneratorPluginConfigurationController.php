@@ -57,6 +57,10 @@ class InsightsGeneratorPluginConfigurationController extends PluginConfiguration
             $contents = fread($fhandle, filesize($includefile));
             fclose($fhandle);
             $plugin_vals = $this->parseFileContents($contents);
+			if($plugin_vals) {
+				$filename = substr($includefile,strripos($includefile,'/')+1);
+				$plugin_vals['filename'] = substr($filename,0,strpos($filename,'.'));
+			}
             array_push($installed_plugins, $plugin_vals);
         }
         return $installed_plugins;
