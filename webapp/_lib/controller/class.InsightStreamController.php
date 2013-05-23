@@ -105,10 +105,22 @@ class InsightStreamController extends ThinkUpController {
             $this->addErrorMessage(stripslashes($_GET["u"])." on ".ucfirst($_GET['n']) ." is not in ThinkUp.");
         }
         if ( $should_display_insight) {
+			$plugin_options_dao = DAOFactory::getDAO('PluginOptionDAO');
+			$plugin_options = $plugin_options_dao->getOptions('insightsGenerator');
+			foreach($plugin_options as $plugin_option){
+				$plugin_options[$plugin_option->option_name] = $plugin_option->option_value;
+			}
             $insights = array();
             $insight = $insight_dao->getInsightByUsername($_GET['u'], $_GET['n'], $_GET['s'], $_GET['d']);
             if (isset($insight)) {
                 $insights[] = $insight;
+				/*Removing the insights that should be hidden*/
+				foreach($insights as $key => $insight) {
+					if(isset($plugin_options['hide_'.$insight->filename]) && 
+					$plugin_options['hide_'.$insight->filename] == true){
+						unset($insights[$key]);
+					}
+				}
                 $this->addToView('insights', $insights);
                 $this->addToView('expand', true);
             } else {
@@ -122,7 +134,11 @@ class InsightStreamController extends ThinkUpController {
      */
     private function displayPageOfInsights() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
-
+		$plugin_options_dao = DAOFactory::getDAO('PluginOptionDAO');
+		$plugin_options = $plugin_options_dao->getOptions('insightsGenerator');
+		foreach($plugin_options as $plugin_option){
+			$plugin_options[$plugin_option->option_name] = $plugin_option->option_value;
+		}
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
         if (Session::isLoggedIn()) {
             if ($this->isAdmin()) {
@@ -141,6 +157,13 @@ class InsightStreamController extends ThinkUpController {
             //show just public service users in stream
             $insights = $insight_dao->getPublicInsights($page_count=(self::PAGE_INSIGHTS_COUNT+1), $page);
         }
+		/*Removing the insights that should be hidden*/
+		foreach($insights as $key => $insight) {
+			if(isset($plugin_options['hide_'.$insight->filename]) && 
+			$plugin_options['hide_'.$insight->filename] == true){
+				unset($insights[$key]);
+			}
+		}
         if (isset($insights) && sizeof($insights) > 0) {
             if (sizeof($insights) == (self::PAGE_INSIGHTS_COUNT+1)) {
                 $this->addToView('next_page', $page+1);
