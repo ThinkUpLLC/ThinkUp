@@ -1080,20 +1080,21 @@ class TwitterCrawler {
                     $continue = false;
                 } else {
                     $post_dao = DAOFactory::getDAO('FavoritePostDAO');
+                    $fav_count = 0;
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
                         if ($post_dao->addFavorite($this->user->user_id, $tweet) > 0) {
                             URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
                             $this->logger);
-                            $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
-                            $fcount++;
-                            $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
-                            $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
+                            $this->logger->logInfo("Found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
+                            $fav_count++;
+                            $this->logger->logInfo("Fav count: $fav_count", __METHOD__.','.__LINE__);
+                            $this->logger->logInfo("Added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                         } else {
                             // fav was already stored, so take no action. This could happen both because some
                             // of the favs on the given page were processed last time, or because a separate process,
                             // such as a UserStream process, is also watching for and storing favs.
-                            $status_message = "have already stored fav ". $tweet['post_id'];
+                            $status_message = "Have already stored fav ". $tweet['post_id'];
                             $this->logger->logDebug($status_message, __METHOD__.','.__LINE__);
                         }
 
