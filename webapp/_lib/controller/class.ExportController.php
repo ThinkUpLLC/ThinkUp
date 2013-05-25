@@ -96,7 +96,11 @@ class ExportController extends ThinkUpAuthController {
 
     protected function exportAllPosts() {
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $posts_it = $post_dao->getAllPostsByUsernameIterator($_GET['u'], $_GET['n']);
+        // Opt to use user_id instead of username if provided (accounts for when usernames/facebook page names/etc. are changed)
+        if(isset($_GET['user_id']))
+            $posts_it = $post_dao->getAllPostsIterator($_GET['user_id'], $_GET['n']);
+        else
+            $posts_it = $post_dao->getAllPostsByUsernameIterator($_GET['u'], $_GET['n']);
         $column_labels = array_keys(get_class_vars('Post'));
 
         self::outputCSV($posts_it, $column_labels, 'posts-'.$_GET['u'].'-'.$_GET['n']);

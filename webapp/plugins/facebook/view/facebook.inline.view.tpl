@@ -16,7 +16,7 @@
 
 <div class="header">
     {if $is_searchable}<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>{/if}
-    {if $logged_in_user and $display eq 'posts-all'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
+    {if $logged_in_user and $display eq 'posts-all'} | <a href="{$site_root_path}post/export.php?user_id={$instance->network_user_id|urlencode}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
 </div>
     
 
