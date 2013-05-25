@@ -279,7 +279,7 @@ class TwitterCrawler {
 
                     $user_replied_to = new User($tweet, 'replies');
                     $this->user_dao->updateUser($user_replied_to);
-                    $post_dao->addPost($tweet, $user_replied_to, $this->logger);
+                    $inserted_post_key = $post_dao->addPost($tweet, $user_replied_to, $this->logger);
                     if ($inserted_post_key !== false) {
                         $status_message = 'Added replied to tweet ID '.$tid." to database.";
                         URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
