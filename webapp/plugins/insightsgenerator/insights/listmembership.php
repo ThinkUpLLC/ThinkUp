@@ -77,7 +77,8 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     }
                 }
                 $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
-                if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                if (is_array($list_membership_count_history_by_day['history'])
+                && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                     $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
                     $insight_text .=  ", bringing the total to <strong>". number_format($total_lists).
                     " lists</strong>.";
