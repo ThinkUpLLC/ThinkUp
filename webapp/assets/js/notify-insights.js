@@ -43,17 +43,29 @@
                         dataType: "json",
                         success: function(data) {
                             if (typeof data.error === 'undefined') {
-                                for (var i = 0 ; i < data.length; i++) {
-                                    var insight = data[i];
+                                if (data.length >= 3) {
                                     var icon = site_root_path + "assets/img/favicon.png",
-                                    title = insight.prefix,
-                                    message = $(document.createElement('div')).hide().append(insight.text).text().replace(':', '...');
+                                    title = "New insights available",
+                                    message = "ThinkUp has " + data.length + " new insights for you.";
                                     notification = window.webkitNotifications.createNotification(icon, title, message);
                                     notification.onclick = function(x) { 
                                         window.open(document.URL);
                                         this.cancel(); 
                                     };
                                     notification.show();
+                                } else {
+                                    for (var i = 0 ; i < data.length; i++) {
+                                        var insight = data[i];
+                                        var icon = site_root_path + "assets/img/favicon.png",
+                                        title = insight.prefix,
+                                        message = $(document.createElement('div')).hide().append(insight.text).text().replace(':', '...');
+                                        notification = window.webkitNotifications.createNotification(icon, title, message);
+                                        notification.onclick = function(x) { 
+                                            window.open(document.URL);
+                                            this.cancel(); 
+                                        };
+                                        notification.show();
+                                    }
                                 }
                                 timecheck = Math.round(+new Date()/1000);
                             }
