@@ -37,6 +37,9 @@ class Session {
      * @return bool Is user logged into ThinkUp
      */
     public static function isLoggedIn() {
+	
+
+	
         if (!SessionCache::isKeySet('user')) {
             return false;
         } else {
@@ -71,10 +74,30 @@ class Session {
      * @param Owner $owner
      */
     public static function completeLogin($owner) {
+		
+		$config = Config::getInstance();
+		
+		//to generate unique key
+		$generate_key=md5(microtime().$_SERVER[REMOTE_ADDR]);
+		$unique_key=FALSE;
+		while(!($unique_key))
+		{$session_dao = DAOFactory::getDAO('SessionDataDAO');
+		$is_duplicate=$session_dao->checkDuplicateSessionKey($generate_key);
+		if($is_duplicate)
+		$generate_key=md5(microtime().$_SERVER[REMOTE_ADDR]);
+		else
+		$unique_key=TRUE;
+		}
+		
+		
+		$_SESSION[$config->getValue('source_root_path')]['session_key']=$generate_key ;
         SessionCache::put('user', $owner->email);
         SessionCache::put('user_is_admin', $owner->is_admin);
         // set a CSRF token
         SessionCache::put('csrf_token', uniqid(mt_rand(), true));
+		
+		
+		
         if (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == 'TESTS') {
             SessionCache::put('csrf_token', 'TEST_CSRF_TOKEN');
         }
@@ -85,7 +108,8 @@ class Session {
      */
     public static function logout() {
         SessionCache::unsetKey('user');
-        SessionCache::unsetKey('user_is_admin');
+        SessionCache::unsetKey('user_is_admin');		
+		SessionCache::unsetKey('session_key');
     }
 
     /**
