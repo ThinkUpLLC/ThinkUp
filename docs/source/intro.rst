@@ -15,7 +15,7 @@ social activity in a database that YOU control, making it easy to search, sort, 
 from your network. All you need is a web server that can run a PHP application.
 
 `Gina Trapani <http://ginatrapani.org>`_ began building ThinkUp as a personal project in 2009. From 2010 until 2012,
-`Expert Labs <http://expertlabs.org>`_ incubated ThinkUp. Today development is led by ThinkUp LLC, a company founded
+`Expert Labs <http://expertlabs.org>`_ incubated ThinkUp. Today, development is led by ThinkUp LLC, a company founded
 by Anil Dash and Gina Trapani.
 
 ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and 

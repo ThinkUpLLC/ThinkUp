@@ -6,9 +6,11 @@ standard methods every plugin will need.
 
 Navigate to ThinkUp's root directory in a terminal and type the following command:
 
-./extras/dev/makeplugin/makeplugin NameOfYourPlugin
+::
 
-Where NameOfYourPlugin is the name of the plugin you want to create e.g. Twitter, Facebook etc. Once the script is
+    ./extras/dev/makeplugin/makeplugin NameOfYourPlugin
+
+Where NameOfYourPlugin is the name of the plugin you want to create, e.g. Twitter, Facebook etc. Once the script is
 done, navigate to the webapp/plugins/ folder, and you'll see a newly-created folder there which contains all your
 new plugin's files.
 
