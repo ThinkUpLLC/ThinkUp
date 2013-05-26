@@ -2314,6 +2314,28 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $result["average_retweet_count"];
     }
 
+    public function getAverageFaveCount($author_username, $network, $last_x_days, $since=null){
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT round(avg(favlike_count_cache)) as average_favlike_count ";
+        $q .= "FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+        $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+        $q .= "AND favlike_count_cache > 0 ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY);";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        return $result["average_favlike_count"];
+    }
+
     public function doesUserHavePostsWithRetweetsSinceDate($author_username, $network, $last_x_days, $since=null) {
         if ($since==null) {
             $since = date('Y-m-d');
@@ -2322,6 +2344,31 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = "SELECT id FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
         $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
         $q .= "AND (retweet_count_cache > 0 OR old_retweet_count_cache > 0 OR retweet_count_api > 0) ";
+        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':last_x_days'=>(int)$last_x_days,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        if (sizeof($result) < 1 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function doesUserHavePostsWithFavesSinceDate($author_username, $network, $last_x_days, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT id FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
+        $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
+        $q .= "AND (favlike_count_cache > 0) ";
         $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
         $vars = array(
             ':author_username'=>$author_username,
