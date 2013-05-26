@@ -268,7 +268,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         if (!$user_dao->isUserInDB($fb_user_id, 'facebook')) {
             $r = array('user_id'=>$fb_user_id, 'user_name'=>$fb_username,'full_name'=>$fb_username, 'avatar'=>'',
-            'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
+            'location'=>'', 'description'=>'', 'url'=>'', 'is_verified'=>'', 'is_protected'=>'',  'follower_count'=>0,
             'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
             'last_post_id'=>'', 'network'=>'facebook' );
             $u = new User($r, 'Owner info');
@@ -314,6 +314,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $val['location'] = '';
                 $val['description'] = '';
                 $val['url'] = '';
+                $val['is_verified'] = false;
                 $val['is_protected'] = false;
                 $val['follower_count'] = 0;
                 $val['post_count'] = 0;

@@ -207,6 +207,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($results["user_id"], "795649");
         $this->assertEqual($results["user_name"], "rsarver");
         $this->assertEqual($results["full_name"], "Ryan Sarver");
+        $this->assertEqual($results["is_verified"], 1);
     }
 
     public function testParseJSONUsers() {

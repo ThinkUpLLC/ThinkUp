@@ -158,6 +158,15 @@ interface FollowDAO {
      */
     public function getLeastLikelyFollowersThisWeek($user_id, $network, $count = 20, $page = 1);
     /**
+     * Gets the followers who are verified by the network first seen by ThinkUp a specified number of days ago.
+     * @param str $user_id
+     * @param str $network
+     * @param int $days_ago
+     * @param int $limit
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getVerifiedFollowersByDay($user_id, $network, $days_ago=0, $limit=10);
+    /**
      * Gets the followers with the earliest join date.
      * @param int $user_id
      * @param str $network

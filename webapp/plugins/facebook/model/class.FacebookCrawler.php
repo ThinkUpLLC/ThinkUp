@@ -128,6 +128,7 @@ class FacebookCrawler {
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = isset($details->location->name)?$details->location->name:'';
             $user_vals["description"] = isset($details->about)?$details->about:'';
+            $user_vals["is_verifed"] = 0; //is_verified is for legitimate high quality sources
             $user_vals["is_protected"] = 1; //for now, assume a Facebook user is private
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
