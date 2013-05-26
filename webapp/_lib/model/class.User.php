@@ -159,7 +159,9 @@ class User {
             $this->location = $val['location'];
             $this->description = $val['description'];
             $this->url = $val['url'];
-            $this->is_verified = $val['is_verified'];
+            if (isset($val['is_verified'])) {
+                $this->is_verified = $val['is_verified'];
+            }
             if ($this->is_verified == '') {
                 $this->is_verified = 0;
             } elseif ($this->is_verified == 'true') {
