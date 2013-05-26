@@ -109,6 +109,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($results["author_fullname"], "Twitter API");
         $this->assertEqual($results["location"], "San Francisco, CA");
         $this->assertEqual($results["is_protected"], false);
+        $this->assertEqual($results["favlike_count_cache"], 53);
     }
 
     public function testParseJSONTweetPrivate() {

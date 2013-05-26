@@ -1799,10 +1799,18 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($post->is_reply_by_friend);
         $this->assertEqual($post->is_geo_encoded, 0);
         $this->assertTrue($post->is_protected);
+        $this->assertEqual($post->favlike_count_cache, 0);
 
         //test add post that does exist
         $vals['post_id']=129;
         $this->assertFalse($dao->addPost($vals), "Post exists, nothing inserted");
+
+        //test add post with new favorite_count
+        $vals['post_id']=250;
+        $vals['favlike_count_cache']=67;
+        $this->assertFalse($dao->addPost($vals), "Post exists, nothing inserted");
+        $post = $dao->getPost(250, 'twitter');
+        $this->assertEqual($post->favlike_count_cache, 67);
 
         //test add reply, check cache count
         $vals['post_id']=251;
