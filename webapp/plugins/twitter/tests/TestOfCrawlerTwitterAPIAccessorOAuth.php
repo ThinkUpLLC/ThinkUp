@@ -45,7 +45,7 @@ class TestOfCrawlerTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->debug(__METHOD__);
         $api = new CrawlerTwitterAPIAccessorOAuth($oauth_token='111', $oauth_token_secret='222',
         $oauth_consumer_key=1234, $oauth_consumer_secret=4567, $archive_limit=3200, $num_twitter_errors=5);
-        $api->to->setDataPathFolder('testofcrawlertwitterapiaccessoroauth/testinitializeendpointratelimits/');
+        $api->to->setDataPathFolder('toctaaoauth/initendpointratelimits/');
         $this->assertNotNull($api);
         $this->assertIsA($api, 'CrawlerTwitterAPIAccessorOAuth');
     }
@@ -54,7 +54,7 @@ class TestOfCrawlerTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->debug(__METHOD__);
         $api = new CrawlerTwitterAPIAccessorOAuth($oauth_token='111', $oauth_token_secret='222',
         $oauth_consumer_key=1234, $oauth_consumer_secret=4567, $archive_limit=3200, $num_twitter_errors=5);
-        $api->to->setDataPathFolder('testofcrawlertwitterapiaccessoroauth/testinitializeendpointratelimits/');
+        $api->to->setDataPathFolder('toctaaoauth/initendpointratelimits/');
 
         $api->initializeEndpointRateLimits();
         $this->assertEqual($api->endpoints["mentions"]->getRemaining(), 15);

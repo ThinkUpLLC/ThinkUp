@@ -28,7 +28,7 @@
  */
 class TwitterOAuth {
 
-    var $data_path = 'webapp/plugins/twitter/tests/testdata/';
+    var $data_path = 'webapp/plugins/twitter/tests/data/';
 
     private $last_status_code = 200;
 
@@ -96,7 +96,7 @@ class TwitterOAuth {
     }
 
     public function http($url) {
-        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/twitter/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_WEBAPP_PATH.'plugins/twitter/tests/data/';
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1.1/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);
