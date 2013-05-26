@@ -110,4 +110,13 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         }
         return $options_hash;
     }
+	
+	public function getOptionByName($plugin_folder, $name) {
+		$plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin_folder);
+		$namespace = $this->namespace . '-' . $plugin_id;
+		
+		$option = $this->option_dao->getOptionByName($namespace, $name);
+		return $option;
+	}
 }
