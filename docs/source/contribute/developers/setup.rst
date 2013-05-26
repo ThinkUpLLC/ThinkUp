@@ -62,21 +62,3 @@ Useful Keyboard Shortcuts
    shortcuts <http://www.rossenstoyanchev.org/write/prog/eclipse/eclipse3.html>`_
 -  `Boosting your productivity in Eclipse using
    shortcuts <http://refactor.se/2007/07/05/boosting-you-productivity-in-eclipse-using-shortcuts/>`_
-
-Windows development
--------------------------
-Due to the length of some `filename paths conflicting with the Windows 
-environment <http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx>`_, 
-Windows-based developers are advised to use an initial `folder path
-of no more than 16 characters <https://github.com/ginatrapani/ThinkUp/issues/1519>`_. 
-For example, the below ThinkUp install directory is 26 characters:
-
-:: 
-
-    C:\GitHubProjects\ThinkUp\
-
-Where possible, the path to install ThinkUp should be under 16 characters, as in the following example:
-	
-:: 
-
-    C:\ThinkUp\
