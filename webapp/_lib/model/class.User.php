@@ -73,6 +73,11 @@ class User {
      *
      * @var bool
      */
+    var $is_verified;
+    /**
+     *
+     * @var bool
+     */
     var $is_protected;
     /**
      *
@@ -154,6 +159,12 @@ class User {
             $this->location = $val['location'];
             $this->description = $val['description'];
             $this->url = $val['url'];
+            $this->is_verified = $val['is_verified'];
+            if ($this->is_verified == '') {
+                $this->is_verified = 0;
+            } elseif ($this->is_verified == 'true') {
+                $this->is_verified = 1;
+            }
             $this->is_protected = $val['is_protected'];
             if ($this->is_protected == '') {
                 $this->is_protected = 0;

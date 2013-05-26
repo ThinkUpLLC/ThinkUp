@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: Interesting Followers
- Description: New discerning followers.
+ Plugin Name: Interesting followers
+ Description: New least likely and verified followers.
  */
 
 /**
@@ -26,8 +26,9 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2013 Gina Trapani, Nilaksh Das
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
+ * @author Nilaksh Das <nilakshdas@gmail.com>
  */
 
 class InterestingFollowersInsight extends InsightPluginParent implements InsightPlugin {
@@ -36,8 +37,9 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
-        // Least likely followers insights
         $follow_dao = DAOFactory::getDAO('FollowDAO');
+
+        // Least likely followers based on follower-to-followee ratio
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
         $instance->network, 0, 3);
 
@@ -50,6 +52,22 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
                 "Standout:", "An interesting user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
                 serialize($least_likely_followers));
+            }
+        }
+
+        // Verified followers
+        $verified_followers = $follow_dao->getVerifiedFollowersByDay($instance->network_user_id, $instance->network, 0,
+        3);
+
+        if (sizeof($verified_followers) > 0 ) { //if not null, store insight
+            if (sizeof($verified_followers) > 1) {
+                $this->insight_dao->insertInsight('verified_followers', $instance->id, $this->insight_date,
+                "Verified followers!", '<strong>'.sizeof($verified_followers)." verified users</strong> ".
+                "followed $this->username", $filename, Insight::EMPHASIS_LOW, serialize($verified_followers));
+            } else {
+                $this->insight_dao->insertInsight('verified_followers', $instance->id, $this->insight_date,
+                "Verified follower!", "A verified user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
+                serialize($verified_followers));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
