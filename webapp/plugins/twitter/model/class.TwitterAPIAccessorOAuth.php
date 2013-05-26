@@ -283,7 +283,7 @@ class TwitterAPIAccessorOAuth {
             'friend_count'=> (integer)$json_tweet->user->friends_count,
             'joined'=> (string)gmdate("Y-m-d H:i:s", strToTime($json_tweet->user->created_at)),
             'favorites_count'=>(integer)$json_tweet->user->favourites_count,
-            'favorited'=> (integer)self::boolToInt($json_tweet->favorited),
+            'favlike_count_cache'=> ((isset($json_tweet->favorite_count))? (integer)$json_tweet->favorite_count:0),
             'network'=>'twitter'
             );
 

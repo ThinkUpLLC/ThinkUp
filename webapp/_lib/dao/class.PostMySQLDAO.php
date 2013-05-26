@@ -762,6 +762,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 // then the post already existed in database & has RT count > 0, so just update the retweet count.
                 $this->updateAPIRetweetCount($vals['post_id'], $vals['retweet_count_api'], $vals['network']);
             }
+            if (isset($vals['favlike_count_cache']) && ($vals['favlike_count_cache'] > 0 ) && !$res) {
+                // then the post already existed in database & has fav count > 0, so just update the fav count.
+                $this->updateFavLikeCount($vals['post_id'], $vals['network'], $vals['favlike_count_cache'] );
+            }
             // if the post was already in the database, but its 'in_retweet_of_post_id' field was not set in the
             // earlier insert, then we need to update the existing post to set that info, then increment the old-style
             // retweet cache count for the original post it references as well.  This situation can arise if the
