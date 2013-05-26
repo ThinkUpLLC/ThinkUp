@@ -11,45 +11,44 @@ Set up Eclipse PDT to work with ThinkUp
 ---------------------------------------
 
 - **Set indentation to spaces:** To easily generate code that complies
-  with ThinkUp's indentation-by-spaces style (as per the [[Code Style
-  Guide]]), in your project's preferences panel, under PHP>Code
-  Style>Formatter, set the 'Tab Style' to spaces, and indentation size to 4.
+  with ThinkUp's indentation-by-spaces style (as per the :doc:`Code Style Guide </contribute/developers/writecode/styleguide/index>`), 
+  in your project's preferences panel, under *PHP > Code
+  Style > Formatter*, set the 'Tab Style' to spaces, and indentation size to 4. 
 
 - **Add word wrap:** Insane but true: Eclipse does not support word
   wrap natively. `Use this experimental add-on to enable
-  it. <http://ahtik.com/blog/2006/06/18/first-alpha-of-eclipse-word-wrap-released/>`_
+  it <http://ahtik.com/blog/2006/06/18/first-alpha-of-eclipse-word-wrap-released/>`_
   (via `Stack
-  Overflow <http://stackoverflow.com/questions/97663/how-can-i-get-word-wrap-to-work-in-eclipse-pdt-for-php-files)>`_.
-  Once the plugin's installed and you've restarted, right-click on a file
+  Overflow <http://stackoverflow.com/questions/97663/how-can-i-get-word-wrap-to-work-in-eclipse-pdt-for-php-files>`_).
+  Once the plugin is installed and you've restarted, right-click on a file
   and select 'Virtual word wrap' to enable it.
 
 - **Show whitespace:** See whether you're using tabs or spaces; go to
-  Window>Customize Perspective and under Editor Presentation check off
+  *Window > Customize Perspective* and under 'Editor Presentation', check off
   'Show Whitespace Characters.' A button will appear on your toolbar that
   you can press to show spaces and tabs.
 
-- **Set your author name:** In Preferences...>PHP>Code Style>Code
-  Templates, expand Comments and choose 'Types.' Click the edit button to
+- **Set your author name:** In *Preferences... > PHP > Code Style > Code
+  Templates*, expand *Comments* and choose 'Types.' Click the edit button to
   set what the @author tag auto-fills when you're commenting your code.
 
-- **Show a max line length ruler:** In the
-  Preferences>General>Editors>Text Editors. Check 'Show print margin' and
-  enter the max line length (currently 120 as per the style guide).
+- **Show a max line length ruler:** In 
+  *Preferences > General > Editors > Text Editors*, check 'Show print margin' and
+  enter the maximum line length (currently 120 as per the style guide).
 
 - **Run regression tests in Eclipse:** Here's how to `install the
   SimpleTest
   plugin <http://www.thetricky.net/php/php-unit-testing-in-eclipse>`_ in
   Eclipse to run tests in the IDE. (Note from Gina: this plugin doesn't
-  work on my Mac or PC; when I choose 'Run as>SimpleTest' nothing
+  work on my Mac or PC; when I choose 'Run as > SimpleTest' nothing
   happens.)
   
 - **Install Mylyn plugin for GitHub:** If you want to browse and update
   issues in Eclipse, install `this
-  plugin <http://wiki.github.com/dgreen99/org.eclipse.mylyn.github/>`_
-  Server:
-  `http://github.com/ginatrapani/ThinkUp- <http://github.com/ginatrapani/ThinkUp*>`_
-  Find your GitHub API Key in `Account
-  Settings <https://github.com/account>`_ under the**Account Admin** tab.
+  plugin <https://github.com/dgreen99/org.eclipse.mylyn.github/wiki>`_.
+
+  - Server: `http://github.com/ginatrapani/ThinkUp <http://github.com/ginatrapani/ThinkUp>`_
+  - Find your GitHub API Key in `Applications <https://github.com/settings/applications>`_ under **Account settings**.
 
 Useful Keyboard Shortcuts
 -------------------------
@@ -62,4 +61,22 @@ Useful Keyboard Shortcuts
 -  `More Eclipse keyboard
    shortcuts <http://www.rossenstoyanchev.org/write/prog/eclipse/eclipse3.html>`_
 -  `Boosting your productivity in Eclipse using
-   shortcuts <http://blog.refactor.se/2007/07/05/boosting-you-productivity-in-eclipse-using-shortcuts/>`_
+   shortcuts <http://refactor.se/2007/07/05/boosting-you-productivity-in-eclipse-using-shortcuts/>`_
+
+Windows development
+-------------------------
+Due to the length of some `filename paths conflicting with the Windows 
+environment <http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx>`_, 
+Windows-based developers are advised to use an initial `folder path
+of no more than 16 characters <https://github.com/ginatrapani/ThinkUp/issues/1519>`_. 
+For example, the below ThinkUp install directory is 26 characters:
+
+:: 
+
+    C:\GitHubProjects\ThinkUp\
+
+Where possible, the path to install ThinkUp should be under 16 characters, as in the following example:
+	
+:: 
+
+    C:\ThinkUp\
