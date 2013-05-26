@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIEndpoint
 
 class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
 
-    var $test_data_path = 'webapp/plugins/twitter/tests/testdata/';
+    var $test_data_path = 'webapp/plugins/twitter/tests/data/';
 
     public function testConstructor() {
         $this->debug(__METHOD__);
