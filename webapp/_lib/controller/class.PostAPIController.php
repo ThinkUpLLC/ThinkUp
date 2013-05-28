@@ -115,6 +115,11 @@ class PostAPIController extends ThinkUpController {
      */
     public $include_rts = false;
     /**
+     * The keyword to use. No default value. In requests that require hashtag data must be set.
+     * @var str
+     */
+    public $keyword;    
+    /**
      * A User object set when either the user_id or username variables are set. If you are using User data at any point
      * in this class, you should use this object.
      * @var User
@@ -130,6 +135,17 @@ class PostAPIController extends ThinkUpController {
      * @var UserDAO
      */
     private $user_dao;
+    /**
+     * A Hashtag object set when either the hashtag_id or hashtag_name variables are set.
+     * If you are using Hashtag data at any point in this class, you should use this object.
+     * @var hashtag
+     */
+    private $hashtag;
+    /**
+     *
+     * @var HashtagDAO
+     */
+    private $hashtag_dao;    
     /**
      * Constructor
      *
@@ -199,7 +215,10 @@ class PostAPIController extends ThinkUpController {
         if (isset($_GET['include_rts'])) {
             $this->include_rts = $this->isTrue($_GET['include_rts']);
         }
-
+        if (isset($_GET['keyword'])) {
+            $this->keyword = $_GET['keyword'];
+        }
+        
         /*
          * END READ IN OF QUERY STRING VARS
          */
@@ -279,6 +298,7 @@ class PostAPIController extends ThinkUpController {
         // fetch the correct PostDAO and UserDAO from the DAOFactory
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->user_dao = DAOFactory::getDAO('UserDAO');
+        $this->hashtag_dao = DAOFactory::getDAO('HashtagDAO');
 
         /*
          * Use the information gathered from the query string to retrieve a
@@ -292,6 +312,18 @@ class PostAPIController extends ThinkUpController {
         } else {
             $this->user = null;
         }
+        
+       /*
+        * Use the information gathered from the query string to retrieve a
+        * Hashtag object. This will be the standard object with which to get
+        * Hashtag information from in API calls.
+        */
+        if (!is_null($this->keyword) && !is_null($this->network)) {
+            $this->hashtag = $this->hashtag_dao->getHashtag($this->keyword,$this->network);
+        } else {
+            $this->hashtag = null;
+        }
+        
         //Privacy checks
         if (substr($this->type, 0, 4)=='user') { //user-related API call
             if (is_null($this->user)) {
@@ -589,6 +621,30 @@ class PostAPIController extends ThinkUpController {
             case 'user_replies_in_range':
                 $data = $this->post_dao->getAllRepliesInRange($this->user->user_id, $this->network, $this->count,
                 $this->from, $this->until, $this->page, $this->order_by, $this->direction, $this->is_public);
+                break;
+                
+                /*
+                 * Gets posts that contains a Keyword.
+                *
+                * Required arguments: keyword and network
+                *
+                * Optional arguments: count, page, order_by, direction, include_entities, trim_user
+                *
+                * Docs: http://thinkup.com/docs/userguide/api/posts/keyword_posts.html
+                */
+            case 'keyword_posts':
+                if (is_null($this->keyword) || is_null($this->network)) {
+                    $m = 'A request of type ' . $this->type . ' requires valid keyword and network ';
+                    $m .= 'parameters to be specified.';
+                    throw new RequiredArgumentMissingException($m);
+                }
+                elseif (is_null($this->hashtag) && !is_null($this->keyword) && !is_null($this->network)) {
+                    throw new KeywordNotFoundException();
+                }
+                else {
+                    $data = $this->post_dao->getAllPostsByHashtagId($this->hashtag->id, $this->network,
+                            $this->count, $this->order_by, $this->direction, $this->page, $this->is_public);
+                }
                 break;
 
                 /*
