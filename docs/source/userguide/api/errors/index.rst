@@ -10,3 +10,4 @@ Contents:
    requiredargumentmissing
    usernotfound
    apidisabled
+   keywordnotfound

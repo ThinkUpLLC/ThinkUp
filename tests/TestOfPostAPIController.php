@@ -744,6 +744,99 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'in_reply_to_post_id' => null,
                             'in_reply_to_user_id' => null,
                             'is_protected' => 1));
+        // add instance 7
+        $builders[] = FixtureBuilder::build('instances',
+                array('network_user_id' => '100', 'network_viewer_id' => '100', 'network_username' => 'userhashtag',
+                        'last_post_id'  => '1', 'crawler_last_run' => '2013-02-28 15:21:16', 'total_posts_by_owner' => 0,
+                        'total_posts_in_system' => 0, 'total_replies_in_system' => 0, 'total_follows_in_system' => 0,
+                        'posts_per_day' => 0, 'posts_per_week' => 0, 'percentage_replies' => 0, 'percentage_links' => 0,
+                        'earliest_post_in_system' => '2013-02-28 15:21:16',
+                        'earliest_reply_in_system' => '2013-02-28 15:21:16', 'is_archive_loaded_posts' => 0,
+                        'is_archive_loaded_replies' => 0, 'is_archive_loaded_follows' => 0, 'is_public' => 0,
+                        'is_active' => 0, 'network' => 'twitter', 'favorites_profile' => 0, 'owner_favs_in_system' => 0));
+        
+        // add instance_twitter
+        $builders[] = FixtureBuilder::build('instances_twitter',
+                array('last_page_fetched_replies' => 1, 'last_page_fetched_tweets' => 1));
+        
+        // add hashtags 1 i 2
+        $builders[] = FixtureBuilder::build('hashtags',
+                array('hashtag' => 'first', 'network'=>'twitter', 'count_cache' => 0));
+        $builders[] = FixtureBuilder::build('hashtags',
+                array('hashtag' => '#second', 'network'=>'twitter', 'count_cache' => 0));
+        
+        // add instances_hashtags 1
+        $builders[] = FixtureBuilder::build('instances_hashtags',
+                array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0,
+                        'last_page_fetched_tweets' => 1));
+        
+        // add users
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 101,
+                'user_name' => 'userhashtag1',
+                'full_name' => 'User Hashtag1',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 101));
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 102,
+                'user_name' => 'userhashtag2',
+                'full_name' => 'User Hashtag2',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 102));
+        $builders[] = FixtureBuilder::build( 'users', array(
+                'user_id' => 103,
+                'user_name' => 'userhashtag3',
+                'full_name' => 'User Hashtag3',
+                'is_protected' => 0,
+                'network' => 'twitter',
+                'follower_count' => 103));
+        
+        $counter = 300;
+        while ($counter <= 359) {
+            $pseudo_minute = substr($counter, 1,2);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+                $userid = 1;
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+                $userid = 2;
+            } else {
+                $source = 'web';
+                $userid = 3;
+            }
+            $username = 'userhashtag'.$userid;
+            $userfullname = 'User Hashtag'.$userid;
+            $builders[] = FixtureBuilder::build( 'posts', array(
+                    'post_id' => $counter,
+                    'author_user_id' => $userid,
+                    'author_username' => $username,
+                    'author_fullname' => $userfullname,
+                    'author_avatar' => 'avatar.jpg',
+                    'post_text' => 'This is post ' . $counter,
+                    'source' => $source,
+                    'pub_date' => '2013-03-05 16:' . $pseudo_minute . ':00',
+                    'reply_count_cache' => rand(0, 4),
+                    'retweet_count_cache' => 5,
+                    'network' => 'twitter',
+                    'old_retweet_count_cache' => 0,
+                    'in_rt_of_user_id' => null,
+                    'in_reply_to_post_id' => null,
+                    'in_retweet_of_post_id' => null,
+                    'is_geo_encoded' => 0,
+                    'is_protected'=>0));
+        
+            if ($counter % 2 == 0) {
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter, 'hashtag_id' => 2, 'network' => 'twitter'));
+            }
+            else {
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter, 'hashtag_id' => 1, 'network' => 'twitter'));
+            }                    
+            $counter++;
+        }
         return $builders;
     }
 
@@ -2737,4 +2830,182 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
         $this->assertFalse(isset($output->error));
     }
+
+    public function testKeywordPosts() {
+        $_GET['type'] = 'keyword_posts';
+        $_GET['keyword'] = 'first';
+        $_GET['network'] = 'twitter';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 20);
+    
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+        }
+    
+        // test all posts are from correct user
+        foreach ($output as $post) {
+            $this->assertWithinMargin($post->user->id, 102,1);
+        }
+    
+        //test page
+        $_GET['page'] = 1;
+        $_GET['order_by'] = 'post_id';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 20);
+        $counter=301;
+        foreach($output as $post) {
+            $this->assertEqual($post->id, $counter);
+            $counter = $counter+2;
+        }
+    
+        $_GET['page'] = 2;
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 10);
+        $counter=341;
+        foreach($output as $post) {
+            $this->assertEqual($post->id, $counter);
+            $counter = $counter+2;
+        }
+         
+        unset($_GET['page']);
+        unset($_GET['order_by']);
+        unset($_GET['direction']);
+    
+        //test #second
+        $_GET['keyword'] = '#second';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 20);
+    
+        // test the object type is correct
+        $this->assertTrue(is_array($output));
+        foreach($output as $post) {
+            $this->assertTrue($post instanceof stdClass);
+            $this->assertEqual($post->protected, false);
+        }
+    
+        // test all posts are from correct user
+        foreach ($output as $post) {
+            $this->assertWithinMargin($post->user->id, 102,1);
+        }
+    
+        // test count
+        for ($count = 1; $count <= 20; $count++) {
+            $_GET['count'] = $count;
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            $this->assertEqual(sizeof($output), $count);
+        }
+        unset($_GET['count']);
+    
+        // test order_by
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) <= $date);
+            $date = strtotime($post->created_at);
+        }
+    
+        $_GET['order_by'] = 'date';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $date = strtotime($output[0]->created_at);
+        foreach ($output as $post) {
+            $this->assertTrue(strtotime($post->created_at) >= $date);
+            $date = strtotime($post->created_at);
+        }
+    
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) <= 0);
+            $str = $post->source;
+        }
+    
+        $_GET['order_by'] = 'source';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->source;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->source, $str) >= 0);
+            $str = $post->source;
+        }
+    
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) <= 0);
+            $str = $post->text;
+        }
+    
+        $_GET['order_by'] = 'post_text';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->text;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->text, $str) >= 0);
+            $str = $post->text;
+        }
+    
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) <= 0);
+            $str = $post->user->screen_name;
+        }
+    
+        $_GET['order_by'] = 'author_username';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $str = $output[0]->user->screen_name;
+        foreach ($output as $post) {
+            $this->assertTrue(strcmp($post->user->screen_name, $str) >= 0);
+            $str = $post->user->screen_name;
+        }
+    
+        // test trim user
+        unset($_GET['order_by'], $_GET['direction']);
+        $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 20);
+    
+        $this->assertEqual(sizeof($output[0]->user), 1);
+    
+        // test sql injection
+        $_GET = array('type' => 'keyword_posts');
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') { continue; }
+            $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
+            $output = json_decode($controller->go());
+            unset($_GET[$key]);
+        }
+        $installer_dao = DAOFactory::getDAO('InstallerDAO');
+        $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }    
 }
