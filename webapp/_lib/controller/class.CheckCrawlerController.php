@@ -49,7 +49,8 @@ class CheckCrawlerController extends ThinkUpController {
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $hours_since_last_crawl = $instance_dao->getHoursSinceLastCrawlerRun();
         if (isset($hours_since_last_crawl) && $hours_since_last_crawl > $this->threshold)  {
-            $this->addToView('message', "Crawler hasn't run in ".round($hours_since_last_crawl)." hours");
+            $this->addToView('message', Utils::getApplicationURL().": Crawler hasn't run in ".
+            round($hours_since_last_crawl)." hours");
         }
         return $this->generateView();
     }
