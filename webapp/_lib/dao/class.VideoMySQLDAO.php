@@ -133,4 +133,72 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
             return null;
         }
     }
+
+    public function getAverageLikePercentage($username, $network, $duration=null) {
+        $q = "SELECT (SUM( likes ) / ( SUM( likes ) + SUM( dislikes ) ))*100 AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getAverageDislikePercentage($username, $network, $duration=null) {
+        $q = "SELECT (SUM( dislikes ) / ( SUM( likes ) + SUM( dislikes ) ))*100 AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getHighestLikePercentage($username, $network, $duration=null) {
+        $q = "SELECT (MAX(likes / (likes + dislikes)))*100 AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getHighestDislikePercentage($username, $network, $duration=null) {
+        $q = "SELECT (MAX(dislikes / (likes + dislikes)))*100 AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
 }

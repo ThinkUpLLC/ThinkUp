@@ -43,7 +43,6 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->dao = new VideoMySQLDAO();
         parent::setUp();
         $config = Config::getInstance();
-        $this->builders = self::buildData();
     }
 
     public function tearDown() {
@@ -158,6 +157,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetVideoByIDExists() {
+        $this->builders = self::buildData();
         $video = $this->dao->getVideoByID('tfgdf4es', 'youtube');
         $this->assertTrue(isset($video));
         $this->assertEqual($video->post_id, 'tfgdf4es');
@@ -191,6 +191,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testUpdateVideoCounts(){
+        $this->builders = self::buildData();
         $video_attributes['post_id'] = 'tfgdf4es';
         $video_attributes['likes'] = 25;
         $video_attributes['dislikes'] = 40;
@@ -219,8 +220,81 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($video->minutes_watched, 824);
         $this->assertEqual($video->average_view_duration, 50004110);
         $this->assertEqual($video->average_view_percentage, 65);
-
     }
 
+    public function testGetHighestDislikePercentage() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10, 'average_view_percentage'=>56.5));
 
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>56.5));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHighestDislikePercentage('ev', 'youtube');
+        $this->assertEqual($result, 50);
+
+        $result2 = $video_dao->getHighestDislikePercentage('ev', 'youtube', 5);
+        $this->assertEqual($result2, 50);
+    }
+
+    public function testGetHighestLikePercentage() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10, 'average_view_percentage'=>56.5));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>56.5));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHighestLikePercentage('ev', 'youtube');
+        $this->assertEqual($result, 90);
+
+        $result2 = $video_dao->getHighestLikePercentage('ev', 'youtube', 5);
+        $this->assertEqual($result2, 50);
+    }
+
+    public function testGetAverageDislikePercentage() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10, 'average_view_percentage'=>56.5));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>56.5));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageDislikePercentage('ev', 'youtube');
+        $this->assertEqual($result, 30);
+
+        $result2 = $video_dao->getAverageDislikePercentage('ev', 'youtube', 5);
+        $this->assertEqual($result2, 50);
+    }
+
+    public function testGetAverageLikePercentage() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10, 'average_view_percentage'=>56.5));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>56.5));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageLikePercentage('ev', 'youtube');
+        $this->assertEqual($result, 70);
+
+        $result2 = $video_dao->getAverageLikePercentage('ev', 'youtube', 5);
+        $this->assertEqual($result2, 50);
+    }
 }
