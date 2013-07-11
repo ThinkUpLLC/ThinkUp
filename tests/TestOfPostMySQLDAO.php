@@ -3851,6 +3851,44 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($average_fave_count, 3);
     }
 
+    public function testGetAverageReplyCount() {
+        $builders = array();
+        //Add straight text posts
+        $counter = 1;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter+256, 'post_id'=>$counter+256,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-'.$counter.'d', 'in_reply_to_user_id'=>null,
+            'reply_count_cache'=>$counter, 'is_protected'=>0,
+            'retweet_count_cache'=>0, 'network'=>'twitter', 'favlike_count_cache'=> 0,
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $dao = new PostMySQLDAO();
+        //without date (today)
+        $average_reply_count = $dao->getAverageReplyCount('ev', 'twitter', 7);
+        $this->assertEqual($average_reply_count, 4);
+
+        //yesterday
+        $average_reply_count = $dao->getAverageReplyCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-1 day")));
+        $this->assertEqual($average_reply_count, 5);
+
+        //40 days ago
+        $average_reply_count = $dao->getAverageReplyCount('ev', 'twitter', 7, date("Y-m-d", strtotime("-40 day")));
+        $this->assertEqual($average_reply_count, 20);
+    }
+
     public function testDoesUserHavePostsWithRetweetsSinceDate() {
         $post_dao = new PostMySQLDAO();
         $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 7);
@@ -3915,6 +3953,42 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($result);
 
         $result = $post_dao->doesUserHavePostsWithFavesSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $this->assertFalse($result);
+    }
+
+    public function testDoesUserHavePostsWithRepliesSinceDate() {
+        $post_dao = new PostMySQLDAO();
+        $result = $post_dao->doesUserHavePostsWithRepliesSinceDate('user4', 'youtube', 7);
+        $this->assertFalse($result);
+
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+            'id'=>$id,
+            'post_id'=>(147+$counter),
+            'author_user_id'=>23,
+            'author_username'=>'user4',
+            'pub_date'=>'-'.$counter.'d',
+            'retweet_count_cache'=> 0,
+            'old_retweet_count_cache' => 0,
+            'favlike_count_cache'=>0,
+            'network'=>'youtube',
+            'reply_count_cache'=>$counter,
+            'in_reply_to_user_id'=>null,
+            'in_reply_to_post_id'=>null,
+            'in_retweet_of_post_id'=>null
+            ));
+            $counter++;
+        }
+        // They do have replies from within 30 days
+        $result = $post_dao->doesUserHavePostsWithRepliesSinceDate('user4', 'youtube', 30);
+        $this->assertTrue($result);
+        // Set date to some time 30+ days in the future and were guaranteed to have no replies since then
+        $result = $post_dao->doesUserHavePostsWithRepliesSinceDate('user4', 'youtube', 30,
+        date('Y-m-d', strtotime('+31 days')));
         $this->assertFalse($result);
     }
 
