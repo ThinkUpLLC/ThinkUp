@@ -64,7 +64,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                     }
                 }
 
-                if ($instance->network == 'twitter') {
+                if ($instance->network == 'twitter' || $instance->network == 'google+') {
                     $mentions_in_post = $elements['mentions'];
                     foreach ($mentions_in_post as $mention_in_post) {
                         $mention_in_post = '@'.$mention_in_post;
@@ -106,7 +106,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
             "talked about <a href=".self::getHashtagSearchURL($most_used_hashtag['key'],$instance->network)
             ." target=\"_blank\">".$most_used_hashtag['key']."</a> <strong>".$most_used_hashtag['value']
             .(($most_used_hashtag['value'] > 1) ? " times</strong> " : " time</strong> "):'';
-            $insight_text .= $insight_text ? "and ":'';
+            $insight_text .= ($insight_text && $most_mentioned_user) ? "and ":'';
             $insight_text .= $most_mentioned_user?
             "mentioned ".$most_mentioned_user['key']." <strong>".$most_mentioned_user['value']
             .(($most_mentioned_user['value'] > 1) ? " times</strong> " : " time</strong> "):'';
