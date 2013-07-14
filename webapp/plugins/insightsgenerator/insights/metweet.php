@@ -43,14 +43,14 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
         	$metweet_count = 0;
 
         	foreach ($last_week_of_posts as $post) {
-        		if ($post->in_retweet_of_post_id != NULL) {
+        		if (isset($post->in_retweet_of_post_id)) {
         			$post_text = $post->post_text;
         			
         			$text_parser = new Twitter_Extractor($post_text);
         			$elements = $text_parser->extract();
 
         			$mentions_in_post = $elements['mentions'];
-        			if (array_search($instance->network_username,$mentions_in_post)) {
+        			if (in_array($instance->network_username,$mentions_in_post)) {
         				$metweet_count++;
         			}
         		}
