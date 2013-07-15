@@ -119,8 +119,17 @@ class PluginRegistrarCrawler extends PluginRegistrar {
      * Register crawler plugin.
      * @param str $object_name Name of Crawler plugin object which instantiates the Crawler interface, like
      * "TwitterPlugin"
+     * @param boolean $run_before_insight_generator true if this plugin should run before the insight generator plugin
      */
-    public function registerCrawlerPlugin($object_name) {
-        $this->registerObjectFunction('crawl', $object_name, 'crawl');
+    public function registerCrawlerPlugin($object_name, $run_before_insight_generator=true) {
+        $this->registerObjectFunction('crawl', $object_name, 'crawl', $run_before_insight_generator);
+    }
+
+    /**
+     * FOR TESTING PURPOSES ONLY
+     * -- Returns the array of function call backs
+     */
+    public function getObjectFunctionCallbacks() {
+        return $this->object_function_callbacks;
     }
 }
