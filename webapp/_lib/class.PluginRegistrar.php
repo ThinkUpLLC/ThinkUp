@@ -40,16 +40,41 @@ abstract class PluginRegistrar {
      * All the registered callbacks, an array of arrays where the index is the action name
      * @var arr $object_function_callbacks['trigger_name'][] = array('object_name', 'function_name');
      */
-    private $object_function_callbacks = array();
+    protected $object_function_callbacks = array();
+    /**
+     * All registered callbacks that need to be run before insight generation
+     */
+    private $before_insight_generation = array();
+    /**
+     * All registered callbacks that need to be run after insight generation
+     */
+    private $after_insight_generation = array();
+    /**
+     * The insight generator plugin
+     */
+    private $insight_generator = array();
+
     /**
      * Register an object function call
      * Note: This will cause a PHP fatal error if the object name does not exist
      * @param str $trigger Trigger keyword
      * @param str $object_name Object name
      * @param str $function_name Function name
+     * @param boolean $before_insights_generate=true true if this plugin should run before the insight generator plugin
      */
-    protected function registerObjectFunction($trigger, $object_name, $function_name) {
-        $this->object_function_callbacks[$trigger][] = array($object_name, $function_name);
+    protected function registerObjectFunction($trigger, $object_name, $function_name, $before_insights_generate=true) {
+        // If the trigger type is crawl then we have to store them in the correct array for ordering later
+        if($trigger == 'crawl') {
+            if($object_name == 'InsightsGeneratorPlugin') {
+                $this->insight_generator[$trigger][] = array($object_name, $function_name);
+            } elseif($before_insights_generate == true) {
+                $this->before_insight_generation[$trigger][] = array($object_name, $function_name);
+            } elseif($before_insights_generate == false) {
+                $this->after_insight_generation[$trigger][] = array($object_name, $function_name);
+            }
+        } else { // Any other type such as generateInsight don't need ordering
+            $this->object_function_callbacks[$trigger][] = array($object_name, $function_name);
+        }
     }
     /**
      * Run all object functions registered as callbacks.
@@ -58,6 +83,9 @@ abstract class PluginRegistrar {
      * @throws Exception When registered object doesn't have function
      */
     protected function emitObjectFunction($trigger, $params = array()) {
+        // Order the call back arrays for crawler plugins relative to the insight generator
+        self::orderPlugins($trigger);
+
         if (isset($this->object_function_callbacks[$trigger])) {
             foreach ($this->object_function_callbacks[$trigger] as $callback) {
                 if (method_exists($callback[0], $callback[1] )) {
@@ -90,5 +118,23 @@ abstract class PluginRegistrar {
             throw new PluginNotFoundException($shortname);
         }
         return $this->plugins[$shortname];
+    }
+    /**
+     * Orders the object_function_callback array relative to the insight generator plugin
+     * @param  string $trigger the type of plugins you want to order currently only supports crawl
+     */
+    public function orderPlugins($trigger='crawl') {
+        if($trigger == 'crawl') {
+            if(sizeof($this->before_insight_generation) > 0 && sizeof($this->after_insight_generation) > 0) {
+                $this->object_function_callbacks['crawl'] = array_merge($this->before_insight_generation['crawl'],
+                $this->insight_generator['crawl'], $this->after_insight_generation['crawl']);
+            } elseif(sizeof($this->before_insight_generation) > 0) {
+                $this->object_function_callbacks['crawl'] = array_merge($this->before_insight_generation['crawl'],
+                $this->insight_generator['crawl']);
+            } elseif(sizeof($this->after_insight_generation) > 0) {
+                $this->object_function_callbacks['crawl'] = array_merge($this->insight_generator['crawl'],
+                $this->after_insight_generation['crawl']);
+            }
+        }
     }
 }
