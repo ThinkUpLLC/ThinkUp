@@ -155,7 +155,7 @@
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
-
+  
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
 
 {if $post->post_text} 

@@ -30,7 +30,7 @@
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
-require_once('../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php');
+require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
 class InteractionGraphInsight extends InsightPluginParent implements InsightPlugin {
 
@@ -45,6 +45,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
 
             $hashtags_of_last_week = array();
             $mentions_of_last_week = array();
+            $link_hashtags_mentions = array();
             $insight_data = array('user' => $user_dao->getDetails($instance->network_user_id,$instance->network),
             'hashtags' => array(), 'mentions' => array());
             $insight_text = '';
@@ -64,7 +65,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                     }
                 }
 
-                if ($instance->network == 'twitter' || $instance->network == 'google+') {
+                if ($instance->network == 'twitter') {
                     $mentions_in_post = $elements['mentions'];
                     foreach ($mentions_in_post as $mention_in_post) {
                         $mention_in_post = '@'.$mention_in_post;
@@ -72,6 +73,10 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                             $mentions_of_last_week[$mention_in_post]++;
                         } else {
                             $mentions_of_last_week[$mention_in_post] = 1;
+                        }
+                        foreach ($hashtags_in_post as $hashtag_in_post) {
+                            $hashtag_in_post = '#'.$hashtag_in_post;
+                            $link_hashtags_mentions[$hashtag_in_post][] = $mention_in_post;
                         }
                     }
                 }
@@ -87,6 +92,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                     $hashtag_info['hashtag'] = $hashtag;
                     $hashtag_info['count'] = $count;
                     $hashtag_info['url'] = self::getHashtagSearchURL($hashtag,$instance->network);
+                    $hashtag_info['related_mentions'] = count($link_hashtags_mentions[$hashtag]) ? $link_hashtags_mentions[$hashtag] : array();
                     $insight_data['hashtags'][] = $hashtag_info;
                 }
             }
@@ -112,8 +118,8 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
             .(($most_mentioned_user['value'] > 1) ? " times</strong> " : " time</strong> "):'';
 
             if ($insight_text) {
-                $insight_text = $this->username." ".$insight_text."in his posts last week.";
-                $this->insight_dao->insertInsight("interaction_graph_".date("Y_W",strtotime('last Monday')),
+                $insight_text = $this->username." ".$insight_text."in their posts last week.";
+                $this->insight_dao->insertInsight("interaction_graph",
                 $instance->id, $this->insight_date, "Interactions:", $insight_text,
                 basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($insight_data));
             }
