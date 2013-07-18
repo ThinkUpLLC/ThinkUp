@@ -30,7 +30,7 @@
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
-require_once('../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php');
+require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
 class MetweetInsight extends InsightPluginParent implements InsightPlugin {
 	public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
@@ -68,11 +68,11 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
                 $last_monday_insight_baseline = $insight_baseline_dao->getInsightBaseline("metweet_count",
                 $instance->id, $last_monday);
                 if (isset($last_monday_insight_baseline)) {
-                	if ($last_monday_insight_baseline->value > $count ) {
-                		$difference = $last_monday_insight_baseline->value - $count;
+                	if ($last_monday_insight_baseline->value > $metweet_count ) {
+                		$difference = $last_monday_insight_baseline->value - $metweet_count;
                 		$insight_text .= ", $difference fewer time".($difference>1?"s":"")." than the prior week.";
-                	} elseif ($last_monday_insight_baseline->value < $count ) {
-                        $difference = $count - $last_monday_insight_baseline->value;
+                	} elseif ($last_monday_insight_baseline->value < $metweet_count ) {
+                        $difference = $metweet_count - $last_monday_insight_baseline->value;
                         $insight_text .= ", $difference more time".($difference>1?"s":"")." than the prior week.";
                     } else {
                         $insight_text .= ".";
