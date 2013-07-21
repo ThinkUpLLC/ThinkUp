@@ -294,7 +294,7 @@ class FoursquareCrawler {
                 // The avatar is the one they have set on foursquare
                 if (isset($user->response->user->photo->prefix) && isset($user->response->user->photo->suffix)) {
                     $post["author_avatar"] = $user->response->user->photo->prefix . "100x100" .
-                    $details->response->user->photo->suffix;
+                    $user->response->user->photo->suffix;
                 } elseif (isset($user->response->user->photo)) { //sometimes just photo is set, not prefix and suffix
                     $post["author_avatar"] = $user->response->user->photo;
                 }
@@ -372,9 +372,12 @@ class FoursquareCrawler {
                         // The author full name is the name they gave foursquare
                         $comment_store['author_fullname'] = $comment->user->firstName." ".$comment->user->lastName;
                         // The avatar is the one they have set on foursquare
-                        $comment_store["author_avatar"] = $comment->user->photo->prefix . "100x100" .
-                        $comment->user->photo->suffix;
-
+                        if (isset($comment->user->photo->prefix) && isset($comment->user->photo->suffix)) {
+                            $comment_store["author_avatar"] = $comment->user->photo->prefix . "100x100" .
+                            $comment->user->photo->suffix;
+                        } elseif (isset($comment->user->photo)) { //sometimes just photo is set, not prefix and suffix
+                            $comment["author_avatar"] = $comment->user->photo;
+                        }
                         // The author user id is there foursquare user ID
                         $comment_store['author_user_id'] = $comment->user->id;
                         // The date they posted the comment
