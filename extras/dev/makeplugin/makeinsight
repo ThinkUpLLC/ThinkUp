@@ -1,0 +1,162 @@
+#!/bin/bash
+
+# Insight Maker
+# Generates all the necessary files for a new insight.
+# The 1st argument passed in is the name of the new plugin, the 2nd is your name and the 3rd your email address
+
+# Check we got the name of the plugin
+if [ "$#" -ne 3 ]; then
+  echo "3 Parameters required, the name of the plugin, your name, your email address.
+  E.g. ViewDuration Aaron\\ Kalair aaronkalair@gmail.com"
+  exit 1
+fi
+
+plugin_name_lcase="$(tr [A-Z] [a-z] <<< "$1")"
+name=$2
+email=$3
+# Function to add the preamble to the top of the php files
+# Parameter 1 = Name of Plugin  Parameter 2 = Path of file to be written to
+function preamble {
+# Write everything before the END keyword to the file passed in as parameter 2
+cat<< END >$2
+<?php
+/**
+ *
+ * $2
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkup.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2013 $name
+ *
+ * @author $name $email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2013 $name
+ */
+END
+}
+
+# Navigate to the root directory
+cd `dirname $0`/../../..
+
+# Create the insight file
+touch 'webapp/plugins/insightsgenerator/insights/'$plugin_name_lcase'.php'
+# Create the insights test file
+touch 'webapp/plugins/insightsgenerator/tests/TestOf'$1'Insight.php'
+# Create a basic view file
+touch 'webapp/plugins/insightsgenerator/view/'$plugin_name_lcase'.tpl'
+
+
+# Standard template for a insight
+cat<< END >>'webapp/plugins/insightsgenerator/insights/'$plugin_name_lcase'.php'
+<?php
+/*
+ Plugin Name: My New Plugin
+ Description: This plugin does amazing things
+ */
+/**
+ *
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/$plugin_name_lcase.php
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkup.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * $1 (name of file)
+ *
+ * Description of what this class does
+ *
+ * Copyright (c) 2013 $name
+ *
+ * @author $name $email
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2013 $name
+ */
+
+class $1Insight extends InsightPluginParent implements InsightPlugin {
+
+    public function generateInsight(Instance \$instance, \$last_week_of_posts, \$number_days) {
+        parent::generateInsight(\$instance, \$last_week_of_posts, \$number_days);
+
+        \$this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        \$filename = basename(__FILE__, ".php");
+
+        foreach (\$last_week_of_posts as \$post) {
+            \$simplified_post_date = date('Y-m-d', strtotime(\$post->pub_date));
+            \$prefix = 'Snappy Prefix';
+            \$text = 'Body of the insight';
+
+            \$this->insight_dao->insertInsight('insight_name_goes_here'.\$post->id, \$instance->id,
+            \$simplified_post_date, \$prefix, \$text, \$filename, Insight::EMPHASIS_LOW, null);
+        }
+        \$this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+}
+
+\$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+\$insights_plugin_registrar->registerInsightPlugin('$1Insight');
+
+END
+
+# Standard template for insight tests
+preamble $1 'webapp/plugins/insightsgenerator/tests/TestOf'$1'Insight.php'
+
+cat<< END >>'webapp/plugins/insightsgenerator/tests/TestOf'$1'Insight.php'
+
+require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
+require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/$plugin_name_lcase.php';
+
+class TestOf$1Insight extends ThinkUpUnitTestCase {
+
+    public function setUp() {
+        parent::setUp();
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+    }
+}
+
+END
+
+# Basic view template
+cat<< END >>'webapp/plugins/insightsgenerator/view/'$plugin_name_lcase'.tpl'
+{include file=$tpl_path|cat:'_header.tpl'}
+
+{include file=$tpl_path|cat:'_textonly.tpl' icon='user'}
+
+{include file=$tpl_path|cat:'_footer.tpl'}
+
+END
