@@ -184,7 +184,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users; ";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         $installer = Installer::getInstance();
@@ -262,7 +263,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos";
 
         PDODAO::$PDO->exec($q);
 
@@ -461,7 +463,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -507,7 +510,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
 
         PDODAO::$PDO->exec($q);
 
@@ -553,7 +557,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         $q = "CREATE TABLE weird_random_table(id INT);";
@@ -608,7 +613,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         'insight_baselines', 'insights', 'instances', 'instances_hashtags', 'instances_twitter', 'invites',
         'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'places','places_posts',
-        'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
+        'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users', 'videos');
         $this->assertIdentical($tables, $expected_tables);
     }
 

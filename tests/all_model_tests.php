@@ -94,6 +94,7 @@ $model_tests->add(new TestOfTableStatsMySQLDAO());
 $model_tests->add(new TestOfShortLinkMySQLDAO());
 $model_tests->add(new TestOfHashtagPostMySQLDAO());
 $model_tests->add(new TestOfInstanceHashtagMySQLDAO());
+$model_tests->add(new TestOfVideoMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
