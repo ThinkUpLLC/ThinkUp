@@ -194,7 +194,12 @@ class DAOFactory {
     //Hashtag Post DAO
         'HashtagPostDAO' => array(
     //MySQL Version
-            'mysql' => 'HashtagPostMySQLDAO' )
+            'mysql' => 'HashtagPostMySQLDAO' ),
+    //Video DAO
+        'VideoDAO' => array(
+    //MySQL Version
+            'mysql' => 'VideoMySQLDAO' )
+
     );
 
     /*
