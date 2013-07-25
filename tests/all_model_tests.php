@@ -39,7 +39,7 @@ $model_tests->add(new TestOfConfig());
 $model_tests->add(new TestOfFileDataManager());
 $model_tests->add(new TestOfCrawler());
 $model_tests->add(new TestOfFollowMySQLDAO());
-$model_tests->add(new TestOfFollowerCountMySQLDAO());
+$model_tests->add(new TestOfCountHistoryMySQLDAO());
 $model_tests->add(new TestOfGroupMySQLDAO());
 $model_tests->add(new TestOfGroupMemberMySQLDAO());
 $model_tests->add(new TestOfGroupMembershipCountMySQLDAO());
