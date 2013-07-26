@@ -112,7 +112,7 @@ class Loader {
             if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
                 define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
             } else {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH);
             }
         }
     }

@@ -30,15 +30,6 @@ if ( version_compare(PHP_VERSION, '5.2', '<') ) {
     exit("ERROR: ThinkUp requires PHP 5.2 or greater. The current version of PHP is ".PHP_VERSION.".");
 }
 
-//Define path globals
-if (!file_exists('README.md')) { // source repo
-    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
-    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-} else { // distro package
-    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(__FILE__)) .'/');
-    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH);
-}
-
 //Register our lazy class loader
 require_once '_lib/class.Loader.php';
 
