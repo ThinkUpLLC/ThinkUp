@@ -122,7 +122,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
-        'read_friendlists,friends_location,manage_pages,read_insights',
+        'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
         'state'=>SessionCache::get('facebook_auth_csrf'));
 
         $fbconnect_link = $facebook->getLoginUrl($params);
