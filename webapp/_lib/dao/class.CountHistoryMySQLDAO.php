@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.FollowerCountMySQLDAO.php
+ * ThinkUp/webapp/_lib/model/class.CountHistoryMySQLDAO.php
  *
  * Copyright (c) 2009-2013 Gina Trapani
  *
@@ -28,16 +28,24 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
-    public function insert($network_user_id, $network, $count){
-        $q  = "INSERT INTO #prefix#follower_count ";
-        $q .= "(network_user_id, network, date, count) ";
-        $q .= "VALUES ( :network_user_id, :network, NOW(), :count );";
+class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
+
+    public function insert($network_user_id, $network, $count, $post_id, $type, $date=null) {
+        $q  = "INSERT INTO #prefix#count_history ";
+        $q .= "(network_user_id, network, date, count, post_id, type) ";
+        $q .= "VALUES ( :network_user_id, :network, :date, :count, :post_id, :type )";
         $vars = array(
             ':network_user_id'=>(string) $network_user_id,
             ':network'=>$network,
-            ':count'=>$count
+            ':count'=>$count,
+            ':post_id'=>$post_id,
+            ':type'=>$type
         );
+        if(isset($date)) {
+            $vars[':date'] = $date;
+        } else {
+            $vars[':date'] = date('Y-m-d');
+        }
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getInsertCount($ps);
@@ -68,7 +76,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         );
         $q = "SELECT network_user_id, network, count, date, full_date FROM ";
         $q .= "(SELECT network_user_id, network, count, ".$date_format." as date, date as full_date ";
-        $q .= "FROM #prefix#follower_count AS fc ";
+        $q .= "FROM #prefix#count_history AS fc ";
         $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
         if ($before_date != null) {
             $q .= "AND date <= :before_date ";
@@ -211,5 +219,46 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             $milestone = false;
         }
         return array('history'=>$history, 'trend'=>$trend, 'milestone'=> $milestone, 'vis_data' => $vis_data);
+    }
+
+    public function getCountsByPostID($post_id) {
+        $q = "SELECT network_user_id, post_id, network, type, date, count FROM #prefix#count_history WHERE ";
+        $q .= "post_id=:post_id";
+        $vars[':post_id'] = $post_id;
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows;
+    }
+
+    public function getCountsByPostIDAndType($post_id, $type) {
+        $q = "SELECT network_user_id, post_id, network, type, date, count FROM #prefix#count_history WHERE ";
+        $q .= "post_id=:post_id AND type=:type";
+        $vars[':post_id'] = $post_id;
+        $vars[':type'] = $type;
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows;
+    }
+
+    public function sumCountsOverTimePeriod($post_id, $type, $start_date, $end_date) {
+        $q = "SELECT SUM(count) as count FROM #prefix#count_history WHERE post_id=:post_id AND type=:type AND date ";
+        $q .= "BETWEEN :start_date AND :end_date";
+        $vars[':post_id'] = $post_id;
+        $vars[':type'] = $type;
+        $vars[':start_date'] = $start_date;
+        $vars[':end_date'] = $end_date;
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataCountResult($ps);
+        return $rows;
+    }
+
+    public function getLatestCountByPostIDAndType($post_id, $type) {
+        $q = "SELECT network_user_id, post_id, network, type, date, count FROM #prefix#count_history WHERE ";
+        $q .= "post_id=:post_id AND type=:type ORDER BY date DESC";
+        $vars[':post_id'] = $post_id;
+        $vars[':type'] = $type;
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows[0];
     }
 }
