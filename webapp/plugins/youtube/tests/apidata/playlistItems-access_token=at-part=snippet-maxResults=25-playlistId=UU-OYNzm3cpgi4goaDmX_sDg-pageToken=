@@ -1,0 +1,67 @@
+{
+ "kind": "youtube#playlistItemListResponse",
+ "etag": "\"QS4tD3B9gYZkrdquKKEppK31m_8/3Hs0n1C3LDPnFgHIGv3Gs1rF4Fg\"",
+ "pageInfo": {
+  "totalResults": 2,
+  "resultsPerPage": 1
+ },
+ "nextPageToken": "CAEQAA",
+ "items": [
+  {
+   "id": "UU9OheKmSof6jaFHB89cV6tOheXaMqMsrJ",
+   "kind": "youtube#playlistItem",
+   "etag": "\"QS4tD3B9gYZkrdquKKEppK31m_8/ZQstLkUL5-DyGd93PxuHYE1RbVw\"",
+   "snippet": {
+    "publishedAt": "2013-06-05T12:06:49.000Z",
+    "channelId": "UC-OYNzm3cpgi4goaDmX_sDg",
+    "title": "My Slideshow",
+    "thumbnails": {
+     "default": {
+      "url": "https://i4.ytimg.com/vi/g/default.jpg"
+     },
+     "medium": {
+      "url": "https://i4.ytimg.com/vi/g/mqdefault.jpg"
+     },
+     "high": {
+      "url": "https://i4.ytimg.com/vi/g/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Aaron Kalair",
+    "playlistId": "UU-OYNzm3cpgi4goaDmX_sDg",
+    "position": 0,
+    "resourceId": {
+     "kind": "youtube#video",
+     "videoId": "g"
+    }
+   }
+  },
+  {
+   "id": "UU9OheKmSof6jaFHBRGH56E6tOheXaMqMsrJ",
+   "kind": "youtube#playlistItem",
+   "etag": "\"QS4tD3B9gYZkrdquKKEsadgr41m_8/ZQstLkUL5-DyGd93PxuHYE1RbVw\"",
+   "snippet": {
+    "publishedAt": "2013-01-05T12:06:49.000Z",
+    "channelId": "UC-OYNzm3cpgi4goaDmX_sDg",
+    "title": "Video on same page",
+    "thumbnails": {
+     "default": {
+      "url": "https://i4.ytimg.com/vi/a/default.jpg"
+     },
+     "medium": {
+      "url": "https://i4.ytimg.com/vi/a/mqdefault.jpg"
+     },
+     "high": {
+      "url": "https://i4.ytimg.com/vi/a/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Aaron Kalair",
+    "playlistId": "UU-OYNzm3cpgi4goaDmX_sDg",
+    "position": 0,
+    "resourceId": {
+     "kind": "youtube#video",
+     "videoId": "a"
+    }
+   }
+  }
+ ]
+}
