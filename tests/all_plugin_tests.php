@@ -78,6 +78,9 @@ $plugin_tests->add(new TestOfMapInsight());
 $plugin_tests->add(new TestOfSavedSearchResultsInsight());
 $plugin_tests->add(new TestOfStyleStatsInsight());
 $plugin_tests->add(new TestOfMetweetInsight());
+$plugin_tests->add(new TestOfYouTubeCrawler());
+$plugin_tests->add(new TestOfYouTubePlugin());
+$plugin_tests->add(new TestOfYouTubePluginConfigurationController());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());

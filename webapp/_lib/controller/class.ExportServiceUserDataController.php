@@ -126,7 +126,7 @@ Commands to run:
 
             self::exportPostsRepliesRetweetsFavoritesMentions($username, $user_id, $service);
             self::exportFollowsAndFollowers($user_id, $service);
-            self::exportFollowerCountHistory($user_id, $service);
+            self::exportCountHistory($user_id, $service);
             return true;
         } catch(Exception $e) {
             $err = $e->getMessage();
@@ -294,17 +294,17 @@ Commands to run:
         self::appendToReadme($import_instructions);
     }
 
-    protected function exportFollowerCountHistory($user_id, $network) {
+    protected function exportCountHistory($user_id, $network) {
         //just the max of each day's count
-        $follower_count_table_file = FileDataManager::getBackupPath('follower_count.tmp');
+        $count_history_table_file = FileDataManager::getBackupPath('count_history.tmp');
 
         $export_dao = DAOFactory::getDAO('ExportDAO');
-        $export_dao->exportFollowerCountToFile($user_id, $network, $follower_count_table_file);
+        $export_dao->exportCountHistoryToFile($user_id, $network, $count_history_table_file);
 
-        $this->files_to_zip[] = array('path'=>$follower_count_table_file, 'name'=>'follower_count.tmp');
+        $this->files_to_zip[] = array('path'=>$count_history_table_file, 'name'=>'count_history.tmp');
 
-        $import_instructions = "LOAD DATA INFILE '/your/path/to/follower_count.tmp' ";
-        $import_instructions .= "IGNORE INTO TABLE tu_follower_count;
+        $import_instructions = "LOAD DATA INFILE '/your/path/to/count_history.tmp' ";
+        $import_instructions .= "IGNORE INTO TABLE tu_count_history;
 
 ";
         self::appendToReadme($import_instructions);

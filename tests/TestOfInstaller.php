@@ -157,7 +157,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         //$config->getValue('table_prefix')."follows, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
         $config->getValue('table_prefix')."group_member_count, ".
@@ -184,7 +184,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         $installer = Installer::getInstance();
@@ -236,7 +237,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
         $config->getValue('table_prefix')."group_member_count, ".
@@ -262,7 +263,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos";
 
         PDODAO::$PDO->exec($q);
 
@@ -306,7 +308,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
         $config->getValue('table_prefix')."group_member_count, ".
@@ -351,7 +353,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
         $config->getValue('table_prefix')."group_member_count, ".
@@ -433,7 +435,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -461,7 +463,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -479,7 +482,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -507,7 +510,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
 
         PDODAO::$PDO->exec($q);
 
@@ -525,7 +529,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -553,7 +557,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."videos;";
         PDODAO::$PDO->exec($q);
 
         $q = "CREATE TABLE weird_random_table(id INT);";
@@ -603,12 +608,12 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
 
-        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
+        $expected_tables = array('count_history', 'encoded_locations', 'favorites', 'follows', 'group_member_count',
         'group_members', 'groups', 'hashtags', 'hashtags_posts',
         'insight_baselines', 'insights', 'instances', 'instances_hashtags', 'instances_twitter', 'invites',
         'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'places','places_posts',
-        'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
+        'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users', 'videos');
         $this->assertIdentical($tables, $expected_tables);
     }
 

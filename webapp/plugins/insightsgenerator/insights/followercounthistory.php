@@ -43,7 +43,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
         $insight_day_of_month = (int) $insight_date->format('j');
 
         if ($insight_day_of_month == 1) { //it's the first day of the month
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $follower_count_dao = DAOFactory::getDAO('CountHistoryDAO');
             //by month
             $follower_count_history_by_month = $follower_count_dao->getHistory($instance->network_user_id,
             $instance->network, 'MONTH', 15, $this->insight_date);
@@ -64,7 +64,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 serialize($follower_count_history_by_month));
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $follower_count_dao = DAOFactory::getDAO('CountHistoryDAO');
             //by week
             $follower_count_history_by_week = $follower_count_dao->getHistory($instance->network_user_id,
             $instance->network, 'WEEK', 15, $this->insight_date);

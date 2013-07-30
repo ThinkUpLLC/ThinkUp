@@ -1,0 +1,25 @@
+{
+ "kind": "youtube#channelListResponse",
+ "etag": "\"Wes3wj_Yozi4a9GfHnpc8qG73KI/IsDcZW9KeQinKXgtK9nT4_9mwAM\"",
+ "pageInfo": {
+  "totalResults": 1,
+  "resultsPerPage": 1
+ },
+ "items": [
+  {
+   "id": "UC-OYNzm3cpgi4goaDmX_sDg",
+   "kind": "youtube#channel",
+   "etag": "\"Wes3wj_Yozi4a9GfHnpc8qG73KI/VMXMu08JhTzVN3ZcHsxqK1_baVc\"",
+   "contentDetails": {
+    "relatedPlaylists": {
+     "likes": "LL-OYNzm3cpgi4goaDmX_sDg",
+     "favorites": "FL-OYNzm3cpgi4goaDmX_sDg",
+     "uploads": "UU-OYNzm3cpgi4goaDmX_sDg",
+     "watchHistory": "HL-OYNzm3cpgi4goaDmX_sDg",
+     "watchLater": "WL-OYNzm3cpgi4goaDmX_sDg"
+    },
+    "googlePlusUserId": "115383827382290096528"
+   }
+  }
+ ]
+}
