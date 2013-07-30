@@ -254,8 +254,18 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
 
     public function getLatestCountByPostIDAndType($post_id, $type) {
         $q = "SELECT network_user_id, post_id, network, type, date, count FROM #prefix#count_history WHERE ";
-        $q .= "post_id=:post_id AND type=:type ORDER BY date DESC";
+        $q .= "post_id=:post_id AND type=:type ORDER BY date DESC, count DESC";
         $vars[':post_id'] = $post_id;
+        $vars[':type'] = $type;
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows[0];
+    }
+
+    public function getLatestCountByNetworkUserIDAndType($network_user_id, $type) {
+        $q = "SELECT network_user_id, post_id, network, type, date, count FROM #prefix#count_history WHERE ";
+        $q .= "network_user_id=:network_user_id AND type=:type ORDER BY date DESC, count DESC";
+        $vars[':network_user_id'] = $network_user_id;
         $vars[':type'] = $type;
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);

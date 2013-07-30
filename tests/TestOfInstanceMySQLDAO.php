@@ -795,4 +795,16 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[1]->id, 6);
         $this->assertEqual($result[1]->network_username, "yaya");
     }
+
+    public function testSetPostArchiveLoaded() {
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'johndoe', 'network'=>'twitter', 'network_viewer_id'=>15,
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1, 'is_archive_loaded_posts'=>0));
+
+        $this->DAO->setPostArchiveLoaded(17);
+        $result = $this->DAO->getByUsername('johndoe');
+
+        $this->assertTrue($result->is_archive_loaded_posts);
+    }
+
 }

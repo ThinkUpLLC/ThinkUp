@@ -235,4 +235,11 @@ interface InstanceDAO {
      * @return int Count of updated instances
      */
     public function updateUsername($id, $username);
+
+    /**
+     * Sets the post archive loaded value to true
+     * @param str network_user_id
+     * @return int Count of updated instances
+     */
+    public function setPostArchiveLoaded($network_user_id);
 }
