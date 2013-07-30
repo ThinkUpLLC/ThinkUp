@@ -82,7 +82,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@testeriffic\'s most popular post from last week got /', $result->text);
         $this->assertPattern('/5 replies/', $result->text);
         $this->assertPattern('/1 retweet/', $result->text);
-        $this->assertPattern('/3 favourites/', $result->text);
+        $this->assertPattern('/3 favorites/', $result->text);
     }
 
     public function testWeeklyBestsInsightForFacebook() {
@@ -151,7 +151,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/and/', $result->text);
     }
 
-    public function testWeeklyBestsInsightWithFavourites() {
+    public function testWeeklyBestsInsightWithFavorites() {
         // Get data ready that insight requires
         $instance = new Instance();
         $instance->id = 10;
@@ -176,14 +176,14 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s most popular post from last week got /', $result->text);
-        $this->assertPattern('/3 favourites/', $result->text);
+        $this->assertPattern('/3 favorites/', $result->text);
         $this->assertNoPattern('/reply/', $result->text);
         $this->assertNoPattern('/retweet/', $result->text);
         $this->assertNoPattern('/,/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
     }
 
-    public function testWeeklyBestsInsightWithRepliesAndFavourites() {
+    public function testWeeklyBestsInsightWithRepliesAndFavorites() {
         // Get data ready that insight requires
         $instance = new Instance();
         $instance->id = 10;
@@ -209,7 +209,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s most popular post from last week got /', $result->text);
         $this->assertPattern('/4 replies/', $result->text);
-        $this->assertPattern('/5 favourites/', $result->text);
+        $this->assertPattern('/5 favorites/', $result->text);
         $this->assertNoPattern('/,/', $result->text);
         $this->assertPattern('/and/', $result->text);
     }

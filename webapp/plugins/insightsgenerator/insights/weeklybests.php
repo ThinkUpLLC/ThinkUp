@@ -1,7 +1,8 @@
 <?php
 /*
- Plugin Name: Weekly bests
- Description: Your most popular posts from last week. (Monday)
+ Plugin Name: Weekly Bests
+ Description: Your most popular posts from last week.
+ When: Thursdays
  */
 
 /**
@@ -36,8 +37,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Monday or if we're testing
-        if ((date('w') == 1 || $in_test_mode) && count($last_week_of_posts)) {
+        //Only insert this insight if it's Thursday or if we're testing
+        if ((date('w') == 4 || $in_test_mode) && count($last_week_of_posts)) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'replies' => 0, 'retweets' => 0, 'favs' => 0);
 
@@ -70,14 +71,14 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                                     $insight_text .= $value." comment".($value > 1 ? "s, " : ", ");
                                 }
                                 break;
-                            
+
                             case 'retweets':
                                 $insight_text .= $value." retweet".($value > 1 ? "s, " : ", ");
                                 break;
 
                             case 'favs':
                                 if ($instance->network == 'twitter') {
-                                    $insight_text .= $value." favourite".($value > 1 ? "s, " : ", ");
+                                    $insight_text .= $value." favorite".($value > 1 ? "s, " : ", ");
                                 } elseif ($instance->network == 'google+') {
                                     $insight_text .= $value." +1".($value > 1 ? "s, " : ", ");
                                 } else {
