@@ -78,7 +78,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                             case 'favs':
                                 if ($instance->network == 'twitter') {
                                     $insight_text .= $value." favourite".($value > 1 ? "s, " : ", ");
-                                } elseif ($instance->network == 'googleplus') {
+                                } elseif ($instance->network == 'google+') {
                                     $insight_text .= $value." +1".($value > 1 ? "s, " : ", ");
                                 } else {
                                     $insight_text .= $value." like".($value > 1 ? "s, " : ", ");
