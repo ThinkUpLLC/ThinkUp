@@ -730,6 +730,15 @@ interface PostDAO {
     public function getRetweetsByAuthorsOverFollowerCount($post_id, $network, $follower_count_threshold);
 
     /**
+     * Get the number of days since a user last replied to a specified recipient.
+     * @param int $user_id
+     * @param int $recipient_id
+     * @param str $network
+     * @return int
+     */
+    public function getDaysAgoSinceUserRepliedToRecipient($user_id, $recipient_id, $network);
+
+    /**
      * Search a service users's posts.
      * @param arr $keywords
      * @param str $network

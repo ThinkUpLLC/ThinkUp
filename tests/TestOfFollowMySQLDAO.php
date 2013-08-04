@@ -342,6 +342,88 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]['user_id'], 1623457890);
     }
 
+    public function testGetFolloweesRepliedToThisWeekLastYear() {
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612345', 'user_name'=>'twitteruser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter User'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612346', 'user_name'=>'twitterfoll1',
+        'full_name'=>'Twitter Follower One', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612347', 'user_name'=>'twitterfoll2',
+        'full_name'=>'Twitter Follower Two', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612348', 'user_name'=>'twitterfoll3',
+        'full_name'=>'Twitter Follower Three', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612349', 'user_name'=>'twitterfoll4',
+        'full_name'=>'Twitter Follower Four', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612350', 'user_name'=>'twitterfoll5',
+        'full_name'=>'Twitter Follower Five', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612346', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612347', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612348', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612349', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612350', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $time_ago_1 = date('Y-m-d H:i:s', strtotime('-370 days'));
+        $time_ago_2 = date('Y-m-d H:i:s', strtotime('-369 days'));
+        $time_ago_3 = date('Y-m-d H:i:s', strtotime('-367 days'));
+        $time_ago_4 = date('Y-m-d H:i:s', strtotime('-130 days'));
+        $time_ago_5 = date('Y-m-d H:i:s', strtotime('-20 days'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>138, 'post_id'=>138, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_1, 'in_reply_to_user_id'=>7612346, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_2, 'in_reply_to_user_id'=>7612347, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_3, 'in_reply_to_user_id'=>7612348, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>141, 'post_id'=>141, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_4, 'in_reply_to_user_id'=>7612349, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>142, 'post_id'=>142, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_5, 'in_reply_to_user_id'=>7612350, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $result = $this->DAO->getFolloweesRepliedToThisWeekLastYear(7612345, 'twitter');
+
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertIsA($result, "array");
+        $this->assertIsA($result[0], "User");
+        $this->assertEqual(count($result), 3);
+        $this->assertEqual($result[0]->full_name, "Twitter Follower One");
+        $this->assertEqual($result[1]->full_name, "Twitter Follower Two");
+        $this->assertEqual($result[2]->full_name, "Twitter Follower Three");
+    }
+
     public function testSearchFollowers(){
         $result = $this->DAO->searchFollowers($keywords=array("Square", "name:jack"),
         $network="twitter", $user_id="1324567890");
