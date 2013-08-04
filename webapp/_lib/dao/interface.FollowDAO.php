@@ -237,6 +237,13 @@ interface FollowDAO {
      */
     public function getFriendsNotFollowingBack($uid, $network);
     /**
+     * Gets the people you follow and replied to on this week, a year ago.
+     * @param int $user_id
+     * @param str $network
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getFolloweesRepliedToThisWeekLastYear($user_id, $network);
+    /**
      * Search a user's followers names and bio. (Use name:term to search only name field.)
      * @param arr $keywords
      * @param str $network
