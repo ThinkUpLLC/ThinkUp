@@ -189,13 +189,13 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         $friend_fan_menu_title = $instance->network == 'facebook page'?'Fans':'Friends';
         $friends_menu_item = new MenuItem($friend_fan_menu_title, "Friends insights", $friends_data_tpl);
 
-        $friends_menu_ds_2 = new Dataset("follower_count_history_by_day", 'FollowerCountDAO', 'getHistory',
+        $friends_menu_ds_2 = new Dataset("follower_count_history_by_day", 'CountHistoryDAO', 'getHistory',
         array($instance->network_user_id, $instance->network, 'DAY', 15));
         $friends_menu_item->addDataset($friends_menu_ds_2);
-        $friends_menu_ds_3 = new Dataset("follower_count_history_by_week", 'FollowerCountDAO', 'getHistory',
+        $friends_menu_ds_3 = new Dataset("follower_count_history_by_week", 'CountHistoryDAO', 'getHistory',
         array($instance->network_user_id, $instance->network, 'WEEK', 15));
         $friends_menu_item->addDataset($friends_menu_ds_3);
-        $friends_menu_ds_4 = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
+        $friends_menu_ds_4 = new Dataset("follower_count_history_by_month", 'CountHistoryDAO', 'getHistory',
         array($instance->network_user_id, $instance->network, 'MONTH', 11));
         $friends_menu_item->addDataset($friends_menu_ds_4);
 

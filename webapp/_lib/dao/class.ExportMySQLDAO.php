@@ -320,11 +320,11 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         self::dropExportedFollowsTable();
     }
 
-    public function exportFollowerCountToFile($user_id, $network, $file) {
+    public function exportCountHistoryToFile($user_id, $network, $file) {
         if (file_exists($file)) {
             unlink($file);
         }
-        $q = "SELECT * INTO OUTFILE '$file' FROM #prefix#follower_count WHERE ";
+        $q = "SELECT * INTO OUTFILE '$file' FROM #prefix#count_history WHERE ";
         $q .= "network=:network AND network_user_id=:user_id GROUP by date;";
         $vars = array(
             ':user_id'=>$user_id,

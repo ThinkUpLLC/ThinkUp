@@ -136,10 +136,10 @@ class DAOFactory {
         'PluginOptionDAO' => array(
     //MySQL Version
             'mysql' => 'PluginOptionMySQLDAO' ),
-    //Follower Count MySQL DAO
-        'FollowerCountDAO' => array(
+    //Count History MySQL DAO
+        'CountHistoryDAO' => array(
     //MySQL Version
-            'mysql' => 'FollowerCountMySQLDAO'),
+            'mysql' => 'CountHistoryMySQLDAO'),
     //Installer MySQL DAO
         'InstallerDAO' => array (
     //MySQL Version
@@ -194,7 +194,12 @@ class DAOFactory {
     //Hashtag Post DAO
         'HashtagPostDAO' => array(
     //MySQL Version
-            'mysql' => 'HashtagPostMySQLDAO' )
+            'mysql' => 'HashtagPostMySQLDAO' ),
+    //Video DAO
+        'VideoDAO' => array(
+    //MySQL Version
+            'mysql' => 'VideoMySQLDAO' )
+
     );
 
     /*

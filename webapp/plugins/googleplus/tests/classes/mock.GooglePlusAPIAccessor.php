@@ -66,6 +66,13 @@ class GooglePlusAPIAccessor {
 
     private static function decodeFileContents($file_path, $decode_json=true) {
         $debug = (getenv('TEST_DEBUG')!==false) ? true : false;
+        $create_files = (getenv('CREATE_FILES')!==false) ? true : false;
+        if ($create_files) {
+            if($debug){
+                echo 'CREATING '.$file_path."\n\n";
+            }
+            exec('touch '.$file_path);
+        }
         if ($debug) {
             echo "READING LOCAL TEST DATA FILE: ".$file_path. '
 ';
