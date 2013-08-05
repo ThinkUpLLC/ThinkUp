@@ -1,7 +1,8 @@
 <?php
 /*
  Plugin Name: Interaction Graph
- Description: People and topics you posted about in the last week. (Wednesday)
+ Description: People and topics you posted about in the last week.
+ When: Wednesdays
  */
 
 /**

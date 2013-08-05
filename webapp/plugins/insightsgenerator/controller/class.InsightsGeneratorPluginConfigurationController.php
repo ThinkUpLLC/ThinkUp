@@ -78,6 +78,9 @@ class InsightsGeneratorPluginConfigurationController extends PluginConfiguration
                 if (preg_match('/Description:(.*)/', $line, $m)) {
                     $plugin_vals['description'] = trim($m[1]);
                 }
+                if (preg_match('/When:(.*)/', $line, $m)) {
+                    $plugin_vals['when'] = trim($m[1]);
+                }
             }
             return $plugin_vals;
         } else {

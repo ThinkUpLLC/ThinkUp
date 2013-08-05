@@ -1,7 +1,8 @@
 <?php
 /*
  Plugin Name: Biggest Fans
- Description: Users who have favorited or liked your posts the most over the last 7 and 30 days.
+ Description: Who has liked your posts the most over the last 7 and 30 days.
+ When: Sundays and 1st of the month
  */
 
 /**

@@ -2,6 +2,7 @@
 /*
  Plugin Name: Hello ThinkUp
  Description: Example developer insight plugin.
+ When:
  */
 
 /**

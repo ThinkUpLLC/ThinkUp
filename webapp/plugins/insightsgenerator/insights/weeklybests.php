@@ -1,7 +1,8 @@
 <?php
 /*
- Plugin Name: Weekly bests
- Description: Your most popular posts from last week. (Thursday)
+ Plugin Name: Weekly Bests
+ Description: Your most popular posts from last week.
+ When: Thursdays
  */
 
 /**

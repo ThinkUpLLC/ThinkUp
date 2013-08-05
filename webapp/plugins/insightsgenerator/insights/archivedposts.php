@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Archived Posts
- Description: Notify user every 100 posts captured.
+ Description: How many posts of yours which have been captured.
  */
 
 /**

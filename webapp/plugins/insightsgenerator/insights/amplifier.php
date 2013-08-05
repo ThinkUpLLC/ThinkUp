@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Amplifier
- Description: Show how many more users a message has reached due to your retweet.
+ Description: How many more users a message has reached due to your reshare or retweet.
  */
 
 /**

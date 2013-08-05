@@ -1,7 +1,8 @@
 <?php
 /*
  Plugin Name: Frequency
- Description: How frequently you posted this week as compared to last week. (Monday)
+ Description: How frequently you posted this week as compared to last week.
+ When: Mondays
  */
 /**
  *

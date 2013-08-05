@@ -1,7 +1,8 @@
 <?php
 /*
  Plugin Name: All About You
- Description: How many times posts contained the words "I", "me", "my", "myself" or "mine" in the past week. (Sundays)
+ Description: How often you referred to yourself ("I", "me", "myself", "my") in the past week.
+ When: Sundays
  */
 
 /**

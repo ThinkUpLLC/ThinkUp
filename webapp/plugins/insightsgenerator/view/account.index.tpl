@@ -20,7 +20,7 @@
     {foreach from=$installed_plugins key=pid item=plugin name=foo}
         <tr>
             <td><b>{$plugin.name}</b></td>
-            <td>{$plugin.description}</td>
+            <td>{$plugin.description} {if $plugin.when}<span class="label">{$plugin.when}</span>{/if}</td>
         </tr>
     {/foreach}
     </table>

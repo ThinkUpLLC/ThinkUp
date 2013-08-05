@@ -1,7 +1,8 @@
 <?php
 /*
  Plugin Name: Metweet
- Description: How many times you share tweets mentioning yourself. (Tuesday)
+ Description: How many times you share tweets mentioning yourself.
+ When: Tuesdays
  */
 
 /**
