@@ -376,7 +376,7 @@ class FoursquareCrawler {
                             $comment_store["author_avatar"] = $comment->user->photo->prefix . "100x100" .
                             $comment->user->photo->suffix;
                         } elseif (isset($comment->user->photo)) { //sometimes just photo is set, not prefix and suffix
-                            $comment["author_avatar"] = $comment->user->photo;
+                            $comment_store["author_avatar"] = $comment->user->photo;
                         }
                         // The author user id is there foursquare user ID
                         $comment_store['author_user_id'] = $comment->user->id;
