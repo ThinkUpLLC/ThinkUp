@@ -1,0 +1,106 @@
+<?php
+/*
+ Plugin Name: Favorited Links
+ Description: Go through the links in the posts you favorite everyday.
+ */
+
+/**
+ *
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/favoritedlinks.php
+ *
+ * Copyright (c) 2012-2013 Nilaksh Das, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkup.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2012-2013 Nilaksh Das, Gina Trapani
+ * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
+ */
+
+require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
+
+class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin {
+    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+
+        $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
+        $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
+        $todays_favorited_posts_with_links = array();
+        
+        foreach ($favorited_posts as $post) {
+            if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
+                $post_text = $post->post_text;
+
+                $text_parser = new Twitter_Extractor($post_text);
+                $elements = $text_parser->extract();
+
+                if (count($elements['urls'])) {
+                    $todays_favorited_posts_with_links[] = $post;
+                }
+            }
+        }
+
+        $favorited_links_count = count($todays_favorited_posts_with_links);
+        if ($favorited_links_count) {
+            $verb = '';
+            $post_type = '';
+
+            switch ($instance->network) {
+                case 'twitter':
+                    $verb = 'favorited';
+                    $post_type = 'tweet';
+                    break;
+
+                case 'facebook':
+                    $verb = 'liked';
+                    $post_type = 'status update';
+                    break;
+
+                case 'google+':
+                    $verb = '+1\'ed';
+                    $post_type = 'post';
+                    break;
+
+                case 'foursquare':
+                    $verb = 'liked';
+                    $post_type = 'checkin';
+                    break;
+                
+                default:
+                    $verb = 'liked';
+                    $post_type = 'post';
+                    break;
+            }
+
+            if ($favorited_links_count == 1) {
+                $insight_text = $this->username." ".$verb." <strong>1 ".$post_type."</strong> with a link in it.";
+            } else {
+                $insight_text = $this->username." ".$verb." <strong>".$favorited_links_count
+                ." ".$post_type."s</strong> with links in them, here's a list:";
+            }
+
+            $this->insight_dao->insertInsight("favorited_links", $instance->id,
+            $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
+            Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
+        }
+
+        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+}
+
+$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+$insights_plugin_registrar->registerInsightPlugin('FavoritedLinksInsight');
