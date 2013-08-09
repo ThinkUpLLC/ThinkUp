@@ -81,6 +81,7 @@ $plugin_tests->add(new TestOfMetweetInsight());
 $plugin_tests->add(new TestOfInteractionGraphInsight());
 $plugin_tests->add(new TestOfWeeklyBestsInsight());
 $plugin_tests->add(new TestOfReplySpikeInsight());
+$plugin_tests->add(new TestOfResponseTimeInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());
