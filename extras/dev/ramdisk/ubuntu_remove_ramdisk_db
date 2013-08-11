@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [[ $1 == '-h' || $1 == '-help' || $1 == '--h' || $1 == '--help' ]]; then
+    echo ''
+    echo 'This script moves your MySQL database data from the RAM disk back onto your hard drive.'
+    echo ''
+    echo 'After making a RAM disk you must run this script before restarting your computer or your MySQL installation will be destroyed.'
+    echo ''
+    exit 0
+fi
+
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]];
+then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+# Remove the symbolic link
+rm /var/lib/mysql
+
+# Move MySQL data back
+mv /tmp/ramdisk/mysql /var/lib/mysql
+
+restart mysql

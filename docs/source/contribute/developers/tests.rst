@@ -165,6 +165,18 @@ There are a few ways to speed up the test runs:
 
     ``sudo sh extras/dev/ramdisk/osx_make_ramdisk_db delete -v``
 
+3.  On Ubuntu, set up your test database to run in a RAM disk to speed up database i/o during testing.
+
+    You will need to run run:
+
+    ``sudo ./extras/dev/ramdisk/ubuntu_make_ramdisk_db``
+
+    When you are done you MUST run:
+
+    ``sudo ./extras/dev/ramdisk/ubuntu_remove_ramdisk_db``
+
+    Or your MySQL installation will be destroyed
+
 I'm getting lots of test failures. Help!
 ----------------------------------------
 
