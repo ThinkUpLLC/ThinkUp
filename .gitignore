@@ -1,21 +1,27 @@
-webapp/config.inc.php
-webapp/config.inc.bak.php
-data/
-!tests/data
-!webapp/data/README.md
-tests/config.tests.inc.php
+# Config and dotfiles
 .*
 !.travis.yml
+webapp/config.inc.php
+webapp/config.inc.bak.php
+tests/config.tests.inc.php
 extras/cron/config
 extras/scripts/autodeploy-conf
 extras/scripts/migratedb-conf
-extras/scripts/lic_header.py
 extras/scripts/test-pull-postback-conf
+extras/dev/ramdisk/osx_make_ramdisk_db.conf
+extras/scripts/lic_header.py
+
+# Temp data
+data/
+!tests/data
+!webapp/data/README.md
+
+# Compiled packages and process files
+build/
 webapp/test_installer/*
 webapp/plugins/twitterrealtime/streaming/*.pid
-build/
-extras/dev/ramdisk/osx_make_ramdisk_db.conf
 
+# Plugins except for core plugins
 webapp/plugins/*
 !webapp/plugins/expandurls/
 !webapp/plugins/facebook/
@@ -26,3 +32,6 @@ webapp/plugins/*
 !webapp/plugins/insightsgenerator/
 !webapp/plugins/twitter/
 !webapp/plugins/twitterrealtime/
+
+# ThinkUpLLC-specific extensions
+thinkupllc*
