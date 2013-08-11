@@ -1,0 +1,37 @@
+#!/bin/bash
+# Adapted From: https://gist.github.com/kurisuchan/1262135
+
+if [[ $1 == '-h' || $1 == '-help' || $1 == '--h' || $1 == '--help' ]]; then
+    echo ''
+    echo 'This script moves your MySQL database data onto a RAM disk for faster test runs.'
+    echo ''
+    echo 'After running this script You MUST run ubuntu_remove_ramdisk_db before you restart your computer or your MySQL installation will be destroyed'
+    echo ''
+    exit 0
+fi
+
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]];
+then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+# Backup the MySQL folder
+cp -u --update -r /var/lib/mysql ~/mysql_backup
+
+# Mount ramdisk folder in RAM
+mkdir -p /tmp/ramdisk
+mount -t tmpfs -o size=128M tmpfs /tmp/ramdisk/
+
+# Move MySQL data
+mv /var/lib/mysql /tmp/ramdisk/mysql
+ln -s /tmp/ramdisk/mysql/ /var/lib/mysql
+
+# Update permissions
+chmod -R 700 /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
+
+restart mysql
+
+echo 'You MUST run ubuntu_remove_ramdisk_db before you restart your computer or your MySQL installation will be destroyed'
