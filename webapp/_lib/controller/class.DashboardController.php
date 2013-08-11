@@ -267,13 +267,13 @@ class DashboardController extends ThinkUpController {
 
             //follower count history
             //by day
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-            $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
+            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
+            $follower_count_history_by_day = $count_dao->getHistory($this->instance->network_user_id,
             $this->instance->network, 'DAY', 5);
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
 
             //by week
-            $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
+            $follower_count_history_by_week = $count_dao->getHistory($this->instance->network_user_id,
             $this->instance->network, 'WEEK', 5);
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
 

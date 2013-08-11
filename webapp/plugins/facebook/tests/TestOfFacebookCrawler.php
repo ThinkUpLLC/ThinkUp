@@ -247,9 +247,9 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         // Test FollowerCount is set
         $sql = "SELECT * FROM ".$this->table_prefix.
-        "follower_count WHERE network='facebook' AND network_user_id='729597743';";
+        "count_history WHERE network='facebook' AND network_user_id='729597743' AND type='followers';";
 
-        $stmt = FollowerCountMySQLDAO::$PDO->query($sql);
+        $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
@@ -314,11 +314,11 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '7568536355');
 
-        // Test FollowerCount is set
+        // Test follower count is set
         $sql = "SELECT * FROM ".$this->table_prefix.
-        "follower_count WHERE network='facebook page' AND network_user_id='7568536355';";
+        "count_history WHERE network='facebook page' AND network_user_id='7568536355' AND type='followers';";
 
-        $stmt = FollowerCountMySQLDAO::$PDO->query($sql);
+        $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
         $data = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);

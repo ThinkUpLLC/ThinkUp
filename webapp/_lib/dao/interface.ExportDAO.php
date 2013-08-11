@@ -115,7 +115,7 @@ interface ExportDAO {
      * @param $network
      * @param $file
      */
-    public function exportFollowerCountToFile($user_id, $network, $file);
+    public function exportCountHistoryToFile($user_id, $network, $file);
     /**
      * Export followers, followees, and user data to file.
      * @param $user_id

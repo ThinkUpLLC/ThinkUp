@@ -271,12 +271,12 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test get FollowerCountDAO
+     * Test get CountHistoryDAO
      */
-    public function testGetFollowerCountDAO() {
-        $plugin_dao = DAOFactory::getDAO('FollowerCountDAO');
+    public function testGetCountHistoryDAO() {
+        $plugin_dao = DAOFactory::getDAO('CountHistoryDAO');
         $this->assertNotNull($plugin_dao);
-        $this->assertIsA($plugin_dao, 'FollowerCountMySQLDAO');
+        $this->assertIsA($plugin_dao, 'CountHistoryMySQLDAO');
     }
 
     /**
@@ -400,7 +400,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
         $this->assertEqual(sizeof($result), 32);
-        $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
+        $this->assertEqual($result[0], $cfg_values["table_prefix"].'count_history');
         $this->restoreConfigFile();
     }
     /**

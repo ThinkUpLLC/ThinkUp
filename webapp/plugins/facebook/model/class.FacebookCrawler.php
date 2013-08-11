@@ -93,8 +93,9 @@ class FacebookCrawler {
 
             // Record the current number of page likes in follower count table
             if ($network == 'facebook page' && isset($user_details->likes) && !$this->page_like_count_set) {
-                $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-                $follower_count_dao->insert($this->instance->network_user_id, 'facebook page', $user_details->likes);
+                $count_dao = DAOFactory::getDAO('CountHistoryDAO');
+                $count_dao->insert($this->instance->network_user_id, 'facebook page', $user_details->likes, null,
+                'followers');
                 $this->page_like_count_set = true;
             }
 
@@ -645,7 +646,7 @@ class FacebookCrawler {
         if (isset($friends->data)) {
             //store relationships in follows table
             $follows_dao = DAOFactory::getDAO('FollowDAO');
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $user_dao = DAOFactory::getDAO('UserDAO');
 
             foreach ($friends->data as $friend) {
@@ -671,7 +672,7 @@ class FacebookCrawler {
                 }
             }
             //totals in follower_count table
-            $follower_count_dao->insert($user_id, $network, count($friends->data));
+            $count_dao->insert($user_id, $network, count($friends->data), null, 'followers');
         } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
             throw new APIOAuthException($stream->error->message);
         }
