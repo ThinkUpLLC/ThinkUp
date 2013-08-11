@@ -146,7 +146,7 @@ There are a few ways to speed up the test runs:
 
     ``SKIP_UPGRADE_TESTS=1 php tests/all_tests.php``
 
-2.  On OS X, set up your test database to run in a RAM disk to speed up database i/o during testing.
+2.  On OS X, set up your test database to run in a RAM disk to speed up database I/O during testing.
 
     You will need to update the ``config.inc.php`` file to reflect the latest test override and test RAM disk option.
 
@@ -165,9 +165,9 @@ There are a few ways to speed up the test runs:
 
     ``sudo sh extras/dev/ramdisk/osx_make_ramdisk_db delete -v``
 
-3.  On Ubuntu, set up your test database to run in a RAM disk to speed up database i/o during testing.
+3.  On Ubuntu, set up your test database to run in a RAM disk to speed up database I/O during testing.
 
-    You will need to run run:
+    You will need to run:
 
     ``sudo ./extras/dev/ramdisk/ubuntu_make_ramdisk_db``
 
@@ -175,7 +175,7 @@ There are a few ways to speed up the test runs:
 
     ``sudo ./extras/dev/ramdisk/ubuntu_remove_ramdisk_db``
 
-    Or your MySQL installation will be destroyed
+    Or your MySQL installation will be destroyed.
 
 I'm getting lots of test failures. Help!
 ----------------------------------------
