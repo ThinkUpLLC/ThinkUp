@@ -1123,6 +1123,10 @@ class TwitterCrawler {
         if ($since_id != "") {
             $args["since_id"] = $since_id;
         }
+        //init vars
+        $tweets = null;
+        $http_status = null;
+        $payload = null;
         try {
             list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
             if ($http_status == 200) {
