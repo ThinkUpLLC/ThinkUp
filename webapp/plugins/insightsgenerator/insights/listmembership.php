@@ -42,9 +42,9 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
         $this->insight_date);
         if (sizeof($new_groups) > 0 ) { //if not null, store insight
-            $group_membership_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
-            $list_membership_count_history_by_day = $group_membership_count_dao->getHistory($instance->network_user_id,
-            $instance->network, 'DAY', 15);
+            $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
+            $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
+            $instance->network, 'DAY', 15, null, 'group_membership_count');
             if (sizeof($new_groups) > 1) {
                 $group_name_list = '';
                 $group_number = 0;

@@ -160,7 +160,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -239,7 +238,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -309,7 +307,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -354,7 +351,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -437,7 +433,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -483,7 +478,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -529,7 +523,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
-        $config->getValue('table_prefix')."group_member_count, ".
         $config->getValue('table_prefix')."hashtags," .
         $config->getValue('table_prefix')."hashtags_posts, " .
         $config->getValue('table_prefix')."instances, ".
@@ -603,7 +596,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
 
-        $expected_tables = array('count_history', 'encoded_locations', 'favorites', 'follows', 'group_member_count',
+        $expected_tables = array('count_history', 'encoded_locations', 'favorites', 'follows',
         'group_members', 'groups', 'hashtags', 'hashtags_posts',
         'insight_baselines', 'insights', 'instances', 'instances_hashtags', 'instances_twitter', 'invites',
         'links', 'links_short', 'mentions', 'mentions_posts', 'options',

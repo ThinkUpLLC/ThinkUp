@@ -79,4 +79,12 @@ interface CountHistoryDAO  {
      * @return array of Counts for the specified post and of the specified type
      */
     public function getLatestCountByPostIDAndType($post_id, $type);
+
+    /**
+     * Update the count of active group memberships based on the group memberships in storage.
+     * @param int $network_user_id
+     * @param str $network
+     * @return int Total inserted
+     */
+    public function updateGroupMembershipCount($network_user_id, $network);
 }
