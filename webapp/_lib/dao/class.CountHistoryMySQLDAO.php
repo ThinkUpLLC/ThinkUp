@@ -55,7 +55,6 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
         if ($before_date == date('Y-m-d')) {
             $before_date = null;
         }
-
         if ($units != "DAY" && $units != 'WEEK' && $units != 'MONTH') {
             $units = 'DAY';
         }
@@ -102,6 +101,9 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
             default:
                 $follower_description = 'Followers';
                 break;
+        }
+        if($type == 'group_membership_count') {
+            $follower_description = 'Lists';
         }
         foreach ($history_rows as $row) {
             $timestamp = strtotime($row['full_date']);
@@ -170,6 +172,27 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
                     ksort($history);
                 }
             }
+
+            if($type == 'group_membership_count') {
+                //calculate the point percentages
+                $percentages = array();
+
+                $max_count = intval($history_rows[0]['count']);
+                $min_count = intval($history_rows[0]['count']);
+                foreach ($history_rows as $row) {
+                    $min_count = ($row['count'] < $min_count)?intval($row['count']):$min_count;
+                    $max_count = ($row['count'] > $max_count)?intval($row['count']):$max_count;
+                }
+                $difference = $max_count - $min_count;
+                foreach ($history as $data_point) {
+                    if ($data_point == 'no data') {
+                        $percentages[] = 0;
+                    } else {
+                        $amount_above_min = $data_point - $min_count;
+                        $percentages[] = round(Utils::getPercentage($amount_above_min, $difference));
+                    }
+                }
+            }
             $history = $simplified_history;
 
             $milestone = Utils::predictNextMilestoneDate(intval($history_rows[sizeof($history_rows)-1]['count']),
@@ -211,7 +234,7 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
                 $milestone['units_of_time'] = $units;
             }
             //only set milestone if it's within 10 to avoid "954 weeks until you reach 1000 followers" messaging
-            if ($milestone['will_take'] > 50) {
+            if ($milestone['will_take'] > 10) {
                 $milestone = null;
             }
         } else  {
@@ -261,5 +284,20 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);
         return $rows[0];
+    }
+
+    public function updateGroupMembershipCount($network_user_id, $network) {
+        $q  = "INSERT INTO #prefix#count_history ";
+        $q .= "(network_user_id, network, type, date, count) ";
+        $q .= "SELECT :network_user_id, :network, 'group_membership_count', NOW(), COUNT(group_id) ";
+        $q .= "FROM #prefix#group_members WHERE member_user_id = :network_user_id ";
+        $q .= "AND network = :network AND is_active = 1";
+        $vars = array(
+            ':network_user_id'=>(string) $network_user_id,
+            ':network'=>$network,
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getInsertCount($ps);
     }
 }
