@@ -675,11 +675,11 @@ class TwitterCrawler {
                 }
             }
             if ($updated_group_member_count > 0) {
-                $group_member_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+                $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
                 $status_message = $updated_group_member_count ." group membership(s) updated";
                 $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
                 // update current number of active list membershps
-                $group_member_count_dao->updateCount($this->instance->network_user_id, 'twitter');
+                $count_history_dao->updateGroupMembershipCount($this->instance->network_user_id, 'twitter');
             }
         }
     }
@@ -703,7 +703,7 @@ class TwitterCrawler {
             $group_dao = DAOFactory::getDAO('GroupDAO');
             $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
             // $group_owner_dao = DAOFactory::getDAO('GroupOwnerDAO');
-            $group_member_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+            $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
 
             while ($continue_fetching) {
 
@@ -767,7 +767,7 @@ class TwitterCrawler {
                 $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
             }
             // update current number of active list membershps
-            $group_member_count_dao->updateCount($this->instance->network_user_id, 'twitter');
+            $count_history_dao->updateGroupMembershipCount($this->instance->network_user_id, 'twitter');
         }
     }
 

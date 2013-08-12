@@ -42,7 +42,6 @@ $model_tests->add(new TestOfFollowMySQLDAO());
 $model_tests->add(new TestOfCountHistoryMySQLDAO());
 $model_tests->add(new TestOfGroupMySQLDAO());
 $model_tests->add(new TestOfGroupMemberMySQLDAO());
-$model_tests->add(new TestOfGroupMembershipCountMySQLDAO());
 $model_tests->add(new TestOfInsightBaselineMySQLDAO());
 $model_tests->add(new TestOfInsightMySQLDAO());
 $model_tests->add(new TestOfInstanceMySQLDAO());

@@ -430,8 +430,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($group_member_dao->isGroupMemberInStorage($user = '36823', $group = '79854285', 'twitter'));
         $this->assertFalse($group_member_dao->isGroupMemberInStorage($user = '930061', $group = '79854285', 'twitter'));
 
-        $group_membership_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
-        $history = $group_membership_count_dao->getHistory($user = '36823', 'twitter', 'DAYS');
+        $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
+        $history = $count_history_dao->getHistory($user = '36823', 'twitter', 'DAYS', null, 'group_memberships');
         $this->assertEqual(count($history['history']), 1);
     }
 

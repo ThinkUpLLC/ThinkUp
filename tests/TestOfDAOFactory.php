@@ -358,12 +358,6 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'GroupMemberMySQLDAO');
     }
 
-    public function testGetGroupMembershipDAO() {
-        $dao = DAOFactory::getDAO('GroupMembershipCountDAO');
-        $this->assertNotNull($dao);
-        $this->assertIsA($dao, 'GroupMembershipCountMySQLDAO');
-    }
-
     public function testGetTableStatsDAO() {
         $dao = DAOFactory::getDAO('TableStatsDAO');
         $this->assertNotNull($dao);
@@ -406,7 +400,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 33);
+        $this->assertEqual(sizeof($result), 32);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'count_history');
         $this->restoreConfigFile();
     }

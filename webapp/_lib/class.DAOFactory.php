@@ -160,10 +160,6 @@ class DAOFactory {
         'GroupDAO' => array (
     //MySQL Version
             'mysql' => 'GroupMySQLDAO'),
-    //Group Membership Count MySQL DAO
-        'GroupMembershipCountDAO' => array (
-    //MySQL Version
-            'mysql' => 'GroupMembershipCountMySQLDAO'),
     //Group Member MySQL DAO
         'GroupMemberDAO' => array (
     //MySQL Version

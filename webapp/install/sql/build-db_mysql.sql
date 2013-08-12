@@ -68,18 +68,6 @@ CREATE TABLE tu_follows (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user follow and friend relationships.';
 
 --
--- Table structure for table tu_group_member_count
---
-
-CREATE TABLE tu_group_member_count (
-  network varchar(20) NOT NULL COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
-  member_user_id varchar(30) NOT NULL COMMENT 'User ID on a particular service in a number of groups/lists.',
-  date date NOT NULL COMMENT 'Date of group count.',
-  count int(10) unsigned NOT NULL COMMENT 'Total number of groups the user is in.',
-  KEY member_network (member_user_id,network)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Group membership counts by date and time.';
-
---
 -- Table structure for table tu_group_members
 --
 
@@ -560,7 +548,7 @@ CREATE TABLE tu_videos (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Videos which appear in posts.';
 
 
--- Dump completed on 2013-08-12 14:55:36
+-- Dump completed on 2013-08-12 15:02:16
 
 --
 -- Insert DB Version

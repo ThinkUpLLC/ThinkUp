@@ -232,14 +232,16 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
 
         if ($build_history) {
             date ('Y-m-d', strtotime('-1 day'));
-            $builders[] = FixtureBuilder::build('group_member_count', array('member_user_id'=>'13',
-            'network'=>'twitter', 'date'=>date('Y-m-d'), 'count'=>$history_ceiling));
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>'13',
+            'network'=>'twitter', 'date'=>date('Y-m-d'), type =>'group_memberships','count'=>$history_ceiling));
 
-            $builders[] = FixtureBuilder::build('group_member_count', array('member_user_id'=>'13',
-            'network'=>'twitter', 'date'=>date ('Y-m-d', strtotime('-1 day')), 'count'=>($history_ceiling-3)));
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>'13',
+            'network'=>'twitter', 'date'=>date ('Y-m-d', strtotime('-1 day')), 'type' =>'group_memberships',
+            'count'=>($history_ceiling-3)));
 
-            $builders[] = FixtureBuilder::build('group_member_count', array('member_user_id'=>'13',
-            'network'=>'twitter', 'date'=>date ('Y-m-d', strtotime('-2 day')), 'count'=>($history_ceiling-5)));
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>'13',
+            'network'=>'twitter', 'date'=>date ('Y-m-d', strtotime('-2 day')), 'type' =>'group_memberships',
+            'count'=>($history_ceiling-5)));
         }
 
         return $builders;
