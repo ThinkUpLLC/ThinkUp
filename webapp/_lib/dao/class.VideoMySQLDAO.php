@@ -58,13 +58,13 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
     public function addVideo($vals) {
         $res = null;
         // Check all the fields we need are set
-        if(self::hasAllRequiredFields($vals)) {
+        if (self::hasAllRequiredFields($vals)) {
 
             // Insert the values which go into the post table
             $row_id = parent::addPost($vals);
 
             // If the post insertion went fine insert the values that go into the videos table
-            if($row_id != null) {
+            if ($row_id != null) {
                 //SQL variables to bind
                 $vars = array();
                 //SQL query
@@ -126,7 +126,7 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
         );
         $ps = $this->execute($q, $vars);
         $post_row = $this->getDataRowAsArray($ps);
-        if($post_row) {
+        if ($post_row) {
             return new Video($post_row);
         }
         else{

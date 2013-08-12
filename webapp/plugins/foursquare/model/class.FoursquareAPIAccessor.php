@@ -46,7 +46,7 @@ class FoursquareAPIAccessor{
         $url = $this->api_domain.$endpoint.'?oauth_token='.$access_token;
 
         // If there are additional parameters passed in add them to the URL also
-        if($fields != null){
+        if ($fields != null){
             foreach( $fields as $key=>$value) {
                 $url = $url.'&'.$key.'='.$value;
             }

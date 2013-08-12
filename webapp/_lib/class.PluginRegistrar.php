@@ -64,12 +64,12 @@ abstract class PluginRegistrar {
      */
     protected function registerObjectFunction($trigger, $object_name, $function_name, $before_insights_generate=true) {
         // If the trigger type is crawl then we have to store them in the correct array for ordering later
-        if($trigger == 'crawl') {
-            if($object_name == 'InsightsGeneratorPlugin') {
+        if ($trigger == 'crawl') {
+            if ($object_name == 'InsightsGeneratorPlugin') {
                 $this->insight_generator[$trigger][] = array($object_name, $function_name);
-            } elseif($before_insights_generate == true) {
+            } elseif ($before_insights_generate == true) {
                 $this->before_insight_generation[$trigger][] = array($object_name, $function_name);
-            } elseif($before_insights_generate == false) {
+            } elseif ($before_insights_generate == false) {
                 $this->after_insight_generation[$trigger][] = array($object_name, $function_name);
             }
         } else { // Any other type such as generateInsight don't need ordering
@@ -124,25 +124,25 @@ abstract class PluginRegistrar {
      * @param  string $trigger the type of plugins you want to order currently only supports crawl
      */
     public function orderPlugins($trigger='crawl') {
-        if($trigger == 'crawl') {
+        if ($trigger == 'crawl') {
             // Handle case where the insight generator plugin does not exist (only known case is during testing)
-            if(sizeof($this->insight_generator['crawl']) != 1) {
-                if(sizeof($this->before_insight_generation) > 0 && sizeof($this->after_insight_generation) > 0) {
+            if (sizeof($this->insight_generator['crawl']) != 1) {
+                if (sizeof($this->before_insight_generation) > 0 && sizeof($this->after_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = array_merge($this->before_insight_generation['crawl'],
                     $this->after_insight_generation['crawl']);
-                } elseif(sizeof($this->before_insight_generation) > 0) {
+                } elseif (sizeof($this->before_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = $this->before_insight_generation['crawl'];
-                } elseif(sizeof($this->after_insight_generation) > 0) {
+                } elseif (sizeof($this->after_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = $this->after_insight_generation['crawl'];
                 }
             } else {
-                if(sizeof($this->before_insight_generation) > 0 && sizeof($this->after_insight_generation) > 0) {
+                if (sizeof($this->before_insight_generation) > 0 && sizeof($this->after_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = array_merge($this->before_insight_generation['crawl'],
                     $this->insight_generator['crawl'], $this->after_insight_generation['crawl']);
-                } elseif(sizeof($this->before_insight_generation) > 0) {
+                } elseif (sizeof($this->before_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = array_merge($this->before_insight_generation['crawl'],
                     $this->insight_generator['crawl']);
-                } elseif(sizeof($this->after_insight_generation) > 0) {
+                } elseif (sizeof($this->after_insight_generation) > 0) {
                     $this->object_function_callbacks['crawl'] = array_merge($this->insight_generator['crawl'],
                     $this->after_insight_generation['crawl']);
                 }
