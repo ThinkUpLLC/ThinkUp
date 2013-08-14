@@ -7,7 +7,7 @@
 
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/insights/replyrate.php
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/responsetime.php
  *
  * Copyright (c) 2013 Nilaksh Das, Gina Trapani
  *
