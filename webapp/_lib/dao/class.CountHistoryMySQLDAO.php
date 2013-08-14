@@ -197,7 +197,6 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
 
             $milestone = Utils::predictNextMilestoneDate(intval($history_rows[sizeof($history_rows)-1]['count']),
             $trend);
-
             //If $before_date set, add difference between then and now to how long it will take
             if (isset($before_date) ) {
                 if ($units=='DAY') {
@@ -233,8 +232,8 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
             if (isset($milestone)) {
                 $milestone['units_of_time'] = $units;
             }
-            //only set milestone if it's within 10 to avoid "954 weeks until you reach 1000 followers" messaging
-            if ($milestone['will_take'] > 10) {
+            //only set milestone if it's within 20 to avoid "954 weeks until you reach 1000 followers" messaging
+            if ($milestone['will_take'] > 20) {
                 $milestone = null;
             }
         } else  {

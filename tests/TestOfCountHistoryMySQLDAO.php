@@ -51,7 +51,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result, 1, 'One count inserted');
     }
 
-    public function testGetDayHistoryNoGapsMilestoneNotInSight() {
+    public function testFollowerCountGetDayHistoryNoGapsMilestoneNotInSight() {
         $format = 'n/j';
         $date = date ( $format );
 
@@ -123,7 +123,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNotNull($result['vis_data']);
     }
 
-    public function testGetDayHistoryFromSpecificStartDate() {
+    public function testFollowerCountGetDayHistoryFromSpecificStartDate() {
         $builders = array();
         $format = 'Y-m-d';
         $date = date ( $format );
@@ -197,7 +197,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNotNull($result['vis_data']);
     }
 
-    public function testGetDayHistoryNoGapsMilestoneInSight() {
+    public function testFollowerCountGetDayHistoryNoGapsMilestoneInSight() {
         $format = 'n/j';
         $date = date ( $format );
 
@@ -268,7 +268,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result['milestone']['units_of_time'], 'DAY');
     }
 
-    public function testGetDayHistoryWeekNoGaps() {
+    public function testFollowerCountGetDayHistoryWeekNoGaps() {
         $format = 'm/j';
         $date = date ( $format );
 
@@ -283,7 +283,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
             $gap = 1;
             while ($gap < $days_ago) {
                 $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-'.$gap.'d',
-                'count'=>145);
+                'count'=>145, 'type'=>'followers', 'post_id'=>null);
                 $builders[] = FixtureBuilder::build('count_history', $follower_count);
                 $gap++;
             }
@@ -292,19 +292,19 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $day_counter = 0;
         while ($day_counter < 14) {
             $follower_count = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-'.$days_ago.'d',
-            'count'=>(140-$day_counter) );
+            'count'=>(140-$day_counter), 'type'=>'followers','post_id'=>null );
             $builders[] = FixtureBuilder::build('count_history', $follower_count);
             $day_counter++;
             $days_ago++;
         }
 
         $dao = new CountHistoryMySQLDAO();
-        $result = $dao->getHistory('930061', 'twitter', 'WEEK', 3);
+        $result = $dao->getHistory('930061', 'twitter', 'WEEK', 3, null, 'followers');
         $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, trend, and milestone, and vis_data');
 
         $this->debug(Utils::varDumpToString($result));
 
-        if (date('w')  != 1 && date('w')  != 0) { //Don't test on Sunday or Saturday
+        if (date('w')  != 1 && date('w')  != 0) { //Don't test on Sunday or Monday
             $this->assertEqual(sizeof($result['history']), 3);
 
             // Yesterday count was 145
@@ -332,7 +332,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         }
     }
 
-    public function testGetDayHistoryWithGaps() {
+    public function testFollowerCountGetDayHistoryWithGaps() {
         // Filling gaps was only required by the old visualization library
         $format = 'n/j';
         $date = date ( $format );
@@ -379,7 +379,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result['milestone']);
     }
 
-    public function testTrendMillionPlusFollowers() {
+    public function testFollowerCountTrendMillionPlusFollowers() {
         $format = 'n/j';
         $date = date ( $format );
 
@@ -412,7 +412,7 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($result['milestone']);
     }
 
-    public function testTrendMillionPlusFollowers2() {
+    public function testFollowerCountTrendMillionPlusFollowers2() {
         $format = 'n/j';
         $date = date ( $format );
 
@@ -779,12 +779,13 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $date_ago = date ($format, strtotime('-1 day'.$date));
         $this->assertEqual($result['history'][$date_ago], 140);
 
+        $this->debug(Utils::varDumpToString($result));
         //check milestone
         //latest group membership count is 140, next milestone is 1,000 group memberships
-        //with a 7+/day trend, this should take 123 days
-        //beyond our "don't feel bad about yourself" threshold of 10, so should be null
+        //with a 7+/day trend, this should take 123 days (under 20 weeks)
+        //within our "don't feel bad about yourself" threshold of 20, so should not be null
         if ($todays_day_of_the_week != 0) {
-            $this->assertNull($result['milestone']);
+            $this->assertNotNull($result['milestone']);
         }
     }
 
