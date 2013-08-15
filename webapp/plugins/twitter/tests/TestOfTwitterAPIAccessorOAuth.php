@@ -194,6 +194,13 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($results[0]["user_name"], "twitterapi");
         $this->assertEqual($results[0]["author_fullname"], "Twitter API");
         $this->assertEqual($results[0]["location"], "San Francisco, CA");
+
+        // assert reply is processed correctly
+        $this->assertEqual($results[5]["post_text"],
+        "@foetusite minutes after tweeting, a developer was kind enough to submit one: https://t.co/8qkLwLuW ^TS");
+        $this->assertEqual($results[5]["post_id"], "292042417505443840");
+        $this->assertEqual($results[5]["in_reply_to_user_id"], "93378131");
+        $this->assertEqual($results[5]["in_reply_to_post_id"], "292038019752538112");
     }
 
     public function testParseJSONUser() {

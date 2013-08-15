@@ -263,7 +263,7 @@ class TwitterAPIAccessorOAuth {
             'post_text'=>$json_tweet->text,
             'author_username'=>$json_tweet->user->screen_name,
             'user_name'=>$json_tweet->user->screen_name,
-            'in_reply_to_user_id'=>((isset($json_tweet->to_user_id))?$json_tweet->to_user_id:''),
+            'in_reply_to_user_id'=>((isset($json_tweet->in_reply_to_user_id))?$json_tweet->in_reply_to_user_id:''),
             'author_avatar'=>$json_tweet->user->profile_image_url,
             'avatar'=>$json_tweet->user->profile_image_url,
             'in_reply_to_post_id'=> ((isset($json_tweet->in_reply_to_status_id_str))?
