@@ -5,3 +5,4 @@ Plugins
    :maxdepth: 2
 
    buildplugin
+   buildinsight
