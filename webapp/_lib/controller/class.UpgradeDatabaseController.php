@@ -290,20 +290,26 @@ class UpgradeDatabaseController extends ThinkUpAuthController {
         }
         // add non-versioned sql if running via command line and no version arg '--with-new-sql'
         if ($no_version) {
-            foreach($dir_list as $file) {
+            foreach ($dir_list as $file) {
                 if (!preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $file)
-                && preg_match("/\.sql$/", $file)
-                ) {
-                    $migration_string = file_get_contents($file);
-                    // check for modified prefix
-                    if ($table_prefix != 'tu_') {
-                        $migration_string = str_replace('tu_', $table_prefix, $migration_string);
-                    }
-                    $path_info = pathinfo($file);
-                    $migration =
-                    array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
+                && preg_match("/\.sql$/", $file) ) {
+
+                    //No version in filename
+                    if (!preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $file, $matches)
+                    //TODO combine these into a single regex
+                    && !preg_match('/_v(\d+\.\d+(-beta\.\d+)?(\w+)?)\.sql(\.migration)?/', $file, $matches)) {
+                        $migration_string = file_get_contents($file);
+
+                        // check for modified prefix
+                        if ($table_prefix != 'tu_') {
+                            $migration_string = str_replace('tu_', $table_prefix, $migration_string);
+                        }
+                        $path_info = pathinfo($file);
+                        $migration =
+                        array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
                         'filename' => $path_info['basename'], 'new_migration' => true);
-                    array_push($migrations, $migration);
+                        array_push($migrations, $migration);
+                    }
                 }
             }
         }
