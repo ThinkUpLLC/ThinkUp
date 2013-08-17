@@ -324,7 +324,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->addToView('rss_crawl_url', $rss_crawl_url);
         //cli_crawl_command
         $cli_crawl_command = 'cd '.THINKUP_WEBAPP_PATH.'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.
-        ' crawl.php '.$email;
+        ' -d error_reporting=3 crawl.php '.$email.' > /dev/null';
         $this->addToView('cli_crawl_command', $cli_crawl_command);
         //help link
         $this->view_mgr->addHelp('rss', 'userguide/datacapture');
