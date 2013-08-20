@@ -47,7 +47,8 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         $THINKUP_CFG['db_name'] = $this->test_database_name;
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."/webapp/install/sql/build-db_mysql.sql");
+        $this->testdb_helper->create($THINKUP_CFG['source_root_path'].
+        "/webapp/install/sql/build-db_mysql-upcoming-release.sql");
     }
 
     public function tearDown() {
@@ -96,7 +97,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>17, 'user_name'=>'thinkupapp',
-        'full_name'=>'ThinkUpers', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10, 
+        'full_name'=>'ThinkUpers', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
         'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
@@ -130,9 +131,9 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
             'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
-            'author_avatar'=>'avatar.jpg', 'source'=>'web', 
-            'pub_date'=>"2006-01-01 00:$pseudo_minute:00", 'reply_count_cache'=>$reply_or_forward_count, 
-            'retweet_count_cache'=>$reply_or_forward_count, 'post_text'=>'This is post '.$counter, 
+            'author_avatar'=>'avatar.jpg', 'source'=>'web',
+            'pub_date'=>"2006-01-01 00:$pseudo_minute:00", 'reply_count_cache'=>$reply_or_forward_count,
+            'retweet_count_cache'=>$reply_or_forward_count, 'post_text'=>'This is post '.$counter,
             'network'=>'twitter', 'is_protected'=>0, 'is_geo_encoded'=>1));
             $counter++;
         }
@@ -143,13 +144,13 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
             'author_user_id'=>18, 'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug',
-            'author_avatar'=>'avatar.jpg', 
-            'source'=>'web', 'pub_date'=>"2006-01-02 00:$pseudo_minute:00", 'reply_count_cache'=>0, 
+            'author_avatar'=>'avatar.jpg',
+            'source'=>'web', 'pub_date'=>"2006-01-02 00:$pseudo_minute:00", 'reply_count_cache'=>0,
             'retweet_count_cache'=>0, 'post_text'=>'This is image post '.$counter, 'network'=>'twitter',
             'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_key'=>$post_id, 
+            'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_key'=>$post_id,
             'image_src'=>'image.png'));
 
             $counter++;
@@ -161,12 +162,12 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
             'author_user_id'=>19, 'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter',
-            'author_avatar'=>'avatar.jpg', 
+            'author_avatar'=>'avatar.jpg',
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>"2006-03-01 00:$pseudo_minute:00",
             'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter', 'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'expanded_url'=>'http://example.com/'.$counter.'html', 
+            'expanded_url'=>'http://example.com/'.$counter.'html',
             'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_id, 'image_src'=>''));
 
             $counter++;
@@ -176,7 +177,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $post_id = $counter + 120;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>1234,
-            'author_username'=>'thinkupapp', 'author_fullname'=>'thinkupapp', 'author_avatar'=>'avatar.jpg', 
+            'author_username'=>'thinkupapp', 'author_fullname'=>'thinkupapp', 'author_avatar'=>'avatar.jpg',
             'post_text'=>'This is test post '.$counter, 'source'=>'web', 'pub_date'=>"2006-03-01 00:$pseudo_minute:00",
             'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 

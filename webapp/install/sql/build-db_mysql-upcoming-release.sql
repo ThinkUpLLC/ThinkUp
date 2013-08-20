@@ -6,6 +6,22 @@
 ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
+-- Table structure for table tu_count_history
+--
+
+CREATE TABLE tu_count_history (
+  network_user_id varchar(30) DEFAULT NULL COMMENT 'User ID on a given network associated with this count.',
+  post_id varchar(80) DEFAULT NULL COMMENT 'Post ID on a given network associated with this count.',
+  network varchar(20) NOT NULL COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
+  type varchar(80) NOT NULL COMMENT 'Type of item counted.',
+  date date NOT NULL COMMENT 'Date this count was recorded.',
+  count int(11) NOT NULL COMMENT 'Total number of the item specified in type.',
+  KEY network_user_id (network,type,network_user_id),
+  KEY post_id (network,type,post_id),
+  KEY date (date)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Item counts by date on a network.';
+
+--
 -- Table structure for table tu_encoded_locations
 --
 
@@ -35,17 +51,6 @@ CREATE TABLE tu_favorites (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Favorite posts.';
 
 --
--- Table structure for table tu_follower_count
---
-
-CREATE TABLE tu_follower_count (
-  network_user_id varchar(30) NOT NULL COMMENT 'User ID on a particular service with a follower count.',
-  network varchar(20) NOT NULL COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
-  date date NOT NULL COMMENT 'Date of follower count.',
-  count int(11) NOT NULL COMMENT 'Total number of followers.'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Follower counts by date and time.';
-
---
 -- Table structure for table tu_follows
 --
 
@@ -62,18 +67,6 @@ CREATE TABLE tu_follows (
   KEY network (network,last_seen),
   KEY user_id (user_id,network,active)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user follow and friend relationships.';
-
---
--- Table structure for table tu_group_member_count
---
-
-CREATE TABLE tu_group_member_count (
-  network varchar(20) NOT NULL COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
-  member_user_id varchar(30) NOT NULL COMMENT 'User ID on a particular service in a number of groups/lists.',
-  date date NOT NULL COMMENT 'Date of group count.',
-  count int(10) unsigned NOT NULL COMMENT 'Total number of groups the user is in.',
-  KEY member_network (member_user_id,network)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Group membership counts by date and time.';
 
 --
 -- Table structure for table tu_group_members
@@ -516,6 +509,7 @@ CREATE TABLE tu_users (
   location varchar(255) DEFAULT NULL COMMENT 'Service user location.',
   description text COMMENT 'Service user description, like a Twitter user''s profile description.',
   url varchar(255) DEFAULT NULL COMMENT 'Service user''s URL.',
+  is_verified tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not the user is verified by the network.',
   is_protected tinyint(1) NOT NULL COMMENT 'Whether or not the user is public.',
   follower_count int(11) NOT NULL COMMENT 'Total number of followers a service user has.',
   friend_count int(11) NOT NULL DEFAULT '0' COMMENT 'Total number of friends a service user has.',
@@ -531,8 +525,31 @@ CREATE TABLE tu_users (
   UNIQUE KEY user_id (user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
+--
+-- Table structure for table tu_videos
+--
 
--- Dump completed on 2013-08-19 17:49:26
+CREATE TABLE tu_videos (
+  id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
+  post_key int(11) DEFAULT NULL COMMENT 'Internal ID of the post in which this video appeared.',
+  description text COMMENT 'The description of this video.',
+  likes int(11) NOT NULL COMMENT 'Total number of likes this video has received.',
+  dislikes int(11) NOT NULL COMMENT 'Total number of dislikes this video has received.',
+  views int(11) NOT NULL COMMENT 'Total number of views on this video.',
+  minutes_watched int(11) NOT NULL COMMENT 'Total number of minutes people have spent watching this video.',
+  average_view_duration int(11) NOT NULL COMMENT 'Average number of seconds people spent watching this video.',
+  average_view_percentage float NOT NULL COMMENT 'Average percentage of this video people watched.',
+  favorites_added int(11) NOT NULL COMMENT 'Number of people who favorited this video.',
+  favorites_removed int(11) NOT NULL COMMENT 'Number of people who removed this video from their favorites.',
+  shares int(11) NOT NULL COMMENT 'Number of times people shared this video through the share button.',
+  subscribers_gained int(11) NOT NULL COMMENT 'Number of people who subscribed to this users channel on this videos page.',
+  subscribers_lost int(11) NOT NULL COMMENT 'Number of people who unsubscribed to this users channel on this videos page.',
+  PRIMARY KEY (id),
+  KEY post_key (post_key)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Videos which appear in posts.';
+
+
+-- Dump completed on 2013-08-19 20:38:07
 
 --
 -- Insert DB Version

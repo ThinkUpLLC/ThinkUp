@@ -26,8 +26,8 @@ echo "--
 --
 
 ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-" > build-db_mysql.sql
-$mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | sed 's/AUTO_INCREMENT=[0-9]*//' | sed "s/\`//g" |  tail -n+7 >> build-db_mysql.sql
+" >  build-db_mysql-upcoming-release.sql
+$mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | sed 's/AUTO_INCREMENT=[0-9]*//' | sed "s/\`//g" |  tail -n+7 >>  build-db_mysql-upcoming-release.sql
 
 
 ## set up app db version option
@@ -38,7 +38,7 @@ echo "
 -- Insert DB Version
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
-VALUES ('application_options', 'database_version', '${DB_VERSION}', NOW(), NOW()); " >> build-db_mysql.sql
+VALUES ('application_options', 'database_version', '${DB_VERSION}', NOW(), NOW()); " >> build-db_mysql-upcoming-release.sql
 
 echo "
 --
@@ -61,14 +61,14 @@ INSERT INTO tu_plugins (name , folder_name, description, author, homepage, versi
 VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Insights Generator', 'insightsgenerator', 'Pluggable plugin populates the insights stream.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');" >> build-db_mysql.sql
+VALUES ('Insights Generator', 'insightsgenerator', 'Pluggable plugin populates the insights stream.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');" >>  build-db_mysql-upcoming-release.sql
 
 
-mv build-db_mysql.sql ../.
+mv  build-db_mysql-upcoming-release.sql ../.
 
 cd ..
 
 echo "
 
 Check the output for errors.
-Complete build script generated and saved as $(pwd)/build-db_mysql.sql"
+Complete build script generated and saved as $(pwd)/build-db_mysql-upcoming-release.sql"

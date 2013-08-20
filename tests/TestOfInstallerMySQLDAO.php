@@ -126,7 +126,8 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testExamineQueries() {
         // test on fully installed tables
-        $install_queries = file_get_contents(THINKUP_ROOT_PATH."webapp/install/sql/build-db_mysql.sql");
+        $install_queries = file_get_contents(THINKUP_ROOT_PATH.
+        "webapp/install/sql/build-db_mysql-upcoming-release.sql");
 
         $this->debug(Utils::varDumpToString($install_queries));
 
