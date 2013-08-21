@@ -60,7 +60,28 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $insight_text = $this->username."'s most popular post from last week got ";
+                switch ($instance->network) {
+                    case 'twitter':
+                        $post_type = 'tweet';
+                        break;
+
+                    case 'facebook':
+                        $post_type = 'status update';
+                        break;
+
+                    case 'google+':
+                        $post_type = 'post';
+                        break;
+
+                    case 'foursquare':
+                        $post_type = 'checkin';
+                        break;
+
+                    default:
+                        $post_type = 'post';
+                        break;
+                }
+                $insight_text = $this->username."'s most popular ".$post_type." from last week got ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value) {
                         switch ($key) {
