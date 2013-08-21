@@ -60,7 +60,7 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                 $hashtags_in_post = $elements['hashtags'];
                 foreach ($hashtags_in_post as $hashtag_in_post) {
                     $hashtag_in_post = '#'.$hashtag_in_post;
-                    
+
                     // Update hashtag count
                     if (array_key_exists($hashtag_in_post, $hashtags_of_last_week)) {
                         $hashtags_of_last_week[$hashtag_in_post]++;
