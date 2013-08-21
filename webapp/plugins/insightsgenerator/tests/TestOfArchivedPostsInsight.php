@@ -96,7 +96,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/ThinkUp has captured over/', $result->text);
-        $this->assertPattern('/1,500 posts/', $result->text);
+        $this->assertPattern('/1,500 status updates/', $result->text);
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;
@@ -108,7 +108,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/ThinkUp has captured over/', $result->text);
-        $this->assertPattern('/167,600 posts/', $result->text);
+        $this->assertPattern('/167,600 status updates/', $result->text);
     }
 
     public function testArchivedPostsInsightGooglePlus() {

@@ -55,8 +55,9 @@ class MapInsight extends InsightPluginParent implements InsightPlugin {
                     }
                     if ($total_geoencoded_replies > 4) {
                         $this->insight_dao->insertInsight('geoencoded_replies', $instance->id, $simplified_post_date,
-                        "Going global!", "$this->username's post got responses from locations all over the map.",
-                        $filename, Insight::EMPHASIS_LOW, serialize($post));
+                        "Going global!", "$this->username's ".$this->terms->getNoun('post')
+                        ." got responses from locations all over the map.", $filename, Insight::EMPHASIS_LOW,
+                        serialize($post));
                     }
                 }
             }

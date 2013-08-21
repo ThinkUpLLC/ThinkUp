@@ -39,16 +39,16 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
         //Only insert this insight if it's Friday or if we're testing
         if ((date('w') == 5 || $in_test_mode) && count($last_week_of_posts)) {
-            $response_count = array('replies' => 0, 'retweets' => 0, 'favs' => 0);
+            $response_count = array('reply' => 0, 'retweet' => 0, 'like' => 0);
 
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
                 $retweet_count = $post->retweet_count_cache;
                 $fav_count = $post->favlike_count_cache;
 
-                $response_count['replies'] += $reply_count;
-                $response_count['retweets'] +=  $retweet_count;
-                $response_count['favs'] += $fav_count;
+                $response_count['reply'] += $reply_count;
+                $response_count['retweet'] +=  $retweet_count;
+                $response_count['like'] += $fav_count;
             }
 
             arsort($response_count);
@@ -63,49 +63,8 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $time_per_response = floor((60 * 60 * 24 * 7) / $response_factor['value']);
 
-                switch ($response_factor['key']) {
-                    case 'replies':
-                        if ($instance->network == 'twitter') {
-                            $post_type = 'tweets';
-                            $response_type = 'reply';
-                        } elseif ($instance->network == 'facebook') {
-                            $post_type = 'status updates';
-                            $response_type = 'comment';
-                        } elseif ($instance->network == 'foursquare') {
-                            $post_type = 'checkins';
-                            $response_type = 'comment';
-                        } else {
-                            $post_type = 'posts';
-                            $response_type = 'comment';
-                        }
-                        break;
-
-                    case 'retweets':
-                        $post_type = 'tweets';
-                        $response_type = 'retweet';
-                        break;
-
-                    case 'favs':
-                        if ($instance->network == 'twitter') {
-                            $post_type = 'tweets';
-                            $response_type = 'favorite';
-                        } elseif ($instance->network == 'facebook') {
-                            $post_type = 'status updates';
-                            $response_type = 'like';
-                        } elseif ($instance->network == 'google+') {
-                            $post_type = 'posts';
-                            $response_type = '+1';
-                        } elseif ($instance->network == 'foursquare') {
-                            $post_type = 'checkins';
-                            $response_type = 'like';
-                        } else {
-                            $post_type = 'posts';
-                            $response_type = 'like';
-                        }
-                        break;
-                }
-
-                $insight_text = $this->username."'s ".$post_type." averaged one new ".$response_type." every "
+                $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                ." averaged one new ".$this->terms->getNoun($response_factor['key'])." every "
                 .self::getSyntacticTimeDifference($time_per_response)." over the last week";
 
                 $last_wed = date('Y-m-d', strtotime('-7 day'));
@@ -118,12 +77,14 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     if (self::getSyntacticTimeDifference($last_wed_time_per_response)
                     != self::getSyntacticTimeDifference($time_per_response)) {
                         if (isset($last_wed_time_per_response) && $last_wed_time_per_response < $time_per_response) {
-                            $insight_text .= ", slower than the previous week's average of one ".$response_type.
-                            " every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
+                            $insight_text .= ", slower than the previous week's average of one "
+                            .$this->terms->getNoun($response_factor['key'])
+                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
                         } elseif (isset($last_wed_time_per_response)
                         && $last_wed_time_per_response > $time_per_response) {
-                            $insight_text .= ", faster than the previous week's average of one ".$response_type.
-                            " every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
+                            $insight_text .= ", faster than the previous week's average of one "
+                            .$this->terms->getNoun($response_factor['key'])
+                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
                         }
                     }
                 }
