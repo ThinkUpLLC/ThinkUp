@@ -214,4 +214,88 @@ class TestOfInteractionGraphInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($dataset['mentions'][0]['mention'], '@mentionOne');
         $this->assertEqual($dataset['mentions'][0]['count'], 3);
     }
+
+    public function testInteractionGraphInsightTextWithMetweets() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @mentionOne @testeriffic blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @mentionOne blah @testeriffic",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @testeriffic blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+
+        $insight_plugin = new InteractionGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight("interaction_graph", 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/\@testeriffic mentioned /', $result->text);
+        $this->assertPattern('/\@mentionOne \<strong\>2 times/', $result->text);
+        $this->assertNoPattern('/and/', $result->text);
+    }
+
+    public function testInteractionGraphInsightMentionCasesIgnored() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612345', 'user_name'=>'TwitterTestUser',
+        'full_name'=>'Twitter Test User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter user'));
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @TwitterTestUser blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @Twittertestuser blah blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah @twitterTestUser blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah @tWiTTerTeSTusEr blah bleh",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+
+        $insight_plugin = new InteractionGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight("interaction_graph", 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $dataset = unserialize($result->related_data);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/\@testeriffic mentioned /', $result->text);
+        $this->assertPattern('/\@TwitterTestUser \<strong\>4 times/', $result->text);
+        $this->assertNoPattern('/and/', $result->text);
+        $this->assertEqual($dataset['mentions'][0]['mention'], '@TwitterTestUser');
+        $this->assertEqual($dataset['mentions'][0]['count'], 4);
+    }
 }

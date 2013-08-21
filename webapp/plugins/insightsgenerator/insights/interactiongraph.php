@@ -53,12 +53,15 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
             foreach ($last_week_of_posts as $post) {
                 $post_text = $post->post_text;
 
+                // Extract hashtags and mentions from post text
                 $text_parser = new Twitter_Extractor($post_text);
                 $elements = $text_parser->extract();
 
                 $hashtags_in_post = $elements['hashtags'];
                 foreach ($hashtags_in_post as $hashtag_in_post) {
                     $hashtag_in_post = '#'.$hashtag_in_post;
+                    
+                    // Update hashtag count
                     if (array_key_exists($hashtag_in_post, $hashtags_of_last_week)) {
                         $hashtags_of_last_week[$hashtag_in_post]++;
                     } else {
@@ -68,16 +71,32 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
 
                 if ($instance->network == 'twitter') {
                     $mentions_in_post = $elements['mentions'];
+                    $mentioned_users = array();
                     foreach ($mentions_in_post as $mention_in_post) {
-                        $mention_in_post = '@'.$mention_in_post;
-                        if (array_key_exists($mention_in_post, $mentions_of_last_week)) {
-                            $mentions_of_last_week[$mention_in_post]++;
+                        if ($mention_in_post == $instance->network_username) {
+                            // Don't count metweets
+                            continue;
                         } else {
-                            $mentions_of_last_week[$mention_in_post] = 1;
-                        }
-                        foreach ($hashtags_in_post as $hashtag_in_post) {
-                            $hashtag_in_post = '#'.$hashtag_in_post;
-                            $link_hashtags_mentions[$hashtag_in_post][] = $mention_in_post;
+                            $mentioned_users[$mention_in_post] = $user_dao->getUserByName($mention_in_post,
+                            $instance->network);
+                            if (isset($mentioned_users[$mention_in_post])) {
+                                $mention_in_post = '@'.$mentioned_users[$mention_in_post]->username;
+                            } else {
+                                $mention_in_post = '@'.$mention_in_post;
+                            }
+
+                            // Update mention count
+                            if (array_key_exists($mention_in_post, $mentions_of_last_week)) {
+                                $mentions_of_last_week[$mention_in_post]++;
+                            } else {
+                                $mentions_of_last_week[$mention_in_post] = 1;
+                            }
+
+                            // Link mention with hashtags
+                            foreach ($hashtags_in_post as $hashtag_in_post) {
+                                $hashtag_in_post = '#'.$hashtag_in_post;
+                                $link_hashtags_mentions[$hashtag_in_post][] = $mention_in_post;
+                            }
                         }
                     }
                 }
@@ -86,9 +105,11 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
             $most_used_hashtag = false;
             $most_mentioned_user = false;
             if (count($hashtags_of_last_week)) {
+                // Get most talked about hashtag
                 arsort($hashtags_of_last_week);
                 $most_used_hashtag = each($hashtags_of_last_week);
 
+                // Add hashtags to dataset
                 foreach ($hashtags_of_last_week as $hashtag => $count) {
                     $hashtag_info['hashtag'] = $hashtag;
                     $hashtag_info['count'] = $count;
@@ -99,13 +120,15 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
                 }
             }
             if (count($mentions_of_last_week)) {
+                // Get most mentioned user
                 arsort($mentions_of_last_week);
                 $most_mentioned_user = each($mentions_of_last_week);
 
+                // Add mentions to dataset
                 foreach ($mentions_of_last_week as $mention => $count) {
                     $mention_info['mention'] = $mention;
                     $mention_info['count'] = $count;
-                    $mention_info['user'] = $user_dao->getUserByName(ltrim($mention,'@'),$instance->network);
+                    $mention_info['user'] = $mentioned_users[ltrim($mention,'@')];
                     $insight_data['mentions'][] = $mention_info;
                 }
             }
