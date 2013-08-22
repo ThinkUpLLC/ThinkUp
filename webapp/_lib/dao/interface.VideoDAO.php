@@ -45,4 +45,44 @@ interface VideoDAO {
      * @return Video Object Containing all the videos details
      */
     public function getVideoByID($video_id, $network);
+    /**
+     * Returns the highest percentage of dislikes a users video has, for all time if $duration is null or for $duration
+     * days if it is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @return int The highest percentage of dislikes a users video has
+     */
+    public function getHighestDislikePercentage($username, $network, $duration=null);
+    /**
+     * Returns the highest percentage of likes a users video has, for all time if $duration is null or for $duration
+     * days if it is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @return int The highest percentage of likes a users video has
+     */
+    public function getHighestLikePercentage($username, $network, $duration=null);
+    /**
+     * Returns the average percentage of dislikes a users video has, for all time if $duration is null or for $duration
+     * days if it is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @return int The average percentage of dislikes a users video has
+     */
+    public function getAverageDislikePercentage($username, $network, $duration=null);
+    /**
+     * Returns the average percentage of likes a users video has, for all time if $duration is null or for $duration
+     * days if it is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @return int The average percentage of likes a users video has
+     */
+    public function getAverageLikePercentage($username, $network, $duration=null);
 }
