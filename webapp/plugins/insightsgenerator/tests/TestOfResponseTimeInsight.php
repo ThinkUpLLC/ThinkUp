@@ -104,9 +104,9 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
 
         // Assert that baselines got inserted
         $insight_baseline_dao = new InsightBaselineMySQLDAO();
-        $result_1 = $insight_baseline_dao->getInsightBaseline('response_count_replies', 10);
-        $result_2 = $insight_baseline_dao->getInsightBaseline('response_count_retweets', 10);
-        $result_3 = $insight_baseline_dao->getInsightBaseline('response_count_favs', 10);
+        $result_1 = $insight_baseline_dao->getInsightBaseline('response_count_reply', 10);
+        $result_2 = $insight_baseline_dao->getInsightBaseline('response_count_retweet', 10);
+        $result_3 = $insight_baseline_dao->getInsightBaseline('response_count_like', 10);
         $this->assertNotNull($result_1);
         $this->assertNotNull($result_2);
         $this->assertNotNull($result_3);
@@ -144,7 +144,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_favs',
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_like',
         'instance_id'=>10, 'value'=>27));
 
         // Calculate time for each new favorite
@@ -193,7 +193,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_replies',
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_reply',
         'instance_id'=>10, 'value'=>12));
 
         // Calculate time for each new favorite

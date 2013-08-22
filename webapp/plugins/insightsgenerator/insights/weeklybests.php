@@ -40,7 +40,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         //Only insert this insight if it's Thursday or if we're testing
         if ((date('w') == 4 || $in_test_mode) && count($last_week_of_posts)) {
             $most_popular_post = null;
-            $best_popularity_params = array('index' => 0, 'replies' => 0, 'retweets' => 0, 'favs' => 0);
+            $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
 
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
@@ -51,41 +51,20 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
 
                 if ($popularity_index > $best_popularity_params['index']) {
                     $best_popularity_params['index'] = $popularity_index;
-                    $best_popularity_params['replies'] = $reply_count;
-                    $best_popularity_params['retweets'] = $retweet_count;
-                    $best_popularity_params['favs'] = $fav_count;
+                    $best_popularity_params['reply'] = $reply_count;
+                    $best_popularity_params['retweet'] = $retweet_count;
+                    $best_popularity_params['like'] = $fav_count;
 
                     $most_popular_post = $post;
                 }
             }
 
             if (isset($most_popular_post)) {
-                $insight_text = $this->username."'s most popular post from last week got ";
+                $insight_text = $this->username."'s most popular ".$this->terms->getNoun('post')
+                ." from last week got ";
                 foreach ($best_popularity_params as $key => $value) {
-                    if ($value) {
-                        switch ($key) {
-                            case 'replies':
-                                if ($instance->network == 'twitter') {
-                                    $insight_text .= $value." ".($value > 1 ? "replies, " : "reply, ");
-                                } else {
-                                    $insight_text .= $value." comment".($value > 1 ? "s, " : ", ");
-                                }
-                                break;
-
-                            case 'retweets':
-                                $insight_text .= $value." retweet".($value > 1 ? "s, " : ", ");
-                                break;
-
-                            case 'favs':
-                                if ($instance->network == 'twitter') {
-                                    $insight_text .= $value." favorite".($value > 1 ? "s, " : ", ");
-                                } elseif ($instance->network == 'google+') {
-                                    $insight_text .= $value." +1".($value > 1 ? "s, " : ", ");
-                                } else {
-                                    $insight_text .= $value." like".($value > 1 ? "s, " : ", ");
-                                }
-                                break;
-                        }
+                    if ($value && $key != 'index') {
+                        $insight_text .= $value." ".$this->terms->getNoun($key, ($value > 1)).", ";
                     }
                 }
 
