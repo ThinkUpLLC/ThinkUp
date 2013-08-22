@@ -90,6 +90,7 @@ $plugin_tests->add(new TestOfLongLostContactsInsight());
 $plugin_tests->add(new TestOfLinkPromptInsight());
 $plugin_tests->add(new TestOfLocalFollowersInsight());
 $plugin_tests->add(new TestOfOutreachPunchcardInsight());
+$plugin_tests->add(new TestOfSplitOpinionsInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());
