@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "code": 200
+  },
+  "data": {
+    "username": "louk_as",
+    "bio": "",
+    "website": "",
+    "profile_picture": "http://images.ak.instagram.com/profiles/profile_20065178_75sq_1335521050.jpg",
+    "full_name": "",
+    "counts": {
+      "media": 31,
+      "followed_by": 12,
+      "follows": 24
+    },
+    "id": "20065178"
+  }
+}

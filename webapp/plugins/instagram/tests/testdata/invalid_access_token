@@ -1,0 +1,7 @@
+{
+    "meta":{
+        "error_type":"OAuthAccessTokenException",
+        "code":400,
+        "error_message":"The \"access_token\" provided is invalid."
+    }
+}
