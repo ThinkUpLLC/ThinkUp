@@ -95,8 +95,16 @@ class PluginRegistrarCrawler extends PluginRegistrar {
         if ($lock_successful) {
             // Global mutex was free, which means no admin crawls are under way
             if ($owner->is_admin) {
-                // Nothing more needs to be done, since admins use the global mutex
-                $mutex_name = $global_mutex_name;
+                //Although user is admin, if it uses filtered crawl to parallel cron
+                if (!CrawlFilter::isFilterNeeded()) {
+                    // Nothing more needs to be done, since admins use the global mutex and no filter is needed
+                    $mutex_name = $global_mutex_name;
+                } else {
+                    //let's use a filter mutex.
+                    $mutex_name = 'crawler-filter-'.CrawlFilter::getFilter().'-'.CrawlFilter::getSelected();
+                    $lock_successful = $mutex_dao->getMutex($mutex_name);
+                    $mutex_dao->releaseMutex($global_mutex_name);
+                }
             } else {
                 // User is a non-admin; let's use a user mutex.
                 $mutex_name = 'crawler-'.$owner->id;
