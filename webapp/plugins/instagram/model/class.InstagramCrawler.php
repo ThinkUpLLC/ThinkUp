@@ -213,7 +213,8 @@ class InstagramCrawler {
             }
 
             if (!isset($post_in_storage)) {
-                $post_to_process = array(
+                $photo_to_process = array(
+                  // Post details
                   "post_id"=>$post_id,
                   "author_username"=>$profile->getUserName(),
                   "author_fullname"=>$profile->getFullName(),
@@ -227,12 +228,19 @@ class InstagramCrawler {
                   "source"=>'',
                   'network'=>$network,
                   'is_protected'=>$is_protected,
-                  'location'=>''
+                  'location'=>'',
+                  // Photo details
+                  'photo_page'=>$p->getStandardRes()->url,
+                  'standard_resolution_url'=>$p->getStandardRes()->url,
+                  'low_resolution_url'=>$p->getLowRes()->url,
+                  'thumbnail_url'=>$p->getThumbnail()->url,
+                  'filter'=>$p->getFilter(),
                 );
 
-                $new_post_key = $this->storePostAndAuthor($post_to_process, "Owner stream");
+                //$new_post_key = $this->storePostAndAuthor($post_to_process, "Owner stream");
+                $new_photo_key = $this->storePhotoAndAuthor($photo_to_process, "Owner stream");
 
-                if ($new_post_key !== false ) {
+                if ($new_photo_key !== false ) {
                     $total_added_posts++;
                 }
             } else { // post already exists in storage
@@ -395,6 +403,21 @@ class InstagramCrawler {
         }
         $added_post_key = $post_dao->addPost($post);
         return $added_post_key;
+    }
+
+    private function storePhotoAndAuthor($photo, $photo_source){
+        $photo_dao = DAOFactory::getDAO('PhotoDAO');
+        if (isset($photo['author_user_id'])) {
+            $user_object = $this->fetchUser($photo['author_user_id'], $photo_source);
+            if (isset($user_object)) {
+                $photo["author_username"] = $user_object->full_name;
+                $photo["author_fullname"] = $user_object->full_name;
+                $photo["author_avatar"] = $user_object->avatar;
+                $photo["location"] = $user_object->location;
+            }
+        }
+        $added_photo_key = $photo_dao->addPhoto($photo);
+        return $added_photo_key;
     }
 
     private function storeUsers($users, $users_source) {
