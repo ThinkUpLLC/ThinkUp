@@ -32,8 +32,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
     public function testInsightTermsForTwitter() {
-    	$terms = new InsightTerms('twitter');
-    	
+        $terms = new InsightTerms('twitter');
 
         $text = "Two of your ".$terms->getNoun('friend', InsightTerms::PLURAL)." ".$terms->getVerb('liked')
         ." your ".$terms->getNoun('post');
@@ -44,18 +43,18 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
 
     public function testInsightTermsForGooglePlus() {
         $terms = new InsightTerms('google+');
-        
+
         $count = 2;
         $text = "Two of your ".$terms->getNoun('friend', ($count > 1))." ".$terms->getVerb('liked')
         ." your ".$terms->getNoun('post');
 
         $this->assertNotNull($terms);
-        $this->assertEqual($text, "Two of your friends +1'ed your post");
+        $this->assertEqual($text, "Two of your friends +1'd your post");
     }
 
     public function testInsightTermsForFacebook() {
         $terms = new InsightTerms('facebook');
-        
+
         $count = 3;
         $text = "Your ".$terms->getNoun('post')." got ".$count." ".$terms->getNoun('reply', ($count > 1))
         ." from 2 ".$terms->getNoun('follower', InsightTerms::PLURAL);

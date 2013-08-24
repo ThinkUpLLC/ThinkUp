@@ -47,7 +47,7 @@ class InsightTerms {
     }
 
     /**
-     * Get the appropriate noun for a term
+     * Get the appropriate noun for a term.
      * @param str $noun the term to be localized
      * @param bool $quantity whether the term to be returned is plural or not
      * @return str localized noun for the required term
@@ -77,7 +77,7 @@ class InsightTerms {
             case 'follower':
                 return self::getNounForFriend($this->network, $quantity);
                 break;
-            
+
             default:
                 return null;
                 break;
@@ -85,7 +85,7 @@ class InsightTerms {
     }
 
     /**
-     * Get the appropriate verb for an action
+     * Get the appropriate verb for an action.
      * @param str $verb the action that has to be localized
      * @return str localized verb for the required action
      */
@@ -104,7 +104,7 @@ class InsightTerms {
             case 'shared':
                 return self::getPastTenseVerbToShare($this->network);
                 break;
-            
+
             default:
                 return null;
                 break;
@@ -112,7 +112,7 @@ class InsightTerms {
     }
 
     /**
-     * Get the localized noun for the term 'post'
+     * Get the localized noun for the term 'post'.
      * @param str $network network whose localization has to be followed
      * @param bool $plural whether the term to be returned is plural or not
      * @return str localized noun for the term 'post'
@@ -130,7 +130,7 @@ class InsightTerms {
             case 'foursquare':
                 return (!$plural) ? 'checkin' : 'checkins';
                 break;
-            
+
             default:
                 return (!$plural) ? 'post' : 'posts';
                 break;
@@ -138,7 +138,7 @@ class InsightTerms {
     }
 
     /**
-     * Get the localized noun for the term 'like'
+     * Get the localized noun for the term 'like'.
      * @param str $network network whose localization has to be followed
      * @param bool $plural whether the term to be returned is plural or not
      * @return str localized noun for the term 'like'
@@ -242,7 +242,7 @@ class InsightTerms {
                 break;
 
             case 'google+':
-                return '+1\'ed';
+                return '+1\'d';
                 break;
 
             default:
