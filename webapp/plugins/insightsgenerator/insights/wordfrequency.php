@@ -42,7 +42,7 @@ class WordFrequencyInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
                 $this->insight_dao->insertInsight('replies_frequent_words_'.$post->id, $instance->id,
-                $simplified_post_date, "Conversation starter:",
+                $simplified_post_date, "What they said:",
                 "$this->username's ".$this->terms->getNoun('post')
                 ." got <strong>".$post->reply_count_cache.' replies</strong>. See <a href="'
                 .$config->getValue('site_root_path'). 'post/?t='.$post->post_id.'&n='.$post->network
