@@ -59,38 +59,13 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
             $verb = '';
             $post_type = '';
 
-            switch ($instance->network) {
-                case 'twitter':
-                    $verb = 'favorited';
-                    $post_type = 'tweet';
-                    break;
-
-                case 'facebook':
-                    $verb = 'liked';
-                    $post_type = 'status update';
-                    break;
-
-                case 'google+':
-                    $verb = '+1\'ed';
-                    $post_type = 'post';
-                    break;
-
-                case 'foursquare':
-                    $verb = 'liked';
-                    $post_type = 'checkin';
-                    break;
-
-                default:
-                    $verb = 'liked';
-                    $post_type = 'post';
-                    break;
-            }
-
             if ($favorited_links_count == 1) {
-                $insight_text = $this->username." ".$verb." <strong>1 ".$post_type."</strong> with a link in it.";
+                $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
             } else {
-                $insight_text = $this->username." ".$verb." <strong>".$favorited_links_count
-                ." ".$post_type."s</strong> with links in them, here's a list:";
+                $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                ."</strong> with links in them, here's a list:";
             }
 
             $this->insight_dao->insertInsight("favorited_links", $instance->id,

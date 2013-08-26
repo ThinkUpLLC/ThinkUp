@@ -44,8 +44,9 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $count += self::countFirstPersonReferences($post->post_text);
             }
             if ($count > 1) {
-                $text = "$this->username's posts contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\"".
-                " <strong>" .$count. ' times</strong> in the last week';
+                $text = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
+                ." contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\" "
+                ."<strong>".$count." times</strong> in the last week";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("all_about_you", $instance->id, $count,
