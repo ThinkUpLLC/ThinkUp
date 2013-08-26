@@ -133,3 +133,78 @@ var InteractionGraph = function(placeholder_id, graph_size, interaction_data) {
 		node.attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; });
 	});
 };
+
+var OutreachPunchcard = function(placeholder_id, graph_size, outreach_data) {
+	var vis = d3.select('#'+placeholder_id)
+	.append("svg")
+	.attr("width", graph_size)
+	.attr("height", (graph_size / 3))
+	.style("display", "block")
+	.style("margin", "0 auto");
+
+	var x = d3.scale.linear().domain([0, 23]).range([(graph_size / 9), (graph_size - 20)]);
+	var y = d3.scale.linear().domain([1, 7]).range([20, ((graph_size / 3) - 40)]);
+	var xAxis = d3.svg.axis().scale(x).orient("bottom")
+	.ticks(24)
+	.tickFormat(function (d, i) {
+		var m = (d < 12) ? 'a' : 'p';
+		return (d % 12 == 0) ? 12+m :  (d % 12)+m;
+	});
+	var yAxis = d3.svg.axis().scale(y).orient("left")
+	.ticks(7)
+	.tickFormat(function (d, i) {
+        return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][d - 1];
+    });
+    vis.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0, "+((graph_size / 3) - 20)+")")
+    .call(xAxis);
+    vis.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate("+((graph_size / 9) - 20)+", 0)")
+    .call(yAxis);
+    d3.selectAll('.axis path')
+    .style("fill", "none")
+    .style("stroke", "#eee")
+    .style("shape-rendering", "crispEdges");
+    d3.selectAll('.axis line')
+    .style("fill", "none")
+    .style("stroke", "#eee")
+    .style("shape-rendering", "crispEdges");
+    d3.selectAll('.axis text')
+    .style("font-family", "sans-serif")
+    .style("font-size", "11px");
+
+    var punches = {posts: [], responses: []};
+    var max_val = 0;
+    for (var i = 1; i <= 7; i++) {
+    	for (var j = 0; j < 24; j++) {
+    		max_val = Math.max(outreach_data.posts[i][j],max_val);
+    		max_val = Math.max(outreach_data.responses[i][j],max_val);
+
+    		punches.posts.push([i, j, outreach_data.posts[i][j]]);
+    		punches.responses.push([i, j, outreach_data.responses[i][j]]);
+    	}
+    }
+    var rad = d3.scale.linear().domain([0, max_val]).range([0, 12]);
+
+    vis.selectAll('.post-punch')
+    .data(punches.posts)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return x(d[1]); })
+    .attr("cy", function(d) { return y(d[0]); })
+    .attr("r", function(d) { return rad(d[2]); })
+    .style("fill", "#f00")
+    .style("opacity", "0.8");
+
+    vis.selectAll('.response-punch')
+    .data(punches.responses)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return x(d[1]); })
+    .attr("cy", function(d) { return y(d[0]); })
+    .attr("r", function(d) { return rad(d[2]); })
+    .style("fill", "#0f0")
+    .style("opacity", "0.5");
+};
