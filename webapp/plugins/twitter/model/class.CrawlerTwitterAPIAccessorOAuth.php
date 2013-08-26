@@ -77,7 +77,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
             }
         }
         foreach ($this->endpoints as $endpoint) {
-            if(isset($limits[$endpoint->getShortPath()]) {
+            if(isset($limits[$endpoint->getShortPath()])) {
                 $endpoint->setRemaining($limits[$endpoint->getShortPath()]['remaining']);
                 $endpoint->setLimit($limits[$endpoint->getShortPath()]['limit']);
                 $endpoint->setReset($limits[$endpoint->getShortPath()]['reset']);
