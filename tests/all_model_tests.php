@@ -30,6 +30,8 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/mock_objects.php';
 
+ini_set('error_reporting', E_ALL);
+
 /* MODEL TESTS */
 $model_tests = new TestSuite('Model tests');
 $model_tests->add(new TestOfLogger());
