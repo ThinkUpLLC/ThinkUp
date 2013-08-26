@@ -457,7 +457,7 @@ class InstagramCrawler {
         if (isset($friends)) {
             //store relationships in follows table
             $follows_dao = DAOFactory::getDAO('FollowDAO');
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $user_dao = DAOFactory::getDAO('UserDAO');
 
             foreach ($friends as $friend) {
@@ -484,7 +484,7 @@ class InstagramCrawler {
                 }
             }
             //totals in follower_count table
-            $follower_count_dao->insert($user_id, $network, $friends->count());
+            $count_dao->insert($user_id, $network, $friends->count(), null, 'followers');
         } else {
             throw new Instagram\Core\ApiAuthException('Error retrieving friends');
         }

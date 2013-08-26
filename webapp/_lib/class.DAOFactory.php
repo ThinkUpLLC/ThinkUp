@@ -199,7 +199,6 @@ class DAOFactory {
         'PhotoDAO' => array(
     //MySQL Version
             'mysql' => 'PhotoMySQLDAO' )
-    );
 
     );
 

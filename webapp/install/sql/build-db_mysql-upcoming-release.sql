@@ -344,6 +344,22 @@ CREATE TABLE tu_owners (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='ThinkUp user account details.';
 
 --
+-- Table structure for table tu_photos
+--
+
+CREATE TABLE tu_photos (
+  id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Interal unique ID of photo.',
+  internal_post_id int(11) NOT NULL COMMENT 'ID of the row in the posts table for more information on a photo.',
+  photo_page varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'URL of the photo page inside the respective service.',
+  filter varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Native filter used on the photo.',
+  standard_resolution_url varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'URL of standard resolution image file.',
+  low_resolution_url varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'URL of low resolution image file.',
+  thumbnail_url varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'URL of thumbnail image file.',
+  PRIMARY KEY (id),
+  UNIQUE KEY internal_post_id (internal_post_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Photos posted by service users on a given network.';
+
+--
 -- Table structure for table tu_places
 --
 
@@ -578,3 +594,6 @@ VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
 VALUES ('Insights Generator', 'insightsgenerator', 'Pluggable plugin populates the insights stream.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
+
+INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
+VALUES ('Instagram', 'instagram', 'Instagram Support', 'Dimosthenis Nikoudis', 'http://thinkup.com', '0.01', '1');

@@ -81,6 +81,5 @@ class TestOfPhotoMySQLDAO extends ThinkUpUnitTestCase {
     public function testConstructor() {
         $dao = new PhotoMySQLDAO();
         $this->assertTrue(isset($dao));
-        sleep(120);
     }
 }
