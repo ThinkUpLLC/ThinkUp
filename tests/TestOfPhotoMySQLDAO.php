@@ -29,6 +29,7 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/dao/class.PhotoMySQLDAO.php';
 
 class TestOfPhotoMySQLDAO extends ThinkUpUnitTestCase {
     /**
