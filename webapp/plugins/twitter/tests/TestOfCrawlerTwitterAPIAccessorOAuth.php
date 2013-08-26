@@ -35,6 +35,8 @@ require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterOAuthThinkU
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterAPIEndpoint.php';
 
 class TestOfCrawlerTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
+    var $DEBUG;
+
     public function setUp() {
     }
 
