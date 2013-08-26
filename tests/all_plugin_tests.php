@@ -64,6 +64,7 @@ $plugin_tests->add(new TestOfStreamMessageQueueFactory());
 $plugin_tests->add(new TestOfGooglePlusPlugin());
 $plugin_tests->add(new TestOfGooglePlusCrawler());
 $plugin_tests->add(new TestOfGooglePlusPluginConfigurationController());
+ini_set('error_reporting', E_ALL);
 $plugin_tests->add(new TestOfFoursquarePlugin());
 $plugin_tests->add(new TestOfFoursquareCrawler());
 $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
