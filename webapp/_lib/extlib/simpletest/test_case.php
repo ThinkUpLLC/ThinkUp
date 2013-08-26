@@ -130,7 +130,6 @@ class SimpleTestCase {
         $this->reporter = $reporter;
         $started = false;
         foreach ($this->getTests() as $method) {
-            ini_set("error_reporting", E_ALL);
             if (getenv('TEST_METHOD') != '' && $method != getenv('TEST_METHOD')) {
                 continue;
             } else if (getenv('TEST_METHOD') != '') {
@@ -559,7 +558,6 @@ class TestSuite {
     function run($reporter) {
         $reporter->paintGroupStart($this->getLabel(), $this->getSize());
         for ($i = 0, $count = count($this->test_cases); $i < $count; $i++) {
-            ini_set("error_reporting", E_ALL);
             if (is_string($this->test_cases[$i])) {
                 $class = $this->test_cases[$i];
                 $test = new $class();
