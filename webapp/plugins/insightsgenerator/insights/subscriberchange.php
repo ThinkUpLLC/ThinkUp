@@ -57,14 +57,20 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
             // if we lost subscribers then we will be doing subscriber_count minus a negative number, so adding
             $total_before_video = $subscriber_count - $gain_or_loss;
             $percent_change = round((abs($gain_or_loss) / $total_before_video) * 100,2);
-            $prefix = ($gain_or_loss < 0) ? 'They\'re fleeing' : 'They\'re sticking around';
+            $prefix = ($gain_or_loss < 0) ? 'They\'re fleeing:' : 'They\'re sticking around:';
             $verb = ($gain_or_loss < 0) ? ' decreased' : ' increased';
-            $text = $video->post_text.$verb." your subscriber count by ".$percent_change."%";
+            $text = "<a href=http://www.youtube.com/watch?v=$video->post_id>$video->post_text</a>$verb ";
+            $text .= "<a href=http://plus.google.com/$instance->network_user_id>$instance->network_username</a>"."'s ";
+            $text .= "subscriber count by <strong>".$percent_change."%</strong>.";
             $subscriber_count = intval($subscriber_count);
             $total_before_video = intval($total_before_video);
-            $chart = "{cols: [{label: 'metric', type: 'string'}, {label: 'Subscribers', type: 'number'}],";
-            $chart .= "rows: [{c:[{v:'Before'}, {v:$total_before_video} ] },";
-            $chart .= "{c:[{v:'After'}, {v:$subscriber_count} ] } ] }";
+            $rows = $video_dao->getNetSubscriberChange($instance->network_username, 'youtube', 10);
+            $chart = VideoMySQLDAO::getHotVideosVisualizationData($rows, 'Subscriber Change');
+            echo($chart);
+
+            // $chart = "{cols: [{label: 'metric', type: 'string'}, {label: 'Subscribers', type: 'number'}],";
+            // $chart .= "rows: [{c:[{v:'Before'}, {v:$total_before_video} ] },";
+            // $chart .= "{c:[{v:'After'}, {v:$subscriber_count} ] } ] }";
 
             if($percent_change >=50) {
                 $this->insight_dao->insertInsight('subscriber_change'.$video->id, $instance->id,

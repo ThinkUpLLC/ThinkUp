@@ -43,7 +43,6 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->dao = new VideoMySQLDAO();
         parent::setUp();
         $config = Config::getInstance();
-        $this->builders = self::buildData();
     }
 
     public function tearDown() {
@@ -158,6 +157,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetVideoByIDExists() {
+        $this->builders = self::buildData();
         $video = $this->dao->getVideoByID('tfgdf4es', 'youtube');
         $this->assertTrue(isset($video));
         $this->assertEqual($video->post_id, 'tfgdf4es');
@@ -191,6 +191,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testUpdateVideoCounts(){
+        $this->builders = self::buildData();
         $video_attributes['post_id'] = 'tfgdf4es';
         $video_attributes['likes'] = 25;
         $video_attributes['dislikes'] = 40;
@@ -222,5 +223,29 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
 
     }
 
+    public function testGetNetSubscriberChange() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'subscribers_gained'=>10, 'subscribers_lost'=>5));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'subscribers_gained'=>5, 'subscribers_lost'=>10));
+
+        $post_builder3 = FixtureBuilder::build('posts', array('id'=>3, 'post_id'=>'3',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 3', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder3 = FixtureBuilder::build('videos', array('id'=>3, 'post_key'=>'3',
+        'subscribers_gained'=>20, 'subscribers_lost'=>5));
+
+        $video_dao = new VideoMySQLDAO();
+        $result = $video_dao->getNetSubscriberChange('ev', 'youtube', 3);
+        print_r($result);
+        $this->assertEqual(sizeof($result), 3);
+        $this->assertEqual($result[0]['Subscriber Change'], 5);
+        $this->assertEqual($result[1]['Subscriber Change'], -5);
+        $this->assertEqual($result[2]['Subscriber Change'], 15);
+    }
 
 }

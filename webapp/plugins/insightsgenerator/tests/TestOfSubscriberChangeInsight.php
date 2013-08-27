@@ -69,8 +69,10 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're sticking around");
-        $this->assertEqual($result->text, "My Great Video increased your subscriber count by 81.82%");
+        $this->assertEqual($result->prefix, "They're sticking around:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>81.82%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 2);
     }
 
@@ -98,8 +100,10 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're sticking around");
-        $this->assertEqual($result->text, "My Great Video increased your subscriber count by 25%");
+        $this->assertEqual($result->prefix, "They're sticking around:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>25%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 1);
     }
 
@@ -127,8 +131,10 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're sticking around");
-        $this->assertEqual($result->text, "My Great Video increased your subscriber count by 17.65%");
+        $this->assertEqual($result->prefix, "They're sticking around:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>17.65%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 0);
     }
 
@@ -156,8 +162,10 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're fleeing");
-        $this->assertEqual($result->text, "My Great Video decreased your subscriber count by 50%");
+        $this->assertEqual($result->prefix, "They're fleeing:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>50%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 2);
     }
 
@@ -185,8 +193,10 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're fleeing");
-        $this->assertEqual($result->text, "My Great Video decreased your subscriber count by 31.03%");
+        $this->assertEqual($result->prefix, "They're fleeing:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>31.03%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 1);
     }
 
@@ -214,11 +224,12 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->prefix, "They're fleeing");
-        $this->assertEqual($result->text, "My Great Video decreased your subscriber count by 16.67%");
+        $this->assertEqual($result->prefix, "They're fleeing:");
+        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
+        $text .= "/1>ev</a>'s subscriber count by <strong>16.67%</strong>.";
+        $this->assertEqual($result->text, $text);
         $this->assertEqual($result->emphasis, 0);
     }
-
 
     private function buildData() {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'ev',

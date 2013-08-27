@@ -221,7 +221,7 @@ class FixtureBuilder {
             } else {
                 if (preg_match('/^enum/', $column['Type'])) {
                     $column['value'] = $this->genEnum( $column['Type'] );
-                } else if (preg_match('/^decimal/', $column['Type'])) {
+                } else if (preg_match('/^(decimal|float)/', $column['Type'])) {
                     $column['value'] = $this->genDecimal($column['Type']);
                 } else if (preg_match('/^(int|tinyint)/', $column['Type'])) {
                     preg_match('#\((.*?)\)#', $column['Type'], $int_length);
