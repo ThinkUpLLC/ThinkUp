@@ -296,7 +296,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_spike_30_day_31', 1, date('Y-m-d', strtotime('-6 days')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_spike_30_day_31');
-        $this->assertEqual($check->prefix, 'Conversation Starter:');
+        $this->assertEqual($check->prefix, 'Conversation starter:');
         $this->assertEqual($check->text,
         '<strong>12 people</strong> replied to @ev\'s post, more than <strong>2x</strong> @ev\'s 30-day average.');
         $this->assertEqual($check->emphasis, 0);
@@ -370,7 +370,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_spike_7_day_32', 1, date('Y-m-d', strtotime('-6 days')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_spike_7_day_32');
-        $this->assertEqual($check->prefix, 'Conversation Starter:');
+        $this->assertEqual($check->prefix, 'Conversation starter:');
         $this->assertEqual($check->text,
         '<strong>12 people</strong> replied to @ev\'s post, more than <strong>2x</strong> @ev\'s 7-day average.');
         $this->assertEqual($check->emphasis, 0);
