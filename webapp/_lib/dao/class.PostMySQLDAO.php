@@ -2453,6 +2453,25 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getDataRowsAsObjects($ps, 'User');
     }
 
+    public function getDaysAgoSinceUserRepliedToRecipient($user_id, $recipient_id, $network) {
+        $q = "SELECT TIMESTAMPDIFF(DAY, pub_date, NOW()) AS last_reply_days_ago ";
+        $q .= "FROM #prefix#posts AS p ";
+        $q .= "WHERE p.author_user_id=:user_id AND p.network=:network AND p.in_reply_to_user_id=:recipient_id ";
+        $q .= "ORDER BY p.pub_date DESC LIMIT 1";
+
+        $vars = array(
+            ':user_id' => (string)$user_id,
+            ':recipient_id' => (string)$recipient_id,
+            ':network' => $network
+        );
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+
+        return count($result) ? (int)$result[0]['last_reply_days_ago'] : null;
+    }
+
     public function searchPostsByUser(array $keywords, $network, $author_username, $page_number=1, $page_count=20) {
         if (!is_array($keywords)) {
             return null;
