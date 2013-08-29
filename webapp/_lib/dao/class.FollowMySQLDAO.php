@@ -532,15 +532,15 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE p.author_user_id=:user_id AND p.network=:network ";
         $q .= "AND (p.pub_date>=:date_low AND p.pub_date<=:date_high) AND p.in_reply_to_user_id IS NOT NULL ";
         $q .= "AND f.follower_id=:user_id ";
-        $q .= "LIMIT 5 ";
-        
+        $q .= "LIMIT 12 ";
+
         $vars = array(
             ':user_id' => (string)$user_id,
             ':network' => $network,
             ':date_low' => $date_low,
             ':date_high' => $date_high
         );
-        
+
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $all_user_rows = $this->getDataRowsAsArrays($ps);
