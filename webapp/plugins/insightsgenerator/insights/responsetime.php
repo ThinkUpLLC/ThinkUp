@@ -62,35 +62,34 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 $time_per_response = floor((60 * 60 * 24 * 7) / $response_factor['value']);
+                $time_str = strncmp(self::getSyntacticTimeDifference($time_per_response), "1 ", 2) == 0 ?
+                substr(self::getSyntacticTimeDifference($time_per_response), 2)
+                : self::getSyntacticTimeDifference($time_per_response);
 
                 $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ." averaged one new ".$this->terms->getNoun($response_factor['key'])." every "
-                .self::getSyntacticTimeDifference($time_per_response)." over the last week";
+                ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
+                ." every ".$time_str."</strong>";
 
-                $last_wed = date('Y-m-d', strtotime('-7 day'));
-                $last_wed_insight_baseline = $insight_baseline_dao->getInsightBaseline(
-                'response_count_'.$response_factor['key'], $instance->id, $last_wed);
-                if (isset($last_wed_insight_baseline)) {
-                    $last_wed_time_per_response = $last_wed_insight_baseline->value > 0 ?
-                    floor((60 * 60 * 24 * 7) / $last_wed_insight_baseline->value) : null;
+                $last_fri = date('Y-m-d', strtotime('-7 day'));
+                $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
+                'response_count_'.$response_factor['key'], $instance->id, $last_fri);
+                if (isset($last_fri_insight_baseline) && $last_fri_insight_baseline->value > 0) {
+                    $last_fri_time_per_response = floor((60 * 60 * 24 * 7) / $last_fri_insight_baseline->value);
+                    $time_str1 = strncmp(self::getSyntacticTimeDifference($last_fri_time_per_response), "1 ", 2) == 0 ?
+                    substr(self::getSyntacticTimeDifference($last_fri_time_per_response), 2)
+                    : self::getSyntacticTimeDifference($last_fri_time_per_response);
 
-                    if (self::getSyntacticTimeDifference($last_wed_time_per_response)
-                    != self::getSyntacticTimeDifference($time_per_response)) {
-                        if (isset($last_wed_time_per_response) && $last_wed_time_per_response < $time_per_response) {
-                            $insight_text .= ", slower than the previous week's average of one "
-                            .$this->terms->getNoun($response_factor['key'])
-                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
-                        } elseif (isset($last_wed_time_per_response)
-                        && $last_wed_time_per_response > $time_per_response) {
-                            $insight_text .= ", faster than the previous week's average of one "
-                            .$this->terms->getNoun($response_factor['key'])
-                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
-                        }
+                    if ($last_fri_time_per_response < $time_per_response) {
+                        $insight_text .= ", slower than the previous week's average of 1 "
+                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                    } elseif ($last_fri_time_per_response > $time_per_response) {
+                        $insight_text .= ", faster than the previous week's average of 1 "
+                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
                     }
                 }
                 $insight_text .= '.';
 
-                $this->insight_dao->insertInsight("response_time", $instance->id, $this->insight_date, "Response Time:",
+                $this->insight_dao->insertInsight("response_time", $instance->id, $this->insight_date, "Response time:",
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
