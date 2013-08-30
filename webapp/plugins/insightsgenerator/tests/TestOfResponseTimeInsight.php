@@ -100,7 +100,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new retweet/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.'<\/strong>./', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>./', $result->text);
 
         // Assert that baselines got inserted
         $insight_baseline_dao = new InsightBaselineMySQLDAO();
@@ -162,7 +162,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s status updates averaged <strong>1 new like/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.'<\/strong>/', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->text);
         $this->assertPattern('/slower than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 like every '.$last_week_time_per_response.'./', $result->text);
     }
@@ -211,7 +211,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s checkins averaged <strong>1 new comment/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.'<\/strong>/', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->text);
         $this->assertPattern('/faster than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 comment every '.$last_week_time_per_response.'./', $result->text);
     }
@@ -246,7 +246,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new favorite/', $result->text);
-        $this->assertPattern('/every hour<\/strong>/', $result->text);
+        $this->assertPattern('/every <strong>hour<\/strong>/', $result->text);
         $this->assertPattern('/faster than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 favorite every day./', $result->text);
     }

@@ -68,7 +68,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                ." every ".$time_str."</strong>";
+                ."</strong> every <strong>".$time_str."</strong>";
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
