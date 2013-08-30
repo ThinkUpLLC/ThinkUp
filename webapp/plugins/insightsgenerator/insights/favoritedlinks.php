@@ -65,7 +65,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
             } else {
                 $insight_text = $this->username." ".$this->terms->getVerb('liked')
                 ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ."</strong> with links in them, here's a list:";
+                ."</strong> with links in them:";
             }
 
             $this->insight_dao->insertInsight("favorited_links", $instance->id,
