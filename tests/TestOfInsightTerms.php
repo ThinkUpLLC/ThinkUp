@@ -62,4 +62,21 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertNotNull($terms);
         $this->assertEqual($text, "Your status update got 3 comments from 2 friends");
     }
+
+    public function testGetSyntacticTimeDifference() {
+        $delta_1 = 60 * 60 * 3; // 3 hours
+        $delta_2 = 60 * 6; // 6 minutes
+        $delta_3 = 60 * 60 * 24 * 4; // 4 days
+        $delta_4 = 60 * 60 * 24; // 1 day
+
+        $result_1 = InsightTerms::getSyntacticTimeDifference($delta_1);
+        $result_2 = InsightTerms::getSyntacticTimeDifference($delta_2);
+        $result_3 = InsightTerms::getSyntacticTimeDifference($delta_3);
+        $result_4 = InsightTerms::getSyntacticTimeDifference($delta_4);
+
+        $this->assertEqual($result_1, '3 hours');
+        $this->assertEqual($result_2, '6 minutes');
+        $this->assertEqual($result_3, '4 days');
+        $this->assertEqual($result_4, '1 day');
+    }
 }
