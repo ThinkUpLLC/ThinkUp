@@ -103,4 +103,44 @@ class URLExpander {
         }
         return $tinyurl;
     }
+
+    public static function getWebPageDetails($url) {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        $html = curl_exec($ch);
+        curl_close($ch);
+
+        //parsing begins here:
+        $doc = new DOMDocument();
+        @$doc->loadHTML($html);
+        $nodes = $doc->getElementsByTagName('title');
+
+        //get and display what you need:
+        $title = $nodes->item(0)->nodeValue;
+
+        $metas = $doc->getElementsByTagName('meta');
+
+        $description = null;
+        for ($i = 0; $i < $metas->length; $i++) {
+            $meta = $metas->item($i);
+            if ($meta->getAttribute('name') == 'description') {
+                $description = $meta->getAttribute('content');
+            }
+        }
+        //<link rel="shortcut icon" type="image/x-icon" href="/demo/ginatrapani/assets/img/favicon.png">
+        //        $favicon = null;
+        //        $metas = $doc->getElementsByTagName('link');
+        //        for ($i = 0; $i < $metas->length; $i++) {
+        //            $meta = $metas->item($i);
+        //            if ($meta->getAttribute('rel') == 'shortcut icon') {
+        //                $favicon = $meta->getAttribute('href');
+        //            }
+        //        }
+        return array('title'=>$title, 'description'=>$description);
+    }
 }

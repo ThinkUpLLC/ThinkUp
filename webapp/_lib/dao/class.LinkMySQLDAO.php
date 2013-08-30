@@ -49,15 +49,17 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getInsertId($ps);
     }
 
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' ){
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $description = '' ){
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
+            ':description'=>$description,
             ':image_src'=>$image_src
         );
         $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src WHERE url=:url ";
+        $q .= "SET expanded_url=:expanded, title=:title, description = :description , image_src=:image_src ";
+        $q .= "WHERE url=:url ";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 

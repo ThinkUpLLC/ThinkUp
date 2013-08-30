@@ -190,18 +190,21 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($updated_link->title, "my title");
 
         //With title and image_src
-        $this->DAO->saveExpandedUrl($link, "http://expandedurl2.com", 'my title1', 'http://expandedurl2.com/thumb.png');
+        $this->DAO->saveExpandedUrl($link, "http://expandedurl2.com", 'my title1', 'http://expandedurl2.com/thumb.png',
+        'this is my description');
         $updated_link = $this->DAO->getLinkByUrl($link);
         $this->assertEqual($updated_link->expanded_url, "http://expandedurl2.com");
         $this->assertEqual($updated_link->image_src, "http://expandedurl2.com/thumb.png");
         $this->assertEqual($updated_link->title, "my title1");
+        $this->assertEqual($updated_link->description, "this is my description");
 
         //With title, image_src, and click_count
-        $this->DAO->saveExpandedUrl($link, "http://expandedurl3.com", 'my title3', '');
+        $this->DAO->saveExpandedUrl($link, "http://expandedurl3.com", 'my title3', '', 'yoyo');
         $updated_link = $this->DAO->getLinkByUrl($link);
         $this->assertEqual($updated_link->expanded_url, "http://expandedurl3.com");
         $this->assertEqual($updated_link->image_src, "");
         $this->assertEqual($updated_link->title, "my title3");
+        $this->assertEqual($updated_link->description, "yoyo");
     }
 
     /**
