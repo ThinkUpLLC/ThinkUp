@@ -62,9 +62,9 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 $time_per_response = floor((60 * 60 * 24 * 7) / $response_factor['value']);
-                $time_str = strncmp(self::getSyntacticTimeDifference($time_per_response), "1 ", 2) == 0 ?
-                substr(self::getSyntacticTimeDifference($time_per_response), 2)
-                : self::getSyntacticTimeDifference($time_per_response);
+                $time_str = strncmp(InsightTerms::getSyntacticTimeDifference($time_per_response), "1 ", 2) == 0 ?
+                substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
+                : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
                 $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
@@ -75,9 +75,10 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 'response_count_'.$response_factor['key'], $instance->id, $last_fri);
                 if (isset($last_fri_insight_baseline) && $last_fri_insight_baseline->value > 0) {
                     $last_fri_time_per_response = floor((60 * 60 * 24 * 7) / $last_fri_insight_baseline->value);
-                    $time_str1 = strncmp(self::getSyntacticTimeDifference($last_fri_time_per_response), "1 ", 2) == 0 ?
-                    substr(self::getSyntacticTimeDifference($last_fri_time_per_response), 2)
-                    : self::getSyntacticTimeDifference($last_fri_time_per_response);
+                    $time_str1 = strncmp(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response),
+                    "1 ", 2) == 0 ?
+                    substr(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response), 2)
+                    : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     if ($last_fri_time_per_response < $time_per_response) {
                         $insight_text .= ", slower than the previous week's average of 1 "
@@ -95,30 +96,6 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
-    }
-
-    /**
-     * Get the human-readable, syntactic time difference .
-     * @param int $delta Time difference in seconds
-     * @return str Syntactic time difference
-     */
-    public static function getSyntacticTimeDifference($delta) {
-        $tokens = array();
-        $tokens['second'] = 1;
-        $tokens['minute'] = 60 * $tokens['second'];
-        $tokens['hour'] = 60 * $tokens['minute'];
-        $tokens['day'] = 24 * $tokens['hour'];
-
-        arsort($tokens);
-
-        foreach ($tokens as $unit => $value) {
-            if ($delta < $value) {
-                continue;
-            } else {
-                $number_of_units = floor($delta / $value);
-                return $number_of_units.' '.$unit.(($number_of_units > 1) ? 's' : '');
-            }
-        }
     }
 }
 

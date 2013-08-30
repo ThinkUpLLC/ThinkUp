@@ -267,4 +267,28 @@ class InsightTerms {
                 break;
         }
     }
+
+    /**
+     * Get the human-readable, syntactic time difference .
+     * @param int $delta Time difference in seconds
+     * @return str Syntactic time difference
+     */
+    public static function getSyntacticTimeDifference($delta) {
+        $tokens = array();
+        $tokens['second'] = 1;
+        $tokens['minute'] = 60 * $tokens['second'];
+        $tokens['hour'] = 60 * $tokens['minute'];
+        $tokens['day'] = 24 * $tokens['hour'];
+
+        arsort($tokens);
+
+        foreach ($tokens as $unit => $value) {
+            if ($delta < $value) {
+                continue;
+            } else {
+                $number_of_units = floor($delta / $value);
+                return $number_of_units.' '.$unit.(($number_of_units > 1) ? 's' : '');
+            }
+        }
+    }
 }
