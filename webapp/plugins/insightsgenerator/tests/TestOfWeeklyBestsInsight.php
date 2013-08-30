@@ -52,21 +52,27 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 5,
             'retweet_count_cache' => 1,
-            'favlike_count_cache' => 3
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 34
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
             'retweet_count_cache' => 1,
-            'favlike_count_cache' => 15
+            'favlike_count_cache' => 15,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 33
         $posts[] = new Post(array(
             'reply_count_cache' => 2,
             'retweet_count_cache' => 5,
-            'favlike_count_cache' => 1
+            'favlike_count_cache' => 1,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 27
 
         $insight_plugin = new WeeklyBestsInsight();
@@ -92,18 +98,24 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'tester_fb';
         $instance->network = 'facebook';
 
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>31, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 8,
-            'favlike_count_cache' => 3
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 46
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
-            'favlike_count_cache' => 15
+            'favlike_count_cache' => 15,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 30
         $posts[] = new Post(array(
             'reply_count_cache' => 2,
-            'favlike_count_cache' => 1
+            'favlike_count_cache' => 1,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 12
 
         $insight_plugin = new WeeklyBestsInsight();
@@ -128,11 +140,15 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>32, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 1,
             'retweet_count_cache' => 0,
-            'favlike_count_cache' => 0
+            'favlike_count_cache' => 0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 5
 
         $insight_plugin = new WeeklyBestsInsight();
@@ -158,11 +174,15 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>33, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
             'retweet_count_cache' => 0,
-            'favlike_count_cache' => 3
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 6
 
         $insight_plugin = new WeeklyBestsInsight();
@@ -190,11 +210,15 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>34, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 4,
             'retweet_count_cache' => 0,
-            'favlike_count_cache' => 5
+            'favlike_count_cache' => 5,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 30
 
         $insight_plugin = new WeeklyBestsInsight();
