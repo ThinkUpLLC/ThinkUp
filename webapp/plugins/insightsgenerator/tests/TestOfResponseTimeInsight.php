@@ -45,23 +45,6 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testGetSyntacticTimeDifference() {
-        $delta_1 = 60 * 60 * 3; // 3 hours
-        $delta_2 = 60 * 6; // 6 minutes
-        $delta_3 = 60 * 60 * 24 * 4; // 4 days
-        $delta_4 = 60 * 60 * 24; // 1 day
-
-        $result_1 = ResponseTimeInsight::getSyntacticTimeDifference($delta_1);
-        $result_2 = ResponseTimeInsight::getSyntacticTimeDifference($delta_2);
-        $result_3 = ResponseTimeInsight::getSyntacticTimeDifference($delta_3);
-        $result_4 = ResponseTimeInsight::getSyntacticTimeDifference($delta_4);
-
-        $this->assertEqual($result_1, '3 hours');
-        $this->assertEqual($result_2, '6 minutes');
-        $this->assertEqual($result_3, '4 days');
-        $this->assertEqual($result_4, '1 day');
-    }
-
     public function testResponseTimeInsightForTwitterNoPriorBaseline() {
         // Get data ready that insight requires
         $instance = new Instance();
@@ -87,7 +70,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         ));
 
         // Calculate time for each new retweet
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 25));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 25));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -148,8 +131,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         'instance_id'=>10, 'value'=>27));
 
         // Calculate time for each new favorite
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 19));
-        $last_week_time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 27));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 19));
+        $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 27));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -197,8 +180,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         'instance_id'=>10, 'value'=>12));
 
         // Calculate time for each new favorite
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 17));
-        $last_week_time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 12));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 17));
+        $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 12));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
