@@ -335,6 +335,10 @@ color : #666;
     padding-top: 4px;
 }
 
+.link-detail small a{
+    font-weight:normal;
+}
+
 .twitter-bio-info {
     padding-top : 4px;
 }

@@ -33,7 +33,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
         {if isset($l->image_src) and $l->image_src neq ''}
             <h3><a href="{$l->url}" title="{$l->caption}"><img src="{$l->image_src}" class="avatar2"  width="48" height="48"/></a></h3>
         {else}
-            <h3><a href="{$l->url}" title="{$l->caption}"><i class="icon-external-link icon-2x icon-muted"></i></a></h3>
+            <h3><a href="{$l->url}" title="{$l->caption}"><a href="https://twitter.com/intent/user?user_id={$p->author_user_id}" title="{$p->author_username}"><img src="{$p->author_avatar}" class=""  width="48" height="48"/></a></h3>
         {/if}
     </td>
 
@@ -41,7 +41,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
         {if isset($l->title) and $l->title neq ''}
             <h3><a href="{$l->url}">{$l->title|truncate:100}</a></h3>
         {else}
-            <h3><a href="{$l->url}">External link</a></h3>
+            <h3><a href="{$l->url}">{$l->expanded_url|truncate:75}</a></h3>
         {/if}
 
         {if isset($l->expanded_url) and $l->expanded_url neq ''}
@@ -56,10 +56,10 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
             <p class="link-detail"><small>
                 {if $p->network eq 'twitter'}
                     tweeted by {'@'|cat:$p->author_username|link_usernames_to_twitter}
+                    at <a href="http://twitter.com/{$p->author_user_id}/statuses/{$p->post_id}">{$p->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}</a>
                 {else}
-                    posted by {$p->author_fullname}
+                    posted by {$p->author_fullname} at {$p->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}
                 {/if}
-                at {$p->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}
             </small></p>
         </div>
     </td>
