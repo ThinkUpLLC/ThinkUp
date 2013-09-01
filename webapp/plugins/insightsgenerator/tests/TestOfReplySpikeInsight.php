@@ -243,12 +243,12 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
 
         // Insert a new post with a higher count than the baseline and a related hot posts insight
         $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>1,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-6d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-2d' ));
 
         $post1_builder = FixtureBuilder::build('posts', array('id'=>28, 'post_id'=>'28',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
         'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 28',
-        'source'=>'web', 'pub_date'=>'-5d', 'reply_count_cache'=>3, 'is_protected'=>0,
+        'source'=>'web', 'pub_date'=>'-5d', 'reply_count_cache'=>15, 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
 
@@ -261,8 +261,22 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
 
         $post3_builder = FixtureBuilder::build('posts', array('id'=>30, 'post_id'=>'30',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
-        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 29',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 30',
         'source'=>'web', 'pub_date'=>'-20d', 'reply_count_cache'=>3, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
+
+        $post4_builder = FixtureBuilder::build('posts', array('id'=>31, 'post_id'=>'31',
+        'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 31',
+        'source'=>'web', 'pub_date'=>'-27d', 'reply_count_cache'=>4, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
+
+        $post5_builder = FixtureBuilder::build('posts', array('id'=>32, 'post_id'=>'32',
+        'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 32',
+        'source'=>'web', 'pub_date'=>'-34d', 'reply_count_cache'=>31, 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
 
@@ -272,6 +286,10 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $posts[] = $post2;
         $post3 = new Post($post3_builder->columns);
         $posts[] = $post3;
+        $post4 = new Post($post4_builder->columns);
+        $posts[] = $post4;
+        $post5 = new Post($post5_builder->columns);
+        $posts[] = $post5;
         $instance = new Instance();
         $instance->id = 1;
         $instance->network_user_id = '13';
@@ -282,24 +300,24 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $reply_spike_insight->generateInsight($instance, $posts, 7);
 
         // Now insert a post with more replies than on average
-        $post4_builder = FixtureBuilder::build('posts', array('id'=>31, 'post_id'=>'31',
+        $post6_builder = FixtureBuilder::build('posts', array('id'=>33, 'post_id'=>'33',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
         'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 31',
-        'source'=>'web', 'pub_date'=>'-6d', 'reply_count_cache'=>12, 'is_protected'=>0,
+        'source'=>'web', 'pub_date'=>'-2d', 'reply_count_cache'=>26, 'is_protected'=>0,
         'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
-        $posts2[] = new Post($post4_builder->columns);
+        $posts2[] = new Post($post6_builder->columns);
 
         $reply_spike_insight->generateInsight($instance, $posts2, 7);
 
         // Check the insight was created
-        $check = $insight_dao->getInsight('reply_spike_30_day_31', 1, date('Y-m-d', strtotime('-6 days')));
+        $check = $insight_dao->getInsight('reply_high_30_day_33', 1, date('Y-m-d', strtotime('-2 days')));
         $this->assertNotNull($check);
-        $this->assertEqual($check->slug, 'reply_spike_30_day_31');
-        $this->assertEqual($check->prefix, 'Conversation starter:');
+        $this->assertEqual($check->slug, 'reply_high_30_day_33');
+        $this->assertEqual($check->prefix, 'New 30-day record!');
         $this->assertEqual($check->text,
-        '<strong>12 people</strong> replied to @ev\'s post, more than <strong>2x</strong> @ev\'s 30-day average.');
-        $this->assertEqual($check->emphasis, 0);
+        '<strong>26 people</strong> replied to @ev\'s post.');
+        $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
 
@@ -367,13 +385,13 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $reply_spike_insight->generateInsight($instance, $posts2, 7);
 
         // Check the insight was created
-        $check = $insight_dao->getInsight('reply_spike_7_day_32', 1, date('Y-m-d', strtotime('-6 days')));
+        $check = $insight_dao->getInsight('reply_high_7_day_32', 1, date('Y-m-d', strtotime('-6 days')));
         $this->assertNotNull($check);
-        $this->assertEqual($check->slug, 'reply_spike_7_day_32');
-        $this->assertEqual($check->prefix, 'Conversation starter:');
+        $this->assertEqual($check->slug, 'reply_high_7_day_32');
+        $this->assertEqual($check->prefix, 'New 7-day record!');
         $this->assertEqual($check->text,
-        '<strong>12 people</strong> replied to @ev\'s post, more than <strong>2x</strong> @ev\'s 7-day average.');
-        $this->assertEqual($check->emphasis, 0);
+        '<strong>12 people</strong> replied to @ev\'s post.');
+        $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
 
