@@ -57,7 +57,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
-        'friend_count'=>1345));
+        'is_verified'=>0, 'friend_count'=>1345));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1723457890', 'user_name'=>'facebookuser1',
         'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
@@ -67,35 +67,35 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
-        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
+        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>'15', 'error_code'=>404,
         'error_text'=>'User not found', 'error_issued_to_user_id'=>'1324567890', 'network'=>'twitter'));
 
         //ev is followed by jack
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1234567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>14,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'14',
         'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>15,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'15',
         'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>1623457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1623457890',
         'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1324567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1324567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1234567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>'1234567890',
         'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>17, 'active'=>0,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'17', 'active'=>0,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>1823457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>'1823457890',
         'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
 
         return $builders;
@@ -224,24 +224,39 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetLeastLikelyFollowers(){
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'12345678911110', 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'12345678911110',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 15);
 
         $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 2);
+        $this->assertEqual(count($result), 3);
         $this->assertEqual($result[0]["user_id"], 1234567890);
-        $this->assertEqual($result[1]["user_id"], 1623457890);
+        $this->assertEqual($result[1]["user_id"], 12345678911110);
+        $this->assertEqual($result[2]["user_id"], 1623457890);
 
         //test paging
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 1);
         $this->assertEqual($result[0]["user_id"], 1234567890);
 
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 2);
-        $this->assertEqual($result[0]["user_id"], 1623457890);
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]["user_id"], 12345678911110);
 
         $result = $this->DAO->getLeastLikelyFollowersThisWeek(1324567890, 'twitter', 15);
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
         $this->assertEqual($result[0]["user_id"], 1623457890);
+
+        $result = $this->DAO->getLeastLikelyFollowersByDay(1324567890, 'twitter', 2);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 1);
+        //assert the verified follower doesn't get returned
+        $this->assertEqual($result[0]->user_id, 1623457890);
     }
 
     public function testGetVerifiedFollowersByDay() {

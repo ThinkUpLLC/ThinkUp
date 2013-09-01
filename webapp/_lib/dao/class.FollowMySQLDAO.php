@@ -330,7 +330,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         }
         $q .= "AND f.user_id = :user_id AND f.network=:network AND f.network=u.network AND active=1 ";
         $q .= "AND follower_count > 1000 AND friend_count > 0 AND friend_count < (follower_count/2) ";
-        $q .= "ORDER BY likelihood_of_follow ASC, u.follower_count DESC LIMIT :limit;";
+        $q .= "AND u.is_verified = 0 ORDER BY likelihood_of_follow ASC, u.follower_count DESC LIMIT :limit;";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, 'User');
