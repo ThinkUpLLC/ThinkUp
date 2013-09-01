@@ -126,9 +126,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                     }
-                }
-
-                if (isset($average_reply_count_30_days->value)
+                } elseif (isset($average_reply_count_30_days->value)
                 && $post->reply_count_cache > ($average_reply_count_30_days->value*2)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
