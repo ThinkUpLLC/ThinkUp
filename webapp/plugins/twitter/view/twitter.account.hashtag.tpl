@@ -20,9 +20,7 @@
     {foreach from=$hashtags key=iid item=h name=foo}
     <tr>
         <td>
-            <h3 class="lead"><a href="{$site_root_path}search.php?u={$user}&n=twitter&c=searches&t=
-{if substr($h->hashtag,0,1) eq '#'}hashtag{else}keyword{/if}&q=
-{if substr($h->hashtag,0,1) eq '#'}{$h->hashtag|replace:"#":""}{else}{$h->hashtag}{/if}">{$h->hashtag}</a></h3>
+            <h3 class="lead"><a href="{$site_root_path}search.php?u={$user}&n=twitter&c=searches&k={$h->hashtag|urlencode}&q={$h->hashtag|urlencode}">{$h->hashtag}</a></h3>
         </td>
         <td>
             <h3 class="lead">{$h->count_cache}</h3>
