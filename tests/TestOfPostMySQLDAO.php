@@ -360,7 +360,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // add instance_twitter
         $builders[] = FixtureBuilder::build('instances_twitter',
-        array('last_page_fetched_replies' => 1, 'last_page_fetched_tweets' => 1));
+        array());
 
         // add hashtags 1 i 2
         $builders[] = FixtureBuilder::build('hashtags',
@@ -370,8 +370,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // add instances_hashtags 1
         $builders[] = FixtureBuilder::build('instances_hashtags',
-        array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0,
-                        'last_page_fetched_tweets' => 1));
+        array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0));
 
         // add users
         $builders[] = FixtureBuilder::build( 'users', array(
@@ -4012,7 +4011,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             date('Y-m-d H:i:s', strtotime('-17 days'))
         );
 
-        for ($i = 0; $i < 3; $i++) { 
+        for ($i = 0; $i < 3; $i++) {
             $builders[] = FixtureBuilder::build('posts', array(
                 'id'=>(760+$i),
                 'post_id'=>(760+$i),

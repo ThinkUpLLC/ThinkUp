@@ -754,22 +754,21 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                         'earliest_reply_in_system' => '2013-02-28 15:21:16', 'is_archive_loaded_posts' => 0,
                         'is_archive_loaded_replies' => 0, 'is_archive_loaded_follows' => 0, 'is_public' => 0,
                         'is_active' => 0, 'network' => 'twitter', 'favorites_profile' => 0, 'owner_favs_in_system' => 0));
-        
+
         // add instance_twitter
         $builders[] = FixtureBuilder::build('instances_twitter',
-                array('last_page_fetched_replies' => 1, 'last_page_fetched_tweets' => 1));
-        
+                array());
+
         // add hashtags 1 i 2
         $builders[] = FixtureBuilder::build('hashtags',
                 array('hashtag' => 'first', 'network'=>'twitter', 'count_cache' => 0));
         $builders[] = FixtureBuilder::build('hashtags',
                 array('hashtag' => '#second', 'network'=>'twitter', 'count_cache' => 0));
-        
+
         // add instances_hashtags 1
         $builders[] = FixtureBuilder::build('instances_hashtags',
-                array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0,
-                        'last_page_fetched_tweets' => 1));
-        
+                array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0));
+
         // add users
         $builders[] = FixtureBuilder::build( 'users', array(
                 'user_id' => 101,
@@ -792,7 +791,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                 'is_protected' => 0,
                 'network' => 'twitter',
                 'follower_count' => 103));
-        
+
         $counter = 300;
         while ($counter <= 359) {
             $pseudo_minute = substr($counter, 1,2);
@@ -826,7 +825,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                     'in_retweet_of_post_id' => null,
                     'is_geo_encoded' => 0,
                     'is_protected'=>0));
-        
+
             if ($counter % 2 == 0) {
                 $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
                         'post_id' => $counter, 'hashtag_id' => 2, 'network' => 'twitter'));
@@ -834,7 +833,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             else {
                 $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
                         'post_id' => $counter, 'hashtag_id' => 1, 'network' => 'twitter'));
-            }                    
+            }
             $counter++;
         }
         return $builders;
@@ -2838,19 +2837,19 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $controller = new PostAPIController();
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
-    
+
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
             $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
-    
+
         // test all posts are from correct user
         foreach ($output as $post) {
             $this->assertWithinMargin($post->user->id, 102,1);
         }
-    
+
         //test page
         $_GET['page'] = 1;
         $_GET['order_by'] = 'post_id';
@@ -2863,7 +2862,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertEqual($post->id, $counter);
             $counter = $counter+2;
         }
-    
+
         $_GET['page'] = 2;
         $controller = new PostAPIController();
         $output = json_decode($controller->go());
@@ -2873,29 +2872,29 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertEqual($post->id, $counter);
             $counter = $counter+2;
         }
-         
+
         unset($_GET['page']);
         unset($_GET['order_by']);
         unset($_GET['direction']);
-    
+
         //test #second
         $_GET['keyword'] = '#second';
         $controller = new PostAPIController();
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
-    
+
         // test the object type is correct
         $this->assertTrue(is_array($output));
         foreach($output as $post) {
             $this->assertTrue($post instanceof stdClass);
             $this->assertEqual($post->protected, false);
         }
-    
+
         // test all posts are from correct user
         foreach ($output as $post) {
             $this->assertWithinMargin($post->user->id, 102,1);
         }
-    
+
         // test count
         for ($count = 1; $count <= 20; $count++) {
             $_GET['count'] = $count;
@@ -2904,7 +2903,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertEqual(sizeof($output), $count);
         }
         unset($_GET['count']);
-    
+
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
@@ -2915,7 +2914,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strtotime($post->created_at) <= $date);
             $date = strtotime($post->created_at);
         }
-    
+
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
         $controller = new PostAPIController(true);
@@ -2925,7 +2924,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strtotime($post->created_at) >= $date);
             $date = strtotime($post->created_at);
         }
-    
+
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
         $controller = new PostAPIController(true);
@@ -2935,7 +2934,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->source, $str) <= 0);
             $str = $post->source;
         }
-    
+
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
         $controller = new PostAPIController(true);
@@ -2945,7 +2944,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->source, $str) >= 0);
             $str = $post->source;
         }
-    
+
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
         $controller = new PostAPIController(true);
@@ -2955,7 +2954,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->text, $str) <= 0);
             $str = $post->text;
         }
-    
+
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
         $controller = new PostAPIController(true);
@@ -2965,7 +2964,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->text, $str) >= 0);
             $str = $post->text;
         }
-    
+
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
         $controller = new PostAPIController(true);
@@ -2975,7 +2974,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->user->screen_name, $str) <= 0);
             $str = $post->user->screen_name;
         }
-    
+
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
         $controller = new PostAPIController(true);
@@ -2985,16 +2984,16 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
             $this->assertTrue(strcmp($post->user->screen_name, $str) >= 0);
             $str = $post->user->screen_name;
         }
-    
+
         // test trim user
         unset($_GET['order_by'], $_GET['direction']);
         $_GET['trim_user'] = true;
         $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
-    
+
         $this->assertEqual(sizeof($output[0]->user), 1);
-    
+
         // test sql injection
         $_GET = array('type' => 'keyword_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
@@ -3007,5 +3006,5 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         }
         $installer_dao = DAOFactory::getDAO('InstallerDAO');
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
-    }    
+    }
 }

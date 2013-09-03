@@ -90,19 +90,17 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
         if ($lfi){
             $q .= "last_favorite_id, ";
         }
-        $q .= "last_page_fetched_replies, last_page_fetched_tweets) ";
+        $q .= "last_reply_id) ";
         $q .= "VALUES (:instance_id, ";
         if ($lfi){
             $q .= ":last_favorite_id, ";
         }
-        $q .= ":last_page_fetched_replies, :last_page_fetched_tweets) ";
+        $q .= ":last_reply_id) ";
         $vars = array(
             ':instance_id'                  => $instance_object->id,
             ':last_favorite_id'             => $instance_object->last_favorite_id,
-            ':last_page_fetched_replies'    => isset($instance_object->last_page_fetched_replies)?
-        $instance_object->last_page_fetched_replies:1,
-            ':last_page_fetched_tweets'     => isset($instance_object->last_page_fetched_tweets)?
-        $instance_object->last_page_fetched_tweets:1,
+            ':last_reply_id'                => isset($instance_object->last_reply_id)?
+            $instance_object->last_reply_id:'',
         );
         if (!$lfi){
             unset ($vars[':last_favorite_id']);;
@@ -118,19 +116,17 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
      */
     private function updateMetaData($instance_object) {
         $lfi = ($instance_object->last_favorite_id != "" ? true : false);
-        isset($instance_object->last_page_fetched_replies)?$instance_object->last_page_fetched_replies:1;
+        isset($instance_object->last_reply_id)?$instance_object->last_reply_id:1;
         $q  = "UPDATE ".$this->getMetaTableName()." SET ";
         if ($lfi){
             $q .= "last_favorite_id = :lastfavid, ";
         }
-        $q .= "last_page_fetched_replies = :lpfr, ";
-        $q .= "last_page_fetched_tweets = :lpft ";
+        $q .= "last_reply_id = :lpfr ";
         $q .= "WHERE id=:id;";
 
         $vars = array(
             ':lastfavid'     => $instance_object->last_favorite_id,
-            ':lpfr'         => $instance_object->last_page_fetched_replies,
-            ':lpft'         => $instance_object->last_page_fetched_tweets,
+            ':lpfr'         => $instance_object->last_reply_id,
             ':id'           => $instance_object->id
         );
         if (!$lfi){

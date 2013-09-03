@@ -325,7 +325,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
-        $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>1));
+        $builders[] = FixtureBuilder::build('instances_twitter', array('last_reply_id'=>'1'));
         $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'930061',
         'network_username'=>'ginatrapani', 'is_public'=>1));
         //Add instance_owner

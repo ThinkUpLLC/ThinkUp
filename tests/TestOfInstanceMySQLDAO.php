@@ -575,8 +575,6 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
         //Edit it.
         $i->last_post_id = 512;
-        $i->last_page_fetched_replies = 2;
-        $i->last_page_fetched_tweets = 17;
         $i->is_archive_loaded_follows = 1;
         $i->is_archive_loaded_replies = 1;
 

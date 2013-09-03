@@ -89,7 +89,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         // insert instances_hashtags
         $this->builders[] = FixtureBuilder::build('instances_hashtags', array('id' => 1, 'instance_id' => 1,
-        'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => '0', 'last_page_fetched_tweets' => 1));
+        'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => '0'));
     }
 
     public function tearDown() {
@@ -100,7 +100,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAnilDash() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'last_post_id'=>'0', 'last_reply_id'=>'1001',
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
@@ -119,7 +119,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAnilDashDelete() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36825', 'network_viewer_id'=>'36823',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'last_post_id'=>'0', 'last_reply_id'=>'10001',
         'total_posts_in_system'=>'21', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
@@ -138,7 +138,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAnilDashUsernameChange() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36824', 'network_viewer_id'=>'36824',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'last_post_id'=>'0', 'last_reply_id'=>'1001',
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
@@ -169,7 +169,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'is_protected'=>1, 'last_post_id'=>''));
 
         $r = array('id'=>1, 'network_username'=>'mcprivate', 'network_user_id'=>'123456', 'network_viewer_id'=>'123456',
-        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17',
+        'last_post_id'=>'0', 'last_reply_id'=>'1001',
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0',
         'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0',
@@ -188,8 +188,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserGinaTrapani() {
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061',
-        'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_reply_id'=>'10001',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter',
@@ -361,8 +361,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
         self::setUpInstanceUserAmygdala();
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'2768241', 'network'=>'twitter'));
-
-        $this->instance->last_page_fetched_tweets = 17;
 
         $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
         $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/retweets/');
@@ -565,8 +563,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserEduardCucurella() {
         $r = array('id'=>1, 'network_username'=>'ecucurella', 'network_user_id'=>'13771532',
-            'network_viewer_id'=>'13771532', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
-            'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+            'network_viewer_id'=>'13771532', 'last_post_id'=>'0', 'last_reply_id'=>'10001',
+            'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
             'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
             'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
             'avg_replies_per_day'=>'0', 'is_public'=>'0', 'is_active'=>'1', 'network'=>'twitter',
