@@ -78,9 +78,11 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
                 if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
                 && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
+                    $archive_limit = isset($options['archive_limit']->option_value)?
+                    $options['archive_limit']->option_value:3200;
                     $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                     $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
-                    $options['oauth_consumer_secret']->option_value, $options['archive_limit']->option_value,
+                    $options['oauth_consumer_secret']->option_value, $archive_limit,
                     $num_twitter_errors);
 
                     $twitter_crawler = new TwitterCrawler($instance, $api);
