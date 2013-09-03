@@ -986,30 +986,27 @@ class TwitterCrawler {
      * Fetch user from Twitter and add to DB
      * @param int $fid
      * @param str $source Place where user was found
+     * @throws APICallLimitExceededException
      */
     private function fetchAndAddUser($fid, $source) {
         $status_message = "";
         $endpoint = $this->api->endpoints['show_user'];
-        try {
-            list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $fid);
-            if ($http_status == 200) {
-                $user_arr = $this->api->parseJSONUser($payload);
-                if (isset($user_arr[0])) {
-                    $user = new User($user_arr[0], $source);
-                    $this->user_dao->updateUser($user);
-                    $status_message = 'Added/updated user '.$user->username." in database";
-                }
-            } elseif ($http_status == 404) {
-                $e = $this->api->parseJSONError($payload);
-                $usererror_dao = DAOFactory::getDAO('UserErrorDAO');
-                $usererror_dao->insertError($fid, $http_status, $e['error'], $this->user->user_id, 'twitter');
-                $status_message = 'User error saved.';
+        list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $fid);
+        if ($http_status == 200) {
+            $user_arr = $this->api->parseJSONUser($payload);
+            if (isset($user_arr[0])) {
+                $user = new User($user_arr[0], $source);
+                $this->user_dao->updateUser($user);
+                $status_message = 'Added/updated user '.$user->username." in database";
             }
-            $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
-            $status_message = "";
-        } catch (APICallLimitExceededException $e) {
-            $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+        } elseif ($http_status == 404) {
+            $e = $this->api->parseJSONError($payload);
+            $usererror_dao = DAOFactory::getDAO('UserErrorDAO');
+            $usererror_dao->insertError($fid, $http_status, $e['error'], $this->user->user_id, 'twitter');
+            $status_message = 'User error saved.';
         }
+        $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+        $status_message = "";
     }
     /**
      * For each API call left, grab oldest follow relationship, check if it exists, and update table.
