@@ -271,6 +271,7 @@ class TwitterCrawler {
     /**
      * Fetch a replied-to tweet and add it and any URLs it contains to the database.
      * @param int $tid
+     * @throws APICallLimitExceededException
      */
     private function fetchAndAddTweetRepliedTo($tid) {
         if (!isset($this->user)) {
@@ -278,31 +279,27 @@ class TwitterCrawler {
         }
         if (isset($this->user)) {
             $endpoint = $this->api->endpoints['show_tweet'];
-            try {
-                list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $tid);
-                $status_message = "";
-                if ($http_status == 200) {
-                    $tweet = $this->api->parseJSONTweet($payload);
+            list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $tid);
+            $status_message = "";
+            if ($http_status == 200) {
+                $tweet = $this->api->parseJSONTweet($payload);
 
-                    $post_dao = DAOFactory::getDAO('PostDAO');
+                $post_dao = DAOFactory::getDAO('PostDAO');
 
-                    $user_replied_to = new User($tweet, 'replies');
-                    $this->user_dao->updateUser($user_replied_to);
-                    $inserted_post_key = $post_dao->addPost($tweet, $user_replied_to, $this->logger);
-                    if ($inserted_post_key !== false) {
-                        $status_message = 'Added replied to tweet ID '.$tid." to database.";
-                        URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
-                    }
-                } elseif ($http_status == 404 || $http_status == 403) {
-                    $e = $this->api->parseJSONError($payload);
-                    $posterror_dao = DAOFactory::getDAO('PostErrorDAO');
-                    $posterror_dao->insertError($tid, 'twitter', $http_status, $e['error'], $this->user->user_id);
-                    $status_message = 'Error saved to tweets.';
+                $user_replied_to = new User($tweet, 'replies');
+                $this->user_dao->updateUser($user_replied_to);
+                $inserted_post_key = $post_dao->addPost($tweet, $user_replied_to, $this->logger);
+                if ($inserted_post_key !== false) {
+                    $status_message = 'Added replied to tweet ID '.$tid." to database.";
+                    URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                 }
-                $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
-            } catch (APICallLimitExceededException $e) {
-                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+            } elseif ($http_status == 404 || $http_status == 403) {
+                $e = $this->api->parseJSONError($payload);
+                $posterror_dao = DAOFactory::getDAO('PostErrorDAO');
+                $posterror_dao->insertError($tid, 'twitter', $http_status, $e['error'], $this->user->user_id);
+                $status_message = 'Error saved to tweets.';
             }
+            $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
         }
     }
     /**
