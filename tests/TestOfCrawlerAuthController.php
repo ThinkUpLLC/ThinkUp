@@ -64,4 +64,40 @@ class TestOfCrawlerAuthController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
     }
+    
+    public function testCrawlFilterParametersSuccesfullSaved() {
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('mypassword', 'test');
+    
+        $builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass,
+                'pwd_salt'=>'test', 'is_activated'=>1, 'is_admin'=>1));
+    
+        //CLI with Filter
+        $controller = new CrawlerAuthController(5, array('crawl.php','me@example.com', 'mypassword',3,1));
+        $this->assertTrue(isset($controller));
+        $results = $controller->go();
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);        
+        $this->assertPattern('/FILTER=3SELECTED=1/', $results);
+        
+        //CLI without Filter
+        $controller = new CrawlerAuthController(3, array('crawl.php','me@example.com', 'mypassword'));
+        $this->assertTrue(isset($controller));
+        $results = $controller->go();
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
+        $this->assertNoPattern('/FILTER=/', $results);
+        $this->assertPattern('/COMPLETELOGIN/', $results);
+        
+        //web
+        $this->simulateLogin('me@example.com', 1, true);
+        $controller = new CrawlerAuthController(1, array('crawl.php'));
+        $this->assertTrue(isset($controller));
+        $results = $controller->go();
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
+        $this->assertNoPattern('/FILTER=/', $results);
+        $this->assertNoPattern('/COMPLETELOGIN/', $results);
+        $this->assertPattern('/ISLOGGEDIN/', $results);       
+
+    }
 }

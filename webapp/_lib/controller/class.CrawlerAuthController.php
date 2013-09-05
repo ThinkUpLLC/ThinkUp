@@ -65,18 +65,35 @@ class CrawlerAuthController extends ThinkUpController {
             } else {
                 $pw = getenv('THINKUP_PASSWORD');
             }
+            //check for arguments to filter crawl instances
+            if ($this->argc > 3) {
+                $numfilter = $this->argv[3];
+            } else {
+                $numfilter = getenv('THINKUP_CRAWL_FILTER');
+            }
+            if ($this->argc > 4) {
+                $selected = $this->argv[4];
+            } else {
+                $selected = getenv('THINKUP_CRAWL_SELECTED');
+            }
 
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $owner = $owner_dao->getByEmail($username);
             if ( $owner_dao->isOwnerAuthorized($username, $pw)) {
                 $authorized = true;
                 Session::completeLogin($owner);
+                $output="COMPLETELOGIN";
+                if (isset($numfilter) && isset($selected) && is_numeric($numfilter) && is_numeric($selected)) {
+                    CrawlFilter::setFilterParameters($numfilter,$selected);
+                    $output ="FILTER=".CrawlFilter::getFilter()."SELECTED=".CrawlFilter::getSelected();
+                }
             } else {
                 $output = "ERROR: Incorrect username and password.";
             }
         } else { // check user is logged in on the web
             if ( $this->isLoggedIn() ) {
                 $authorized = true;
+                $output="ISLOGGEDIN";
             } else {
                 $output = "ERROR: Invalid or missing username and password.";
             }

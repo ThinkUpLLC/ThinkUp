@@ -793,4 +793,80 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[1]->id, 6);
         $this->assertEqual($result[1]->network_username, "yaya");
     }
+    
+    public function testGetActiveInstancesStalestFirstForOwnerByNetworkNoAuthErrorUsingCrawlFilter() {
+            
+        $this->buildDataCrawlFilter();
+        
+        $this->DAO = new InstanceMySQLDAO();
+        $owner = new Owner();
+        $owner->id = 2;
+        $owner->is_admin = true;
+        
+        //Without any filter, gets 11 instances
+        $result = $this->DAO->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($owner, 'twitter');
+        $this->assertEqual(sizeof($result), 10);
+        $this->assertEqual($result[0]->id, 2);
+        $this->assertEqual($result[0]->network_username, "jill");
+        for ($i = 1; $i <= 9; $i++) {
+            $index=5+$i;
+            $this->assertEqual($result[$i]->id, $index);
+            $this->assertEqual($result[$i]->network_username, 'name_'.$index);
+        }
+        
+        //Using Filter
+        CrawlFilter::setFilterParameters(3,0);
+        $result = $this->DAO->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($owner, 'twitter');
+        $this->assertEqual(sizeof($result), 3);
+        for ($i = 0; $i <= 2; $i++) {
+            $index=6+$i*3;
+            $this->assertEqual($result[$i]->id, $index);
+            $this->assertEqual($result[$i]->network_username, "name_".$index);
+        }
+
+        //Using Filter
+        CrawlFilter::setFilterParameters(3,1);
+        $result = $this->DAO->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($owner, 'twitter');
+        $this->assertEqual(sizeof($result), 3);
+        for ($i = 0; $i <= 2; $i++) {
+            $index=7+$i*3;
+            $this->assertEqual($result[$i]->id, $index);
+            $this->assertEqual($result[$i]->network_username, "name_".$index);
+        }
+
+        //Using Filter
+        CrawlFilter::setFilterParameters(3,2);
+        $result = $this->DAO->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($owner, 'twitter');
+        $this->assertEqual(sizeof($result), 4);
+        $this->assertEqual($result[0]->id, 2);
+        $this->assertEqual($result[0]->network_username, "jill");
+        for ($i = 1; $i <= 3; $i++) {
+            $index=8+($i-1)*3;
+            $this->assertEqual($result[$i]->id, $index);
+            $this->assertEqual($result[$i]->network_username, "name_".$index);
+        }
+    }
+    
+    private function buildDataCrawlFilter() {
+        
+        for ($i = 6; $i <= 14; $i++) {
+        
+            $this->builders[] = FixtureBuilder::build('instances', array(
+                    'id'=>$i,
+                    'network_user_id'=>$i,
+                    'network_username'=>'name_'.$i,
+                    'network'=>'twitter',
+                    'network_viewer_id'=>$i,
+                    'crawler_last_run'=>'2013-08-23 17:00:'.$i,
+                    'is_active'=>1,
+                    'is_public'=>0));
+             
+            $this->builders[] = FixtureBuilder::build('owner_instances', array(
+                    'owner_id'=>2,
+                    'instance_id'=>$i,
+                    'auth_error'=>''));
+        
+        }
+    }
+    
 }
