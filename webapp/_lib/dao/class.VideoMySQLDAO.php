@@ -114,11 +114,11 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
 
     public function getVideoByID($video_id, $network) {
         $q = "SELECT po.id, po.post_id, po.author_user_id, po.author_username, po.author_fullname, po.author_avatar, ";
-        $q .= "po.post_text, po.is_protected, po.location, po.place, po.geo, po.pub_date, po.reply_count_cache, ";
-        $q .= "po.network, vid.id, vid.post_key, vid.description, vid.likes, vid.dislikes, vid.views, ";
-        $q .= "vid.minutes_watched, vid.average_view_duration, vid.average_view_percentage, vid.favorites_added, ";
-        $q .= "vid.favorites_removed, vid.shares, vid.subscribers_gained, vid.subscribers_lost ";
-        $q .= "FROM #prefix#posts po JOIN #prefix#videos vid ON po.id = vid.post_key ";
+        $q .= "po.post_text, po.is_protected, po.location, po.place, po.geo, pub_date + interval #gmt_offset# hour as ";
+        $q .= "adj_pub_date, po.pub_date, po.reply_count_cache, po.network, vid.id, vid.post_key, vid.description, ";
+        $q .= "vid.dislikes, vid.views, vid.minutes_watched, vid.average_view_duration, vid.average_view_percentage, ";
+        $q .= "vid.favorites_added, vid.favorites_removed, vid.shares, vid.subscribers_gained, vid.subscribers_lost, ";
+        $q .= "vid.likes FROM #prefix#posts po JOIN #prefix#videos vid ON po.id = vid.post_key ";
         $q .= "WHERE po.post_id=:video_id AND po.network=:network";
         $vars = array(
             ':video_id'=>$video_id,
@@ -132,5 +132,110 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
         else{
             return null;
         }
+    }
+
+    public function getHighestLikes($username, $network, $duration=null, $start_date=null) {
+        $q = "SELECT MAX(likes) AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            if($start_date == null) {
+                $start_date = date('Y-m-d');
+            }
+            $q .= "AND pub_date >= DATE_SUB(:start, INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+            $vars[':start'] = $start_date;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getAverageLikeCount($username, $network, $duration=null, $start_date=null) {
+        $q = "SELECT AVG(likes) AS count FROM #prefix#posts as posts ";
+        $q .= "JOIN #prefix#videos as videos ON posts.id = videos.post_key WHERE author_username =:username ";
+        $q .= "AND network =:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            if($start_date == null) {
+                $start_date = date('Y-m-d');
+            }
+            $q .= "AND pub_date >= DATE_SUB(:start, INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+            $vars[':start'] = $start_date;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function doesUserHaveVideosWithLikesSinceDate($network_username, $network, $duration, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+
+        $q = "SELECT posts.id FROM #prefix#posts as posts JOIN #prefix#videos AS videos ON posts.id = videos.post_key ";
+        $q .= "WHERE network=:network and author_username=:author_username AND in_reply_to_user_id IS null ";
+        $q .= "AND in_reply_to_post_id IS null AND likes > 0 ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :duration DAY) LIMIT 1";
+        $vars = array(
+            ':author_username'=>$network_username,
+            ':network'=>$network,
+            ':duration'=>(int)$duration,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        if (sizeof($result) < 1 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function getHotVideos($network_username, $network, $limit, $column, $as=null) {
+        $q .= "SELECT $column ";
+        if($as != null ) {
+            $q .= "AS '$as'";
+        }
+        $q .= ", pub_date, post_text FROM #prefix#posts as posts JOIN #prefix#videos as videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:username AND ";
+        $q .= "network=:network AND $column > 0 ORDER BY pub_date DESC LIMIT :limit";
+        $vars = array(
+            ':username'=>$network_username,
+            ':network'=>$network,
+            ':limit'=>(int)$limit
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+
+    /**
+     * Convert hot video data to JSON for Google Charts
+     * @param arr $client_usage Array returned from VideoDAO::getHotPosts
+     * @return str JSON
+     */
+    public static function getHotVideosVisualizationData($hot_videos, $column) {
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Video Title'),
+        array('type' => 'number', 'label' => $column),
+        );
+        $result_set = array();
+        foreach ($hot_videos as $video) {
+            $result_set[] = array('c' => array(
+            array('v' => $video['post_text'], 'f' => $video['post_text']),
+            array('v' => intval($video[$column])),
+            ));
+        }
+        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
     }
 }
