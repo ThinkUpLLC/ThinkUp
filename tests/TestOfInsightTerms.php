@@ -63,6 +63,27 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($text, "Your status update got 3 comments from 2 friends");
     }
 
+    public function testGetMultiplierAdverb() {
+        $terms = new InsightTerms('youtube');
+        $this->assertEqual($terms->getMultiplierAdverb(1), '1x');
+        $this->assertEqual($terms->getMultiplierAdverb(2), 'double');
+        $this->assertEqual($terms->getMultiplierAdverb(3), 'triple');
+        $this->assertEqual($terms->getMultiplierAdverb(4), 'quadruple');
+        $this->assertEqual($terms->getMultiplierAdverb(5), '5x');
+        $this->assertEqual($terms->getMultiplierAdverb(1), '1x');
+        $this->assertEqual($terms->getMultiplierAdverb(0.5), 'half');
+        $this->assertEqual($terms->getMultiplierAdverb(0.3), 'a third of');
+        $this->assertEqual($terms->getMultiplierAdverb(0.25), 'a quarter of');
+        $this->assertEqual($terms->getMultiplierAdverb(0.1), '0.1x');
+    }
+
+    public function testGetOccurrencesAdverb() {
+        $terms = new InsightTerms('youtube');
+        $this->assertEqual($terms->getOccurrencesAdverb(1), 'once');
+        $this->assertEqual($terms->getOccurrencesAdverb(2), 'twice');
+        $this->assertEqual($terms->getOccurrencesAdverb(3), '3 times');
+    }
+
     public function testGetSyntacticTimeDifference() {
         $delta_1 = 60 * 60 * 3; // 3 hours
         $delta_2 = 60 * 6; // 6 minutes
