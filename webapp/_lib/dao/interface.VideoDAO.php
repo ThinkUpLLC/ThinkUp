@@ -45,4 +45,51 @@ interface VideoDAO {
      * @return Video Object Containing all the videos details
      */
     public function getVideoByID($video_id, $network);
+    /**
+     * Returns the highest number of likes a users video has, since $since_date if it is set or since today if it
+     * is null and for all time since $since_date if $duration is null or for $duration days before $since_date if it
+     * is set.
+     * days if it is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int The highest percentage of likes a users video has
+     */
+    public function getHighestLikes($username, $network, $duration=null, $since_date=null);
+    /**
+     * Returns the average number of likes a users videos has, since $since_date if it is set or since today if it
+     * is null and for all time since $since_date if $duration is null or for $duration days before $since_date if it
+     * is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int The average percentage of likes a users video has
+     */
+    public function getAverageLikeCount($username, $network, $duration=null);
+    /**
+     * Returns true if the user has posted videos which have likes in $duration days since today if $since is null or
+     * since $since if it is not.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the check, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int True or False
+     */
+    public function doesUserHaveVideosWithLikesSinceDate($username, $network, $duration, $since=null);
+    /**
+     * Returns the $column count of the most recent $limit videos.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $limit The maximum number of videos to return
+     * @param  str $column The name of the column to show in the graph e.g. likes, dislikes etc.
+     * @param  str $as If set renames the column selected in the results, useful for formatting names in the graph
+     * @return Array An array of video $column counts, designed to be fed into getHotVideosVisualizationData()
+     */
+    public function getHotVideos($username, $network, $limit, $column, $as=null);
+
 }
