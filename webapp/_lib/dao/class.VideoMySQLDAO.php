@@ -133,4 +133,42 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
             return null;
         }
     }
+
+    public function getHotVideos($network_username, $network, $limit, $column, $as=null) {
+        $q .= "SELECT $column ";
+        if($as != null ) {
+            $q .= "AS '$as'";
+        }
+        $q .= ", pub_date, post_text FROM #prefix#posts as posts JOIN #prefix#videos as videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:username AND ";
+        $q .= "network=:network AND $column > 0 ORDER BY pub_date DESC LIMIT :limit";
+        $vars = array(
+            ':username'=>$network_username,
+            ':network'=>$network,
+            ':limit'=>(int)$limit
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+
+    /**
+     * Convert hot video data to JSON for Google Charts
+     * @param arr $client_usage Array returned from VideoDAO::getHotPosts
+     * @return str JSON
+     */
+    public static function getHotVideosVisualizationData($hot_videos, $column) {
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Video Title'),
+        array('type' => 'number', 'label' => $column),
+        );
+        $result_set = array();
+        foreach ($hot_videos as $video) {
+            $result_set[] = array('c' => array(
+            array('v' => $video['post_text'], 'f' => $video['post_text']),
+            array('v' => intval($video[$column])),
+            ));
+        }
+        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
+    }
 }

@@ -43,7 +43,6 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->dao = new VideoMySQLDAO();
         parent::setUp();
         $config = Config::getInstance();
-        $this->builders = self::buildData();
     }
 
     public function tearDown() {
@@ -95,8 +94,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
     }
 
-    public function testAddPost(){
-
+    public function testAddPost() {
         $video_attributes['description'] = "Watch my youtube video";
         $video_attributes['post_text'] = "My Great Video";
         $video_attributes['likes'] = 200;
@@ -158,6 +156,7 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetVideoByIDExists() {
+        $this->builders = self::buildData();
         $video = $this->dao->getVideoByID('tfgdf4es', 'youtube');
         $this->assertTrue(isset($video));
         $this->assertEqual($video->post_id, 'tfgdf4es');
@@ -185,12 +184,13 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($video->network, 'youtube');
     }
 
-    public function testGetVideoByIDDoesNotExist(){
+    public function testGetVideoByIDDoesNotExist() {
         $video = $this->dao->getVideoByID(100000001, 'youtube');
         $this->assertTrue(!isset($video));
     }
 
-    public function testUpdateVideoCounts(){
+    public function testUpdateVideoCounts() {
+        $this->builders = self::buildData();
         $video_attributes['post_id'] = 'tfgdf4es';
         $video_attributes['likes'] = 25;
         $video_attributes['dislikes'] = 40;
@@ -219,8 +219,37 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($video->minutes_watched, 824);
         $this->assertEqual($video->average_view_duration, 50004110);
         $this->assertEqual($video->average_view_percentage, 65);
-
     }
 
+    public function testGetHotVideos() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10, 'average_view_percentage'=>10));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>10));
+
+        $post_builder3 = FixtureBuilder::build('posts', array('id'=>3, 'post_id'=>'3',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 3', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder3 = FixtureBuilder::build('videos', array('id'=>3, 'post_key'=>'3',
+        'likes'=>50, 'dislikes'=>50, 'average_view_percentage'=>10));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHotVideos('ev', 'youtube', 10, 'likes');
+        $result2 = $video_dao->getHotVideos('ev', 'youtube', 10, 'likes', 'Likes');
+
+        $this->assertEqual(sizeof($result), 3);
+        $this->assertEqual($result[0]['likes'], 50);
+        $this->assertEqual($result[1]['likes'], 50);
+        $this->assertEqual($result[2]['likes'], 90);
+
+        $this->assertEqual(sizeof($result2), 3);
+        $this->assertEqual($result2[0]['Likes'], 50);
+        $this->assertEqual($result2[1]['Likes'], 50);
+        $this->assertEqual($result2[2]['Likes'], 90);
+    }
 
 }
