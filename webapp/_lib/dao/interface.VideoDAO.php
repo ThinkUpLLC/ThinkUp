@@ -45,4 +45,15 @@ interface VideoDAO {
      * @return Video Object Containing all the videos details
      */
     public function getVideoByID($video_id, $network);
+    /**
+     * Returns the $column count of the most recent $limit videos.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $limit The maximum number of videos to return
+     * @param  str $column The name of the column to show in the graph e.g. likes, dislikes etc.
+     * @param  str $as If set renames the column selected in the results, useful for formatting names in the graph
+     * @return Array An array of video $column or $as counts if $as is set, designed to be fed into
+     * getHotVideosVisualizationData()
+     */
+    public function getHotVideos($username, $network, $limit, $column, $as=null);
 }
