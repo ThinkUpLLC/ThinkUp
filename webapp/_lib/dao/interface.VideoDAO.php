@@ -56,4 +56,24 @@ interface VideoDAO {
      * getHotVideosVisualizationData()
      */
     public function getHotVideos($username, $network, $limit, $column, $as=null);
+    /**
+     * Returns the average number of minutes people have spent viewing the users videos, for all time if duration is not
+     * set and for the last $duration days if it is.
+     * @param  str $user_name The users network username.
+     * @param  str $network   The network the video was posted on.
+     * @param  int duration  How many days worth of videos to include in the calculation, defaults to null which
+     *                       includes every video from all time.
+     * @return int  The average number of minutes the users videos were viewed for.
+     */
+    public function getAverageMinutesViewed($user_name, $network, $duration=null);
+    /**
+     * Returns the highest number of minutes people have spent viewing a users videos, for all time if duration is not
+     * set and for the last $duration days if it is.
+     * @param  str $user_name The users network username.
+     * @param  str $network   The network the video was posted on.
+     * @param  int duration  How many days worth of videos to include in the calculation, defaults to null which
+     *                       includes every video from all time.
+     * @return int  The highest number of minutes a users video has been viewed for.
+     */
+    public function getHighestMinutesViewed($user_name, $network, $duration=null);
 }

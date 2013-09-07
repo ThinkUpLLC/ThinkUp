@@ -252,4 +252,62 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result2[2]['Likes'], 90);
     }
 
+    public function testGetAverageMinutesViewed() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_user_id'=>'1', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'My Great Video',
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'youtube', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'minutes_watched'=>2, 'title'=>'The first video', 'average_view_percentage'=>65.4));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_user_id'=>'1', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'My Great Video 2',
+        'source'=>'web', 'pub_date'=>'-40d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'youtube', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'minutes_watched'=>4, 'title'=>'The second video', 'average_view_percentage'=>65.4));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageMinutesViewed('ev', 'youtube');
+        $this->assertEqual($result, 3);
+
+        $result2 = $video_dao->getAverageMinutesViewed('ev', 'youtube', 5);
+        $this->assertEqual($result2, 2);
+    }
+
+    public function testGetHighestMinutesViewed() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_user_id'=>'1', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'My Great Video',
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'youtube', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'minutes_watched'=>2, 'title'=>'The first video', 'average_view_percentage'=>65.4));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_user_id'=>'1', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'My Great Video 2',
+        'source'=>'web', 'pub_date'=>'-40d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'youtube', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'minutes_watched'=>4, 'title'=>'The second video', 'average_view_percentage'=>65.4));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHighestMinutesViewed('ev', 'youtube');
+        $this->assertEqual($result, 4);
+
+        $result2 = $video_dao->getHighestMinutesViewed('ev', 'youtube', 5);
+        $this->assertEqual($result2, 2);
+    }
+
 }
