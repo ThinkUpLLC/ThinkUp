@@ -350,4 +350,18 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
             return true;
         }
     }
+
+    public function getNetSubscriberChange($username, $network, $limit) {
+        $q = "SELECT (subscribers_gained - subscribers_lost) AS 'Subscriber Change', pub_date, post_text FROM ";
+        $q .= "#prefix#videos AS videos JOIN #prefix#posts AS posts ON posts.id = videos.post_key WHERE ";
+        $q .= "author_username=:username AND network=:network AND (subscribers_gained - subscribers_lost) != 0 ";
+        $q .= "ORDER BY pub_date LIMIT :limit";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network,
+            ':limit'=>$limit
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
 }
