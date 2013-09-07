@@ -66,7 +66,8 @@ class TestOfixtureBuilder extends UnitTestCase {
             'numeric_ip_address int default 2015153756,' .
             'a_point point,' .
             'a_polygon polygon,' .
-            'worth decimal(11,2)  default 12.99' .
+            'worth decimal(11,2)  default 12.99,' .
+            'a_float float(11,2)  default 11.33' .
             ')');
     }
 
@@ -88,6 +89,9 @@ class TestOfixtureBuilder extends UnitTestCase {
 
         // test_id is an int?
         $this->assertEqual(1, $builder->columns['test_id'], 'we have a test_id');
+
+        // a_float is a float?
+        $this->assertPattern('/[11][.][0-9][0-9]/', $builder->columns['a_float'], 'we have a float');
 
         // test fav_food enum
         $enum_array = array('red', 'blue', 'green');
@@ -163,7 +167,8 @@ class TestOfixtureBuilder extends UnitTestCase {
         $builder5 = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
         $mysql_date = strtotime( $builder3->columns['date_created'] );
         $match_date = time() + (60 * 60 * 24);
-        $stmt = $this->pdo->query( 'select t.*, AsText(a_point) as text_point from ' . $this->test_table . ' as t where id = 5');
+        $stmt = $this->pdo->query( 'select t.*, AsText(a_point) as text_point from ' . $this->test_table .
+        ' as t where id = 5');
         $data = $stmt->fetch();
         $this->assertEqual('POINT(27.1 20.2)', $data['text_point']);
 
@@ -224,7 +229,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
-        $this->assertEqual(count($columns), 13, 'column count valid');
+        $this->assertEqual(count($columns), 14, 'column count valid');
     }
 
 
