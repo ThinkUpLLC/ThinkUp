@@ -252,4 +252,64 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result2[2]['Likes'], 90);
     }
 
+    public function testGetHighestLikes() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHighestLikes('ev', 'youtube');
+        $this->assertEqual($result, 90);
+
+        $result2 = $video_dao->getHighestLikes('ev', 'youtube', 5, date('Y-m-d'));
+        $this->assertEqual($result2, 50);
+    }
+
+    public function testGetAverageLikeCount() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageLikeCount('ev', 'youtube');
+        $this->assertEqual($result, 70);
+
+        $result2 = $video_dao->getAverageLikeCount('ev', 'youtube', 5);
+        $this->assertEqual($result2, 50);
+    }
+
+    public function testDoesUserHaveVideosWithLikesSinceDate() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube',
+        'in_reply_to_user_id'=>null, 'in_reply_to_post_id'=>null));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'likes'=>90, 'dislikes'=>10));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube',
+        'in_reply_to_user_id'=>null, 'in_reply_to_post_id'=>null));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'likes'=>50, 'dislikes'=>50));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->doesUserHaveVideosWithLikesSinceDate('ev', 'youtube', 10, null);
+        $this->assertTrue($result);
+
+        $result2 = $video_dao->doesUserHaveVideosWithLikesSinceDate('ev', 'youtube', 5,
+        date('Y-m-d', strtotime('+200 days')));
+        $this->assertFalse($result2);
+    }
+
 }
