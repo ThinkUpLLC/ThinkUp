@@ -367,4 +367,68 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         date('Y-m-d', strtotime('+200 days')));
         $this->assertFalse($result2);
     }
+
+    public function testGetHighestViews() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1', 'author_username'=>'ev',
+        'post_text'=>'My Great Video', 'pub_date'=>'-41d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1', 'views'=>4,
+        'average_view_percentage'=>54.6));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2', 'author_username'=>'ev',
+        'post_text'=>'My Great Video 2', 'pub_date'=>'-1d', 'network'=>'youtube' ));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2', 'views'=>2,
+        'average_view_percentage'=>54.6));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getHighestViews('ev', 'youtube');
+        $this->assertEqual($result, 4);
+
+        $result2 = $video_dao->getHighestViews('ev', 'youtube', 5);
+        $this->assertEqual($result2, 2);
+    }
+
+    public function testGetAverageViews() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1', 'author_username'=>'ev',
+        'post_text'=>'My Great Video', 'pub_date'=>'-41d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1', 'views'=>4,
+        'average_view_percentage'=>54.6));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2', 'author_username'=>'ev',
+        'post_text'=>'My Great Video 2', 'pub_date'=>'-1d', 'network'=>'youtube' ));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2', 'views'=>2,
+        'average_view_percentage'=>54.6));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageViews('ev', 'youtube');
+        $this->assertEqual($result, 3);
+
+        $result2 = $video_dao->getAverageViews('ev', 'youtube', 5);
+        $this->assertEqual($result2, 2);
+    }
+
+    public function testDoesUserHaveVideosWithViewsSinceDate() {
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->doesUserHaveVideosWithViewsSinceDate('user', 'youtube', 7);
+        $this->assertFalse($result);
+
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1', 'author_username'=>'ev',
+        'post_text'=>'My Great Video', 'pub_date'=>'-3d', 'network'=>'youtube', 'in_reply_to_post_id'=>null,
+        'in_reply_to_user_id'=>null));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1', 'views'=>4,
+        'average_view_percentage'=>54.6));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2', 'author_username'=>'ev',
+        'post_text'=>'My Great Video 2', 'pub_date'=>'-5d', 'network'=>'youtube', 'in_reply_to_post_id'=>null,
+        'in_reply_to_user_id'=>null));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2', 'views'=>2,
+        'average_view_percentage'=>54.6));
+
+        // They do have replies from within 30 days
+        $result = $video_dao->doesUserHaveVideosWithViewsSinceDate('ev', 'youtube', 30);
+        $this->assertTrue($result);
+        // Set date to some time 30+ days in the future and were guaranteed to have no replies since then
+        $result = $video_dao->doesUserHaveVideosWithViewsSinceDate('ev', 'youtube', 30,
+        date('Y-m-d', strtotime('+31 days')));
+        $this->assertFalse($result);
+    }
 }

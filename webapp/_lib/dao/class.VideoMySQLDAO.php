@@ -286,4 +286,68 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
             return true;
         }
     }
+
+    public function getAverageViews($username, $network, $duration=null, $start_date=null) {
+        if ($start_date == null) {
+            $start_date = date('Y-m-d');
+        }
+        $q = "SELECT AVG(views) AS count FROM #prefix#posts as posts JOIN #prefix#videos as videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:username AND network=:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if ($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(:start_date, INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+            $vars[':start_date'] = $start_date;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getHighestViews($username, $network, $duration=null, $start_date=null) {
+        if($start_date == null) {
+            $start_date = date('Y-m-d');
+        }
+        $q = "SELECT MAX(views) AS count FROM #prefix#posts as posts JOIN #prefix#videos as videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:username AND network=:network ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        if ($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(:start_date, INTERVAL :duration DAY)";
+            $vars[':duration'] = $duration;
+            $vars[':start_date'] = $start_date;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function doesUserHaveVideosWithViewsSinceDate($network_username, $network, $duration, $since=null) {
+        if ($since==null) {
+            $since = date('Y-m-d');
+        }
+        $q = "SELECT posts.id FROM #prefix#posts as posts JOIN #prefix#videos AS videos ON posts.id = videos.post_key ";
+        $q .= "WHERE network=:network and author_username=:author_username AND in_reply_to_user_id IS null ";
+        $q .= "AND in_reply_to_post_id IS null AND views > 0 ";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :duration DAY) LIMIT 1";
+        $vars = array(
+            ':author_username'=>$network_username,
+            ':network'=>$network,
+            ':duration'=>(int)$duration,
+            ':since'=>$since
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        if (sizeof($result) < 1 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
