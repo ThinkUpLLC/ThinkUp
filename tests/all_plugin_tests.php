@@ -95,6 +95,7 @@ $plugin_tests->add(new TestOfViewDurationInsight());
 $plugin_tests->add(new TestOfLikeSpikeInsight());
 $plugin_tests->add(new TestOfViewSpikeInsight());
 $plugin_tests->add(new TestOfSubscriberChangeInsight());
+$plugin_tests->add(new TestOfMinutesViewedInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());
