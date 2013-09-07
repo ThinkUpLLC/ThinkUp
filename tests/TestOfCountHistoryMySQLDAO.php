@@ -897,4 +897,25 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         //beyond our "don't feel bad about yourself" threshold of 10, so should be null
         $this->assertNull($result['milestone']);
     }
+
+    public function testGetLatestCountByNetworkUserIDAndType() {
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>930061, 'network'=>'youtube',
+        'date'=>'2013-04-21 11:52:01', 'count'=>125, 'post_id'=>'Hbfgh48', 'type'=>'views'));
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>930061, 'network'=>'youtube',
+        'date'=>'2013-04-21 11:51:01', 'count'=>45, 'post_id'=>'Hbfgh48', 'type'=>'views'));
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>930061, 'network'=>'youtube',
+        'date'=>'2013-04-21 11:50:01', 'count'=>25, 'post_id'=>'Hbfgh48', 'type'=>'views'));
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>930061, 'network'=>'youtube',
+        'date'=>'2013-04-21 11:49:01', 'count'=>10, 'post_id'=>'Jhgndf7', 'type'=>'views'));
+
+        $dao = new CountHistoryMySQLDAO();
+        $result = $dao->getLatestCountByNetworkUserIDAndType(930061, 'youtube', 'views');
+        // Check we got the correct result back
+        $this->assertEqual($result['network_user_id'], 930061);
+        $this->assertEqual($result['network'], 'youtube');
+        $this->assertEqual($result['date'], '2013-04-21');
+        $this->assertEqual($result['count'], 125);
+        $this->assertEqual($result['post_id'], 'Hbfgh48');
+        $this->assertEqual($result['type'], 'views');
+    }
 }

@@ -1,0 +1,125 @@
+{
+    "encoding": "UTF-8",
+    "feed": {
+        "author": [
+            {
+                "name": {
+                    "$t": "YouTube"
+                },
+                "uri": {
+                    "$t": "http://www.youtube.com/"
+                }
+            }
+        ],
+        "category": [
+            {
+                "scheme": "http://schemas.google.com/g/2005#kind",
+                "term": "http://gdata.youtube.com/schemas/2007#comment"
+            }
+        ],
+        "entry": [
+            {
+                "author": [
+                    {
+                        "name": {
+                            "$t": "Aaron Kalair"
+                        },
+                        "uri": {
+                            "$t": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg"
+                        }
+                    }
+                ],
+                "category": [
+                    {
+                        "scheme": "http://schemas.google.com/g/2005#kind",
+                        "term": "http://gdata.youtube.com/schemas/2007#comment"
+                    }
+                ],
+                "content": {
+                    "$t": "A comment on the second page",
+                    "type": "text"
+                },
+                "id": {
+                    "$t": "http://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments/hg_HF75HJSNY38JH_ht5_fh"
+                },
+                "link": [
+                    {
+                        "href": "https://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME",
+                        "rel": "related",
+                        "type": "application/atom+xml"
+                    },
+                    {
+                        "href": "https://www.youtube.com/watch?v=HbeUSp5w5ME",
+                        "rel": "alternate",
+                        "type": "text/html"
+                    },
+                    {
+                        "href": "https://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments/jm_SGXNfF6AmF20tsHqF_2h_S_fV_0l2DU3AfqjbsNc",
+                        "rel": "self",
+                        "type": "application/atom+xml"
+                    }
+                ],
+                "published": {
+                    "$t": "2013-06-10T18:14:33.000Z"
+                },
+                "title": {
+                    "$t": "A comment on the second page",
+                    "type": "text"
+                },
+                "updated": {
+                    "$t": "2013-06-05T08:13:43.000Z"
+                },
+                "yt$channelId": {
+                    "$t": "UC-OYNzm3cpgi4goaDmX_sDg"
+                },
+                "yt$videoid": {
+                    "$t": "HbeUSp5w5ME"
+                }
+            }
+        ],
+        "generator": {
+            "$t": "YouTube data API",
+            "uri": "http://gdata.youtube.com",
+            "version": "2.1"
+        },
+        "id": {
+            "$t": "http://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments"
+        },
+        "link": [
+            {
+                "href": "https://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments",
+                "rel": "http://schemas.google.com/g/2005#feed",
+                "type": "application/atom+xml"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments/batch",
+                "rel": "http://schemas.google.com/g/2005#batch",
+                "type": "application/atom+xml"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/videos/HbeUSp5w5ME/comments?alt=json&start-index=1&max-results=25",
+                "rel": "self",
+                "type": "application/atom+xml"
+            }
+        ],
+        "logo": {
+            "$t": "http://www.youtube.com/img/pic_youtubelogo_123x63.gif"
+        },
+        "openSearch$itemsPerPage": {
+            "$t": 25
+        },
+        "openSearch$startIndex": {
+            "$t": 1
+        },
+        "openSearch$totalResults": {
+            "$t": 1
+        },
+        "updated": {
+            "$t": "2013-07-28T22:25:34.769Z"
+        },
+        "xmlns": "http://www.w3.org/2005/Atom",
+        "xmlns$openSearch": "http://a9.com/-/spec/opensearchrss/1.0/",
+        "xmlns$yt": "http://gdata.youtube.com/schemas/2007"
+    },
+    "version": "1.0"
+}

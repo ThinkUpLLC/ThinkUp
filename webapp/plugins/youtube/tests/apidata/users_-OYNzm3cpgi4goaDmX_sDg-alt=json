@@ -1,0 +1,106 @@
+{
+    "encoding": "UTF-8",
+    "entry": {
+        "author": [
+            {
+                "name": {
+                    "$t": "Aaron Kalair"
+                },
+                "uri": {
+                    "$t": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg"
+                }
+            }
+        ],
+        "category": [
+            {
+                "scheme": "http://schemas.google.com/g/2005#kind",
+                "term": "http://gdata.youtube.com/schemas/2007#userProfile"
+            }
+        ],
+        "content": {
+            "$t": "",
+            "type": "text"
+        },
+        "gd$feedLink": [
+            {
+                "countHint": 0,
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/subscriptions",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.subscriptions"
+            },
+            {
+                "countHint": 0,
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/contacts",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.contacts"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/inbox",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.inbox"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/playlists",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.playlists"
+            },
+            {
+                "countHint": 3,
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/uploads",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.uploads"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg/newsubscriptionvideos",
+                "rel": "http://gdata.youtube.com/schemas/2007#user.newsubscriptionvideos"
+            }
+        ],
+        "id": {
+            "$t": "http://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg"
+        },
+        "link": [
+            {
+                "href": "https://www.youtube.com/channel/UC-OYNzm3cpgi4goaDmX_sDg",
+                "rel": "alternate",
+                "type": "text/html"
+            },
+            {
+                "href": "https://gdata.youtube.com/feeds/api/users/-OYNzm3cpgi4goaDmX_sDg",
+                "rel": "self",
+                "type": "application/atom+xml"
+            }
+        ],
+        "media$thumbnail": {
+            "url": "https://lh3.googleusercontent.com/-Z2vFxu2wO6E/AAAAAAAAAAI/AAAAAAAAAAA/Aauqlj8q9zg/s88-c-k/photo.jpg"
+        },
+        "published": {
+            "$t": "2011-10-03T10:01:18.000Z"
+        },
+        "title": {
+            "$t": "Aaron Kalair",
+            "type": "text"
+        },
+        "updated": {
+            "$t": "2013-07-12T09:13:48.000Z"
+        },
+        "xmlns": "http://www.w3.org/2005/Atom",
+        "xmlns$gd": "http://schemas.google.com/g/2005",
+        "xmlns$media": "http://search.yahoo.com/mrss/",
+        "xmlns$yt": "http://gdata.youtube.com/schemas/2007",
+        "yt$firstName": {
+            "$t": "Aaron"
+        },
+        "yt$googlePlusUserId": {
+            "$t": "115383827382290096528"
+        },
+        "yt$lastName": {
+            "$t": "Kalair"
+        },
+        "yt$statistics": {
+            "lastWebAccess": "1970-01-01T00:00:00.000Z",
+            "subscriberCount": "0",
+            "totalUploadViews": "24",
+            "videoWatchCount": 0,
+            "viewCount": "0"
+        },
+        "yt$username": {
+            "$t": "-OYNzm3cpgi4goaDmX_sDg"
+        }
+    },
+    "version": "1.0"
+}
