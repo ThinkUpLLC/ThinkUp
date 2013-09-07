@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/googleplus/model/mock.GooglePlusAPIAccessor.php
+ * ThinkUp/webapp/plugins/youtube/model/mock.YouTubeAnalyticsAPIAccessor.php
  *
  * LICENSE:
  *
@@ -19,21 +19,21 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Mock Google+ API Accessor
+ * Mock YouTube Analytics API Accessor
  *
- * Reads test data files instead of the actual Google servers for the purposes of running tests.
+ * Reads test data files instead of the actual YouTube servers for the purposes of running tests.
  *
- * Copyright (c) 2011-2013 Gina Trapani
+ * Copyright (c) 2013 Aaron Kalair
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Aaron Kalair <aaronkalair[at]gmail[dot]com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2013 Gina Trapani
+ * @copyright 2013 Aaron Kaliar
  */
-class GooglePlusAPIAccessor {
+class YouTubeAnalyticsAPIAccessor {
     /**
      * @var str
      */
-    var $api_domain = 'https://www.googleapis.com/plus/v1/';
+    var $api_domain = 'https://www.googleapis.com/youtube/analytics/v1/';
     /**
      * @var str
      */
@@ -41,26 +41,65 @@ class GooglePlusAPIAccessor {
     /**
      * @var str
      */
-    var $data_location = 'webapp/plugins/googleplus/tests/apidata/';
+    var $data_location = 'webapp/plugins/youtube/tests/apidata/';
+
     /**
-     * Make a Google+ API request.
+     * Make a YouTube API request.
      * @param str $path
      * @param str $access_token
      * @return array Decoded JSON response
      */
     public function apiRequest($path, $access_token, $fields=null) {
+        //Todays date, used to detect dynamically changing filenames
+        $date = date('Y-m-d');
+        $two_days_ago = date('Y-m-d', strtotime('-2 days'));
+
+        //The name of a file whose name is too long for ThinkUp to use
+        $file1 = 'reports-access_token=at-ids=channel==UC-start-date=2013-04-21-end-date='.$date.'-metrics=favorit';
+        $file1 .= 'esAdded,favoritesRemoved,shares,subscribersGained,subscribersLost,estimatedMinutesWatched,averageVi';
+        $file1 .= 'ewDuration,averageViewPercentage,views,likes,dislikes-filters=video==H';
+
+        // The name of a another file whose name is too long for ThinkUp to use
+        $file2 = 'reports-access_token=at-ids=channel==UC-start-date=2013-06-05-end-date='.$date.'-metrics=favorit';
+        $file2 .= 'esAdded,favoritesRemoved,shares,subscribersGained,subscribersLost,estimatedMinutesWatched,averageVi';
+        $file2 .= 'ewDuration,averageViewPercentage,views,likes,dislikes-filters=video==g';
+
+        $file3 = 'reports-access_token=at-ids=channel==UC-start-date=2013-06-05-end-date='.$date.'-metrics=favorit';
+        $file3 .= 'esAdded,favoritesRemoved,shares,subscribersGained,subscribersLost,estimatedMinutesWatched,averageVi';
+        $file3 .= 'ewDuration,averageViewPercentage,views,likes,dislikes-filters=video==a';
+
+        $file4 = 'reports-access_token=at-ids=channel==UC-start-date='.$two_days_ago.'-end-date='.$two_days_ago.'-metri';
+        $file4 .= 'cs=favoritesAdded,favoritesRemoved,shares,subscribersGained,subscribersLost,estimatedMinutesWatche';
+        $file4 .= 'd,averageViewDuration,averageViewPercentage,views,likes,dislikes-filters=video==a';
+
         $url = $this->api_domain.$path.'?access_token='.$access_token;
         if ($fields != null ) {
             foreach ($fields as $key=>$value) {
                 $url = $url.'&'.$key.'='.$value;
             }
         }
+
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . $this->data_location;
         $url = str_replace($this->api_domain, '', $url);
         $url = str_replace(':', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
+
+        // Two file names are too long for ThinkUp so we hash those filenames and read a file with that name instead
+        if($url == $file1) {
+            $url = '25f3d173cf75c34c8005370a066d39ed';
+        }
+        if($url == $file2) {
+            $url = '18c645d6b4cb20d1753fc14fdff50dcd';
+        }
+        if($url == $file3) {
+            $url = '73ebb609998a4d8d1bf26d981239863f';
+        }
+        if($url == $file4) {
+            $url = 'e6eaf8352122390429b3026a48692ad8';
+        }
+
         return self::decodeFileContents($FAUX_DATA_PATH.$url);
     }
 
@@ -74,15 +113,13 @@ class GooglePlusAPIAccessor {
             exec('touch '.$file_path);
         }
         if ($debug) {
-            echo "READING LOCAL TEST DATA FILE: ".$file_path. '
-';
+            echo "READING LOCAL TEST DATA FILE: ".$file_path. '';
         }
         $contents=  file_get_contents($file_path);
         if ($decode_json) {
             $decoded = json_decode($contents);
             if ($decoded == null && $debug) {
-                echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/
-";
+                echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/";
             }
             return $decoded;
         } else {
@@ -92,7 +129,7 @@ class GooglePlusAPIAccessor {
 
     /**
      * Make a Graph API request with the absolute URL. This URL needs to include the
-     * https://www.googleapis.com/plus/v1/ at the start and the access token at the end as well as everything in
+     * prefix at the start and the access token at the end as well as everything in
      * between. It is literally the raw URL that needs to be passed in.
      *
      * @param str $path

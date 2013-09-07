@@ -67,6 +67,9 @@ $plugin_tests->add(new TestOfGooglePlusPluginConfigurationController());
 $plugin_tests->add(new TestOfFoursquarePlugin());
 $plugin_tests->add(new TestOfFoursquareCrawler());
 $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
+$plugin_tests->add(new TestOfYouTubeCrawler());
+$plugin_tests->add(new TestOfYouTubePlugin());
+$plugin_tests->add(new TestOfYouTubePluginConfigurationController());
 //Insights
 $plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());

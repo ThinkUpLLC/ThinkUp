@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/googleplus/model/mock.GooglePlusAPIAccessor.php
+ * ThinkUp/webapp/plugins/youtube/model/mock.YouTubeAPIAccessor.php
  *
  * LICENSE:
  *
@@ -19,21 +19,21 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Mock Google+ API Accessor
+ * Mock YouTube API Accessor
  *
- * Reads test data files instead of the actual Google servers for the purposes of running tests.
+ * Reads test data files instead of the actual YouTube servers for the purposes of running tests.
  *
- * Copyright (c) 2011-2013 Gina Trapani
+ * Copyright (c) 2013 Aaron Kalair
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Aaron Kalair <aaronkalair[at]gmail[dot]com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2013 Gina Trapani
+ * @copyright 2013 Aaron Kalair
  */
-class GooglePlusAPIAccessor {
+class YouTubeAPIAccessor {
     /**
      * @var str
      */
-    var $api_domain = 'https://www.googleapis.com/plus/v1/';
+    var $api_domain = 'https://www.googleapis.com/youtube/v3/';
     /**
      * @var str
      */
@@ -41,9 +41,9 @@ class GooglePlusAPIAccessor {
     /**
      * @var str
      */
-    var $data_location = 'webapp/plugins/googleplus/tests/apidata/';
+    var $data_location = 'webapp/plugins/youtube/tests/apidata/';
     /**
-     * Make a Google+ API request.
+     * Make a YouTube API request.
      * @param str $path
      * @param str $access_token
      * @return array Decoded JSON response
@@ -74,15 +74,13 @@ class GooglePlusAPIAccessor {
             exec('touch '.$file_path);
         }
         if ($debug) {
-            echo "READING LOCAL TEST DATA FILE: ".$file_path. '
-';
+            echo "READING LOCAL TEST DATA FILE: ".$file_path. "\n\n";
         }
         $contents=  file_get_contents($file_path);
         if ($decode_json) {
             $decoded = json_decode($contents);
             if ($decoded == null && $debug) {
-                echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/
-";
+                echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/";
             }
             return $decoded;
         } else {
@@ -92,7 +90,7 @@ class GooglePlusAPIAccessor {
 
     /**
      * Make a Graph API request with the absolute URL. This URL needs to include the
-     * https://www.googleapis.com/plus/v1/ at the start and the access token at the end as well as everything in
+     * prefix at the start and the access token at the end as well as everything in
      * between. It is literally the raw URL that needs to be passed in.
      *
      * @param str $path
