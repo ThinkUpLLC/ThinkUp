@@ -56,4 +56,34 @@ interface VideoDAO {
      * getHotVideosVisualizationData()
      */
     public function getHotVideos($username, $network, $limit, $column, $as=null);
+    /**
+     * Returns the average of the average view percentage for the last $duration days if $duration is not null or
+     * all time if it is.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *             the last $duration days.
+     * @return int the average of the average view percentage
+     */
+    public function getAverageOfAverageViewPercentage($username, $network, $duration=null);
+    /**
+     * Returns the lowest of the average view percentage for the last $duration days if $duration is not null or
+     * all time if it is.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *             the last $duration days.
+     * @return int the lowest of the average view percentage
+     */
+    public function getAverageViewPercentageLow($username, $network, $duration=null);
+    /**
+     * Returns the highest of the average view percentage for the last $duration days if $duration is not null or
+     * all time if it is.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *             the last $duration days.
+     * @return int the highest of the average view percentage
+     */
+    public function getAverageViewPercentageHigh($username, $network, $duration=null);
 }
