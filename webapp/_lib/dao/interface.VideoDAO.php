@@ -86,4 +86,39 @@ interface VideoDAO {
      * @return int the highest of the average view percentage
      */
     public function getAverageViewPercentageHigh($username, $network, $duration=null);
+    /**
+     * Returns the highest number of likes a users video has, since $since_date if it is set or since today if it
+     * is null and for all time since $since_date if $duration is null or for $duration days before $since_date if it
+     * is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int The highest percentage of likes a users video has
+     */
+    public function getHighestLikes($username, $network, $duration=null, $since_date=null);
+    /**
+     * Returns the average number of likes a users videos has, since $since_date if it is set or since today if it
+     * is null and for all time since $since_date if $duration is null or for $duration days before $since_date if it
+     * is set.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the count, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int The average percentage of likes a users video has
+     */
+    public function getAverageLikeCount($username, $network, $duration=null);
+    /**
+     * Returns true if the user has posted videos which have likes in $duration days since today if $since is null or
+     * since $since if it is not.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the check, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int True or False
+     */
+    public function doesUserHaveVideosWithLikesSinceDate($username, $network, $duration, $since=null);
 }
