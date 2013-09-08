@@ -34,16 +34,17 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
+        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Saturday or if we're testing
-        if (date('w') == 6 || $in_test_mode ) {
+        if (self::shouldGenerateInsight('style_stats', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts),
+        $excluded_networks=array('foursquare'))) {
             $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
             $total_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
             $average_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
             $total_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
             $average_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
-            if ( sizeof( $last_week_of_posts) > 5  && $instance->network != 'foursquare') {
+            if (sizeof( $last_week_of_posts) > 5) {
                 $this->logger->logSuccess("Calculating style stats ", __METHOD__.','.__LINE__);
                 foreach ($last_week_of_posts as $post) {
                     $total_replies["all"] += $post->reply_count_cache;
@@ -187,6 +188,8 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);
             }
         }
+
+        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 
     private function endsWith($str, $end_str) {

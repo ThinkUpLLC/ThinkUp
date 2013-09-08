@@ -35,9 +35,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $existing_insight = $this->insight_dao->getInsight("posts_on_this_day_popular_flashback", $instance->id,
-        $this->insight_date);
-        if (!isset($existing_insight)) {
+        if (self::shouldGenerateInsight('posts_on_this_day_popular_flashback', $instance)) {
             //Generate flashback post list
             $post_dao = DAOFactory::getDAO('PostDAO');
             $flashback_posts = $post_dao->getOnThisDayFlashbackPosts($instance->network_user_id, $instance->network,
@@ -66,6 +64,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                 }
             }
         }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
