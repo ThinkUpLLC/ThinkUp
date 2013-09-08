@@ -77,7 +77,6 @@ $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfFrequencyInsight());
 $plugin_tests->add(new TestOfListMembershipInsight());
-$plugin_tests->add(new TestOfMapInsight());
 $plugin_tests->add(new TestOfSavedSearchResultsInsight());
 $plugin_tests->add(new TestOfStyleStatsInsight());
 $plugin_tests->add(new TestOfMetweetInsight());
