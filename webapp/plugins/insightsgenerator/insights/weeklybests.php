@@ -36,9 +36,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Thursday or if we're testing
-        if ((date('w') == 4 || $in_test_mode) && count($last_week_of_posts)) {
+        if (self::shouldGenerateInsight('weekly_best', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
 

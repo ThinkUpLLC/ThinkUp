@@ -36,8 +36,8 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        if (date('w') == 0 || $in_test_mode) { //Sunday
+        if (self::shouldGenerateInsight('all_about_you', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
             $text = '';
             $count = 0;
             foreach ($last_week_of_posts as $post) {
@@ -75,6 +75,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 

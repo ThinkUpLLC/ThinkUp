@@ -39,9 +39,8 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Wednesday or if we're testing
-        if (date('w') == 3 || $in_test_mode ) {
+        if (self::shouldGenerateInsight('interaction_graph', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts))) {
             $user_dao = DAOFactory::getDAO('UserDAO');
 
             $hashtags_of_last_week = array();
