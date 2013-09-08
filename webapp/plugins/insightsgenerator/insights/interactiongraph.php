@@ -177,4 +177,5 @@ class InteractionGraphInsight extends InsightPluginParent implements InsightPlug
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('InteractionGraphInsight');
+//@TODO Uncomment out next line when we fix this visualization
+//$insights_plugin_registrar->registerInsightPlugin('InteractionGraphInsight');
