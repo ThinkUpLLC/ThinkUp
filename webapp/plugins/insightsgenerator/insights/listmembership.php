@@ -37,72 +37,76 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
 
-        //get new group memberships per day
-        $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
-        $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
-        $this->insight_date);
-        if (sizeof($new_groups) > 0 ) { //if not null, store insight
-            $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
-            $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
-            $instance->network, 'DAY', 15, null, 'group_memberships');
-            if (sizeof($new_groups) > 1) {
-                $group_name_list = '';
-                $group_number = 0;
-                foreach ($new_groups as $group) {
-                    if (sizeof($new_groups) > 10) { //If more than 10 lists, just display first 10
-                        if ($group_number >= 10) {
-                            if ($group_number == 10) {
-                                $group_name_list .= ", and ". (sizeof($new_groups) - 10)." more";
+        if (self::shouldGenerateInsight('new_group_memberships', $instance, $insight_date='today',
+        $regenerate_existing_insight=true)) {
+            //get new group memberships per day
+            $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
+            $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
+            $this->insight_date);
+            if (sizeof($new_groups) > 0 ) { //if not null, store insight
+                $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
+                $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
+                $instance->network, 'DAY', 15, null, 'group_memberships');
+                if (sizeof($new_groups) > 1) {
+                    $group_name_list = '';
+                    $group_number = 0;
+                    foreach ($new_groups as $group) {
+                        if (sizeof($new_groups) > 10) { //If more than 10 lists, just display first 10
+                            if ($group_number >= 10) {
+                                if ($group_number == 10) {
+                                    $group_name_list .= ", and ". (sizeof($new_groups) - 10)." more";
+                                }
+                            } else {
+                                if ($group_name_list != '') {
+                                    $group_name_list .= ", ";
+                                }
                             }
-                        } else {
-                            if ($group_name_list != '') {
-                                $group_name_list .= ", ";
+                            if ($group_number < 10 ) {
+                                $group->setMetadata();
+                                $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                             }
-                        }
-                        if ($group_number < 10 ) {
+                            $group_number++;
+                        } else  { //Display all lists
+                            if ($group == end($new_groups)) {
+                                $group_name_list .= " and ";
+                            } else {
+                                if ($group_name_list != '') {
+                                    $group_name_list .= ", ";
+                                }
+                            }
                             $group->setMetadata();
                             $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                         }
-                        $group_number++;
-                    } else  { //Display all lists
-                        if ($group == end($new_groups)) {
-                            $group_name_list .= " and ";
-                        } else {
-                            if ($group_name_list != '') {
-                                $group_name_list .= ", ";
-                            }
-                        }
-                        $group->setMetadata();
-                        $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                     }
-                }
-                $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
-                if (is_array($list_membership_count_history_by_day['history'])
-                && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
-                    $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
-                    $insight_text .=  ", bringing the total to <strong>". number_format($total_lists).
-                    " lists</strong>.";
+                    $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
+                    if (is_array($list_membership_count_history_by_day['history'])
+                    && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                        $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
+                        $insight_text .=  ", bringing the total to <strong>". number_format($total_lists).
+                        " lists</strong>.";
+                    } else {
+                        $insight_text .= ".";
+                    }
+                    $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
+                    "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    serialize($list_membership_count_history_by_day));
                 } else {
+                    $new_groups[0]->setMetadata();
+                    $insight_text = "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
+                    $new_groups[0]->keyword."</a>";
+                    if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                        $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
+                        $insight_text .= ", bringing the total to <strong>". number_format($total_lists). " lists</strong>";
+                    }
                     $insight_text .= ".";
-                }
-                $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
-                serialize($list_membership_count_history_by_day));
-            } else {
-                $new_groups[0]->setMetadata();
-                $insight_text = "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
-                $new_groups[0]->keyword."</a>";
-                if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
-                    $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
-                    $insight_text .= ", bringing the total to <strong>". number_format($total_lists). " lists</strong>";
-                }
-                $insight_text .= ".";
 
-                $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
-                serialize($list_membership_count_history_by_day));
+                    $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
+                    "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    serialize($list_membership_count_history_by_day));
+                }
             }
         }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }

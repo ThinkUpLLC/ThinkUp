@@ -46,9 +46,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
 
         if ($insight_day_of_month == 1) { //it's the first day of the month
             // Past 30 days
-            $existing_insight = $this->insight_dao->getInsight("biggest_fans_last_30_days", $instance->id,
-            $since_date);
-            if (!isset($existing_insight)) {
+            if (self::shouldGenerateInsight('biggest_fans_last_30_days', $instance, $insight_date=$since_date)) {
                 $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
                 $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 30);
@@ -61,9 +59,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
             // Past 7 days
-            $existing_insight = $this->insight_dao->getInsight("biggest_fans_last_7_days", $instance->id,
-            $since_date);
-            if (!isset($existing_insight)) {
+            if (self::shouldGenerateInsight('biggest_fans_last_7_days', $instance, $insight_date=$since_date)) {
                 $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
                 $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 7);

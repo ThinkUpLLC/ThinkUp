@@ -34,10 +34,10 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
+        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Monday or if we're testing
-        if (date('w') == 1 || $in_test_mode ) {
+        if (self::shouldGenerateInsight('frequency', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
                 $text = "$this->username posted <strong>$count times</strong> in the past week";
@@ -79,6 +79,8 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             $this->insight_dao->insertInsight("frequency", $instance->id, $this->insight_date, $prefix,
             $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
         }
+
+        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
 
