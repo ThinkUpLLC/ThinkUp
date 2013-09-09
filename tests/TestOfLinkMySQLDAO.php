@@ -325,6 +325,31 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         }
     }
 
+    /**
+     * Test of countLinksPostedByUserSinceDaysAgo Method
+     */
+    public function testCountLinksPostedByUserSinceDaysAgo() {
+        $builders = array();
+        $user_id = 12345;
+        $counter = 0;
+        while ($counter < 47) {
+            $post_key = $counter + 1760;
+            $post_date = date('Y-m-d H:i:s', strtotime('-'.$counter.' day'));
+
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_key, 'post_id'=>$post_key,
+            'network'=>'twitter', 'author_user_id'=>$user_id, 'author_username'=>'user',
+            'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
+            'post_text'=>'Link post http://example.com/'.$counter, 'pub_date'=>$post_date));
+
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+            $counter++;
+        }
+
+        $result = $this->DAO->countLinksPostedByUserSinceDaysAgo($user_id, 'twitter', 26);
+
+        $this->assertEqual($result, 27);
+    }
 
     /**
      * Test Of getPhotosByFriends Method

@@ -4043,6 +4043,28 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($result_3);
     }
 
+    public function testCountAllPostsByUserSinceDaysAgo() {
+        $builders = array();
+        $user_id = 7654321;
+        $counter = 0;
+        while ($counter < 53) {
+            $post_key = 1760 + $counter;
+            $post_date = date('Y-m-d H:i:s', strtotime('-'.$counter.' day'));
+
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_key, 'post_id'=>$post_key,
+            'network'=>'twitter', 'author_user_id'=>$user_id, 'author_username'=>'user',
+            'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
+            'post_text'=>'Sample post '.$counter, 'pub_date'=>$post_date));
+
+            $counter++;
+        }
+
+        $post_dao = new PostMySQLDAO();
+        $result = $post_dao->countAllPostsByUserSinceDaysAgo($user_id, 'twitter', 31);
+
+        $this->assertEqual($result, 32);
+    }
+
     public function testSearchPostsByUsername() {
         $post_dao = new PostMySQLDAO();
         //should be first page of 20
