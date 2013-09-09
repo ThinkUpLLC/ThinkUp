@@ -340,7 +340,7 @@ class TwitterAPIAccessorOAuth {
         //If it's a list of users, set the cursor
         if (isset($json->users)) {
             if (isset($json->next_cursor)) {
-                $this->next_cursor =  $json->next_cursor;
+                $this->next_cursor =  $json->next_cursor_str;
             }
             foreach ($json->users as $user) {
                 $parsed_payload[] = self::convertJSONtoUserArray($user);
@@ -365,7 +365,7 @@ class TwitterAPIAccessorOAuth {
         //If it's a list of IDs, set the cursor
         if (isset($json->ids)) {
             if (isset($json->next_cursor)) {
-                $this->next_cursor =  $json->next_cursor;
+                $this->next_cursor =  $json->next_cursor_str;
             }
             foreach ($json->ids as $id) {
                 $parsed_payload[] = array('id'=>$id);
@@ -427,7 +427,7 @@ class TwitterAPIAccessorOAuth {
         //If it's a list of lists, set the cursor
         if (isset($json->lists)) {
             if (isset($json->next_cursor)) {
-                $this->next_cursor =  $json->next_cursor;
+                $this->next_cursor =  $json->next_cursor_str;
             }
             foreach ($json->lists as $list) {
                 $parsed_payload[] = array(

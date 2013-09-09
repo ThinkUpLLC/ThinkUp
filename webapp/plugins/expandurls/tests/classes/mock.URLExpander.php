@@ -139,4 +139,8 @@ class URLExpander {
         }
         return $exp_url;
     }
+
+    public static function getWebPageDetails($url) {
+        return array('title'=>'test title of '.$url, 'description'=>'test description of '.$url);
+    }
 }

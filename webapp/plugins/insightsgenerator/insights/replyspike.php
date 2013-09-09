@@ -126,9 +126,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                     }
-                }
-
-                if (isset($average_reply_count_30_days->value)
+                } elseif (isset($average_reply_count_30_days->value)
                 && $post->reply_count_cache > ($average_reply_count_30_days->value*2)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
@@ -137,7 +135,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_30_days->value);
                         $this->insight_dao->insertInsight('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Conversation Starter:",
+                        $simplified_post_date, "Conversation starter:",
                         "<strong>".number_format($post->reply_count_cache).
                         " people</strong> replied to $this->username's post, more than <strong>".$multiplier.
                         "x</strong> $this->username's 30-day average.", $filename,
@@ -159,7 +157,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_7_days->value);
                         $this->insight_dao->insertInsight('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Conversation Starter:",
+                        $simplified_post_date, "Conversation starter:",
                         "<strong>".number_format($post->reply_count_cache).
                         " people</strong> replied to $this->username's post, more than <strong>" .$multiplier.
                         "x</strong> $this->username's 7-day average.", $filename, Insight::EMPHASIS_LOW,

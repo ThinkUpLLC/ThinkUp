@@ -62,7 +62,7 @@ $controller_test_list = array(
 "TestOfToggleActiveOwnerController",
 "TestOfToggleOwnerAdminController",
 "TestOfTogglePublicInstanceController",
-/*"TestOfUserController",
+"TestOfUserController",
 "TestOfPluginOptionController",
 "TestOfTestAuthAPIController",
 "TestOfRSSController",
@@ -71,7 +71,7 @@ $controller_test_list = array(
 "TestOfSearchController",
 "TestOfStreamerAuthController",
 "TestOfUpdateNowController",
-"TestOfUpgradeApplicationController"*/
+"TestOfUpgradeApplicationController"
 );
 
 if (!getenv("TEST_TIMING")=="1") {

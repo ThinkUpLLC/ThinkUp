@@ -79,7 +79,6 @@ interface CountHistoryDAO  {
      * @return array of Counts for the specified post and of the specified type
      */
     public function getLatestCountByPostIDAndType($post_id, $type);
-
     /**
      * Update the count of active group memberships based on the group memberships in storage.
      * @param int $network_user_id
@@ -87,4 +86,13 @@ interface CountHistoryDAO  {
      * @return int Total inserted
      */
     public function updateGroupMembershipCount($network_user_id, $network);
+    /**
+     * Get the newest and highest count for the specified type and network user id
+     * @param  str $network_user_id The ID of the user to get counts for
+     * @param  str $network The network this count is for
+     * @param  str $type The type of count you are interested in e.g. likes dislikes, views etc
+     * @return array containing a single Count for the specified type and network user id
+     */
+    public function getLatestCountByNetworkUserIDAndType($network_user_id, $network, $type);
+
 }

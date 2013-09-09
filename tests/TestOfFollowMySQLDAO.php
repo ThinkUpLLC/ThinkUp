@@ -57,7 +57,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
-        'friend_count'=>1345));
+        'is_verified'=>0, 'friend_count'=>1345));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1723457890', 'user_name'=>'facebookuser1',
         'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
@@ -67,35 +67,35 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
-        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
+        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>'15', 'error_code'=>404,
         'error_text'=>'User not found', 'error_issued_to_user_id'=>'1324567890', 'network'=>'twitter'));
 
         //ev is followed by jack
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1234567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>14,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'14',
         'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>15,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'15',
         'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>1623457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1623457890',
         'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1324567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1324567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1234567890',
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>1234567890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>'1234567890',
         'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>17, 'active'=>0,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'17', 'active'=>0,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>1823457890,
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>'1823457890',
         'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
 
         return $builders;
@@ -224,24 +224,39 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetLeastLikelyFollowers(){
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'12345678911110', 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'12345678911110',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 15);
 
         $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 2);
+        $this->assertEqual(count($result), 3);
         $this->assertEqual($result[0]["user_id"], 1234567890);
-        $this->assertEqual($result[1]["user_id"], 1623457890);
+        $this->assertEqual($result[1]["user_id"], 12345678911110);
+        $this->assertEqual($result[2]["user_id"], 1623457890);
 
         //test paging
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 1);
         $this->assertEqual($result[0]["user_id"], 1234567890);
 
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 2);
-        $this->assertEqual($result[0]["user_id"], 1623457890);
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]["user_id"], 12345678911110);
 
         $result = $this->DAO->getLeastLikelyFollowersThisWeek(1324567890, 'twitter', 15);
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
         $this->assertEqual($result[0]["user_id"], 1623457890);
+
+        $result = $this->DAO->getLeastLikelyFollowersByDay(1324567890, 'twitter', 2);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 1);
+        //assert the verified follower doesn't get returned
+        $this->assertEqual($result[0]->user_id, 1623457890);
     }
 
     public function testGetVerifiedFollowersByDay() {
@@ -340,6 +355,88 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[1]['user_id'], 1324567890);
         $this->assertEqual($result[0]['user_id'], 1623457890);
+    }
+
+    public function testGetFolloweesRepliedToThisWeekLastYear() {
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612345', 'user_name'=>'twitteruser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter User'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612346', 'user_name'=>'twitterfoll1',
+        'full_name'=>'Twitter Follower One', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612347', 'user_name'=>'twitterfoll2',
+        'full_name'=>'Twitter Follower Two', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612348', 'user_name'=>'twitterfoll3',
+        'full_name'=>'Twitter Follower Three', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612349', 'user_name'=>'twitterfoll4',
+        'full_name'=>'Twitter Follower Four', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612350', 'user_name'=>'twitterfoll5',
+        'full_name'=>'Twitter Follower Five', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Follower'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612346', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612347', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612348', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612349', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'7612350', 'follower_id'=>'7612345',
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+
+        $time_ago_1 = date('Y-m-d H:i:s', strtotime('-370 days'));
+        $time_ago_2 = date('Y-m-d H:i:s', strtotime('-369 days'));
+        $time_ago_3 = date('Y-m-d H:i:s', strtotime('-367 days'));
+        $time_ago_4 = date('Y-m-d H:i:s', strtotime('-130 days'));
+        $time_ago_5 = date('Y-m-d H:i:s', strtotime('-20 days'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>138, 'post_id'=>138, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_1, 'in_reply_to_user_id'=>7612346, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_2, 'in_reply_to_user_id'=>7612347, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_3, 'in_reply_to_user_id'=>7612348, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>141, 'post_id'=>141, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_4, 'in_reply_to_user_id'=>7612349, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>142, 'post_id'=>142, 'author_user_id'=>7612345,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+        'pub_date'=>$time_ago_5, 'in_reply_to_user_id'=>7612350, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $result = $this->DAO->getFolloweesRepliedToThisWeekLastYear(7612345, 'twitter');
+
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertIsA($result, "array");
+        $this->assertIsA($result[0], "User");
+        $this->assertEqual(count($result), 3);
+        $this->assertEqual($result[0]->full_name, "Twitter Follower One");
+        $this->assertEqual($result[1]->full_name, "Twitter Follower Two");
+        $this->assertEqual($result[2]->full_name, "Twitter Follower Three");
     }
 
     public function testSearchFollowers(){

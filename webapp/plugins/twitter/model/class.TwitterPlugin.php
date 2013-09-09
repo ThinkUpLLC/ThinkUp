@@ -68,23 +68,28 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         $instances = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
         'twitter');
         foreach ($instances as $instance) {
-            try {
-                $logger->setUsername($instance->network_username);
-                $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
-                __METHOD__.','.__LINE__);
-                $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
-                $num_twitter_errors =
-                isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
+            $logger->setUsername($instance->network_username);
+            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
+            __METHOD__.','.__LINE__);
 
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+
+            $num_twitter_errors =
+            isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
+
+            $dashboard_module_cacher = new DashboardModuleCacher($instance);
+
+            try {
                 if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
                 && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
+                    $archive_limit = isset($options['archive_limit']->option_value)?
+                    $options['archive_limit']->option_value:3200;
                     $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                     $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
-                    $options['oauth_consumer_secret']->option_value, $options['archive_limit']->option_value,
+                    $options['oauth_consumer_secret']->option_value, $archive_limit,
                     $num_twitter_errors);
 
                     $twitter_crawler = new TwitterCrawler($instance, $api);
-                    $dashboard_module_cacher = new DashboardModuleCacher($instance);
 
                     $instance_dao->updateLastRun($instance->id);
 

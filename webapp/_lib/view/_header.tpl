@@ -58,7 +58,7 @@
       function searchMe(_baseu) {
         var _mu = $("input#search-keywords").val();
         if (_mu != "null") {
-          document.location.href = _baseu + _mu;
+          document.location.href = _baseu + encodeURIComponent(_mu);
         }
       }
     {/literal}

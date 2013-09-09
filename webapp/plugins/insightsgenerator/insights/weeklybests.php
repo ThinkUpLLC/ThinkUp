@@ -36,9 +36,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Thursday or if we're testing
-        if ((date('w') == 4 || $in_test_mode) && count($last_week_of_posts)) {
+        if (self::shouldGenerateInsight('weekly_best', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
 
@@ -64,7 +63,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 ." from last week got ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
-                        $insight_text .= $value." ".$this->terms->getNoun($key, ($value > 1)).", ";
+                        $insight_text .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
                     }
                 }
 
@@ -75,8 +74,15 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                     strpos($insight_text, strrchr($insight_text, ',')), 1);
                 }
 
-                $this->insight_dao->insertInsight("weekly_best", $instance->id, $this->insight_date, "Weekly best:",
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($most_popular_post));
+                $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
+                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
+                $instance->id, $simplified_post_date);
+
+                if (isset($hot_posts_data)) {
+                    $this->insight_dao->insertInsight("weekly_best", $instance->id, $this->insight_date,
+                    "Post of the week:", $insight_text, basename(__FILE__, ".php"),
+                    Insight::EMPHASIS_LOW, serialize(array($most_popular_post, $hot_posts_data)));
+                }
             }
         }
 

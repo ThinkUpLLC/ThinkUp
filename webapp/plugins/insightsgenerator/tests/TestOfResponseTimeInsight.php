@@ -45,23 +45,6 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testGetSyntacticTimeDifference() {
-        $delta_1 = 60 * 60 * 3; // 3 hours
-        $delta_2 = 60 * 6; // 6 minutes
-        $delta_3 = 60 * 60 * 24 * 4; // 4 days
-        $delta_4 = 60 * 60 * 24; // 1 day
-
-        $result_1 = ResponseTimeInsight::getSyntacticTimeDifference($delta_1);
-        $result_2 = ResponseTimeInsight::getSyntacticTimeDifference($delta_2);
-        $result_3 = ResponseTimeInsight::getSyntacticTimeDifference($delta_3);
-        $result_4 = ResponseTimeInsight::getSyntacticTimeDifference($delta_4);
-
-        $this->assertEqual($result_1, '3 hours');
-        $this->assertEqual($result_2, '6 minutes');
-        $this->assertEqual($result_3, '4 days');
-        $this->assertEqual($result_4, '1 day');
-    }
-
     public function testResponseTimeInsightForTwitterNoPriorBaseline() {
         // Get data ready that insight requires
         $instance = new Instance();
@@ -87,7 +70,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         ));
 
         // Calculate time for each new retweet
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 25));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 25));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -99,8 +82,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s tweets averaged one new retweet/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.' over the last week./', $result->text);
+        $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new retweet/', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>./', $result->text);
 
         // Assert that baselines got inserted
         $insight_baseline_dao = new InsightBaselineMySQLDAO();
@@ -148,8 +131,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         'instance_id'=>10, 'value'=>27));
 
         // Calculate time for each new favorite
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 19));
-        $last_week_time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 27));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 19));
+        $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 27));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -161,10 +144,10 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic\'s status updates averaged one new like/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.' over the last week,/', $result->text);
+        $this->assertPattern('/testeriffic\'s status updates averaged <strong>1 new like/', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->text);
         $this->assertPattern('/slower than the previous week\'s average/', $result->text);
-        $this->assertPattern('/of one like every '.$last_week_time_per_response.'./', $result->text);
+        $this->assertPattern('/of 1 like every '.$last_week_time_per_response.'./', $result->text);
     }
 
     public function testResponseTimeInsightForFoursquarePriorSmallerBaseline() {
@@ -197,8 +180,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         'instance_id'=>10, 'value'=>12));
 
         // Calculate time for each new favorite
-        $time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 17));
-        $last_week_time_per_response = ResponseTimeInsight::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 12));
+        $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 17));
+        $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 12));
 
         $insight_plugin = new ResponseTimeInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -210,9 +193,44 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic\'s checkins averaged one new comment/', $result->text);
-        $this->assertPattern('/every '.$time_per_response.' over the last week,/', $result->text);
+        $this->assertPattern('/testeriffic\'s checkins averaged <strong>1 new comment/', $result->text);
+        $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->text);
         $this->assertPattern('/faster than the previous week\'s average/', $result->text);
-        $this->assertPattern('/of one comment every '.$last_week_time_per_response.'./', $result->text);
+        $this->assertPattern('/of 1 comment every '.$last_week_time_per_response.'./', $result->text);
+    }
+
+    public function testResponseTimeInsightWithUnitTimeValue() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => (24 * 7)
+        ));
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_like',
+        'instance_id'=>10, 'value'=>7));
+
+        $insight_plugin = new ResponseTimeInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('response_time', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new favorite/', $result->text);
+        $this->assertPattern('/every <strong>hour<\/strong>/', $result->text);
+        $this->assertPattern('/faster than the previous week\'s average/', $result->text);
+        $this->assertPattern('/of 1 favorite every day./', $result->text);
     }
 }

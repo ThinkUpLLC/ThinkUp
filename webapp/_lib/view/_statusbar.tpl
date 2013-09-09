@@ -25,7 +25,7 @@
                         {/if}
                     {/foreach}
                     {foreach from=$saved_searches key=tid item=i}
-                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i.network_username|urlencode}&n=twitter&c=searches&k={$i.hashtag}&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search tweets which contain {$i.hashtag} for <span class="searchterm"></span></a></li>
+                        <li class="lead"><a onclick="searchMe('{$site_root_path}search.php?u={$i.network_username|urlencode}&n=twitter&c=searches&k={$i.hashtag|urlencode}&q=');" href="#"><i class="icon-twitter icon-muted icon-2x"></i> Search tweets which contain {$i.hashtag} for <span class="searchterm"></span></a></li>
                     {/foreach}
                     </ul>
 

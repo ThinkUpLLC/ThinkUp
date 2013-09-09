@@ -303,6 +303,42 @@ color : #666;
     padding-top : 0px;
 }
 
+.link-image {
+    width: 50px;
+}
+
+.link-image img {
+    margin: 0;
+    padding-top: 0px;
+}
+
+.link-image a {
+    text-decoration: none;
+}
+
+.link-url {
+    padding-top: 4px;
+}
+
+.link-url a {
+    text-decoration: none;
+    color: #666;
+    opacity: 0.7;
+}
+
+.link-description {
+    margin: 0;
+    font-weight: bold;
+}
+
+.link-detail {
+    padding-top: 4px;
+}
+
+.link-detail small a{
+    font-weight:normal;
+}
+
 .twitter-bio-info {
     padding-top : 4px;
 }

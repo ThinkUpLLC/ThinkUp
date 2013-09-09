@@ -1,0 +1,49 @@
+{
+ "kind": "youtube#videoListResponse",
+ "etag": "\"2vd4g3cVsHAtTjJSdUMaBo1PBVE/OBs766N0vs_6ZmvyHadWsps5CBI\"",
+ "pageInfo": {
+  "totalResults": 1,
+  "resultsPerPage": 1
+ },
+ "items": [
+  {
+
+   "id": "a",
+   "kind": "youtube#video",
+   "etag": "\"2vd4g3cVsHAtTjJSdUMaBo1PBVE/FoQV-S_Hs6iXqjj1uveA90_SjQA\"",
+   "snippet": {
+    "publishedAt": "2013-06-05T12:08:56.000Z",
+    "channelId": "UC-OYNzm3cpgi4goaDmX_sDg",
+    "title": "Same Page Video",
+    "description": "This video is on the same page",
+    "thumbnails": {
+     "default": {
+      "url": "https://i4.ytimg.com/vi/a/default.jpg"
+     },
+     "medium": {
+      "url": "https://i4.ytimg.com/vi/a/mqdefault.jpg"
+     },
+     "high": {
+      "url": "https://i4.ytimg.com/vi/a/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Aaron Kalair",
+    "categoryId": "20"
+   },
+   "statistics": {
+    "viewCount": "50",
+    "likeCount": "10",
+    "dislikeCount": "110",
+    "favoriteCount": "1110",
+    "commentCount": "0"
+   },
+   "status": {
+    "uploadStatus": "processed",
+    "privacyStatus": "public",
+    "license": "youtube",
+    "embeddable": true,
+    "publicStatsViewable": true
+   }
+  }
+ ]
+}

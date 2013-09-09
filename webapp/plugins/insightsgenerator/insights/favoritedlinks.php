@@ -37,40 +37,43 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
-        $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
-        $todays_favorited_posts_with_links = array();
+        if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
+        $regenerate_existing_insight=true)) {
+            $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
+            $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
+            $todays_favorited_posts_with_links = array();
 
-        foreach ($favorited_posts as $post) {
-            if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
-                $post_text = $post->post_text;
+            foreach ($favorited_posts as $post) {
+                if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
+                    $post_text = $post->post_text;
 
-                $text_parser = new Twitter_Extractor($post_text);
-                $elements = $text_parser->extract();
+                    $text_parser = new Twitter_Extractor($post_text);
+                    $elements = $text_parser->extract();
 
-                if (count($elements['urls'])) {
-                    $todays_favorited_posts_with_links[] = $post;
+                    if (count($elements['urls'])) {
+                        $todays_favorited_posts_with_links[] = $post;
+                    }
                 }
             }
-        }
 
-        $favorited_links_count = count($todays_favorited_posts_with_links);
-        if ($favorited_links_count) {
-            $verb = '';
-            $post_type = '';
+            $favorited_links_count = count($todays_favorited_posts_with_links);
+            if ($favorited_links_count) {
+                $verb = '';
+                $post_type = '';
 
-            if ($favorited_links_count == 1) {
-                $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
-            } else {
-                $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ."</strong> with links in them, here's a list:";
+                if ($favorited_links_count == 1) {
+                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                } else {
+                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                    ."</strong> with links in them:";
+                }
+
+                $this->insight_dao->insertInsight("favorited_links", $instance->id,
+                $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
+                Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
             }
-
-            $this->insight_dao->insertInsight("favorited_links", $instance->id,
-            $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
-            Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

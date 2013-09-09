@@ -330,7 +330,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         }
         $q .= "AND f.user_id = :user_id AND f.network=:network AND f.network=u.network AND active=1 ";
         $q .= "AND follower_count > 1000 AND friend_count > 0 AND friend_count < (follower_count/2) ";
-        $q .= "ORDER BY likelihood_of_follow ASC, u.follower_count DESC LIMIT :limit;";
+        $q .= "AND u.is_verified = 0 ORDER BY likelihood_of_follow ASC, u.follower_count DESC LIMIT :limit;";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, 'User');
@@ -514,6 +514,43 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
+    }
+
+    public function getFolloweesRepliedToThisWeekLastYear($user_id, $network) {
+        // Get dates for this week, last year
+        $datetime = new DateTime('now');
+        $day = $datetime->format('l');
+        $datetime->modify("last year");
+        $datetime->modify("last " . $day);
+        $date_low = $datetime->format('Y-m-d');
+        $datetime->modify("next " . $day);
+        $date_high = $datetime->format('Y-m-d');
+
+        $q = "SELECT DISTINCT u.* FROM #prefix#posts AS p ";
+        $q .= "INNER JOIN #prefix#users AS u ON u.user_id = p.in_reply_to_user_id AND u.network = p.network ";
+        $q .= "INNER JOIN #prefix#follows AS f ON f.user_id = p.in_reply_to_user_id AND f.network = p.network ";
+        $q .= "WHERE p.author_user_id=:user_id AND p.network=:network ";
+        $q .= "AND (p.pub_date>=:date_low AND p.pub_date<=:date_high) AND p.in_reply_to_user_id IS NOT NULL ";
+        $q .= "AND f.follower_id=:user_id ";
+        $q .= "LIMIT 12 ";
+
+        $vars = array(
+            ':user_id' => (string)$user_id,
+            ':network' => $network,
+            ':date_low' => $date_low,
+            ':date_high' => $date_high
+        );
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $all_user_rows = $this->getDataRowsAsArrays($ps);
+        $followees = array();
+        foreach ($all_user_rows as $user_row) {
+            $followee = new User($user_row);
+            $followees[] = $followee;
+        }
+
+        return $followees;
     }
 
     public function searchFollowers(array $keywords, $network, $user_id, $page_number=1, $page_count=20) {

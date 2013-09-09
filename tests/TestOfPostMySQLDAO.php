@@ -360,7 +360,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // add instance_twitter
         $builders[] = FixtureBuilder::build('instances_twitter',
-        array('last_page_fetched_replies' => 1, 'last_page_fetched_tweets' => 1));
+        array());
 
         // add hashtags 1 i 2
         $builders[] = FixtureBuilder::build('hashtags',
@@ -370,8 +370,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // add instances_hashtags 1
         $builders[] = FixtureBuilder::build('instances_hashtags',
-        array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0,
-                        'last_page_fetched_tweets' => 1));
+        array('instance_id' => 7, 'hashtag_id'=>1, 'last_post_id' => 0, 'earliest_post_id' => 0));
 
         // add users
         $builders[] = FixtureBuilder::build( 'users', array(
@@ -4003,6 +4002,45 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($big_retweeters[1]->username, 'user2');
         $this->assertEqual($big_retweeters[2]->follower_count, 70);
         $this->assertEqual($big_retweeters[2]->username, 'linkbaiter');
+    }
+
+    public function testGetDaysAgoSinceUserRepliedToRecipient() {
+        $time_ago = array(
+            date('Y-m-d H:i:s', strtotime('-12 days')),
+            date('Y-m-d H:i:s', strtotime('-14 days')),
+            date('Y-m-d H:i:s', strtotime('-17 days'))
+        );
+
+        for ($i = 0; $i < 3; $i++) {
+            $builders[] = FixtureBuilder::build('posts', array(
+                'id'=>(760+$i),
+                'post_id'=>(760+$i),
+                'author_user_id'=>9912345,
+                'author_username'=>'user123',
+                'network'=>'twitter',
+                'pub_date'=>$time_ago[$i],
+                'in_reply_to_user_id'=>9912346
+            ));
+        }
+
+        $builders[] = FixtureBuilder::build('posts', array(
+            'id'=>763,
+            'post_id'=>763,
+            'author_user_id'=>9912345,
+            'author_username'=>'user123',
+            'network'=>'twitter',
+            'pub_date'=>$time_ago[2],
+            'in_reply_to_user_id'=>9912347
+        ));
+
+        $dao = new PostMySQLDAO();
+        $result_1 = $dao->getDaysAgoSinceUserRepliedToRecipient(9912345, 9912346, 'twitter');
+        $result_2 = $dao->getDaysAgoSinceUserRepliedToRecipient(9912345, 9912347, 'twitter');
+        $result_3 = $dao->getDaysAgoSinceUserRepliedToRecipient(9912345, 9912348, 'twitter'); // no replies
+
+        $this->assertEqual($result_1, 12);
+        $this->assertEqual($result_2, 17);
+        $this->assertNull($result_3);
     }
 
     public function testSearchPostsByUsername() {

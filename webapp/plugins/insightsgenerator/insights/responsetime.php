@@ -36,9 +36,8 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        //Only insert this insight if it's Friday or if we're testing
-        if ((date('w') == 5 || $in_test_mode) && count($last_week_of_posts)) {
+        if (self::shouldGenerateInsight('response_time', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=5, count($last_week_of_posts))) {
             $response_count = array('reply' => 0, 'retweet' => 0, 'like' => 0);
 
             foreach ($last_week_of_posts as $post) {
@@ -62,64 +61,40 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 $time_per_response = floor((60 * 60 * 24 * 7) / $response_factor['value']);
+                $time_str = strncmp(InsightTerms::getSyntacticTimeDifference($time_per_response), "1 ", 2) == 0 ?
+                substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
+                : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
                 $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ." averaged one new ".$this->terms->getNoun($response_factor['key'])." every "
-                .self::getSyntacticTimeDifference($time_per_response)." over the last week";
+                ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
+                ."</strong> every <strong>".$time_str."</strong> over the last week";
 
-                $last_wed = date('Y-m-d', strtotime('-7 day'));
-                $last_wed_insight_baseline = $insight_baseline_dao->getInsightBaseline(
-                'response_count_'.$response_factor['key'], $instance->id, $last_wed);
-                if (isset($last_wed_insight_baseline)) {
-                    $last_wed_time_per_response = $last_wed_insight_baseline->value > 0 ?
-                    floor((60 * 60 * 24 * 7) / $last_wed_insight_baseline->value) : null;
+                $last_fri = date('Y-m-d', strtotime('-7 day'));
+                $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
+                'response_count_'.$response_factor['key'], $instance->id, $last_fri);
+                if (isset($last_fri_insight_baseline) && $last_fri_insight_baseline->value > 0) {
+                    $last_fri_time_per_response = floor((60 * 60 * 24 * 7) / $last_fri_insight_baseline->value);
+                    $time_str1 = strncmp(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response),
+                    "1 ", 2) == 0 ?
+                    substr(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response), 2)
+                    : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
-                    if (self::getSyntacticTimeDifference($last_wed_time_per_response)
-                    != self::getSyntacticTimeDifference($time_per_response)) {
-                        if (isset($last_wed_time_per_response) && $last_wed_time_per_response < $time_per_response) {
-                            $insight_text .= ", slower than the previous week's average of one "
-                            .$this->terms->getNoun($response_factor['key'])
-                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
-                        } elseif (isset($last_wed_time_per_response)
-                        && $last_wed_time_per_response > $time_per_response) {
-                            $insight_text .= ", faster than the previous week's average of one "
-                            .$this->terms->getNoun($response_factor['key'])
-                            ." every " .self::getSyntacticTimeDifference($last_wed_time_per_response);
-                        }
+                    if ($last_fri_time_per_response < $time_per_response) {
+                        $insight_text .= ", slower than the previous week's average of 1 "
+                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                    } elseif ($last_fri_time_per_response > $time_per_response) {
+                        $insight_text .= ", faster than the previous week's average of 1 "
+                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
                     }
                 }
                 $insight_text .= '.';
 
-                $this->insight_dao->insertInsight("response_time", $instance->id, $this->insight_date, "Response Time:",
+                $this->insight_dao->insertInsight("response_time", $instance->id, $this->insight_date, "Response time:",
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
-    }
-
-    /**
-     * Get the human-readable, syntactic time difference .
-     * @param int $delta Time difference in seconds
-     * @return str Syntactic time difference
-     */
-    public static function getSyntacticTimeDifference($delta) {
-        $tokens = array();
-        $tokens['second'] = 1;
-        $tokens['minute'] = 60 * $tokens['second'];
-        $tokens['hour'] = 60 * $tokens['minute'];
-        $tokens['day'] = 24 * $tokens['hour'];
-
-        arsort($tokens);
-
-        foreach ($tokens as $unit => $value) {
-            if ($delta < $value) {
-                continue;
-            } else {
-                $number_of_units = floor($delta / $value);
-                return $number_of_units.' '.$unit.(($number_of_units > 1) ? 's' : '');
-            }
-        }
     }
 }
 

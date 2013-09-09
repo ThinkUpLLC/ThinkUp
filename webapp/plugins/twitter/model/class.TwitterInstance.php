@@ -34,24 +34,19 @@ class TwitterInstance extends Instance {
      */
     var $id;
     /**
-     * @var int Last page of replies fetched for this instance.
-     */
-    var $last_page_fetched_replies;
-    /**
-     * @var int Last page of tweets fetched for this instance.
-     */
-    var $last_page_fetched_tweets;
-    /**
      * @var int Last favorite post ID of the instance saved.
      */
     var $last_favorite_id;
+    /**
+     * @var int Last reply post ID to the instance saved.
+     */
+    var $last_reply_id;
     public function __construct($row = false) {
         parent::__construct($row);
         if ($row) {
             $this->id = $row['id'];
-            $this->last_page_fetched_replies = $row['last_page_fetched_replies'];
-            $this->last_page_fetched_tweets = $row['last_page_fetched_tweets'];
             $this->last_favorite_id = $row['last_favorite_id'];
+            $this->last_reply_id = $row['last_reply_id'];
         }
     }
 }

@@ -1,0 +1,67 @@
+{
+ "kind": "plus#person",
+ "etag": "\"uYrzoZsxQM1LGjix0pfxxKDsvgg/AgFFjHhOVT7JaSk5PNUJGkC5BXE\"",
+ "gender": "male",
+ "urls": [
+  {
+   "value": "http://www.aaronkalair.co.uk",
+   "label": "Portfolio"
+  },
+  {
+   "value": "http://www.twitter.com/AaronKalair",
+   "label": "Twitter"
+  },
+  {
+   "value": "http://www.linkedin.com/profile/view?id=94263305",
+   "label": "LinkedIn"
+  },
+  {
+   "value": "https://www.facebook.com/aaronkalair",
+   "label": "Facebook"
+  }
+ ],
+ "objectType": "person",
+ "id": "115383827382290096528",
+ "displayName": "Aaron Kalair",
+ "name": {
+  "familyName": "Kalair",
+  "givenName": "Aaron"
+ },
+ "aboutMe": "Hi !<div><br /></div><div>I&#39;m <a href=\"http://www.twitter.com/aaronkalair\">@AaronKalair</a> on twitter </div><div><br /></div><div><a href=\"https://github.com/AaronKalair\">AaronKalair</a> on Github</div><div><br /></div><div>If you want to see all the cool things I&#39;ve done, check out my personal website at <a href=\"http://www.aaronkalair.co.uk\">www.aaronkalair.co.uk</a></div>",
+ "url": "https://plus.google.com/115383827382290096528",
+ "image": {
+  "url": "https://lh5.googleusercontent.com/-Z2vFxu2wO6E/AAAAAAAAAAI/AAAAAAAAANQ/Pp0EB7dNKLY/photo.jpg?sz=50"
+ },
+ "organizations": [
+  {
+   "name": "University of Warwick",
+   "type": "school",
+   "primary": true
+  },
+  {
+   "title": "Student",
+   "type": "work",
+   "primary": true
+  }
+ ],
+ "placesLived": [
+  {
+   "value": "England",
+   "primary": true
+  }
+ ],
+ "isPlusUser": true,
+ "verified": false,
+ "cover": {
+  "layout": "banner",
+  "coverPhoto": {
+   "url": "https://lh3.googleusercontent.com/-D4JwAhp7PoQ/T9kKYnpXhjI/AAAAAAAAAGg/uTdh7EL6QcE/s1000-fcrop64=1,201f24a6df8adb58/Sea%2Bof%2BFog.jpg",
+   "height": 552,
+   "width": 940
+  },
+  "coverInfo": {
+   "topImageOffset": 0,
+   "leftImageOffset": 0
+  }
+ }
+}

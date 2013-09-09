@@ -87,14 +87,14 @@ $model_tests->add(new TestOfStreamProcMySQLDAO());
 $model_tests->add(new TestOfHashtagMySQLDAO());
 $model_tests->add(new TestOfMentionMySQLDAO());
 $model_tests->add(new TestOfPlaceMySQLDAO());
-/*$model_tests->add(new TestOfPDODAO());
+$model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfURLProcessor());
 $model_tests->add(new TestOfTableStatsMySQLDAO());
 $model_tests->add(new TestOfShortLinkMySQLDAO());
 $model_tests->add(new TestOfHashtagPostMySQLDAO());
 $model_tests->add(new TestOfInstanceHashtagMySQLDAO());
 $model_tests->add(new TestOfVideoMySQLDAO());
-$model_tests->add(new TestOfPhotoMySQLDAO());*/
+$model_tests->add(new TestOfPhotoMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());

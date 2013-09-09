@@ -59,8 +59,8 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         $this->logger = Logger::getInstance();
         // Create an array with instance details
         $r = array('id'=>1, 'network_username'=>'aaronkalair@gmail.com', 'network_user_id'=>'113612142759476883204',
-        'network_viewer_id'=>'113612142759476883204', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'network_viewer_id'=>'113612142759476883204', 'last_post_id'=>'0',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'0', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'foursquare',

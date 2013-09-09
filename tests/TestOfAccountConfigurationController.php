@@ -1371,11 +1371,9 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('hashtags',
         array('hashtag' => 'second', 'network' => 'twitter', 'count_cache' => 0));
         $builders[] = FixtureBuilder::build('instances_hashtags',
-        array('instance_id' => $instance, 'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => 0,
-        'last_page_fetched_tweets' => 1));
+        array('instance_id' => $instance, 'hashtag_id' => 1, 'last_post_id' => '0', 'earliest_post_id' => 0));
         $builders[] = FixtureBuilder::build('instances_hashtags',
-        array('instance_id' => $instance, 'hashtag_id' => 2, 'last_post_id' => '0', 'earliest_post_id' => 0,
-        'last_page_fetched_tweets' => 1));
+        array('instance_id' => $instance, 'hashtag_id' => 2, 'last_post_id' => '0', 'earliest_post_id' => 0));
         $builders[] = FixtureBuilder::build('hashtags_posts',
         array('post_id' => 1, 'hashtag_id' => 1, 'network' => 'twitter'));
         $builders[] = FixtureBuilder::build('hashtags_posts',
