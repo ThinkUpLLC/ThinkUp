@@ -37,7 +37,7 @@ $model_tests->add(new TestOfPDOCorePluginDAO());
 $model_tests->add(new TestOfDAOFactory());
 $model_tests->add(new TestOfConfig());
 $model_tests->add(new TestOfFileDataManager());
-$model_tests->add(new TestOfCrawler());
+/*$model_tests->add(new TestOfCrawler());
 $model_tests->add(new TestOfFollowMySQLDAO());
 $model_tests->add(new TestOfCountHistoryMySQLDAO());
 $model_tests->add(new TestOfGroupMySQLDAO());
@@ -94,7 +94,7 @@ $model_tests->add(new TestOfShortLinkMySQLDAO());
 $model_tests->add(new TestOfHashtagPostMySQLDAO());
 $model_tests->add(new TestOfInstanceHashtagMySQLDAO());
 $model_tests->add(new TestOfVideoMySQLDAO());
-$model_tests->add(new TestOfPhotoMySQLDAO());
+$model_tests->add(new TestOfPhotoMySQLDAO());*/
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
