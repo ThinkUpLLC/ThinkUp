@@ -81,7 +81,7 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESS
 //    $THINKUP_CFG['db_password']               = 'your_test_database_password';
 //    $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
     $THINKUP_CFG['invalid_db_host']                = 'localcheese';
-    ini_set('error_reporting', E_STRICT);
+    ini_set('error_reporting', E_ALL | E_STRICT);
 }
 
 //Test RAM disk database override: Set this to run tests against the RAM disk tests database
