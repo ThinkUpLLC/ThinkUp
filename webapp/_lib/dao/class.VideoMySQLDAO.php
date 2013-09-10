@@ -171,4 +171,36 @@ class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {
         }
         return json_encode(array('rows' => $result_set, 'cols' => $metadata));
     }
+
+    public function getAverageMinutesViewed($user_name, $network, $duration=null) {
+        $q = "SELECT AVG(minutes_watched) AS count FROM #prefix#posts AS posts JOIN #prefix#videos AS videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:user_name AND network=:network ";
+        $vars = array(
+            ':user_name'=>$user_name,
+            ':network'=>$network
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY) ";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getHighestMinutesViewed($user_name, $network, $duration=null) {
+        $q = "SELECT MAX(minutes_watched) AS count FROM #prefix#posts AS posts JOIN #prefix#videos AS videos ON ";
+        $q .= "posts.id = videos.post_key WHERE author_username=:user_name AND network=:network ";
+        $vars = array(
+            ':user_name'=>$user_name,
+            ':network'=>$network,
+        );
+        if($duration != null) {
+            $q .= "AND pub_date >= DATE_SUB(NOW(), INTERVAL :duration DAY) ";
+            $vars[':duration'] = $duration;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
 }
