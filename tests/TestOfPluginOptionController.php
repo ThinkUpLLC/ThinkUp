@@ -188,7 +188,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_response->results->inserted->test1, 3);
         $this->assertEqual($json_response->results->inserted->test2, 4);
 
-        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'plugin_options-8\'';
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'plugin_options-7\'';
         $stmt = $this->pdo->query($sql);
         $this->assertEqual($stmt->rowCount(), 3);
         for($i = 0; $i < 3; $i++) {
@@ -228,7 +228,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_response->results->inserted->test1, 3);
         $this->assertEqual($json_response->results->inserted->test2, 4);
 
-        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'plugin_options-8\'';
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'plugin_options-7\'';
         $stmt = $this->pdo->query($sql);
         $this->assertEqual($stmt->rowCount(), 3);
         for($i = 0; $i < 3; $i++) {
@@ -287,7 +287,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_response->status, 'success');
         $this->assertEqual($json_response->results->updated, 2);
 
-        $sql = "select * from " . $this->table_prefix . "options where namespace = 'plugin_options-8'";
+        $sql = "select * from " . $this->table_prefix . "options where namespace = 'plugin_options-7'";
         $stmt = $this->pdo->query($sql);
         $this->assertEqual($stmt->rowCount(), 3);
         for($i = 0; $i < 3; $i++) {
@@ -353,7 +353,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_response->results->updated, 1);
         $this->assertEqual($json_response->results->deleted, 1);
 
-        $sql = "select * from " . $this->table_prefix . "options where namespace = 'plugin_options-8'";
+        $sql = "select * from " . $this->table_prefix . "options where namespace = 'plugin_options-7'";
         $stmt = $this->pdo->query($sql);
         $this->assertEqual($stmt->rowCount(), 2);
         for($i = 1; $i < 3; $i++) {
