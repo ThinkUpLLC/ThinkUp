@@ -131,18 +131,18 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testOfGetOptions() {
-        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'8', 'folder_name'=>'test_plugin',
+        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'7', 'folder_name'=>'test_plugin',
         'is_active'=>1));
-        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'9', 'folder_name'=>'test_plugin1',
+        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'8', 'folder_name'=>'test_plugin1',
         'is_active'=>1));
 
         # init our dao
         $dao = new PluginOptionMySQLDAO();
         $builder1 = $this->buildOptions(1, 'test name', 'test option');
         $insert_id1 = $builder1->columns[ 'last_insert_id' ];
-        $builder2 = $this->buildOptions(8, 'test name2', 'test option2');
+        $builder2 = $this->buildOptions(7, 'test name2', 'test option2');
         $insert_id2 = $builder2->columns[ 'last_insert_id' ];
-        $builder3 = $this->buildOptions(8, 'test name3', 'test option3');
+        $builder3 = $this->buildOptions(7, 'test name3', 'test option3');
         $insert_id3 = $builder3->columns[ 'last_insert_id' ];
 
         // bad plugin id
@@ -161,10 +161,10 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNotNull( $options );
         $this->assertEqual(count($options), 2);
         $this->assertIsA($options[0], 'PluginOption');
-        $this->assertEqual($options[0]->plugin_id, 8);
+        $this->assertEqual($options[0]->plugin_id, 7);
         $this->assertEqual($options[0]->id, 3);
         $this->assertIsA($options[1], 'PluginOption');
-        $this->assertEqual($options[1]->plugin_id, 8);
+        $this->assertEqual($options[1]->plugin_id, 7);
         $this->assertEqual($options[1]->id, 4);
     }
 

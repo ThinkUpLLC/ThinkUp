@@ -250,6 +250,9 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     private function buildPluginOptions() {
+        // Create a plugin (required as Instagram isn't a default plugin)
+        $builder_plugin = FixtureBuilder::build('plugins', array('name' => 'instagram',
+        'folder_name' => 'youtube', 'is_active' => 1) );
         // Get plugin ID
         $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'instagram'";
         $stmt = PluginMySQLDAO::$PDO->query($sql);
