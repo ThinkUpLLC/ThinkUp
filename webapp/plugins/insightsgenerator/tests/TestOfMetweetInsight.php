@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfMetweetInsight.php
  *
- * Copyright (c) 2012-2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the MetweetInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
@@ -62,8 +62,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
     }
 
     public function testMetweetInsightPriorGreaterBaseline() {
@@ -88,9 +88,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
-        $this->assertPattern('/6 fewer times than the prior week/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/6 fewer times than the prior week./', $result->text);
     }
 
     public function testMetweetInsightPriorGreaterByOneBaseline() {
@@ -115,9 +115,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
-        $this->assertPattern('/1 fewer time than the prior week/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/1 fewer time than the prior week./', $result->text);
     }
 
     public function testMetweetInsightPriorSmallerBaseline() {
@@ -142,9 +142,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
-        $this->assertPattern('/2 more times than the prior week/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/2 more times than the prior week./', $result->text);
     }
 
     public function testMetweetInsightPriorSmallerByOneBaseline() {
@@ -169,9 +169,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
-        $this->assertPattern('/1 more time than the prior week/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/1 more time than the prior week./', $result->text);
     }
 
     public function testMetweetInsightPriorEqualBaseline() {
@@ -196,8 +196,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted posts mentioning themself/', $result->text);
-        $this->assertPattern('/5 times/', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);
     }
