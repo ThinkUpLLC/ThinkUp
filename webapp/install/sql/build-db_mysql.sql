@@ -577,6 +577,3 @@ VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
 VALUES ('Insights Generator', 'insightsgenerator', 'Pluggable plugin populates the insights stream.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
-
-INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
-VALUES ('Instagram', 'instagram', 'Instagram Support', 'Dimosthenis Nikoudis', 'http://thinkup.com', '0.01', '1');

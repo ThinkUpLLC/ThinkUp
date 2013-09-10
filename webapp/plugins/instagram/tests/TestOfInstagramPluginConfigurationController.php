@@ -258,15 +258,15 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     private function buildPluginOptions() {
+		$builders = array();
         // Create a plugin (required as Instagram isn't a default plugin)
-        $builder_plugin = FixtureBuilder::build('plugins', array('name' => 'instagram',
-        'folder_name' => 'youtube', 'is_active' => 1) );
+        $builders[] = FixtureBuilder::build('plugins', array('name' => 'Instagram',
+        'folder_name' => 'instagram', 'is_active' => 1) );
         // Get plugin ID
         $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'instagram'";
         $stmt = PluginMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
-        $builders = array();
         $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'instagram_api_secret', 'option_value' => "scrt") );
         $builders[] = FixtureBuilder::build('options',
