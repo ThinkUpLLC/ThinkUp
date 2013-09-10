@@ -30,7 +30,7 @@
  * @copyright 2013 Aaron Kalair
  */
 
-require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
@@ -90,11 +90,12 @@ class TestOfYouTubePluginConfigurationController extends ThinkUpUnitTestCase {
         // Create a plugin (required as YouTube isn't a default plugin)
         $builder_plugin = FixtureBuilder::build('plugins', array('name' => 'youtube',
         'folder_name' => 'youtube', 'is_active' => 1) );
-        // Set the plugin ID (the id of the last insert to the database (the call above)
-        $plugin_id = $builder_plugin->columns['last_insert_id'];
-
+        // Set the plugin ID
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'youtube'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
         // Set the name space to plugin_options-pluginid
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$plugin_id;
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         $builder_plugin_options[] =
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'youtube_client_id',
@@ -248,7 +249,10 @@ class TestOfYouTubePluginConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('plugins', array('name' => 'YouTube',
         'folder_name' => 'youtube', 'is_active' => 1) );
         // Set the plugin ID
-        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .'7';
+        $sql = "select id from " . $this->table_prefix . "plugins where folder_name = 'youtube'";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-'.$data['id'];
         // Create the client id option
         $builders[] =
         FixtureBuilder::build('options',
