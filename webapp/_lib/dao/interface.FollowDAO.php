@@ -167,6 +167,15 @@ interface FollowDAO {
      */
     public function getVerifiedFollowersByDay($user_id, $network, $days_ago=0, $limit=10);
     /**
+     * Gets the followers from a location by the network first seen by ThinkUp a specified number of days ago.
+     * @param str $user_id
+     * @param str $network
+     * @param str $location
+     * @param int $days_ago
+     * @param int $limit
+     **/
+    public function getFollowersFromLocationByDay($user_id, $network, $location, $days_ago=0, $limit=10);
+    /**
      * Gets the followers with the earliest join date.
      * @param int $user_id
      * @param str $network

@@ -100,4 +100,22 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($result_3, '4 days');
         $this->assertEqual($result_4, '1 day');
     }
+
+    public function testGetPhraseForAddingAsFriend() {
+        $terms = new InsightTerms('google+');
+
+        $result_1 = $terms->getPhraseForAddingAsFriend('testeriffic');
+
+        $terms = new InsightTerms('facebook');
+
+        $result_2 = $terms->getPhraseForAddingAsFriend('testeriffic');
+
+        $terms = new InsightTerms('twitter');
+
+        $result_3 = $terms->getPhraseForAddingAsFriend('@testeriffic');
+
+        $this->assertEqual($result_1, "added testeriffic to new circles");
+        $this->assertEqual($result_2, "added testeriffic as a friend");
+        $this->assertEqual($result_3, "followed @testeriffic");
+    }
 }

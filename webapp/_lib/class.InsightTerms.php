@@ -112,6 +112,27 @@ class InsightTerms {
     }
 
     /**
+     * Get a localized phrase for the action of adding a user as a friend
+     * @param str $user the subject who has been added as a friend
+     * @return str localized phrase for adding a user as a friend
+     **/
+    public function getPhraseForAddingAsFriend($user) {
+        switch ($this->network) {
+            case 'twitter':
+                return "followed ".$user;
+                break;
+
+            case 'google+':
+                return "added ".$user." to new circles";
+                break;
+
+            default:
+                return "added ".$user." as a friend";
+                break;
+        }
+    }
+
+    /**
      * Get the localized noun for the term 'post'.
      * @param str $network network whose localization has to be followed
      * @param bool $plural whether the term to be returned is plural or not

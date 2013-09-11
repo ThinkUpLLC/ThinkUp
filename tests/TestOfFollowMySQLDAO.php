@@ -274,6 +274,42 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]->user_id, 1234567890);
     }
 
+    public function testGetFollowersFromLocationByDay() {
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'twitteruser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter User'));
+
+        // Followers
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'twitterfollower1',
+        'full_name'=>'Twitter Follower One', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Francisco, CA'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'twitterfollower2',
+        'full_name'=>'Twitter Follower Two', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Francisco, CA'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'twitterfollower3',
+        'full_name'=>'Twitter Follower Three', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Diego, CA'));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000769',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000770',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000771',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getFollowersFromLocationByDay(9654000768, 'twitter', 'San Francisco, CA', 0);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $this->assertEqual($result[0]->user_id, 9654000769);
+        $this->assertEqual($result[1]->user_id, 9654000770);
+    }
+
     public function testGetEarliestJoinerFollowers(){
         $result = $this->DAO->getEarliestJoinerFollowers(1324567890, 'twitter');
 
