@@ -89,7 +89,7 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
 
         //Limit the number of links expanded each crawl
         $this->link_limit = isset($options['links_to_expand']->option_value) ?
-        (int)$options['links_to_expand']->option_value : 1500;
+        (int)$options['links_to_expand']->option_value : 500;
 
         if ($this->link_limit != 0) {
             //set Flickr API key
