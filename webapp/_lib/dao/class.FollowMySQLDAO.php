@@ -359,6 +359,30 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsObjects($ps, 'User');
     }
 
+    public function getFollowersFromLocationByDay($user_id, $network, $location, $days_ago=0, $limit=10) {
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':location'=>$location,
+            ':days_ago'=>(int)$days_ago,
+            ':limit'=>(int)$limit
+        );
+        $q  = "SELECT u.* FROM #prefix#users AS u ";
+        $q .= "INNER JOIN #prefix#follows AS f ON u.user_id = f.follower_id ";
+        $q .= "WHERE f.first_seen >= date_sub(current_date, INTERVAL :days_ago day) ";
+        if ($days_ago > 0) {
+            $end_days_ago = $days_ago-1;
+            $q .= "AND f.first_seen <= date_sub(current_date, INTERVAL :end_days_ago day) ";
+            $vars['end_days_ago'] = $end_days_ago;
+        }
+        $q .= "AND f.user_id = :user_id AND f.network = :network AND u.network=f.network AND active=1 ";
+        $q .= "AND u.location = :location ";
+        $q .= "LIMIT :limit;";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
+
     public function getEarliestJoinerFollowers($user_id, $network, $count = 20, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 

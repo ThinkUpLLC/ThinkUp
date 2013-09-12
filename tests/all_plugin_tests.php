@@ -87,6 +87,7 @@ $plugin_tests->add(new TestOfReplySpikeInsight());
 $plugin_tests->add(new TestOfResponseTimeInsight());
 $plugin_tests->add(new TestOfFavoritedLinksInsight());
 $plugin_tests->add(new TestOfLongLostContactsInsight());
+$plugin_tests->add(new TestOfLocalFollowersInsight());
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());
