@@ -111,6 +111,7 @@ class URLExpander {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1); // don't wait more than 1 second
 
         $html = curl_exec($ch);
         curl_close($ch);

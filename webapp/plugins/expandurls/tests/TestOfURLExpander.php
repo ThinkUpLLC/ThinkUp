@@ -59,5 +59,8 @@ class TestOfExpandURLsPlugin extends ThinkUpBasicUnitTestCase {
 
         $details = URLExpander::getWebPageDetails('https://stellar.io/x/manage/membership');
         print_r($details);
+
+        $details = URLExpander::getWebPageDetails('https://www.wepay.com/donations/free-barrett-brown');
+        print_r($details);
     }
 }
