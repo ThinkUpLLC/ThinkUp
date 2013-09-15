@@ -118,7 +118,7 @@ class YouTubePluginConfigurationController extends PluginConfigurationController
         if (isset($_GET['code'])) {
 
             $code = $_GET['code'];
-            $crawler_plugin_registrar = new YouTubeCrawler(null, null);
+            $crawler_plugin_registrar = new YouTubeCrawler(null, null, null, null, null);
             $tokens = $crawler_plugin_registrar->getOAuthTokens($client_id, $client_secret, $code, 'authorization_code',
             $redirect_uri);
 

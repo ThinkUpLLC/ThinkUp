@@ -103,8 +103,7 @@ class YouTubeCrawler {
      * @param str $redirect_uri
      * @return Object with access_token and refresh_token member vars
      */
-    public function getOAuthTokens($client_id, $client_secret, $code_refresh_token, $grant_type,
-    $redirect_uri=null) {
+    public function getOAuthTokens($client_id, $client_secret, $code_refresh_token, $grant_type, $redirect_uri=null) {
         //prep access token request URL
         $access_token_request_url = "https://accounts.google.com/o/oauth2/token";
         $fields = array(
@@ -290,7 +289,8 @@ class YouTubeCrawler {
         $archive_loaded = $instance->is_archive_loaded_posts;
         // If the archive isn't loaded yet keep track of how many times we've tried to load it
         if(!$archive_loaded) {
-            $attempts = $count_history_dao->getLatestCountByNetworkUserIDAndType($user_id, 'youtube_archive_attempts');
+            $attempts = $count_history_dao->getLatestCountByNetworkUserIDAndType($user_id, 'youtube',
+            'youtube_archive_attempts');
             if($attempts == null) {
                 // If this is the first crawler run
                 $attempts['count'] = 0;
@@ -542,7 +542,8 @@ class YouTubeCrawler {
                                 // In this case the user id is their YouTube user ID
                                 $comment_store['author_user_id'] = $user_id_string[sizeof($user_id_string)-1];
 
-                                self::fetchUserFromYouTube($user_id_string[sizeof($user_id_string)-1]);
+                                self::fetchUserFromYouTube($user_id_string[sizeof($user_id_string)-1],
+                                'youtube_crawler');
 
                                 // If we still didn't get these details we can't store this comment
                                 if($comment_store['author_username'] == null ||
@@ -626,7 +627,7 @@ class YouTubeCrawler {
         // If we didn't have to finish the crawl early due to timing out we have collected all this users videos or
         // we have tried more than 20 times stop trying to go back and load the post archive
         if(!$had_to_finish_early || $attempts >= 20) {
-            $instance_dao->setPostArchiveLoaded($user_id);
+            $instance_dao->setPostArchiveLoaded($user_id, 'youtube');
         }
     }
 
