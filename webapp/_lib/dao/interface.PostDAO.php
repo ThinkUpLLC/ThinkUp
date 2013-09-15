@@ -739,6 +739,15 @@ interface PostDAO {
     public function getDaysAgoSinceUserRepliedToRecipient($user_id, $recipient_id, $network);
 
     /**
+     * Get the total number of posts by a user.
+     * @param int $author_id
+     * @param str $network
+     * @param int $days_ago
+     * @return int posts count
+     */
+    public function countAllPostsByUserSinceDaysAgo($author_id, $network, $days_ago=7);
+
+    /**
      * Search a service users's posts.
      * @param arr $keywords
      * @param str $network
