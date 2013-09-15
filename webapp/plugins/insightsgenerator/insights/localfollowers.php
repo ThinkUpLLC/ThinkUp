@@ -42,7 +42,7 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
 
             $user = $user_dao->getDetails($instance->network_user_id, $instance->network);
 
-            if (isset($user->location)) {
+            if (isset($user->location) && $user->location != "") {
                 $followers = $follow_dao->getFollowersFromLocationByDay($instance->network_user_id, $instance->network,
                 $user->location, 0);
 
