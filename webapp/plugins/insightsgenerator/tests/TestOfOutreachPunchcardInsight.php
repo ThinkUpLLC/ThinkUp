@@ -47,22 +47,21 @@ class TestOfOutreachPunchcardInsight extends ThinkUpUnitTestCase {
     }
 
     public function testOutreachPunchcardInsight() {
-        require THINKUP_WEBAPP_PATH.'config.inc.php';
-
-        $local_timezone = new DateTimeZone($THINKUP_CFG['timezone']);
+        $cfg = Config::getInstance();
+        $local_timezone = new DateTimeZone($cfg->getValue('timezone'));
 
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
 
-        $post_pub_date = new DateTime($posts[0]->pub_date, $gmt);
+        $post_pub_date = new DateTime($posts[0]->pub_date);
         $post_dotw = date('N',
             (date('U',
-                strtotime($posts[0]->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
+            strtotime($posts[0]->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
             )
         ); // Day of the week
         $post_hotd = date('G',
             (date('U',
-                strtotime($posts[0]->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
+            strtotime($posts[0]->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
             )
         ); // Hour of the day
 
