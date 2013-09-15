@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/metweet.php
  *
- * Copyright (c) 2012-2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
@@ -58,8 +58,8 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if ($metweet_count > 1) {
-                $insight_text = $this->username." retweeted posts mentioning themself "
-                ."<strong>".$metweet_count." times</strong> in the last week";
+                $insight_text = $this->username." retweeted ".$this->username." mentions "
+                ."<strong>".$this->terms->getOccurrencesAdverb($metweet_count)."</strong> last week";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("metweet_count", $instance->id, $metweet_count,
