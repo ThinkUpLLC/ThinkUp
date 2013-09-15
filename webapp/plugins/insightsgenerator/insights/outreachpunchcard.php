@@ -39,7 +39,6 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
         if (parent::shouldGenerateInsight('outreach_punchcard', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts))) {
             $cfg = Config::getInstance();
-
             $local_timezone = new DateTimeZone($cfg->getValue('timezone'));
 
             $post_dao = DAOFactory::getDAO('PostDAO');
@@ -78,7 +77,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                     $responses_chron[$response_hotd]++;
                 }
 
-                $post_pub_date = new DateTime($post->pub_date, $gmt);
+                $post_pub_date = new DateTime($post->pub_date, $local_timezone);
                 $post_dotw = date('N',
                 (date('U',
                 strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
