@@ -147,6 +147,24 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $links;
     }
 
+    public function countLinksPostedByUserSinceDaysAgo($user_id, $network, $days_ago=7) {
+        $q = "SELECT COUNT(*) AS count FROM #prefix#links AS l ";
+        $q .= "INNER JOIN #prefix#posts AS p ON p.id = l.post_key ";
+        $q .= "WHERE p.author_user_id=:user_id AND p.network=:network ";
+        $q .= "AND p.pub_date>=DATE_SUB(CURDATE(), INTERVAL :days_ago DAY) ";
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network,
+            ':days_ago'=>$days_ago
+        );
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+
+        return (int)$result['count'];
+    }
+
     /**
      * Add post object to link
      * @param array $row
