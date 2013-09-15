@@ -48,6 +48,31 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
     public function testLinkPromptInsight() {
         // Get data ready that insight requires
         $builders = self::buildData();
+
+        $today = date('Y-m-d H:i:s');
+        $days_ago_1 = date('Y-m-d H:i:s', strtotime('yesterday'));
+        $days_ago_2 = date('Y-m-d H:i:s', strtotime('-2 days'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>7612345,
+        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
+        'pub_date'=>$today, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7612345,
+        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
+        'pub_date'=>$days_ago_1, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>135, 'post_id'=>135, 'author_user_id'=>7612345,
+        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
+        'pub_date'=>$days_ago_1, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>136, 'post_id'=>136, 'author_user_id'=>7612345,
+        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
+        'pub_date'=>$days_ago_2, 'reply_count_cache'=>0, 'is_protected'=>0));
+
         $instance = new Instance();
         $instance->id = 10;
         $instance->network_user_id = 7612345;
@@ -92,11 +117,12 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
     }
 
-    public function testLinkPromptInsightNoPrompt() {
+    public function testLinkPromptInsightNoPromptForRecentLinkPost() {
         // Get data ready that insight requires
         $builders = self::buildData();
 
         $days_ago_1 = date('Y-m-d H:i:s', strtotime('yesterday'));
+
         $builders[] = FixtureBuilder::build('posts', array('id'=>241, 'post_id'=>241, 'author_user_id'=>7612345,
         'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
         'network'=>'twitter', 'post_text'=>'This is a post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
@@ -118,34 +144,31 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testLinkPromptInsightNoPromptForNoRecentPosts() {
+        // Get data ready that insight requires
+        $builders = self::buildData();
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new LinkPromptInsight();
+        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+
+        // Assert that no insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('link_prompt', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNull($result);
+    }
+
     private function buildData() {
         $builders = array();
 
-        $today = date('Y-m-d H:i:s');
-        $days_ago_1 = date('Y-m-d H:i:s', strtotime('yesterday'));
-        $days_ago_2 = date('Y-m-d H:i:s', strtotime('-2 days'));
         $days_ago_3 = date('Y-m-d H:i:s', strtotime('-3 days'));
-        $days_ago_4 = date('Y-m-d H:i:s', strtotime('-40 days'));
-
-        $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>7612345,
-        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$today, 'reply_count_cache'=>0, 'is_protected'=>0));
-
-        $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7612345,
-        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$days_ago_1, 'reply_count_cache'=>0, 'is_protected'=>0));
-
-        $builders[] = FixtureBuilder::build('posts', array('id'=>135, 'post_id'=>135, 'author_user_id'=>7612345,
-        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$days_ago_1, 'reply_count_cache'=>0, 'is_protected'=>0));
-
-        $builders[] = FixtureBuilder::build('posts', array('id'=>136, 'post_id'=>136, 'author_user_id'=>7612345,
-        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$days_ago_2, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $days_ago_40 = date('Y-m-d H:i:s', strtotime('-40 days'));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>137, 'post_id'=>137, 'author_user_id'=>7612345,
         'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
@@ -174,7 +197,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
             $builders[] = FixtureBuilder::build('posts', array('id'=>$post_key, 'post_id'=>$post_key,
             'author_user_id'=>7612345, 'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User',
             'author_avatar'=>'avatar.jpg', 'network'=>'twitter', 'post_text'=>'This is a very old post.',
-            'source'=>'web', 'pub_date'=>$days_ago_4, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'source'=>'web', 'pub_date'=>$days_ago_40, 'reply_count_cache'=>0, 'is_protected'=>0));
         }
 
         $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1',
