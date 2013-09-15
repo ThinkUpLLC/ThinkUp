@@ -77,7 +77,7 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic mentioned \@mentionOne /', $result->text);
-        $this->assertPattern('/\@mentionOne <strong>2 times<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@mentionOne <strong>twice<\/strong> last week./', $result->text);
     }
 
     public function testInteractionsInsightRelatedData() {
@@ -154,7 +154,7 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic mentioned /', $result->text);
-        $this->assertPattern('/\@mentionOne <strong>2 times/', $result->text);
+        $this->assertPattern('/\@mentionOne <strong>twice/', $result->text);
     }
 
     public function testInteractionsInsightMentionCasesIgnored() {
