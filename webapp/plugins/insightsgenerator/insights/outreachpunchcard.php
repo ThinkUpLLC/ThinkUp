@@ -57,21 +57,21 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
             foreach ($last_week_of_posts as $post) {
                 $responses = array();
                 $responses = array_merge(
-                    (array)$post_dao->getRepliesToPost($post->post_id, $post->network),
-                    (array)$post_dao->getRetweetsOfPost($post->post_id, $post->network)
+                (array)$post_dao->getRepliesToPost($post->post_id, $post->network),
+                (array)$post_dao->getRetweetsOfPost($post->post_id, $post->network)
                 );
 
                 foreach ($responses as $response) {
                     $response_pub_date = new DateTime($response->pub_date);
                     $response_dotw = date('N',
-                        (date('U',
-                            strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
-                        )
+                    (date('U',
+                    strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
+                    )
                     ); // Day of the week
                     $response_hotd = date('G',
-                        (date('U',
-                            strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
-                        )
+                    (date('U',
+                    strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
+                    )
                     ); // Hour of the day
                     $punchcard['responses'][$response_dotw][$response_hotd]++;
 
@@ -80,14 +80,14 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
                 $post_pub_date = new DateTime($post->pub_date, $gmt);
                 $post_dotw = date('N',
-                    (date('U',
-                        strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
-                    )
+                (date('U',
+                strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
+                )
                 ); // Day of the week
                 $post_hotd = date('G',
-                    (date('U',
-                        strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
-                    )
+                (date('U',
+                strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
+                )
                 ); // Hour of the day
                 $punchcard['posts'][$post_dotw][$post_hotd]++;
             }
@@ -131,7 +131,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $insight_text .= $insight_comparison_text.".";
 
                 $this->insight_dao->insertInsight("outreach_punchcard", $instance->id, $this->insight_date,
-                "Outreach:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
+                "Time of day:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
                 serialize($punchcard));
             }
         }
