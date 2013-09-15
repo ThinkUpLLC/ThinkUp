@@ -38,9 +38,9 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
         if (parent::shouldGenerateInsight('outreach_punchcard', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts))) {
-            require THINKUP_WEBAPP_PATH.'config.inc.php';
+            $cfg = Config::getInstance();
 
-            $local_timezone = new DateTimeZone($THINKUP_CFG['timezone']);
+            $local_timezone = new DateTimeZone($cfg->getValue('timezone'));
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             $punchcard = array();
