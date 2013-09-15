@@ -77,7 +77,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                     $responses_chron[$response_hotd]++;
                 }
 
-                $post_pub_date = new DateTime($post->pub_date, $local_timezone);
+                $post_pub_date = new DateTime($post->pub_date);
                 $post_dotw = date('N',
                 (date('U',
                 strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
