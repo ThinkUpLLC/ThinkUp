@@ -152,6 +152,10 @@ class InsightTerms {
                 return (!$plural) ? 'checkin' : 'checkins';
                 break;
 
+            case 'youtube':
+                return (!$plural) ? 'video' : 'videos';
+                break;
+
             default:
                 return (!$plural) ? 'post' : 'posts';
                 break;
@@ -226,6 +230,10 @@ class InsightTerms {
         switch ($network) {
             case 'twitter':
                 return (!$plural) ? 'follower' : 'followers';
+                break;
+
+            case 'youtube':
+                return (!$plural) ? 'viewer' : 'viewers';
                 break;
 
             default:
