@@ -77,4 +77,10 @@ interface HashtagPostDAO {
      * @return arr Post objects
      */
     public function getTotalPostsByHashtagAndDate($hashtag_id, $for_date=null);
+    /**
+     * Get last post ID by hashtag
+     * @param int $hashtag_id
+     * @return int post_id
+     */
+    public function getLastPostIDByHashtag($hashtag_id);
 }
