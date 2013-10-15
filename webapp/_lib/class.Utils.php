@@ -452,4 +452,54 @@ class Utils {
             return date($format,strtotime("last Saturday",$offset));
         }
     }
+    
+    /**
+     * Validate a date in a specific format. Uses date_create_from_format if it exists
+     * @param str $date 
+     * @param str $format 
+     * @return boolean frue if date is ok, false if not
+     */
+    public static function validateDate($date, $format = 'Y-m-d H:i:s')
+    {        
+        try {
+            if(!function_exists("date_create_from_format")) {
+                $d = Utils::utils_date_create_from_format($format, $date);
+            } else {
+                $d = date_create_from_format($format, $date);
+            }
+            return $d && $d->format($format) == $date;
+        } catch (Exception $e) {
+            return false;
+        }       
+    }
+    
+    /**
+     * date_create_from_format function for PHP versions under than 5.3
+     * @param str $dformat
+     * @param str $dvalue
+     * @return date return a date
+     */
+    public static function utils_date_create_from_format( $dformat, $dvalue )
+    {
+        $schedule = $dvalue;
+        $schedule_format = str_replace(array('Y','m','d', 'H', 'i','s'),
+                array('%Y','%m','%d', '%H', '%M','%S' ) ,$dformat);
+        // %Y, %m and %d correspond to date()'s Y m and d.
+        // %H corresponds to H, %M to i and %S to s
+        $ugly = strptime($schedule, $schedule_format);
+        $ymd = sprintf(
+            // This is a format string that takes six total decimal
+            // arguments, then left-pads them with zeros to either
+            // 4 or 2 characters, as needed
+            '%04d-%02d-%02d %02d:%02d:%02d',
+            $ugly['tm_year'] + 1900,  // This will be "111", so we need to add 1900.
+            $ugly['tm_mon'] + 1,      // This will be the month minus one, so we add one.
+            $ugly['tm_mday'], 
+            $ugly['tm_hour'], 
+            $ugly['tm_min'], 
+            $ugly['tm_sec']
+        );
+        $new_schedule = new DateTime($ymd);    
+        return $new_schedule;
+   }
 }

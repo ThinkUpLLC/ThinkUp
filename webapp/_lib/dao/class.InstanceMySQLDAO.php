@@ -622,4 +622,81 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+
+    public function setPostArchiveLoaded($network_user_id, $network) {
+        $q = "UPDATE ".$this->getTableName()." SET is_archive_loaded_posts = 1 WHERE network_user_id = :network_id AND";
+        $q .= " network=:network";
+        $vars[':network_id'] = $network_user_id;
+        $vars[':network'] = $network;
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+    
+    public function getInstancesPosts($start_date, $end_date, $network, $limit) {
+        $q = "SELECT i.network_user_id, ";
+        $q .= "i.network_username, ";
+        $q .= "i.crawler_last_run, ";
+        $q .= "i.total_posts_by_owner, ";
+        $q .= "i.total_posts_in_system, ";
+        $q .= "i.posts_per_day, ";
+        $q .= "i.posts_per_week, ";
+        $q .= "i.percentage_replies, ";
+        $q .= "i.percentage_links, ";
+        $q .= "i.network, ";
+        $q .= "count(p.author_user_id) AS period_number_posts ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "RIGHT JOIN ";
+        $q .= "(SELECT * FROM #prefix#instances WHERE network= :network ) AS i ";
+        $q .= "ON p.author_user_id = i.network_user_id ";
+        $q .= "AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') >= :start_date ";
+        $q .= "AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') <= :end_date ";
+        $q .= "GROUP BY i.network_user_id ";
+        $q .= "ORDER BY period_number_posts DESC ";
+        $q .= (isset($limit) && is_numeric($limit)) ? "LIMIT ".$limit.";" : ";";
+        $vars = array(
+                ':start_date' => $start_date,
+                ':end_date' => $end_date,
+                ':network' => $network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+    
+    public function getInstancesHashtags($start_date, $end_date, $network, $limit) {
+        $q = "SELECT ";
+        $q .= "i.network_user_id, ";
+        $q .= "i.network_username,  ";
+        $q .= "i.crawler_last_run, ";
+        $q .= "i.network, ";
+        $q .= "h.hashtag,  ";
+        $q .= "h.count_cache, ";
+        $q .= "count(php.post_id) as period_number_posts ";
+        $q .= "FROM #prefix#hashtags h ";
+        $q .= "LEFT JOIN  ";
+        $q .= "	(SELECT p.post_id, hp.hashtag_id ";
+        $q .= "	FROM #prefix#posts p ";
+        $q .= "	JOIN #prefix#hashtags_posts hp ";
+        $q .= "	ON p.post_id = hp.post_id ";
+        $q .= "	WHERE CONVERT_TZ(p.pub_date,'+00:00','+02:00') >= :start_date ";
+        $q .= "	AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') <= :end_date ";
+        $q .= "	) AS php ";
+        $q .= "ON h.id = php.hashtag_id ";
+        $q .= "JOIN #prefix#instances_hashtags ih ON h.id = ih.hashtag_id ";
+        $q .= "JOIN #prefix#instances i ON ih.instance_id = i.id  ";
+        $q .= "WHERE i.network = :network ";
+        $q .= "GROUP BY h.hashtag ";
+        $q .= "ORDER BY period_number_posts DESC ";
+        $q .= (isset($limit) && is_numeric($limit)) ? "LIMIT ".$limit.";" : ";";
+        $vars = array(
+                ':start_date' => $start_date,
+                ':end_date' => $end_date,
+                ':network' => $network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+
 }

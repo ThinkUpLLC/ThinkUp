@@ -191,4 +191,33 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
+    
+    public function getFollowers($date, $network, $limit) {
+        $q = "SELECT DISTINCT u1.*, ch1.date, ";
+        $q .= "    (SELECT  ch2.count ";
+        $q .= "    FROM #prefix#count_history ch2 ";
+        $q .= "    INNER JOIN #prefix#users u2 ";
+        $q .= "    ON u2.user_id = ch2.network_user_id ";
+        $q .= "    WHERE ch2.type='followers' ";
+        $q .= "    AND ch2.date = :date ";
+        $q .= "    AND u2.network = :network ";
+        $q .= "    AND u2.user_id = u1.user_id ";
+        $q .= "    ORDER BY ch2.date DESC, ch2.count DESC ";
+        $q .= "    LIMIT 1)  as followers ";
+        $q .= "FROM #prefix#count_history ch1 ";
+        $q .= "INNER JOIN #prefix#users u1 ";
+        $q .= "ON u1.user_id = ch1.network_user_id ";
+        $q .= "WHERE ch1.type='followers' ";
+        $q .= "AND ch1.date = :date ";
+        $q .= "AND u1.network= :network ";
+        $q .= "ORDER BY followers DESC ";
+        $q .= (isset($limit) && is_numeric($limit)) ? "LIMIT ".$limit.";" : ";";
+        $vars = array(
+                ':date' => $date,
+                ':network' => $network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
 }

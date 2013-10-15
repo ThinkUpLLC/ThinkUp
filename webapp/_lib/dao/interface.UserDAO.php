@@ -81,4 +81,13 @@ interface UserDAO {
      * @return int Total number of affected rows
      */
     public function deleteUsersByHashtagId($hashtag_id);
+    
+    /**
+     * Gets number of followers for every user from a social network in a date.
+     * @param date $date which we want to get the number of followers
+     * @param str $network The network to use in the call. Default twitter
+     * @param int $limit The number of top followers to display from this API call
+     * @return array Users with followers and date
+     */
+    public function getFollowers($date, $network, $limit);
 }

@@ -3007,5 +3007,942 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         }
         $installer_dao = DAOFactory::getDAO('InstallerDAO');
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
+    }        
+    
+    private function buildDataFollowers() {
+        $builders = array();
+
+        //add users               
+        for ($i = 1; $i <= 50; $i++) {
+            $user_twitter_id = 200 + $i;
+            $user_facebook_id = 300 + $i;
+            $user_name_twitter = 'user_name_twitter_'.$user_twitter_id;
+            $user_name_facebook_page = 'user_name_facebook_page_'.$user_facebook_id;
+            $count_twitter = 200 - $i;
+            $count_facebook_page = 300 + $i;
+    
+            $builders[] = FixtureBuilder::build( 'users', array(
+                    'user_id' => $user_twitter_id,
+                    'user_name' => $user_name_twitter,
+                    'full_name' => $user_name_twitter,
+                    'network' => 'twitter'));
+    
+            $builders[] = FixtureBuilder::build( 'users', array(
+                    'user_id' => $user_facebook_id,
+                    'user_name' => $user_name_facebook_page,
+                    'full_name' => $user_name_facebook_page,
+                    'network' => 'facebook page'));
+    
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_twitter_id,
+                    'network' => 'twitter',
+                    'type' => 'followers',
+                    'date' => '2013-10-11',
+                    'count' => $count_twitter));
+    
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_facebook_id,
+                    'network' => 'facebook page',
+                    'type' => 'followers',
+                    'date' => '2013-10-11',
+                    'count' => $count_facebook_page));            
+        }
+
+        //Today
+        for ($i = 1; $i <= 5; $i++) {
+            $user_twitter_id = 200 + $i;    
+            $user_facebook_id = 300 + $i;
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_twitter_id,
+                    'network' => 'twitter',
+                    'type' => 'followers',
+                    'date' => date_format(new DateTime('NOW'),'Y-m-d'),
+                    'count' => 666));
+            
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_facebook_id,
+                    'network' => 'facebook page',
+                    'type' => 'followers',
+                    'date' => date_format(new DateTime('NOW'),'Y-m-d'),
+                    'count' => 999));
+        }
+        
+        return $builders;        
+    }
+    
+    public function testFollowersNoParameters() {
+        //BuildData
+        $builder = $this->buildDataFollowers();
+        //Test no parameters => Today + Twitter + No limit
+        $_GET['type'] = 'followers';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+        $index1 = 201;
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->network, 'twitter');
+            $this->assertEqual($follower->date, date_format(new DateTime('NOW'),'Y-m-d'));
+            $this->assertEqual($follower->followers, 666);
+            $index1 += 1;
+        }               
+    }
+    
+    public function testFollowersOnlyLimit() {
+        //BuildData
+        $builder = $this->buildDataFollowers();
+        //Test only limit=1 => Today + Twitter + limit =1
+        $_GET['type'] = 'followers';
+        $_GET['limit'] = '1';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->debug(Utils::varDumpToString($output));
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output[0]->user_id, 201);
+        $this->assertEqual($output[0]->user_name, 'user_name_twitter_201');
+        $this->assertEqual($output[0]->full_name, 'user_name_twitter_201');
+        $this->assertEqual($output[0]->network, 'twitter');
+        $this->assertEqual($output[0]->date, date_format(new DateTime('NOW'),'Y-m-d'));
+        $this->assertEqual($output[0]->followers, 666);       
+    }
+
+    public function testFollowersOnlyNetwork() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+
+        //Test only network=facebook page => Today + Facebook Page + No limit
+        $_GET['type'] = 'followers';
+        $_GET['network'] = 'facebook page';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+        $index1 = 301;
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($follower->network, 'facebook page');
+            $this->assertEqual($follower->date, date_format(new DateTime('NOW'),'Y-m-d'));
+            $this->assertEqual($follower->followers, 999);
+            $index1+=1;
+        }    
+    }
+
+    public function testFollowersOnlyDate() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+                   
+        //Test only date=2013-10-11 => 2013-10-11 + Twitter + No limit
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 50);
+    
+        //From 201 to 250
+        $index1 = 201;
+        $index2 = 199;
+        $this->assertTrue(is_array($output));
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->network, 'twitter');
+            $this->assertEqual($follower->date, '2013-10-11');
+            $this->assertEqual($follower->followers, $index2);
+            $index1+=1;
+            $index2-=1;
+        }        
+    }
+
+    public function testFollowersDateNotValid() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+
+        //Test date not valid
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-13-11'; //month from 1-12
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '50';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type followers requires valid format date value (yyyy-mm-dd) !!';
+        $this->assertEqual($message,$output->error->message);    
     }    
+    
+    public function testFollowersSQLInjection() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+
+        //Test limit SQL injection
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = ';DROP TABLE tu_count_history;';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 50);
+        
+        //From 201 to 250
+        $index1 = 201;
+        $index2 = 199;
+        $this->assertTrue(is_array($output));
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->network, 'twitter');
+            $this->assertEqual($follower->date, '2013-10-11');
+            $this->assertEqual($follower->followers, $index2);
+            $index1+=1;
+            $index2-=1;
+        }        
+    }
+
+    public function testFollowersLimitEmpty() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+    
+        //Test limit empty
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 50);        
+        
+        //From 201 to 250
+        $index1 = 201;
+        $index2 = 199;
+        $this->assertTrue(is_array($output));
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->network, 'twitter');
+            $this->assertEqual($follower->date, '2013-10-11');
+            $this->assertEqual($follower->followers, $index2);
+            $index1+=1;
+            $index2-=1;
+        }    
+    }
+
+    public function testFollowersTwitter() {    
+        //BuildData
+        $builder = $this->buildDataFollowers();
+    
+        //Test twitter
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '50';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 50);
+    
+        //From 201 to 250
+        $index1 = 201;
+        $index2 = 199;
+        $this->assertTrue(is_array($output));
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_twitter_'.$index1);
+            $this->assertEqual($follower->network, 'twitter');
+            $this->assertEqual($follower->date, '2013-10-11');
+            $this->assertEqual($follower->followers, $index2);
+            $index1+=1;
+            $index2-=1;
+        }
+    }    
+    
+    public function testFollowersFacebookPage() {
+        //BuildData
+        $builder = $this->buildDataFollowers();
+    
+        //Test facebook pages
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $_GET['network'] = 'facebook page';
+        $_GET['limit'] = '50';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 50);
+    
+        //From 350 to 301
+        $index1 = 350;
+        $this->assertTrue(is_array($output));
+        foreach($output as $follower) {
+            $this->assertTrue($follower instanceof stdClass);
+            $this->assertEqual($follower->user_id, $index1);
+            $this->assertEqual($follower->user_name, 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($follower->full_name, 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($follower->network, 'facebook page');
+            $this->assertEqual($follower->date, '2013-10-11');
+            $this->assertEqual($follower->followers, $index1);
+            $index1-=1;
+        }    
+    }
+
+    public function testFollowersNoUsers() {
+        //BuildData
+        $builder = $this->buildDataFollowers();
+    
+        //Test another with no users
+        $_GET['type'] = 'followers';
+        $_GET['date'] = '2013-10-11';
+        $_GET['network'] = 'facebook';
+        $_GET['limit'] = '50';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());;
+        $this->assertEqual(sizeof($output), 0);
+    }
+    
+    private function buildDataInstancesPosts() {
+        $builders = array();
+    
+        //add instances
+        for ($i = 1; $i <= 5; $i++) {
+            $user_twitter_id = 400 + $i;
+            $user_facebook_id = 500 + $i;
+            $user_name_twitter = 'user_name_twitter_'.$user_twitter_id;
+            $user_name_facebook_page = 'user_name_facebook_page_'.$user_facebook_id;
+            
+            $builders[] = FixtureBuilder::build( 'instances', array(
+                    'network_user_id' => $user_twitter_id,
+                    'network_username' => $user_name_twitter,
+                    'is_public' => 1,
+                    'network' => 'twitter'));
+            
+            $builders[] = FixtureBuilder::build( 'instances', array(
+                    'network_user_id' => $user_facebook_id,
+                    'network_username' => $user_name_facebook_page,
+                    'is_public' => 1,
+                    'network' => 'facebook page'));
+            
+            for ($j = 1; $j <= $i; $j++) {
+                $counter_twitter = 400 + ($i-1)*10 + $j;
+                $counter_facebook_page = 500 + ($i-1)*10 + $j;
+                
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_twitter,
+                        'author_user_id' => $user_twitter_id,
+                        'author_username' => $user_name_twitter,
+                        'post_text' => 'This is post ' . $counter_twitter,
+                        'is_protected' => 0,                        
+                        'pub_date' => '2013-10-20 15:52:00',
+                        'in_reply_to_user_id' => null,                        
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'twitter'));     
+                    
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_facebook_page,
+                        'author_user_id' => $user_facebook_id,
+                        'author_username' => $user_name_facebook_page,
+                        'post_text' => 'This is post ' . $counter_facebook_page,
+                        'is_protected' => 0,
+                        'pub_date' => '2013-10-20 15:56:00',
+                        'in_reply_to_user_id' => null,
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'facebook page'));
+            }
+        }
+    
+        //Today
+        $user_twitter_id = 401;
+        $user_facebook_id = 501;
+        $user_name_twitter = 'user_name_twitter_'.$user_twitter_id;
+        $user_name_facebook_page = 'user_name_facebook_page_'.$user_facebook_id;
+        
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                'post_id' =>  600,
+                'author_user_id' => $user_twitter_id,
+                'author_username' => $user_name_twitter,
+                'post_text' => 'This is post 600',
+                'is_protected' => 0,                        
+                'pub_date' => date_format(new DateTime('NOW'),'Y-m-d H:i:s'),
+                'in_reply_to_user_id' => null,                        
+                'in_reply_to_post_id' => null,
+                'in_retweet_of_post_id' => null,
+                'network' => 'twitter')); 
+        
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                'post_id' =>  601,
+                'author_user_id' => $user_facebook_id,
+                'author_username' => $user_name_facebook_page,
+                'post_text' => 'This is post 601',
+                'is_protected' => 0,
+                'pub_date' => date_format(new DateTime('NOW'),'Y-m-d H:i:s'),
+                'in_reply_to_user_id' => null,
+                'in_reply_to_post_id' => null,
+                'in_retweet_of_post_id' => null,
+                'network' => 'facebook page'));
+        
+        return $builders;
+    }
+    
+    public function testInstancesPostsNoParameters() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+        //Test no parameters => Today between 00:00:00 to 23:59:59 + Twitter + No limit
+        $_GET['type'] = 'instances_posts';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 12); //12 twitter instances
+        foreach($output as $instance_posts) {
+            if ($instance_posts->network_user_id == 401) {
+                $this->assertEqual($instance_posts->network_username, 'user_name_twitter_401');
+                $this->assertEqual($instance_posts->network, 'twitter');
+                $this->assertEqual($instance_posts->period_number_posts, 1);                
+            }   else {
+                $this->assertEqual($instance_posts->period_number_posts, 0);
+            }         
+        }
+    }
+    
+    public function testInstancesPostsOnlyLimit() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+        //Test only limit=1 => Today between 00:00:00 to 23:59:59 + Twitter + limit =1
+        $_GET['type'] = 'instances_posts';
+        $_GET['limit'] = '1';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output[0]->network_user_id, 401);
+        $this->assertEqual($output[0]->network_username, 'user_name_twitter_401');
+        $this->assertEqual($output[0]->network, 'twitter');
+        $this->assertEqual($output[0]->period_number_posts, 1);
+    }
+    
+    public function testInstancesPostsOnlyNetwork() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        //Test only network=facebook page => Today between 00:00:00 to 23:59:59 + Facebook Page + No limit
+        $_GET['type'] = 'instances_posts';
+        $_GET['network'] = 'facebook page';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        //$this->debug(Utils::varDumpToString($output));
+        $this->assertEqual(sizeof($output), 5);
+        foreach($output as $instance_posts) {
+            if ($instance_posts->network_user_id == 501) {
+                $this->assertEqual($instance_posts->network_username, 'user_name_facebook_page_501');
+                $this->assertEqual($instance_posts->period_number_posts, 1);                
+            }   else {
+                $this->assertWithinMargin($instance_posts->network_user_id, 503,2);
+                $this->assertNotEqual($instance_posts->network_username, 'user_name_facebook_page_501');
+                $this->assertEqual($instance_posts->period_number_posts, 0);
+            }         
+            $this->assertEqual($instance_posts->network, 'facebook page');
+        }
+    }
+    
+    public function testInstancesPostsOnlyDate() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+         
+        //Test only date=2013-10-20 => 2013-10-20 + Twitter + No limit
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-10-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 12);
+    
+        //From 405 to 401
+        $index=405;
+        for($i = 0; $i < 5; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $index);
+            $this->assertEqual($output[$i]->network_username, 'user_name_twitter_'.$index);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, $index-400);
+            $index-=1;
+        }
+    }
+    
+    public function testInstancesPostsDateNotValid() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        //Test date not valid
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-13-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '5';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_posts requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+        
+        $_GET['start_date'] = '2013-10-32 00:00:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_posts requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+
+        $_GET['start_date'] = '2013-10-20 25:00:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_posts requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+        
+        $_GET['start_date'] = '2013-10-20 00:66:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_posts requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+
+        $_GET['start_date'] = '2013-10-20 00:00:60';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_posts requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    }
+    
+    public function testInstancesPostsSQLInjection() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        //Test limit SQL injection
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-10-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = ';DROP TABLE tu_count_history;';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 12);
+    
+        //From 405 to 401
+        $index=405;
+        for($i = 0; $i < 5; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $index);
+            $this->assertEqual($output[$i]->network_username, 'user_name_twitter_'.$index);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, $index-400);
+            $index-=1;
+        }
+    }
+    
+    public function testInstancesPostsLimitEmpty() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        //Test limit SQL injection
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-10-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 12);
+    
+        //From 405 to 401
+        $index=405;
+        for($i = 0; $i < 5; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $index);
+            $this->assertEqual($output[$i]->network_username, 'user_name_twitter_'.$index);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, $index-400);
+            $index-=1;
+        }
+    }
+    
+    public function testInstancesPostsTwitter() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-10-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '5';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+    
+        //From 405 to 401
+        $index=405;
+        for($i = 0; $i < 5; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $index);
+            $this->assertEqual($output[$i]->network_username, 'user_name_twitter_'.$index);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, $index-400);
+            $index-=1;
+        }
+    }
+    
+    public function testInstancesPostsFacebookPage() {
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        $_GET['type'] = 'instances_posts';
+        $_GET['start_date'] = '2013-10-20 00:00:00';
+        $_GET['end_date'] = '2013-10-20 23:59:59';
+        $_GET['network'] = 'facebook page';
+        $_GET['limit'] = '5';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+    
+        //From 505 to 501
+        $index=505;
+        for($i = 0; $i < 5; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $index);
+            $this->assertEqual($output[$i]->network_username, 'user_name_facebook_page_'.$index);
+            $this->assertEqual($output[$i]->network, 'facebook page');
+            $this->assertEqual($output[$i]->period_number_posts, $index-500);
+            $index-=1;
+        }
+    }
+    
+    private function buildDataInstancesHashtags() {
+        $builders = array();
+    
+        //add instances, hashtags_instances, hashtags
+        
+        //hashtags
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 10,
+                'hashtag' => '#APMTV3',
+                'network'=>'twitter',
+                'count_cache' => 1845));
+        
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 11,                
+                'hashtag' => '#ohdTV3',
+                'network'=>'twitter',
+                'count_cache' => 6828));
+        
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 12,
+                'hashtag' => '#MalalaTV3',
+                'network'=>'twitter',
+                'count_cache' => 0));
+        
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 13,
+                'hashtag' => '#CampTV3',
+                'network'=>'twitter',
+                'count_cache' => 0));
+        
+        //instances
+        $builders[] = FixtureBuilder::build( 'instances', array(
+                'id' => 10,
+                'network_user_id' => 600,
+                'network_username' => 'TV3',
+                'is_public' => 1,
+                'network' => 'twitter'));
+        
+        $builders[] = FixtureBuilder::build( 'instances', array(
+                'id' => 11,
+                'network_user_id' => 601,
+                'network_username' => '30minuts',
+                'is_public' => 1,
+                'network' => 'twitter'));    
+
+        // add instances_hashtags 1
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 10, 
+                'hashtag_id'=>10));
+                
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 10,
+                'hashtag_id'=>11));
+        
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 11,
+                'hashtag_id'=>12));
+
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 11,
+                'hashtag_id'=>13));
+        
+        //add posts and hashtags_posts  
+        $user = array('TV3','TV3','30minuts');
+        $user_id = array(10,10,11);
+        $text = array('#APMTV3','#ohdTV3','#MalalaTV3');
+        $hashtag_id = array(10,11,12);
+                
+        for ($i = 1; $i <= 3; $i++) {                                                            
+            for ($j = 1; $j <= $i; $j++) {
+                
+                $counter_twitter = 600 + ($i-1)*10 + $j;    
+                
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_twitter,
+                        'author_user_id' => $user_id[$i-1],
+                        'author_username' => $user[$i-1],
+                        'post_text' => 'This is hashtags post ' . $text[$i-1],
+                        'is_protected' => 0,
+                        'pub_date' => '2013-10-22 11:31:00',
+                        'in_reply_to_user_id' => null,
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'twitter'));
+                
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter_twitter, 
+                        'hashtag_id' => $hashtag_id[$i-1], 
+                        'network' => 'twitter'));                               
+            }
+        }
+    
+        //Today        
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                'post_id' =>  700,
+                'author_user_id' => 601,
+                'author_username' => '30minuts',
+                'post_text' => 'This is hashtags post #CampTV3',
+                'is_protected' => 0,
+                'pub_date' => date_format(new DateTime('NOW'),'Y-m-d H:i:s'),
+                'in_reply_to_user_id' => null,
+                'in_reply_to_post_id' => null,
+                'in_retweet_of_post_id' => null,
+                'network' => 'twitter'));
+        
+        $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                'post_id' => 700,
+                'hashtag_id' => 13,
+                'network' => 'twitter'));
+            
+        return $builders;
+    }
+    
+    public function testInstancesHashtagsNoParameters() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+        //Test no parameters => Today between 00:00:00 to 23:59:59 + Twitter + No limit
+        $_GET['type'] = 'instances_hashtags';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());        
+        $this->assertEqual(sizeof($output), 5); //+ first
+        
+        //Check
+        for($i = 0; $i < count($output); $i++) {
+            if ($i == 0) {
+                $this->assertEqual($output[$i]->network_user_id, 601);
+                $this->assertEqual($output[$i]->network_username, '30minuts');
+                $this->assertEqual($output[$i]->hashtag, '#CampTV3');
+                $this->assertEqual($output[$i]->period_number_posts, 1);
+            }   else {
+                $this->assertEqual($output[$i]->period_number_posts, 0);
+            }
+            $this->assertEqual($output[$i]->network, 'twitter');            
+        }
+    }
+    
+    /*
+     *  $this->debug(Utils::varDumpToString($output));
+     *  $user = array('30minuts','TV3','TV3','30minuts');
+     *  $user_id = array(601,600,600, 601);
+     *  $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3','#CampTV3');
+     *   
+     */
+    
+    public function testInstancesHashtagsOnlyLimit() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+        //Test only limit=1 => Today between 00:00:00 to 23:59:59 + Twitter + limit =1
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['limit'] = '1';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $this->assertEqual($output[0]->network_user_id, 601);
+        $this->assertEqual($output[0]->network_username, '30minuts');
+        $this->assertEqual($output[0]->hashtag, '#CampTV3');
+        $this->assertEqual($output[0]->network, 'twitter');
+        $this->assertEqual($output[0]->period_number_posts, 1);
+    }
+    
+    public function testInstancesHashtagsOnlyNetwork() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        //Test only network=facebook page => Today between 00:00:00 to 23:59:59 + Facebook Page + No limit
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['network'] = 'facebook page';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 0);
+    }
+    
+    public function testInstancesHashtagsOnlyDate() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+         
+        //Test only date=2013-10-20 => 2013-10-20 + Twitter + No limit
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-10-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+    
+        $user = array('30minuts','TV3','TV3');
+        $user_id = array(601,600,600);
+        $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3');
+
+        for($i = 0; $i < 3; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $user_id[$i]);
+            $this->assertEqual($output[$i]->network_username, $user[$i]);
+            $this->assertEqual($output[$i]->hashtag, $hashtag[$i]);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, 3-$i);
+        }
+    }
+    
+    public function testInstancesHashtagsDateNotValid() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        //Test date not valid
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-13-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '5';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_hashtags requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    
+        $_GET['start_date'] = '2013-10-32 00:00:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_hashtags requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    
+        $_GET['start_date'] = '2013-10-22 25:00:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_hashtags requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    
+        $_GET['start_date'] = '2013-10-22 00:66:00';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_hashtags requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    
+        $_GET['start_date'] = '2013-10-22 00:00:60';
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 1);
+        $message = 'A request of type instances_hashtags requires valid format date value (yyyy-mm-dd HH:ii:ss) !!';
+        $this->assertEqual($message,$output->error->message);
+    }
+    
+    public function testInstancesHashtagsSQLInjection() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        //Test limit SQL injection
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-10-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = ';DROP TABLE tu_hashtags;';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+    
+        $user = array('30minuts','TV3','TV3');
+        $user_id = array(601,600,600);
+        $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3');
+
+        for($i = 0; $i < 3; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $user_id[$i]);
+            $this->assertEqual($output[$i]->network_username, $user[$i]);
+            $this->assertEqual($output[$i]->hashtag, $hashtag[$i]);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, 3-$i);
+        }
+    }
+    
+    public function testInstancesHashtagsLimitEmpty() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        //Test limit SQL injection
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-10-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 5);
+    
+        $user = array('30minuts','TV3','TV3');
+        $user_id = array(601,600,600);
+        $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3');
+
+        for($i = 0; $i < 3; $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $user_id[$i]);
+            $this->assertEqual($output[$i]->network_username, $user[$i]);
+            $this->assertEqual($output[$i]->hashtag, $hashtag[$i]);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, 3-$i);
+        }
+    }
+    
+    public function testInstancesHashtagsTwitter() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-10-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $_GET['network'] = 'twitter';
+        $_GET['limit'] = '3';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 3);
+    
+        $user = array('30minuts','TV3','TV3');
+        $user_id = array(601,600,600);
+        $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3');
+
+        for($i = 0; $i < count($output); $i++) {
+            $this->assertEqual($output[$i]->network_user_id, $user_id[$i]);
+            $this->assertEqual($output[$i]->network_username, $user[$i]);
+            $this->assertEqual($output[$i]->hashtag, $hashtag[$i]);
+            $this->assertEqual($output[$i]->network, 'twitter');
+            $this->assertEqual($output[$i]->period_number_posts, 3-$i);
+        }
+    }
+    
+    public function testInstancesHashtagsFacebookPage() {
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        $_GET['type'] = 'instances_hashtags';
+        $_GET['start_date'] = '2013-10-22 00:00:00';
+        $_GET['end_date'] = '2013-10-22 23:59:59';
+        $_GET['network'] = 'facebook page';
+        $_GET['limit'] = '5';
+        $controller = new PostAPIController();
+        $output = json_decode($controller->go());
+        $this->assertEqual(sizeof($output), 0);
+    }
+    
 }

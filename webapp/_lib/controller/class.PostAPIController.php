@@ -118,7 +118,31 @@ class PostAPIController extends ThinkUpController {
      * The keyword to use. No default value. In requests that require hashtag data must be set.
      * @var str
      */
-    public $keyword;    
+    public $keyword;   
+    /**
+     * The date to retrieve users followers
+     * @var date
+     * 
+     */
+    public $date; 
+    /**
+     * The number maximum if users follower to get. Default is no limit.
+     * @var int
+     *
+     */
+    public $limit;
+    /**
+     * The start date which you want to get the number of posts done
+     * @var date
+     *
+     */
+    public $start_date;
+    /**
+     * The end date which you want to get the number of posts done
+     * @var date
+     *
+     */
+    public $end_date;
     /**
      * A User object set when either the user_id or username variables are set. If you are using User data at any point
      * in this class, you should use this object.
@@ -145,7 +169,12 @@ class PostAPIController extends ThinkUpController {
      *
      * @var HashtagDAO
      */
-    private $hashtag_dao;    
+    private $hashtag_dao;   
+    /**
+     *
+     * @var InstanceDAO
+     */
+    private $instance_dao;
     /**
      * Constructor
      *
@@ -218,7 +247,18 @@ class PostAPIController extends ThinkUpController {
         if (isset($_GET['keyword'])) {
             $this->keyword = $_GET['keyword'];
         }
-        
+        if (isset($_GET['date'])) {
+            $this->date = $_GET['date'];
+        }
+        if (isset($_GET['limit'])) {
+            $this->limit = $_GET['limit'];
+        } 
+        if (isset($_GET['start_date'])) {
+            $this->start_date = $_GET['start_date'];
+        }
+        if (isset($_GET['end_date'])) {
+            $this->end_date = $_GET['end_date'];
+        }               
         /*
          * END READ IN OF QUERY STRING VARS
          */
@@ -299,6 +339,7 @@ class PostAPIController extends ThinkUpController {
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->user_dao = DAOFactory::getDAO('UserDAO');
         $this->hashtag_dao = DAOFactory::getDAO('HashtagDAO');
+        $this->instance_dao = DAOFactory::getDAO('InstanceDAO');
 
         /*
          * Use the information gathered from the query string to retrieve a
@@ -346,9 +387,19 @@ class PostAPIController extends ThinkUpController {
                 }
             }
         } else { //post-related API call
-            if ($this->network == "facebook") {
-                //assume all Facebook posts are private
-                throw new PostNotFoundException();
+            switch ($this->type) {
+                case 'followers':
+                    break;
+                case 'instances_posts':
+                    break;
+                case 'instances_hashtags':
+                    break;
+                default:
+                    if ($this->network == "facebook") {
+                        //assume all Facebook posts are private
+                        throw new PostNotFoundException();
+                    }                    
+                    break;                                                   
             }
         }
 
@@ -646,6 +697,79 @@ class PostAPIController extends ThinkUpController {
                             $this->count, $this->order_by, $this->direction, $this->page, $this->is_public);
                 }
                 break;
+            
+                /*
+                 *  Gets users with followers in a date for a network
+                 *  
+                 *  Optional arguments: date, network, limit
+                 *  
+                 *  Docs: http://thinkup.com/docs/userguide/api/posts/followers.html
+                 *  
+                 */
+            case 'followers':
+                $this->network = (is_null($this->network)) ? 'twitter' : $this->network;
+                $this->date = (!isset($this->date) || is_null($this->date) ) ? 
+                    date_format(new DateTime('NOW'),'Y-m-d') : $this->date;
+                //check date is ok, ex: 2013-10-11
+                if (Utils::validateDate($this->date,'Y-m-d')) {
+                    $data = $this->user_dao->getFollowers($this->date, $this->network,$this->limit);
+                }
+                else {
+                    $m = 'A request of type ' . $this->type . ' requires valid format date value (yyyy-mm-dd) !!';
+                    throw new APIErrorException($m);
+                }
+                break;
+                
+                /*
+                 *  Get number of posts done for every instance from a social network between two dates
+                *
+                *  Optional arguments: start_date, end_date, network, limit
+                *
+                *  Docs: http://thinkup.com/docs/userguide/api/posts/instances_posts.html
+                *
+                */
+            case 'instances_posts':
+                $this->network = (is_null($this->network)) ? 'twitter' : $this->network;
+                $this->start_date = (!isset($this->start_date) || is_null($this->start_date) ) ?
+                    date_format(new DateTime('NOW'),'Y-m-d').' 00:00:00' : $this->start_date;
+                $this->end_date = (!isset($this->end_date) || is_null($this->end_date) ) ?
+                    date_format(new DateTime('NOW'),'Y-m-d').' 23:59:59' : $this->end_date;
+                //check date is ok, ex: 2013-10-11 15:25:25
+                if (Utils::validateDate($this->start_date) && Utils::validateDate($this->end_date)) {
+                    $data = $this->instance_dao->getInstancesPosts($this->start_date, $this->end_date, $this->network, 
+                            $this->limit);
+                }
+                else {
+                    $m = 'A request of type ' . $this->type . ' requires valid format date value ' . 
+                            '(yyyy-mm-dd HH:ii:ss) !!';
+                    throw new APIErrorException($m);
+                }
+                break;
+                /*
+                 *  Get number of posts done for every instance from a social network between two dates
+                *
+                *  Optional arguments: start_date, end_date, network, limit
+                *
+                *  Docs: http://thinkup.com/docs/userguide/api/posts/instances_posts.html
+                *
+                */
+            case 'instances_hashtags':
+                $this->network = (is_null($this->network)) ? 'twitter' : $this->network;
+                $this->start_date = (!isset($this->start_date) || is_null($this->start_date) ) ?
+                date_format(new DateTime('NOW'),'Y-m-d').' 00:00:00' : $this->start_date;
+                $this->end_date = (!isset($this->end_date) || is_null($this->end_date) ) ?
+                date_format(new DateTime('NOW'),'Y-m-d').' 23:59:59' : $this->end_date;
+                //check date is ok, ex: 2013-10-11 15:25:25
+                if (Utils::validateDate($this->start_date) && Utils::validateDate($this->end_date)) {
+                    $data = $this->instance_dao->getInstancesHashtags($this->start_date, $this->end_date, 
+                            $this->network, $this->limit);
+                }
+                else {
+                    $m = 'A request of type ' . $this->type . ' requires valid format date value ' .
+                            '(yyyy-mm-dd HH:ii:ss) !!';
+                    throw new APIErrorException($m);
+                }
+                break;                
 
                 /*
                  * Generate an error because the API call type was not recognized.
@@ -663,13 +787,23 @@ class PostAPIController extends ThinkUpController {
 
         switch ($this->network) {
             case 'twitter':
-                if (is_array($data)) {
-                    foreach ($data as $key => $post) {
-                        $data[$key] = $this->convertPostToTweet($post);
-                    }
-                } else {
-                    $data = $this->convertPostToTweet($data);
-                }
+                switch ($this->type) { 
+                    case 'followers':
+                        break;
+                    case 'instances_posts':
+                        break;
+                    case 'instances_hashtags':
+                        break;
+                    default:
+                        if (is_array($data)) {
+                            foreach ($data as $key => $post) {
+                                $data[$key] = $this->convertPostToTweet($post);
+                            }
+                        } else {
+                            $data = $this->convertPostToTweet($data);
+                        }                        
+                        break;
+                }                              
                 break;
 
             case 'facebook':

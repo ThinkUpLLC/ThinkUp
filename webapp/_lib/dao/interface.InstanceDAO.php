@@ -235,4 +235,33 @@ interface InstanceDAO {
      * @return int Count of updated instances
      */
     public function updateUsername($id, $username);
+
+    /**
+     * Sets the post archive loaded value to true
+     * @param str network_user_id
+     * @param str network
+     * @return int Count of updated instances
+     */
+    public function setPostArchiveLoaded($network_user_id, $network);
+    
+    /**
+     * Get number of posts done for every instance from a social network between two dates.
+     * @param start_date $date start date which you want to get the number of posts done. Default Today at 00:00:00. 
+     * @param end_date $date end date which you want to get the number of posts done. Default Today at 23:59:59.
+     * @param str $network The network to use in the call. Default twitter
+     * @param int $limit The number of top instances posts to display from this API call
+     * @return array Instances with number of posts in system between dates
+     */
+    public function getInstancesPosts($start_date, $end_date, $network, $limit);
+    
+    /**
+     * Get number of posts saved with a hashtag for every instance from a social network between two dates.
+     * @param start_date $date start date which you want to get the number of posts saved with a hashtag. Default Today at 00:00:00.
+     * @param end_date $date end date which you want to get the number of posts saved with a hashtag. Default Today at 23:59:59.
+     * @param str $network The network to use in the call. Default twitter
+     * @param int $limit The number of top instances hashtags to display from this API call
+     * @return array Instances with number of posts saved with a hashtag in system between dates
+     */
+    public function getInstancesHashtags($start_date, $end_date, $network, $limit);
+
 }

@@ -50,7 +50,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'zuck',
         'full_name'=>'Mark Zuckerberg', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco',
         'network'=>'facebook'));
-
+        
         $this->logger = Logger::getInstance();
         return $builders;
     }
@@ -419,5 +419,136 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'full_name'=>'efectivament'));
 
         return $builders;
+    }
+    
+    public function testGetFollowers() {
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        
+        //BuildData
+        $builder = $this->buildDataFollowers();
+
+        //Test limit
+        $followers = $user_dao->getFollowers('2013-10-11','twitter',1);
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),1);
+        $this->assertEqual($followers[0]['user_id'], 201);
+        $this->assertEqual($followers[0]['user_name'], 'user_name_twitter_201');
+        $this->assertEqual($followers[0]['followers'], 199);
+        
+        //Test      
+        $followers = $user_dao->getFollowers('2013-10-11','twitter',50);        
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+
+        //Check
+        $index1 = 201;
+        $index2 = 199;
+        for ($i = 0; $i < 50; $i++) {
+            $this->assertEqual($followers[$i]['user_id'], $index1);
+            $this->assertEqual($followers[$i]['user_name'], 'user_name_twitter_'.$index1);
+            $this->assertEqual($followers[$i]['full_name'], 'user_name_twitter_'.$index1);
+            $this->assertEqual($followers[$i]['network'], 'twitter');
+            $this->assertEqual($followers[$i]['date'], '2013-10-11');
+            $this->assertEqual($followers[$i]['followers'], $index2);
+            $index1+=1;
+            $index2-=1;
+        }
+        
+        //Test no limit
+        $followers = $user_dao->getFollowers('2013-10-11','twitter');
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+
+        //Test limit no numeric
+        $followers = $user_dao->getFollowers('2013-10-11','twitter','aa');
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+        
+        //Test limit empty string
+        $followers = $user_dao->getFollowers('2013-10-11','twitter','');
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+        
+        //Test limit null
+        $followers = $user_dao->getFollowers('2013-10-11','twitter',null);
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+        
+        //Test date no date
+        $followers = $user_dao->getFollowers('2013-66-88','twitter',50);
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),0);
+        
+        //Test other network
+        $followers = $user_dao->getFollowers('2013-10-11','facebook');
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),0);
+
+        //Test other date
+        $followers = $user_dao->getFollowers('2013-10-10','twitter');
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),0);
+        
+        //Test facebook page
+        $followers = $user_dao->getFollowers('2013-10-11','facebook page',50);
+        $this->assertIsA($followers,'array');
+        $this->assertEqual(count($followers),50);
+        
+        //Check
+        $index1 = 350;
+        for ($i = 0; $i < 50; $i++) {
+            $this->assertEqual($followers[$i]['user_id'], $index1);
+            $this->assertEqual($followers[$i]['user_name'], 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($followers[$i]['full_name'], 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($followers[$i]['network'], 'facebook page');
+            $this->assertEqual($followers[$i]['date'], '2013-10-11');
+            $this->assertEqual($followers[$i]['followers'], $index1);
+            $index1-=1;
+        }
+        
+    }
+    
+    private  function buildDataFollowers() {
+        $builders = array();
+
+        //add users               
+        for ($i = 1; $i <= 50; $i++) {
+            $user_twitter_id = 200 + $i;
+            $user_facebook_id = 300 + $i;
+            $user_name_twitter = 'user_name_twitter_'.$user_twitter_id;
+            $user_name_facebook_page = 'user_name_facebook_page_'.$user_facebook_id;
+            $count_twitter = 200 - $i;
+            $count_facebook_page = 300 + $i;
+    
+            $builders[] = FixtureBuilder::build( 'users', array(
+                    'user_id' => $user_twitter_id,
+                    'user_name' => $user_name_twitter,
+                    'full_name' => $user_name_twitter,
+                    'network' => 'twitter'));
+    
+            $builders[] = FixtureBuilder::build( 'users', array(
+                    'user_id' => $user_facebook_id,
+                    'user_name' => $user_name_facebook_page,
+                    'full_name' => $user_name_facebook_page,
+                    'network' => 'facebook page'));
+    
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_twitter_id,
+                    'network' => 'twitter',
+                    'type' => 'followers',
+                    'date' => '2013-10-11',
+                    'count' => $count_twitter));
+    
+            $builders[] = FixtureBuilder::build( 'count_history', array(
+                    'network_user_id' => $user_facebook_id,
+                    'network' => 'facebook page',
+                    'type' => 'followers',
+                    'date' => '2013-10-11',
+                    'count' => $count_facebook_page));            
+        }
+        
+        return $builders;
+        
     }
 }

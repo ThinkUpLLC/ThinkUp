@@ -795,4 +795,341 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[1]->id, 6);
         $this->assertEqual($result[1]->network_username, "yaya");
     }
+
+    public function testSetPostArchiveLoaded() {
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'johndoe', 'network'=>'twitter', 'network_viewer_id'=>15,
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1, 'is_archive_loaded_posts'=>0));
+
+        $this->DAO->setPostArchiveLoaded(17, 'twitter');
+        $result = $this->DAO->getByUsername('johndoe');
+
+        $this->assertTrue($result->is_archive_loaded_posts);
+    }
+    
+    public function testGetInstancesPosts() {
+    
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+    
+        //BuildData
+        $builder = $this->buildDataInstancesPosts();
+    
+        //Test limit
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter',1);
+        $this->assertIsA($instances_posts,'array');
+        $this->assertEqual(count($instances_posts),1);
+        $this->assertEqual($instances_posts[0]['network_user_id'], 405);
+        $this->assertEqual($instances_posts[0]['network_username'], 'user_name_twitter_405');
+        $this->assertEqual($instances_posts[0]['period_number_posts'], 5);
+    
+        //Test
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter',5);
+        $this->assertEqual(count($instances_posts),5);
+    
+        //Check
+        $index1 = 405;
+        for ($i = 0; $i < count($instances_posts); $i++) {
+            $this->assertEqual($instances_posts[$i]['network_user_id'], $index1);
+            $this->assertEqual($instances_posts[$i]['network_username'], 'user_name_twitter_'.$index1);
+            $this->assertEqual($instances_posts[$i]['network'], 'twitter');
+            $this->assertEqual($instances_posts[$i]['period_number_posts'], $index1-400);
+            $index1-=1;
+        }
+    
+        //Test no limit
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter');
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+    
+        //Test limit no numeric
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter','aa');
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+    
+        //Test limit empty string
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter','');
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+    
+        //Test limit null
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59','twitter',null);
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+    
+        //Test other date
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-19 00:00:00','2013-10-19 23:59:59','twitter');
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+        for ($i = 0; $i < count($instances_posts); $i++) {
+            $this->assertEqual($instances_posts[$i]['network'], 'twitter');
+            $this->assertEqual($instances_posts[$i]['period_number_posts'], 0);
+        }
+    
+        //Test date not exist
+        $instances_posts = $instance_dao->getInstancesPosts('2013-66-20 00:00:00','2013-66-20 23:59:59','twitter');
+        $this->assertEqual(count($instances_posts),8); //plus jack, etc
+        for ($i = 0; $i < count($instances_posts); $i++) {
+            $this->assertEqual($instances_posts[$i]['period_number_posts'], 0);
+        }        
+        
+        //Test Facebook Page
+        $instances_posts = $instance_dao->getInstancesPosts('2013-10-20 00:00:00','2013-10-20 23:59:59',
+                'facebook page',5);
+        $this->assertEqual(count($instances_posts),5);
+    
+        //Check
+        $index1 = 505;
+        for ($i = 0; $i < count($instances_posts); $i++) {
+            $this->assertEqual($instances_posts[$i]['network_user_id'], $index1);
+            $this->assertEqual($instances_posts[$i]['network_username'], 'user_name_facebook_page_'.$index1);
+            $this->assertEqual($instances_posts[$i]['network'], 'facebook page');
+            $this->assertEqual($instances_posts[$i]['period_number_posts'], $index1-500);
+            $index1-=1;
+        }
+    
+    }
+    
+    private function buildDataInstancesPosts() {
+        $builders = array();
+    
+        //add instances
+        for ($i = 1; $i <= 5; $i++) {
+            $user_twitter_id = 400 + $i;
+            $user_facebook_id = 500 + $i;
+            $user_name_twitter = 'user_name_twitter_'.$user_twitter_id;
+            $user_name_facebook_page = 'user_name_facebook_page_'.$user_facebook_id;
+            
+            $builders[] = FixtureBuilder::build( 'instances', array(
+                    'network_user_id' => $user_twitter_id,
+                    'network_username' => $user_name_twitter,
+                    'is_public' => 1,
+                    'network' => 'twitter'));
+            
+            $builders[] = FixtureBuilder::build( 'instances', array(
+                    'network_user_id' => $user_facebook_id,
+                    'network_username' => $user_name_facebook_page,
+                    'is_public' => 1,
+                    'network' => 'facebook page'));
+            
+            for ($j = 1; $j <= $i; $j++) {
+                $counter_twitter = 400 + ($i-1)*10 + $j;
+                $counter_facebook_page = 500 + ($i-1)*10 + $j;
+                
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_twitter,
+                        'author_user_id' => $user_twitter_id,
+                        'author_username' => $user_name_twitter,
+                        'post_text' => 'This is post ' . $counter_twitter,
+                        'is_protected' => 0,                        
+                        'pub_date' => '2013-10-20 15:52:00',
+                        'in_reply_to_user_id' => null,                        
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'twitter'));     
+                    
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_facebook_page,
+                        'author_user_id' => $user_facebook_id,
+                        'author_username' => $user_name_facebook_page,
+                        'post_text' => 'This is post ' . $counter_facebook_page,
+                        'is_protected' => 0,
+                        'pub_date' => '2013-10-20 15:56:00',
+                        'in_reply_to_user_id' => null,
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'facebook page'));
+            }
+        }
+        
+        return $builders;
+    }
+    
+    public function testGetInstancesHashtags() {
+    
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+    
+        //BuildData
+        $builder = $this->buildDataInstancesHashtags();
+    
+        //Test limit
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter',1);
+        $this->assertIsA($instances_hashtags,'array');
+        $this->assertEqual(count($instances_hashtags),1);
+        $this->assertEqual($instances_hashtags[0]['network_user_id'], 601);
+        $this->assertEqual($instances_hashtags[0]['network_username'], '30minuts');
+        $this->assertEqual($instances_hashtags[0]['network'], 'twitter');
+        $this->assertEqual($instances_hashtags[0]['hashtag'], '#MalalaTV3');
+        $this->assertEqual($instances_hashtags[0]['period_number_posts'], 3);
+    
+        //Test
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter',5);
+        $this->assertEqual(count($instances_hashtags),4);
+    
+        //Check
+        $user = array('30minuts','TV3','TV3','30minuts');
+        $user_id = array(601,600,600, 601);
+        $hashtag = array('#MalalaTV3','#ohdTV3','#APMTV3','#CampTV3');
+        
+        for ($i = 0; $i < 4; $i++) {
+            $this->assertEqual($instances_hashtags[$i]['network_user_id'], $user_id[$i]);
+            $this->assertEqual($instances_hashtags[$i]['network_username'], $user[$i]);
+            $this->assertEqual($instances_hashtags[$i]['network'], 'twitter');
+            $this->assertEqual($instances_hashtags[$i]['hashtag'], $hashtag[$i]);
+            $this->assertEqual($instances_hashtags[$i]['period_number_posts'], 3-$i);     
+        }
+    
+        //Test no limit
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter');
+        $this->assertEqual(count($instances_hashtags),4);
+    
+        //Test limit no numeric
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter','aa');
+        $this->assertEqual(count($instances_hashtags),4);
+    
+        //Test limit empty string
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter','');
+        $this->assertEqual(count($instances_hashtags),4);
+    
+        //Test limit null
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'twitter',null);
+        $this->assertEqual(count($instances_hashtags),4);
+    
+        //Test other date
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-19 00:00:00','2013-10-19 23:59:59',
+                'twitter');
+        $this->assertEqual(count($instances_hashtags),4);
+        for ($i = 0; $i < count($instances_hashtags); $i++) {
+            $this->assertEqual($instances_hashtags[$i]['period_number_posts'], 0);
+        }
+    
+        //Test date not exist
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-66-20 00:00:00','2013-66-20 23:59:59',
+                'twitter');
+        $this->assertEqual(count($instances_hashtags),4);
+        for ($i = 0; $i < count($instances_hashtags); $i++) {
+            $this->assertEqual($instances_hashtags[$i]['period_number_posts'], 0);
+        }
+    
+        //Test Facebook Page
+        $instances_hashtags = $instance_dao->getInstancesHashtags('2013-10-22 00:00:00','2013-10-22 23:59:59',
+                'facebook page',5);
+        $this->assertEqual(count($instances_hashtags),0);
+    
+    
+    }
+    
+    private function buildDataInstancesHashtags() {
+        $builders = array();
+    
+        //add instances, hashtags_instances, hashtags
+    
+        //hashtags
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 10,
+                'hashtag' => '#APMTV3',
+                'network'=>'twitter',
+                'count_cache' => 1845));
+    
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 11,
+                'hashtag' => '#ohdTV3',
+                'network'=>'twitter',
+                'count_cache' => 6828));
+    
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 12,
+                'hashtag' => '#MalalaTV3',
+                'network'=>'twitter',
+                'count_cache' => 0));
+    
+        $builders[] = FixtureBuilder::build('hashtags', array(
+                'id' => 13,
+                'hashtag' => '#CampTV3',
+                'network'=>'twitter',
+                'count_cache' => 0));
+    
+        //instances
+        $builders[] = FixtureBuilder::build( 'instances', array(
+                'id' => 10,
+                'network_user_id' => 600,
+                'network_username' => 'TV3',
+                'is_public' => 1,
+                'network' => 'twitter'));
+    
+        $builders[] = FixtureBuilder::build( 'instances', array(
+                'id' => 11,
+                'network_user_id' => 601,
+                'network_username' => '30minuts',
+                'is_public' => 1,
+                'network' => 'twitter'));
+    
+        // add instances_hashtags 1
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 10,
+                'hashtag_id'=>10));
+    
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 10,
+                'hashtag_id'=>11));
+    
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 11,
+                'hashtag_id'=>12));
+    
+        $builders[] = FixtureBuilder::build('instances_hashtags', array(
+                'instance_id' => 11,
+                'hashtag_id'=>13));
+    
+        //add posts and hashtags_posts
+        $user = array('TV3','TV3','30minuts');
+        $user_id = array(10,10,11);
+        $text = array('#APMTV3','#ohdTV3','#MalalaTV3');
+        $hashtag_id = array(10,11,12);
+    
+        for ($i = 1; $i <= 3; $i++) {
+            for ($j = 1; $j <= $i; $j++) {
+    
+                $counter_twitter = 600 + ($i-1)*10 + $j;
+    
+                $builders[] = FixtureBuilder::build( 'posts', array(
+                        'post_id' =>  $counter_twitter,
+                        'author_user_id' => $user_id[$i-1],
+                        'author_username' => $user[$i-1],
+                        'post_text' => 'This is hashtags post ' . $text[$i-1],
+                        'is_protected' => 0,
+                        'pub_date' => '2013-10-22 11:31:00',
+                        'in_reply_to_user_id' => null,
+                        'in_reply_to_post_id' => null,
+                        'in_retweet_of_post_id' => null,
+                        'network' => 'twitter'));
+    
+                $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                        'post_id' => $counter_twitter,
+                        'hashtag_id' => $hashtag_id[$i-1],
+                        'network' => 'twitter'));
+            }
+        }
+    
+        //Today
+        $builders[] = FixtureBuilder::build( 'posts', array(
+                'post_id' =>  700,
+                'author_user_id' => 601,
+                'author_username' => '30minuts',
+                'post_text' => 'This is hashtags post #CampTV3',
+                'is_protected' => 0,
+                'pub_date' => date_format(new DateTime('NOW'),'Y-m-d H:i:s'),
+                'in_reply_to_user_id' => null,
+                'in_reply_to_post_id' => null,
+                'in_retweet_of_post_id' => null,
+                'network' => 'twitter'));
+    
+        $builders[] = FixtureBuilder::build( 'hashtags_posts', array(
+                'post_id' => 700,
+                'hashtag_id' => 13,
+                'network' => 'twitter'));
+    
+        return $builders;
+    }
+
 }
