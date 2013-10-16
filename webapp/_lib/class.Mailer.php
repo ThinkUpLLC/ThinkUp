@@ -32,7 +32,8 @@ class Mailer {
      */
     const EMAIL = '/latest_email';
     /**
-     * Send email from ThinkUp instalation. If you're running tests, just write the message headers and contents to
+     * Send email from ThinkUp installation. Will attempt to send via Mandrill if the key has been set.
+     * If you're running tests, just write the message headers and contents to
      * the file system in the data directory.
      * @param str $to A valid email address
      * @param str $subject
@@ -40,25 +41,12 @@ class Mailer {
      */
     public static function mail($to, $subject, $message) {
         $config = Config::getInstance();
+        $mandrill_api_key = $config->getValue('mandrill_api_key');
 
-        $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
-        $host = self::getHost();
-
-        $mail_header = "From: \"{$app_title}\" <notifications@{$host}>\r\n";
-        $mail_header .= "X-Mailer: PHP/".phpversion();
-
-        //don't send email when running tests, just write it to the filesystem for assertions
-        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
-          $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
-            $fp = fopen($test_email, 'w');
-            fwrite($fp, $mail_header."\n");
-            fwrite($fp, "to: $to\n");
-            fwrite($fp, "subject: $subject\n");
-            fwrite($fp, "message: $message");
-            fclose($fp);
-            return $message;
+        if (isset($mandrill_api_key) && $mandrill_api_key != '') {
+            self::mailViaMandrill($to, $subject, $message);
         } else {
-            mail($to, $subject, $message, $mail_header);
+            self::mailViaPHP($to, $subject, $message);
         }
     }
     /**
@@ -85,4 +73,74 @@ class Mailer {
             return '';
         }
     }
+    /**
+     * Return the contents of the last email Mailer "sent" out.
+     * For testing purposes only; this will return nothing in production.
+     * @return str The contents of the last email sent
+     */
+    private static function setLastMail($message) {
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
+        $fp = fopen($test_email, 'w');
+        fwrite($fp, $message);
+        fclose($fp);
+    }
+    /**
+     * Send email from ThinkUp installation via PHP's built-in mail() function.
+     * If you're running tests, just write the message headers and contents to the file system in the data directory.
+     * @param str $to A valid email address
+     * @param str $subject
+     * @param str $message
+     */
+    public static function mailViaPHP($to, $subject, $message) {
+        $config = Config::getInstance();
+
+        $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
+        $host = self::getHost();
+
+        $mail_header = "From: \"{$app_title}\" <notifications@{$host}>\r\n";
+        $mail_header .= "X-Mailer: PHP/".phpversion();
+
+        //don't send email when running tests, just write it to the filesystem for assertions
+        if (Utils::isTest()) {
+            self::setLastMail($mail_header."\n" .
+                                "to: $to\n" .
+                                "subject: $subject\n" .
+                                "message: $message");
+        } else {
+            mail($to, $subject, $message, $mail_header);
+        }
+    }
+    /**
+     * Send email from ThinkUp installation via Mandrill's API.
+     * If you're running tests, just write the message headers and contents to the file system in the data directory.
+     * @param str $to A valid email address
+     * @param str $subject
+     * @param str $message
+     */
+    public static function mailViaMandrill($to, $subject, $message) {
+        $config = Config::getInstance();
+
+        $app_title = $config->getValue('app_title_prefix') . "ThinkUp";
+        $host = self::getHost();
+        $mandrill_api_key = $config->getValue('mandrill_api_key');
+
+        try {
+            require_once THINKUP_WEBAPP_PATH.'_lib/extlib/mandrill/Mandrill.php';
+            $mandrill = new Mandrill($mandrill_api_key);
+            $message = array( 'text' => $message, 'subject' => $subject, 'from_email' => "notifications@${host}",
+            'from_name' => $app_title, 'to' => array( array( 'email' => $to, 'name' => $to ) ) );
+
+            //don't send email when running tests, just write it to the filesystem for assertions
+            if (Utils::isTest()) {
+                self::setLastMail(json_encode($message));
+            } else {
+                $result = $mandrill->messages->send($message, $async, $ip_pool);
+                //DEBUG
+                //print_r($result);
+            }
+    } catch (Mandrill_Error $e) {
+        throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
+        ': ' . $e->getMessage());
+    }
+}
 }

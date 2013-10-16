@@ -20,3 +20,13 @@ This is the path to ThinkUp's writable file cache directory. By default, this fo
 customize the location of the folder where ThinkUp writes its cache and data backup files, set it here.
 
 The default value is ``$THINKUP_CFG['source_root_path'] . 'data/'``.
+
+mandrill_api_key
+----------------
+
+If your web server is unable to send email via PHP's built-in mail() function, ThinkUp can send email via
+`Mandrill <http://mandrillapp.com>`_, a transactional email service.
+
+To set ThinkUp to send email via Mandrill, in ``config.inc.php``, set ``mandrill_api_key`` to your Mandrill API key.
+To get an API key, sign up for a Mandrill account, log in, and create a new API key in Settings > SMTP & API
+Credentials.

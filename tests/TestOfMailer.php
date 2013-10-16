@@ -33,10 +33,14 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $config = Config::getInstance();
+        $config->setValue("mandrill_api_key", "");
     }
 
     public function tearDown(){
         parent::tearDown();
+        $config = Config::getInstance();
+        $config->setValue("mandrill_api_key", "");
         // delete test email file if it exists
         $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
         if (file_exists($test_email)) {
@@ -61,5 +65,22 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
         $this->debug($email_body);
         $this->assertPattern('/From: "My Other Installation of ThinkUp" <notifications@my_other_hostname>/',
         $email_body);
+    }
+
+    public function testMandrill() {
+        $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "My Crazy Custom ");
+        $config->setValue("mandrill_api_key", "1234567890");
+        $_SERVER['HTTP_HOST'] = "thinkup.com";
+        Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
+        $email_body = Mailer::getLastMail();
+        $this->debug($email_body);
+
+        // Exact JSON structure copied from Mandrill's site
+        $json = '{"text":"Me worky, yo?","subject":"Testing 123","from_email":"notifications@thinkup.com",'.
+        '"from_name":"My Crazy Custom ThinkUp","to":[{"email":"you@example.com","name":"you@example.com"}]}';
+
+        // Compare JSON string, ignoring whitespace differences
+        $this->assertEqual($json, $email_body);
     }
 }

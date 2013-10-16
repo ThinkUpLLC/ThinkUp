@@ -65,6 +65,8 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $THINKUP_CFG['THINKUP_VERSION_REQUIRED'] =
         array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
         $THINKUP_CFG['enable_profiler']=false;
+        //tests assume Mandrill is not enabled
+        $THINKUP_CFG['mandrill_api_key']='';
         $values_array = $config->getValuesArray();
         $this->assertIdentical($THINKUP_CFG, $values_array);
     }

@@ -452,4 +452,11 @@ class Utils {
             return date($format,strtotime("last Saturday",$offset));
         }
     }
+    /**
+     * Return whether currently in test mode.
+     * @return bool Whether in test mode
+     */
+    public static function isTest() {
+        return (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS";
+    }
 }
