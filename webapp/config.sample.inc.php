@@ -30,6 +30,9 @@ $THINKUP_CFG['cache_lifetime']               = 600;
 // 20 minutes or more since the last crawl.
 $THINKUP_CFG['rss_crawler_refresh_rate']  = 20;
 
+// Optional Mandrill key. Set this to a valid key to send via Mandrill instead.
+$THINKUP_CFG['mandrill_key'] = '';
+
 /************************************************/
 /***  DATABASE CONFIG                         ***/
 /************************************************/

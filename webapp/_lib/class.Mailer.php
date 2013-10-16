@@ -32,7 +32,8 @@ class Mailer {
      */
     const EMAIL = '/latest_email';
     /**
-     * Send email from ThinkUp instalation. If you're running tests, just write the message headers and contents to
+     * Send email from ThinkUp installation. Will attempt to send via Mandrill if the key has been set.
+     * If you're running tests, just write the message headers and contents to
      * the file system in the data directory.
      * @param str $to A valid email address
      * @param str $subject
@@ -40,32 +41,19 @@ class Mailer {
      */
     public static function mail($to, $subject, $message) {
         $config = Config::getInstance();
+        $mandrill_key = $config->getValue('mandrill_key');
 
-        $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
-        $host = self::getHost();
-
-        $mail_header = "From: \"{$app_title}\" <notifications@{$host}>\r\n";
-        $mail_header .= "X-Mailer: PHP/".phpversion();
-
-        //don't send email when running tests, just write it to the filesystem for assertions
-        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
-          $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
-            $fp = fopen($test_email, 'w');
-            fwrite($fp, $mail_header."\n");
-            fwrite($fp, "to: $to\n");
-            fwrite($fp, "subject: $subject\n");
-            fwrite($fp, "message: $message");
-            fclose($fp);
-            return $message;
+        if ($mandrill_key) {
+            MailerMandrill::mail($to, $subject, $message);
         } else {
-            mail($to, $subject, $message, $mail_header);
+            MailerPHP::mail($to, $subject, $message);
         }
     }
     /**
      * Return the current host's name, ie, $_SERVER['HTTP_HOST'] if it is set.
      * @return str Host name
      */
-    private static function getHost() {
+    public static function getHost() {
         if (isset($_SERVER['HTTP_HOST'])) {
             return $_SERVER['HTTP_HOST'];
         } else {
@@ -84,5 +72,23 @@ class Mailer {
         } else {
             return '';
         }
+    }
+    /**
+     * Return the contents of the last email Mailer "sent" out.
+     * For testing purposes only; this will return nothing in production.
+     * @return str The contents of the last email sent
+     */
+    public static function setLastMail($message) {
+        $test_email = FileDataManager::getDataPath(Mailer::EMAIL);
+        $fp = fopen($test_email, 'w');
+        fwrite($fp, $message);
+        fclose($fp);
+    }
+    /**
+     * Return whether currently in test mode.
+     * @return bool Whether in test mode
+     */
+    public static function isTest() {
+        return (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS";
     }
 }
