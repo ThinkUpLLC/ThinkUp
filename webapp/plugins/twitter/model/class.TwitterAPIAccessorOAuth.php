@@ -242,6 +242,19 @@ class TwitterAPIAccessorOAuth {
         return null;
     }
     /**
+     * Convert JSON errors codes to array.
+     * @param str $error_data
+     * @return array
+     */
+    public function parseJSONErrorCodeAPI($error_data) {
+        $json = JSONDecoder::decode($error_data);
+        $parsed_payload = array();
+        if (isset($json->errors)) {
+            $parsed_payload['error'] = $json->errors[0]->code;
+        }
+        return $parsed_payload;
+    }
+    /**
      * Convert JSON representation of tweet to an array.
      * @param str $json_tweet
      * @return array Post values

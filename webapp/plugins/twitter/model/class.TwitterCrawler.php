@@ -1049,6 +1049,14 @@ class TwitterCrawler {
                     } else {
                         $this->logger->logError("Got non-200 response for " .$endpoint->getShortPath(),
                         __METHOD__.','.__LINE__);
+                        $error_code = $this->api->parseJSONErrorCodeAPI($payload);
+                        if ($http_status == 403 && $error_code['error'] == 163) {
+                            $this->logger->logError("Marking follow inactive due to 403 Source User Not Found ".
+                            "error response with API 163 error", __METHOD__.','.__LINE__);
+                            // deactivate in both directions
+                            $follow_dao->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter');
+                            $follow_dao->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
+                        }
                         if ($http_status == 404) {
                             $this->logger->logError("Marking follow inactive due to 404 response",
                             __METHOD__.','.__LINE__);

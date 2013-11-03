@@ -321,4 +321,16 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($results[1]["post_count"], 5848);
         $this->assertEqual($results[1]["friend_count"], 713);
     }
+    public function testParseJSONErrorCodeAPI() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+
+        //List of users with cursor
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/error_source_user.json');
+
+        $results = $api->parseJSONErrorCodeAPI($data);
+
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual($results["error"], 163);
+    }
 }
