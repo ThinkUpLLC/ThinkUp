@@ -106,7 +106,11 @@ class Loader {
      */
     public static function definePathConstants() {
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
+            if (strpos(__FILE__, 'webapp/_lib' ) !== false) { // root is up 3 directories
+                define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(dirname(__FILE__)))) .'/');
+            } else { // root is up 2 directories
+                define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
+            }
         }
         if (!defined('THINKUP_WEBAPP_PATH') ) {
             if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
