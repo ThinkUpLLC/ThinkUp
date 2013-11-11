@@ -37,8 +37,10 @@ class LoginController extends ThinkUpController {
         $this->view_mgr->addHelp('login', 'userguide/accounts/index');
         $this->disableCaching();
 
+        // set var for open registration
         $config = Config::getInstance();
-        $this->addToView('is_registration_open', $config->getValue('is_registration_open'));
+        $is_registration_open = $config->getValue('is_registration_open');
+        $this->addToView('is_registration_open', $is_registration_open);
 
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
@@ -46,11 +48,6 @@ class LoginController extends ThinkUpController {
             return $controller->go();
         } else  {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
-
-            // set var for open registration
-            $config = Config::getInstance();
-            $is_registration_open = $config->getValue('is_registration_open');
-            $this->addToView('is_registration_open', $is_registration_open);
 
             if (isset($_POST['Submit']) && $_POST['Submit']=='Log In' && isset($_POST['email']) &&
             isset($_POST['pwd']) ) {
