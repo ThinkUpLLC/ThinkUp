@@ -30,59 +30,59 @@
  */
 interface OwnerDAO {
     /**
-     * Gets owner by email address
+     * Get owner by email address.
      * @param str $email
      * @return Owner
      */
     public function getByEmail($email);
     /**
-     * Gets owner by id
+     * Get owner by ID.
      * @param int $id
      * @return Owner
      */
     public function getById($id);
     /**
-     * Gets all ThinkUp owners
+     * Get all ThinkUp owners.
      * @return array Of Owner objects
      */
     public function getAllOwners();
     /**
-     * Checks whether or not owner is in storage
+     * Check if owner is in storage.
      * @param str $email
      * @return bool
      */
     public function doesOwnerExist($email);
 
     /**
-     * Get password for activated owner by email
+     * Get password for activated owner by email.
      * @param str $email
      * @return str|bool Password string or false if none
      */
     public function getPass($email);
 
     /**
-     * Get activation code for an owner
+     * Get activation code for an owner by email.
      * @param str $email
      * @return str Activation code
      */
     public function getActivationCode($email);
 
     /**
-     * Activate an owner
+     * Activate an owner.
      * @param str $email
      * @return int Affected rows
      */
     public function activateOwner($email);
 
     /**
-     * Dectivate an owner
+     * Dectivate an owner.
      * @param str $email
      * @return int Affected rows
      */
     public function deactivateOwner($email);
 
     /**
-     * Set hashed, owner password in the data store.
+     * Set hashed, owner password in storage.
      * @param str $email
      * @param str $password
      * @return int Affected rows
@@ -90,7 +90,7 @@ interface OwnerDAO {
     public function updatePassword($email, $password);
 
     /**
-     * Insert owner
+     * Insert owner.
      * @param str $email
      * @param str $password
      * @param str $full_name
@@ -99,14 +99,14 @@ interface OwnerDAO {
     public function create($email, $password, $full_name);
 
     /**
-     * Update last_login field for given owner
+     * Update last_login field for given owner.
      * @param str $email Owner's email
      * @return int Affected rows
      */
     public function updateLastLogin($email);
 
     /**
-     * Update an owner's token for recovering their password
+     * Update an owner's token for recovering their password.
      * @param str $email The email address of the owner to set it for
      * @param str $token The MD5 token and timestamp, separated by an underscore
      * @return int Affected rows
@@ -114,22 +114,20 @@ interface OwnerDAO {
     public function updatePasswordToken($email, $token);
 
     /**
-     * Load an owner by their recovery token
+     * Load an owner by their recovery token.
      * @param str $token The token to load, minus the timestamp
      * @return int The full Owner object
      */
     public function getByPasswordToken($token);
 
     /**
-     * Check if admin owner exists
-     *
+     * Check if admin owner exists.
      * @return bool Whether or not admin user exists in the store.
      */
     public function doesAdminExist();
 
     /**
-     * Insert an activated admin owner
-     *
+     * Insert an activated admin owner.
      * @param str $email
      * @param str $password
      * @param str $full_name
@@ -139,7 +137,6 @@ interface OwnerDAO {
 
     /**
      * Promote an owner to admin status.
-     *
      * @param str $email Owner email address.
      * @return int Update count
      */
@@ -147,8 +144,7 @@ interface OwnerDAO {
 
     /**
      * Gets a list of the admin users
-     *
-     * @return array An array of Owners
+     * @return arr An array of Owners
      */
     public function getAdmins();
 
@@ -181,8 +177,7 @@ interface OwnerDAO {
     public function clearAccountStatus($email);
 
     /**
-     * Activates an owner account.
-     *
+     * Activate an owner.
      * @param str $owner_id
      * @param int $is_activated Active = 1, Inactive=0.
      * @return int number of updated rows.
@@ -190,8 +185,7 @@ interface OwnerDAO {
     public function setOwnerActive($id, $is_activated);
 
     /**
-     * Sets an owner's admin status.
-     *
+     * Sets owner's admin status.
      * @param str $owner_id
      * @param int $is_admin Active = 1, Inactive=0.
      * @return int number of updated rows.
@@ -199,8 +193,7 @@ interface OwnerDAO {
     public function setOwnerAdmin($id, $is_admin);
 
     /**
-     * Generates and sets a new API key.
-     *
+     * Generate and set a new API key.
      * @param str $owner_id
      * @return str A new API Key
      */
@@ -213,4 +206,19 @@ interface OwnerDAO {
      * @returns bool True if password is valid, false if it is not
      */
     public function isOwnerAuthorized($email, $password);
+
+    /**
+     * Get private API key for activated owner by email.
+     * @param str $email
+     * @return str|bool Private API key string or false if none.
+     */
+    public function getPrivateAPIKey($email);
+
+    /**
+     * Checks if the hashed email address and private API key are valid credentials.
+     * @param str $email
+     * @param str $private_api_key
+     * @returns bool True if credentials are valid, false if not.
+     */
+    public function isOwnerAuthorizedViaPrivateAPIKey($email, $private_api_key);
 }

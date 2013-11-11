@@ -29,81 +29,68 @@
  */
 class Owner {
     /**
-     * @var int
+     * @var int Internal unique ID.
      */
     var $id;
     /**
-     *
-     * @var str
+     * @var str User full name.
      */
     var $full_name;
     /**
-     *
-     * @var str
+     * @var str User email.
      */
     var $email;
     /**
-     *
-     * @var bool Default false
+     * @var date Date user registered for an account.
      */
-    var $is_admin = false;
+    var $joined;
     /**
-     *
-     * @var bool Default false
+     * @var bool If user is activated, 1 for true, 0 for false.
      */
     var $is_activated = false;
     /**
-     *
-     * @var str Date
+     * @var bool If user is an admin, 1 for true, 0 for false.
+     */
+    var $is_admin = false;
+    /**
+     * @var date Last time user logged into ThinkUp.
      */
     var $last_login;
     /**
-     *
-     * @var array Of instances
-     */
-    var $instances = null;
-    /**
-     * Token to email to user for resetting password
-     * @var str
-     */
-    var $password_token;
-
-    /**
-     * Count of failed login attempts
-     * @var int
+     * @var int Current number of failed login attempts.
      */
     var $failed_logins;
-
     /**
-     * String describing acount status, like "Too many failed logins" or "Never activated"
-     * @var str
+     * @var str Description of account status, i.e., "Inactive due to excessive failed login attempts".
      */
     var $account_status;
-
     /**
-     * String api_key for API auth
-     * @var str
+     * @var str Key to authorize API calls.
      */
     var $api_key;
-
     /**
-     * Constructor
-     * @param array $val Key/value pairs to construct Owner
-     * @return Owner
+     * @var str Optional non-user-facing API key.
      */
-    public function __construct($val=false) {
-        if ($val) {
-            $this->id = $val["id"];
-            $this->full_name = $val["full_name"];
-            $this->email = $val['email'];
-            $this->last_login = $val['last_login'];
-            $this->is_admin = PDODAO::convertDBToBool($val["is_admin"]);
-            $this->is_activated = PDODAO::convertDBToBool($val["is_activated"]);
-            $this->account_status = $val["account_status"];
-            $this->failed_logins = $val["failed_logins"];
+    var $api_key_private;
+    /**
+     * @var arr Non-persistent, used for UI, array of instances associated with owner.
+     */
+    var $instances = null;
+    public function __construct($row = false) {
+        if ($row) {
+            $this->id = $row['id'];
+            $this->full_name = $row['full_name'];
+            $this->email = $row['email'];
+            $this->joined = $row['joined'];
+            $this->is_activated = PDODAO::convertDBToBool($row['is_activated']);
+            $this->is_admin = PDODAO::convertDBToBool($row['is_admin']);
+            $this->last_login = $row['last_login'];
+            $this->failed_logins = $row['failed_logins'];
+            $this->account_status = $row['account_status'];
+            $this->api_key = $row['api_key'];
+            $this->api_key_private = $row['api_key_private'];
         }
     }
-
     /**
      * Setter
      * @param array $instances

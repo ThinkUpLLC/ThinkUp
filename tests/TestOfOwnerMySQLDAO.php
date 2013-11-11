@@ -437,4 +437,49 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($this->DAO->isOwnerAuthorized('ttuser1@example.com', 'wrong'),
         'Credentials should be invalid');
     }
+
+    public function testGetPrivateAPIKey() {
+        $builders_array = array();
+        // build our data
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser2@example.com', 'is_activated'=>0, 'is_admin'=>0, 'api_key_private'=>''));
+
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser3@example.com', 'is_activated'=>1, 'is_admin'=>1, 'api_key_private'=>'aabbccdd'));
+        // init our dao
+        $dao = new OwnerMySQLDAO();
+        $result = $dao->getPrivateAPIKey('ttuser2@example.com');
+        $this->assertFalse($result);
+
+        $result = $dao->getPrivateAPIKey('ttuser3@example.com');
+        $this->assertEqual($result, 'aabbccdd');
+    }
+
+    public function testIsOwnerAuthorizedViaPrivateAPIKey() {
+        $builders_array = array();
+        // build our data
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser2@example.com', 'is_activated'=>0, 'is_admin'=>0, 'api_key_private'=>''));
+
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser3@example.com', 'is_activated'=>1, 'is_admin'=>1, 'api_key_private'=>'aabbccdd'));
+        // init our dao
+        $dao = new OwnerMySQLDAO();
+
+        //empty api key for empty api key
+        $result = $dao->isOwnerAuthorizedViaPrivateAPIKey('ttuser2@example.com', '');
+        $this->assertFalse($result);
+
+        //wrong api key for email address
+        $result = $dao->isOwnerAuthorizedViaPrivateAPIKey('ttuser3@example.com', 'xyz');
+        $this->assertFalse($result);
+
+        //right api key for email address
+        $result = $dao->isOwnerAuthorizedViaPrivateAPIKey('ttuser3@example.com', 'aabbccdd');
+        $this->assertTrue($result);
+
+        //email address that doesn't exist
+        $result = $dao->isOwnerAuthorizedViaPrivateAPIKey('idontexisty@example.com', 'aabbccdd');
+        $this->assertFalse($result);
+    }
 }

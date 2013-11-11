@@ -218,7 +218,7 @@ SQL;
               SET password_token=:token
               WHERE email=:email";
         $vars = array(
-            ":token" => $token, 
+            ":token" => $token,
             ":email" => $email
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
@@ -449,4 +449,25 @@ SQL;
             return ($hashed_pwd == $db_password);
         }
     }
+
+    public function getPrivateAPIKey($email) {
+        $q = "SELECT api_key_private FROM #prefix#owners  WHERE email = :email AND is_activated='1' LIMIT 1;";
+        $vars = array(
+            ':email'=>$email
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        if (!isset($result['api_key_private']) || $result['api_key_private'] == '') {
+            return false;
+        } else {
+            return $result['api_key_private'];
+        }
+    }
+
+    public function isOwnerAuthorizedViaPrivateAPIKey($email, $private_api_key) {
+        $db_private_api_key = $this->getPrivateAPIKey($email);
+        return ($db_private_api_key === $private_api_key);
+    }
+
 }

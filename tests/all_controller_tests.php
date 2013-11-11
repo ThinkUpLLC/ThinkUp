@@ -68,6 +68,7 @@ $controller_test_list = array(
 "TestOfRSSController",
 "TestOfUpgradeDatabaseController",
 "TestOfPostAPIController",
+"TestOfSessionAPILoginController",
 "TestOfSearchController",
 "TestOfStreamerAuthController",
 "TestOfUpdateNowController",
