@@ -649,8 +649,8 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "RIGHT JOIN ";
         $q .= "(SELECT * FROM #prefix#instances WHERE network= :network ) AS i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
-        $q .= "AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') >= :start_date ";
-        $q .= "AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') <= :end_date ";
+        $q .= "AND p.pub_date >= :start_date ";
+        $q .= "AND p.pub_date <= :end_date ";
         $q .= "GROUP BY i.network_user_id ";
         $q .= "ORDER BY period_number_posts DESC ";
         $q .= (isset($limit) && is_numeric($limit)) ? "LIMIT ".$limit.";" : ";";
@@ -679,8 +679,8 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "	FROM #prefix#posts p ";
         $q .= "	JOIN #prefix#hashtags_posts hp ";
         $q .= "	ON p.post_id = hp.post_id ";
-        $q .= "	WHERE CONVERT_TZ(p.pub_date,'+00:00','+02:00') >= :start_date ";
-        $q .= "	AND CONVERT_TZ(p.pub_date,'+00:00','+02:00') <= :end_date ";
+        $q .= "	WHERE p.pub_date >= :start_date ";
+        $q .= "	AND p.pub_date <= :end_date ";
         $q .= "	) AS php ";
         $q .= "ON h.id = php.hashtag_id ";
         $q .= "JOIN #prefix#instances_hashtags ih ON h.id = ih.hashtag_id ";
