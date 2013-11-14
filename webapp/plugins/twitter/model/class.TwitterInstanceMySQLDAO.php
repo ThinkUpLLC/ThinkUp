@@ -35,8 +35,8 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false) {
         $id = parent::insert($network_user_id, $network_username, $network, $viewer_id);
         $q  = "INSERT INTO ".$this->getMetaTableName()." ";
-        $q .= "(id) ";
-        $q .= "VALUES (:instance_id) ";
+        $q .= "(id, last_reply_id) ";
+        $q .= "VALUES (:instance_id, '') ";
         $vars = array(
             ':instance_id'=>$id
         );
