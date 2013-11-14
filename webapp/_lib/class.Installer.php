@@ -481,7 +481,7 @@ class Installer {
     }
 
     /**
-     * Populate tables/execute queries in build-db_mysql-upcoming-release.sql
+     * Populate tables/execute queries in build-db_mysql.sql
      *
      * @param array $config database configuration
      * @return array Queries for update
@@ -497,14 +497,18 @@ class Installer {
     }
 
     /**
-     * Read the contents of the webapp/install/sql/build-db_mysql-upcoming-release.sql file.
+     * Read the contents of the webapp/install/sql/build-db_mysql.sql file.
      * Replace all instances of 'tu_' with the custom table prefix.
      *
      * @param string $table_prefix custom table prefix to replace the 'tu_' prefix
      * @return string
      */
     private function getInstallQueries($table_prefix) {
-        $query_file = THINKUP_WEBAPP_PATH . 'install/sql/build-db_mysql-upcoming-release.sql';
+        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+            $query_file = THINKUP_WEBAPP_PATH . 'install/sql/build-db_mysql-upcoming-release.sql';
+        } else {
+            $query_file = THINKUP_WEBAPP_PATH . 'install/sql/build-db_mysql.sql';
+        }
         if ( !file_exists($query_file) ) {
             throw new InstallerException("File <code>$query_file</code> is not found.", self::ERROR_FILE_NOT_FOUND);
         }
@@ -751,12 +755,16 @@ class Installer {
     }
 
     /**
-     * Return array of tables that appear in ThinkUp's build-db_mysql-upcoming-release.sql file
+     * Return array of tables that appear in ThinkUp's build-db_mysql.sql file
      * @return array Table names
      */
     public function getTablesToInstall() {
         $table_names = array();
-        $install_queries = file_get_contents(THINKUP_WEBAPP_PATH."install/sql/build-db_mysql-upcoming-release.sql");
+        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+            $install_queries = file_get_contents(THINKUP_WEBAPP_PATH."install/sql/build-db_mysql-upcoming-release.sql");
+        } else {
+            $install_queries = file_get_contents(THINKUP_WEBAPP_PATH."install/sql/build-db_mysql.sql");
+        }
         $queries = explode(';', $install_queries);
         if ( $queries[count($queries)-1] == '' ) {
             array_pop($queries);
