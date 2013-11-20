@@ -131,7 +131,7 @@
     Fill in the following settings.<br />
     <strong>App Display Name:</strong> <span style="font-family:Courier;">{$logged_in_user} ThinkUp</span><br />
     <strong>App Namespace:</strong> [leave blank]<br />
-    <strong>Web Hosting:</strong> [Do not check box]<br />
+    <strong>App Category:</strong> [Leave as default: Other - Choose a sub-category]<br />
     Click "Continue", enter in the security word, and click "Continue" again
 </li>
 <li>
