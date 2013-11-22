@@ -56,4 +56,35 @@ interface VideoDAO {
      * getHotVideosVisualizationData()
      */
     public function getHotVideos($username, $network, $limit, $column, $as=null);
+    /**
+     * Returns the highest number of views a video received for all time if $duration is null and for the last $duration
+     * days if is not.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the video was posted on
+     * @param  int $duration How many days before today to include in the count, or null for all time
+     * @param  str $start_date The date to duration is relative to, or todays date if null
+     * @return int Highest view count in the specified time period
+     */
+    public function getHighestViews($username, $network, $duration=null, $start_date=null);
+    /**
+     * Returns the average number of views a video received for all time if $duration is null and for the last $duration
+     * days if is not.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the video was posted on
+     * @param  int $duration How many days before today to include in the count, or null for all time
+     * @param  str $start_date The date to duration is relative to, or todays date if null
+     * @return int Average view count in the specified time period
+     */
+    public function getAverageViews($username, $network, $duration=null, $start_date=null);
+    /**
+     * Returns true if the user has posted videos which have been viewed in $duration days since today if $since is null
+     * or since $since if it is not.
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  str $duration Defaults to null and includes every video in the check, if set only includes videos from
+     *                       the last $duration days.
+     * @param str $since_date Defaults to todays date or if set includes videos since $since_date
+     * @return int True or False
+     */
+    public function doesUserHaveVideosWithViewsSinceDate($username, $network, $duration, $since=null);
 }
