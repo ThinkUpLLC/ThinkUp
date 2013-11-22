@@ -56,4 +56,12 @@ interface VideoDAO {
      * getHotVideosVisualizationData()
      */
     public function getHotVideos($username, $network, $limit, $column, $as=null);
+    /**
+     * Returns the total number of subscribers gained or lost for $limit videos
+     * @param  str $username Username of the user to retrieve the count for
+     * @param  str $network  Network the videos were posted on
+     * @param  int $limit The maximum number of videos to retur
+     * @return Array An array with the subscriber change, video title and pub_date for up to $limit videos
+     */
+    public function getNetSubscriberChange($username, $network, $limit);
 }
