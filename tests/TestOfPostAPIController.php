@@ -841,6 +841,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
     public function testPost() {
         $config = Config::getInstance();
+        $config->setValue('timezone', 'utc');
 
         $_GET['type'] = 'post';
         $_GET['post_id'] = '137';
