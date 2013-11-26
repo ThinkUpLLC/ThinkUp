@@ -241,12 +241,10 @@ class FacebookCrawler {
             $is_protected = ($network=='facebook')?1:0;
             //Get likes count
             $likes_count = 0;
+            //Normalize likes to be one array
             if (isset($p->likes)) {
-                if (is_int($p->likes)) {
-                    $likes_count = $p->likes;
-                } elseif (isset($p->likes->count) && is_int($p->likes->count) )  {
-                    $likes_count = $p->likes->count;
-                }
+                $p->likes = $this->normalizeLikes($p->likes);
+                $likes_count = $p->likes->count;
             }
 
             // Normalize comments to be one array
@@ -348,6 +346,8 @@ class FacebookCrawler {
                             if (is_array($post_comments) && sizeof($post_comments) > 0) {
                                 foreach ($post_comments as $c) {
                                     if (isset($c->from)) {
+                                        // Sometimes the id is parent_poster_postId
+                                        // sometimes it's just parent_postId
                                         $comment_id = explode("_", $c->id);
                                         if (count($comment_id) == 3) {
                                             $comment_id = $comment_id[2];
@@ -705,6 +705,42 @@ class FacebookCrawler {
                 $comments = FacebookGraphAPIAccessor::rawApiRequest($next_url);
             } else {
                 $comments = null;
+            }
+        }
+        return $output;
+    }
+
+    /**
+     * Take a list of likes from a page or a post, run through pagination
+     * and add a count member to the object
+     * @param  object $likes Likes Object structure from Facebook API
+     * @return object
+     */
+    private function normalizeLikes($likes)
+    {
+        $output = (object) array('count' => 0, 'data' => array());
+        // Just in case we get an object with the legacy layout
+        if (!isset($likes->data)) {
+            if (is_int($likes)) {
+                $output->count = $likes;
+            }
+            elseif (is_object($likes) && isset($likes->count) && is_int($likes->count)) {
+                $output->count = $likes->count;
+            }
+            return $output;
+        }
+
+        while ($likes !== null) {
+            foreach ($likes->data as $like) {
+                $output->data[] = $like;
+                $output->count++;
+            }
+            if (!empty($likes->paging->next)) {
+               $next_url = $likes->paging->next . '&access_token=' . $this->access_token;
+               $likes = FacebookGraphAPIAccessor::rawApiRequest($next_url);
+            }
+            else {
+                $likes = null;
             }
         }
         return $output;

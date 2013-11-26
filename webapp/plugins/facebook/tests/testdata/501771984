@@ -1,0 +1,112 @@
+{
+  "timezone": -5,
+  "updated_time": "2013-11-18T17:26:00+0000",
+  "verified": true,
+  "birthday": "03/22/1978",
+  "first_name": "Chris",
+  "name": "Chris Moyer",
+  "id": "501771984",
+  "gender": "male",
+  "location": {
+    "name": "Clarence, New York",
+    "id": "108077575886746"
+  },
+  "last_name": "Moyer",
+  "username": "cdmoyer",
+  "work": [
+    {
+      "start_date": "2008-09-01",
+      "location": {
+        "name": "Phoenix, Arizona",
+        "id": "105540216147364"
+      },
+      "employer": {
+        "name": "Asymmetric Publications, LLC",
+        "id": "157230247804298"
+      },
+      "position": {
+        "name": "Coder / Fixer of Bugs / Interface Craftsman (Contractor)",
+        "id": "147005618684361"
+      },
+      "description": "I make it so your stick figure can do different things in different ways!  yay!",
+      "with": [
+        {
+          "name": "Zack Johnson",
+          "id": "100001738902603"
+        },
+        {
+          "name": "Kevin Simmons",
+          "id": "100001704732556"
+        },
+        {
+          "name": "Erin Stack",
+          "id": "1443775437"
+        }
+      ]
+    },
+    {
+      "start_date": "2008-07-01",
+      "location": {
+        "name": "Buffalo, New York",
+        "id": "109324835754083"
+      },
+      "employer": {
+        "name": "Chris Moyer Consulting, Inc",
+        "id": "444421832337543"
+      },
+      "position": {
+        "name": "CEO & President",
+        "id": "100959506626496"
+      }
+    },
+    {
+      "start_date": "2000-04-01",
+      "end_date": "2008-07-01",
+      "location": {
+        "name": "Buffalo, New York",
+        "id": "109324835754083"
+      },
+      "employer": {
+        "name": "Synacor, Inc.",
+        "id": "610520668980327"
+      },
+      "position": {
+        "name": "Web Architect",
+        "id": "146408765385677"
+      },
+      "with": [
+        {
+          "name": "Ross Winston",
+          "id": "1200646408"
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": {
+        "name": "Kenmore West Senior High School",
+        "id": "104006916302781"
+      },
+      "type": "High School",
+      "year": {
+        "name": "1996",
+        "id": "116962635018500"
+      }
+    },
+    {
+      "school": {
+        "name": "University at Buffalo, The State University of New York",
+        "id": "111568078860131"
+      },
+      "type": "College"
+    }
+  ],
+  "hometown": {
+    "name": "Buffalo, New York",
+    "id": "109324835754083"
+  },
+  "link": "https://www.facebook.com/cdmoyer",
+  "locale": "en_US",
+  "bio": "I'm a geek.  I have an awesome wife and two wonderful kids.  I like video games, not-video games, playing the guitar, reading, and wasting time on the internet."
+}

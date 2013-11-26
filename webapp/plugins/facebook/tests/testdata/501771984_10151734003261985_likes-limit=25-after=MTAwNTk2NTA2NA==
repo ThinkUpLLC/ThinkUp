@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": "555287307", 
+      "name": "CJ Imbert"
+    }, 
+    {
+      "id": "1392207609", 
+      "name": "Jennifer O'Rawe Dudek"
+    }
+  ], 
+  "paging": {
+    "cursors": {
+      "after": "MTM5MjIwNzYwOQ==", 
+      "before": "NTU1Mjg3MzA3"
+    }, 
+    "previous": "https://graph.facebook.com/501771984_10151734003261985/likes?limit=25&before=NTU1Mjg3MzA3"
+  }
+}
