@@ -1,0 +1,330 @@
+{
+  "data": [
+    {
+      "id": "775180192497884_104932844", 
+      "from": {
+        "name": "Ayush Shrivastava", 
+        "id": "100005963640296"
+      }, 
+      "message": "Do you want to hack somebody's facebook account? Use this program that can steal facebook password 100% Working here  http://fbhackerz.blogspot.com/", 
+      "can_remove": false, 
+      "created_time": "2013-11-26T07:51:52+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104932623", 
+      "from": {
+        "name": "Michael Gidron", 
+        "id": "1144454524"
+      }, 
+      "message": "wow.. I over looked the single # sign as being a valid square.", 
+      "can_remove": false, 
+      "created_time": "2013-11-26T05:49:02+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104932083", 
+      "from": {
+        "name": "Hafiz Ahmad", 
+        "id": "100000987379715"
+      }, 
+      "message": "<<<<<<<<\nHack facebook account online,You can hack facebook passwords for free with this online hacking tool. No download needed,Hack facebook account online,check this site :- http://www.hack-fb-online.com\n<<<<<<<<", 
+      "can_remove": false, 
+      "created_time": "2013-11-26T03:07:44+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104931489", 
+      "from": {
+        "name": "IntērnàTïônàl Bräñðêð Bâçhíì", 
+        "id": "100002169050570"
+      }, 
+      "message": "i need help. if any know how to to hack fb page. inbox me :'(", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T23:42:32+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930825", 
+      "from": {
+        "name": "Marcin Krnąbny", 
+        "id": "100001089217022"
+      }, 
+      "message": "Download: http://www.sharfiles.com/download/2/2983000/Hack", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T19:09:12+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930684", 
+      "from": {
+        "name": "Anubhav Joshi", 
+        "id": "100000429699776"
+      }, 
+      "message": "can anybody tell what does source with a red cross signify??? Please reply..", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T18:20:21+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930656", 
+      "from": {
+        "name": "Yoandry Martinez Rodriguez", 
+        "id": "100000071074557"
+      }, 
+      "message": "I think -with all respect- you my friend did not completely understood the problem.", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T18:10:46+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930589", 
+      "from": {
+        "name": "Anis Imanis", 
+        "id": "100001420300757"
+      }, 
+      "message": "dam i forget it !", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T17:44:49+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930496", 
+      "from": {
+        "name": "Narendra Yadav", 
+        "id": "100005808700499"
+      }, 
+      "message": "Facebook Hacker Cup Pl upload  input and outfull file of these problems.", 
+      "message_tags": [
+        {
+          "id": "133954286636768", 
+          "name": "Facebook Hacker Cup", 
+          "type": "page", 
+          "offset": 0, 
+          "length": 19
+        }
+      ], 
+      "can_remove": false, 
+      "created_time": "2013-11-25T17:09:18+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930475", 
+      "from": {
+        "name": "Atul Anand", 
+        "id": "855354123"
+      }, 
+      "message": "for square detection problem, i tweaked the classic algorithm of finding maximum square within a matrix with all ones i.e min(DP[i-1][j-1],DP[i-1][j] , DP[i][j-])+1 if input[i][j]==1.To make sure that we have found the max square , we just need to take care that DP[i-1][j-1],DP[i][j-1],DP[i-1][j] are equal . keep updating x-axis square boundary and y-axis square boundary.now just traverse the whole input[][] once again so that there is no more '1' (i.e #) expect the final square bounday found using DP[][].", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T16:55:51+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930266", 
+      "from": {
+        "name": "Diego Arcos", 
+        "id": "100006184567958"
+      }, 
+      "message": "Alejandro R. Arzola   ya viste los problemas tipo icpc, y las soluciones!", 
+      "message_tags": [
+        {
+          "id": "1458497013", 
+          "name": "Alejandro R. Arzola", 
+          "type": "user", 
+          "offset": 0, 
+          "length": 19
+        }
+      ], 
+      "can_remove": false, 
+      "created_time": "2013-11-25T15:47:17+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104930125", 
+      "from": {
+        "name": "Muhammad Ridwan Apriansyah", 
+        "id": "100000075861819"
+      }, 
+      "message": "Well i prefer to use deque and do some simple simulation to attack problem 2 :v", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T14:53:33+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929872", 
+      "from": {
+        "name": "Eduardo Cuesta", 
+        "id": "100001049452062"
+      }, 
+      "message": "I have a question about the following assertion in Tennison problem:\n\n\"Luckily for Tennison, whenever he wins a set, the probability that there will be sun increases by pu with probability pw. Unfortunately, when Tennison loses a set, the probability of sun decreases by pd with probability pl.\"\n\nDoes this mean that when Tennison wins a set (that is P(win) is 1) then P(sun) += pu * pw else (that is 1 - P(win) is 0) then P(sun) -= pd * pl?\n\nIf so then the problem can be solved with less temporal and spatial complexity by a FORMULA.", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T13:29:38+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929781", 
+      "from": {
+        "name": "Muhammad Shufi", 
+        "id": "100006628740846"
+      }, 
+      "message": "Nice", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T12:54:43+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929756", 
+      "from": {
+        "name": "Anubhav Joshi", 
+        "id": "100000429699776"
+      }, 
+      "message": "why is my second question wrong it uses the same algorithm????", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T12:46:06+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929542", 
+      "from": {
+        "name": "Victor Borisov", 
+        "id": "100001024632246"
+      }, 
+      "message": "Третья задача это кабзец какой-то просто!", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T11:22:43+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929509", 
+      "from": {
+        "name": "Omar Rivera", 
+        "id": "1565831002"
+      }, 
+      "message": "The order players in Basketball game result is important?", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T11:00:42+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929449", 
+      "from": {
+        "name": "Baljeet Singh", 
+        "id": "100007113308231"
+      }, 
+      "message": "My Solution for Square Detector give the same output as accepted solution but My final solution is not accepted.Correct me if I am wrong.Thanks in advance.       http://ideone.com/tjcp0D", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T10:29:39+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929272", 
+      "from": {
+        "name": "Durgesh Kumar", 
+        "id": "100001847357742"
+      }, 
+      "message": "the 4th case is not cleared...... \"sixth decimal place\"... output gives Case #4: 0.999954 but Case #4: 0.999956. why??", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T08:15:45+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929213", 
+      "from": {
+        "name": "Ollo Akhtom", 
+        "id": "100003231711648"
+      }, 
+      "message": "I used the same approach stated above.But the Fourth case gives me wrong output for the sixth decimal place. My output gives Case #4: 0.999954 .It should have been Case #4: 0.999956 ,  I don't know why ?", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T07:29:49+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929196", 
+      "from": {
+        "name": "David Machaj", 
+        "id": "6203047"
+      }, 
+      "message": "I agree with the \"run out of time\" comment for Tennyson.  At least half of the time I spent on that problems was optimizing and parallelizing it to handle 100 cases of 100 rounds to be sure that my program could finish in under 6 minutes (C#).  In the end I only got 20 cases and it took 15 seconds to run.  ", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T07:17:30+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929194", 
+      "from": {
+        "name": "Zakka Fauzan Muhammad", 
+        "id": "1177864071"
+      }, 
+      "message": "can anyone explain the third answer in more detail?", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T07:16:42+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929160", 
+      "from": {
+        "name": "Irvan", 
+        "id": "1548822479"
+      }, 
+      "message": "Thanks for your solution \"No.3\" -_- Perfect ! you win .", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T07:00:31+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929134", 
+      "from": {
+        "name": "Ashutosh Kumar", 
+        "id": "100001917451288"
+      }, 
+      "message": "Can some one explain me how they have tried to solve square detector", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T06:47:16+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }, 
+    {
+      "id": "775180192497884_104929131", 
+      "from": {
+        "name": "Kondal Chinnu", 
+        "id": "100002177566168"
+      }, 
+      "message": "Hi hackers", 
+      "can_remove": false, 
+      "created_time": "2013-11-25T06:46:51+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    }
+  ], 
+  "paging": {
+    "cursors": {
+      "after": "MjY=", 
+      "before": "NTM="
+    }, 
+    "previous": "https://graph.facebook.com/133954286636768_775180192497884/comments?limit=25&before=NTM=", 
+    "next": "https://graph.facebook.com/133954286636768_775180192497884/comments?limit=25&after=MjY="
+  }
+}
