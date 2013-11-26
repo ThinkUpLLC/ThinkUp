@@ -61,7 +61,7 @@
          "attribution": "Foursquare"
       },
       {
-         "id": "606837591_153956564638648",
+         "id": "501771984_10151848164181985",
          "from": {
             "name": "Gina Trapani",
             "id": "606837591"
@@ -87,27 +87,316 @@
          "likes": 3,
          "comments": {
             "data": [
-               {
-                  "id": "606837591_153956564638648_1546020",
-                  "from": {
-                     "name": "Mitch Wagner",
-                     "id": "697015835"
-                  },
-                  "message": "I'm not the target demographic for this. I don't like Britney Spears music. I barely know it.\n\nThe episode still had its moments, though. \"Is this real life\" was awesome. She had the facial expression right too. And Sue Sylvester and the principal were, of course, fantastic. Couple of great lines there.",
-                  "created_time": "2010-09-29T16:51:27+0000"
-               },
-               {
-                  "id": "606837591_153956564638648_1552762",
-                  "from": {
-                     "name": "Yael Kropsky",
-                     "id": "500941232"
-                  },
-                  "message": "I think Sue stole the episode (again) with Gloria Allred being her lawyer and, \"you wear more vests than the cast of Blossom.\" My main issue with Glee is the voice correction/overproduction of the songs. And not enough leotards and legwarmers. \n\nCheck out http://www.youtube.com/watch?v=W3aCAMRjuBM to see how it's done.",
-                  "created_time": "2010-09-30T14:27:39+0000"
-               }
-            ],
-            "count": 19
-         }
+              {
+                "id": "10151848164181985_29187893", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Commenting to myself.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:34:29+0000", 
+                "like_count": 0, 
+                "user_likes": false,
+				"location": "Buffalo, New York"
+              }, 
+              {
+                "id": "10151848164181985_29187896", 
+                "from": {
+                  "name": "Jeffrey McManus", 
+                  "id": "691270740"
+                }, 
+                "message": "And another.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:25+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187897", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "An one more.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:27+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187898", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "1", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:28+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187899", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "2", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:29+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187900", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "3", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:29+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187902", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "4", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:30+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187903", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "5", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:30+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187905", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "6", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:31+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187906", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Seven?", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:34+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187907", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Can I do 8?", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:37+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187908", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "I can do 9, too.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:40+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187909", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "I think I lost count.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:43+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187911", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Well.  Huh.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:48+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187914", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "This is like talking to myself.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:54+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187915", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Except, I don't talk back.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:57+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187916", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Werid.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:35:59+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187917", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Oops, weird.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:02+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187918", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "There we go.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:04+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187919", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "Ok.  Starting over.", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:21+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187920", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "1", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:23+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187921", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "2", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:23+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187922", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "3", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:23+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187923", 
+                "from": {
+                  "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "4", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:24+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151848164181985_29187924", 
+                "from": {
+                      "name": "Chris Moyer", 
+                  "id": "501771984"
+                }, 
+                "message": "5", 
+                "can_remove": true, 
+                "created_time": "2013-11-26T06:36:24+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }
+            ], 
+            "paging": {
+              "cursors": {
+                "after": "MjU=", 
+                "before": "MQ=="
+              }, 
+              "next": "https://graph.facebook.com/606837591_10151848164181985/comments?limit=25&after=MjU="
+            }
+          }
       },
       {
          "id": "606837591_151722324867461",

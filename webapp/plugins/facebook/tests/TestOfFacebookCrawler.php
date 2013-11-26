@@ -162,10 +162,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->favlike_count_cache, 0);
         $this->assertEqual($post->location, 'San Diego, California');
 
-        $post = $post_dao->getPost('153956564638648', 'facebook');
+        $post = $post_dao->getPost('10151848164181985', 'facebook');
         $this->assertEqual($post->post_text,
         'Britney Glee episode tonight. I may explode into a million pieces, splattered all over my living room walls.');
-        $this->assertEqual($post->reply_count_cache, 19);
+        $this->assertEqual($post->reply_count_cache, 31);
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 3);
         $this->assertEqual($post->location, 'San Diego, California');
@@ -176,13 +176,12 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->location, 'Portland, Oregon');
         $this->assertEqual($post->in_reply_to_user_id, $this->profile1_instance->network_user_id);
 
-        $post = $post_dao->getPost('1546020', 'facebook');
-        $this->assertPattern('/not the target demographic/', $post->post_text);
+        $post = $post_dao->getPost('29187893', 'facebook');
+        $this->assertPattern('/to myself./', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);
-        $this->assertEqual($post->in_reply_to_post_id, '153956564638648');
+        $this->assertEqual($post->in_reply_to_post_id, '10151848164181985');
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 0);
-        $this->assertEqual($post->location, 'La Mesa, California');
 
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
@@ -278,7 +277,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost('437900891355', 'facebook page');
         $this->assertEqual($post->post_text, 'Top 10 iOS Jailbreak Hacks');
         $this->assertFalse($post->is_protected);
-        $this->assertEqual($post->reply_count_cache, 8);
+        $this->assertEqual($post->reply_count_cache, 45);
 
         //test link with image
         $this->assertEqual(sizeof($post->links), 1);
@@ -332,7 +331,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $fbc->fetchPostsAndReplies('133954286636768', 'facebook page');
         $post_dao = new PostMySQLDAO();
-        $post = $post_dao->getPost('144568048938151', 'facebook page');
-        $this->assertEqual($post->reply_count_cache, 70);
+        $post = $post_dao->getPost('775180192497884', 'facebook page');
+        $this->assertEqual($post->reply_count_cache, 51);
     }
 }

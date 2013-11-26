@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "id": "775180192497884_104932845", 
+      "from": {
+        "name": "Ayush Shrivastava", 
+        "id": "100005963640296"
+      }, 
+      "message": "Do you want to hack somebody's facebook account? Use this program that can steal facebook password 100% Working here  http://fbhackerz.blogspot.com/", 
+      "can_remove": false, 
+      "created_time": "2013-11-26T07:51:52+0000", 
+      "like_count": 0, 
+      "user_likes": false
+    } 
+  ], 
+  "paging": {
+    "cursors": {
+      "after": "MjY=", 
+      "before": "NTM="
+    }, 
+    "previous": "https://graph.facebook.com/133954286636768_775180192497884/comments?limit=25&before=NTM="
+  }
+}
