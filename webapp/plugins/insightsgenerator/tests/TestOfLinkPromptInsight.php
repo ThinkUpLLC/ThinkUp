@@ -66,6 +66,32 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@testeriffic hasn\'t tweeted a link in the last 2 days/', $result->text);
     }
 
+    public function testLinkPromptInsighPromptWithRecentTweet() {
+        // Get data ready that insight requires
+        $builders = self::buildData();
+
+        $days_ago_1 = date('Y-m-d H:i:s', strtotime('1 hour ago'));
+        $builders[] = FixtureBuilder::build('posts', array('id'=>241, 'post_id'=>241, 'author_user_id'=>7612345,
+        'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>"I don't always tweet holiday gift guides, but when I do, it's from @overthinkingit: http://t.co/jZTI9PGm9b\nIdeas for the geek on your list.", 'source'=>'web',
+        'pub_date'=>$days_ago_1, 'reply_count_cache'=>0, 'is_protected'=>0));
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new LinkPromptInsight();
+        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+
+        // Assert that no insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('link_prompt', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNull($result);
+    }
+
     public function testLinkPromptInsightNoPrompt() {
         // Get data ready that insight requires
         $builders = self::buildData();
