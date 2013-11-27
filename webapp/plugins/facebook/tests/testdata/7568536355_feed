@@ -33,27 +33,342 @@
          "likes": 67,
          "comments": {
             "data": [
-               {
-                  "id": "7568536355_437900891355_13767800",
-                  "from": {
-                     "name": "Adrian Valera",
-                     "id": "833828624"
-                  },
-                  "message": "Cool Top 10",
-                  "created_time": "2010-10-03T01:58:01+0000"
-               },
-               {
-                  "id": "7568536355_437900891355_13768553",
-                  "from": {
-                     "name": "Rahul Narasimha Akmol",
-                     "id": "625158327"
-                  },
-                  "message": "Really a good post which showed me the better amplified iphone ",
-                  "created_time": "2010-10-03T04:58:05+0000"
-               }
-            ],
-            "count": 8
-         },
+              {
+                "id": "10151728144886356_28166192", 
+                "from": {
+                  "name": "Matthew Fleisher", 
+                  "id": "1036552729"
+                }, 
+                "message": "The issue with facebook is not protection from hackers and the likes of the NSA, it's that the information is for sale.  Pay'em. Don't hack'em.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:20:15+0000", 
+                "like_count": 81, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166223", 
+                "from": {
+                  "name": "Paul Cassidy", 
+                  "id": "100000028811048"
+                }, 
+                "message": "Maybe you should have added a 6th box labelled \"Safe from spying by your own government\". That one would go unticked for all of them, I'd say.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:22:30+0000", 
+                "like_count": 36, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166189", 
+                "from": {
+                  "name": "Dave Myers", 
+                  "id": "44100633"
+                }, 
+                "message": "Protect from everyone but the government, of course.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:20:05+0000", 
+                "like_count": 7, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166962", 
+                "from": {
+                  "name": "Dave F. Samuel", 
+                  "id": "18417420"
+                }, 
+                "message": "This is missing a 6th box... \"Hands data over to the NSA\"", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T20:28:57+0000", 
+                "like_count": 5, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166229", 
+                "from": {
+                  "name": "Alex Wright", 
+                  "id": "518042907"
+                }, 
+                "message": "Well good thing the NSA doesn't give a crap and vacuums up all the data anyway.\n\nDon't think for a SECOND that large scale corporate and government forces don't use your data against you and have been since the early 1960's. \n\nEven implying that NSA doesn't already hold all of the crypto keys to unlock ALL of the encryption standards.\n\nWhat the HELL do you think they're building this for:\n\nhttp://en.wikipedia.org/wiki/Utah_Data_Center", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:23:06+0000", 
+                "like_count": 5, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166207", 
+                "from": {
+                  "name": "Ben Stanley", 
+                  "id": "1046979495"
+                }, 
+                "message": "Doesn't really matter if they keep 'improving' my privacy settings, though.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:21:27+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28168085", 
+                "from": {
+                  "name": "Christina Rockwood", 
+                  "id": "1064132204"
+                }, 
+                "message": "\"Protecting\" my data? LOL!....interesting that i browse products on other websites only to find those exact same products appearing in the ads on my FB page later.... i wonder how FB could POSSIBLY have known the exact products i was browsing for on completely different websites.... coincidence? Doubtful... ", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T21:53:18+0000", 
+                "like_count": 2, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28167048", 
+                "from": {
+                  "name": "Sean Lancaster", 
+                  "id": "22419216"
+                }, 
+                "message": "\"everyone else, not so much\" as you proceed to show a chart showing Google and a few others with green nearly all across or all across. Are they not part of \"everyone else\"?", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T20:35:21+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166298", 
+                "from": {
+                  "name": "Jan Gvdp", 
+                  "id": "61309586"
+                }, 
+                "message": "of course you protect it, when you can sell it", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:28:17+0000", 
+                "like_count": 4, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28168089", 
+                "from": {
+                  "name": "Leonardo Dutra", 
+                  "id": "100000047561578"
+                }, 
+                "message": "Why is Facebook on the title if Google, and others, are one step ahead?", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T21:53:48+0000", 
+                "like_count": 1, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166548", 
+                "from": {
+                  "name": "Leo Gharapetian", 
+                  "id": "1280168112"
+                }, 
+                "message": "In progress and pending should not have a green box!", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:51:14+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166372", 
+                "from": {
+                  "name": "Damon Freinik", 
+                  "id": "1655356726"
+                }, 
+                "message": "If you put it on the internets kiss it goodbye...", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:35:12+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166201", 
+                "from": {
+                  "name": "Joe McLaughlin", 
+                  "id": "100001277313216"
+                }, 
+                "message": "The difference is, Amazon dont catalog every bit of your being for evil. They just keep a log of what you bought so you can see it later..", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:20:55+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28175126", 
+                "from": {
+                  "name": "Joe Pepersack", 
+                  "id": "556987515"
+                }, 
+                "message": "Of course they protect it.  Your data is their product.   If they let someone steal it, they can't sell it.", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T13:11:51+0000", 
+                "like_count": 3, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166457", 
+                "from": {
+                  "name": "Eric Tiberius Blue", 
+                  "id": "560992307"
+                }, 
+                "message": "Of course they protect it.  They want to make as much money off of it as possible.... and keep it safe for the NSA to review.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:42:43+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28174387", 
+                "from": {
+                  "name": "Matt Stratton", 
+                  "id": "500557137"
+                }, 
+                "message": "As mentioned, by some others, the whole \"I was looking at honda.com and then Facebook showed me ads for Hondas\" is not because Facebook is spying out you. \n\nIt's because Facebook and Honda participate in a data exchange where Honda sets a cookie that Facebook (or anyone else who is part of that exchange) can read/use. \n\nIs it morally right? Dunno. Is Facebook \"tracking you without your knowledge\"? Sorta. But not the way you think it is.", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T11:16:34+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28175518", 
+                "from": {
+                  "name": "Jarek Niskiewicz", 
+                  "id": "100000641653272"
+                }, 
+                "message": "Sure they do, makes it so much more valuable to their clients :D", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T13:56:08+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28170157", 
+                "from": {
+                  "name": "Banlu Anumart", 
+                  "id": "100003784651128"
+                }, 
+                "message": "Good guy Dropbox.", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T01:08:10+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166302", 
+                "from": {
+                  "name": "Daniel Fugisawa", 
+                  "id": "564295957"
+                }, 
+                "message": "Yeah, right. Just to sell it to the highest bidder for a higher price. And to give it away to all P5 + Israel intelligence services.", 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:28:22+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28166245", 
+                "from": {
+                  "name": "Meghan Carnowski", 
+                  "id": "100000290596817"
+                }, 
+                "message": "Richard?", 
+                "message_tags": [
+                  {
+                    "id": "558920514", 
+                    "name": "Richard", 
+                    "type": "user", 
+                    "offset": 0, 
+                    "length": 7
+                  }
+                ], 
+                "can_remove": false, 
+                "created_time": "2013-11-25T19:24:20+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28176143", 
+                "from": {
+                  "name": "Chris Whitman", 
+                  "id": "100000891619230"
+                }, 
+                "message": "It doesn't really matter how secure their databases are if hackers just get all of the data from all of them for hacking the nsa", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T15:09:58+0000", 
+                "like_count": 1, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28173597", 
+                "from": {
+                  "name": "Michelle Genée", 
+                  "id": "888230692"
+                }, 
+                "message": "Jonathan FYI", 
+                "message_tags": [
+                  {
+                    "id": "100000865935401", 
+                    "name": "Jonathan", 
+                    "type": "user", 
+                    "offset": 0, 
+                    "length": 8
+                  }
+                ], 
+                "can_remove": false, 
+                "created_time": "2013-11-26T08:26:23+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28173177", 
+                "from": {
+                  "name": "Ma Sheila A Magboo", 
+                  "id": "1291663317"
+                }, 
+                "message": "Really?", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T07:06:13+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28171786", 
+                "from": {
+                  "name": "Diane Thomas", 
+                  "id": "1302225487"
+                }, 
+                "message": "Thank you, Brian Thomas, and Facebook crew!!! :)", 
+                "message_tags": [
+                  {
+                    "id": "13749328", 
+                    "name": "Brian Thomas", 
+                    "type": "user", 
+                    "offset": 11, 
+                    "length": 12
+                  }
+                ], 
+                "can_remove": false, 
+                "created_time": "2013-11-26T03:41:00+0000", 
+                "like_count": 0, 
+                "user_likes": false
+              }, 
+              {
+                "id": "10151728144886356_28171258", 
+                "from": {
+                  "name": "Marcus Randall", 
+                  "id": "1049255840"
+                }, 
+                "message": "Similar to comparing amored trucks vs pizza delivery drivers. Regardless, individuals are independant varriables when it comes to their privacy", 
+                "can_remove": false, 
+                "created_time": "2013-11-26T02:45:01+0000", 
+                "like_count": 1, 
+                "user_likes": false
+              }
+            ], 
+            "paging": {
+              "cursors": {
+                "after": "Njk=", 
+                "before": "OTQ="
+              }, 
+              "next": "https://graph.facebook.com/7568536355_10151728144886356/comments?limit=25&after=Njk="
+            }
+          },
          "attribution": "RSS Graffiti"
       },
       {

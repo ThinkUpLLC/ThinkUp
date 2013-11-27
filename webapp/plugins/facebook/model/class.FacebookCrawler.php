@@ -54,7 +54,7 @@ class FacebookCrawler {
      */
     var $page_like_count_set = false;
     /**
-     * @param Instance $instance
+     * @param  Instance        $instance
      * @return FacebookCrawler
      */
     public function __construct($instance, $access_token, $max_crawl_time) {
@@ -66,9 +66,9 @@ class FacebookCrawler {
     /**
      * If user doesn't exist in the datastore, fetch details from Facebook API and insert into the datastore.
      * If $reload_from_facebook is true, update existing user details in store with data from Facebook API.
-     * @param int $user_id Facebook user ID
-     * @param str $found_in Where the user was found
-     * @param bool $reload_from_facebook Defaults to false; if true will query Facebook API and update existing user
+     * @param  int  $user_id              Facebook user ID
+     * @param  str  $found_in             Where the user was found
+     * @param  bool $reload_from_facebook Defaults to false; if true will query Facebook API and update existing user
      * @return User
      */
     public function fetchUser($user_id, $found_in, $force_reload_from_facebook=false) {
@@ -107,7 +107,7 @@ class FacebookCrawler {
                 //We just assume every user is a vanilla FB user. However, we can't retrieve page details using
                 //a vanilla user call here
                 $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Facebook API, ".
-                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
+                  "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
             }
         }
         return $user_object;
@@ -168,7 +168,7 @@ class FacebookCrawler {
             $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
             if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data) > 0) {
                 $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
-                __METHOD__.','.__LINE__);
+                  __METHOD__.','.__LINE__);
 
                 $this->processStream($stream, $network, $current_page_number);
 
@@ -194,7 +194,7 @@ class FacebookCrawler {
     /**
      * Convert parsed JSON of a profile or page's posts into ThinkUp posts and users
      * @param Object $stream
-     * @param str $source The network for the post, either 'facebook' or 'facebook page'
+     * @param str    $source The network for the post, either 'facebook' or 'facebook page'
      * @param int Page number being processed
      */
     private function processStream($stream, $network, $page_number) {
@@ -226,7 +226,7 @@ class FacebookCrawler {
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
             $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
-            " on page ".$page_number, __METHOD__.','.__LINE__);
+              " on page ".$page_number, __METHOD__.','.__LINE__);
 
             // stream can contain posts from multiple users.  get profile for this post
             $profile = null;
@@ -244,35 +244,39 @@ class FacebookCrawler {
             if (isset($p->likes)) {
                 if (is_int($p->likes)) {
                     $likes_count = $p->likes;
-                } elseif (isset($p->likes->count) && is_int($p->likes->count) )  {
+                } elseif (isset($p->likes->count) && is_int($p->likes->count) ) {
                     $likes_count = $p->likes->count;
                 }
             }
+
+            // Normalize comments to be one array
+            if (isset($p->comments)) $p->comments = $this->normalizeComments($p->comments);
 
             $post_in_storage = $post_dao->getPost($post_id, $network);
 
             //Figure out if we have to process likes and comments
             if (isset($post_in_storage)) {
                 $this->logger->logInfo("Post ".$post_id. " already in storage", __METHOD__.','.__LINE__);
-                if ($post_in_storage->favlike_count_cache >= $likes_count ) {
+                if ($post_in_storage->favlike_count_cache >= $likes_count) {
                     $must_process_likes = false;
                     $this->logger->logInfo("Already have ".$likes_count." like(s) for post ".$post_id.
-                    "in storage; skipping like processing", __METHOD__.','.__LINE__);
-                } else  {
+                      "in storage; skipping like processing", __METHOD__.','.__LINE__);
+                } else {
                     $likes_difference = $likes_count - $post_in_storage->favlike_count_cache;
                     $this->logger->logInfo($likes_difference." new like(s) to process for post ".$post_id,
-                    __METHOD__.','.__LINE__);
+                      __METHOD__.','.__LINE__);
                 }
+
 
                 if (isset($p->comments->count)) {
                     if ($post_in_storage->reply_count_cache >= $p->comments->count) {
                         $must_process_comments = false;
                         $this->logger->logInfo("Already have ".$p->comments->count." comment(s) for post ".$post_id.
-                        "; skipping comment processing", __METHOD__.','.__LINE__);
+                          "; skipping comment processing", __METHOD__.','.__LINE__);
                     } else {
                         $comments_difference = $p->comments->count - $post_in_storage->reply_count_cache;
                         $this->logger->logInfo($comments_difference." new comment(s) of ".$p->comments->count.
-                        " total to process for post ".$post_id, __METHOD__.','.__LINE__);
+                          " total to process for post ".$post_id, __METHOD__.','.__LINE__);
                     }
                 }
             } else {
@@ -302,27 +306,27 @@ class FacebookCrawler {
 
                     $new_post_key = $this->storePostAndAuthor($post_to_process, "Owner stream");
 
-                    if ($new_post_key !== false ) {
+                    if ($new_post_key !== false) {
                         $total_added_posts++;
                     }
 
                     if (isset($p->source) || isset($p->link)) { // there's a link to store
                         $link_url = (isset($p->source))?$p->source:$p->link;
                         $link = new Link(array(
-                        "url"=>$link_url,
-                        "expanded_url"=>'',
-                        "image_src"=>(isset($p->picture))?$p->picture:'',
-                        "caption"=>(isset($p->caption))?$p->caption:'',
-                        "description"=>(isset($p->description))?$p->description:'',
-                        "title"=>(isset($p->name))?$p->name:'',
-                        "post_key"=>$new_post_key
+                          "url"=>$link_url,
+                          "expanded_url"=>'',
+                          "image_src"=>(isset($p->picture))?$p->picture:'',
+                          "caption"=>(isset($p->caption))?$p->caption:'',
+                          "description"=>(isset($p->description))?$p->description:'',
+                          "title"=>(isset($p->name))?$p->name:'',
+                          "post_key"=>$new_post_key
                         ));
                         array_push($thinkup_links, $link);
                     }
                     $total_links_addded = $total_links_added + $this->storeLinks($thinkup_links);
-                    if ($total_links_added > 0 ) {
+                    if ($total_links_added > 0) {
                         $this->logger->logUserSuccess("Collected $total_links_added new links",
-                        __METHOD__.','.__LINE__);
+                          __METHOD__.','.__LINE__);
                     }
                     //free up memory
                     $thinkup_links  = array();
@@ -330,7 +334,7 @@ class FacebookCrawler {
                     if ($must_process_likes) { //update its like count only
                         $post_dao->updateFavLikeCount($post_id, $network, $likes_count);
                         $this->logger->logInfo("Updated Like count for post ".$post_id . " to ". $likes_count,
-                        __METHOD__.','.__LINE__);
+                          __METHOD__.','.__LINE__);
                     }
                 }
 
@@ -343,18 +347,25 @@ class FacebookCrawler {
                             if (is_array($post_comments) && sizeof($post_comments) > 0) {
                                 foreach ($post_comments as $c) {
                                     if (isset($c->from)) {
+                                        // Sometimes the id is parent_poster_postId
+                                        // sometimes it's just parent_postId
                                         $comment_id = explode("_", $c->id);
-                                        $comment_id = $comment_id[2];
+                                        if (count($comment_id) == 3) {
+                                            $comment_id = $comment_id[2];
+                                        } else {
+                                            $comment_id = $comment_id[1];
+                                        }
                                         //only add to queue if not already in storage
                                         $comment_in_storage = $post_dao->getPost($comment_id, $network);
                                         if (!isset($comment_in_storage)) {
                                             $comment_to_process = array("post_id"=>$comment_id,
-                                            "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
-                                            "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture',
-                                            "author_user_id"=>$c->from->id, "post_text"=>$c->message,
-                                            "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
-                                            "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
-                                            'is_protected'=>$is_protected, 'location'=>'');
+                                              "author_username"=>$c->from->name,
+                                              "author_fullname"=>$c->from->name,
+                                              "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture',
+                                              "author_user_id"=>$c->from->id,"post_text"=>$c->message,
+                                              "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
+                                              "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
+                                              'is_protected'=>$is_protected, 'location'=>'');
                                             array_push($thinkup_posts, $comment_to_process);
                                             $comments_captured = $comments_captured + 1;
                                         }
@@ -363,7 +374,7 @@ class FacebookCrawler {
                             }
                         }
                         $post_comments_added = $post_comments_added +
-                        $this->storePostsAndAuthors($thinkup_posts, "Post stream comments");
+                            $this->storePostsAndAuthors($thinkup_posts, "Post stream comments");
 
                         //free up memory
                         $thinkup_posts = array();
@@ -377,7 +388,7 @@ class FacebookCrawler {
                         }
                         // collapsed comment thread
                         if (isset($p->comments->count) && $p->comments->count > $comments_captured
-                        && $must_process_comments) {
+                            && $must_process_comments) {
                             if (is_int($comments_difference)) {
                                 $offset = $p->comments->count - $comments_difference;
                                 $offset_str = "&offset=".$offset."&limit=".$comments_difference;
@@ -385,12 +396,11 @@ class FacebookCrawler {
                                 $offset_str = "";
                             }
                             $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.
-                            '/comments?access_token='. $this->access_token.$offset_str;
-                            //$this->logger->logInfo("API call ".$api_call, __METHOD__.','.__LINE__);
+                              '/comments?access_token='. $this->access_token.$offset_str;
                             do {
                                 $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
                                 if (isset($comments_stream) && isset($comments_stream->data)
-                                && is_array($comments_stream->data)) {
+                                    && is_array($comments_stream->data)) {
                                     foreach ($comments_stream->data as $c) {
                                         if (isset($c->from)) {
                                             $comment_id = explode("_", $c->id);
@@ -399,20 +409,21 @@ class FacebookCrawler {
                                             $comment_in_storage = $post_dao->getPost($comment_id, $network);
                                             if (!isset($comment_in_storage)) {
                                                 $comment_to_process = array("post_id"=>$comment_id,
-                                                "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
-                                                "author_avatar"=>'https://graph.facebook.com/'.
-                                                $c->from->id.'/picture', "author_user_id"=>$c->from->id,
-                                                "post_text"=>$c->message, "pub_date"=>$c->created_time,
-                                                "in_reply_to_user_id"=>$profile->user_id,
-                                                "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
-                                                'is_protected'=>$is_protected, 'location'=>'');
+                                                  "author_username"=>$c->from->name,
+                                                  "author_fullname"=>$c->from->name,
+                                                  "author_avatar"=>'https://graph.facebook.com/'. $c->from->id.'/picture',
+                                                  "author_user_id"=>$c->from->id,
+                                                  "post_text"=>$c->message, "pub_date"=>$c->created_time,
+                                                  "in_reply_to_user_id"=>$profile->user_id,
+                                                  "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
+                                                  'is_protected'=>$is_protected, 'location'=>'');
                                                 array_push($thinkup_posts, $comment_to_process);
                                             }
                                         }
                                     }
 
                                     $post_comments_added = $post_comments_added +
-                                    $this->storePostsAndAuthors($thinkup_posts, "Posts stream comments collapsed");
+                                      $this->storePostsAndAuthors($thinkup_posts, "Posts stream comments collapsed");
 
                                     if (is_int($comments_difference) && $post_comments_added >= $comments_difference) {
                                         $must_process_comments = false;
@@ -437,10 +448,10 @@ class FacebookCrawler {
                     }
                     if ($post_comments_added > 0) { //let user know
                         $this->logger->logUserSuccess("Added ".$post_comments_added." comment(s) for post ". $post_id,
-                        __METHOD__.','.__LINE__);
+                          __METHOD__.','.__LINE__);
                     } else {
                         $this->logger->logInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
-                        __METHOD__.','.__LINE__);
+                          __METHOD__.','.__LINE__);
                     }
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
@@ -457,14 +468,15 @@ class FacebookCrawler {
                                     if (isset($l->name) && isset($l->id)) {
                                         //Get users
                                         $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                        "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                        '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                        "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                        "network"=>'facebook'); //Users are always set to network=facebook
+                                            "user_id"=>$l->id,
+                                            "avatar"=>'https://graph.facebook.com/'.$l->id.  '/picture',
+                                            "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                            "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                            "network"=>'facebook'); //Users are always set to network=facebook
                                         array_push($thinkup_users, $user_to_add);
 
                                         $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                        "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
+                                          "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
                                         array_push($thinkup_likes, $fav_to_add);
                                         $likes_captured = $likes_captured + 1;
                                     }
@@ -505,10 +517,11 @@ class FacebookCrawler {
                                         if (isset($l->name) && isset($l->id)) {
                                             //Get users
                                             $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                            "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                            '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                            "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                            "network"=>'facebook'); //Users are always set to network=facebook
+                                              "user_id"=>$l->id,
+                                              "avatar"=>'https://graph.facebook.com/'.$l->id.  '/picture',
+                                              "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                              "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                              "network"=>'facebook'); //Users are always set to network=facebook
                                             array_push($thinkup_users, $user_to_add);
 
                                             $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
@@ -573,11 +586,11 @@ class FacebookCrawler {
             $added_post_key = $this->storePostAndAuthor($post, $posts_source);
             if ($added_post !== false) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
+                  " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
                 $total_added_posts = $total_added_posts ++;
-            } else  {
+            } else {
                 $this->logger->logInfo("Didn't add post ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
+                  " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
             }
             $added_post = 0;
         }
@@ -676,5 +689,30 @@ class FacebookCrawler {
         } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
             throw new APIOAuthException($stream->error->message);
         }
+    }
+
+    /**
+     * Take a list of comments from a page or a post, run through pagination
+     * and add a count member to the object
+     * @param  object $comments Comments Object structure from Facebook API
+     * @return object
+     */
+    private function normalizeComments($comments)
+    {
+        $output = (object) array('count' => 0, 'data' => array());
+        while ($comments !== null) {
+            foreach ($comments->data as $comment) {
+                $output->data[] = $comment;
+                $output->count++;
+            }
+            if (!empty($comments->paging->next)) {
+               $next_url = $comments->paging->next . '&access_token=' . $this->access_token;
+               $comments = FacebookGraphAPIAccessor::rawApiRequest($next_url);
+            }
+            else {
+                $comments = null;
+            }
+        }
+        return $output;
     }
 }

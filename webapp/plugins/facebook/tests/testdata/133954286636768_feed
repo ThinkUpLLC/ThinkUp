@@ -1,44 +1,947 @@
 {
-   "data": [
-      {
-         "id": "133954286636768_144568048938151",
-         "from": {
-            "name": "Facebook Hacker Cup",
-            "category": "Website",
-            "id": "133954286636768"
-         },
-         "message": "Round 2 is over and the final scoreboard will be up shortly.  It will take us a while to fully verify the scores so they may shuffle a little in the next couple days, but you will be able to see the as-graded score for all competitors.",
-         "link": "http://www.facebook.com/hackercup/scoreboard.php/?round=178767375498716",
-         "name": "http://www.facebook.com/hackercup/scoreboard.php/?round=178767375498716",
-         "caption": "www.facebook.com",
-         "icon": "http://b.static.ak.fbcdn.net/rsrc.php/yD/r/aS8ecmYRys0.gif",
-         "type": "link",
-         "created_time": "2011-02-06T00:05:19+0000",
-         "updated_time": "2011-02-06T00:05:19+0000",
-         "likes": {
-            "data": [
-               {
-                  "name": "York Mw",
-                  "id": "100000234593146"
-               },
-               {
-                  "name": "Sabbar Khatib",
-                  "id": "100001478065484"
-               },
-               {
-                  "name": "Shih-Chiang Lin",
-                  "id": "792519448"
-               },
-               {
-                  "name": "David Sanchez Jimenez",
-                  "id": "100000103487278"
-               }
-            ],
-            "count": 97
-         },
-         "comments": {
-            "count": 73
-         }
+  "data": [
+    {
+      "id": "133954286636768_775180192497884", 
+      "from": {
+        "category": "Website", 
+        "name": "Facebook Hacker Cup", 
+        "id": "133954286636768"
+      }, 
+      "link": "https://www.facebook.com/notes/facebook-hacker-cup/2014-qualification-round-solutions/775180192497884", 
+      "name": "2014 Qualification Round Solutions", 
+      "description": "1. Square Detector (20 Points)\n\n\nWhen facing a problem in a programming contest there are three main things to consider when planning your solution. In order of importance:Is the algorithm correct.Is ", 
+      "icon": "https://fbstatic-a.akamaihd.net/rsrc.php/v2/yY/r/1gBp2bDGEuh.gif", 
+      "actions": [
+        {
+          "name": "Comment", 
+          "link": "https://www.facebook.com/133954286636768/posts/775180192497884"
+        }, 
+        {
+          "name": "Like", 
+          "link": "https://www.facebook.com/133954286636768/posts/775180192497884"
+        }
+      ], 
+      "privacy": {
+        "value": ""
+      }, 
+      "type": "link", 
+      "status_type": "created_note", 
+      "application": {
+        "name": "Notes", 
+        "id": "2347471856"
+      }, 
+      "created_time": "2013-11-25T05:34:09+0000", 
+      "updated_time": "2013-11-26T17:21:03+0000", 
+      "shares": {
+        "count": 53
+      }, 
+      "likes": {
+        "data": [
+          {
+            "id": "100002526577162", 
+            "name": "Sultan Bajalan"
+          }, 
+          {
+            "id": "632661716", 
+            "name": "Riham Magdy"
+          }, 
+          {
+            "id": "100000063019464", 
+            "name": "Jinsean Tee"
+          }, 
+          {
+            "id": "1228678051", 
+            "name": "Warsito Raharjo"
+          }, 
+          {
+            "id": "1664847556", 
+            "name": "Fn Lion"
+          }, 
+          {
+            "id": "100003738152592", 
+            "name": "Marc Albrightun"
+          }, 
+          {
+            "id": "100002077698098", 
+            "name": "Hardik Patel"
+          }, 
+          {
+            "id": "100007089823970", 
+            "name": "Digvijay Kirti Verma"
+          }, 
+          {
+            "id": "1409951512", 
+            "name": "Amal Dev"
+          }, 
+          {
+            "id": "100001875705436", 
+            "name": "Akhmad Amin"
+          }, 
+          {
+            "id": "100000396618817", 
+            "name": "Haron Shihab"
+          }, 
+          {
+            "id": "1727363100", 
+            "name": "Raktai Choomeechai"
+          }, 
+          {
+            "id": "100005041530255", 
+            "name": "Julio César Vidal Garcia"
+          }, 
+          {
+            "id": "100006846763128", 
+            "name": "Sritanu Chakraborty"
+          }, 
+          {
+            "id": "100003184362516", 
+            "name": "Praveen Minz"
+          }, 
+          {
+            "id": "100003122999128", 
+            "name": "Raphael Miranda"
+          }, 
+          {
+            "id": "100004268793723", 
+            "name": "Hafidz SA"
+          }, 
+          {
+            "id": "100002366359603", 
+            "name": "Mohamad Fazeli"
+          }, 
+          {
+            "id": "750619142", 
+            "name": "Khristian Fabian Robayo Garcia"
+          }, 
+          {
+            "id": "100000641970489", 
+            "name": "Pankaj Jakhar"
+          }, 
+          {
+            "id": "1187442680", 
+            "name": "Tri Nguyen"
+          }, 
+          {
+            "id": "100006262693277", 
+            "name": "Ramadan"
+          }, 
+          {
+            "id": "1496594985", 
+            "name": "Ramun Berger"
+          }, 
+          {
+            "id": "100000642606673", 
+            "name": "Parth Soni"
+          }, 
+          {
+            "id": "100002365850833", 
+            "name": "Daniel Joshua"
+          }
+        ], 
+        "paging": {
+          "cursors": {
+            "after": "MTAwMDAyMzY1ODUwODMz", 
+            "before": "MTAwMDAyNTI2NTc3MTYy"
+          }, 
+          "next": "https://graph.facebook.com/133954286636768_775180192497884/likes?limit=25&after=MTAwMDAyMzY1ODUwODMz"
+        }
+      }, 
+      "comments": {
+        "data": [
+          {
+            "id": "775180192497884_104928997", 
+            "from": {
+              "name": "Ahmed Gamal", 
+              "id": "1046294762"
+            }, 
+            "message": "I hate this Tennison", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:37:56+0000", 
+            "like_count": 16, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929055", 
+            "from": {
+              "name": "Daniel Zhi", 
+              "id": "1306697257"
+            }, 
+            "message": "Agree that Basketball game requires no simulation. You can simply put players in playing order and use modular to identify top P after M rounds.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T06:04:58+0000", 
+            "like_count": 16, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929597", 
+            "from": {
+              "name": "Eugene Serkin", 
+              "id": "100000076041242"
+            }, 
+            "message": "Would be interesting to see programming language statistics at the end of the tournament.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T11:41:54+0000", 
+            "like_count": 6, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929254", 
+            "from": {
+              "name": "Roman Vorobets", 
+              "id": "100001065080101"
+            }, 
+            "message": "There are not enough tests for problem 1!\nMy colleague's solution got accepted, even though it returns 'YES' for the following test input:\n1\n3\n#.#\n...\n#.#", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T08:01:35+0000", 
+            "like_count": 6, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929012", 
+            "from": {
+              "name": "Gal Appelbaum", 
+              "id": "740952671"
+            }, 
+            "message": "You should also add the questions on top of the solution explanation so people can read the question again before reading the explanation, or if they don't understand something they can look back at the question.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:43:01+0000", 
+            "like_count": 5, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929336", 
+            "from": {
+              "name": "Shreyas Subramaniam", 
+              "id": "682765760"
+            }, 
+            "message": "The basketball problem becomes a whole lot simpler if you use a min-heap.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T08:58:21+0000", 
+            "like_count": 4, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104932142", 
+            "from": {
+              "name": "Maria Jose Patron", 
+              "id": "1170794705"
+            }, 
+            "message": "Angel :P", 
+            "message_tags": [
+              {
+                "id": "1062886365", 
+                "name": "Angel", 
+                "type": "user", 
+                "offset": 0, 
+                "length": 5
+              }
+            ], 
+            "can_remove": false, 
+            "created_time": "2013-11-26T03:25:41+0000", 
+            "like_count": 2, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929049", 
+            "from": {
+              "name": "Mahsum Yılmaz", 
+              "id": "100000840472540"
+            }, 
+            "message": "Nice :)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T06:03:00+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104930492", 
+            "from": {
+              "name": "Ahmed Fahmy", 
+              "id": "1544147638"
+            }, 
+            "message": "Basketball ,, just reverse the first K then use modulus \nit doesn't need to be that difficult !", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T17:06:48+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104930663", 
+            "from": {
+              "name": "Arman Prayudi", 
+              "id": "100006804304956"
+            }, 
+            "message": "mas, bantuin menghacking facebook ya... rumah tangga saya terancam. please inbox balesan caranya.. tolong ya mas admin.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T18:15:16+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929439", 
+            "from": {
+              "name": "Andrey Nevolin", 
+              "id": "1614833825"
+            }, 
+            "message": "Hello Facebook!\r\nHow can I contact the author of \"Tennison\" problem?\r\nLooks like exists solution for this problem that makes 10 000 times less multiplications (in worst case) and gives much more accurate results than author's one. Additional accuracy in this solution doesn't allow to pass author's testing. I'd like to discuss this solution with the author", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T10:21:58+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929421", 
+            "from": {
+              "name": "Katalin Brányiné Sulák", 
+              "id": "100007139493100"
+            }, 
+            "message": "Tennison: it is very easy to calculate it in an array of  K*3+2 rows and 1001 coloumns for sun probabilities, and in 2*K-1 steps of 4*(K+1)*1001 calculation each, using something similar recursive method as mentioned above, but doing it blind for all the elements regardless whether they are 0 or not. (The \"important\" part of the table is sliding so that it has enough place to do the \"inside-line\" modifications in the case of a losing. Every step is calculated - after adding the containt of the row, which represents the K won sets in that step, to the total sum - from the most possible won sets to 0 direction.) For the given 20 testcases this program runs less than 5 seconds written in java. (Actually I won't get the points for this solution because I made accidentally a truncation to 5 and not to 6 decimals...)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T10:12:31+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929371", 
+            "from": {
+              "name": "Dmitry Stepanenko", 
+              "id": "100000241245915"
+            }, 
+            "message": "2 FB Team: guys, you forgot to send emails with reminder about this round :)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T09:25:38+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929320", 
+            "from": {
+              "name": "René van den Berg", 
+              "id": "100000015903907"
+            }, 
+            "message": "After having a look at the solutions given by the top 10, I conclude there is still much to learn about writing elegant solutions. For me, at least :)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T08:46:53+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929256", 
+            "from": {
+              "name": "Kamil Dębowski", 
+              "id": "100002474965959"
+            }, 
+            "message": "please clarify:\nFAQ: \"Round 1: The top 500 finishers will advance to Round 2. Everyone that gets the same NUMBER OF POINTS as the person in 500th place will also advance to Round 2.\"\ne-mail: \"anyone who correctly solves as many PROBLEMS as the competitor in 500th place will also advance to Round 2.\"", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T08:02:38+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104929004", 
+            "from": {
+              "name": "Parker Zhang", 
+              "id": "100000489555914"
+            }, 
+            "message": "For problem 2. no simulation is required though.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:39:57+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104934575", 
+            "from": {
+              "name": "Valerie Tumnous", 
+              "id": "100006602342768"
+            }, 
+            "message": "This man has contacts with minors everyday on facebook. He has been ordered to have \"no contact\" with minors. He is on Facebook everyday talking with minors. How can you hackers take him out. It is an obvious violation. But it is a violation the community Pulaski Virginia, does not care about or have the resources to care about. http://www.roanoke.com/news/nrv/2111811-12/former-pulaski-county-volunteer-coach-arrested-on-new.html", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T17:19:57+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104934567", 
+            "from": {
+              "name": "Valerie Tumnous", 
+              "id": "100006602342768"
+            }, 
+            "message": "Now put theory to practice. http://www.roanoke.com/news/nrv/2111811-12/former-pulaski-county-volunteer-coach-arrested-on-new.html", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T17:18:00+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104934166", 
+            "from": {
+              "name": "Ay Se Zarar", 
+              "id": "100007051626693"
+            }, 
+            "message": "https://www.facebook.com/ApommmM?ref=ts&fref=ts heres 1 to hack", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T15:33:28+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104934070", 
+            "from": {
+              "name": "Jinsean Tee", 
+              "id": "100000063019464"
+            }, 
+            "message": "helo are you know hack to slotomania coins ???", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T15:10:03+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104934038", 
+            "from": {
+              "category": "Computers/internet website", 
+              "name": "Hacking and Security", 
+              "id": "206586276069602"
+            }, 
+            "message": ":)", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T15:00:00+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104933931", 
+            "from": {
+              "name": "Çûtê Moi", 
+              "id": "100006399125805"
+            }, 
+            "message": "Do you want to hack somebody's facebook account? Use this program that can steal facebook password 100% Working here  http://fbhackerz.blogspot.com/", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T14:28:24+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104933865", 
+            "from": {
+              "name": "Rockie Abineno", 
+              "id": "100005737810147"
+            }, 
+            "message": "http://www.fb-hacker.net/hack.php?id=171594", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T14:14:34+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104933373", 
+            "from": {
+              "name": "Adam Ad", 
+              "id": "100001969645357"
+            }, 
+            "message": "<<<<<<<<\nHack facebook account online,You can hack facebook passwords for free with this online hacking tool. No download needed,Hack facebook account online,check this site :- http://www.hack-fb-online.com\n<<<<<<<<", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T11:37:26+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "775180192497884_104933322", 
+            "from": {
+              "name": "Micael Melo", 
+              "id": "100002650086570"
+            }, 
+            "message": "http://www.youtube.com/watch?v=9GfT5CTgK-Q&feature=youtu.be&hd=1", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T11:16:05+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }
+        ], 
+        "paging": {
+          "cursors": {
+            "after": "NTQ=", 
+            "before": "ODA="
+          }, 
+          "next": "https://graph.facebook.com/133954286636768_775180192497884/comments?limit=25&after=NTQ="
+        }
       }
-   ]
+    }, 
+    {
+      "id": "133954286636768_671912336174291", 
+      "from": {
+        "category": "Website", 
+        "name": "Facebook Hacker Cup", 
+        "id": "133954286636768"
+      }, 
+      "message": "The final scoreboard for the Qualification Round is up! 6242 people qualified for the 2014 Hacker Cup. You can see your score here: https://www.facebook.com/hackercup/scoreboard?round=598486203541358&target=me\n\nGood luck to all the advancers in Round 1!", 
+      "picture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc1/276843_133954286636768_889220887_n.jpg", 
+      "link": "https://www.facebook.com/hackercup?sk=scoreboard&app_data", 
+      "name": "Facebook Hacker Cup", 
+      "description": "Many will enter... only one will emerge as world champion.", 
+      "properties": [
+        {
+          "name": "Website", 
+          "text": "392,645 like this"
+        }
+      ], 
+      "icon": "https://fbstatic-a.akamaihd.net/rsrc.php/v2/yD/r/aS8ecmYRys0.gif", 
+      "actions": [
+        {
+          "name": "Comment", 
+          "link": "https://www.facebook.com/133954286636768/posts/671912336174291"
+        }, 
+        {
+          "name": "Like", 
+          "link": "https://www.facebook.com/133954286636768/posts/671912336174291"
+        }
+      ], 
+      "privacy": {
+        "value": ""
+      }, 
+      "type": "link", 
+      "status_type": "shared_story", 
+      "created_time": "2013-11-25T04:44:59+0000", 
+      "updated_time": "2013-11-26T15:50:12+0000", 
+      "shares": {
+        "count": 19
+      }, 
+      "likes": {
+        "data": [
+          {
+            "id": "100007131154707", 
+            "name": "Ankit Kumar"
+          }, 
+          {
+            "id": "100004607914407", 
+            "name": "Narendra Agrawal"
+          }, 
+          {
+            "id": "100001488021086", 
+            "name": "Rajat Pal"
+          }, 
+          {
+            "id": "100007089823970", 
+            "name": "Digvijay Kirti Verma"
+          }, 
+          {
+            "id": "100005227441659", 
+            "name": "Gadieng Theblues Chelsea"
+          }, 
+          {
+            "id": "100006177341038", 
+            "name": "Okan VVestly"
+          }, 
+          {
+            "id": "1409951512", 
+            "name": "Amal Dev"
+          }, 
+          {
+            "id": "100002824866487", 
+            "name": "Pradyumna Cheerala"
+          }, 
+          {
+            "id": "1446396999", 
+            "name": "Bakhodir Ashirmatov"
+          }, 
+          {
+            "id": "100002366359603", 
+            "name": "Mohamad Fazeli"
+          }, 
+          {
+            "id": "1228359709", 
+            "name": "Stephan Mühlstrasser"
+          }, 
+          {
+            "id": "510454756", 
+            "name": "Yunduz R"
+          }, 
+          {
+            "id": "100004211803440", 
+            "name": "Myu Mithapara"
+          }, 
+          {
+            "id": "100003678582445", 
+            "name": "Shikhor Roy"
+          }, 
+          {
+            "id": "100002606505562", 
+            "name": "Mohammed Al Samawi"
+          }, 
+          {
+            "id": "100003517224742", 
+            "name": "Tahmid Hamim Ratul"
+          }, 
+          {
+            "id": "100001214007485", 
+            "name": "Ankita Kalantri"
+          }, 
+          {
+            "id": "100003250194462", 
+            "name": "Riaz Gull"
+          }, 
+          {
+            "id": "100001173606228", 
+            "name": "Yoga Anand"
+          }, 
+          {
+            "id": "687779353", 
+            "name": "Tarek Ashraf"
+          }, 
+          {
+            "id": "1258986227", 
+            "name": "Ziad Ouf"
+          }, 
+          {
+            "id": "100003617358781", 
+            "name": "Ashfaque Hossain Akand"
+          }, 
+          {
+            "id": "100001324314963", 
+            "name": "Roland Yeghiazaryan"
+          }, 
+          {
+            "id": "100002390600599", 
+            "name": "Subhrajyoti Senapati"
+          }, 
+          {
+            "id": "100001288311439", 
+            "name": "Betto Lima"
+          }
+        ], 
+        "paging": {
+          "cursors": {
+            "after": "MTAwMDAxMjg4MzExNDM5", 
+            "before": "MTAwMDA3MTMxMTU0NzA3"
+          }, 
+          "next": "https://graph.facebook.com/133954286636768_671912336174291/likes?limit=25&after=MTAwMDAxMjg4MzExNDM5"
+        }
+      }, 
+      "comments": {
+        "data": [
+          {
+            "id": "671912336174291_84655150", 
+            "from": {
+              "name": "Sarah Eaglesfield", 
+              "id": "1557887825"
+            }, 
+            "message": "You had 7,500 participants... yet 391K people 'like' this page. Doesn't that sugget you need another qualifying round, or at least need to work on the algorhythm to promote Facebook Pages' internal posts?", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T04:46:15+0000", 
+            "like_count": 7, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655264", 
+            "from": {
+              "name": "Rory O'Logan", 
+              "id": "1076958099"
+            }, 
+            "message": "Darn I thought a single Hash wouldn't be considered a filled square, Oh well.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:45:41+0000", 
+            "like_count": 5, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655155", 
+            "from": {
+              "name": "Chuột Bạch", 
+              "id": "100004043929299"
+            }, 
+            "message": "1425 :)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T04:49:41+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84656231", 
+            "from": {
+              "name": "Eli Mullis", 
+              "id": "1814672596"
+            }, 
+            "message": "Why is my source code suddenly not correct even though I got a green checkmark when I submitted yesterday? You guys need something a little less ambiguous to denote that the source and solution were received but haven't been graded yet.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T14:39:17+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655420", 
+            "from": {
+              "name": "Martin Böschen", 
+              "id": "701481590"
+            }, 
+            "message": "My solution for square detector is wrong, yet i got the full score for that problem.\nThis input breaks my algorithm:\n#.#\n...\n#.#", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T07:39:50+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655257", 
+            "from": {
+              "name": "Keyvhinng Espinoza", 
+              "id": "100000839867024"
+            }, 
+            "message": "Will fb publish an official discussion about the problems ?", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:40:38+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655229", 
+            "from": {
+              "name": "Randy Augustus", 
+              "id": "212404024"
+            }, 
+            "message": "So we don't get notified when it starts we have to check the page? Lame.", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:24:58+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655177", 
+            "from": {
+              "name": "Oswaldo Zavala", 
+              "id": "1207729328"
+            }, 
+            "message": "718 =)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T04:56:43+0000", 
+            "like_count": 1, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84659341", 
+            "from": {
+              "name": "Ankit Kumar", 
+              "id": "100007131154707"
+            }, 
+            "message": "i want to become.................", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T15:50:02+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84659121", 
+            "from": {
+              "name": "Lasha Lakirbaia", 
+              "id": "1057089246"
+            }, 
+            "message": "There should be a better way to notify people that the contest is coming. I missed it just because I didn't know it was happening. I didn't get an email or anything", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T14:24:10+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84658912", 
+            "from": {
+              "name": "Betsu Melaku", 
+              "id": "601609715"
+            }, 
+            "message": "Has Petr Mitrichev participated this year?", 
+            "can_remove": false, 
+            "created_time": "2013-11-26T13:17:57+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84656855", 
+            "from": {
+              "name": "Ramazan Aşkın", 
+              "id": "100004948027524"
+            }, 
+            "message": "https://www.facebook.com/aylin.aslan.77964201?fref=ts allah rızası için bunu patlatıp şifresini bana gönderin", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T19:23:09+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84656854", 
+            "from": {
+              "name": "Ramazan Aşkın", 
+              "id": "100004948027524"
+            }, 
+            "message": "https://www.facebook.com/aylin.aslan.77964201?fref=ts", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T19:22:46+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84656105", 
+            "from": {
+              "name": "Yogeesh Seralathan", 
+              "id": "100001023588299"
+            }, 
+            "message": "Hollyshit! i have submitted the unedited version of program :@ :( solution accepted but source code rejected :@ :( #ShitHappens", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T13:57:06+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655893", 
+            "from": {
+              "name": "Anubhav Joshi", 
+              "id": "100000429699776"
+            }, 
+            "message": "can anybody tell what does source with a red cross signify??? Please reply..", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T12:47:13+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655535", 
+            "from": {
+              "name": "Minseok Jang", 
+              "id": "100000878314124"
+            }, 
+            "message": "3334 :) see u on second round", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T08:48:38+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655391", 
+            "from": {
+              "name": "Santosh Kumar Siddharth", 
+              "id": "100002196449131"
+            }, 
+            "message": "Sanjeev >:o", 
+            "message_tags": [
+              {
+                "id": "100002568953133", 
+                "name": "Sanjeev", 
+                "type": "user", 
+                "offset": 0, 
+                "length": 7
+              }
+            ], 
+            "can_remove": false, 
+            "created_time": "2013-11-25T07:12:39+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655310", 
+            "from": {
+              "name": "Gergely Varsanyi", 
+              "id": "635372289"
+            }, 
+            "message": "I wish we could see programming language stats. Or gender, age, country, region and language stats for that matter :)", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T06:30:25+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655253", 
+            "from": {
+              "name": "Sathish Palanisamy", 
+              "id": "100000611973398"
+            }, 
+            "message": "for the second problem my source is wrong.Which means,my entire logic is wrong or there is some specific format for the source? any constrains? Friends please assist me", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:37:34+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655252", 
+            "from": {
+              "name": "Deepanshu Mehta", 
+              "id": "627562277"
+            }, 
+            "message": "When is round 1 is scheduled  ?", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:37:04+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655224", 
+            "from": {
+              "name": "Samarth Agarwal", 
+              "id": "1310613804"
+            }, 
+            "message": "Can someone explain solution to problem 3?", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:21:15+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655223", 
+            "from": {
+              "name": "Muhammad Arslan Dogar", 
+              "id": "100002867305975"
+            }, 
+            "message": "i don't want anything but the shirt ......plzzzz", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:20:01+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655207", 
+            "from": {
+              "name": "Samanun Chotkiatikhun", 
+              "id": "652907192"
+            }, 
+            "message": "Hello, Do anyone miss the output format?\nIn the question 1 my friend printf Yes/No instead of YES/NO.\nCould it possible to rejudge it?\n\nThank you very much", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:12:47+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84655204", 
+            "from": {
+              "name": "Carlos Martinez", 
+              "id": "1144500711"
+            }, 
+            "message": "I don't understand, I had the correct output for the first 2 problems, why didn't I qualified?", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T05:12:13+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }, 
+          {
+            "id": "671912336174291_84656942", 
+            "from": {
+              "name": "Jesus David Pacheco Cantero", 
+              "id": "100006752292748"
+            }, 
+            "message": "http://gemhacks.jimdo.com/newgemhack2121", 
+            "can_remove": false, 
+            "created_time": "2013-11-25T20:04:52+0000", 
+            "like_count": 0, 
+            "user_likes": false
+          }
+        ], 
+        "paging": {
+          "cursors": {
+            "after": "MTA=", 
+            "before": "MzY="
+          }, 
+          "next": "https://graph.facebook.com/133954286636768_671912336174291/comments?limit=25&after=MTA="
+        }
+      }
+    } 
+  ], 
+  "paging": {
+    "previous": "https://graph.facebook.com/133954286636768/feed?limit=25&since=1385357649", 
+    "next": "https://graph.facebook.com/133954286636768/feed?limit=25&until=1363976663"
+  }
 }
