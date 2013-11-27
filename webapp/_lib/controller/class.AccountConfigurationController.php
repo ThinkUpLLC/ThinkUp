@@ -293,12 +293,12 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $this->addToView('body', $p->renderInstanceConfiguration($owner, $instance_username, $instance_network));
             $profiler = Profiler::getInstance();
             $profiler->clearLog();
-        }  else {
-            $plugin_dao = DAOFactory::getDAO('PluginDAO');
-            $config = Config::getInstance();
-            $installed_plugins = $plugin_dao->getInstalledPlugins();
-            $this->addToView('installed_plugins', $installed_plugins);
-        }
+        } 
+
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $config = Config::getInstance();
+        $installed_plugins = $plugin_dao->getInstalledPlugins();
+        $this->addToView('installed_plugins', $installed_plugins);
         /* End plugin-specific configuration handling */
 
         if ($owner->is_admin) {

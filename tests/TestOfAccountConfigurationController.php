@@ -394,6 +394,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->email, 'admin@example.com');
         $this->assertIsA($v_mgr->getTemplateDataItem('owners'), 'array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owners')), 2);
+        $this->assertTrue($v_mgr->getTemplateDataItem('installed_plugins'));
 
         //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
@@ -418,12 +419,12 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertTrue($v_mgr->getTemplateDataItem('body'));
+        $this->assertTrue($v_mgr->getTemplateDataItem('installed_plugins'));
 
-        //not set: owners, body, success_msg, error_msg
+        //not set: owners, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('installed_plugins'));
     }
 
     public function testAuthControlLoggedInSpecificPluginDoesNotExist() {

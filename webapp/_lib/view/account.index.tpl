@@ -42,14 +42,14 @@
                             </td>
                             <td>
                                 <p class="lead" style="padding-left: 0px; margin : 0px;">
-                                <a href="?p={$ip->folder_name|get_plugin_path}"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+                                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
                                 </p>
                                 <span class="muted">{$ip->description}</span>
                             </td>
                     {if $user_is_admin}
                       <td class="action-button">
                       <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}" class="btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="icon-cog "></i> Configure{else}<i class="icon-warning-sign"></i> Set Up{/if}</a>
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="icon-cog "></i> Configure{else}<i class="icon-warning-sign"></i> Set Up{/if}</a>
                       </span>
                       <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                       </td>
@@ -58,13 +58,15 @@
                   {/if}
                 {/foreach}
                     </table>
-              {else}
-                <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
               {/if}
+        </div> <!-- end #plugins -->
+
+		<div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
+            <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
             {if $body}
               {$body}
             {/if}
-        </div> <!-- end #plugins -->
+		</div>
 
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
@@ -490,6 +492,20 @@ $(function() {
         demoteOwner($(this).attr("id"));
       }
     });
+
+    $('.manage_plugin').click(function (e) {
+      var url = $(this).attr('href');
+      var p = url.replace(/.*p=/, '').replace(/#.*/, '');;
+      if (window.location.href.indexOf("="+p) >= 0) {
+        $('.section').hide();
+        $('#manage_plugin').show();
+        e.preventDefault();
+      }
+    });
+    if (window.location.hash && window.location.hash == '#manage_plugin') {
+      $('.section').hide();
+      $('#manage_plugin').show();
+    }
 
   });
 
