@@ -121,7 +121,9 @@ your development server. If you have problems, check the permissions on
 the newly created thinkup directory on your server.
 
 Install a running instance of ThinkUp on your development server using
-any of a number of installation guides.
+any of a number of installation guides. Running nightly code from ThinkUp’s 
+git repository might require you to `catch up on necessary database 
+migrations <https://www.thinkup.com/docs/install/upgrade.html#running-beta-versions-or-code-from-github>`_.
 
 Create an Issue-Specific Development Branch
 -------------------------------------------
