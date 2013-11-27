@@ -121,7 +121,9 @@ class PluginRegistrarWebapp extends PluginRegistrar {
                 $p = new $plugin_class_name;
                 if ($p instanceof PostDetailPlugin) {
                     $menus = $p->getPostDetailMenuItems($post);
-                    $this->post_detail_menus = array_merge($this->post_detail_menus, $menus);
+                    if (is_array($menus)) {
+                        $this->post_detail_menus = array_merge($this->post_detail_menus, $menus);
+                    }
                 }
             }
         }

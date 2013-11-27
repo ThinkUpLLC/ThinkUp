@@ -387,6 +387,34 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertEqual(0, $data['is_active']);
     }
 
+    public function testPluginMenuGeneration() {
+        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'10', 'network_username'=>'ev',
+            'is_public'=>1, 'network'=>'facebook'));
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1001', 'author_user_id'=>'10',
+            'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'facebook',
+            'is_protected'=>0, 'location' => 'Clarence, NY 14031, USA'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
+            'network'=>'facebook'));
+
+        $data[] = FixtureBuilder::build('plugins', array('name'=>"Facebook", 'folder_name'=>'facebook', 'is_active' => 1));
+        $data[] = FixtureBuilder::build('plugins', array('name'=>"YouTube", 'folder_name'=>'youtube', 'is_active' => 1));
+
+        // Disable debug (because then the controller sets reporting to E_STRICT) and enable warnings
+        $this->config->setValue('debug', 0);
+        $old_level = error_reporting();
+        error_reporting(E_WARNING);
+
+        $_GET['t'] = '1001';
+        $_GET['n'] = 'facebook';
+        $_GET['v'] = 'likes';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertNoPattern( "/PHP error/", $results);
+        $this->assertPattern( "/n=facebook.*Replies/", $results);
+        error_reporting($old_level);
+    }
+
+
     private function buildPublicPostWithMixedAccessResponses($with_xss = false) {
         $post_text = 'This is a test post';
         if ($with_xss) {
