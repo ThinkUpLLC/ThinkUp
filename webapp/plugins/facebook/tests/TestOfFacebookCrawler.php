@@ -250,7 +250,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
         $data = array();
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
         }
         $stmt->closeCursor();
@@ -319,7 +319,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
         $data = array();
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($data, $row);
         }
         $stmt->closeCursor();
