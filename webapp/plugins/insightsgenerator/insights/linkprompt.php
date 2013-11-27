@@ -43,8 +43,10 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $link_dao = DAOFactory::getDAO('LinkDAO');
 
+            // Check from midnight two days ago until an hour from now
+            // (to avoid clock-sync issues)
             $recent_posts = $post_dao->getPostsByUserInRange($instance->network_user_id, $instance->network,
-            date('Y-m-d H:i:s', strtotime('-2 days midnight')), date('Y-m-d H:i:s', strtotime('today midnight')));
+            date('Y-m-d H:i:s', strtotime('-2 days midnight')), date('Y-m-d H:i:s', strtotime('+1 hour')));
 
             $posts_with_links = array();
 
