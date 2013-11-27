@@ -20,7 +20,7 @@ to know. Once you fork and download the ThinkUp code:
    on. Name it by issue # and description. For example, if you're
    working on Issue #100, a retweet bugfix, your development branch
    should be called 100-retweet-bugfix. If you decide to work on another
-   issue mid-stream, create a new branch for that issue—don't work on
+   issue mid-stream, create a new branch for that issue-don't work on
    both in one branch.
 
 -  **Do not merge** the upstream master with your development branch;
@@ -33,8 +33,8 @@ to know. Once you fork and download the ThinkUp code:
 -  **Squash your commits.** After you rebase your work on top of the
    upstream master, you can squash multiple commits into one. Say, for
    instance, you've got three commits in related to Issue #100. Squash
-   all three into one with the message “Issue #100 Description of the
-   issue here.” Gina won't accept pull requests for multiple commits
+   all three into one with the message "Issue #100 Description of the
+   issue here." Gina won't accept pull requests for multiple commits
    related to a single issue; it's up to you to squash and clean your
    commit tree. (Remember, if you squash commits you've already pushed
    to GitHub, you won't be able to push that same branch again. Create a
@@ -59,23 +59,17 @@ workflow should look like. (Click to enlarge.)
 Step-by-step (the short version)
 --------------------------------
 
-#. Fork on GitHub (click Fork button)
-#. Clone to your server ($ git clone
-   git@github.com:you/ThinkUp.git)
-#. Set up remote upstream ($ git remote add upstream
-   git://github.com/ginatrapani/ThinkUp.git)
+#. Fork on GitHub. (Click the Fork button.)
+#. Clone to your server (``$ git clone git@github.com:you/ThinkUp.git``)
+#. Set up remote upstream (``$ git remote add upstream git://github.com/ginatrapani/ThinkUp.git``)
+#. Run any outstanding database migrations (``$ cd install/cli/; php upgrade.php --with-new-sql``)
 #. Branch for new issue (``$ git branch ###-description; git checkout ###-description``) and develop on issue branch. 
-   *As time passes, the upstream ThinkUp repository accumulates new commits*. Keep
-   your working copy's master branch and issue branch up to date by
-   periodically rebasing: fetch upstream, rebase master, rebase issue
-   branch.
-#. When development is complete, rebase one more time, then branch
-   from dev branch to release candidate branch . Squash all X commits
-   that pertain to the issue into one clean, descriptive commit ($ git
-   rebase -i HEAD-X)
-#. Push release candidate branch to GitHub ($ git push origin
-   ###-description-rc)
-#. Issue pull request on GitHub (Click Pull Request button)
+#. As time passes, the upstream ThinkUp repository accumulates new commits. Keep your working copy's master branch
+   and issue branch up to date by periodically rebasing: fetch upstream, rebase master, rebase issue branch.
+#. When development is complete, rebase one more time, then branch from dev branch to release candidate branch. Squash 
+   all X commits that pertain to the issue into one clean, descriptive commit (``$ git rebase -i HEAD-X``)
+#. Push release candidate branch to GitHub (``$ git push origin ###-description-rc``)
+#. Issue pull request on GitHub. (Click the Pull Request button.)
 
 If you're new to git and GitHub, here's the longer version of these
 instructions.
@@ -121,9 +115,10 @@ your development server. If you have problems, check the permissions on
 the newly created thinkup directory on your server.
 
 Install a running instance of ThinkUp on your development server using
-any of a number of installation guides. Running nightly code from ThinkUp’s 
-git repository might require you to `catch up on necessary database 
-migrations <https://www.thinkup.com/docs/install/upgrade.html#running-beta-versions-or-code-from-github>`_.
+any of a number of installation guides.
+
+Running nightly code from ThinkUp's  git repository will require you to :doc:`catch up on necessary database 
+migrations </install/fromsource>`.
 
 Create an Issue-Specific Development Branch
 -------------------------------------------
@@ -178,7 +173,7 @@ entering:
 
     $ git remote add upstream git://github.com/ginatrapani/ThinkUp.git
 
-Verify you've now got “origin” and “upstream” remotes by entering:
+Verify you've now got "origin" and "upstream" remotes by entering:
 
 ::
 
@@ -209,8 +204,8 @@ local master, and rebase your branch from it like so:
 You may need to resolve conflicts that occur when a file on the
 development trunk and one of your files have both been changed. Edit
 each file to resolve the differences, then commit the fixes to your
-development server repo and test. Each file will need to be “added”
-before running a “commit.”
+development server repo and test. Each file will need to be "added"
+before running a "commit."
 
 Conflicts are clearly marked in the code files. Make sure to take time
 in determining what version of the conflict you want to keep and what
@@ -234,7 +229,7 @@ Squash All Commits Related to a Single Issue into a Single Commit
 Once you have rebased your work on top of the latest state of the
 upstream master, you may have several commits related to the issue you
 were working on. Once everything is done, squash them into a single
-commit with a descriptive message, like “Issue #100: Retweet bugfix.”
+commit with a descriptive message, like "Issue #100: Retweet bugfix."
 
 To squash four commits into one, do the following:
 
@@ -242,15 +237,15 @@ To squash four commits into one, do the following:
 
     $ git rebase -i HEAD-4
 
-In the text editor that comes up, replace the words “pick” with “squash”
+In the text editor that comes up, replace the words "pick" with "squash"
 next to the commits you want to squash into the commit before it. Save
-and close the editor, and git will combine the “squash”'ed commits with
+and close the editor, and git will combine the "squash"'ed commits with
 the one before it. Git will then give you the opportunity to change your
-commit message to something like, “Issue #100: Fixed retweet bug.”
+commit message to something like, "Issue #100: Fixed retweet bug."
 
 Important: If you've already pushed commits to GitHub, and then squash them locally, you will not be able to push that same branch to GitHub again.
-Create a new branch—like 100-retweet-bug-squashed or 100-retweet-bug-rc1
-(for release candidate 1)—and squash your commits there. Once everything
+Create a new branch-like 100-retweet-bug-squashed or 100-retweet-bug-rc1
+(for release candidate 1)-and squash your commits there. Once everything
 is squashed and ready, push the new squashed branch to GitHub and send
 your pull request to Gina.
 

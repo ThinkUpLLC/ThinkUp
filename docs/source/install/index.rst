@@ -9,6 +9,7 @@ everything you need to know to get ThinkUp up and running on your web server.
 
    quickstart
    install
+   fromsource
    advancedconfig
    upgrade
    permsintro
