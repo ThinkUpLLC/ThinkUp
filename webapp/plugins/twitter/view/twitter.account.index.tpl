@@ -38,10 +38,10 @@
         </td>
         {/if}
         <td class="action-button">
-            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter" class="btn btn-info btnHashtag">Saved searches</a>
+            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
         </td>
         <td class="action-button">
-            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter">
+            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
@@ -106,7 +106,7 @@
     <br />
     Callback URL:
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=twitter</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=twitter#manage_plugin</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"

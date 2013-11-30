@@ -1,4 +1,4 @@
-<a href="?p=twitter" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
+<a href="?p=twitter#manage_plugin" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
 
 {include file="_usermessage.tpl"}
 
@@ -27,7 +27,7 @@
         </td>
         <td class="action-button">
             <span id="delete{$h->id}">
-            <form method="post" action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter">
+            <form method="post" action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter#manage_plugin">
                 <input type="hidden" name="instance_id" value="{$instance->id}">
                 {insert name="csrf_token"}
                 <input type="hidden" name="hashtag_id" value="{$h->id}">
@@ -49,7 +49,7 @@
 
 <h3><i class="icon-tag icon-muted"></i> Add a Saved Search</h3>
   <form name="newhashtag" id="newhashtag" class="form-horizontal" method="post" 
-  action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter">
+  action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter#manage_plugin">
     <div class="control-group input-prepend">
       <label for="hashtag" class="control-label">Keyword or hashtag:</label>
       <div class="controls">
