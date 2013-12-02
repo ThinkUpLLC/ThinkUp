@@ -108,6 +108,12 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
         );
         $this->profile3_instance = new Instance($r);
+
+        $r['id'] = 6;
+        $r['network_username'] = 'Chris Moyer';
+        $r['network_user_id'] = '501771984';
+        $r['network_viewer_id'] = '501771984';
+        $this->profile5_instance = new Instance($r);
     }
 
     public function tearDown() {
@@ -333,5 +339,14 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('775180192497884', 'facebook page');
         $this->assertEqual($post->reply_count_cache, 51);
+    }
+
+    public function testPaginatedPostLikes() {
+        $fbc = new FacebookCrawler($this->profile5_instance, 'fauxaccesstoken', 10);
+
+        $fbc->fetchPostsAndReplies('501771984', 'facebook');
+        $post_dao = new PostMySQLDAO();
+        $post = $post_dao->getPost('10151734003261985', 'facebook');
+        $this->assertEqual($post->favlike_count_cache, 27);
     }
 }
