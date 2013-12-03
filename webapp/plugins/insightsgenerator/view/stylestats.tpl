@@ -23,12 +23,19 @@
         function drawChart{/literal}{$i->id}{literal}() {
         {/literal}
             var response_rates_data_{$i->id} = new google.visualization.DataTable({$i->related_data});
+            var response_rates_view_{$i->id} = new google.visualization.DataView(response_rates_data_{$i->id});
+            response_rates_view_{$i->id}.setColumns({literal}[{
+                calc: function (table, row) {
+                    var value =  table.getValue(row, 0);
+                    return value.replace && value.replace(/\n/g, " ") || value;
+                }, sourceColumn: 0, type: "string"
+            }, 1, 2, 3]{/literal});
 
             {literal}
             var response_rates_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'response_rates_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
-              dataTable: response_rates_data_{/literal}{$i->id}{literal},
+              dataTable: response_rates_view_{/literal}{$i->id}{literal},
               options: {
                   colors: ['#3e5d9a', '#3c8ecc', '#BBCCDD'],
                   isStacked: true,
