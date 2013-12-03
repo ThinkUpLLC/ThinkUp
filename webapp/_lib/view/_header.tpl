@@ -16,7 +16,6 @@
 
     <!-- styles -->
     <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/insights.css" rel="stylesheet">
 
@@ -26,7 +25,7 @@
     <![endif]-->
 
     <script src="{$site_root_path}assets/js/jquery.js"></script>
-    <script src="{$site_root_path}assets/js/bootstrap.js"></script>
+    <script src="{$site_root_path}assets/js/bootstrap.min.js"></script>
 
     {literal}
       <script type="text/javascript">
