@@ -72,17 +72,18 @@ input#search-keywords {
     font-weight: bold;
 }
 
-form .control-group {
+form .form-group {
     margin : 6px;
 }
 
 form legend {
     background-color : #f5f5f5;
     font-weight: 200;
+    padding: 20px;
 }
 
 form legend:before {
-    content: '\a0 \a0 \a0 \a0 ';
+    content: '';
 }
 
 form fieldset .alert-error {
@@ -102,6 +103,11 @@ form .help-block ul {
 
 form .help-inline ul li {
     display: inline;
+}
+
+.form-actions {
+    padding-top: 40px;
+    padding-bottom: 20px;
 }
 
 div.white-card form legend {

@@ -18,7 +18,7 @@
     var txt = '';
 //    console.debug(data);
 //    console.debug('version ' + data[0].version);
-    txt += ' <a  class="linkbutton" style="background: #31C22D;color:white;" href="{/literal}{$site_root_path}{literal}install/upgrade-application.php" title="'+data[0].version+'">Upgrade ThinkUp</a>';
+    txt += ' <a  class="btn btn-success btn-xs upgrade-button" href="{/literal}{$site_root_path}{literal}install/upgrade-application.php" title="'+data[0].version+'">Upgrade ThinkUp</a>';
     div.innerHTML =  txt;  // assign new HTML into #ROOT
     div.style.display = 'inline'; // make element visible
   }

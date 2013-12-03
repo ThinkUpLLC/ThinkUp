@@ -1,12 +1,12 @@
-{include file="_header.tpl" enable_bootstrap=$enable_bootstrap}
-{include file="_statusbar.tpl" enable_bootstrap=$enable_bootstrap}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
     <div id="main" class="container">
 
 {include file="_usermessage.tpl"}
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div class="embossed-block">
         <ul>
           <li>
@@ -14,9 +14,9 @@
           </li>
         </ul>
       </div>
-    </div><!--/span3-->
+    </div><!--/col-md-3-->
 
-    <div class="span9">
+    <div class="col-md-9">
     {if $smarty.get.c eq 'posts'}
         {if $posts|@count > 0}
         {foreach from=$posts key=pid item=post name=bar}
@@ -69,12 +69,12 @@
          <h2>No followers found.</h2>
         {/if}
     {/if}
-    </div><!--/span9-->
+    </div><!--/col-md-9-->
 </div><!--/row-->
 
 <div class="row">
-    <div class="span3">&nbsp;</div>
-    <div class="span9">
+    <div class="col-md-3">&nbsp;</div>
+    <div class="col-md-9">
 
         <ul class="pager">
         {if $next_page}
