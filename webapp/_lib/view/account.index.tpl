@@ -1,10 +1,10 @@
-{include file="_header.tpl" enable_tabs=1 enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl" enable_tabs=1}
+{include file="_statusbar.tpl"}
 
 <div class="container">
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
@@ -16,8 +16,8 @@
           {if $user_is_admin}<li><a href="#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
-    </div><!--/span3-->
-    <div class="span9">
+    </div><!--/col-md-3-->
+    <div class="col-md-9">
         <div class="white-card">
 
         <div class="section" id="plugins">
@@ -62,7 +62,7 @@
         </div> <!-- end #plugins -->
 
 		<div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
-            <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
+            <a href="?m=manage" class="btn btn-xs"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
             {if $body}
               {$body}
             {/if}
@@ -100,36 +100,41 @@
         <div class="section" id="instances">
           {include file="_usermessage.tpl" field='password'}
           <span class="pull-right">{insert name="help_link" id='account'}</span>
-          <h3><i class="icon-key icon-muted"></i> Password</h3>
+          <h3><i class="icon-key icon-muted"></i>Change Password</h3>
           <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-            <div class="control-group input-prepend">
-              <label for="oldpass" class="control-label">Current password</label>
-              <div class="controls">
-                <span class="add-on"><i class="icon-key"></i></span>
-                <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
-              </div>
+
+            <div class="form-group">
+                    <label class="col-sm-2" for="oldpass">Current password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <input name="oldpass" type="password" id="oldpass" class="password form-control" required>{insert name="csrf_token"}<!-- reset password -->
+                        </span>
+                        <span class="help-block"></span>
+
+                    </div>
             </div>
-            <div class="control-group">
-                    <label class="control-label" for="password">New Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
+            <div class="form-group">
+                    <label class="col-sm-2" for="password">New Password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="icon-key"></i></span>
                             <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
                             data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
                         </span>
-                        <span class="help-inline"></span>
+                        <span class="help-block"></span>
 
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>            
+                <div class="form-group">
+                    <label class="col-sm-2" for="confirm_password">Confirm&nbsp;new Password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="icon-key"></i></span>            
                             <input type="password" name="pass2" id="confirm_password" required 
-                             class="password" 
+                             class="password form-control" 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
                             data-validation-match-match="pass1" 
                             data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
@@ -137,8 +142,8 @@
                         <span class="help-block"></span>
                     </div>
                 </div>
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-8">
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">
               </div>
             </div>
@@ -512,4 +517,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0}

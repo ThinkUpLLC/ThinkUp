@@ -4,10 +4,9 @@
   {include file="_usermessage.tpl"}
 
  <div class="alert alert-error" id="settings_error_message_error" style="display: none;">
-  <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+  <span class="icon icon-alert"></span>
   <span id="settings_error_message"></span>
 </div>
-
 
  <div class="alert alert-success"  id="settings_success" style="display: none;">
   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>

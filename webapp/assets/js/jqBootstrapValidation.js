@@ -51,7 +51,7 @@
 
           $inputs.each(function (i, el) {
             var $this = $(el),
-              $controlGroup = $this.parents(".control-group").first();
+              $controlGroup = $this.parents(".form-group").first();
             if (
               $controlGroup.hasClass("warning")
             ) {
@@ -82,7 +82,7 @@
 
           // Get references to everything we're interested in
           var $this = $(this),
-            $controlGroup = $this.parents(".control-group").first(),
+            $controlGroup = $this.parents(".form-group").first(),
             $helpBlock = $controlGroup.find(".help-block").first(),
             $form = $this.parents("form").first(),
             validatorNames = [];
@@ -92,7 +92,7 @@
           // create message container if not exists
             if (!$helpBlock.length && settings.options.autoAdd && (settings.options.autoAdd.helpBlocks || settings.options.autoAdd.helpInline)) {
                 if(settings.options.autoAdd.helpInline){
-            $helpBlock = $('<span class="help-inline" />');
+            $helpBlock = $('<span class="help-block" />');
             }else{
             $helpBlock = $('<div class="help-block" />');
             }
@@ -517,7 +517,7 @@
 
             var
               $this = $(this),
-              $controlGroup = $this.parents(".control-group").first(),
+              $controlGroup = $this.parents(".form-group").first(),
               $helpBlock = $controlGroup.find(".help-block").first();
 
             // remove our events

@@ -1,5 +1,5 @@
-{include file="_header.tpl" enable_bootstrap=$enable_bootstrap}
-{include file="_statusbar.tpl" enable_bootstrap=$enable_bootstrap}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
     <div id="main" class="container">
 
@@ -8,8 +8,8 @@
 {if $message_header}
 
 <div class="row">
-    <div class="span3">&nbsp;</div>
-    <div class="span9">
+    <div class="col-md-3">&nbsp;</div>
+    <div class="col-md-9">
         <div class="page-header">
           <h1>{$message_header}</h1>
           <h2><small>{$message_body}</small></h2>
@@ -25,7 +25,7 @@
 <div class="row">
     {if $i->text neq ''}
         {if $cur_date neq $i->date}
-    <div class="span3">
+    <div class="col-md-3">
       <div class="embossed-block">
         <ul>
           <li>
@@ -37,29 +37,29 @@
           </li>
         </ul>
       </div>
-    </div><!--/span3-->
+    </div><!--/col-md-3-->
 
             {assign var='cur_date' value=$i->date}
 
         {else}
 
-    <div class="span3"></div>
+    <div class="col-md-3"></div>
         {/if}
 
-    <div class="span9">
+    <div class="col-md-9">
         {if $i->filename neq ''}
             {assign var='tpl_filename' value=$i->filename|cat:'.tpl'}
             <!-- including {$tpl_filename} -->
             {include file=$tpl_path|cat:$tpl_filename}
         {/if}
-    </div><!--/span9-->
+    </div><!--/col-md-9-->
    {/if}
 </div><!--/row-->
 {/foreach}
 
 <div class="row">
-    <div class="span3">&nbsp;</div>
-    <div class="span9">
+    <div class="col-md-3">&nbsp;</div>
+    <div class="col-md-9">
 
         <ul class="pager">
         {if $next_page}

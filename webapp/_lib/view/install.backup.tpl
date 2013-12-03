@@ -1,11 +1,11 @@
 
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 <div class="container">
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
@@ -15,14 +15,14 @@
           {if $user_is_admin}<li><a href="{$site_root_path}account/?m=manage#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
-    </div><!--/span3-->
-    <div class="span9">
+    </div><!--/col-md-3-->
+    <div class="col-md-9">
         <div class="white-card">
 
 
         <div class="section thinkup-canvas clearfix" id="backup_data">
 
-        <a href="javascript: history.go(-1)" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back</a>
+        <a href="javascript: history.go(-1)" class="btn btn-xs"><i class="icon-chevron-left icon-muted"></i> Back</a>
 
         <div class="plugin-info">
 
@@ -33,7 +33,7 @@
 
         </div>
 
-        {include file="_usermessage.tpl" enable_bootstrap=1}
+        {include file="_usermessage.tpl"}
 
 
             {if $no_zip_support}
@@ -121,4 +121,4 @@
 </div>
 
 
-{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0}

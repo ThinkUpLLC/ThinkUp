@@ -1,4 +1,4 @@
-<a href="?p=twitter#manage_plugin" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
+<a href="?p=twitter#manage_plugin" class="btn btn-xs"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
 
 {include file="_usermessage.tpl"}
 
@@ -50,9 +50,9 @@
 <h3><i class="icon-tag icon-muted"></i> Add a Saved Search</h3>
   <form name="newhashtag" id="newhashtag" class="form-horizontal" method="post" 
   action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter#manage_plugin">
-    <div class="control-group input-prepend">
+    <div class="form-group input-prepend">
       <label for="hashtag" class="control-label">Keyword or hashtag:</label>
-      <div class="controls">
+      <div class="col-sm-8">
         {insert name="csrf_token"}
         <input type="hidden" name="instance_id" value="{$instance->id}">
         <input name="new_hashtag_name" type="new_hashtag_name" id="new_hashtag_name" {literal}pattern="^[\S]*$"{/literal}  required 
@@ -62,8 +62,8 @@
         
       </div>
     </div>
-    <div class="control-group">
-      <div class="controls">
+    <div class="form-group">
+      <div class="col-sm-8">
         <input type="submit" id="hashtag-new" name="action" value="Save search" class="btn btn-primary">
       </div>
     </div>
