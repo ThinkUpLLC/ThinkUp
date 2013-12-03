@@ -3,9 +3,9 @@
 
         <div class="container">
 
-            <div class="navbar-header">
+            <div class="navbar-header col-md-7">
 
-                <a href="{$site_root_path}" class="navbar-brand col-md-3"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
+                <a href="{$site_root_path}" class="navbar-brand col-md-5"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
 
                 <a class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="glyphicon glyphicon-th"></span>
@@ -14,9 +14,9 @@
             {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances}
 
                 <!--search posts-->
-                <form class="navbar-form pull-left dropdown" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&amp;n={$instances[0]->network|urlencode}&amp;c=posts&amp;q=');">
+                <form class="navbar-form dropdown col-md-2" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&amp;n={$instances[0]->network|urlencode}&amp;c=posts&amp;q=');">
 
-                    <input type="text" id="search-keywords" class="search-query span4 dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
+                    <input type="text" id="search-keywords" class="search-query dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
 
                     <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     {foreach from=$instances key=tid item=i}
@@ -41,7 +41,7 @@
 
       {if $logged_in_user}
 
-<ul class="nav navbar-nav navbar-right" style="border-left : none;">
+<ul class="nav navbar-nav navbar-right col-md-4" style="border-left : none;">
 
     {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
     <li><a href="#" id="notify-insights" title="Enable desktop notifications of new insights!" style="display:none;"><i class="icon-bell"></i></a></li>
