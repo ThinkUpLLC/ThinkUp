@@ -73,6 +73,10 @@ class Owner {
      */
     var $api_key_private;
     /**
+     * @var str When the user should receive insight digests.
+     */
+    var $notification_frequency;
+    /**
      * @var arr Non-persistent, used for UI, array of instances associated with owner.
      */
     var $instances = null;
@@ -89,6 +93,7 @@ class Owner {
             $this->account_status = $row['account_status'];
             $this->api_key = $row['api_key'];
             $this->api_key_private = $row['api_key_private'];
+            $this->notification_frequency = $row['notification_frequency'];
         }
     }
     /**

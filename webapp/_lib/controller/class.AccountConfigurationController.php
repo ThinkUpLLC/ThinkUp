@@ -31,6 +31,11 @@
  */
 class AccountConfigurationController extends ThinkUpAuthController {
 
+    /*
+     * @var array Options for notification frequency
+     */
+    var $notification_frequencies = array('daily'=>'Daily','weekly'=>'Weekly','both'=>'Both','never'=>'Never');
+
     /**
      * Constructor
      * @param bool $session_started
@@ -53,6 +58,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $invite_dao = DAOFactory::getDAO('InviteDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
+        $this->addToView('notification_options', $this->notification_frequencies);
         $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
         $this->view_mgr->addHelp('users', 'userguide/settings/allaccounts');
@@ -265,6 +271,25 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 'Please try again.','account');
             }
         }
+
+        //process change to notification frequency
+        if (isset($_POST['updatefrequency'])) {
+            $this->validateCSRFToken();
+            $new_freq = isset($_POST['notificationfrequency']) ? $_POST['notificationfrequency'] : null;
+            $updates = 0;
+            if ($new_freq && isset($this->notification_frequencies[$new_freq])) {
+                $updates = $owner_dao->setNotificationFrequency($this->getLoggedInUser(), $new_freq);
+            }
+            if ($updates) {
+                // Update the user in the view to match
+                $owner->notification_frequency = $new_freq;
+                $this->addToView('owner', $owner);
+                $this->addSuccessMessage('Your email frequency has been updated.', 'notifications');
+            } else {
+                $this->addErrorMessage('Invalid frequency.', 'notifications');
+            }
+        }
+
         $this->view_mgr->clear_all_cache();
 
         /* Begin plugin-specific configuration handling */

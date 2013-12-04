@@ -64,7 +64,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
         'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$hashed_pass,
-        'pwd_salt'=> OwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
+        'pwd_salt'=> OwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c',
+        'notification_frequency' => 'daily'));
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. Admin',
         'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1));
@@ -796,6 +797,53 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug($result);
         $this->assertPattern(
         '/crawler\/rss.php\?un=me153\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+    }
+    
+    public function testAuthControlLoggedInChangeNotificationFrequency() {
+        $owner_dao = new OwnerMySQLDAO();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        $this->assertEqual('daily', $owner->notification_frequency);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $controller = new AccountConfigurationController(true);
+        $output = $controller->go();
+        $this->assertPattern('/"daily"[^>]*selected/', $output);
+        $this->assertNoPattern('/"both"[^>]*selected/', $output);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['notificationfrequency'] = 'both';
+        $controller = new AccountConfigurationController(true);
+        $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        // No CSRF shouldn't update
+        $this->assertNotEqual('both', $owner->notification_frequency);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['notificationfrequency'] = 'bananas';
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+
+        $controller = new AccountConfigurationController(true);
+        $output = $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        // bad value, shouldn't update
+        $this->assertNotEqual('bananas', $owner->notification_frequency);
+        $this->assertEqual('daily', $owner->notification_frequency);
+        $this->assertPattern('/Invalid frequency/', $output);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['notificationfrequency'] = 'both';
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+        $output = $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        $this->assertNotEqual('daily', $owner->notification_frequency);
+        $this->assertEqual('both', $owner->notification_frequency);
+        $this->assertNoPattern('/"daily"[^>]*selected/', $output);
+        $this->assertPattern('/"both"[^>]*selected/', $output);
+        $this->assertPattern('/email frequency has been updated/', $output);
     }
 
     private function buildRSSData() {
