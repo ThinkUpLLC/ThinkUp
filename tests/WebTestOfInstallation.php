@@ -175,7 +175,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //sleep(1000);
         //Start installation process
         $this->get($this->url.'/test_installer/thinkup/');
-        $this->assertTitle("ThinkUp");
+        $this->assertTitle("ThinkUp Permissions Error");
 
         //data_dir isn't writable
         $this->assertText('Oops! ThinkUp is unable to run because of incorrect folder permissions. '.
