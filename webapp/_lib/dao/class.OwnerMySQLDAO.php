@@ -46,7 +46,8 @@ SELECT
     password_token,
     account_status,
     failed_logins,
-    api_key
+    api_key,
+    email_notification_frequency
 FROM #prefix#owners AS o
 WHERE email = :email;
 SQL;
@@ -61,7 +62,7 @@ SQL;
 
     public function getById($id) {
         $q = 'SELECT id,full_name,email,is_admin,last_login,is_activated,password_token,' .
-            'account_status,failed_logins,api_key ' .
+            'account_status,failed_logins,api_key,email_notification_frequency ' .
             'FROM #prefix#owners AS o WHERE id = :id';
         $vars = array(
             ':id'=>$id
@@ -72,7 +73,7 @@ SQL;
     }
 
     public function getAllOwners() {
-        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
+        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login, email_notification_frequency ";
         $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q);
@@ -322,6 +323,15 @@ SQL;
         } else {
             return $new_api_key;
         }
+    }
+
+    public function setEmailNotificationFrequency($email, $email_notification_frequency) {
+        $q = "UPDATE #prefix#owners
+             SET email_notification_frequency=:email_notification_frequency
+             WHERE email=:email";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $stmt = $this->execute($q, array(':email_notification_frequency' => $email_notification_frequency, ':email' => $email));
+        return $this->getUpdateCount($stmt);
     }
 
     /**

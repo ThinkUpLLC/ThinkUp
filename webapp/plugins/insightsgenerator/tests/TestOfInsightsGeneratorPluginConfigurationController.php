@@ -28,20 +28,17 @@
  * @copyright 2012-2013 Gina Trapani
  */
 
-require_once 'tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/InsightsGenerator/controller/class.InsightsGeneratorPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/InsightsGenerator/model/class.InsightsGeneratorCrawler.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/InsightsGenerator/model/class.InsightsGeneratorPlugin.php';
+require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_WEBAPP_PATH.
+'plugins/insightsgenerator/controller/class.InsightsGeneratorPluginConfigurationController.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightsGeneratorPlugin.php';
 
 class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('InsightsGenerator', 'InsightsGeneratorPlugin');
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
     }
 
@@ -49,4 +46,50 @@ class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTe
         parent::tearDown();
     }
 
+    public function testLoginRequired  () {
+        $controller = $this->getController(false);
+        $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertPattern('/You must.*log in/', $v_mgr->getTemplateDataItem('error_msg'));
+
+        $controller = $this->getController(true);
+        $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertNoPattern('/You must.*log in/', $v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testPluginsListed () {
+        $controller = $this->getController(true);
+        $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $plugins = $v_mgr->getTemplateDataItem('installed_plugins');
+        $this->assertIsA($plugins, 'array');
+        $this->assertTrue(count($plugins) > 0);
+        $this->assertNotNull($plugins[0]['name']);
+        $this->assertNotNull($plugins[0]['description']);
+    }
+
+    public function testOptionsShow () {
+        // Non-admin doesn't get mandrill option
+        $controller = $this->getController(true, false);
+        $output = $controller->go();
+        $this->assertNoPattern('/Mandrill Template Name/', $output);
+
+        // Admin gets option
+        $controller = $this->getController(true, true);
+        $output = $controller->go();
+        $this->assertPattern('/Mandrill Template Name/', $output);
+    }
+
+    private function getController($logged_in, $is_admin=false) {
+        if ($logged_in) {
+            $this->simulateLogin('me@example.com', $is_admin);
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+            $controller = new InsightsGeneratorPluginConfigurationController($owner);
+        } else {
+            $controller = new InsightsGeneratorPluginConfigurationController(true);
+        }
+        return $controller;
+    }
 }

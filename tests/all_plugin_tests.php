@@ -71,6 +71,8 @@ $plugin_tests->add(new TestOfYouTubeCrawler());
 $plugin_tests->add(new TestOfYouTubePlugin());
 $plugin_tests->add(new TestOfYouTubePluginConfigurationController());
 $plugin_tests->add(new TestOfInsightPluginParent());
+$plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
+$plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 //Insights
 $plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());

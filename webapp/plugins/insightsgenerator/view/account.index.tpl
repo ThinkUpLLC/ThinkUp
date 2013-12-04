@@ -29,11 +29,9 @@
 <div class="append_20">
 
 {if $options_markup}
-    {if $user_is_admin}
-        {include file="_plugin.showhider.tpl"}
-        {include file="_usermessage.tpl" field="setup"}
-        {$options_markup}
-    {/if}
+    <p>
+    {$options_markup}
+    </p>
 {/if}
 </div>
 
