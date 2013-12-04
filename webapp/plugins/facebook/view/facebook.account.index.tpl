@@ -4,14 +4,14 @@
 
     <span class="pull-right">{insert name="help_link" id='facebook'}</span>
     <h2>
-        <i class="icon-facebook icon-muted"></i> Facebook 
+        <i class="fa fa-facebook icon-muted"></i> Facebook 
     </h2>
 
 </div>
 
 {if $fbconnect_link}
 {include file="_usermessage.tpl" field="authorization"}
-<a href="{$fbconnect_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Facebook User</a>
+<a href="{$fbconnect_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a Facebook User</a>
 {/if}
 
 {if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
@@ -23,7 +23,7 @@
     {foreach from=$instances key=iid item=i name=foo}
     <div class="row-fluid">
         <div class="col-md-3">
-            {if $i->auth_error}<span class="ui-icon ui-icon-alert" style="float: left; margin:0.25em 0 0 0;" id="facebook-auth-error"></span>{/if}
+            {if $i->auth_error}<span class="fa fa-warning" id="facebook-auth-error"></span>{/if}
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
         <div class="col-md-3">

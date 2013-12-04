@@ -35,7 +35,7 @@
                     <label class="col-sm-2" for="email">Email&nbsp;Address</label>
                     <div class="col-sm-8">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-envelope"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             <input type="email" name="email" id="email" class="form-control"{if  isset($mail)} value="{$mail|filter_xss}"{/if} required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
                         </span>
@@ -47,7 +47,7 @@
                     <label class="col-sm-2" for="password">Password</label>
                     <div class="col-sm-8">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass1" id="pass1"
                             {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="form-control password" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
@@ -60,7 +60,7 @@
                     <label class="col-sm-2" for="pass2">Confirm&nbsp;Password</label>
                     <div class="col-sm-8">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass2" id="pass2" required 
                             class="form-control password" 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 

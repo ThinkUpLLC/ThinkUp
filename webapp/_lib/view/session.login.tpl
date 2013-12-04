@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label class="col-sm-2" for="email">Email</label>
                         <div class="col-sm-8 input-group">
-                            <span class="input-group-addon"><i class="icon-envelope"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             <input class="form-control" type="email" name="email" id="email" {if isset($email)} value="{$email|filter_xss}"{/if} autofocus="autofocus">
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                     <div class="form-group">
                         <label class="col-sm-2" for="pwd">Password</label>
                         <div class="col-sm-8 input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input class="form-control" type="password" name="pwd" id="pwd">
                         </div>
                     </div>
