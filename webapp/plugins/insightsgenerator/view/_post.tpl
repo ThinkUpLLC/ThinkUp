@@ -2,14 +2,14 @@
 
 {else}
     {if $i->slug|substr:24 eq 'replies_frequent_words_'}
-        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-xs detail-btn" ><i class="icon-comment icon-white"></i></a></div>
+        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-xs detail-btn" ><i class="fa fa-comment icon-white"></i></a></div>
     {/if}
     {if $i->slug eq 'geoencoded_replies'}
-        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?v=geoencoder_map&t={$post->post_id}&n=twitter"><button class="btn btn-info btn-xs detail-btn" ><i class="icon-map-marker icon-white"></i></button></a></div>
+        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?v=geoencoder_map&t={$post->post_id}&n=twitter"><button class="btn btn-info btn-xs detail-btn" ><i class="fa fa-map-marker icon-white"></i></button></a></div>
     {/if}
 
-    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-{$icon}"></i> <a href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->prefix}</a></span>
-        <i class="icon-{$i->instance->network}{if $i->instance->network eq 'google+'} icon-google-plus{/if} icon-muted"></i>
+    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="fa icon-white fa-{$icon}"></i> <a href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->prefix}</a></span>
+        <i class="fa fa-{$i->instance->network}{if $i->instance->network eq 'google+'} fa-google-plus{/if} icon-muted"></i>
         {$i->text|link_usernames_to_twitter}
 {/if}
 
@@ -23,7 +23,7 @@
                 {if $i->instance->network_username != $post->author_username}
 
                     <h4><a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">{$post->author_fullname}</a></h4>
-                    <p class="twitter-bio-info"><i class="icon-twitter"></i> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">@{$post->author_username}</a> <small>{$post->place}</small>
+                    <p class="twitter-bio-info"><i class="fa fa-twitter"></i> <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}">@{$post->author_username}</a> <small>{$post->place}</small>
 
                         {if $post->is_geo_encoded < 2}
                             <small>
@@ -76,7 +76,7 @@
             {/if}
 
             {if !$post && $post->in_reply_to_post_id }
-                <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
+                <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="fa fa-reply" title="reply to..."></span></a>
             {/if}
 
 
@@ -85,9 +85,9 @@
                 <a href="http://twitter.com/{$post->author_user_id}/statuses/{$post->post_id}">{$post->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}</a>
 
                 &nbsp;&nbsp;
-                <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="icon icon-reply" title="reply"></i></a>
-                <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="icon icon-retweet" title="retweet"></i></a>
-                <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="icon icon-star-empty" title="favorite"></i></a>
+                <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><i class="fa fa-reply" title="reply"></i></a>
+                <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><i class="fa fa-retweet" title="retweet"></i></a>
+                <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><i class="fa fa-star-empty" title="favorite"></i></a>
                 </p>
             {else}
                 <span class="metaroll">

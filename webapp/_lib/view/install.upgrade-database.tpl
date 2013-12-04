@@ -29,7 +29,7 @@
     <div id="info-parent" class="alert urgent" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">
            <p>
-            <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+            <span class="fa fa-info-circle"></span>
             Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table  has <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
             Since upgrading a large database can time out in the browser, we recommend that you use the <a href="http://thinkup.com/docs/install/upgrade.html">
             <b>command line upgrade tool</b></a> when upgrading ThinkUp.
@@ -43,7 +43,7 @@
     <!-- no upgrade needed -->
      <div class="alert helpful">
          <p>
-           <span class="icon icon-check"></span>
+           <span class="fa fa-check"></span>
            Sweet! Your database is up to date. {if $thinkup_db_version}Here's <a href="http://thinkup.com/docs/changelog/{$thinkup_db_version}.html" target="_new">what's new in version <b>{$thinkup_db_version}</b></a>.{/if}
         </p>
      </div> 
@@ -56,7 +56,7 @@
     <div id="info-parent" class="alert urgent" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">
         <p>
-        <span class="icon icon-info"></span>
+        <span class="fa fa-info"></span>
         <p>Your ThinkUp installation needs {$migrations|@count} database update{if $migrations|@count gt 1}s{/if}. {if $user_is_admin}Before you proceed, you should back up your ThinkUp database if you haven't already.</p>
         <a href="{$site_root_path}install/backup.php" class="btn btn-primary btn-large">Back up your ThinkUp database</a>.{else}If you haven't already, <a href="http://thinkup.com/docs/install/backup.html">back up your current installation's data first</a>.</p>{/if}
         </p>
