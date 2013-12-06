@@ -1,0 +1,368 @@
+// Bootstrap helpers
+
+@import "../../bootstrap/less/variables.less";
+@import "../../bootstrap/less/mixins.less";
+
+// We shall override some variables!
+
+@blue-dark: #2785D3;
+@blue: #46BCFF;
+@orange-dark: #DA6070;
+@orange: #FC939E;
+
+@lightest-gray: #f0f0f0;
+@lighter-gray: #dbdbdb;
+@light-gray: #999;
+
+// Mobile first! (< 480px)
+
+body {
+   background-color: @lightest-gray;
+   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   font-weight: 300;
+   font-size: 14px;
+   line-height: 1.286;
+   color: #222;
+   text-rendering: optimizeLegibility;
+}
+
+strong {
+    font-weight: 600;
+}
+
+// The navbar still needs lots of work.
+
+.navbar-default {
+    // Undo Bootstrap defaults
+    border-radius: 0;
+    border: 0;
+    background-color: @blue;
+
+    // Our additions
+    border-top: 5px solid @blue-dark;
+    border-bottom: 1px solid @blue-dark;
+    box-shadow: 0px 5px 0px fade(#1787BD, 40%);
+    color: white;
+
+    .navbar-brand, .navbar-toggle, .navbar-toggle .icon-bar {
+        color: #fff;
+    }
+}
+
+.navbar-brand {
+    font-weight: 300;
+    
+    strong {
+        font-weight: 700;
+    }
+}
+
+.container {
+    // Undo Bootstrap defaults
+    padding: 0;
+    width: 100%;
+}
+
+.stream {
+    min-width: 320px;
+    width: 100%;
+    padding: 0 5px;
+
+    .date-group {
+        margin-top: 14px;
+        padding: 14px 0;
+
+        &:before {
+            width: 100%;
+            border-top: 1px solid #dbdbdb;
+            content: " ";
+            position: absolute;
+            left: 0;
+            margin-top: -14px;
+        }
+
+        .date-marker {
+            width: 160px;
+            line-height: 1.25;
+            margin: 0 0 @font-size-base/2;
+
+            .relative {
+                color: @blue;
+                font-weight: 700;
+            }
+
+            .absolute {
+                font-size: 13px;
+                color: #cacaca;
+            }
+        }
+
+        &:first-child {
+            margin-top: 0;
+            padding-top: 0;
+
+            &:before {
+                border: 0;
+                display: none;
+            }
+        }
+    }
+
+    .date-group-today {
+        .date-marker .absolute {
+            display: none;
+        }
+    }
+}
+
+// Builds on top of Bootstrap's .panel
+
+// This is the insight color schemer.
+// It will let you set colors for your insight type.
+.insight-colors(@border-top: @orange-dark, @headline-bgd: @orange, 
+    @body-bgd: #fff, @footer-bgd: #fff, @footer-borders: @lighter-gray) {
+    background: @headline-bgd;
+    border-top-color: @border-top;
+    border-bottom-color: @headline-bgd;
+
+    .panel-heading {
+        background: @headline-bgd;
+    }
+
+    .panel-body {
+        background: @body-bgd;
+    }
+
+    .panel-footer {
+        background: @footer-bgd;
+        border-top-color: @footer-borders;
+
+        .share-menu {
+            border-color: @footer-borders;
+        }
+    }
+}
+
+.insight {
+    // Undo Bootstrap defaults
+    border: 0;
+    border-radius: 0px;
+
+    .insight-colors();
+
+    max-width: 540px;
+    margin: 0 0 @font-size-base;
+    border-style: solid;
+    border-top-width: 5px;
+    border-bottom-width: 2px;
+
+    .panel-heading {
+        // Undo Bootstrap defaults
+        border-radius: 0;
+        border: 0;
+
+        padding: 5px 10px 12px;
+        position: relative;
+
+        .panel-title {
+            font-family: "tablet-gothic-semi-condensed", sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 1.167;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: .03em;
+            color: white;
+        }
+
+        .panel-subtitle {
+            line-height: 18px;
+            letter-spacing: .01em;
+            margin: 0;
+        }
+
+        .userpic-featured {
+            position: absolute;
+            right: 10px;
+            bottom: -10px;
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    .panel-heading-illustrated {
+        padding-right: 80px;
+    }
+
+    .panel-body {
+        // Undo Bootstrap defaults
+        padding: 0;
+
+        .panel-body-inner {
+            padding: 10px;
+            letter-spacing: .01em;
+        }
+    }
+
+    .panel-footer {
+        border-radius: 0;
+
+        color: @light-gray;
+        font-size: 12px;
+        line-height: 1.66;
+        padding: 8px 10px;
+        position: relative;
+
+        a {
+            text-decoration: none;
+            color: @light-gray;
+        }
+
+        .icon {
+            font-size: 20px;
+            vertical-align: bottom;
+        }
+
+        .icon-network {
+            margin-right: 8px;
+        }
+
+        .permalink {
+            font-weight: 700;
+        }
+
+        .share-menu {
+            position: absolute;
+            right: 10px;
+            top: 4px;
+            height: 28px;
+            padding: 4px 0 4px 8px;
+            border-left-width: 1px;
+            border-left-style: solid;
+            margin-left: 8px;
+        }
+    }
+}
+
+// Insight types
+
+.insight-hero {
+    .panel-heading {
+        padding: 5px 10px 15px; 
+
+        .panel-title {
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: .01em;
+            margin-bottom: 8px;
+        }
+    }
+}
+
+.insight-historical {
+    .insight-colors(#A19F8B, #C0BDAF , #E7E5D9, #E7E5D9, #D7D6CE);
+}
+
+.panel-heading h2.lead {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.083;
+}
+
+
+.tweet {
+    font-family: 'Libre Baskerville', georgia, serif;
+    font-size: 13px;
+}
+
+.tweet p {
+    margin: 0;
+}
+
+.tweet .byline {
+    color: #000;
+}
+
+.tweet .byline .username {
+    color: #898989;
+}
+
+.tweet .pull-left {
+    margin-right: 10px;
+}
+
+// Tablet
+
+@media (min-width: 540px) {
+    .stream {
+        padding: 0 10px;
+
+        .date-group {
+            width: 540px;
+            margin: 0 auto;
+        }
+    }
+
+    .insight {
+        .clearfix;
+
+        .panel-heading {
+            float: left;
+            width: 230px;
+            padding: 5px 10px 12px 10px;
+
+            .userpic-featured {
+                bottom: -40px;
+            }
+        }
+
+        .panel-body, .panel-footer {
+            width: 310px;
+            margin-left: 230px;
+        }   
+    }
+
+    .insight-hero {
+        .panel-heading {
+            padding: 5px 10px 15px;
+        }
+    }
+
+    .insight-wide {
+        .panel-heading {
+            float: none;
+            width: 100%;
+            padding: 5px 10px 15px;
+        }
+
+        .panel-footer, .panel-body {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+}
+
+// Desktop
+
+@media (min-width: 780px) {
+    .stream {
+        .clearfix;
+
+        .date-group {
+            width: 780px;
+            margin: 0 auto;
+        }
+
+        .date-marker {
+            float: left;
+        }
+
+        .insight {
+            margin-left: 160px;
+
+
+        }
+    }
+
+}
