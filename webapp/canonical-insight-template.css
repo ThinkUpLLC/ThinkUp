@@ -1,0 +1,286 @@
+body {
+  background-color: #f0f0f0;
+  font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.286;
+  color: #222;
+  text-rendering: optimizeLegibility;
+}
+strong {
+  font-weight: 600;
+}
+.navbar-default {
+  border-radius: 0;
+  border: 0;
+  background-color: #46bcff;
+  border-top: 5px solid #2785d3;
+  border-bottom: 1px solid #2785d3;
+  box-shadow: 0px 5px 0px rgba(23, 135, 189, 0.4);
+  color: white;
+}
+.navbar-default .navbar-brand,
+.navbar-default .navbar-toggle,
+.navbar-default .navbar-toggle .icon-bar {
+  color: #fff;
+}
+.navbar-brand {
+  font-weight: 300;
+}
+.navbar-brand strong {
+  font-weight: 700;
+}
+.container {
+  padding: 0;
+  width: 100%;
+}
+.stream {
+  min-width: 320px;
+  width: 100%;
+  padding: 0 5px;
+}
+.stream .date-group {
+  margin-top: 14px;
+  padding: 14px 0;
+}
+.stream .date-group:before {
+  width: 100%;
+  border-top: 1px solid #dbdbdb;
+  content: " ";
+  position: absolute;
+  left: 0;
+  margin-top: -14px;
+}
+.stream .date-group .date-marker {
+  width: 160px;
+  line-height: 1.25;
+  margin: 0 0 7px;
+}
+.stream .date-group .date-marker .relative {
+  color: #46bcff;
+  font-weight: 700;
+}
+.stream .date-group .date-marker .absolute {
+  font-size: 13px;
+  color: #cacaca;
+}
+.stream .date-group:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.stream .date-group:first-child:before {
+  border: 0;
+  display: none;
+}
+.stream .date-group-today .date-marker .absolute {
+  display: none;
+}
+.insight {
+  border: 0;
+  border-radius: 0px;
+  background: #fc939e;
+  border-top-color: #da6070;
+  border-bottom-color: #fc939e;
+  max-width: 540px;
+  margin: 0 0 14px;
+  border-style: solid;
+  border-top-width: 5px;
+  border-bottom-width: 2px;
+}
+.insight .panel-heading {
+  background: #fc939e;
+}
+.insight .panel-body {
+  background: #ffffff;
+}
+.insight .panel-footer {
+  background: #ffffff;
+  border-top-color: #dbdbdb;
+}
+.insight .panel-footer .share-menu {
+  border-color: #dbdbdb;
+}
+.insight .panel-heading {
+  border-radius: 0;
+  border: 0;
+  padding: 5px 10px 12px;
+  position: relative;
+}
+.insight .panel-heading .panel-title {
+  font-family: "tablet-gothic-semi-condensed", sans-serif;
+  font-size: 18px;
+  line-height: 1.167;
+  margin-bottom: 6px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: white;
+}
+.insight .panel-heading .panel-subtitle {
+  line-height: 18px;
+  letter-spacing: .01em;
+  margin: 0;
+}
+.insight .panel-heading .userpic-featured {
+  position: absolute;
+  right: 10px;
+  bottom: -10px;
+  width: 60px;
+  height: 60px;
+}
+.insight .panel-heading-illustrated {
+  padding-right: 80px;
+}
+.insight .panel-body {
+  padding: 0;
+}
+.insight .panel-body .panel-body-inner {
+  padding: 10px;
+  letter-spacing: .01em;
+}
+.insight .panel-footer {
+  border-radius: 0;
+  color: #999999;
+  font-size: 12px;
+  line-height: 1.66;
+  padding: 8px 10px;
+  position: relative;
+}
+.insight .panel-footer a {
+  text-decoration: none;
+  color: #999999;
+}
+.insight .panel-footer .icon {
+  font-size: 20px;
+  vertical-align: bottom;
+}
+.insight .panel-footer .icon-network {
+  margin-right: 8px;
+}
+.insight .panel-footer .permalink {
+  font-weight: 700;
+}
+.insight .panel-footer .share-menu {
+  position: absolute;
+  right: 10px;
+  top: 4px;
+  height: 28px;
+  padding: 4px 0 4px 8px;
+  border-left-width: 1px;
+  border-left-style: solid;
+  margin-left: 8px;
+}
+.insight-hero .panel-heading {
+  padding: 5px 10px 15px;
+}
+.insight-hero .panel-heading .panel-title {
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: .01em;
+  margin-bottom: 8px;
+}
+.insight-historical {
+  background: #c0bdaf;
+  border-top-color: #a19f8b;
+  border-bottom-color: #c0bdaf;
+}
+.insight-historical .panel-heading {
+  background: #c0bdaf;
+}
+.insight-historical .panel-body {
+  background: #e7e5d9;
+}
+.insight-historical .panel-footer {
+  background: #e7e5d9;
+  border-top-color: #d7d6ce;
+}
+.insight-historical .panel-footer .share-menu {
+  border-color: #d7d6ce;
+}
+.panel-heading h2.lead {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.083;
+}
+.tweet {
+  font-family: 'Libre Baskerville', georgia, serif;
+  font-size: 13px;
+}
+.tweet p {
+  margin: 0;
+}
+.tweet .byline {
+  color: #000;
+}
+.tweet .byline .username {
+  color: #898989;
+}
+.tweet .pull-left {
+  margin-right: 10px;
+}
+@media (min-width: 540px) {
+  .stream {
+    padding: 0 10px;
+  }
+  .stream .date-group {
+    width: 540px;
+    margin: 0 auto;
+  }
+  .insight:before,
+  .insight:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  .insight:after {
+    clear: both;
+  }
+  .insight .panel-heading {
+    float: left;
+    width: 230px;
+    padding: 5px 10px 12px 10px;
+  }
+  .insight .panel-heading .userpic-featured {
+    bottom: -40px;
+  }
+  .insight .panel-body,
+  .insight .panel-footer {
+    width: 310px;
+    margin-left: 230px;
+  }
+  .insight-hero .panel-heading {
+    padding: 5px 10px 15px;
+  }
+  .insight-wide .panel-heading {
+    float: none;
+    width: 100%;
+    padding: 5px 10px 15px;
+  }
+  .insight-wide .panel-footer,
+  .insight-wide .panel-body {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+@media (min-width: 780px) {
+  .stream:before,
+  .stream:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  .stream:after {
+    clear: both;
+  }
+  .stream .date-group {
+    width: 780px;
+    margin: 0 auto;
+  }
+  .stream .date-marker {
+    float: left;
+  }
+  .stream .insight {
+    margin-left: 160px;
+  }
+}
