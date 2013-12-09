@@ -77,9 +77,11 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
             }
         }
         foreach ($this->endpoints as $endpoint) {
-            $endpoint->setRemaining($limits[$endpoint->getShortPath()]['remaining']);
-            $endpoint->setLimit($limits[$endpoint->getShortPath()]['limit']);
-            $endpoint->setReset($limits[$endpoint->getShortPath()]['reset']);
+            if(isset($limits[$endpoint->getShortPath()])) {
+                $endpoint->setRemaining($limits[$endpoint->getShortPath()]['remaining']);
+                $endpoint->setLimit($limits[$endpoint->getShortPath()]['limit']);
+                $endpoint->setReset($limits[$endpoint->getShortPath()]['reset']);
+            }
         }
     }
     /**
