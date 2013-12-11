@@ -136,7 +136,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_365_day_28');
         $this->assertEqual($check->prefix, 'New 365-day record!');
-        $this->assertEqual($check->text, '<strong>50 people</strong> replied to @ev\'s post.');
+        $this->assertEqual($check->text, '<strong>50 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -180,7 +180,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_30_day_29');
         $this->assertEqual($check->prefix, 'New 30-day record!');
-        $this->assertEqual($check->text, '<strong>40 people</strong> replied to @ev\'s post.');
+        $this->assertEqual($check->text, '<strong>40 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -233,7 +233,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_7_day_30');
         $this->assertEqual($check->prefix, 'New 7-day record!');
-        $this->assertEqual($check->text, '<strong>30 people</strong> replied to @ev\'s post.');
+        $this->assertEqual($check->text, '<strong>30 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -316,7 +316,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($check->slug, 'reply_high_30_day_33');
         $this->assertEqual($check->prefix, 'New 30-day record!');
         $this->assertEqual($check->text,
-        '<strong>26 people</strong> replied to @ev\'s post.');
+        '<strong>26 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -390,7 +390,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($check->slug, 'reply_high_7_day_32');
         $this->assertEqual($check->prefix, 'New 7-day record!');
         $this->assertEqual($check->text,
-        '<strong>12 people</strong> replied to @ev\'s post.');
+        '<strong>12 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
