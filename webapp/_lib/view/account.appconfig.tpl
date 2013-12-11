@@ -1,16 +1,15 @@
 
   <span class="pull-right">{insert name="help_link" id='application_settings'}</span>
-  <h3><i class="icon icon-cogs icon-muted"></i> Application Settings</h3>
+  <h3><i class="fa fa-cogs icon-muted"></i> Application Settings</h3>
   {include file="_usermessage.tpl"}
 
  <div class="alert alert-error" id="settings_error_message_error" style="display: none;">
-  <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+  <span class="fa fa-alert"></span>
   <span id="settings_error_message"></span>
 </div>
 
-
  <div class="alert alert-success"  id="settings_success" style="display: none;">
-  <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+  <span class="fa fa-check"></span>
   Settings saved!
  </div>
 

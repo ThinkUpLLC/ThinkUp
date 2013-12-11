@@ -123,7 +123,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
-          '/webapp/test_installer/thinkup/config.inc.php'));
+          'webapp/test_installer/thinkup/config.inc.php'));
 
         //sleep(1000);
         //Test bad activation code
@@ -175,7 +175,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //sleep(1000);
         //Start installation process
         $this->get($this->url.'/test_installer/thinkup/');
-        $this->assertTitle("ThinkUp");
+        $this->assertTitle("ThinkUp Permissions Error");
 
         //data_dir isn't writable
         $this->assertText('Oops! ThinkUp is unable to run because of incorrect folder permissions. '.
