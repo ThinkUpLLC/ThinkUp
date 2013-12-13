@@ -76,8 +76,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($hot_posts_data)) {
                         $this->insight_dao->insertInsight('reply_high_365_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 365-day record!","<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
+                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -97,8 +97,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($hot_posts_data)) {
                         $this->insight_dao->insertInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 30-day record!", "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
+                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -116,8 +116,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($hot_posts_data)) {
                         $this->insight_dao->insertInsight('reply_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 7-day record!", "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
+                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -137,8 +137,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $this->insight_dao->insertInsight('reply_spike_30_day_'.$post->id, $instance->id,
                         $simplified_post_date, "Conversation starter:",
                         "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's post, more than <strong>".$multiplier.
-                        "x</strong> $this->username's 30-day average.", $filename,
+                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post'). ", more than ".
+                        "<strong>".$multiplier. "x</strong> $this->username's 30-day average.", $filename,
                         Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
@@ -159,9 +159,9 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $this->insight_dao->insertInsight('reply_spike_7_day_'.$post->id, $instance->id,
                         $simplified_post_date, "Conversation starter:",
                         "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's post, more than <strong>" .$multiplier.
-                        "x</strong> $this->username's 7-day average.", $filename, Insight::EMPHASIS_LOW,
-                        serialize(array($post, $hot_posts_data)));
+                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post'). ", more than ".
+                        "<strong>" .$multiplier. "x</strong> $this->username's 7-day average.", $filename,
+                        Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
