@@ -252,4 +252,60 @@ class TestOfVideoMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result2[2]['Likes'], 90);
     }
 
+    public function testGetAverageOfAverageViewPercentage() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'average_view_percentage'=>50));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'average_view_percentage'=>20));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageOfAverageViewPercentage('ev', 'youtube');
+        $this->assertEqual($result, 35);
+
+        $result2 = $video_dao->getAverageOfAverageViewPercentage('ev', 'youtube', 5);
+        $this->assertEqual($result2, 20);
+    }
+
+    public function testGetAverageViewPercentageLow() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'average_view_percentage'=>10));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'average_view_percentage'=>20));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageViewPercentageLow('ev', 'youtube');
+        $this->assertEqual($result, 10);
+
+        $result2 = $video_dao->getAverageViewPercentageLow('ev', 'youtube', 5);
+        $this->assertEqual($result2, 20);
+    }
+
+    public function testGetAverageViewPercentageHigh() {
+        $post_builder = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'1',
+        'author_username'=>'ev', 'post_text'=>'My Great Video', 'pub_date'=>'-40d', 'network'=>'youtube'));
+        $video_builder = FixtureBuilder::build('videos', array('id'=>1, 'post_key'=>'1',
+        'average_view_percentage'=>50));
+
+        $post_builder2 = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'2',
+        'author_username'=>'ev', 'post_text'=>'My Great Video 2', 'pub_date'=>'-2d', 'network'=>'youtube'));
+        $video_builder2 = FixtureBuilder::build('videos', array('id'=>2, 'post_key'=>'2',
+        'average_view_percentage'=>20));
+
+        $video_dao = DAOFactory::getDAO('VideoDAO');
+        $result = $video_dao->getAverageViewPercentageHigh('ev', 'youtube');
+        $this->assertEqual($result, 50);
+
+        $result2 = $video_dao->getAverageViewPercentageHigh('ev', 'youtube', 5);
+        $this->assertEqual($result2, 20);
+    }
 }
