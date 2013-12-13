@@ -60,7 +60,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
         'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2,
-        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'account_status'=>'', 'notification_frequency'=>'both'));
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'account_status'=>'', 'notification_frequency'=>'never'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
         'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt,
@@ -120,6 +120,8 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($all_owners), 3);
         $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
         $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
+        $this->assertEqual($all_owners[0]->notification_frequency, 'both');
+        $this->assertEqual($all_owners[1]->notification_frequency, 'never');
     }
 
     /**

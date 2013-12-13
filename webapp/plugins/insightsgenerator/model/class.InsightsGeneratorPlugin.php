@@ -109,21 +109,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $plugin_id = $plugin_dao->getPluginId($this->folder_name);
             $today = date('Y-m-d', $this->current_timestamp);
 
-            // Translate from a list of instances to a list of owners
-            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-            $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
-            $owner_ids = array();
-            foreach ($instances as $instance) {
-                $owner_instance = $owner_instance_dao->getByInstance($instance->id);
-                if (count($owner_instance) && !in_array($owner_instance[0]->owner_id, $owner_ids)) {
-                    $owner_ids[] = $owner_instance[0]->owner_id;
-                }
-            }
-
-            $owners = array();
-            foreach ($owner_ids as $owner_id) {
-                $owners[] = $owner_dao->getById($owner_id);
-            }
+            $do_daily = false;
+            $do_weekly = false;
 
             $last_daily = isset($options['last_daily_email']) ? $options['last_daily_email']->option_value : null;
             if ($last_daily != $today) {
@@ -133,11 +120,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                     $plugin_option_dao->updateOption($options['last_daily_email']->id, 
                     'last_daily_email', $today);
                 }
-                foreach ($owners as $owner) {
-                    if ($this->sendDailyDigest($owner)) {
-                        $logger->logUserSuccess("Mailed daily digest to ".$owner->email.".", __METHOD__.','.__LINE__);
-                    }
-                }
+                $do_daily = true;
             }
 
             $last_weekly = isset($options['last_weekly_email']) ? $options['last_weekly_email']->option_value : null;
@@ -148,6 +131,22 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                     $plugin_option_dao->updateOption($options['last_weekly_email']->id, 
                     'last_weekly_email', $today);
                 }
+                $do_weekly = true;
+            }
+
+            if ($do_daily || $do_weekly) {
+                $owners = $owner_dao->getAllOwners();
+            }
+
+            if ($do_daily) {
+                foreach ($owners as $owner) {
+                    if ($this->sendDailyDigest($owner)) {
+                        $logger->logUserSuccess("Mailed daily digest to ".$owner->email.".", __METHOD__.','.__LINE__);
+                    }
+                }
+            }
+
+            if ($do_weekly) {
                 foreach ($owners as $owner) {
                     if ($this->sendWeeklyDigest($owner)) {
                         $logger->logUserSuccess("Mailed weekly digest to ".$owner->email.".", __METHOD__.','.__LINE__);
