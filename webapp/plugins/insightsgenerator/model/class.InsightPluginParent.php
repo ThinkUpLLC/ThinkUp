@@ -25,6 +25,28 @@
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  */
 class InsightPluginParent {
+    /**
+     * @var InsightDAO
+     */
+    var $insight_dao;
+    /**
+     * @var Logger
+     */
+    var $logger;
+    /**
+     * @var InsightTerms
+     */
+    var $terms;
+    /** 
+     * Insight date
+     * @var DateTime
+     */
+    var $insight_date;
+    /** 
+     * Username.
+     * @var str
+     */
+    var $username;
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
