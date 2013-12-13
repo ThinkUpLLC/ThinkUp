@@ -51,7 +51,7 @@
 
             vis.append("g")
             .attr("class", "axis")
-            .attr("transform", "translate("+((graph_size / 9) - 20)+", 0)")
+            .attr("transform", "translate(70, 0)")
             .call(yAxis);
 
             d3.selectAll('.axis path')
@@ -117,7 +117,7 @@
           };
           {/literal}
           var dataset = {$i->related_data|@json_encode};
-          new OutreachPunchcard("outreach_punchcard_{$i->id}", 800, dataset);
+          new OutreachPunchcard("outreach_punchcard_{$i->id}", $("#outreach_punchcard_{$i->id}").width(), dataset);
           {literal}
         })(d3);
         {/literal}
