@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Photo class
+ * Photo Class
  *
  * This class represents a photo posted on networks like Instagram.
  *

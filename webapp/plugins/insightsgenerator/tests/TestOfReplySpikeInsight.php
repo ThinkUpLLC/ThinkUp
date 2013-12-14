@@ -106,6 +106,43 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($high_365->value, 30);
     }
 
+    public function testInsightWithPhotoPost() {
+        // Generate the insight and check the video attributes are available for the view
+        $insight_dao = new InsightMySQLDAO();
+
+        // Insert a new post a related hot posts insight
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>1,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
+        $photo_builder = FixtureBuilder::build('photos', array('id' => 3, 'post_key' => 28, 'filter' => 'Lo-fi',
+        'standard_resolution_url' => 'http://instagramstandard.com',
+        'low_resolution_url' => 'http://instagramlow.com', 'thumbnail_url' => 'http://instagramthumb.com'));
+
+        $post1_builder = FixtureBuilder::build('posts', array('id'=>28, 'post_id'=>'28',
+        'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 28',
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>50, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'instagram', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'in_reply_to_user_id' =>null));
+
+        $post1 = new Post($post1_builder->columns);
+        $posts[] = $post1;
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_user_id = '13';
+        $instance->network = 'instagram';
+        $instance->network_username = 'ev';
+
+        $reply_spike_insight = new ReplySpikeInsight();
+        $reply_spike_insight->generateInsight($instance, $posts, 7);
+
+        // Check the related data for the insight has the photo object
+        $check = $insight_dao->getInsight('reply_high_365_day_3', 1, date('Y-m-d', strtotime('-1 day')));
+        $this->assertNotNull($check);
+        $test = strpos($check->related_data,'Photo');
+        $this->assertEqual($test, 14);
+    }
+
     public function test365DayHigh() {
         $insight_dao = new InsightMySQLDAO();
 

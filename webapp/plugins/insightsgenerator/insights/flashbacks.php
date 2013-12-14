@@ -44,6 +44,10 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $most_responses = 0;
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
                 foreach ($flashback_posts as $post) {
+                    if($post->network == 'instagram') {
+                        $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                        $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+                    }
                     $total_responses = $post->reply_count_cache + $post->all_retweets + $post->favlike_count_cache;
                     if ($total_responses > 0 && $total_responses > $most_responses) {
                         $most_popular_post = $post;
