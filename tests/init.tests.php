@@ -53,5 +53,6 @@ THINKUP_WEBAPP_PATH . 'plugins/hellothinkup/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/googleplus/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/foursquare/tests/',
 THINKUP_WEBAPP_PATH . 'plugins/insightsgenerator/tests/',
-THINKUP_WEBAPP_PATH . 'plugins/youtube/tests/'
+THINKUP_WEBAPP_PATH . 'plugins/youtube/tests/',
+THINKUP_WEBAPP_PATH . 'plugins/instagram/tests/'
 ));
