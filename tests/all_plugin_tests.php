@@ -31,7 +31,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/mock_objects.php';
 
 $RUNNING_ALL_TESTS = true;
-
+$version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 $plugin_tests = new TestSuite('Plugin tests');
 $plugin_tests->add(new TestOfExpandURLsPlugin());
 $plugin_tests->add(new TestOfExpandURLsPluginConfigurationController());
@@ -70,6 +70,11 @@ $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
 $plugin_tests->add(new TestOfYouTubeCrawler());
 $plugin_tests->add(new TestOfYouTubePlugin());
 $plugin_tests->add(new TestOfYouTubePluginConfigurationController());
+if ($version[0] >= 5 && $version[1] >= 3) { //only run Instagram tests if PHP 5.3
+    $plugin_tests->add(new TestOfInstagramPlugin());
+    $plugin_tests->add(new TestOfInstagramCrawler());
+    $plugin_tests->add(new TestOfInstagramPluginConfigurationController());
+}
 $plugin_tests->add(new TestOfInsightPluginParent());
 $plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightsGeneratorPlugin());

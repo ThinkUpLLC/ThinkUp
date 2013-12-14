@@ -170,7 +170,9 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 $plugin_vals = $this->parseFileContents($contents, $pf);
                 if (isset($plugin_vals['class'])) {
                     require_once THINKUP_WEBAPP_PATH.'plugins/'.$pf."/model/class.".$plugin_vals['class'].".php";
-                    $installed_plugin = new $plugin_vals['class']($plugin_vals);
+                    if(class_exists($plugin_vals['class'])) {
+                        $installed_plugin = new $plugin_vals['class']($plugin_vals);
+                    }
                 } else {
                     $installed_plugin = new Plugin($plugin_vals);
                 }
