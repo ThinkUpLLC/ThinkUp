@@ -45,6 +45,11 @@ class InsightsGeneratorPluginConfigurationController extends PluginConfiguration
         $this->view_mgr->addHelp('insightsgenerator', 'contribute/developers/plugins/buildplugin');
         $installed_plugins = $this->getInstalledInsightPlugins();
         $this->addToView('installed_plugins', $installed_plugins);
+
+        $mandrill_template = array('name' => 'mandrill_template', 'label' => 'Mandrill Template Name',
+        'advanced' => true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $mandrill_template);
+
         return $this->generateView();
     }
 

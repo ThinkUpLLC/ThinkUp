@@ -61,12 +61,12 @@
               {/if}
         </div> <!-- end #plugins -->
 
-		<div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
+        <div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
             <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
             {if $body}
               {$body}
             {/if}
-		</div>
+        </div>
 
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
@@ -143,6 +143,27 @@
               </div>
             </div>
           </form>
+    <br><br>
+    {include file="_usermessage.tpl" field='notifications'}
+    <h3><i class="icon-calendar icon-muted"></i> Notification Frequency</h3><br />
+    <form name="setnotificationfrequency" id="setnotificationfrequency" class="form-horizontal" method="post" action="index.php?m=manage#instances">
+        <div class="control-group">
+           <label class="control-label" for="confirm_password">Insight Digest Emails</label>
+           <div class="controls">
+             <select name="notificationfrequency">
+             {foreach from=$notification_options item=description key=key}
+                 <option value="{$key}" {if $key eq $owner->notification_frequency}selected="selected"{/if}>{$description}</option>
+             {/foreach}
+             </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            {insert name="csrf_token"}
+            <input type="submit" name="updatefrequency" value="Update Frequency" class="btn btn-primary">
+          </div>
+         </div>
+    </form>
     <br><br>
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
     <h3><i class="icon-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
