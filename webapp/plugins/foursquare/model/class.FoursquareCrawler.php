@@ -348,7 +348,16 @@ class FoursquareCrawler {
                             'post_key'=> $done,
                             'error'=> 'none'));
                         // Insert the photo into the database
-                        $link_dao->insert($photo_store);
+                        try {
+                            $link_dao->insert($photo_store);
+                        } catch (DuplicateLinkException $e) {
+                            $this->logger->logInfo($photo_store->url." already exists in links table",
+                            __METHOD__.','.__LINE__);
+                        } catch (DataExceedsColumnWidthException $e) {
+                            $this->logger->logInfo($photo_store->url."  data exceeds table column width",
+                            __METHOD__.','.__LINE__);
+                        }
+
                         // Delete the current photo info ready for the next one
                         $photo_store = null;
                     }

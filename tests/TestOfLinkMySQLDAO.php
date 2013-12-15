@@ -167,6 +167,24 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->image_src, 'http://example.com/thumbnail.png');
         $this->assertEqual($result->caption, 'Hot, huh?');
         $this->assertEqual($result->description, 'My hot link');
+
+        //test another with too-lengthy content
+        $long_content  = '';
+        $i = 1;
+        while ($i < 255) {
+            $long_content .= '-'.$i;
+            $i++;
+        }
+        $link = new Link(array('url'=>'http://example.com/test3', 'image_src'=>'',
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php'.$long_content,
+        'title'=>'Very Long URL'.$long_content, 'post_key'=>1234567,
+        'image_src'=>'http://example.com/thumbnail.png'.$long_content, 'description'=>'My hot link', 'caption'=>"Hot, huh?"));
+
+        //SQL mode must be set to strict to get the "Data too long for column" error
+        LinkMySQLDAO::$PDO->exec('SET SESSION sql_mode = "STRICT_ALL_TABLES";');
+
+        $this->expectException('DataExceedsColumnWidthException');
+        $result = $this->DAO->insert($link);
     }
 
     /**
@@ -220,37 +238,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($linkthathaserror->error, "This is expansion error text");
     }
 
-    public function testUpdate(){
-        $link = new Link(array('url'=>'http://example.com/test', 'image_src'=>'',
-        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
-        'title'=>'Very Long URL', 'post_key'=>15000));
-
-        $result = $this->DAO->insert($link);
-        $this->assertEqual($result, 56);
-
-        $link->post_key = 15000;
-        $link->title = 'Even Longer URL';
-        $link->expanded_url = 'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png';
-        $link->description = "This is the link description";
-        $link->image_src = "thumbnail.jpg";
-        $link->caption = "my caption";
-        $result = $this->DAO->update($link);
-        $this->assertEqual($result, 1);
-
-        //OK now check it
-        $result = $this->DAO->getLinkByUrl('http://example.com/test');
-        $this->assertIsA($result, "Link");
-        $this->assertEqual($result->url, 'http://example.com/test');
-        $this->assertEqual($result->expanded_url,
-        'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png');
-        $this->assertEqual($result->title, 'Even Longer URL');
-        $this->assertEqual($result->post_key, 15000);
-        $this->assertEqual($result->id, 56);
-        $this->assertEqual($result->image_src, 'thumbnail.jpg');
-        $this->assertEqual($result->caption, 'my caption');
-        $this->assertEqual($result->description, 'This is the link description');
-    }
-
     public function testUpdateTitle(){
         $builders = FixtureBuilder::build('links', array('id'=>1234, 'url'=>'http://example.com/',
         'title'=>'Old title', 'post_key'=>10000, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
@@ -262,6 +249,22 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         //OK now check it
         $result = $this->DAO->getLinkByUrl('http://example.com/');
         $this->assertEqual($result->title, 'New title');
+
+        // Try setting title to greater than 255 chars
+        $long_content  = '';
+        $i = 1;
+        while ($i < 255) {
+            $long_content .= '-'.$i;
+            $i++;
+        }
+        $this->DAO->updateTitle(1234, 'Title'.$long_content);
+
+        //OK now check it
+        $result = $this->DAO->getLinkByUrl('http://example.com/');
+        $this->debug($result->title);
+        $this->assertEqual($result->title, 'Title-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-'.
+        '26-27-28-29-30-31-32-33-34-35-36-37-38-39-40-41-42-43-44-45-46-47-48-49-50-51-52-53-54-55-56-57-58-59-60-61'.
+        '-62-63-64-65-66-67-68-69-70-71-72-73-74-75-76-77-78-79-80-81-82-83-84-85-86-');
     }
 
     public function testGetLinksByFriends(){

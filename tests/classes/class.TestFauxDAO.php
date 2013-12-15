@@ -54,6 +54,10 @@ class TestFauxDAO implements TestDAO {
     public function badSql() {
     }
 
+    // test too-lengthy content
+    public function insertTooLongContent() {
+    }
+
     // test bad binds...
     public function badBinds() {
     }

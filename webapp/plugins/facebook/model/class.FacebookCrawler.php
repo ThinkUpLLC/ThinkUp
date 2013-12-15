@@ -612,8 +612,17 @@ class FacebookCrawler {
         $total_links_added = 0;
         $link_dao = DAOFactory::getDAO('LinkDAO');
         foreach ($links as $link) {
-            $added_links = $link_dao->insert($link);
-            $total_links_added = $total_links_added + (($added_links)?1:0);
+            try {
+                $added_links = $link_dao->insert($link);
+                $total_links_added = $total_links_added + (($added_links)?1:0);
+            } catch (DuplicateLinkException $e) {
+                $this->logger->logInfo($link->url." already exists in links table",
+                __METHOD__.','.__LINE__);
+            } catch (DataExceedsColumnWidthException $e) {
+                $this->logger->logInfo($link->url."  data exceeds table column width",
+                __METHOD__.','.__LINE__);
+            }
+
         }
         return $total_links_added;
     }

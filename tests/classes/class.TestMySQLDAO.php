@@ -78,6 +78,12 @@ class TestMySQLDAO extends PDODAO implements TestDAO {
         $stmt = $this->execute($sql);
     }
 
+    // test too-lengthy data
+    public function insertTooLongContent() {
+        $sql = "insert into #prefix#test_table (test_name) values ('123456789012345678901234567890')";
+        $stmt = $this->execute($sql);
+    }
+
     // test bad binds...
     public function badBinds() {
         $sql = "select test_name from #prefix#test_table where test_id = :test_id";

@@ -196,9 +196,6 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         'http://api.plixi.com/api/tpapi.svc/imagefromurl?url=http://plixi.com/p/138376416&size=thumbnail');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_key, 108);
-
-        //test facebook
-        $network = 'facebook';
     }
 
     // Don't run this test on every build b/c it makes live request

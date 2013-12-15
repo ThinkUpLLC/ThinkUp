@@ -104,6 +104,12 @@ class URLExpander {
             case "http://wp.me/p1fxNB-2F":
                 $exp_url =  "";
                 break;
+            case "http://wp.me/this-short-url-is-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaylongerthan100characterswaaaaaaaaaaaaaaaaaaaa":
+                $exp_url =  "http://apressen.o5.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.ori";
+                break;
+            case "http://wp.me/this-long-url-is-longer-than-256-chars":
+                $exp_url =  "http://apressen.o5.no/api/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere/checkpoint/v1/transfer?target=http%3A%2F%2Fgirlgeekdinners.origo.no%2F-%2Fbulletin%2Fshow%2F573985_kvinnelige-it-foredragsholdere";
+                break;
             case "http://instagr.am/p/oyQ6/":
                 $exp_url = "http://instagr.am/p/oyQ6/";
                 break;

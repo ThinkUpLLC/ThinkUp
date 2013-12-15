@@ -44,6 +44,9 @@ interface TestDAO {
     // test bad sql
     public function badSql();
 
+    // test too-lengthy data
+    public function insertTooLongContent();
+
     // test bad binds...
     public function badBinds();
 

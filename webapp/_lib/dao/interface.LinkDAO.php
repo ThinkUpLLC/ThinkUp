@@ -51,12 +51,6 @@ interface LinkDAO {
      */
     public function saveExpansionError($url, $error_text);
     /**
-     * Updates a URL in storage.
-     * @param Link $link
-     * @return int Update count
-     */
-    public function update(Link $link);
-    /**
      * Update a Link's title in the data store.
      * @param int $id
      * @param str $title

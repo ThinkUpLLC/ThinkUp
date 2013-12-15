@@ -53,12 +53,16 @@ class URLProcessor {
                     $link_array = array('url'=>$url, 'expanded_url'=>$expanded_url, "image_src"=>$image_src,
                     'post_key'=>$post->id);
                     $link = new Link($link_array);
-                    if ($link_dao->insert($link)) {
+                    try {
+                        $link_dao->insert($link);
                         $logger->logSuccess("Inserted ".$url." ".(($image_src=='')?'':"(thumbnail ".$image_src.") ").
                         "into links table", __METHOD__.','.__LINE__);
-                    } else {
+                    } catch (DuplicateLinkException $e) {
                         $logger->logInfo($url." ".(($image_src=='')?'':"(thumbnail ".$image_src.") ").
-                        "already exists in links table", __METHOD__.','.__LINE__);
+                        " already exists in links table", __METHOD__.','.__LINE__);
+                    } catch (DataExceedsColumnWidthException $e) {
+                        $logger->logInfo($url." ".(($image_src=='')?'':"(thumbnail ".$image_src.") ").
+                        " data exceeds table column width", __METHOD__.','.__LINE__);
                     }
                 }
             }

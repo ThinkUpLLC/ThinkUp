@@ -65,6 +65,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     }
 
     public function testExpandURLsCrawl() {
+        //SQL mode must be set to strict to get the "Data too long for column" error
+        LinkMySQLDAO::$PDO->exec('SET SESSION sql_mode = "STRICT_ALL_TABLES";');
         $builders = $this->buildData();
 
         //use fake Bitly API key
@@ -148,6 +150,19 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->image_src, '');
         $this->assertEqual($link->error, '');
 
+        //Assert the log has a line that reads "longerthan100characterswaaaaaaaaaaaaaaaaaaaa short link record
+        //exceeds column width, cannot save"
+        $config = Config::getInstance();
+        $messages = file($config->getValue('log_location'));
+        $this->assertPattern('/longerthan100characterswaaaaaaaaaaaaaaaaaaaa short link record exceeds column '.
+        'width, cannot save/', $messages[sizeof($messages) - 3]);
+
+        $link = $link_dao->getLinkById(14);
+        $this->assertEqual($link->url, 'http://wp.me/this-long-url-is-longer-than-256-chars');
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->image_src, '');
+        $this->assertEqual($link->error, 'URL exceeds column width');
+
         //check that short URLs were saved
         $sql = "SELECT * FROM " . $this->table_prefix . 'links_short';
         $stmt = ShortLinkMySQLDAO::$PDO->query($sql);
@@ -156,7 +171,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             array_push($data, $row);
         }
         $stmt->closeCursor();
-        $this->assertEqual(count($data), 8);
+        $this->assertEqual(count($data), 9);
         $this->assertEqual($data[0]['id'], 1);
         $this->assertEqual($data[0]['link_id'], 1);
         $this->assertEqual($data[0]['short_url'], 'http://bit.ly/a5VmbO');
@@ -308,6 +323,31 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links', array(
             'id' => 12,
             'url' => 'http://flic.kr/p/8T8ZyA',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        // 100+ character short URL
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 13,
+            'url' => 'http://wp.me/this-short-url-is-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaylongerthan100char'.
+            'acterswaaaaaaaaaaaaaaaaaaaa',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        // 256+ character expanded URL
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 14,
+            'url' => 'http://wp.me/this-long-url-is-longer-than-256-chars',
             'expanded_url' => null,
             'title' => '',
             'clicks' => 0,

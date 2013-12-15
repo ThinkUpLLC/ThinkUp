@@ -247,7 +247,15 @@ class GooglePlusCrawler {
                         ?$item->object->attachments[0]->displayName:'',
                     "post_key"=>$inserted_post_key
                         ));
-                        $added_links = $link_dao->insert($link);
+                        try {
+                            $added_links = $link_dao->insert($link);
+                        } catch (DuplicateLinkException $e) {
+                            $this->logger->logInfo($link->url." already exists in links table",
+                            __METHOD__.','.__LINE__);
+                        } catch (DataExceedsColumnWidthException $e) {
+                            $this->logger->logInfo($link->url."  data exceeds table column width",
+                            __METHOD__.','.__LINE__);
+                        }
                     }
                 }
                 $post = null;

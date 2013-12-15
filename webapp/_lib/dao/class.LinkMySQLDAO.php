@@ -30,22 +30,25 @@
  */
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function insert(Link $link){
-        $q  = "INSERT IGNORE INTO #prefix#links ";
+        $existing_link = $this->getLinkByUrl( $link->url );
+        if ($existing_link) {
+            throw new DuplicateLinkException("The link ".$link->url." is already in storage");
+        }
+        $q  = "INSERT INTO #prefix#links ";
         $q .= "(url, expanded_url, title, description, image_src, caption, post_key) ";
         $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_key ) ";
 
         $vars = array(
             ':url'=>$link->url,
             ':expanded'=>$link->expanded_url,
-            ':title'=>$link->title,
-            ':description'=>$link->description,
+            ':title'=>substr($link->title, 0, 255),
+            ':description'=>substr($link->description, 0, 255),
             ':image_src'=>$link->image_src,
-            ':caption'=>$link->caption,
+            ':caption'=>substr($link->caption, 0, 255),
             ':post_key'=>$link->post_key
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
-
         return $this->getInsertId($ps);
     }
 
@@ -53,9 +56,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
-            ':title'=>$title,
-            ':description'=>$description,
-            ':image_src'=>$image_src
+            ':title'=>substr($title, 0, 255),
+            ':description'=>substr($description, 0, 255),
+            ':image_src'=> ((strlen($image_src) < 256)?$image_src:'')
         );
         $q  = "UPDATE #prefix#links ";
         $q .= "SET expanded_url=:expanded, title=:title, description = :description , image_src=:image_src ";
@@ -77,7 +80,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q  = "UPDATE #prefix#links SET error=:error WHERE url=:url ";
         $vars = array(
             ':url'=>$url,
-            ':error'=>$error_text
+            ':error'=> substr($error_text, 0, 255) //Make sure error text isn't longer than field width
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
@@ -89,25 +92,6 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             $this->logger->logInfo("Error ".$error_text." for ".$url." was NOT saved", __METHOD__.','.__LINE__);
         }
         return $ret;
-    }
-
-    public function update(Link $link){
-        $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, description=:description, image_src=:image_src, ";
-        $q .= "caption=:caption, post_key=:post_key ";
-        $q .= "WHERE url=:url; ";
-        $vars = array(
-            ':url'=>$link->url,
-            ':expanded'=>$link->expanded_url,
-            ':title'=>$link->title,
-            ':description'=>$link->description,
-            ':image_src'=>$link->image_src,
-            ':caption'=>$link->caption,
-            ':post_key'=>$link->post_key
-        );
-        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
-        $ps = $this->execute($q, $vars);
-        return $this->getUpdateCount($ps);
     }
 
     public function getLinksByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false) {
@@ -323,7 +307,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function updateTitle($id, $title) {
         $q  = "UPDATE #prefix#links SET title=:title WHERE id=:id;";
         $vars = array(
-            ':title'=>$title,
+            ':title'=>substr($title, 0, 255),
             ':id'=>$id
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
