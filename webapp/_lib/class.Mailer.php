@@ -50,6 +50,45 @@ class Mailer {
         }
     }
     /**
+     * Send an HTML email from ThinkUp installation. Will only be sent if a Mandrill API key is set, as it makes use of
+     * Mandrill's HTML templating system and API.
+     * @param str $to A valid email address
+     * @param str $subject Subject of the email
+     * @param str $template_name Name of a template in the mandrill system
+     * @param arr $template_params Associative array of parameters
+     */
+    public static function mailHTMLViaMandrillTemplate($to, $subject, $template_name, $template_params) {
+        $config = Config::getInstance();
+        $host = self::getHost();
+        $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
+        $mandrill_api_key = $config->getValue('mandrill_api_key');
+
+        try {
+            require_once THINKUP_WEBAPP_PATH.'_lib/extlib/mandrill/Mandrill.php';
+            $mandrill = new Mandrill($mandrill_api_key);
+            $message = array('subject' => $subject, 'from_email' => "notifications@${host}",
+            'from_name' => $app_title, 'to' => array( array( 'email' => $to, 'name' => $to ) ),
+            'global_merge_vars' => array());
+
+            foreach ($template_params as $key=>$val) {
+                $message['global_merge_vars'][] = array('name'=>$key, 'content'=>$val);
+            }
+
+            //don't send email when running tests, just write it to the filesystem for assertions
+            if (Utils::isTest()) {
+                self::setLastMail(json_encode($message));
+            } else {
+                $async = false;
+                $ip_pool = 'Main Pool';
+                $result = $mandrill->messages->sendTemplate($template_name, $template_content, $message,
+                $async, $ip_pool);
+            }
+        } catch (Mandrill_Error $e) {
+            throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
+            ': ' . $e->getMessage());
+        }
+    }
+    /**
      * Return the current host's name, ie, $_SERVER['HTTP_HOST'] if it is set.
      * @return str Host name
      */
@@ -138,9 +177,9 @@ class Mailer {
                 //DEBUG
                 //print_r($result);
             }
-    } catch (Mandrill_Error $e) {
-        throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
-        ': ' . $e->getMessage());
+        } catch (Mandrill_Error $e) {
+            throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
+            ': ' . $e->getMessage());
+        }
     }
-}
 }
