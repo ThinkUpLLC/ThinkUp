@@ -1,6 +1,6 @@
 <?php
 /*
- Plugin Name: List membership
+ Plugin Name: List Membership
  Description: New lists to which you've been added (chart).
  */
 

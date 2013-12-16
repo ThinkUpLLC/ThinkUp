@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: Local followers
- Description: Followers whose locations are the same as yours.
+ Plugin Name: Local Followers
+ Description: Followers whose location is the same as yours.
  */
 
 /**

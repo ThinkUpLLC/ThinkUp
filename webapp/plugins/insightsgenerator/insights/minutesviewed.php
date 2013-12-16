@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: Minutes Viewed Insight
- Description: Highlights videos that have been viewed for a larger number of minutes than your average videos
+ Plugin Name: Video View Minutes
+ Description: Highlights videos that have been viewed for a larger number of minutes than your average videos.
  */
 /**
  *

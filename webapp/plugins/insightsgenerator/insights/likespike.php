@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: Like Spike
- Description: Like Spikes and Highs for 30/90/365 days
+ Plugin Name: Video Like Spike
+ Description: Like spikes and high insights for videos posted the past 7, 30, and 365 days.
  */
 /**
  *

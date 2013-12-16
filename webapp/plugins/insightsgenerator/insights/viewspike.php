@@ -1,7 +1,7 @@
 <?php
 /*
- Plugin Name: View Spike Insight.
- Description: View highs and spikes for 30 / 90 / 365 day.
+ Plugin Name: View Spike Insight
+ Description: Video view spike and high insights for the past 7, 30, and 365 days.
  */
 /**
  *

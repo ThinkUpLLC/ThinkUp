@@ -1,6 +1,6 @@
 <?php
 /*
- Plugin Name: Interesting followers
+ Plugin Name: Interesting Followers
  Description: New least likely and verified followers.
  */
 
