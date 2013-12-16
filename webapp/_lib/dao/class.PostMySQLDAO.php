@@ -52,7 +52,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     'in_rt_of_user_id', 'location', 'place', 'place_id', 'geo', 'retweet_count_cache',
     'retweet_count_api', 'old_retweet_count_cache', 'favlike_count_cache',
     'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
-    'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
+    'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count', 'permalink');
 
     /**
      * Sanitizes an order_by argument to avoid SQL injection and ensure that the table you're ordering by is valid.

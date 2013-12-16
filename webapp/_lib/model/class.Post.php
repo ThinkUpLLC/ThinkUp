@@ -177,6 +177,10 @@ class Post {
      */
     var $rt_threshold;
     /**
+     * @var Str Link to this post on the respective service.
+     */
+    var $permalink;
+    /**
      * Constructor
      * @param array $val Array of key/value pairs
      * @return Post
@@ -239,6 +243,7 @@ class Post {
 
         // non-persistent, used for UI information display
         $this->all_retweets = $val['old_retweet_count_cache'] + $largest_native_RT_count;
+        $this->permalink = $val['permalink'];
     }
 
     /**

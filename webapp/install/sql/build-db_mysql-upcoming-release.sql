@@ -459,6 +459,7 @@ CREATE TABLE tu_posts (
   retweet_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'Manual count of native retweets as determined by ThinkUp. [Twitter-specific]',
   retweet_count_api int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of native retweets as reported by Twitter API. [Twitter-specific]',
   favlike_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of favorites or likes this post received.',
+  permalink text COMMENT 'Link to this post on the respective service.',
   PRIMARY KEY (id),
   UNIQUE KEY post_network (post_id,network),
   KEY author_username (author_username),
@@ -565,7 +566,7 @@ CREATE TABLE tu_videos (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Videos which appear in posts.';
 
 
--- Dump completed on 2013-12-16  9:20:06
+-- Dump completed on 2013-12-16 10:19:45
 
 --
 -- Insert DB Version
