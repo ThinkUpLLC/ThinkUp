@@ -1,0 +1,59 @@
+2.0-beta.9 - 16 Dec 2013
+========================
+
+New YouTube plugin:
+-------------------
+
+Connect your YouTube account to ThinkUp to get insights on your activity, including:
+
+* Videos with the most likes and views
+* How many minutes users watched your videos
+* The videos viewers watched longer on average
+* Changes to your channel subscriber count
+* Video likes versus dislikes
+
+
+New insights:
+-------------
+* New verified followers: Find out when a verified user follows you.
+* Fave/like/+1 spikes and highs: See when a post gets an unusually high number of likes.
+* Metweets: Keep track of how often you talk about yourself.
+* Interaction Graph: See who you talked to the most each week.
+* Weekly Bests: See your best posts of the week.
+* Reply Spike: See posts that received an usually high number of comments or replies.
+* Response Time: Know how fast your posts get replies or likes.
+* Favorited Links: See what posts you've liked which contained links.
+* Long-lost Contacts: Keep track of the contact you haven't talked to in over a year.
+* Link Prompt: Don't forget to post interesting links.
+* Local Followers: See when new followers are located where you are.
+* Outreach Punchcard: See what times of day your posts get responses.
+
+New features:
+-------------
+* Opt into daily and/or weekly insight email notifications. In Settings -> Account, choose Daily, Weekly, or No Email
+  under Notification Frequency.
+* If your server cannot send email, ThinkUp can now send email via Mandrill.
+  (https://www.thinkup.com/docs/install/advancedconfig.html)
+* Format your insight email notifications with a custom HTML Mandrill template.
+  (https://www.thinkup.com/docs/userguide/settings/plugins/insightsgenerator.html)
+* Retrieve saved search posts via ThinkUp's API. (https://www.thinkup.com/docs/userguide/api/posts/keyword_posts.html)
+
+Enhancements:
+-------------
+* See what days which insights appear in Settings > Plugins > Insights Generator. 
+  (http://blog.thinkup.com/post/57456822638/what-kind-of-insights-will-thinkup-give-you-when)
+* Get improved insight copy with localized terms by service (i.e., status update vs tweet versus post).
+* Expand URLs plugin: Get the title and description of each link on expansion.
+
+Bugfixes:
+---------
+* Correctly capture tweets and mentions by since_id versus page.
+* Correctly capture Facebook comments using updated API pagination.
+* Correctly capture Facebook post likes using Oct 2013 updated API.
+* Correctly display Foursquare checkin photos.
+* Gracefully handle capturing Twitter followers who are 403 "not found" (i.e., deactivated/suspended).
+* Avoid "Data too long for column" error while expanding links.
+* Update Foursquare and Facebook connection instructions.
+* Fix broken saved search links in Twitter configuration.
+* Resolved several PHP warnings and notices.
+* Fixed typos and grammatical errors in insights and documentation.

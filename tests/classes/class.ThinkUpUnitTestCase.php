@@ -72,6 +72,7 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
      */
     public function tearDown() {
         if (isset(ThinkUpTestDatabaseHelper::$PDO)) {
+            ThinkUpTestDatabaseHelper::$PDO->exec('SET SESSION sql_mode = "";');
             $this->testdb_helper->drop($this->test_database_name);
         }
         parent::tearDown();

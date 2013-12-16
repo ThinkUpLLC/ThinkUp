@@ -21,6 +21,8 @@ See the links below for further instructions on how to add new service users for
 * :doc:`Facebook</userguide/settings/plugins/facebook>`
 * :doc:`Google+</userguide/settings/plugins/googleplus>`
 * :doc:`Twitter</userguide/settings/plugins/twitter>`
+* :doc:`Foursquare</userguide/settings/plugins/foursquare>`
+* :doc:`YouTube</userguide/settings/plugins/youtube>`
 
 Switch Service User
 -------------------
