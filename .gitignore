@@ -32,6 +32,7 @@ webapp/plugins/*
 !webapp/plugins/insightsgenerator/
 !webapp/plugins/twitter/
 !webapp/plugins/twitterrealtime/
+!webapp/plugins/instagram/
 !webapp/plugins/youtube/
 
 # ThinkUpLLC-specific extensions

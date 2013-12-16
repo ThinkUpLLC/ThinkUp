@@ -30,7 +30,7 @@
  * @copyright 2013 Aaron Kalair
  */
 
-require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/youtube/controller/class.YouTubePluginConfigurationController.php';

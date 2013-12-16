@@ -67,6 +67,12 @@ $plugin_tests->add(new TestOfGooglePlusPluginConfigurationController());
 $plugin_tests->add(new TestOfFoursquarePlugin());
 $plugin_tests->add(new TestOfFoursquareCrawler());
 $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
+$version = explode('.', PHP_VERSION); //dont run redis or instagram test for php less than 5.3
+if ($version[0] >= 5 && $version[1] >= 3) { //only run Instagram tests if PHP 5.3
+    $plugin_tests->add(new TestOfInstagramPlugin());
+    $plugin_tests->add(new TestOfInstagramCrawler());
+    $plugin_tests->add(new TestOfInstagramPluginConfigurationController());
+}
 $plugin_tests->add(new TestOfYouTubeCrawler());
 $plugin_tests->add(new TestOfYouTubePlugin());
 $plugin_tests->add(new TestOfYouTubePluginConfigurationController());
