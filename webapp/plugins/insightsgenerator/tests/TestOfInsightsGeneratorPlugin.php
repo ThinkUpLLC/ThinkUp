@@ -154,13 +154,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual('', $sent, 'Should not send again same day');
     }
 
-/*
-    //@TODO Replace PHP 5.2-incompatible calls and uncomment out this test
-    //The strtotime calls in this test and the next one are incompatible with PHP 5.2; commenting out till we fix
     public function testWeeklySendSetting() {
         $plugin = new InsightsGeneratorPlugin();
-        $day_to_run = date('D', strtotime("Sunday +".$plugin::WEEKLY_DIGEST_DAY_OF_WEEK." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".(($plugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_to_run = date('D', strtotime("Sunday +".(InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
 
@@ -206,13 +203,11 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual('', $sent, 'Should not send again same day');
     }
 
-    //@TODO Replace PHP 5.2-incompatible calls and uncomment out this test
-    //The strtotime calls in this test and the next one are incompatible with PHP 5.2; commenting out till we fix
     public function testBothSendSetting() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
-        $day_to_run = date('D', strtotime("Sunday +".$plugin::WEEKLY_DIGEST_DAY_OF_WEEK." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".(($plugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_to_run = date('D', strtotime("Sunday +".InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
@@ -264,7 +259,6 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertPattern('/29 new lists/', $sent);
         $this->assertPattern('/This week/', $sent);
     }
-*/
     public function testMultiUser() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
