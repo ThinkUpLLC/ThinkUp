@@ -83,4 +83,19 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
         // Compare JSON string, ignoring whitespace differences
         $this->assertEqual($json, $email_body);
     }
+
+    public function testHtml() {
+        $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "Prefix ");
+        $config->setValue("mandrill_api_key", "4hloQKxMdHGaMbQAmg2iFA");
+        $_SERVER['HTTP_HOST'] = "thinkup.com";
+        Mailer::mailHTML($to='chris@inarow.net',$subject='Test Subject','thinkup-digest',
+        array('insights' =>'test insights', 'merge2' => 'Some other text'));
+        $email_body = Mailer::getLastMail();
+
+        $decoded = json_decode($email_body);
+        $this->assertEqual($subject, $decoded->subject);
+        $this->assertEqual($to, $decoded->to[0]->email);
+        $this->assertEqual(2, count($decoded->global_merge_vars));
+    }
 }
