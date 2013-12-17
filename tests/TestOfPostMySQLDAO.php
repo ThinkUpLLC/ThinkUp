@@ -3917,13 +3917,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30);
         $this->assertTrue($result);
 
-        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 30,
+        date('Y-m-d', strtotime('+256 days')));
         $this->assertFalse($result);
     }
 
     public function testDoesUserHavePostsWithFavesSinceDate() {
         $post_dao = new PostMySQLDAO();
-        $result = $post_dao->doesUserHavePostsWithRetweetsSinceDate('user3', 'twitter', 7);
+        $result = $post_dao->doesUserHavePostsWithFavesSinceDate('user3', 'twitter', 7);
         $this->assertFalse($result);
 
         $counter = 0;
@@ -3937,7 +3938,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id'=>23,
             'author_username'=>'user3',
             'pub_date'=>'-'.$counter.'d',
-            'retweet_count_cache'=>$counter+1,
+            'retweet_count_cache'=>0,
             'old_retweet_count_cache' => floor($counter/2),
             'favlike_count_cache'=>$counter+1,
             'network'=>'twitter',
@@ -3950,8 +3951,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $result = $post_dao->doesUserHavePostsWithFavesSinceDate('user3', 'twitter', 30);
         $this->assertTrue($result);
-
-        $result = $post_dao->doesUserHavePostsWithFavesSinceDate('user3', 'twitter', 30, '2011-01-01');
+        $result = $post_dao->doesUserHavePostsWithFavesSinceDate('user3', 'twitter', 30,
+        date('Y-m-d', strtotime('+256 days')));
         $this->assertFalse($result);
     }
 
