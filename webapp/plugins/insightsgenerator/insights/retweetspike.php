@@ -42,6 +42,10 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
         $simplified_post_date = "";
         $share_verb = ($instance->network == 'twitter')?'retweeted':'reshared';
         foreach ($last_week_of_posts as $post) {
+            if($post->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+            }
             if ($post->all_retweets > 2) { //Only show insight for more than 2 reshares
                 // First get spike/high 7/30/365 day baselines
                 if ($simplified_post_date != date('Y-m-d', strtotime($post->pub_date))) {

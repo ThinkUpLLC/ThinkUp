@@ -42,6 +42,10 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
 
             foreach ($last_week_of_posts as $post) {
+                if($post->network == 'instagram') {
+                    $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                    $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+                }
                 $reply_count = $post->reply_count_cache;
                 $retweet_count = $post->retweet_count_cache;
                 $fav_count = $post->favlike_count_cache;
