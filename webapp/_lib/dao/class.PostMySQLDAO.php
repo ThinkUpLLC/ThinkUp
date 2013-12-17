@@ -2391,7 +2391,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = "SELECT id FROM #prefix#posts WHERE network=:network and author_username=:author_username ";
         $q .= "AND in_reply_to_user_id IS null AND in_reply_to_post_id IS null AND in_retweet_of_post_id is null ";
         $q .= "AND (favlike_count_cache > 0) ";
-        $q .= "AND pub_date <= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
+        $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :last_x_days DAY) LIMIT 1;";
         $vars = array(
             ':author_username'=>$author_username,
             ':network'=>$network,
