@@ -6,9 +6,9 @@
     <div class="navbar">
         <span class="navbar-brand" style="margin-top: 12px;">Install ThinkUp:</span>
         <ul class="nav navbar-nav nav-pills pull-left">
-            <li><a> <h4><i class="icon-ok-circle "></i> Check System Requirements</h4></a></li>
-            <li class="active"><a class="disabled"> <h4><i class="icon-cogs"></i> Configure ThinkUp</h4></a></li>
-            <li><a class="disabled"> <h4><i class="icon-lightbulb"></i> Finish</h4></a></li>
+            <li><a> <h4><i class="fa fa-check "></i> Check System Requirements</h4></a></li>
+            <li class="active"><a class="disabled"> <h4><i class="fa fa-cogs"></i> Configure ThinkUp</h4></a></li>
+            <li><a class="disabled"> <h4><i class="fa fa-lightbulb"></i> Finish</h4></a></li>
         </ul>
     </div>
     
@@ -42,7 +42,7 @@
                     <label class="col-sm-2 control-label" for="site_email">Email&nbsp;Address</label>
                     <div class="col-sm-10">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-envelope"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             <input type="email" name="site_email" id="site_email" required class="form-control" {if isset($site_email)} value="{$site_email}"{/if} 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
                         </span>
@@ -54,7 +54,7 @@
                     <label class="col-sm-2 control-label" for="password">Password</label>
                     <div class="col-sm-10">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="password" id="password" {if isset($password)} value="{$password}"{/if}
                             {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
@@ -68,7 +68,7 @@
                     <label class="col-sm-2 control-label" for="confirm_password">Confirm&nbsp;Password</label>
                     <div class="col-sm-10">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>            
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>            
                             <input type="password" name="confirm_password" id="confirm_password" required 
                             {if isset($confirm_password)} value="{$confirm_password}"{/if} class="password form-control" 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
@@ -168,7 +168,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-10">
-                        <p><a class="btn " data-toggle="collapse" data-target="#advanced-setup" style="margin-top: 12px;">Show Advanced Options <i class="icon-chevron-down icon-white"></i></a></p>
+                        <p><a class="btn " data-toggle="collapse" data-target="#advanced-setup" style="margin-top: 12px;">Show Advanced Options <i class="fa fa-chevron-down icon-white"></i></a></p>
                     </div>
                 </div>
 

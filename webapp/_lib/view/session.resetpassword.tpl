@@ -31,7 +31,7 @@
                     <label class="col-sm-2" for="password">New Password</label>
                     <div class="col-sm-8">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="icon-key"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="password" id="password" 
                             {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
                             data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
@@ -45,7 +45,7 @@
 	                    <label class="col-sm-2" for="confirm_password">Confirm&nbsp;new Password</label>
 	                    <div class="col-sm-8">
 	                        <span class="input-group">
-	                            <span class="input-group-addon"><i class="icon-key"></i></span>            
+	                            <span class="input-group-addon"><i class="fa fa-key"></i></span>            
 	                            <input type="password" name="password_confirm" id="confirm_password" required 
 	                             class="password form-control" 
 	                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 

@@ -16,7 +16,7 @@
 {if $oauth_link}
 
 {include file="_usermessage.tpl" field='authorization'}
-<a href="{$oauth_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a YouTube User</a>
+<a href="{$oauth_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a YouTube User</a>
 {/if}
 
     {if count($owner_instances) > 0 }

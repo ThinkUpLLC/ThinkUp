@@ -6,9 +6,9 @@
     <div class="navbar">
         <span class="navbar-brand" style="margin-top: 12px;">Install ThinkUp:</span>
         <ul class="nav navbar-nav nav-pills pull-left">
-            <li class="active"><a> <h4><i class="icon-tasks "></i> Check System Requirements</h4></a></li>
-            <li><a class="disabled"> <h4><i class="icon-cogs"></i> Configure ThinkUp</h4></a></li>
-            <li><a class="disabled"> <h4><i class="icon-lightbulb"></i> Finish</h4></a></li>
+            <li class="active"><a> <h4><i class="fa fa-tasks "></i> Check System Requirements</h4></a></li>
+            <li><a class="disabled"> <h4><i class="fa fa-cogs"></i> Configure ThinkUp</h4></a></li>
+            <li><a class="disabled"> <h4><i class="fa fa-lightbulb"></i> Finish</h4></a></li>
         </ul>
     </div>
 
@@ -22,11 +22,11 @@
         <div class="col-md-9">
 
         <div class="alert alert-success">
-            <i class="icon-ok-circle"></i>
+            <i class="fa fa-check"></i>
             <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
         </div>        
 
-        <a href="index.php?step=2" class="btn btn-large btn-success" id="nextstep">Let's Go <i class="icon-arrow-right"></i></a>
+        <a href="index.php?step=2" class="btn btn-large btn-success" id="nextstep">Let's Go <i class="fa fa-arrow-right"></i></a>
         
         </div>
     </div>
@@ -40,7 +40,7 @@
         <div class="col-md-9">
     
             <div class="alert alert-danger">
-                <i class="icon-exclamation-sign"></i>
+                <i class="fa fa-exclamation-sign"></i>
                 <strong>Oops!</strong> Your web server isn't set up to run ThinkUp. Please fix the problems below and try installation again.
             </div>
             <div class="panel panel-default">

@@ -665,17 +665,17 @@ form.navbar-search {
  
 .label .icon-white,
 .nav-pills > .active > a > [class^="icon-"],
-.nav-pills > .active > a > [class*=" icon-"],
+.nav-pills > .active > a > [class*=" fa-"],
 .nav-list > .active > a > [class^="icon-"],
-.nav-list > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class*=" fa-"],
 .navbar-inverse .nav > .active > a > [class^="icon-"],
-.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class*=" fa-"],
 .dropdown-menu > li > a:hover > [class^="icon-"],
-.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class*=" fa-"],
 .dropdown-menu > .active > a > [class^="icon-"],
-.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-menu > .active > a > [class*=" fa-"],
 .dropdown-submenu:hover > a > [class^="icon-"],
-.dropdown-submenu:hover > a > [class*=" icon-"] {
+.dropdown-submenu:hover > a > [class*=" fa-"] {
   margin-left : -34px;
   margin-right : 14px;
 }

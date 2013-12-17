@@ -9,14 +9,14 @@
 
       <footer>
         <div class="container footer">
-          <p class="pull-right" style="text-align: right;"><a href="#">Back to top <i class="icon-chevron-up icon-white"></i></a><br />
+          <p class="pull-right" style="text-align: right;"><a href="#">Back to top <i class="fa fa-chevron-up icon-white"></i></a><br />
           &copy; ThinkUp LLC 2012-2013</p>
             <p class="hidden-xs"> 
                 <a href="http://thinkup.com/docs/">Documentation</a> &#8226; 
                 <a href="https://groups.google.com/forum/?fromgroups#!forum/thinkupapp" >Mailing List</a> &#8226; 
-                <a href="http://twitter.com/thinkup"><i class="icon-twitter icon-white"></i></a>
-                <a href="http://facebook.com/thinkupapp"><i class="icon-facebook icon-white"></i></a>
-                <a href="http://gplus.to/thinkup"><i class="icon-google-plus icon-white"></i></a>
+                <a href="http://twitter.com/thinkup"><i class="fa fa-twitter icon-white"></i></a>
+                <a href="http://facebook.com/thinkupapp"><i class="fa fa-facebook icon-white"></i></a>
+                <a href="http://gplus.to/thinkup"><i class="fa fa-google-plus icon-white"></i></a>
             </p>
             <p>
                 <a href="http://thinkup.com">ThinkUp</a>
