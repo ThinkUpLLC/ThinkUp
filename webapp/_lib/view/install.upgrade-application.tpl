@@ -33,7 +33,7 @@
                     {if $updateable} 
                      <div class="alert helpful">
                          <p>
-                           <span class="icon icon-check"></span>
+                           <span class="fa fa-check"></span>
                            Ready to upgrade ThinkUp to version {$latest_version}.
                          </p>
                     </div>
@@ -50,7 +50,7 @@
                     {if $updated}
                      <div class="alert helpful">
                          <p>
-                           <span class="icon icon-check"></span>
+                           <span class="fa fa-check"></span>
                            Success! You're running the latest version of ThinkUp.
                          </p>
                      </div>
