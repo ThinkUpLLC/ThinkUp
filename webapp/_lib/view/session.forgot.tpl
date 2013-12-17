@@ -31,7 +31,7 @@
                             <span class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                 <input type="email" name="email" id="email" class="form-control" required 
-                                data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
+                                data-validation-required-message="<i class='icon-exclamation-triangle'></i> A valid email address is required.">
                             </span>
                             <span class="help-block">Put in your email address and you'll get emailed a link to reset your password.</span>
                             {include file="_usermessage.tpl" field="email"}

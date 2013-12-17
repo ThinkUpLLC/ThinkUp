@@ -40,7 +40,7 @@
         <div class="col-md-9">
     
             <div class="alert alert-danger">
-                <i class="fa fa-exclamation-sign"></i>
+                <i class="fa fa-exclamation-triangle"></i>
                 <strong>Oops!</strong> Your web server isn't set up to run ThinkUp. Please fix the problems below and try installation again.
             </div>
             <div class="panel panel-default">
