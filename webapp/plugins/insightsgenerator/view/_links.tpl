@@ -6,7 +6,7 @@ $i (required) Insight object
 $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-css.html#icons
 *}
 
-<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-{$icon}"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->prefix}</a></span> 
+<span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-{$icon}"></i> <a href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->prefix}</a></span> 
 
 <i class="icon-{$i->instance->network}{if $i->instance->network eq 'google+'} icon-google-plus{/if} icon-muted"></i>
 {$i->text|link_usernames_to_twitter}
@@ -18,7 +18,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
 
         {* Show more link if there are more posts after the first one *}
         {if !$expand and ($smarty.foreach.bar.total gt 1 or $smarty.foreach.lnk.total gt 1) and ($smarty.foreach.bar.first and $smarty.foreach.lnk.first)}
-            <div class="pull-right detail-btn"><button class="btn btn-info btn-mini" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class="icon-chevron-down icon-white"></i></button></div>
+            <div class="pull-right detail-btn"><button class="btn btn-info btn-xs" data-toggle="collapse" data-target="#flashback-{$i->id}"><i class="icon-chevron-down icon-white"></i></button></div>
         {/if}
 
         {* Hide posts after the first one *}
@@ -33,7 +33,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
         {if isset($l->image_src) and $l->image_src neq ''}
             <h3><a href="{$l->url}" title="{$l->caption}"><img src="{$l->image_src}" class="avatar2"  width="48" height="48"/></a></h3>
         {else}
-            <h3><a href="{$l->url}" title="{$l->caption}"><a href="https://twitter.com/intent/user?user_id={$p->author_user_id}" title="{$p->author_username}"><img src="{$p->author_avatar}" class=""  width="48" height="48"/></a></h3>
+            <h3><a href="https://twitter.com/intent/user?user_id={$p->author_user_id}" title="{$p->author_username}"><img src="{$p->author_avatar}" class=""  width="48" height="48" alt="{$p->author_username}" /></a></h3>
         {/if}
     </td>
 
