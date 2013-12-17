@@ -29,7 +29,7 @@
                         <label class="col-sm-2" for="site_email">Email&nbsp;Address</label>
                         <div class="col-sm-8">
                             <span class="input-group">
-                                <span class="input-group-addon"><i class="icon-envelope"></i></span>
+                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                 <input type="email" name="email" id="email" class="form-control" required 
                                 data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
                             </span>

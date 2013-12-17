@@ -9,10 +9,10 @@
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
-          <li><a href="{$site_root_path}account/?m=manage#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li class="active"><a id="app-settings-tab" href="{$site_root_path}account/?m=manage#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
-          <li><a href="{$site_root_path}account/?m=manage#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a href="{$site_root_path}account/?m=manage#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
+          <li><a href="{$site_root_path}account/?m=manage#plugins"><i class="fa fa-list-alt"></i> Plugins <i class="fa fa-chevron-right"></i></a></li>
+          {if $user_is_admin}<li class="active"><a id="app-settings-tab" href="{$site_root_path}account/?m=manage#app_settings"><i class="fa fa-cogs"></i> Application <i class="fa fa-chevron-right"></i></a></li>{/if}
+          <li><a href="{$site_root_path}account/?m=manage#instances"><i class="fa fa-lock"></i> Account <i class="fa fa-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a href="{$site_root_path}account/?m=manage#ttusers"><i class="fa fa-group"></i> Users <i class="fa fa-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
     </div><!--/col-md-3-->
@@ -22,13 +22,13 @@
 
         <div class="section thinkup-canvas clearfix" id="export_service">
 
-        <a href="javascript: history.go(-1)" class="btn btn-xs"><i class="icon-chevron-left icon-muted"></i> Back</a>
+        <a href="javascript: history.go(-1)" class="btn btn-xs"><i class="fa fa-chevron-left icon-muted"></i> Back</a>
 
         <div class="plugin-info">
 
             <span class="pull-right">{insert name="help_link" id='export_user_data'}</span>
             <h2>
-                <i class="icon-user icon-muted"></i> Export a single user account's data
+                <i class="fa fa-user icon-muted"></i> Export a single user account's data
             </h2>
 
         </div>

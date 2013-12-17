@@ -1,11 +1,11 @@
-<a href="?p=twitter#manage_plugin" class="btn btn-xs"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
+<a href="?p=twitter#manage_plugin" class="btn btn-xs"><i class="fa fa-chevron-left icon-muted"></i> Back to Twitter plugin</a>
 
 {include file="_usermessage.tpl"}
 
 <div class="plugin-info">
     <span class="pull-right">{insert name="help_link" id='twitterhashtag'}</span>
     <h2>
-        <i class="icon-twitter icon-muted"></i>@{$user}'s Saved Searches 
+        <i class="fa fa-twitter icon-muted"></i>@{$user}'s Saved Searches 
     </h2>
 </div>
 
@@ -14,7 +14,7 @@
     <tr>
         <th><h4 class="pull-left">Keyword</h4></th>
         <th><h4 class="pull-left">Count</h4></th>
-        <th><i class="icon-trash icon-2x icon-muted"></i></th>
+        <th><i class="fa fa-trash fa-2x icon-muted"></i></th>
     </tr>
 
     {foreach from=$hashtags key=iid item=h name=foo}
@@ -47,7 +47,7 @@
 </table>
 {/if}
 
-<h3><i class="icon-tag icon-muted"></i> Add a Saved Search</h3>
+<h3><i class="fa fa-tag icon-muted"></i> Add a Saved Search</h3>
   <form name="newhashtag" id="newhashtag" class="form-horizontal" method="post" 
   action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter#manage_plugin">
     <div class="form-group input-prepend">
