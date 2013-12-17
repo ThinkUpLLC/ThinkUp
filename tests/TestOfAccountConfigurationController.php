@@ -1412,6 +1412,21 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
     }
 
+    public function testPluginShownWhenPSet() {
+        $this->simulateLogin('admin@example.com', true, true);
+        $_GET['p'] = "twitter";
+        $controller = new AccountConfigurationController(true);
+        $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertTrue($v_mgr->getTemplateDataItem('force_plugin'));
+
+        $_GET = array();
+        $controller = new AccountConfigurationController(true);
+        $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertNull($v_mgr->getTemplateDataItem('force_plugin'));
+    }
+
     private function buildHashtagData($instance) {
         $builders = array();
 

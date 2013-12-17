@@ -305,6 +305,7 @@
 </div>
 
 <script type="text/javascript">
+  var show_plugin = {if $force_plugin}true{else}false{/if};
   {literal}
 $(function() {
     $(".btnPub").click(function() {
@@ -523,7 +524,8 @@ $(function() {
         e.preventDefault();
       }
     });
-    if (window.location.hash && window.location.hash == '#manage_plugin') {
+    if ((show_plugin && (!window.location.hash || window.location.hash == '')
+    || (window.location.hash && window.location.hash == '#manage_plugin')) {
       $('.section').hide();
       $('#manage_plugin').show();
     }

@@ -301,6 +301,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $pobj = $webapp_plugin_registrar->getPluginObject($active_plugin);
             $p = new $pobj;
             $this->addToView('body', $p->renderConfiguration($owner));
+            $this->addToView('force_plugin', true);
             $profiler = Profiler::getInstance();
             $profiler->clearLog();
         } elseif (isset($_GET['p']) && isset($_GET['u']) && isset($_GET['n'])) {
@@ -314,6 +315,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $pobj = $webapp_plugin_registrar->getPluginObject($active_plugin);
             $p = new $pobj;
             $this->addToView('body', $p->renderInstanceConfiguration($owner, $instance_username, $instance_network));
+            $this->addToView('force_plugin', true);
             $profiler = Profiler::getInstance();
             $profiler->clearLog();
         }
