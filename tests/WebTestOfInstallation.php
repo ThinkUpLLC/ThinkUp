@@ -123,7 +123,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
-          '/webapp/test_installer/thinkup/config.inc.php'));
+          'webapp/test_installer/thinkup/config.inc.php'));
 
         //sleep(1000);
         //Test bad activation code

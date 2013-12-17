@@ -70,7 +70,7 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
         $this->assertPattern("/var csrf_token = '" . self::TEST_CSRF_TOKEN . "';/");
 
         // look for password form token
-        $this->assertPattern('/<input name="oldpass" type="password" id="oldpass">'.
+        $this->assertPattern('/<input name="oldpass" type="password" id="oldpass" class="password form-control" required>'.
         '<input type="hidden" name="csrf_token" value="'. self::TEST_CSRF_TOKEN.'" \/>/');
 
         // look for invite token
