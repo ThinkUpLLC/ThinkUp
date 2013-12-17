@@ -56,8 +56,8 @@
         {insert name="csrf_token"}
         <input type="hidden" name="instance_id" value="{$instance->id}">
         <input name="new_hashtag_name" type="new_hashtag_name" id="new_hashtag_name" {literal}pattern="^[\S]*$"{/literal}  required 
-        data-validation-required-message="<i class='icon-exclamation-sign'></i>Please enter a keyword or hashtag."
-        data-validation-pattern-message="<i class='icon-exclamation-sign'></i>Enter an individual keyword or hashtag, not a phrase.">
+        data-validation-required-message="<i class='icon-exclamation-triangle'></i>Please enter a keyword or hashtag."
+        data-validation-pattern-message="<i class='icon-exclamation-triangle'></i>Enter an individual keyword or hashtag, not a phrase.">
         <span class="help-block"></span>
         
       </div>

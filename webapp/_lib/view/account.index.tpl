@@ -121,8 +121,8 @@
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass1" id="password"
                             {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
-                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
+                            data-validation-required-message="<i class='icon-exclamation-triangle'></i> You'll need a enter a password of at least 8 characters." 
+                            data-validation-pattern-message="<i class='icon-exclamation-triangle'></i> Must be at least 8 characters, with both numbers & letters.">
                         </span>
                         <span class="help-block"></span>
 
@@ -135,9 +135,9 @@
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>            
                             <input type="password" name="pass2" id="confirm_password" required 
                              class="password form-control" 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
+                            data-validation-required-message="<i class='icon-exclamation-triangle'></i> Password confirmation is required." 
                             data-validation-match-match="pass1" 
-                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
+                            data-validation-match-message="<i class='icon-exclamation-triangle'></i> Make sure this matches the password you entered above." >
                         </span>
                         <span class="help-block"></span>
                     </div>
