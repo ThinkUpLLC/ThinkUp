@@ -77,12 +77,20 @@ class Mailer {
             //don't send email when running tests, just write it to the filesystem for assertions
             if (Utils::isTest()) {
                 self::setLastMail(json_encode($message));
+                if (preg_match('/keyerror/', $to)) {
+                    throw new Mandrill_Invalid_Key('Invalid api key');
+                } elseif (preg_match('/templateerror/', $to)) {
+                    throw new Mandrill_Unknown_Template('Unknown template');
+                }
             } else {
                 $async = false;
                 $ip_pool = 'Main Pool';
                 $result = $mandrill->messages->sendTemplate($template_name, $template_content, $message,
                 $async, $ip_pool);
             }
+        } catch (Mandrill_Unknown_Template $ut_error) {
+            // We want to be able to handle this specific error differently.
+            throw $ut_error;
         } catch (Mandrill_Error $e) {
             throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
             ': ' . $e->getMessage());

@@ -375,4 +375,51 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
     }
+
+    public function testMandrillHTMLWithExceptions() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key', '1234');
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        // When in test mode, the mailHTMLViaMandrill method will throw an template not found exception
+        // if the email address contains "templateerror".
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'templateerror@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        $this->simulateLogin('templateerror@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+
+        $exception = null;
+        try {
+            $plugin->crawl();
+        } catch (Exception $e) {
+            $exception = $e;
+        }
+        $this->assertNull($e,'Should not get mandrill template error');
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNull($decoded->global_merge_vars);
+
+        $config = Config::getInstance();
+        $logger_file = $config->getValue('log_location');
+        $log = file($logger_file);
+        $last_log = join("\n", array_slice($log, -10));
+        $this->assertPattern('/invalid mandrill template/i', $last_log);
+    }
 }

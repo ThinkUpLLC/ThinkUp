@@ -98,4 +98,26 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($to, $decoded->to[0]->email);
         $this->assertEqual(2, count($decoded->global_merge_vars));
     }
+
+    public function testHTMLViaMandrillTemplateExceptions() {
+        $config = Config::getInstance();
+        $config->setValue("mandrill_api_key", "asdfasdfasdfadsfasd");
+        $exception = null;
+        try {
+            Mailer::mailHTMLViaMandrillTemplate('templateerror@foo.com', 'Subject', 'template', array());
+        } catch (Mandrill_Unknown_Template $e) {
+            $exception = $e;
+        }
+        $this->assertNotNull($exception);
+        $this->assertPattern('/Unknown template/i', $exception->getMessage());
+
+        $exception = null;
+        try {
+            Mailer::mailHTMLViaMandrillTemplate('keyerror@foo.com', 'Subject', 'template', array());
+        } catch (Exception $e) {
+            $exception = $e;
+        }
+        $this->assertNotNull($exception);
+        $this->assertPattern('/invalid api key/i', $exception->getMessage());
+    }
 }

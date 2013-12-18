@@ -197,7 +197,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * @param array $options Plugin options
      * return bool Whether email was sent
      */
-    private function sendDigestSinceWithTemplate($owner, $start, $template, $options) {
+    private function sendDigestSinceWithTemplate($owner, $start, $template, &$options) {
         $insights_dao = DAOFactory::GetDAO('InsightDAO');
         $start_time = date( 'Y-m-d H:i:s', strtotime($start, $this->current_timestamp));
         $insights = $insights_dao->getAllOwnerInstanceInsightsSince($owner->id, $start_time);
@@ -222,9 +222,17 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
             $parameters['weekly_or_daily'] = $days_ago > 2 ? 'Weekly' : 'Daily';
 
-            Mailer::mailHTMLViaMandrillTemplate($owner->email, 'ThinkUp has new insights for you!',
-            $options['mandrill_template']->option_value, $parameters);
-            return true;
+            try {
+                Mailer::mailHTMLViaMandrillTemplate($owner->email, 'ThinkUp has new insights for you!',
+                $options['mandrill_template']->option_value, $parameters);
+                return true;
+            } catch (Mandrill_Unknown_Template $e) {
+                // In this case, we'll fall back to text and warn the user in the log
+                $logger = Logger::getInstance();
+                $logger->logUserError("Invalid mandrill template configured:".
+                $options['mandrill_template']->option_value.".", __METHOD__.','.__LINE__);
+                unset($options['mandrill_template']);
+            }
         }
 
 
