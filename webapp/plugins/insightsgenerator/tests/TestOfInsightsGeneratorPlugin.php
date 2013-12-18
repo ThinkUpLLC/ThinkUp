@@ -308,4 +308,118 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertPattern('/daily digest to admin@example/', $last_log);
         $this->assertPattern('/daily digest to normal@example/', $last_log);
     }
+
+    public function testMandrillHTML() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key', null);
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0, 'Starting with no settings');
+
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        $this->simulateLogin('admin@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+
+        // We can tell if it's HTML because we'll have a JSON block to decode
+        $decoded = json_decode($sent);
+        $this->assertNull($decoded);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+
+        // Set just api key, send again
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $config->setValue('mandrill_api_key','1234');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNotNull($decoded);
+        $this->assertNotNull($decoded->text);
+        $this->assertNull($decoded->global_merge_vars);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+
+        // Finally, set a template name a test output
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNotNull($decoded);
+        $this->assertNotNull($decoded->global_merge_vars);
+        $this->assertEqual(count($decoded->global_merge_vars), 5);
+        $merge_vars = array();
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
+        $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+    }
+
+    public function testMandrillHTMLWithExceptions() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key', '1234');
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        // When in test mode, the mailHTMLViaMandrill method will throw an template not found exception
+        // if the email address contains "templateerror".
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'templateerror@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        $this->simulateLogin('templateerror@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+
+        $exception = null;
+        try {
+            $plugin->crawl();
+        } catch (Exception $e) {
+            $exception = $e;
+        }
+        $this->assertNull($e,'Should not get mandrill template error');
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNull($decoded->global_merge_vars);
+
+        $config = Config::getInstance();
+        $logger_file = $config->getValue('log_location');
+        $log = file($logger_file);
+        $last_log = join("\n", array_slice($log, -10));
+        $this->assertPattern('/invalid mandrill template/i', $last_log);
+    }
 }

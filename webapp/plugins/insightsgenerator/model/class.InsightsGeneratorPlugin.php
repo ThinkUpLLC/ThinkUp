@@ -142,7 +142,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
             if ($do_daily) {
                 foreach ($owners as $owner) {
-                    if ($this->sendDailyDigest($owner)) {
+                    if ($this->sendDailyDigest($owner, $options)) {
                         $logger->logUserSuccess("Mailed daily digest to ".$owner->email.".", __METHOD__.','.__LINE__);
                     }
                 }
@@ -150,7 +150,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
             if ($do_weekly) {
                 foreach ($owners as $owner) {
-                    if ($this->sendWeeklyDigest($owner)) {
+                    if ($this->sendWeeklyDigest($owner, $options)) {
                         $logger->logUserSuccess("Mailed weekly digest to ".$owner->email.".", __METHOD__.','.__LINE__);
                     }
                 }
@@ -161,11 +161,13 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
     /**
      * Email daily insight digest.
      * @param Owner $owner Owner to send for
+     * @param array $options Plugin options
      * return bool Whether email was sent
      */
-    private function sendDailyDigest($owner) {
+    private function sendDailyDigest($owner, $options) {
         if (in_array($owner->email_notification_frequency, array('both','daily'))) {
-            return $this->sendDigestSinceWithTemplate($owner, 'Yesterday 4am', '_email.daily_insight_digest.tpl');
+            return $this->sendDigestSinceWithTemplate($owner, 'Yesterday 4am', '_email.daily_insight_digest.tpl',
+            $options);
         } else {
             return false;
         }
@@ -175,11 +177,13 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
     /**
      * Email weekly insight digest.
      * @param Owner $owner Owner to send for
+     * @param array $options Plugin options
      * return bool Whether email was sent
      */
-    private function sendWeeklyDigest($owner) {
+    private function sendWeeklyDigest($owner, $options) {
         if (in_array($owner->email_notification_frequency, array('both','weekly'))) {
-            return $this->sendDigestSinceWithTemplate($owner, '1 week ago 4am', '_email.weekly_insight_digest.tpl');
+            return $this->sendDigestSinceWithTemplate($owner, '1 week ago 4am', '_email.weekly_insight_digest.tpl',
+            $options);
         } else {
             return false;
         }
@@ -190,9 +194,10 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * @param Owner $owner Owner to send for
      * @param str $start When to start insight lookup
      * @param str $template Email view template to use
+     * @param array $options Plugin options
      * return bool Whether email was sent
      */
-    private function sendDigestSinceWithTemplate($owner, $start, $template) {
+    private function sendDigestSinceWithTemplate($owner, $start, $template, &$options) {
         $insights_dao = DAOFactory::GetDAO('InsightDAO');
         $start_time = date( 'Y-m-d H:i:s', strtotime($start, $this->current_timestamp));
         $insights = $insights_dao->getAllOwnerInstanceInsightsSince($owner->id, $start_time);
@@ -203,6 +208,33 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $config = Config::getInstance();
         $view = new ViewManager();
         $view->caching=false;
+
+        // If we've got a mandril key and template, send HTML
+        if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
+            $view->assign('insights', $insights);
+            $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
+            $parameters = array();
+            $parameters['insights'] = $insights;
+            $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
+            $parameters['app_url'] = Utils::getApplicationURL();
+            $parameters['unsub_url'] = Utils::getApplicationURL().'account/index.php?m=manage#instances';;
+            // It's a weekly digest if we're going back more than a day or two.
+            $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
+            $parameters['weekly_or_daily'] = $days_ago > 2 ? 'Weekly' : 'Daily';
+
+            try {
+                Mailer::mailHTMLViaMandrillTemplate($owner->email, 'ThinkUp has new insights for you!',
+                $options['mandrill_template']->option_value, $parameters);
+                return true;
+            } catch (Mandrill_Unknown_Template $e) {
+                // In this case, we'll fall back to text and warn the user in the log
+                $logger = Logger::getInstance();
+                $logger->logUserError("Invalid mandrill template configured:".
+                $options['mandrill_template']->option_value.".", __METHOD__.','.__LINE__);
+                unset($options['mandrill_template']);
+            }
+        }
+
 
         $view->assign('apptitle', $config->getValue('app_title_prefix')."ThinkUp" );
         $view->assign('application_url', Utils::getApplicationURL());
