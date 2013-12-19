@@ -1,4 +1,4 @@
-{include file="_header.tpl" enable_bootstrap=1}
+{include file="_header.tpl"}
 
   <style type="text/css">
   {literal}
@@ -6,13 +6,13 @@
   html {background:white!important;}
 
 
-.control-group.warning {
+.form-group.warning {
   color: #c09853;
 }
-.control-group.error {
+.form-group.error {
   color: #b94a48;
 }
-.control-group.success {
+.form-group.success {
   color: #468847;
 }
 .table td.crawl-log-component {
