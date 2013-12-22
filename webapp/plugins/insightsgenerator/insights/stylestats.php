@@ -179,7 +179,7 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->id, date('Y-m-d'));
 
                 if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsight('style_stats', $instance->id, date('Y-m-d'),
+                    $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),
                     "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
                     serialize($hot_posts_data));
                 }

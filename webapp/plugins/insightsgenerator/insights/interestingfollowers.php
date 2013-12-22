@@ -45,13 +45,14 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
-                $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
-                "Standouts:", '<strong>'.sizeof($least_likely_followers)." interesting users</strong> ".
-                "followed $this->username.", $filename, Insight::EMPHASIS_LOW, serialize($least_likely_followers));
-            } else {
-                $this->insight_dao->insertInsight('least_likely_followers', $instance->id, $this->insight_date,
-                "Standout:", "An interesting user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
+                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
+                $this->insight_date, "Standouts:", '<strong>'.sizeof($least_likely_followers).
+                " interesting users</strong> ". "followed $this->username.", $filename, Insight::EMPHASIS_LOW,
                 serialize($least_likely_followers));
+            } else {
+                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
+                $this->insight_date, "Standout:", "An interesting user followed $this->username.", $filename,
+                Insight::EMPHASIS_LOW, serialize($least_likely_followers));
             }
         }
 
@@ -61,11 +62,11 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         if (sizeof($verified_followers) > 0 ) { //if not null, store insight
             if (sizeof($verified_followers) > 1) {
-                $this->insight_dao->insertInsight('verified_followers', $instance->id, $this->insight_date,
+                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
                 "Verified followers!", '<strong>'.sizeof($verified_followers)." verified users</strong> ".
                 "followed $this->username.", $filename, Insight::EMPHASIS_LOW, serialize($verified_followers));
             } else {
-                $this->insight_dao->insertInsight('verified_followers', $instance->id, $this->insight_date,
+                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
                 "Verified follower!", "A verified user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
                 serialize($verified_followers));
             }

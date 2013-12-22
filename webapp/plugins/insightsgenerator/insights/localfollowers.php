@@ -51,7 +51,7 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
                     .(count($followers) > 1 ? count($followers)." people" : "1 person")
                     ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
 
-                    $this->insight_dao->insertInsight('local_followers', $instance->id, $this->insight_date,
+                    $this->insight_dao->insertInsightDeprecated('local_followers', $instance->id, $this->insight_date,
                     "New neighbors:", $insight_text, basename(__FILE__, '.php'),
                     Insight::EMPHASIS_LOW, serialize($followers));
                 }

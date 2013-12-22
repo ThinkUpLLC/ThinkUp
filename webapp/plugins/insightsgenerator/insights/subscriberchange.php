@@ -68,15 +68,15 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
             $chart = VideoMySQLDAO::getHotVideosVisualizationData($rows, 'Subscriber Change');
 
             if($percent_change >=50) {
-                $this->insight_dao->insertInsight('subscriber_change'.$video->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
                 $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
                 serialize(array($chart,$video)));
             } elseif($percent_change >=25 ) {
-                $this->insight_dao->insertInsight('subscriber_change'.$video->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
                 $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_MED,
                 serialize(array($chart,$video)));
             } elseif($percent_change >=10 ) {
-                $this->insight_dao->insertInsight('subscriber_change'.$video->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
                 $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
                 serialize(array($chart,$video)));
             }

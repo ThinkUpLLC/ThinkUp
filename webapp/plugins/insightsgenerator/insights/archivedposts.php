@@ -48,8 +48,8 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
 
                 $text = "ThinkUp has captured over <strong>". (number_format($archived_posts_in_hundreds * 100)).
                 ' '.$this->terms->getNoun('post', InsightTerms::PLURAL). '</strong> by '.$this->username.'.';
-                $this->insight_dao->insertInsight("archived_posts", $instance->id, $this->insight_date, "Archived:",
-                $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
+                $this->insight_dao->insertInsightDeprecated("archived_posts", $instance->id, $this->insight_date,
+                "Archived:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

@@ -76,7 +76,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 $text .= ".";
             }
             $prefix = (isset($prefix))?$prefix:'Post rate:';
-            $this->insight_dao->insertInsight("frequency", $instance->id, $this->insight_date, $prefix,
+            $this->insight_dao->insertInsightDeprecated("frequency", $instance->id, $this->insight_date, $prefix,
             $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
         }
 

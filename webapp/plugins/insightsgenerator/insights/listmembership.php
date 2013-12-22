@@ -87,8 +87,8 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     } else {
                         $insight_text .= ".";
                     }
-                    $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                    "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
+                    $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
                 } else {
                     $new_groups[0]->setMetadata();
@@ -96,12 +96,13 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
-                        $insight_text .= ", bringing the total to <strong>". number_format($total_lists). " lists</strong>";
+                        $insight_text .= ", bringing the total to <strong>". number_format($total_lists)
+                        . " lists</strong>";
                     }
                     $insight_text .= ".";
 
-                    $this->insight_dao->insertInsight('new_group_memberships', $instance->id, $this->insight_date,
-                    "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
+                    $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
                 }
             }

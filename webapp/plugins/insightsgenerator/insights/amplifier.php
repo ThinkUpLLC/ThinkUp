@@ -58,7 +58,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                         $insight_text = "$this->username broadcast this post to <strong>$add_audience</strong> ".
                         "more people than its author originally reached.";
 
-                        $this->insight_dao->insertInsight('amplifier_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('amplifier_'.$post->id, $instance->id,
                         $simplified_post_date, "Amplifier:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize($post));
                     }

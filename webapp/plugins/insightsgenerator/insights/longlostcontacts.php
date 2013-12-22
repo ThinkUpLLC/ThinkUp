@@ -61,7 +61,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
                 "<strong>".count($long_lost_contacts)." contacts</strong> " : "a contact ")
                 ."in over a year: ";
 
-                $this->insight_dao->insertInsight("long_lost_contacts", $instance->id, $this->insight_date,
+                $this->insight_dao->insertInsightDeprecated("long_lost_contacts", $instance->id, $this->insight_date,
                 "Keep in touch:", $insight_text, basename(__FILE__, ".php"),
                 Insight::EMPHASIS_LOW, serialize($long_lost_contacts));
             }

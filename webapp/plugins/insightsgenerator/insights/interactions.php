@@ -98,7 +98,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $insight_text = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
 
-                $this->insight_dao->insertInsight('interactions', $instance->id, $this->insight_date, "BFFs:",
+                $this->insight_dao->insertInsightDeprecated('interactions', $instance->id, $this->insight_date, "BFFs:",
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($insight_data));
             }
         }

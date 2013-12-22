@@ -79,7 +79,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->id, $simplified_post_date);
 
                 if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsight("weekly_best", $instance->id, $this->insight_date,
+                    $this->insight_dao->insertInsightDeprecated("weekly_best", $instance->id, $this->insight_date,
                     "Post of the week:", $insight_text, basename(__FILE__, ".php"),
                     Insight::EMPHASIS_LOW, serialize(array($most_popular_post, $hot_posts_data)));
                 }

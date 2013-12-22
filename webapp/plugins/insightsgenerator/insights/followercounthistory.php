@@ -60,7 +60,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 number_format($follower_count_history_by_month['milestone']['next_milestone']);
                 $insight_text .= '</strong> followers at the current growth rate.';
 
-                $this->insight_dao->insertInsight('follower_count_history_by_month_milestone', $instance->id,
+                $this->insight_dao->insertInsightDeprecated('follower_count_history_by_month_milestone', $instance->id,
                 $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_month));
             }
@@ -86,7 +86,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $this->logger->logInfo("Storing insight ".$insight_text, __METHOD__.','
                 .__LINE__);
 
-                $this->insight_dao->insertInsight('follower_count_history_by_week_milestone', $instance->id,
+                $this->insight_dao->insertInsightDeprecated('follower_count_history_by_week_milestone', $instance->id,
                 $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_week));
             }

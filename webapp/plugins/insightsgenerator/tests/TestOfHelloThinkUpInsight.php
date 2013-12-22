@@ -51,14 +51,13 @@ class TestOfHelloThinkUpInsight extends ThinkUpUnitTestCase {
         $instance = new Instance();
         $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
         $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
-        $this->assertTrue(true);
-    }
 
-    public function testFlashbacksInsight() {
-        $posts = array();
-        $instance = new Instance();
-        $flashback_insight_plugin = new FlashbackInsight();
-        $flashback_insight_plugin->generateInsight($instance, $posts, 3);
-        $this->assertTrue(true);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, '2013-12-21');
+        $this->assertEqual($result->headline, 'Ohai');
+        $this->assertEqual($result->text, 'Greetings humans');
+        $this->assertEqual($result->filename, 'hellothinkupinsight');
+        $this->assertNull($result->related_data);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
     }
 }

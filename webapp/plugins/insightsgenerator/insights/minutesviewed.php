@@ -141,7 +141,7 @@ class MinutesViewedInsight extends InsightPluginParent implements InsightPlugin 
             }
 
             if($can_insert) {
-                $this->insight_dao->insertInsight('minutes_viewed'.$video->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated('minutes_viewed'.$video->id, $instance->id,
                 $simplified_post_date, $prefix, $text, $filename, $emphasis, serialize(array($video, $chart)));
             }
 
@@ -168,7 +168,7 @@ class MinutesViewedInsight extends InsightPluginParent implements InsightPlugin 
             }
 
             if($can_insert) {
-                $this->insight_dao->insertInsight('minutes_viewed_high'.$video->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated('minutes_viewed_high'.$video->id, $instance->id,
                 $simplified_post_date, $prefix, $text, $filename, $emphasis, serialize(array($video,$chart)));
             }
         }

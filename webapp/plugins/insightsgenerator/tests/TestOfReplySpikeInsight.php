@@ -135,7 +135,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_365_day_28', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_365_day_28');
-        $this->assertEqual($check->prefix, 'New 365-day record!');
+        $this->assertEqual($check->headline, 'New 365-day record!');
         $this->assertEqual($check->text, '<strong>50 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
@@ -179,7 +179,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_30_day_29', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_30_day_29');
-        $this->assertEqual($check->prefix, 'New 30-day record!');
+        $this->assertEqual($check->headline, 'New 30-day record!');
         $this->assertEqual($check->text, '<strong>40 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
@@ -232,7 +232,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_7_day_30', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_7_day_30');
-        $this->assertEqual($check->prefix, 'New 7-day record!');
+        $this->assertEqual($check->headline, 'New 7-day record!');
         $this->assertEqual($check->text, '<strong>30 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
@@ -314,7 +314,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_30_day_33', 1, date('Y-m-d', strtotime('-2 days')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_30_day_33');
-        $this->assertEqual($check->prefix, 'New 30-day record!');
+        $this->assertEqual($check->headline, 'New 30-day record!');
         $this->assertEqual($check->text,
         '<strong>26 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);
@@ -388,7 +388,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_7_day_32', 1, date('Y-m-d', strtotime('-6 days')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_7_day_32');
-        $this->assertEqual($check->prefix, 'New 7-day record!');
+        $this->assertEqual($check->headline, 'New 7-day record!');
         $this->assertEqual($check->text,
         '<strong>12 people</strong> replied to @ev\'s tweet.');
         $this->assertEqual($check->emphasis, 2);

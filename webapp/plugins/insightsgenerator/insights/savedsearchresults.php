@@ -55,8 +55,9 @@ class SavedSearchResultsInsight extends InsightPluginParent implements InsightPl
                 $text = number_format($total_new_posts)." new ".$post_term." contain <b><a href=\"".$link."\">".
                 $hashtag->hashtag."</a></b>.";
                 // Insert insight
-                $this->insight_dao->insertInsight("saved_search_results_".$instance_hashtag->hashtag_id, $instance->id,
-                $this->insight_date, "New search results:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
+                $this->insight_dao->insertInsightDeprecated("saved_search_results_".$instance_hashtag->hashtag_id,
+                $instance->id, $this->insight_date, "New search results:", $text, basename(__FILE__, ".php"),
+                Insight::EMPHASIS_MED);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

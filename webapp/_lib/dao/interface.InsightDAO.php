@@ -28,7 +28,7 @@
  */
 interface InsightDAO {
     /**
-     * Insert insight into storage.
+     * Insert insight into storage. (Deprecated for insight redesign.)
      * @param str $slug
      * @param int $instance_id
      * @param str $date
@@ -39,8 +39,15 @@ interface InsightDAO {
      * @param str $related_data Defaults to null
      * @return bool
      */
-    public function insertInsight($slug, $instance_id, $date, $prefix, $text, $filename,
+    public function insertInsightDeprecated($slug, $instance_id, $date, $prefix, $text, $filename,
     $emphasis=Insight::EMPHASIS_LOW, $related_data=null);
+    /**
+     * Insert insight into storage.
+     * @param Insight $insight
+     * @return bool
+     * @throws InsightFieldNotSetException
+     */
+    public function insertInsight(Insight $insight);
     /**
      * Retrieve insight from storage.
      * @param str $slug
@@ -66,7 +73,7 @@ interface InsightDAO {
      * @return Insight
      */
     public function getPreCachedInsightData($slug, $instance_id, $date);
-    /*
+    /**
      * Remove insight from storage.
      * @param str $slug
      * @param int $instance_id
@@ -100,7 +107,7 @@ interface InsightDAO {
      * @param str $related_data Defaults to null.
      * @return bool
      */
-    public function updateInsight($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
+    public function updateInsightDeprecated($slug, $instance_id, $date, $prefix, $text, $emphasis=Insight::EMPHASIS_LOW,
     $related_data=null);
     /**
      * Get a page of insights for all public users.

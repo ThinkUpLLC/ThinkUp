@@ -71,8 +71,8 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 } else {
                     $text .= ".";
                 }
-                $this->insight_dao->insertInsight("all_about_you", $instance->id, $this->insight_date, "All about you:",
-                $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                $this->insight_dao->insertInsightDeprecated("all_about_you", $instance->id, $this->insight_date,
+                "All about you:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
 

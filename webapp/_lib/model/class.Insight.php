@@ -40,17 +40,21 @@ class Insight {
      */
     var $slug;
     /**
-     * @var str Prefix to the text content of the alert.
+     * @var str Headline of the insight content.
      */
-    var $prefix;
+    var $headline;
     /**
-     * @var str Text content of the alert.
+     * @var text Text content of the alert.
      */
     var $text;
     /**
-     * @var str Serialized related insight data, such as a list of users or a post.
+     * @var text Serialized related insight data, such as a list of users or a post.
      */
     var $related_data;
+    /**
+     * @var str Optional insight header image.
+     */
+    var $header_image;
     /**
      * @var date Date of insight.
      */
@@ -86,6 +90,7 @@ class Insight {
      * @var int
      */
     const EMPHASIS_LOW = 0;
+
     public function __construct($row = false) {
         if ($row) {
             if (isset($row["insight_key"])) {
@@ -95,14 +100,79 @@ class Insight {
             }
             $this->instance_id = $row['instance_id'];
             $this->slug = $row['slug'];
-            $this->prefix = $row['prefix'];
+            $this->headline = $row['headline'];
             $this->text = $row['text'];
             $this->related_data = $row['related_data'];
+            $this->header_image = $row['header_image'];
             $this->date = $row['date'];
             $this->emphasis = $row['emphasis'];
             $this->filename = $row['filename'];
             $this->time_generated = $row['time_generated'];
             $this->time_updated = $row['time_updated'];
+        } else {
+            //non-null defaults
+            if (!isset($this->emphasis)) {
+                $this->emphasis = Insight::EMPHASIS_LOW;
+            }
+            if (!isset($this->time_generated)) {
+                $this->time_generated=date("Y-m-d H:i:s");
+            }
         }
+    }
+    /**
+     * Add posts to insight's related data.
+     * @param arr $posts Array of Post objects
+     * @return void
+     */
+    public function setPosts($posts) {
+        $this->related_data["posts"] = $posts;
+    }
+    /**
+     * Add photos to insight's related data.
+     * @param arr $photos Array of Photo objects
+     * @return void
+     */
+    public function setPhotos($photos) {
+        $this->related_data["photos"] = $photos;
+    }
+    /**
+     * Add line chart to insight's related data.
+     * @param arr $line_chart Line chart data.
+     * @return void
+     */
+    public function setLineChart($line_chart) {
+        $this->related_data["line_chart"] = $line_chart;
+    }
+    /**
+     * Add bar chart to insight's related data.
+     * @param arr $bar_chart Bar chart data.
+     * @return void
+     */
+    public function setBarChart($bar_chart) {
+        $this->related_data["bar_chart"] = $bar_chart;
+    }
+    /**
+     * Add people/users to insight's related data.
+     * @param arr Array of User objects
+     * @return void
+     */
+    public function setPeople($people) {
+        $this->related_data["people"] = $people;
+    }
+    /**
+     * Add links to insight's related data.
+     * @param arr Array of Link objects
+     * @return void
+     */
+    public function setLinks($links) {
+        $this->related_data["links"] = $links;
+    }
+    /**
+     * Add milestone number to insight's related data.
+     * @param int
+     * @return void
+     */
+    public function setMilestoneNumber($milestone_number) {
+        $this->related_data["milestone_number"] = $milestone_number;
     }
 }

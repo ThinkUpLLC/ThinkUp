@@ -129,7 +129,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
                 $insight_text .= $insight_comparison_text.".";
 
-                $this->insight_dao->insertInsight("outreach_punchcard", $instance->id, $this->insight_date,
+                $this->insight_dao->insertInsightDeprecated("outreach_punchcard", $instance->id, $this->insight_date,
                 "Time of day:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
                 serialize($punchcard));
             }

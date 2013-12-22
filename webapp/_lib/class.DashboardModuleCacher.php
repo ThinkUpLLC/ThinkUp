@@ -56,8 +56,8 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("FollowMySQLDAO::getLeastLikelyFollowersThisWeek", $this->instance->id,
-            $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($results));
+            $insight_dao->insertInsightDeprecated("FollowMySQLDAO::getLeastLikelyFollowersThisWeek",
+            $this->instance->id, $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($results));
         }
 
         //Cache PostMySQLDAO::getHotPosts
@@ -69,7 +69,7 @@ class DashboardModuleCacher {
             //TODO Go back to deleting this existing data once insights stream doesn't reference it
             //$insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getHotPosts", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getHotPosts", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($hot_posts_data));
         }
 
@@ -82,7 +82,7 @@ class DashboardModuleCacher {
             //TODO Go back to deleting this existing data once insights stream doesn't reference it
             //$insight_dao->deleteInsightsBySlug("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("ShortLinkMySQLDAO::getRecentClickStats", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($click_stats_data));
         }
 
@@ -93,7 +93,7 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getMostRepliedToPostsInLastWeek", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($most_replied_to_1wk));
         }
 
@@ -104,7 +104,7 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getMostRetweetedPostsInLastWeek", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($most_retweeted_1wk));
         }
 
@@ -114,7 +114,7 @@ class DashboardModuleCacher {
         //delete existing
         $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id);
         //insert new
-        $insight_dao->insertInsight("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
+        $insight_dao->insertInsightDeprecated("PostMySQLDAO::getClientsUsedByUserOnNetwork", $this->instance->id,
         $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($clients_usage));
 
         //Cache PostMySQLDAO::getOnThisDayFlashbackPosts
@@ -123,7 +123,7 @@ class DashboardModuleCacher {
         //delete existing
         $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id);
         //insert new
-        $insight_dao->insertInsight("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id,
+        $insight_dao->insertInsightDeprecated("PostMySQLDAO::getOnThisDayFlashbackPosts", $this->instance->id,
         $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($posts_flashback));
 
         //if it's December or January, cache PostMySQLDAO::getMostPopularPostsOfTheYear
@@ -139,7 +139,7 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getMostPopularPostsOfTheYear", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($posts_yearly_popular));
         }
 
@@ -150,8 +150,9 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek", $this->instance->id,
-            $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($checkins_count));
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::countCheckinsToPlaceTypesLastWeek",
+            $this->instance->id, $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW,
+            serialize($checkins_count));
 
             // Cache PostMySQLDAO::countCheckinsToPlaceTypes
             $checkins_all_time_count = $post_dao->countCheckinsToPlaceTypes($this->instance->network_user_id,
@@ -159,7 +160,7 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::countCheckinsToPlaceTypes", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($checkins_all_time_count));
 
             // Cache PostMySQLDAO::getPostsPerHourDataVis
@@ -168,7 +169,7 @@ class DashboardModuleCacher {
             //delete existing
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getPostsPerHourDataVis", $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getPostsPerHourDataVis", $this->instance->id,
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getPostsPerHourDataVis", $this->instance->id,
             $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($hourly_checkin_datavis));
 
             // Cache PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap
@@ -178,8 +179,9 @@ class DashboardModuleCacher {
             $insight_dao->deleteInsightsBySlug("PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap",
             $this->instance->id);
             //insert new
-            $insight_dao->insertInsight("PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap", $this->instance->id,
-            $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW, serialize($checkins_map));
+            $insight_dao->insertInsightDeprecated("PostMySQLDAO::getAllCheckinsInLastWeekAsGoogleMap",
+            $this->instance->id, $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW,
+            serialize($checkins_map));
         }
     }
 

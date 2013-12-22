@@ -72,7 +72,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=2>My Great Video 2</a> <strong>34%</strong> of the way through, <strong>12%</strong> ";
@@ -107,7 +107,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=1>My Great Video</a> <strong>10%</strong> of the way through, <strong>12%</strong> ";
@@ -152,7 +152,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video</a> <strong>45%</strong> of the way through, <strong>8%</strong> ";
@@ -192,7 +192,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=2>My Great Video 2</a> <strong>34%</strong> of the way through, <strong>10%</strong> ";
@@ -232,7 +232,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>55%</strong> of the way through, <strong>11%</strong> ";
@@ -277,7 +277,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>10%</strong> of the way through, <strong>12%</strong> ";
@@ -312,7 +312,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=2>My Great Video 2</a> <strong>64%</strong> of the way through, <strong>27%</strong> ";
@@ -347,7 +347,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=2>My Great Video 2</a> <strong>10%</strong> of the way through, <strong>27%</strong> ";
@@ -387,7 +387,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>55%</strong> of the way through, <strong>27%</strong> ";
@@ -427,7 +427,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=2>My Great Video 2</a> <strong>29%</strong> of the way through, <strong>28%</strong> ";
@@ -467,7 +467,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video</a> <strong>75%</strong> of the way through, <strong>21%</strong> ";
@@ -512,7 +512,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video</a> <strong>10%</strong> of the way through, <strong>15%</strong> ";
@@ -552,7 +552,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>90%</strong> of the way through, <strong>57%</strong> ";
@@ -592,7 +592,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>9%</strong> of the way through, <strong>60%</strong> ";
@@ -637,7 +637,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
@@ -688,7 +688,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video 3</a> <strong>7%</strong> of the way through, <strong>35%</strong> ";
@@ -733,7 +733,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Captive audience:');
+        $this->assertEqual($result->headline, 'Captive audience:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video</a> <strong>50%</strong> of the way through, <strong>33%</strong> ";
@@ -772,7 +772,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration');
-        $this->assertEqual($result->prefix, 'Viewer time:');
+        $this->assertEqual($result->headline, 'Viewer time:');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "On average, viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtub";
         $text .= "e.com/watch?v=3>My Great Video</a> <strong>10%</strong> of the way through, <strong>38%</strong> ";
@@ -802,7 +802,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New all-time high!');
+        $this->assertEqual($result->headline, 'New all-time high!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Great Vid";
         $text .= "eo</a> was viewed <strong>85%</strong> of the way through on average.";
@@ -836,7 +836,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New all-time low!');
+        $this->assertEqual($result->headline, 'New all-time low!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=2>My Great Vid";
         $text .= "eo 2</a> was viewed <strong>5%</strong> of the way through on average.";
@@ -875,7 +875,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New 365-day record!');
+        $this->assertEqual($result->headline, 'New 365-day record!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=2>My Great Vid";
         $text .= "eo 2</a> was viewed <strong>75%</strong> of the way through on average.";
@@ -914,7 +914,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New 365-day record!');
+        $this->assertEqual($result->headline, 'New 365-day record!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=3>My Great Vid";
         $text .= "eo 3</a> was viewed <strong>5%</strong> of the way through on average.";
@@ -958,7 +958,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-45 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New 90-day record!');
+        $this->assertEqual($result->headline, 'New 90-day record!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=2>My Great Vid";
         $text .= "eo 2</a> was viewed <strong>75%</strong> of the way through on average.";
@@ -1007,7 +1007,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'view_duration_record');
-        $this->assertEqual($result->prefix, 'New 90-day record!');
+        $this->assertEqual($result->headline, 'New 90-day record!');
         $this->assertEqual($result->filename, 'viewduration');
         $text = "<a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch?v=3>My Great Vid";
         $text .= "eo 3</a> was viewed <strong>4%</strong> of the way through on average.";

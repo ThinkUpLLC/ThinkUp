@@ -6,7 +6,7 @@
 
 # Check we got the name of the plugin
 if [ "$#" -ne 3 ]; then
-  echo "3 Parameters required, the name of the plugin, your name, your email address.
+  echo "3 parameters required: the name of the plugin, your name, and your email address.
   E.g. ViewDuration Aaron\\ Kalair aaronkalair@gmail.com"
   exit 1
 fi
@@ -111,12 +111,23 @@ class $1Insight extends InsightPluginParent implements InsightPlugin {
         \$filename = basename(__FILE__, ".php");
 
         foreach (\$last_week_of_posts as \$post) {
-            \$simplified_post_date = date('Y-m-d', strtotime(\$post->pub_date));
-            \$prefix = 'Snappy Prefix';
-            \$text = 'Body of the insight';
+            \$my_insight = new Insight();
+            \$my_insight->instance_id = \$instance->id;
+            \$my_insight->slug = 'insight_name_goes_here'.\$post->id;
+            \$my_insight->date = date('Y-m-d', strtotime(\$post->pub_date));
+            \$my_insight->headline = 'Snappy headline';
+            \$my_insight->text = 'Body of the insight';
+            \$my_insight->emphasis = Insight::EMPHASIS_MED;
+            \$my_insight->filename = \$filename;
 
-            \$this->insight_dao->insertInsight('insight_name_goes_here'.\$post->id, \$instance->id,
-            \$simplified_post_date, \$prefix, \$text, \$filename, Insight::EMPHASIS_LOW, null);
+            //OPTIONAL: Attach related data of various types using Insight setter functions
+            //\$my_insight->setPosts(\$my_insight_posts);
+            //\$my_insight->setLinks(\$my_insight_links);
+            //\$my_insight->setPeople(\$my_insight_people);
+            //etc
+
+            \$this->insight_dao->insertInsight(\$my_insight);
+            \$my_insight = null;
         }
         \$this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }

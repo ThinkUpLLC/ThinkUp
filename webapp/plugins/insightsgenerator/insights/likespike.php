@@ -93,7 +93,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
                         $text .= "$video->post_id>$video->post_text</a>.";
 
-                        $this->insight_dao->insertInsight('like_high_365_day_'.$video->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('like_high_365_day_'.$video->id, $instance->id,
                         $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
@@ -115,7 +115,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
                         $text .= "$video->post_id>$video->post_text</a>.";
 
-                        $this->insight_dao->insertInsight('like_high_90_day_'.$video->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('like_high_90_day_'.$video->id, $instance->id,
                         $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
@@ -133,7 +133,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
                         $text .= "$video->post_id>$video->post_text</a>.";
 
-                        $this->insight_dao->insertInsight('like_high_30_day_'.$video->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('like_high_30_day_'.$video->id, $instance->id,
                         $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
                     }
@@ -151,7 +151,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
                         $text .= "the 90-day average.";
 
-                        $this->insight_dao->insertInsight('like_spike_90_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('like_spike_90_day_'.$post->id, $instance->id,
                         $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
 
@@ -170,7 +170,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
                         $text .= "the 30-day average.";
 
-                        $this->insight_dao->insertInsight('like_spike_30_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('like_spike_30_day_'.$post->id, $instance->id,
                         $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
                     }

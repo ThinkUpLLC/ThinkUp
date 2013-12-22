@@ -70,7 +70,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                     $sharer->description = '"'.$post->post_text.'"';
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
-                $this->insight_dao->insertInsight("big_reshare_".$post->id, $instance->id,
+                $this->insight_dao->insertInsightDeprecated("big_reshare_".$post->id, $instance->id,
                 $simplified_post_date, "Big reshare!", $notification_text, basename(__FILE__, ".php"),
                 Insight::EMPHASIS_HIGH, serialize($big_reshares));
             }

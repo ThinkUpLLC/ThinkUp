@@ -70,7 +70,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                     ."</strong> with links in them:";
                 }
 
-                $this->insight_dao->insertInsight("favorited_links", $instance->id,
+                $this->insight_dao->insertInsightDeprecated("favorited_links", $instance->id,
                 $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
                 Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
             }

@@ -71,7 +71,7 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
                 ." a link in the last 2 days. It may be time to share an interesting link with "
                 .$this->terms->getNoun('friend', InsightTerms::PLURAL).".";
 
-                $this->insight_dao->insertInsight('link_prompt', $instance->id, $this->insight_date,
+                $this->insight_dao->insertInsightDeprecated('link_prompt', $instance->id, $this->insight_date,
                 "Nudge:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }

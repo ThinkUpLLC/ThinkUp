@@ -47,6 +47,7 @@ $model_tests->add(new TestOfInsightMySQLDAO());
 $model_tests->add(new TestOfInsightTerms());
 $model_tests->add(new TestOfInstanceMySQLDAO());
 $model_tests->add(new TestOfDashboardModuleCacher());
+$model_tests->add(new TestOfInsight());
 $model_tests->add(new TestOfInstaller());
 $model_tests->add(new TestOfInstallerMySQLDAO());
 $model_tests->add(new TestOfInviteMySQLDAO());

@@ -38,7 +38,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'1', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Your post got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //Set up array of owner objects
@@ -80,7 +80,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
 
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-15', 'slug'=>'a_bunch_of_owners',
-        'instance_id'=>'1', 'prefix'=>'Hooray!', 'text'=>'Here are owners', 'related_data'=>serialize($owners),
+        'instance_id'=>'1', 'headline'=>'Hooray!', 'text'=>'Here are owners', 'related_data'=>serialize($owners),
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         return $builders;
@@ -98,7 +98,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'avg_replies_per_week');
         $this->assertEqual($result->date, '2012-05-01');
         $this->assertEqual($result->instance_id, 1);
-        $this->assertEqual($result->prefix, 'Booyah!');
+        $this->assertEqual($result->headline, 'Booyah!');
         $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
@@ -118,7 +118,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'avg_replies_per_week');
         $this->assertEqual(date('Y-m-d', strtotime($result->date)), '2012-05-01');
         $this->assertEqual($result->instance_id, 1);
-        $this->assertEqual($result->prefix, 'Booyah!');
+        $this->assertEqual($result->headline, 'Booyah!');
         $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
@@ -143,49 +143,96 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[2]->full_name, 'Joe Schmoe');
     }
 
-    public function testInsertInsight() {
+    public function testInsertInsightDeprecated() {
         $dao = new InsightMySQLDAO();
         //date specified
-        $result = $dao->insertInsight($slug='avg_replies_per_week', $instance_id=1, $date='2012-05-05',
+        $result = $dao->insertInsightDeprecated($slug='avg_replies_per_week', $instance_id=1, $date='2012-05-05',
         $prefix='Oh hai!', $text='You rock', $filename="test_insight");
         $this->assertTrue($result);
 
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
-        $this->assertEqual($result->prefix, 'Oh hai!');
+        $this->assertEqual($result->headline, 'Oh hai!');
         $this->assertEqual($result->text, 'You rock');
         $this->assertEqual($result->filename, 'test_insight');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
 
         //inserting existing insight should update
-        $result = $dao->insertInsight('avg_replies_per_week', 1, '2012-05-05', 'Ohai!', 'Updated: You rock',
+        $result = $dao->insertInsightDeprecated('avg_replies_per_week', 1, '2012-05-05', 'Ohai!', 'Updated: You rock',
         'tester_insight', Insight::EMPHASIS_HIGH);
         $this->assertTrue($result);
 
         //assert update was successful
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
-        $this->assertEqual($result->prefix, 'Ohai!' );
+        $this->assertEqual($result->headline, 'Ohai!' );
         $this->assertEqual($result->text, 'Updated: You rock');
         //Filename shouldn't change on update
         $this->assertEqual($result->filename, 'test_insight');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
     }
 
-    public function testUpdateInsight() {
+    public function testInsertInsight() {
+        $dao = new InsightMySQLDAO();
+        $insight = new Insight();
+        $e = null;
+        //test exception when fields are not set
+        try {
+            $result = $dao->insertInsight($insight);
+        } catch (InsightFieldNotSetException $e) {
+            //do assertions outside of the catch block to make sure they run every time
+        }
+        $this->assertNotNull($e);
+        $this->assertEqual($e->getMessage(), 'Insight instance_id is not set.');
+        $e = null;
+
+        $insight->instance_id = 1;
+        $insight->slug = 'avg_replies_per_week';
+        $insight->date = '2012-05-05';
+        $insight->headline = 'Oh hai!';
+        $insight->text = "You rock";
+        $insight->emphasis = Insight::EMPHASIS_MED;
+        $insight->filename = "test_filename";
+
+        $result = $dao->insertInsight($insight);
+        $this->assertTrue($result);
+
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
+        $this->assertEqual($result->headline, 'Oh hai!');
+        $this->assertEqual($result->text, 'You rock');
+        $this->assertEqual($result->filename, 'test_filename');
+        $this->assertNull($result->related_data);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        //inserting existing insight should update
+        $insight->headline = "Ohai updated headline";
+        $insight->text = 'Updated: You rock';
+        $result = $dao->insertInsight($insight);
+        $this->assertTrue($result);
+
+        //assert update was successful
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
+        $this->assertEqual($result->headline, 'Ohai updated headline' );
+        $this->assertEqual($result->text, 'Updated: You rock');
+        //Filename shouldn't change on update
+        $this->assertEqual($result->filename, 'test_filename');
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+    }
+
+    public function testupdateInsightDeprecated() {
         $dao = new InsightMySQLDAO();
 
         //update existing baseline
-        $result = $dao->updateInsight('avg_replies_per_week', 1, '2012-05-01', "Yay", 'LOLlerskates',
+        $result = $dao->updateInsightDeprecated('avg_replies_per_week', 1, '2012-05-01', "Yay", 'LOLlerskates',
         Insight::EMPHASIS_MED);
         $this->assertTrue($result);
         //check that value was updated
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-01');
-        $this->assertEqual($result->prefix, 'Yay');
+        $this->assertEqual($result->headline, 'Yay');
         $this->assertEqual($result->text, 'LOLlerskates');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         //update nonexistent baseline
-        $result = $dao->updateInsight('avg_replies_per_week', 1, '2012-05-10', 'ooooh burn');
+        $result = $dao->updateInsightDeprecated('avg_replies_per_week', 1, '2012-05-10', 'ooooh burn');
         $this->assertFalse($result);
     }
 

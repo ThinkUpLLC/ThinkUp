@@ -73,7 +73,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsight('fave_high_365_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('fave_high_365_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 365-day record!", "<strong>".
                         number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
                         ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
@@ -95,7 +95,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsight('fave_high_30_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('fave_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 30-day record!", "<strong>".
                         number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
                         ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
@@ -115,7 +115,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsight('fave_high_7_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('fave_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date, "New 7-day record!", "<strong>".
                         number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
                         ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
@@ -136,7 +136,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->favlike_count_cache/$average_fave_count_30_days->value);
-                        $this->insight_dao->insertInsight('fave_spike_30_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('fave_spike_30_day_'.$post->id, $instance->id,
                         $simplified_post_date, "Hearts and stars:", "<strong>"
                         .number_format($post->favlike_count_cache)
                         ." people</strong> ".$this->terms->getVerb('liked')
@@ -159,7 +159,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->favlike_count_cache/$average_fave_count_7_days->value);
-                        $this->insight_dao->insertInsight('fave_spike_7_day_'.$post->id, $instance->id,
+                        $this->insight_dao->insertInsightDeprecated('fave_spike_7_day_'.$post->id, $instance->id,
                         $simplified_post_date, "Hearts and stars:",
                         "<strong>".number_format($post->favlike_count_cache)
                         ." people</strong> ".$this->terms->getVerb('liked')

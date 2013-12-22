@@ -59,7 +59,7 @@ class SplitOpinionsInsight extends InsightPluginParent implements InsightPlugin 
                 $text .= "<a href=http://www.youtube.com/watch?v=$post->post_id>".$video->post_text."</a> really ";
                 $text .= "touched a nerve! $percent_likes"."% of people liked it and ".$percent_dislikes."% disliked ";
                 $text .= "it.";
-                $this->insight_dao->insertInsight("split_opinions".$video->id, $instance->id, $simplified_post_date,
+                $this->insight_dao->insertInsightDeprecated("split_opinions".$video->id, $instance->id, $simplified_post_date,
                 $prefix, $text, $filename, 1, serialize($video));
             }
         }

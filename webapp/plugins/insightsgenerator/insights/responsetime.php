@@ -89,7 +89,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 $insight_text .= '.';
 
-                $this->insight_dao->insertInsight("response_time", $instance->id, $this->insight_date, "Response time:",
+                $this->insight_dao->insertInsightDeprecated("response_time", $instance->id, $this->insight_date, "Response time:",
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }

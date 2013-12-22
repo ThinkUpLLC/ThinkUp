@@ -51,7 +51,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 30);
                 if (isset($fans) && sizeof($fans) > 0 ) {
-                    $this->insight_dao->insertInsight("biggest_fans_last_30_days", $instance->id,
+                    $this->insight_dao->insertInsightDeprecated("biggest_fans_last_30_days", $instance->id,
                     $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
                     .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 30 days: ",
                     $filename, Insight::EMPHASIS_LOW, serialize($fans));
@@ -64,7 +64,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 7);
                 if (isset($fans) && sizeof($fans) > 0 ) {
-                    $this->insight_dao->insertInsight("biggest_fans_last_7_days", $instance->id,
+                    $this->insight_dao->insertInsightDeprecated("biggest_fans_last_7_days", $instance->id,
                     $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
                     .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 7 days: ",
                     $filename, Insight::EMPHASIS_LOW, serialize($fans));

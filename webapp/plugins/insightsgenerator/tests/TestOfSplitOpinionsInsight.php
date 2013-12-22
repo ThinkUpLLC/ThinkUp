@@ -64,7 +64,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->prefix, 'Split opinion:');
+        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
         $this->assertEqual($result->emphasis, 1);
         $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";
@@ -91,7 +91,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->prefix, 'Split opinion:');
+        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
         $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";
         $text .= "at Video</a> really touched a nerve! 40% of people liked it and 60% disliked it.";
@@ -117,7 +117,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->prefix, 'Split opinion:');
+        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
         $this->assertEqual($result->emphasis, 1);
         $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";

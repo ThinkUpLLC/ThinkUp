@@ -82,7 +82,7 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
                     $insight_text .= ".";
                 }
 
-                $this->insight_dao->insertInsight("metweet", $instance->id, $this->insight_date, "Metweets:",
+                $this->insight_dao->insertInsightDeprecated("metweet", $instance->id, $this->insight_date, "Metweets:",
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }

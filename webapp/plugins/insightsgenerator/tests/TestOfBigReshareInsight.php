@@ -85,7 +85,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->prefix, 'Big reshare!');
+        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than \@testeriffic retweeted/',
         $result->text);
@@ -139,7 +139,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->prefix, 'Big reshare!');
+        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/People with lots of followers retweeted/', $result->text);
         $sharers = unserialize($result->related_data);
@@ -186,7 +186,7 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->prefix, 'Big reshare!');
+        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with lots of followers retweeted/', $result->text);
         $sharers = unserialize($result->related_data);
