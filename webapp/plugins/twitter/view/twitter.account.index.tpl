@@ -106,7 +106,7 @@
     <br />
     Callback URL:
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=twitter#manage_plugin</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=twitter</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"

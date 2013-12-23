@@ -62,7 +62,7 @@
 <li>
   Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to<br> 
     <small>
-      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=google%2B#manage_plugin</code>
+      <code style="font-family:Courier;" id="clippy_2988">{$thinkup_site_url}account/?p=google%2B</code>
     </small>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
