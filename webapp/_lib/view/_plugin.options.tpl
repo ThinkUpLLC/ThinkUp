@@ -66,7 +66,7 @@ function show_advanced() {
     {if $option_obj.advanced and !isset($advanced_options)}
         <p>
             <a href="#" onclick="show_advanced(); return false" class="btn btn-small">
-            <i id="advanced-icon" class="fa-chevron-down"></i> <span id="adv-flip-prompt">Show</span>
+            <i id="advanced-icon" class="fa fa-chevron-down"></i> <span id="adv-flip-prompt">Show</span>
             Advanced Options
             </a>
         </p>

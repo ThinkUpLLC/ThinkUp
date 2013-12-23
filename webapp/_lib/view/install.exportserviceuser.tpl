@@ -38,14 +38,14 @@
         {if $no_zip_support}
         <div class="alert alert-error" > 
             <p>
-                <span class="icon-info-sign"></span>
+                <span class="fa fa-info-circle"></span>
                 It looks like your server setup doesn't support the <code><a href="http://www.php.net/manual/en/book.zip.php">Zip</a></code> library that you'll need to create an export.
             </p>
         </div>
         {elseif $mysql_file_perms}
         <div class="alert alert-error"> 
             <p>
-                <span class="icon-info-sign"></span>
+                <span class="fa fa-info-circle"></span>
                 It looks like the MySQL user does not have the proper file permissions to export data. Please see the
                 <a href="http://thinkup.com/docs/troubleshoot/messages/mysqlfile.html">ThinkUp 
                 documentation</a> for more info on how to resolve this issue.
@@ -54,7 +54,7 @@
         {elseif $grant_perms}
         <div class="alert alert-error"> 
             <p>
-                <span class="icon-info-sign"></span>
+                <span class="fa fa-info-circle"></span>
                 It looks like the MySQL user does not have the proper permissions to export data. Please see the
                 <a href="http://thinkup.com/docs/troubleshoot/messages/mysqlgrant.html">ThinkUp 
                 documentation</a> for more info on how to resolve this issue.
@@ -65,7 +65,7 @@
             {if $messages}
             <div class="alert alert-error" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
             <p>
-                <span class="icon-info-sign" ></span>
+                <span class="fa fa-info-circle" ></span>
                 {foreach from=$messages key=mid item=m}
                 {$m}<br />
                 {/foreach}

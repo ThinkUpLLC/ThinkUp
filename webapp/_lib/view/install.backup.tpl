@@ -39,7 +39,7 @@
             {if $no_zip_support}
                 <div class="alert alert-error"> 
                     <p>
-                    <span class="icon-info-sign"></span>
+                    <span class="fa fa-info-circle"></span>
                     It looks like your server setup does not support the
                     <code><a href="http://www.php.net/manual/en/book.zip.php">Zip</a></code> library that is required to complete a backup 
                     through this interface.
@@ -54,7 +54,7 @@
                     <!-- too many db records, use CLI interface? -->
                     <div class="alert"> 
                         <p>
-                        <span class="icon-info-sign"></span>
+                        <span class="fa fa-info-circle"></span>
                         Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table has 
                         <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
                         Since backing up such a big database can time out in the browser, we recommend that you use the 
@@ -102,7 +102,7 @@
                         classButton: 'btn-primary btn-large',
                         textField: false,
                         icon: true,
-                        classIcon: 'icon-upload-alt icon-white'
+                        classIcon: 'fa fa-upload icon-white'
                     });
                     $('#backup_file').click( function() { $('#upload-backup-submit').addClass('btn-primary'); } );
                     $('#backup-form').submit( function() { $('#uploading-status').show() } );

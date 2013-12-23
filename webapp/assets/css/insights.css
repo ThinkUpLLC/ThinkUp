@@ -304,7 +304,7 @@ color : #666;
     color:#ccc
 }
 
-.icon-foursquare:before {
+.icon-foursquare:before, .fa-foursquare:before {
     content:"\f046";
     content:"\f041";
 }
@@ -525,7 +525,7 @@ span.formError {
   border: 0;
 }
 
-.embossed-block .icon-chevron-right {
+.embossed-block .icon-chevron-right, embossed-block .fa-chevron-right {
   float: right;
   margin-top: 2px;
   margin-right: -6px;
