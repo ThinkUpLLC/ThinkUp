@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS tu_posts_20b9;
 
 CREATE TABLE tu_posts_20b9 LIKE tu_posts;
 
-ALTER TABLE tu_posts_20b9 ADD permalink TEXT DEFAULT NULL COMMENT 'Link to this post on the respective service.';
+ALTER TABLE tu_posts_20b9 ADD permalink TEXT DEFAULT NULL COMMENT 'Link to this post on the respective service.'#rollback=2;
 
 INSERT IGNORE INTO tu_posts_20b9 (SELECT *, null FROM tu_posts)#rollback=3;
 
