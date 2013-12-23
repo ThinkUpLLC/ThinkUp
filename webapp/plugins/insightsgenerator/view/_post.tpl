@@ -2,25 +2,14 @@
 
 {else}
     {if $i->slug|substr:24 eq 'replies_frequent_words_'}
-<<<<<<< HEAD
-        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-mini detail-btn" ><i class="icon-comment icon-white"></i></a></div>
-    {/if}
-    {if $i->slug eq 'geoencoded_replies'}
-        <div class="pull-right detail-btn"><a href="{$site_root_path}post/?v=geoencoder_map&t={$post->post_id}&n=twitter"><button class="btn btn-info btn-mini detail-btn" ><i class="icon-map-marker icon-white"></i></button></a></div>
-    {/if}
-
-    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="icon-white icon-{$icon}"></i> <a href="?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}">{$i->headline}</a></span>
-        <i class="icon-{$i->instance->network}{if $i->instance->network eq 'google+'} icon-google-plus{/if} icon-muted"></i>
-=======
         <div class="pull-right detail-btn"><a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}" class="btn btn-info btn-xs detail-btn" ><i class="fa fa-comment icon-white"></i></a></div>
     {/if}
     {if $i->slug eq 'geoencoded_replies'}
         <div class="pull-right detail-btn"><a href="{$site_root_path}post/?v=geoencoder_map&t={$post->post_id}&n=twitter"><button class="btn btn-info btn-xs detail-btn" ><i class="fa fa-map-marker icon-white"></i></button></a></div>
     {/if}
 
-    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="fa icon-white fa-{$icon}"></i> <a href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->prefix}</a></span>
+    <span class="label label-{if $i->emphasis eq '1'}info{elseif $i->emphasis eq '2'}success{elseif $i->emphasis eq '3'}error{else}info{/if}"><i class="fa icon-white fa-{$icon}"></i> <a href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->headline}</a></span>
         <i class="fa fa-{$i->instance->network}{if $i->instance->network eq 'google+'} fa-google-plus{/if} icon-muted"></i>
->>>>>>> 785d685... Update to Font Awesome 4 and replace Glyphicons markup throughout app.
         {$i->text|link_usernames_to_twitter}
 {/if}
 
