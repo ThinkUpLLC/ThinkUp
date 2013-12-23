@@ -41,7 +41,7 @@
 
       {if $logged_in_user}
 
-<ul class="nav navbar-nav navbar-right col-md-4" style="border-left : none;">
+<ul class="nav navbar-nav navbar-right" style="border-left : none;">
 
     {if $user_is_admin}<li><script src="{$site_root_path}install/checkversion.php"></script></li>{/if}
     <li><a href="#" id="notify-insights" title="Enable desktop notifications of new insights!" style="display:none;"><i class="fa fa-bell"></i></a></li>

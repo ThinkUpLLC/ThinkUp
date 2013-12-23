@@ -25,7 +25,7 @@
             <div class="panel panel-default">
 
             <fieldset>
-            <legend class="panel-heading">Create your ThinkUp account</legend>
+            <legend class="panel-heading">Create your ThinkUp Account</legend>
                 
             <div class="panel-body">
 
