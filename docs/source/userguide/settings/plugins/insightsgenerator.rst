@@ -45,7 +45,7 @@ In order to send HTML email, you must configure Mandrill and create an HTML temp
 6. Copy the Template Slug from the left side of the page (``thinkup-insights-email-template`` if you used the
    example title).
 7. In ThinkUp, navigate to the Insights Generator settings (Settings -> Plugins -> Insights Generator -> Configure).
-8. Open Advanced settings and enter the Mandrill Template Name (``thinkup-email-template`` in our example).
+8. Open Advanced settings and enter the Mandrill Template Name (``thinkup-insights-email-template`` in our example).
 9. Click "Save Settings."
 
 You're done! Now ThinkUp will send your daily and weekly insights email notifications using your HTML template.
