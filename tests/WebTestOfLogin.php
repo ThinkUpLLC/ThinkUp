@@ -42,18 +42,6 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
         parent::tearDown();
     }
 
-    public function testLoginSuccessAndPrivateDashboard() {
-        $this->get($this->url.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-        $this->click("Log In");
-        $this->get($this->url.'/dashboard.php');
-
-        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
-        "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
-    }
-
     public function testLoginFailureAttemptThenSuccess() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me51@example.com');
@@ -72,10 +60,10 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->get($this->url.'/dashboard.php');
-        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
+        $this->get($this->url.'/index.php');
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix') .
         "ThinkUp");
-        $this->assertText('Logged in as admin: me@example.com');
+        $this->assertText('me@example.com');
     }
 
     public function testLoginLockout() {

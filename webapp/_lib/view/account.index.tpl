@@ -1,23 +1,23 @@
-{include file="_header.tpl" enable_tabs=1 enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl" enable_tabs=1}
+{include file="_statusbar.tpl"}
 
 <div class="container">
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
-          <li><a href="#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a>
+          <li><a href="#plugins"><i class="fa fa-list-alt"></i> Plugins <i class="fa fa-chevron-right"></i></a>
 
           </li>
-          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
-          <li><a href="#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a href="#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
+          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings"><i class="fa fa-cogs"></i> Application <i class="fa fa-chevron-right"></i></a></li>{/if}
+          <li><a href="#instances"><i class="fa fa-lock"></i> Account <i class="fa fa-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a href="#ttusers"><i class="fa fa-group"></i> Users <i class="fa fa-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
-    </div><!--/span3-->
-    <div class="span9">
+    </div><!--/col-md-3-->
+    <div class="col-md-9">
         <div class="white-card">
 
         <div class="section" id="plugins">
@@ -30,8 +30,8 @@
                       <thead>
                         <tr>
                           <th>&nbsp;</th>
-                          <th><i class="icon icon-list-alt icon-2x icon-muted pull-left"></i></th>
-                          {if $user_is_admin}<th class="action-button"><i class="icon-cog icon-2x icon-muted"></i></th>{/if}
+                          <th><i class="fa fa-list-alt fa-2x icon-muted pull-left"></i></th>
+                          {if $user_is_admin}<th class="action-button"><i class="fa fa-cog fa-2x icon-muted"></i></th>{/if}
                         </tr>
                       </thead>
                   {/if}
@@ -49,7 +49,7 @@
                     {if $user_is_admin}
                       <td class="action-button">
                       <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="icon-cog "></i> Configure{else}<i class="icon-warning-sign"></i> Set Up{/if}</a>
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="fa fa-cog "></i> Configure{else}<i class="fa fa-warning"></i> Set Up{/if}</a>
                       </span>
                       <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
                       </td>
@@ -61,32 +61,32 @@
               {/if}
         </div> <!-- end #plugins -->
 
-        <div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
-            <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
+		<div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
+            <a href="?m=manage" class="btn btn-xs"><i class="fa fa-chevron-left icon-muted"></i> Back to plugins</a>
             {if $body}
               {$body}
             {/if}
-        </div>
+		</div>
 
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
 
                 
           <span class="pull-right">{insert name="help_link" id='backup'}</span>
-          <h3><i class="icon-download icon-muted"></i> Back Up and Export Data</h3>
+          <h3><i class="fa fa-download icon-muted"></i> Back Up and Export Data</h3>
           <p style="padding-left : 20px;">
-            <a href="{$site_root_path}install/backup.php" class="btn"><i class="icon icon-download-alt"></i> Back up ThinkUp's entire database</a>
+            <a href="{$site_root_path}install/backup.php" class="btn"><i class="fa fa-download"></i> Back up ThinkUp's entire database</a>
             Recommended before upgrading ThinkUp.
           </p>
 
           <p style="padding-left : 20px; padding-bottom : 30px;">
-            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="icon icon-user"></i> Export a single user account's data</a>
+            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="fa fa-user"></i> Export a single user account's data</a>
                 For transfer into another existing ThinkUp database.
           </p>
 
 
           <div class="alert" id="app_setting_loading_div">
-            <i class="icon-spinner icon-spin icon-2x"></i> Loading application settings...<br /><br />
+            <i class="fa fa-spinner fa-spin fa-2x"></i> Loading application settings...<br /><br />
           </div>
           <div id="app_settings_div" style="display: none;">
             {include file="account.appconfig.tpl"}
@@ -100,80 +100,92 @@
         <div class="section" id="instances">
           {include file="_usermessage.tpl" field='password'}
           <span class="pull-right">{insert name="help_link" id='account'}</span>
-          <h3><i class="icon-key icon-muted"></i> Password</h3>
+          <h3><i class="fa fa-key icon-muted"></i> Change Password</h3>
           <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-            <div class="control-group input-prepend">
-              <label for="oldpass" class="control-label">Current password</label>
-              <div class="controls">
-                <span class="add-on"><i class="icon-key"></i></span>
-                <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
-              </div>
-            </div>
-            <div class="control-group">
-                    <label class="control-label" for="password">New Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
-                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
+
+            <div class="form-group">
+                    <label class="col-sm-2" for="oldpass">Current password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <input name="oldpass" type="password" id="oldpass" class="password form-control" required>{insert name="csrf_token"}<!-- reset password -->
                         </span>
-                        <span class="help-inline"></span>
+                        <span class="help-block"></span>
+
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label class="col-sm-2" for="password">New Password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <input type="password" name="pass1" id="password"
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need a enter a password of at least 8 characters." 
+                            data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i> Must be at least 8 characters, with both numbers & letters.">
+                        </span>
+                        <span class="help-block"></span>
 
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>            
+                <div class="form-group">
+                    <label class="col-sm-2" for="confirm_password">Confirm&nbsp;new Password</label>
+                    <div class="col-sm-8">
+                        <span class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>            
                             <input type="password" name="pass2" id="confirm_password" required 
-                             class="password" 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
+                             class="password form-control" 
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password confirmation is required." 
                             data-validation-match-match="pass1" 
-                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
+                            data-validation-match-message="<i class='fa fa-exclamation-triangle'></i> Make sure this matches the password you entered above." >
                         </span>
                         <span class="help-block"></span>
                     </div>
                 </div>
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+                    <label class="col-sm-2" for="submit"></label>
+              <div class="col-sm-8">
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">
               </div>
             </div>
           </form>
     <br><br>
+    <h3><i class="fa fa-envelope icon-muted"></i> Email Notification Frequency</h3><br />
     {include file="_usermessage.tpl" field='notifications'}
-    <h3><i class="icon-calendar icon-muted"></i> Notification Frequency</h3><br />
     <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-        <div class="control-group">
-           <label class="control-label" for="confirm_password">Get insights via email:</label>
-           <div class="controls">
-             <select name="notificationfrequency">
-             {foreach from=$notification_options item=description key=key}
-                 <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
-             {/foreach}
-             </select>
-          </div>
+        <div class="form-group">
+            <label class="col-sm-2" for="notificationfrequency">Get insights:</label>
+            <div class="col-sm-8">
+                <span class="input-group">
+                    <select name="notificationfrequency" class="form-control">
+                    {foreach from=$notification_options item=description key=key}
+                     <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
+                    {/foreach}
+                    </select>
+                </span>
+                <span class="help-block"></span>
+            </div>
         </div>
-        <div class="control-group">
-          <div class="controls">
-            {insert name="csrf_token"}
-            <input type="submit" name="updatefrequency" value="Save" class="btn btn-primary">
-          </div>
-         </div>
+        <div class="form-group">
+            <label class="col-sm-2" for=""></label>
+            <div class="col-sm-8">
+                <span class="input-group">
+                    {insert name="csrf_token"}
+                    <input type="submit" name="updatefrequency" value="Save" class="btn btn-primary">
+                </span>
+            </div>
+        </div>
     </form>
     <br><br>
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
-    <h3><i class="icon-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
+    <h3><i class="fa fa-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
     
-    <legend>RSS</legend>
+    <h4>RSS</h4>
     <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
     
-    <p><a href="{$rss_crawl_url}" class="btn"><i class="icon icon-rss"></i> Secret ThinkUp Update Feed</a></p>
+    <p><a href="{$rss_crawl_url}" class="btn"><i class="fa fa-rss"></i> Secret ThinkUp Update Feed</a></p>
     
-    <legend>Scheduling</legend>
+    <h4>Scheduling</h4>
     <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
     <p>
       <code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code>
@@ -206,7 +218,7 @@
     </p>
     
 
-        <legend>Your API Key</legend>
+        <h4>Your API Key</h4>
               {include file="_usermessage.tpl" field='api_key'}
               <strong>Your Current ThinkUp API Key:</strong>
               <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
@@ -236,7 +248,7 @@
 
      <div class="thinkup-canvas clearfix">
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-        <h3><i class="icon-user icon-muted"></i> Invite New User</h3>
+        <h3><i class="fa fa-user icon-muted"></i> Invite New User</h3>
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
@@ -244,7 +256,7 @@
           </form>
         </div>
 
-      <h3><i class="icon-group icon-muted"></i> Registered Users</h3>
+      <h3><i class="fa fa-group icon-muted"></i> Registered Users</h3>
 
     <table class="table">
 {foreach from=$owners key=oid item=o name=oloop}
@@ -535,4 +547,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0}

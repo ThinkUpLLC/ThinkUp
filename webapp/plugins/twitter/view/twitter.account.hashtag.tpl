@@ -1,11 +1,11 @@
-<a href="?p=twitter#manage_plugin" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to Twitter plugin</a>
+<a href="?p=twitter#manage_plugin" class="btn btn-xs"><i class="fa fa-chevron-left icon-muted"></i> Back to Twitter plugin</a>
 
 {include file="_usermessage.tpl"}
 
 <div class="plugin-info">
     <span class="pull-right">{insert name="help_link" id='twitterhashtag'}</span>
     <h2>
-        <i class="icon-twitter icon-muted"></i>@{$user}'s Saved Searches 
+        <i class="fa fa-twitter icon-muted"></i>@{$user}'s Saved Searches 
     </h2>
 </div>
 
@@ -14,7 +14,7 @@
     <tr>
         <th><h4 class="pull-left">Keyword</h4></th>
         <th><h4 class="pull-left">Count</h4></th>
-        <th><i class="icon-trash icon-2x icon-muted"></i></th>
+        <th><i class="fa fa-trash fa-2x icon-muted"></i></th>
     </tr>
 
     {foreach from=$hashtags key=iid item=h name=foo}
@@ -47,23 +47,23 @@
 </table>
 {/if}
 
-<h3><i class="icon-tag icon-muted"></i> Add a Saved Search</h3>
+<h3><i class="fa fa-tag icon-muted"></i> Add a Saved Search</h3>
   <form name="newhashtag" id="newhashtag" class="form-horizontal" method="post" 
   action="{$site_root_path}account/?p=twitter&u={$user}&n=twitter#manage_plugin">
-    <div class="control-group input-prepend">
+    <div class="form-group input-prepend">
       <label for="hashtag" class="control-label">Keyword or hashtag:</label>
-      <div class="controls">
+      <div class="col-sm-8">
         {insert name="csrf_token"}
         <input type="hidden" name="instance_id" value="{$instance->id}">
         <input name="new_hashtag_name" type="new_hashtag_name" id="new_hashtag_name" {literal}pattern="^[\S]*$"{/literal}  required 
-        data-validation-required-message="<i class='icon-exclamation-sign'></i>Please enter a keyword or hashtag."
-        data-validation-pattern-message="<i class='icon-exclamation-sign'></i>Enter an individual keyword or hashtag, not a phrase.">
+        data-validation-required-message="<i class='fa fa-exclamation-triangle'></i>Please enter a keyword or hashtag."
+        data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i>Enter an individual keyword or hashtag, not a phrase.">
         <span class="help-block"></span>
         
       </div>
     </div>
-    <div class="control-group">
-      <div class="controls">
+    <div class="form-group">
+      <div class="col-sm-8">
         <input type="submit" id="hashtag-new" name="action" value="Save search" class="btn btn-primary">
       </div>
     </div>

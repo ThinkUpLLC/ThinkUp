@@ -1,12 +1,12 @@
-{include file="_header.tpl" enable_bootstrap=$enable_bootstrap}
-{include file="_statusbar.tpl" enable_bootstrap=$enable_bootstrap}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
     <div id="main" class="container">
 
 {include file="_usermessage.tpl"}
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div class="embossed-block">
         <ul>
           <li>
@@ -14,9 +14,9 @@
           </li>
         </ul>
       </div>
-    </div><!--/span3-->
+    </div><!--/col-md-3-->
 
-    <div class="span9">
+    <div class="col-md-9">
     {if $smarty.get.c eq 'posts'}
         {if $posts|@count > 0}
         {foreach from=$posts key=pid item=post name=bar}
@@ -69,22 +69,22 @@
          <h2>No followers found.</h2>
         {/if}
     {/if}
-    </div><!--/span9-->
+    </div><!--/col-md-9-->
 </div><!--/row-->
 
 <div class="row">
-    <div class="span3">&nbsp;</div>
-    <div class="span9">
+    <div class="col-md-3">&nbsp;</div>
+    <div class="col-md-9">
 
         <ul class="pager">
         {if $next_page}
           <li class="previous">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="icon-arrow-left"></i> Older</a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
           </li>
         {/if}
         {if $last_page}
           <li class="next">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="icon-arrow-right"></i></a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
           </li>
         {/if}
         </ul>

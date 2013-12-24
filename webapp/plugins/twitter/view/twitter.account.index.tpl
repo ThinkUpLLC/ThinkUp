@@ -2,7 +2,7 @@
 
     <span class="pull-right">{insert name="help_link" id='twitter'}</span>
     <h2>
-        <i class="icon-twitter icon-muted"></i> Twitter 
+        <i class="fa fa-twitter icon-muted"></i> Twitter 
     </h2>
 
 </div>
@@ -17,16 +17,16 @@
 
     <tr>
         <th><h4 class="pull-left">Account</h4></th>
-        <th><i class="icon-lock icon-2x icon-muted"></i></th>
-        {if $user_is_admin}<th><i class="icon-refresh icon-2x icon-muted"></i></th>{/if}
-        <th><i class="icon-tag icon-2x icon-muted"></i></th>
-        <th><i class="icon-trash icon-2x icon-muted"></i></th>
+        <th><i class="fa fa-lock fa-2x icon-muted"></i></th>
+        {if $user_is_admin}<th><i class="fa fa-refresh fa-2x icon-muted"></i></th>{/if}
+        <th><i class="fa fa-tag fa-2x icon-muted"></i></th>
+        <th><i class="fa fa-trash fa-2x icon-muted"></i></th>
     </tr>
         
     {foreach from=$owner_instances key=iid item=i name=foo}
     <tr>
         <td>
-            <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
+            <h3 class="lead"><i class="fa fa-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
         </td>
         <td class="action-button">
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn
@@ -56,7 +56,7 @@
 
 
 {if $oauthorize_link}
-<a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Twitter account</a>
+<a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a Twitter account</a>
 {/if}
 
 
