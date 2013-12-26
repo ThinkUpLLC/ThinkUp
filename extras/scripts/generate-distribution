@@ -28,6 +28,8 @@ cp -R webapp/data/README.md build/thinkup/data/.
 rm -rf build/thinkup/config.inc.php
 rm -rf build/thinkup/install/sql/build-db_mysql.sql
 mv build/thinkup/install/sql/build-db_mysql-upcoming-release.sql build/thinkup/install/sql/build-db_mysql.sql
+rm -rf build/thinkup/crawler/thinkupllc-*
+rm -rf build/thinkup/install/cli/thinkupllc-*
 
 # Clean out dev/alpha plugins which shouldn't go to users
 rm -rf build/thinkup/plugins/hellothinkup/
@@ -37,6 +39,6 @@ rm -rf build/thinkup/plugins/insightsgenerator/insights/hellothinkupinsight.php
 
 # Zip it up
 cd build/
-zip -r thinkup.zip thinkup 
+zip -r thinkup.zip thinkup
 zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt
 rm -rf thinkup
