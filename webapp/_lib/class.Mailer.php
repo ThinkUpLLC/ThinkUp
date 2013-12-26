@@ -59,7 +59,7 @@ class Mailer {
      */
     public static function mailHTMLViaMandrillTemplate($to, $subject, $template_name, $template_params) {
         $config = Config::getInstance();
-        $host = self::getHost();
+        $host = Utils::getApplicationHostName();
         $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
         $mandrill_api_key = $config->getValue('mandrill_api_key');
 
@@ -92,19 +92,8 @@ class Mailer {
             // We want to be able to handle this specific error differently.
             throw $unknown_template_error;
         } catch (Mandrill_Error $e) {
-            throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .
-            ': ' . $e->getMessage());
-        }
-    }
-    /**
-     * Return the current host's name, ie, $_SERVER['HTTP_HOST'] if it is set.
-     * @return str Host name
-     */
-    private static function getHost() {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            return $_SERVER['HTTP_HOST'];
-        } else {
-            return "";
+            throw new Exception('An error occurred while sending email to '.$to.' from '.$from.' via Mandrill. '
+            . get_class($e) . ': ' . $e->getMessage());
         }
     }
     /**
@@ -142,7 +131,7 @@ class Mailer {
         $config = Config::getInstance();
 
         $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
-        $host = self::getHost();
+        $host = Utils::getApplicationHostName();
 
         $mail_header = "From: \"{$app_title}\" <notifications@{$host}>\r\n";
         $mail_header .= "X-Mailer: PHP/".phpversion();
@@ -168,7 +157,7 @@ class Mailer {
         $config = Config::getInstance();
 
         $app_title = $config->getValue('app_title_prefix') . "ThinkUp";
-        $host = self::getHost();
+        $host = Utils::getApplicationHostName();
         $mandrill_api_key = $config->getValue('mandrill_api_key');
 
         try {

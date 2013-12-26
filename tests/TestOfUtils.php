@@ -218,6 +218,29 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $this->assertEqual($filesystem_site_root_path, $cfg_site_root_path);
     }
 
+    public function testGetApplicationHostName() {
+        //no $_SERVER vars set, but with application setting set
+        $builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'testservername') );
+        $host_name = Utils::getApplicationHostName();
+        $expected_host_name = 'testservername';
+        $this->assertEqual($host_name, $expected_host_name);
+
+        //SERVER_NAME, not HTTP_HOST
+        $_SERVER['HTTP_HOST'] = null;
+        $_SERVER['SERVER_NAME'] = 'mytestservername';
+        $host_name = Utils::getApplicationHostName();
+        $expected_host_name = 'mytestservername';
+        $this->assertEqual($host_name, $expected_host_name);
+
+        //HTTP_HOST, not SERVER_NAME
+        $_SERVER['HTTP_HOST'] = 'myothertestservername';
+        $_SERVER['SERVER_NAME'] = null;
+        $host_name = Utils::getApplicationHostName();
+        $expected_host_name = 'myothertestservername';
+        $this->assertEqual($host_name, $expected_host_name);
+    }
+
     public function testGetApplicationURL() {
         $cfg = Config::getInstance();
         $cfg->setValue('site_root_path', '/my/path/to/thinkup/');

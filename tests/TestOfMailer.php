@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfMailer extends ThinkUpBasicUnitTestCase {
+class TestOfMailer extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -59,11 +59,23 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
         $email_body);
 
         $config->setValue("app_title_prefix", "My Other Installation of ");
-        $_SERVER['HTTP_HOST'] = "my_other_hostname";
+        $_SERVER['HTTP_HOST'] = null;
+        $_SERVER['SERVER_NAME'] = "my_other_hostname";
         Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
         $email_body = Mailer::getLastMail();
         $this->debug($email_body);
         $this->assertPattern('/From: "My Other Installation of ThinkUp" <notifications@my_other_hostname>/',
+        $email_body);
+
+        $config->setValue("app_title_prefix", "Yet Another Installation of ");
+        $_SERVER['HTTP_HOST'] = null;
+        $_SERVER['SERVER_NAME'] = null;
+        $builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'testservername') );
+        Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
+        $email_body = Mailer::getLastMail();
+        $this->debug($email_body);
+        $this->assertPattern('/From: "Yet Another Installation of ThinkUp" <notifications@testservername>/',
         $email_body);
     }
 

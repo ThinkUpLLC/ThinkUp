@@ -294,19 +294,18 @@ class Utils {
     }
 
     /**
-     * Get the application's full URL, i.e., https://example.com/thinkup/
-     * @param $replace_localhost_with_ip Default to false
-     * @return str
+     * Get the application's host name or server name, i.e., example.com.
+     * @return str Host name either set by PHP global vars or stored in the database
      */
-    public static function getApplicationURL($replace_localhost_with_ip = false) {
+    public static function getApplicationHostName() {
         //First attempt to get the host name without querying the database
         //Try SERVER_NAME
         $server = empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME'];
-        //Try HTTP_HOST
+        //Second, try HTTP_HOST
         if ($server == '' ) {
             $server = empty($_SERVER['HTTP_HOST']) ? '' : $_SERVER['HTTP_HOST'];
         }
-        //Then fall back to stored application setting set by Installer::storeServerName
+        //Finally fall back to stored application setting set by Installer::storeServerName
         if ($server == '') {
             $option_dao = DAOFactory::getDAO('OptionDAO');
             $server_app_setting = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
@@ -314,11 +313,21 @@ class Utils {
                 $server = $server_app_setting->option_value;
             }
         }
+        //domain name is always lowercase
+        $server = strtolower($server);
+        return $server;
+    }
+
+    /**
+     * Get the application's full URL, i.e., https://example.com/thinkup/
+     * @param $replace_localhost_with_ip Default to false
+     * @return str
+     */
+    public static function getApplicationURL($replace_localhost_with_ip = false) {
+        $server = self::getApplicationHostName();
         if ($replace_localhost_with_ip) {
             $server = ($server == 'localhost')?'127.0.0.1':$server;
         }
-        //domain name is always lowercase
-        $server = strtolower($server);
         $site_root_path = Config::getInstance()->getValue('site_root_path');
         if (!isset($site_root_path)) { //config file not written yet (during install)
             $site_root_path = self::getSiteRootPathFromFileSystem();
