@@ -140,7 +140,7 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
 
     /**
      * Do we have redis support?
-     * @returns boolean
+     * @returns bool
      */
     private function isRedisSupported() {
         $version = explode('.', PHP_VERSION);
@@ -159,9 +159,13 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
             try {
                 $resp = $redis->ping();
                 $redis_status = true;
-            }
-            catch (Exception $e) {
-                error_log("Exception: " . $e->getMessage() . ". Check that the Redis server is running.");
+            } catch (Exception $e) {
+                if (get_class($e) == "Predis\CommunicationException") { //for php 5.2
+                    $this->addErrorMessage(get_class($e).": " . $e->getMessage() .
+                    ". Check that the Redis server is running.");
+                } else {
+                    throw $e;
+                }
             }
         }
         return $redis_status;
