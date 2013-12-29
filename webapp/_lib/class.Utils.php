@@ -289,6 +289,13 @@ class Utils {
         if ( in_array( end($current_script_path), $dirs_under_root ) ) {
             array_pop($current_script_path);
         }
+        // Account for API calls
+        if ( end($current_script_path) == 'v1' ) {
+            array_pop($current_script_path);
+            if ( end($current_script_path) == 'api' ) {
+                array_pop($current_script_path);
+            }
+        }
         $current_script_path = implode('/', $current_script_path) . '/';
         return $current_script_path;
     }

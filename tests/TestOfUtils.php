@@ -212,7 +212,13 @@ class TestOfUtils extends ThinkUpUnitTestCase {
     public function testGetSiteRootPathFromFileSystem() {
         // function assumes $_SERVER['PHP_SELF'] is set
         // it only is in the web server context so we set it here to test
-        $_SERVER['PHP_SELF'] = Config::getInstance()->getValue('site_root_path');
+        $_SERVER['PHP_SELF'] = Config::getInstance()->getValue('site_root_path').'index.php';
+        $filesystem_site_root_path = Utils::getSiteRootPathFromFileSystem();
+        $cfg_site_root_path = Config::getInstance()->getValue('site_root_path');
+        $this->assertEqual($filesystem_site_root_path, $cfg_site_root_path);
+
+        //API calls
+        $_SERVER['PHP_SELF'] = Config::getInstance()->getValue('site_root_path').'api/v1/session/login.php';
         $filesystem_site_root_path = Utils::getSiteRootPathFromFileSystem();
         $cfg_site_root_path = Config::getInstance()->getValue('site_root_path');
         $this->assertEqual($filesystem_site_root_path, $cfg_site_root_path);
