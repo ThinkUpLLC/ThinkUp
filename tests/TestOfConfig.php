@@ -67,6 +67,9 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $THINKUP_CFG['enable_profiler']=false;
         //tests assume Mandrill is not enabled
         $THINKUP_CFG['mandrill_api_key']='';
+        //tests assume ThinkUp LLC redirects are not enabled
+        $config->setValue('thinkupllc_endpoint', null);
+        $THINKUP_CFG['thinkupllc_endpoint'] = null;
         $values_array = $config->getValuesArray();
         $this->assertIdentical($THINKUP_CFG, $values_array);
     }

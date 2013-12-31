@@ -626,4 +626,20 @@ abstract class ThinkUpController {
             throw new InvalidCSRFTokenException($token);
         }
     }
+
+    /**
+     * Redirect this controller to a ThinkUp LLC-hosted URL.
+     * @param  str $page Optional filename at endpoint
+     * @return void
+     */
+    public function redirectToThinkUpLLCEndpoint($page=null) {
+        $config = Config::getInstance();
+        $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+        if (isset($thinkupllc_endpoint)) {
+            $this->redirect($thinkupllc_endpoint.(isset($page)?$page:''));
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

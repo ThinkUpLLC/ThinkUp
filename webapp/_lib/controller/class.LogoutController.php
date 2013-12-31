@@ -32,6 +32,7 @@
  */
 class LogoutController extends ThinkUpAuthController {
     public function authControl() {
+        $this->redirectToThinkUpLLCEndpoint('logout.php');
         Session::logout();
         $controller = new InsightStreamController(true);
         $controller->addSuccessMessage("You have successfully logged out.");

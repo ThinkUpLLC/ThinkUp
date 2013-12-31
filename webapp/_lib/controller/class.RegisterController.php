@@ -51,6 +51,7 @@ class RegisterController extends ThinkUpController {
     }
 
     public function control(){
+        $this->redirectToThinkUpLLCEndpoint();
         if ($this->isLoggedIn()) {
             $controller = new InsightStreamController(true);
             return $controller->go();

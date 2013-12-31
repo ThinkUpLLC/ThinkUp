@@ -32,6 +32,7 @@
 class LoginController extends ThinkUpController {
 
     public function control() {
+        $this->redirectToThinkUpLLCEndpoint();
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->view_mgr->addHelp('login', 'userguide/accounts/index');

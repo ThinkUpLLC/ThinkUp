@@ -32,6 +32,7 @@
 class ForgotPasswordController extends ThinkUpController {
 
     public function control() {
+        $this->redirectToThinkUpLLCEndpoint('forgot.php');
         $config = Config::getInstance();
         $this->addToView('is_registration_open', $config->getValue('is_registration_open'));
 

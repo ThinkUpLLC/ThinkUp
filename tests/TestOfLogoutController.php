@@ -50,4 +50,15 @@ class TestOfLogoutController extends ThinkUpUnitTestCase {
         //$this->assertPattern("/You have successfully logged out/", $results);
         $this->assertPattern("/Log In/", $results);
     }
+
+    public function testOfThinkUpLLCRedirect() {
+        $this->simulateLogin('me@example.com');
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
+
+        $controller = new LogoutController(true);
+        $result = $controller->go();
+
+        $this->assertEqual($controller->redirect_destination, 'http://example.com/user/logout.php');
+    }
 }

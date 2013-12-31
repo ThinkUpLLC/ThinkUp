@@ -581,4 +581,14 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
         'server.</a></p>');
     }
+
+    public function testOfThinkUpLLCRedirect() {
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
+
+        $controller = new RegisterController(true);
+        $result = $controller->go();
+
+        $this->assertEqual($controller->redirect_destination, 'http://example.com/user/');
+    }
 }

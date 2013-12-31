@@ -56,6 +56,11 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         if ($config->getValue('timezone')) {
             date_default_timezone_set($config->getValue('timezone'));
         }
+        //tests assume no redirect to ThinkUp LLC
+        if ($config->getValue('thinkupllc_endpoint') != null) {
+            $config->setValue('thinkupllc_endpoint', null);
+        }
+
         $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
         $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;

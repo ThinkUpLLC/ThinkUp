@@ -167,4 +167,14 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset
         $this->assertEqual($v_mgr->getTemplateDataItem('is_registration_open'), false);
         $this->assertNoPattern('/Register/', $result);
     }
+
+    public function testOfThinkUpLLCRedirect() {
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
+
+        $controller = new ForgotPasswordController(true);
+        $result = $controller->go();
+
+        $this->assertEqual($controller->redirect_destination, 'http://example.com/user/forgot.php');
+    }
 }
