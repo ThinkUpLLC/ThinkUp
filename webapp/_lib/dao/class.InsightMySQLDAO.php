@@ -27,6 +27,18 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
+    /**
+    * Insights stream global conditional and order by for logged-in and logged-out users
+    * @var str
+    */
+    var $stream_conditionals_order;
+
+    public function __construct() {
+        parent::__construct();
+        $this->stream_conditionals_order =  "AND i.filename != 'dashboard' ORDER BY date DESC, time_updated DESC, ".
+            "emphasis DESC, filename, i.id DESC LIMIT :start_on_record, :limit;";
+    }
+
     public function getInsight($slug, $instance_id, $date) {
         $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image ";
         $q .= "FROM #prefix#insights WHERE ";
@@ -263,7 +275,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
         $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id ";
-        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id DESC LIMIT :start_on_record, :limit;";
+        $q .= $this->stream_conditionals_order;
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count,
@@ -297,8 +309,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($public_only) {
             $q .= "AND su.is_public = 1 ";
         }
-        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, filename, i.id DESC ";
-        $q .= "LIMIT :start_on_record, :limit;";
+        $q .= $this->stream_conditionals_order;
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count

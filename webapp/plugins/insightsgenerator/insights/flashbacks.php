@@ -40,8 +40,11 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $flashback_posts = $post_dao->getOnThisDayFlashbackPosts($instance->network_user_id, $instance->network,
             $this->insight_date);
+            $posts = array();
             $most_popular_post = null;
             $most_responses = 0;
+            $insight_text = '';
+
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
                 foreach ($flashback_posts as $post) {
                     $total_responses = $post->reply_count_cache + $post->all_retweets + $post->favlike_count_cache;
@@ -56,11 +59,31 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $number_of_years_ago = $current_year - $post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
-                    $insight_text = "$this->username's most popular ".$this->terms->getNoun('post')
-                    ." <strong>$number_of_years_ago year$plural ago</strong> today was: ";
-                    $this->insight_dao->insertInsightDeprecated("posts_on_this_day_popular_flashback", $instance->id,
-                    $this->insight_date, "Time machine:", $insight_text, basename(__FILE__, ".php"),
-                    Insight::EMPHASIS_LOW, serialize($most_popular_post));
+                    $headline = "On this day&hellip;";
+                    $time = strtotime("-" . $number_of_years_ago . " year", time());
+                    $pastdate =date('Y', $time);
+                    if ($time % 2 == 0) {
+                        $insight_text = "On this day in " .$pastdate . ", this was $this->username's most popular "
+                        .$this->terms->getNoun('post').".";
+                    } else {
+                        $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
+                        ." <strong>$number_of_years_ago year$plural ago</strong>";
+                    }
+                    $posts[] = $most_popular_post;
+
+                    $my_insight = new Insight();
+
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->slug = 'posts_on_this_day_popular_flashback'; //slug to label this insight's content
+                    $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    // $my_insight->header_image = $header_image;
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->setPosts($posts);
+
+                    $this->insight_dao->insertInsight($my_insight);
                 }
             }
         }
