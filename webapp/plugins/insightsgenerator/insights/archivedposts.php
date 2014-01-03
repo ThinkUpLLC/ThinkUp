@@ -36,6 +36,25 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $archived_posts_in_hundreds = intval($instance->total_posts_in_system / 100);
+
+        $posting_seconds = ($instance->total_posts_in_system * 15);
+
+        $insight_text = 'That\'s over<strong>';
+        $posting_time = self::secondsToTime($posting_seconds);
+        if ($posting_time["d"]) {
+            $insight_text .= ' ' . $posting_time["d"] . ' day'.(($posting_time["d"]>1)?'s':'');
+        }
+        if ($posting_time["h"]) {
+            $insight_text .= ' ' . $posting_time["h"] . ' hour'.(($posting_time["h"]>1)?'s':'');
+        }
+        if ($posting_time["m"]) {
+            $insight_text .= ' ' . $posting_time["m"] . ' minute'.(($posting_time["m"]>1)?'s':'');
+        }
+
+        $insight_text .= '</strong> of '. $this->username.'\'s life.';
+
+
+        $archived_posts_in_hundreds = intval($instance->total_posts_in_system / 100);
         if ($archived_posts_in_hundreds > 0) {
             $insight_baseline_slug = "archived_posts_".$archived_posts_in_hundreds;
 
@@ -46,13 +65,44 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
 
                 $config = Config::getInstance();
 
-                $text = "ThinkUp has captured over <strong>". (number_format($archived_posts_in_hundreds * 100)).
-                ' '.$this->terms->getNoun('post', InsightTerms::PLURAL). '</strong> by '.$this->username.'.';
+                $headline = "ThinkUp captured ". (number_format($archived_posts_in_hundreds * 100)).
+                ' '.$this->terms->getNoun('post', InsightTerms::PLURAL). ' by '.$this->username.'.';
                 $this->insight_dao->insertInsightDeprecated("archived_posts", $instance->id, $this->insight_date,
-                "Archived:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
+                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+
+    private function secondsToTime($inputSeconds) {
+        $secondsInAMinute = 60;
+        $secondsInAnHour  = 60 * $secondsInAMinute;
+        $secondsInADay    = 24 * $secondsInAnHour;
+
+        // extract days
+        $days = floor($inputSeconds / $secondsInADay);
+
+        // extract hours
+        $hourSeconds = $inputSeconds % $secondsInADay;
+        $hours = floor($hourSeconds / $secondsInAnHour);
+
+        // extract minutes
+        $minuteSeconds = $hourSeconds % $secondsInAnHour;
+        $minutes = floor($minuteSeconds / $secondsInAMinute);
+
+        // extract the remaining seconds
+        $remainingSeconds = $minuteSeconds % $secondsInAMinute;
+        $seconds = ceil($remainingSeconds);
+
+        // return the final array
+        $obj = array(
+            'd' => (int) $days,
+            'h' => (int) $hours,
+            'm' => (int) $minutes,
+            's' => (int) $seconds,
+        );
+        return $obj;
     }
 }
 

@@ -85,10 +85,9 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than \@testeriffic retweeted/',
-        $result->text);
+        $result->headline);
     }
 
     public function testMultipleBigReshare() {
@@ -139,11 +138,11 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/People with lots of followers retweeted/', $result->text);
-        $sharers = unserialize($result->related_data);
-        $this->assertEqual($sharers[0]->description,
+        $this->assertPattern('/People with lots of followers retweeted/', $result->headline);
+        $sharers = unserialize($result->related_data.people);
+        $retweet_user = $sharers["people"][0];
+        $this->assertEqual($retweet_user->description,
         '"Be liberal in what you accept and conservative in what you send"');
     }
 
@@ -186,11 +185,11 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
-        $this->assertEqual($result->headline, 'Big reshare!');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with lots of followers retweeted/', $result->text);
-        $sharers = unserialize($result->related_data);
-        $this->assertEqual($sharers[0]->description,
+        $this->assertPattern('/Someone with lots of followers retweeted/', $result->headline);
+        $sharers = unserialize($result->related_data.people);
+        $retweet_user = $sharers["people"][0];
+        $this->assertEqual($retweet_user->description,
         '"Be liberal in what you accept and conservative in what you send"');
     }
 

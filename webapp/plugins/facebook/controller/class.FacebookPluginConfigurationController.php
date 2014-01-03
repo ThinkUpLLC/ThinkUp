@@ -123,14 +123,17 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             }
         }
 
-        if ($this->do_show_add_button) {
-            $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
-            'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
-            'state'=>SessionCache::get('facebook_auth_csrf'),
-            'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
-            );
+        $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
+        'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
+        'state'=>SessionCache::get('facebook_auth_csrf'),
+        'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
+        );
 
-            $fbconnect_link = $facebook->getLoginUrl($params);
+        $fbconnect_link = $facebook->getLoginUrl($params);
+        //For expired connections
+        $this->addToView('fb_reconnect_link', $fbconnect_link);
+
+        if ($this->do_show_add_button) {
             $this->addToView('fbconnect_link', $fbconnect_link);
         }
 

@@ -43,6 +43,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
             $contacts = $follow_dao->getFolloweesRepliedToThisWeekLastYear(
             $instance->network_user_id, $instance->network);
             $long_lost_contacts = array();
+            $insight_text = '';
 
             if (count($contacts)) {
                 $post_dao = DAOFactory::getDAO('PostDAO');
@@ -56,14 +57,28 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
             }
 
             if (count($long_lost_contacts)) {
-                $insight_text = $this->username." hasn't replied to "
+                $headline = $this->username." hasn't replied to "
                 .((count($long_lost_contacts) > 1) ?
                 "<strong>".count($long_lost_contacts)." contacts</strong> " : "a contact ")
                 ."in over a year: ";
 
-                $this->insight_dao->insertInsightDeprecated("long_lost_contacts", $instance->id, $this->insight_date,
-                "Keep in touch:", $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($long_lost_contacts));
+                $insight_text = "Sometimes it's good to reflect after a little bit of time has passed.";
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'long_lost_contacts'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $long_lost_contacts["people"][0]->avatar;
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->setPeople($long_lost_contacts);
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 

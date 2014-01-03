@@ -62,8 +62,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
+        $this->assertPattern('/It\'s cool to let people know what others are saying, but too many can get annoying./', $result->text);
     }
 
     public function testMetweetInsightPriorGreaterBaseline() {
@@ -88,8 +89,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/6 fewer times than the prior week./', $result->text);
     }
 
@@ -115,8 +116,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/1 fewer time than the prior week./', $result->text);
     }
 
@@ -142,8 +143,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/2 more times than the prior week./', $result->text);
     }
 
@@ -169,8 +170,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/1 more time than the prior week./', $result->text);
     }
 
@@ -196,8 +197,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);
     }

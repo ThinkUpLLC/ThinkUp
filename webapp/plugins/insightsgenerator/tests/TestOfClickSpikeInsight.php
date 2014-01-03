@@ -93,9 +93,8 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('click_high_7_day_28', 1, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'click_high_7_day_28');
-        $this->assertEqual($result->headline, 'New 7-day record!');
         $this->assertEqual($result->filename, 'clickspike');
-        $this->assertPattern('/Viewers clicked \@ev\'s link \<strong\>7,609 times\<\/strong\>/', $result->text);
+        $this->assertPattern('/Viewers clicked \@ev\'s link \<strong\>7,609 times\<\/strong\>/', $result->headline);
     }
 
     private function buildData() {

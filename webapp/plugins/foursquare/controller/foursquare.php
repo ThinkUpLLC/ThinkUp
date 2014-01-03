@@ -4,7 +4,7 @@
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/foursquare/
  Description: Capture and display Foursquare checkins.
  Class: FoursquarePlugin
- Icon: assets/img/foursquare_icon.png
+ Icon: foursquare
  Version: 1
  Author: Aaron Kalair
  */

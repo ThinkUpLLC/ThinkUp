@@ -16,7 +16,7 @@ ThinkUp{$post_id} = new function() {literal} {
   function requestContent( local ) {
     var script = document.createElement('script');
     // How you'd pass the current URL into the request
-    // script.src = CONTENT_URL + '&url=' + escape(local || location.href);
+    // script.src = CONTENT_URL + '&amp;url=' + escape(local || location.href);
     script.src = CONTENT_URL;
     // IE7 doesn't like this: document.body.appendChild(script);
     // Instead use:
@@ -50,7 +50,7 @@ ThinkUp{$post_id} = new function() {literal} {
         if (data[0].author_link != 'null') {
           txt += '</a>';
         }
-        txt += ': ' + data[0].post + 
+        txt += ': ' + data[0].post +
         '</div><br clear="all">';
         for (var i = 0; i < data[0].replies.length; i++) {
           if (txt.length > 0) { txt += " "; }
@@ -58,7 +58,7 @@ ThinkUp{$post_id} = new function() {literal} {
           if (data[0].replies[i].author_link != 'null') {
             txt += '<a href="'+data[0].replies[i].author_link+'">';
           }
-          txt += '<img src="' + 
+          txt += '<img src="' +
           data[0].replies[i].author_avatar + '"  class="thinkup_avatar"/>';
           if (data[0].replies[i].author_link != 'null') {
             txt += '</a>';
