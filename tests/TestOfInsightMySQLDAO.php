@@ -349,6 +349,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetPublicInsights() {
+        $this->debug(__METHOD__);
         $builders = array();
         //insert a public instance
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
@@ -378,7 +379,9 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //assert that page of insights is only 3 long for public instane
+        $this->debug("About to instantiate InsightDAO");
         $dao = new InsightMySQLDAO();
+        $this->debug("About to call getPublicInsights");
         $results = $dao->getPublicInsights($page_count=10, $page_number=1);
         $this->assertEqual(sizeof($results), 3);
         foreach ($results as $result) {
@@ -452,10 +455,6 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
-        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //assert that page of insights includes from both private and public
@@ -589,23 +588,23 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         //insert 2 insights for a private instance and 3 for a public instance
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
+        //insight with filename set to dashboard
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
+        'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //assert that page of insights includes from both private and public

@@ -88,7 +88,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic hasn\'t tweeted a link in the last 2 days/', $result->text);
+        $this->assertPattern('/\@testeriffic hasn\'t tweeted a link in the last 2 days/', $result->headline);
     }
 
     public function testLinkPromptInsighPromptWithRecentTweet() {

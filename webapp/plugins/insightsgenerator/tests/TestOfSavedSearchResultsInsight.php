@@ -66,10 +66,8 @@ class TestOfSavedSearchResultsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('saved_search_results_102', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'saved_search_results_102');
-        $this->assertEqual($result->headline, 'New search results:');
         $this->assertEqual($result->filename, 'savedsearchresults');
-        $this->assertEqual('7 new posts contain <b><a href="search.php?u=ev&n=facebook&c=searches&k=%23'.
-        'thinkupsavedsearch&q=%23thinkupsavedsearch">#thinkupsavedsearch</a></b>.', $result->text);
+        $this->assertEqual('7 new posts contain "<strong>#thinkupsavedsearch</strong>".', $result->headline);
     }
 
     private function buildData() {

@@ -145,6 +145,13 @@ interface InstanceDAO {
     public function getByOwner(Owner $owner, $force_not_admin = false, $only_active=false);
 
     /**
+     * Get instances by owner with authorization status messages.
+     * @param Owner $owner
+     * @return array Instance objects
+     */
+    public function getByOwnerWithStatus(Owner $owner);
+
+    /**
      * Get public instances
      * @return array Instance objects
      */

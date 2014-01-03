@@ -38,6 +38,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
         $service_user = $user_dao->getDetails($instance->network_user_id, $instance->network);
+        $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
             $big_reshares = $post_dao->getRetweetsByAuthorsOverFollowerCount($post->post_id, $instance->network,
@@ -47,22 +48,19 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 if (!isset($config)) {
                     $config = Config::getInstance();
                 }
-                $post_link = '<a href="'.$config->getValue('site_root_path'). 'post/?t='.$post->post_id.'&n='.
-                $post->network.'&v=fwds">';
-
                 if (sizeof($big_reshares) > 1) {
-                    $notification_text = "People with lots of followers ".$this->terms->getVerb('shared')." "
-                    .$post_link."$this->username's post</a>.";
+                    $headline = "People with lots of followers ".$this->terms->getVerb('shared')." "
+                    ."$this->username's " . $this->terms->getNoun('post') . ".";
                 } else {
                     $follower_count_multiple =
                     intval(($big_reshares[0]->follower_count) / $service_user->follower_count);
                     if ($follower_count_multiple > 1 ) {
-                        $notification_text = "Someone with <strong>".$follower_count_multiple.
+                        $headline = "Someone with <strong>".$follower_count_multiple.
                         "x</strong> more followers than $this->username ".$this->terms->getVerb('shared')." "
-                        .$post_link."this post</a>.";
+                        ."this " . $this->terms->getNoun('post') . ".";
                     } else {
-                        $notification_text = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
-                        .$post_link."$this->username's post</a>.";
+                        $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
+                        ."$this->username's " . $this->terms->getNoun('post') . ".";
                     }
                 }
                 //Replace each big resharer's bio line with the text of the post
@@ -70,9 +68,22 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                     $sharer->description = '"'.$post->post_text.'"';
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
-                $this->insight_dao->insertInsightDeprecated("big_reshare_".$post->id, $instance->id,
-                $simplified_post_date, "Big reshare!", $notification_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_HIGH, serialize($big_reshares));
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+                $my_insight->slug = "big_reshare_".$post->id; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $simplified_post_date; //date of the data this insight applies to
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $header_image;
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->setPeople($big_reshares);
+                $my_insight->setPosts($post);
+
+                $this->insight_dao->insertInsight($my_insight);
+
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

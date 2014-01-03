@@ -44,6 +44,7 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $filename = basename(__FILE__, ".php");
         $video_dao = DAOFactory::getDAO('VideoDAO');
+        $insight_text = '';
 
         $simplified_post_date = "";
 
@@ -87,14 +88,15 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($high_like_count_365_days->value)
                 && $video->likes >= $high_like_count_365_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 365-day record!";
-                        $text = "<strong>".number_format($video->likes)." people</strong> liked ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $headline = "<strong>".number_format($video->likes)." people</strong> liked ";
+                        $headline .= "<a href=http://plus.google.com/$instance->network_user_id>";
+                        $headline .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
+                        $headline .= "$video->post_id>$video->post_text</a>.";
+
+                        $insight_text = "That's a new 365-day record!";
 
                         $this->insight_dao->insertInsightDeprecated('like_high_365_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('like_high_90_day_'.$post->id, $instance->id,
@@ -109,14 +111,14 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 } elseif (isset($high_like_count_90_days->value)
                 && $video->likes >= $high_like_count_90_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 90-day record!";
-                        $text = "<strong>".number_format($video->likes)." people</strong> liked ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $insight_text = "That's a new 90-day record!";
+                        $headline = "<strong>".number_format($video->likes)." people</strong> liked ";
+                        $headline .= "<a href=http://plus.google.com/$instance->network_user_id>";
+                        $headline .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
+                        $headline .= "$video->post_id>$video->post_text</a>.";
 
                         $this->insight_dao->insertInsightDeprecated('like_high_90_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('like_high_30_day_'.$post->id, $instance->id,
@@ -127,14 +129,14 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 } elseif (isset($high_like_count_30_days->value)
                 && $video->likes >= $high_like_count_30_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 30-day record!";
-                        $text = "<strong>".number_format($video->likes)." people</strong> liked ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $insight_text = "That's a new 30-day record.";
+                        $headline = "<strong>".number_format($video->likes)." people</strong> liked ";
+                        $headline .= "<a href=http://plus.google.com/$instance->network_user_id>";
+                        $headline .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
+                        $headline .= "$video->post_id>$video->post_text</a>.";
 
                         $this->insight_dao->insertInsightDeprecated('like_high_30_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
                     }
                 }
@@ -144,15 +146,14 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($chart_data)) {
                         $multiplier = floor($video->likes/$average_like_count_30_days->value);
                         $multiplier = $this->terms->getMultiplierAdverb($multiplier);
-                        $prefix = "Thumbs up:";
-                        $text = "<strong>".number_format($video->likes)." people</strong> liked ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
-                        $text .= "the 90-day average.";
+                        $headline = "<strong>".number_format($video->likes)." people</strong> liked ";
+                        $headline .= "<a href=http://plus.google.com/$instance->network_user_id>";
+                        $headline .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
+                        $headline .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
+                        $headline .= "the 90-day average.";
 
                         $this->insight_dao->insertInsightDeprecated('like_spike_90_day_'.$post->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('like_spike_30_day_'.$post->id, $instance->id,
@@ -163,15 +164,14 @@ class LikeSpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($chart_data)) {
                         $multiplier = floor($video->likes/$average_like_count_30_days->value);
                         $multiplier = $this->terms->getMultiplierAdverb($multiplier);
-                        $prefix = "Thumbs up:";
-                        $text = "<strong>".number_format($video->likes)." people</strong> liked ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
-                        $text .= "the 30-day average.";
+                        $headline = "<strong>".number_format($video->likes)." people</strong> liked ";
+                        $headline .= "<a href=http://plus.google.com/$instance->network_user_id>";
+                        $headline .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
+                        $headline .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
+                        $headline .= "the 30-day average.";
 
                         $this->insight_dao->insertInsightDeprecated('like_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
                     }
                 }

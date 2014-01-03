@@ -4,8 +4,8 @@
 
     <span class="pull-right">{insert name="help_link" id='googleplus'}</span>
     <h1>
-        <img src="{$site_root_path}plugins/googleplus/assets/img/plugin_icon.png" class="plugin-image">
-        Google+ Plugin
+        <i class="fa fa-google-plus text-muted"></i>
+        Google+
     </h1>
     
     <p>The Google+ plugin collects posts, reply counts, and +1 counts from Google+ for an authorized user. <i>Note:</i> The Google+ API is in its early stages and its capabilities are limited.</p>
@@ -16,7 +16,7 @@
 {if $oauth_link}
 
 {include file="_usermessage.tpl" field='authorization'}
-<a href="{$oauth_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Google+ User</a>
+<a href="{$oauth_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a Google+ User</a>
 {/if}
 
     {if count($owner_instances) > 0 }
@@ -26,18 +26,18 @@
     
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="row-fluid">
-        <div class="span3">
+        <div class="col-md-3">
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
-        <div class="span3">
+        <div class="col-md-3">
             <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="Set {if $i->is_public}private{else}public{/if}" /></span>
         </div>
         {if $user_is_admin}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
         {/if}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=google%2B#manage_plugin"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
             <input onClick="return confirm('Do you really want to delete this Google+ account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="Delete" /></form></span>

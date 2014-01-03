@@ -1,0 +1,1 @@
+<a href="{$button.url}" class="btn btn-default btn-action">{$button.label}</a>

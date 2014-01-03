@@ -45,7 +45,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testLessThan10NewListMembershipNoHistory() {
+    public function testLessThan4NewListMembershipNoHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -66,13 +66,16 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
+        $this->debug($result->headline);
+        $this->assertEqual($result->headline, 'Do &ldquo;list7&rdquo;, &ldquo;list6&rdquo;, &ldquo;list5&rdquo;, '.
+            'and &ldquo;list4&rdquo; sound like good descriptions of @ev?');
+        $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/',
+        $result->text); //
     }
 
-    public function testLessThan10NewListMembershipWithHighHistory() {
+    public function testLessThan4NewListMembershipWithHighHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -93,14 +96,16 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
+        $this->debug($result->headline);
+        $this->assertEqual($result->headline, 'Do &ldquo;list7&rdquo;, &ldquo;list6&rdquo;, &ldquo;list5&rdquo;, '.
+        'and &ldquo;list4&rdquo; sound like good descriptions of @ev?');
+        $this->assertPattern('/and &ldquo;list4&rdquo;/', $result->headline);
         $this->assertPattern('/bringing the total to \<strong\>58 lists\<\/strong\>\./', $result->text);
     }
 
-    public function testLessThan10NewListMembershipWithLowHistory() {
+    public function testLessThan4NewListMembershipWithLowHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -121,14 +126,14 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
-        $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
+        $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/',
+        $result->text);
         $this->assertNoPattern('/bringing your total to/', $result->text);
     }
 
-    public function testMoreThan10NewListMembershipNoHistory() {
+    public function testMoreThan4NewListMembershipNoHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -148,11 +153,41 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
+        $this->debug($result->headline);
+        $this->debug($result->text);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/\@ev is on 26 new lists:/', $result->text);
-        $this->assertPattern('/and 16 more/', $result->text);
+        $this->assertPattern('/&ldquo;list22&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern('/and 22 more/', $result->text);
+    }
+
+    public function test4NewListMembershipNoHistory() {
+        // Assert that insight doesn't exist
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNull($result);
+
+        $builders = self::buildData($total_lists = 4);
+
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_user_id = '13';
+        $instance->network = 'twitter';
+        $instance->network_username = 'ev';
+        $stylestats_insight_plugin = new ListMembershipInsight();
+        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+
+        // Assert that insight got generated
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNotNull($result);
+        $this->debug($result->headline);
+        $this->debug($result->text);
+        $this->assertEqual($result->slug, 'new_group_memberships');
+        $this->assertEqual($result->filename, 'listmembership');
+        $this->assertEqual($result->headline, 'Do &ldquo;list3&rdquo;, &ldquo;list2&rdquo;, &ldquo;list1&rdquo; '.
+        'and &ldquo;list0&rdquo; sound like good descriptions of @ev?');
+        $this->assertPattern('/&ldquo;list0&rdquo; sound like good descriptions of @ev?/', $result->headline);
     }
 
     public function test1NewListMembershipNoHistory() {
@@ -176,9 +211,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/\@ev is on a new list,/', $result->text);
+        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
         $this->assertNoPattern('/bringing/', $result->text);
     }
 
@@ -203,9 +237,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
-        $this->assertEqual($result->headline, 'Made the list:');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/\@ev is on a new list,/', $result->text);
+        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
         $this->assertPattern('/bringing the total to \<strong\>6 lists\<\/strong\>./', $result->text);
     }
 

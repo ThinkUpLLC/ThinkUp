@@ -35,15 +35,53 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
+        $milestones = array();
 
         if (self::shouldGenerateInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
-                $text = "$this->username posted <strong>$count times</strong> in the past week";
+                $headline = "$this->username " . $this->terms->getVerb('posted') .
+                    " <strong>$count times</strong> in the past week";
+                $milestones = array(
+                    "per_row"    => 1,
+                    "label_type" => "icon",
+                    "items" => array(
+                        0 => array(
+                            "number" => $count,
+                            "label"  => $this->terms->getNoun('post', $count),
+                        ),
+                    ),
+                );
             } else {
-                $prefix = "Nudge, nudge:";
-                $text = "$this->username didn't post anything new in the past week";
+                $headline = "$this->username didn't post anything new on " . ucfirst($instance->network) .
+                    " in the past week";
+                $button = array();
+                switch ($instance->network) {
+                    case 'twitter':
+                        $insight_text = "Sometimes we just don't have anything to say. Maybe let someone know you"
+                            . " appreciate their work?";
+                        $button = array(
+                            "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
+                            "label"  => "Tweet a word of praise",
+                        );
+                        break;
+                    case 'facebook':
+                        $insight_text = "Nothing wrong with being quiet. If you would, you could ask your friends "
+                            ."what they've read lately.";
+                        $button = array(
+                            "url" => "http://www.facebook.com/sharer/sharer.php?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&t=Ready any good books lately?",
+                            "label"  => "Read any good books lately?",
+                        );
+                        break;
+                    default:
+                        $insight_text = "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.";
+                        $button = array(
+                            "url" => "http://www.donorschoose.org/",
+                            "label"  => "Give to DonorsChoose.org",
+                        );
+                }
             }
 
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -59,25 +97,41 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($last_monday_insight_baseline) ) {
                     //compare it to this Monday's  number, and add a sentence comparing it.
                     if ($last_monday_insight_baseline->value > ($count + 1) ) {
-                        $prefix = "Slowing down:";
                         $difference = $last_monday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer times than the prior week.";
+                        $insight_text = "That's $difference fewer " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
                     } elseif ($last_monday_insight_baseline->value < ($count - 1) ) {
-                        $prefix = "Ramping up:";
                         $difference = $count - $last_monday_insight_baseline->value;
-                        $text .= ", $difference more times than the prior week.";
+                        $insight_text .= "That's $difference more " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
                     } else {
-                        $text .= ".";
+                        $headline .= ".";
                     }
                 } else {
-                    $text .= ".";
+                    $headline .= ".";
                 }
             } else {
-                $text .= ".";
+                $headline .= ".";
             }
-            $prefix = (isset($prefix))?$prefix:'Post rate:';
-            $this->insight_dao->insertInsightDeprecated("frequency", $instance->id, $this->insight_date, $prefix,
-            $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+            $headline = (isset($headline))?$headline:'Post rate:';
+
+            //Instantiate the Insight object
+            $my_insight = new Insight();
+
+            //REQUIRED: Set the insight's required attributes
+            $my_insight->instance_id = $instance->id;
+            $my_insight->slug = 'frequency'; //slug to label this insight's content
+            $my_insight->date = $this->insight_date; //date of the data this insight applies to
+            $my_insight->headline = $headline;
+            $my_insight->text = $insight_text;
+            $my_insight->header_image = '';
+            $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+            $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+            $my_insight->setMilestones($milestones);
+            $my_insight->setButton($button);
+
+            $this->insight_dao->insertInsight($my_insight);
+
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

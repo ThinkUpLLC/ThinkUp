@@ -123,15 +123,13 @@ class TestOfOutreachPunchcardInsight extends ThinkUpUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('outreach_punchcard', 10, $today);
-        $punchcard = unserialize($result->related_data);
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($punchcard['posts'][$post_dotw][$post_hotd], 3);
-        $this->assertPattern('/\@testeriffic\'s tweets from last week got/', $result->text);
-        $this->assertPattern('/<strong>3 responses<\/strong> between <strong>'.$time1str.'<\/strong>/', $result->text);
-        $this->assertPattern('/as compared to <strong>1 response<\/strong>/', $result->text);
-        $this->assertPattern('/<strong>1 response<\/strong> between <strong>'.$time2str.'<\/strong>/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s tweets from last week got/', $result->headline);
+        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies/', $result->headline);
+        $this->assertPattern('/That\'s compared to 1 response/', $result->text);
+        $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
     }
 
     public function testOutreachPunchcardInsightNoResponse() {

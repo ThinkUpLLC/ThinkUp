@@ -1,4 +1,5 @@
 <?php
+
 /*
  Plugin Name: Response Time
  Description: How quickly your posts generate replies, favorites, and reshares every week.
@@ -65,9 +66,9 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
                 : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
-                $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                ."</strong> every <strong>".$time_str."</strong> over the last week";
+                ."</strong> every <strong>".$time_str."</strong> this week.";
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
@@ -79,21 +80,39 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     substr(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response), 2)
                     : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
+                    $tachy_markup = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; "
+                    ."color: #ddd;\"></i> That's ";
+
                     if ($last_fri_time_per_response < $time_per_response) {
-                        $insight_text .= ", slower than the previous week's average of 1 "
-                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                        $insight_text .= $tachy_markup . "slower than the previous week's average of 1 "
+                        . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     } elseif ($last_fri_time_per_response > $time_per_response) {
-                        $insight_text .= ", faster than the previous week's average of 1 "
-                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                        $insight_text .= $tachy_markup . "faster than the previous week's average of 1 "
+                        . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }
                 }
-                $insight_text .= '.';
 
-                $this->insight_dao->insertInsightDeprecated("response_time", $instance->id, $this->insight_date, "Response time:",
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                if (!isset($insight_text)) {
+                    $insight_text = 'If you ' . $this->terms->getVerb('posted') .
+                        ' once every waking hour, that would be roughly 120 times a week.';
+                }
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'response_time'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }

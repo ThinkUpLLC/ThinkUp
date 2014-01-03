@@ -4,7 +4,7 @@
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/youtube/
  Description: Capture and display YouTube videos.
  Class: YouTubePlugin
- Icon: assets/img/youtube_icon.png
+ Icon: youtube-play
  Version: 1
  Author: Aaron Kalair
  */
