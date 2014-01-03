@@ -59,7 +59,7 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
         $this->clickLinkById('refresh-data');
         //$this->showHeaders();
         $this->assertHeader('Content-Type', 'text/html; charset=UTF-8; charset=UTF-8');
-        $this->assertText('Updating...');
+        $this->assertText('Hint:');
     }
 
     public function testNotLoggedIn() {

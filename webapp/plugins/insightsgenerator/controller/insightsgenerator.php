@@ -4,7 +4,7 @@
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/insightsgenerator/
  Description: Pluggable plugin populates the insights stream.
  Class: InsightsGeneratorPlugin
- Icon: assets/img/plugin_icon.png
+ Icon: list
  Version: 0.01
  Author:
  */

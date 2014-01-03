@@ -62,7 +62,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/1,500 tweets/', $result->text);
 
         // Increase number of posts in system for this instance
@@ -74,7 +74,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/167,600 tweets/', $result->text);
     }
 
@@ -95,7 +95,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/1,500 status updates/', $result->text);
 
         // Increase number of posts in system for this instance
@@ -107,7 +107,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/167,600 status updates/', $result->text);
     }
 
@@ -128,7 +128,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/1,500 posts/', $result->text);
 
         // Increase number of posts in system for this instance
@@ -140,7 +140,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/167,600 posts/', $result->text);
     }
 
@@ -161,7 +161,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/1,500 checkins/', $result->text);
 
         // Increase number of posts in system for this instance
@@ -173,7 +173,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('archived_posts', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/ThinkUp has captured over/', $result->text);
+        $this->assertPattern('/That\'s over/', $result->text);
         $this->assertPattern('/167,600 checkins/', $result->text);
     }
 }

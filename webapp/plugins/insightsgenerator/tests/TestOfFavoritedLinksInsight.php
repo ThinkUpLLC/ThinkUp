@@ -64,7 +64,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic favorited \<strong\>1 tweet\<\/strong\>/', $result->text);
+        $this->assertPattern('/\@testeriffic favorited \<strong\>1 tweet\<\/strong\>/', $result->headline);
         $this->assertNoPattern('/tweets/', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts[0], "Post");
@@ -90,7 +90,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic liked \<strong\>2 status updates\<\/strong\>/', $result->text);
+        $this->assertPattern('/testeriffic liked \<strong\>2 status updates\<\/strong\>/', $result->headline);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts[0], "Post");
         $this->assertEqual(count($fav_posts), 2);

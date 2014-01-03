@@ -36,6 +36,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
         if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
         $regenerate_existing_insight=true)) {
@@ -62,16 +63,16 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 $post_type = '';
 
                 if ($favorited_links_count == 1) {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    $headline = $this->username." ".$this->terms->getVerb('liked')
                     ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
                 } else {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    $headline = $this->username." ".$this->terms->getVerb('liked')
                     ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                     ."</strong> with links in them:";
                 }
 
                 $this->insight_dao->insertInsightDeprecated("favorited_links", $instance->id,
-                $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
+                $this->insight_date, $headline, $insight_text, basename(__FILE__, ".php"),
                 Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
             }
         }

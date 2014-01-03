@@ -50,6 +50,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 if (sizeof($new_groups) > 1) {
                     $group_name_list = '';
                     $group_number = 0;
+                    $headline = "Do ";
                     foreach ($new_groups as $group) {
                         if (sizeof($new_groups) > 10) { //If more than 10 lists, just display first 10
                             if ($group_number >= 10) {
@@ -58,27 +59,33 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                                 }
                             } else {
                                 if ($group_name_list != '') {
+                                    $headline .=", ";
                                     $group_name_list .= ", ";
                                 }
                             }
                             if ($group_number < 10 ) {
                                 $group->setMetadata();
+                                $headline .= "\"" .$group->keyword . "\"";
                                 $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                             }
                             $group_number++;
                         } else  { //Display all lists
                             if ($group == end($new_groups)) {
-                                $group_name_list .= " and ";
+                                $headline .= " and";
+                                $group_name_list .= " and";
                             } else {
                                 if ($group_name_list != '') {
-                                    $group_name_list .= ", ";
+                                    $headline .= ",";
+                                    $group_name_list .= ",";
                                 }
                             }
                             $group->setMetadata();
-                            $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
+                            $headline .= ' '. $group->keyword;
+                            $group_name_list .= ' <a href="'.$group->url.'">'.$group->keyword.'</a>';
                         }
                     }
-                    $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
+                    $headline .= ' sound like good descriptions of ' . $this->username . '?';
+                    $insight_text = "$this->username is on ".sizeof($new_groups)." new lists:".$group_name_list;
                     if (is_array($list_membership_count_history_by_day['history'])
                     && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
@@ -88,11 +95,14 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         $insight_text .= ".";
                     }
                     $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
-                    $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
+
                 } else {
                     $new_groups[0]->setMetadata();
-                    $insight_text = "$this->username is on a new list, ".'<a href="'.$new_groups[0]->url.'">'.
+                    $headline = "Does \"" . $new_groups[0]->keyword . "\" seem like a good description of " 
+                    . $this->username . "?";
+                    $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                     $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
@@ -102,7 +112,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     $insight_text .= ".";
 
                     $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
-                    $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                    $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
                 }
             }
