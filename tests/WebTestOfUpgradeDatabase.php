@@ -258,7 +258,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->assertText('Adjust Your Settings');
         }
         if (version_compare($version, '0.16', '>=')) {
-            $this->assertText('Welcome to ThinkUp. Let\'s get started.');
+            $this->assertText('Welcome to ThinkUp');
         } else {
             $this->assertText('You have no'); //accounts/services configured. Set up an account now');
             $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
@@ -273,7 +273,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         }
         $config = Config::getInstance();
         $this->assertTitle('Configure Your Account | ThinkUp');
-        $this->assertText('admin');
 
         // run updates and migrations
         require dirname(__FILE__) . '/migration-assertions.php';

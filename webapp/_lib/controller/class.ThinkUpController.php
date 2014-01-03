@@ -120,6 +120,17 @@ abstract class ThinkUpController {
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
+
+            $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+            if ($thinkupllc_endpoint != null) {
+                $this->addToView('thinkupllc_endpoint', $thinkupllc_endpoint);
+            }
+
+            if (SessionCache::isKeySet('selected_instance_network') &&
+            SessionCache::isKeySet('selected_instance_username')) {
+                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
+                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
+            }
         } catch (Exception $e) {
             Loader::definePathConstants();
             //echo 'sending this to Smarty:'.THINKUP_WEBAPP_PATH.'data/';

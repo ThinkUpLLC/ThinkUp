@@ -259,6 +259,24 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         return $this->getDataRowsAsObjects($ps, $this->object_name);
     }
 
+    public function getByOwnerWithStatus(Owner $owner) {
+        if ($owner == null) {
+            return null;
+        }
+        $vars = array(
+            ':owner_id'=>$owner->id
+        );
+        $q  = "SELECT ".$this->getFieldList();
+        $q .= ", oi.auth_error FROM ".$this->getTableName()." ";
+        $q .= $this->getMetaTableJoin();
+        $q .= "INNER JOIN #prefix#owner_instances AS oi ";
+        $q .= "ON ".$this->getTableName().".id = oi.instance_id ";
+        $q .= "WHERE oi.owner_id = :owner_id  AND is_active = 1 ORDER BY id ASC;";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, $this->object_name);
+    }
+
     public function getPublicInstances() {
         $q  = "SELECT ".$this->getFieldList();
         $q .= "FROM ".$this->getTableName()." ";

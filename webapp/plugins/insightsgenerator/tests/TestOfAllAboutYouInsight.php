@@ -87,8 +87,11 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
+        if (strpos($result->headline, 'vanity')) {
+            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
+        } else {
+            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
+        }
     }
 
     public function testAllAboutYouInsightPriorGreaterBaseline() {
@@ -113,8 +116,11 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
+        if (strpos($result->headline, 'vanity')) {
+            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
+        } else {
+            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
+        }
         $this->assertPattern('/10 fewer times than the prior week/', $result->text);
     }
 
@@ -140,6 +146,11 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
+        if (strpos($result->headline, 'vanity')) {
+            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
+        } else {
+            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
+        }
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
         $this->assertPattern('/9 times/', $result->text);
         $this->assertPattern('/1 fewer time than the prior week/', $result->text);

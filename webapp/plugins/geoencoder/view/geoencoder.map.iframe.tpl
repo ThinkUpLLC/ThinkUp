@@ -3,9 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
-  <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
 
   <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
   {foreach from=$header_scripts item=script}

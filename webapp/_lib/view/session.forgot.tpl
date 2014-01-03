@@ -1,21 +1,13 @@
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 
 <div class="container">
 
 <div class="row">
-    <div class="span3">
-          <div class="embossed-block">
-            <ul>
-              <li>Reset Your Password</li>
-            </ul>
-          </div>
-    </div><!--/span3-->
-    <div class="span6">
-
-
-
+    <div class="col-md-3">
+    </div><!--/col-md-3-->
+    <div class="col-md-9">
 
     {if isset($error_msgs)}
         <div class="alert alert-error"><p>{$error_msg}</p></div>
@@ -24,42 +16,51 @@
         <div class="alert alert-success"><p>{$success_msg}</p></div>
     {/if}
 
+            <div class="panel panel-default">
+
             <form name="forgot-form" method="post" action="" class="login form-horizontal">
 
-                <fieldset style="background-color : white; padding-top : 30px;">
+                <fieldset>
+                <legend class="panel-heading">Forgot your password?</legend>
                 
+                <div class="panel-body">
                 
-                <div class="control-group">
-                    <label class="control-label" for="site_email">Email&nbsp;Address</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input type="email" name="email" id="email" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
-                        </span>
-                        <span class="help-inline"></span>
-                        {include file="_usermessage.tpl" field="email" enable_bootstrap=1}
+                    <div class="form-group">
+                        <label class="col-sm-2" for="site_email">Email&nbsp;Address</label>
+                        <div class="col-sm-8">
+                            <span class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                <input type="email" name="email" id="email" class="form-control" required 
+                                data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> A valid email address is required.">
+                            </span>
+                            <span class="help-block">Put in your email address and you'll get emailed a link to reset your password.</span>
+                            {include file="_usermessage.tpl" field="email"}
+                        </div>
                     </div>
-                </div>
                     
-                    
-                    
-                    <div class="form-actions">
-                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Send Reset">
+                    <div class="form-group form-actions">
+                        <label class="col-sm-2"></label>
+                        <div class="col-sm-8">
+                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Okay, send it">
                             <span class="pull-right">
                                 <div class="btn-group">
-                                    <a href="login.php" class="btn btn-mini">Log In</a>
-                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini hidden-phone">Register</a>{else}{/if}
+                                    <a href="login.php" class="btn btn-xs">Log In</a>
+                                    {if $is_registration_open}<a href="register.php" class="btn btn-xs hidden-phone">Register</a>{else}{/if}
                                     {insert name="help_link" id='forgot'}
                                 </div>
                             </span>
+                        </div>
                     </div>
+                    
+                </div>
 
                 </fieldset>
             </form>
+            
+            </div><!-- /panel -->
 
-    </div><!-- end span9 -->
+    </div><!-- end col-md-9 -->
 
 </div><!-- end row -->
 
-{include file="_footer.tpl" enable_bootstrap=1}
+{include file="_footer.tpl"}

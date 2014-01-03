@@ -37,6 +37,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         // Follower count history milestone
         $insight_date = new DateTime();
@@ -48,20 +49,20 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
             //by month
             $follower_count_history_by_month = $count_dao->getHistory($instance->network_user_id,
             $instance->network, 'MONTH', 15, $this->insight_date);
-            $insight_text = "<strong>";
+            $headline = "<strong>";
             if ( isset($follower_count_history_by_month['milestone'])
             && $follower_count_history_by_month["milestone"]["will_take"] > 0
             && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
-                $insight_text .= $follower_count_history_by_month['milestone']['will_take'].' month';
+                $headline .= $follower_count_history_by_month['milestone']['will_take'].' month';
                 if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
-                    $insight_text .= 's';
+                    $headline .= 's';
                 }
-                $insight_text .= "</strong> till $this->username reaches <strong>".
+                $headline .= "</strong> till $this->username reaches <strong>".
                 number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                $insight_text .= '</strong> followers at the current growth rate.';
+                $headline .= '</strong> followers at the current growth rate.';
 
                 $this->insight_dao->insertInsightDeprecated('follower_count_history_by_month_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_month));
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -69,25 +70,22 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
             //by week
             $follower_count_history_by_week = $count_dao->getHistory($instance->network_user_id,
             $instance->network, 'WEEK', 15, $this->insight_date);
-            $this->logger->logInfo($this->insight_date." is Sunday; Count by week stats are ".
-            Utils::varDumpToString($follower_count_history_by_week) , __METHOD__.','
-            .__LINE__);
-            $insight_text = "<strong>";
+            $headline = "<strong>";
             if ( isset($follower_count_history_by_week['milestone'])
             && $follower_count_history_by_week["milestone"]["will_take"] > 0
             && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
-                $insight_text .= $follower_count_history_by_week['milestone']['will_take'].' week';
+                $headline .= $follower_count_history_by_week['milestone']['will_take'].' week';
                 if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
-                    $insight_text .= 's';
+                    $headline .= 's';
                 }
-                $insight_text .= "</strong> till $this->username reaches <strong>".
+                $headline .= "</strong> till $this->username reaches <strong>".
                 number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                $insight_text .= '</strong> followers at the current growth rate.';
-                $this->logger->logInfo("Storing insight ".$insight_text, __METHOD__.','
+                $headline .= '</strong> followers at the current growth rate.';
+                $this->logger->logInfo("Storing insight ".$headline, __METHOD__.','
                 .__LINE__);
 
                 $this->insight_dao->insertInsightDeprecated('follower_count_history_by_week_milestone', $instance->id,
-                $this->insight_date, "Upcoming milestone:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize($follower_count_history_by_week));
             }
         }

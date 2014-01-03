@@ -395,6 +395,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         // Assert that the Add User button isn't there
         $this->assertNoPattern('/Add a Twitter Account/', $output);
         // Assert that the message about the membership cap is there
-        $this->assertPattern('/You&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
+        $this->assertPattern('/you&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
     }
 }

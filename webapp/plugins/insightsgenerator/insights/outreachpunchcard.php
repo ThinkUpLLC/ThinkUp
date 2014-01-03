@@ -104,10 +104,13 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $time1_high = (($time1_high_hotd % 12) ? ($time1_high_hotd % 12) : 12)
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ." from last week got <strong>".$most_responses['value']." "
-                .($most_responses['value'] > 1 ? 'responses' : 'response')."</strong>"
-                ." between <strong>".$time1_low." and ".$time1_high."</strong>";
+                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                ." from last week got"
+                ." the best response between <strong>".$time1_low." and ".$time1_high."</strong>"
+                . " - ".$most_responses['value']." "
+                // . ($most_responses['value'] > 1 ? 'responses' : 'response')."</strong> "
+                . $this->terms->getNoun('reply', InsightTerms::PLURAL)
+                . " in all.";
 
                 $insight_comparison_text = '';
                 foreach ($responses_chron as $key => $value) {
@@ -120,17 +123,35 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                         $time2_high = (($time2_high_hotd % 12) ? ($time2_high_hotd % 12) : 12)
                         .((floor($time2_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                        $insight_comparison_text = ", as compared to <strong>".$value." "
-                        .($value > 1 ? 'responses' : 'response')."</strong>"
-                        ." between <strong>".$time2_low." and ".$time2_high."</strong>";
+                        $insight_comparison_text = "That's compared to ".$value." "
+                        .($value > 1 ? 'responses' : 'response').""
+                        ." between ".$time2_low." and ".$time2_high.". ";
                     }
                 }
 
-                $insight_text .= $insight_comparison_text.".";
+                $insight_text .= $insight_comparison_text
+                . "The best timing for an important " . $this->terms->getNoun('post') . "  might be <strong>around "
+                . $time1_low . "</strong>.";
 
-                $this->insight_dao->insertInsightDeprecated("outreach_punchcard", $instance->id, $this->insight_date,
-                "Time of day:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
-                serialize($punchcard));
+                $optimal_hour = substr($time1_low, 0, -2);
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'outreach_punchcard'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                // $my_insight->related_data = $punchcard;
+                $my_insight->related_data = $optimal_hour;
+
+                $this->insight_dao->insertInsight($my_insight);
+
             }
         }
 
