@@ -40,6 +40,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
+            $insight_text = '';
 
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
@@ -59,19 +60,19 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $insight_text = $this->username."'s most popular ".$this->terms->getNoun('post')
+                $headline = $this->username."'s most popular ".$this->terms->getNoun('post')
                 ." from last week got ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
-                        $insight_text .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
+                        $headline .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
                     }
                 }
 
-                $insight_text = rtrim($insight_text, ", ");
-                $insight_text .= '.';
-                if (!(strpos($insight_text, ',') === false)) {
-                    $insight_text = substr_replace($insight_text, " and",
-                    strpos($insight_text, strrchr($insight_text, ',')), 1);
+                $headline = rtrim($headline, ", ");
+                $headline .= '.';
+                if (!(strpos($headline, ',') === false)) {
+                    $headline = substr_replace($headline, " and",
+                    strpos($headline, strrchr($headline, ',')), 1);
                 }
 
                 $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
@@ -80,7 +81,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
 
                 if (isset($hot_posts_data)) {
                     $this->insight_dao->insertInsightDeprecated("weekly_best", $instance->id, $this->insight_date,
-                    "Post of the week:", $insight_text, basename(__FILE__, ".php"),
+                    $headline, $insight_text, basename(__FILE__, ".php"),
                     Insight::EMPHASIS_LOW, serialize(array($most_popular_post, $hot_posts_data)));
                 }
             }

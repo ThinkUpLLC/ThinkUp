@@ -36,6 +36,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
             //if post was a retweet, check if insight exists
@@ -55,11 +56,11 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     //if user exists and has fewer followers than instance user, build and insert insight
                     if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
                         $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $insight_text = "$this->username broadcast this post to <strong>$add_audience</strong> ".
-                        "more people than its author originally reached.";
+                        $headline = $this->username . ' broadcast this ' . $this->terms->getNoun('post') . ' to <strong>' .
+                        $add_audience . '</strong> more people than it would have reached.';
 
                         $this->insight_dao->insertInsightDeprecated('amplifier_'.$post->id, $instance->id,
-                        $simplified_post_date, "Amplifier:", $insight_text, $filename, Insight::EMPHASIS_LOW,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize($post));
                     }
                 }

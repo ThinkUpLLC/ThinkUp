@@ -42,6 +42,8 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
             $this->insight_date);
             $most_popular_post = null;
             $most_responses = 0;
+            $insight_text = '';
+            
             if (isset($flashback_posts) && sizeof($flashback_posts) > 0 ) {
                 foreach ($flashback_posts as $post) {
                     $total_responses = $post->reply_count_cache + $post->all_retweets + $post->favlike_count_cache;
@@ -56,10 +58,10 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $number_of_years_ago = $current_year - $post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
-                    $insight_text = "$this->username's most popular ".$this->terms->getNoun('post')
+                    $headline = "$this->username's most popular ".$this->terms->getNoun('post')
                     ." <strong>$number_of_years_ago year$plural ago</strong> today was: ";
                     $this->insight_dao->insertInsightDeprecated("posts_on_this_day_popular_flashback", $instance->id,
-                    $this->insight_date, "Time machine:", $insight_text, basename(__FILE__, ".php"),
+                    $this->insight_date, $headline, $insight_text, basename(__FILE__, ".php"),
                     Insight::EMPHASIS_LOW, serialize($most_popular_post));
                 }
             }

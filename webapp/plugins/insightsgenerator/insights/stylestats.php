@@ -120,19 +120,19 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 $last_type = end($keys);
                 foreach ($total_posts as $type => $total) {
                     if ($type == $last_type) { //last item in list
-                        $insight_text .= "and ";
+                        $style_analysis .= "and ";
                     }
-                    if ($insight_text == '') { //first item
-                        $insight_text .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
+                    if ($style_analysis == '') { //first item
+                        $style_analysis .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
                         (($total == 1)?"was a":"were")." ".(($total == 1)?substr($type, 0, -1):$type);
                     } else {
-                        $insight_text .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
+                        $style_analysis .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
                         (($total == 1)?substr($type, 0, -1):$type);
                     }
                     if ($type == $last_type) {  //last item in list
-                        $insight_text .= ".";
+                        $style_analysis .= ".";
                     } else {
-                        $insight_text .= ", ";
+                        $style_analysis .= ", ";
                     }
                 }
 
@@ -172,17 +172,18 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                             }
                         }
                     }
-                    $insight_text .= $sentence;
                 }
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, date('Y-m-d'));
 
-                if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),
-                    "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
-                    serialize($hot_posts_data));
+                if ($sentence) {
+                    $headline = $sentence;
+                    $insight_text = $style_analysis;
+                } else {
+                    $headline = $style_analysis;
                 }
+
+                $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),
+                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
+
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);

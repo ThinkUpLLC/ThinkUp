@@ -33,6 +33,37 @@
 
 require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
+function secondsToTextTime($inputSeconds) {
+
+    $secondsInAMinute = 60;
+    $secondsInAnHour  = 60 * $secondsInAMinute;
+    $secondsInADay    = 24 * $secondsInAnHour;
+
+    // extract days
+    $days = floor($inputSeconds / $secondsInADay);
+
+    // extract hours
+    $hourSeconds = $inputSeconds % $secondsInADay;
+    $hours = floor($hourSeconds / $secondsInAnHour);
+
+    // extract minutes
+    $minuteSeconds = $hourSeconds % $secondsInAnHour;
+    $minutes = floor($minuteSeconds / $secondsInAMinute);
+
+    // extract the remaining seconds
+    $remainingSeconds = $minuteSeconds % $secondsInAMinute;
+    $seconds = ceil($remainingSeconds);
+  
+    // return the final array
+    $obj = array(
+        'd' => (int) $days,
+        'h' => (int) $hours,
+        'm' => (int) $minutes,
+        's' => (int) $seconds,
+    );
+    return $obj;
+}
+
 class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
@@ -47,6 +78,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             $mentions_count = array();
             $mentions_info = array();
             $insight_data = array();
+            $insight_text = '';
 
             foreach ($last_week_of_posts as $post) {
                 $post_text = $post->post_text;
@@ -95,10 +127,30 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_mentioned_user)) {
-                $insight_text = $this->username." mentioned ".$most_mentioned_user['key']
+                $headline = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
 
-                $this->insight_dao->insertInsightDeprecated('interactions', $instance->id, $this->insight_date, "BFFs:",
+                $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * 15;
+
+                $insight_text = "That's roughly";
+                $conversation_time = secondsToTextTime($conversation_seconds);
+
+                    if ($conversation_time["d"]) {
+                        $insight_text .= ' ' . $conversation_time["d"] . ' days';
+                    }
+                    if ($conversation_time["h"]) {
+                        $insight_text .= ' ' . $conversation_time["h"] . ' hours';
+                    }
+                    if ($conversation_time["m"]) {
+                        $insight_text .= ' ' . $conversation_time["m"] . ' minutes';
+                    }
+                    if ($conversation_time["s"]) {
+                        $insight_text .= ' ' . $conversation_time["s"] . ' seconds';
+                    }
+
+                    $insight_text .= ' spent chatting with each other.';
+
+                $this->insight_dao->insertInsightDeprecated('interactions', $instance->id, $this->insight_date, $headline,
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($insight_data));
             }
         }

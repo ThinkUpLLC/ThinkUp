@@ -418,10 +418,6 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
-        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //assert that page of insights includes from both private and public
         $dao = new InsightMySQLDAO();

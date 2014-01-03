@@ -36,6 +36,7 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         $video_dao = DAOFactory::getDAO('VideoDAO');
 
@@ -57,11 +58,13 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
             // if we lost subscribers then we will be doing subscriber_count minus a negative number, so adding
             $total_before_video = $subscriber_count - $gain_or_loss;
             $percent_change = round((abs($gain_or_loss) / $total_before_video) * 100,2);
-            $prefix = ($gain_or_loss < 0) ? 'Subscriber change:' : 'They\'re sticking around:';
             $verb = ($gain_or_loss < 0) ? ' decreased' : ' increased';
-            $text = "<a href=http://www.youtube.com/watch?v=$video->post_id>$video->post_text</a>$verb ";
-            $text .= "<a href=http://plus.google.com/$instance->network_user_id>$instance->network_username</a>"."'s ";
-            $text .= "subscriber count by <strong>".$percent_change."%</strong>.";
+            $headline = $video->post_text . $verb . " " . $instance->network_username . "'s ";
+            $headline .= "subscriber count by <strong>".$percent_change."%</strong>.";
+            $insight_text = "<a href=http://plus.google.com/$instance->network_user_id>$instance->network_username</a>'s ";
+            $insight_text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>$video->post_text</a> ";
+            $insight_text .= "left an impression on $gain_or_loss subscribers.";
+            
             $subscriber_count = intval($subscriber_count);
             $total_before_video = intval($total_before_video);
             $rows = $video_dao->getNetSubscriberChange($instance->network_username, 'youtube', 10);
@@ -69,15 +72,15 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
 
             if($percent_change >=50) {
                 $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                 serialize(array($chart,$video)));
             } elseif($percent_change >=25 ) {
                 $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_MED,
+                $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_MED,
                 serialize(array($chart,$video)));
             } elseif($percent_change >=10 ) {
                 $this->insight_dao->insertInsightDeprecated('subscriber_change'.$video->id, $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
+                $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                 serialize(array($chart,$video)));
             }
         }
