@@ -1,8 +1,63 @@
+
+{if isset($thinkupllc_endpoint)}
+
+      <div class="container">
+        <header>
+          <h1>Twitter</h1>
+        </header>
+
+        <ul class="list-group list-accounts">
+        {if count($owner_instances) > 0 }
+          {foreach from=$owner_instances key=iid item=i name=foo}
+          <li class="list-group-item list-accounts-item">
+            <div class="account-label">
+              <img src="http://avatars.io/twitter/{$i->network_username}" class="account-photo img-circle">
+              <a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a>
+            </div>
+            <div class="account-action account-action-delete">
+              <form method="post" action="{$site_root_path}account/?p=twitter"
+                name="{$i->network_username}-delete">
+              <input type="hidden" name="instance_id" value="{$i->id}">
+              <input type="hidden" name="action" value="Delete">
+              {insert name="csrf_token"}
+              <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
+                onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
+                <i class="fa fa-minus-circle icon"></i>
+              </a>
+              </form>
+            </div>
+
+          </li>
+          {/foreach}
+        {/if}
+        {if $oauthorize_link}
+          <li class="list-group-item list-accounts-item-add"><a href="{$oauthorize_link}">
+            <div class="account-label">
+              Connect a Twitter account
+            </div>
+            <div class="account-action account-action-add">
+              <i class="fa fa-plus-circle icon"></i>
+            </div>
+          </a></li>
+        {/if}
+
+        </ul>
+
+        <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
+
+        {include file="_usermessage.tpl" field="membership_cap"}
+
+      </div>
+    </div>
+
+{else}
+
+
 <div class="plugin-info">
 
     <span class="pull-right">{insert name="help_link" id='twitter'}</span>
     <h2>
-        <i class="icon-twitter icon-muted"></i> Twitter 
+        <i class="fa fa-twitter text-muted"></i> Twitter
     </h2>
 
 </div>
@@ -13,20 +68,21 @@
 
 {if count($owner_instances) > 0 }
 
+
 <table class="table">
 
     <tr>
         <th><h4 class="pull-left">Account</h4></th>
-        <th><i class="icon-lock icon-2x icon-muted"></i></th>
-        {if $user_is_admin}<th><i class="icon-refresh icon-2x icon-muted"></i></th>{/if}
-        <th><i class="icon-tag icon-2x icon-muted"></i></th>
-        <th><i class="icon-trash icon-2x icon-muted"></i></th>
+        <th><i class="fa fa-lock fa-2x icon-muted"></i></th>
+        {if $user_is_admin}<th><i class="fa fa-refresh fa-2x icon-muted"></i></th>{/if}
+        <th><i class="fa fa-tag fa-2x icon-muted"></i></th>
+        <th><i class="fa fa-trash fa-2x icon-muted"></i></th>
     </tr>
-        
+
     {foreach from=$owner_instances key=iid item=i name=foo}
     <tr>
         <td>
-            <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
+            <h3 class="lead"><i class="fa fa-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
         </td>
         <td class="action-button">
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn
@@ -38,14 +94,14 @@
         </td>
         {/if}
         <td class="action-button">
-            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
+            <a href="{$site_root_path}account/?p=twitter&amp;u={$i->network_username}&amp;n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
         </td>
         <td class="action-button">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
-            type="submit" name="action" class="btn btn-danger" 
+            type="submit" name="action" class="btn btn-danger"
             value="Delete" /></form></span>
         </td>
     </tr>
@@ -58,7 +114,7 @@
 
 
 {if $oauthorize_link}
-<a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Twitter account</a>
+<a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a Twitter account</a>
 {/if}
 
 
@@ -76,7 +132,7 @@
     Fill in the following settings.<br />
     Name: <span style="font-family:Courier;">{$twitter_app_name}</span><br />
     Description: <span style="font-family:Courier;">My ThinkUp installation</span><br />
-    Website: 
+    Website:
     <small>
       <code style="font-family:Courier;" id="clippy_2987">{$thinkup_site_url}</code>
     </small>
@@ -159,3 +215,5 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
+
+{/if}<!-- end if hosted/OSP loop -->

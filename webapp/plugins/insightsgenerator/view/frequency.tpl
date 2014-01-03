@@ -1,13 +1,14 @@
-{include file=$tpl_path|cat:'_header.tpl'}
-
-{if $i->headline eq 'Ramping up:'}
-{include file=$tpl_path|cat:'_textonly.tpl' icon='circle-arrow-up'}
-{elseif $i->headline eq 'Slowing down:'}
-{include file=$tpl_path|cat:'_textonly.tpl' icon='circle-arrow-down'}
-{elseif $i->headline eq 'Nudge, nudge:'}
-{include file=$tpl_path|cat:'_textonly.tpl' icon='exclamation-sign'}
+{if $i->related_data.milestones}
+  {if $i->related_data.milestones.items|@count eq 1}
+    {include file=$tpl_path|cat:"_bignumber.tpl"
+    milestone=$i->related_data.milestones.items[0]
+    milestone_label_type=$i->related_data.milestones.label_type}
+  {else}
+    {include file=$tpl_path|cat:"_bignumbers.tpl"
+    milestones=$i->related_data.milestones}
+  {/if}
 {else}
-{include file=$tpl_path|cat:'_textonly.tpl' icon='ok-circle'}
+  {if $i->related_data.button}
+  {include file=$tpl_path|cat:"_button.tpl" button=$i->related_data.button }
+  {/if}
 {/if}
-
-{include file=$tpl_path|cat:'_footer.tpl'}

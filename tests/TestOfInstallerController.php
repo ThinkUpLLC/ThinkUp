@@ -179,7 +179,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->debug($result);
         $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
         //make sure we've auto-progressed to step 2 b/c all requirements have been met
-        $this->assertPattern('/Create your ThinkUp account/', $result);
+        $this->assertPattern('/Create your ThinkUp/', $result);
         $this->restoreConfigFile();
         //reset back to what it was
         ini_set('session.save_path', $session_save_path);
