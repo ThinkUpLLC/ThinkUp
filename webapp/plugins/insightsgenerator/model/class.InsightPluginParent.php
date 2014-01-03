@@ -37,12 +37,12 @@ class InsightPluginParent {
      * @var InsightTerms
      */
     var $terms;
-    /** 
+    /**
      * Insight date
-     * @var DateTime
+     * @var str
      */
     var $insight_date;
-    /** 
+    /**
      * Username.
      * @var str
      */
@@ -50,8 +50,7 @@ class InsightPluginParent {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->insight_date = new DateTime();
-        $this->insight_date = $this->insight_date->format('Y-m-d');
+        $this->insight_date = date("Y-m-d");
         $this->insight_dao = DAOFactory::getDAO('InsightDAO');
         $this->username = ($instance->network == 'twitter')?'@'.$instance->network_username:$instance->network_username;
         $this->terms = new InsightTerms($instance->network);
@@ -109,6 +108,51 @@ class InsightPluginParent {
         // Check array of networks for which the insight should run
         if (isset($excluded_networks)) {
             if (in_array($instance->network, $excluded_networks)) {
+                $run = $run && false;
+            } else {
+                $run = $run && true;
+            }
+        }
+
+        return $run;
+    }
+
+    /**
+     * Determine whether a monthly insight should be generated or not.
+     * @param str $slug slug of the insight to be generated
+     * @param Instance $instance user and network details for which the insight has to be generated
+     * @param date $insight_date date for which the insight has to be generated
+     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
+     * @param int $day_of_month the day of the month on which the insight should run
+     * @return bool $run whether the insight should be generated or not
+     */
+    public function shouldGenerateMonthlyInsight($slug, Instance $instance, $insight_date=null,
+    $regenerate_existing_insight=false, $day_of_month=null) {
+        $run = true;
+
+        // Check whether testing
+        $in_test_mode = ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE") == "TESTS");
+        if ($in_test_mode) {
+            return ($run && $in_test_mode);
+        }
+
+        // Check the day of the month
+        if (isset($day_of_month)) {
+            if (date('j') == $day_of_month) {
+                $run = $run && true;
+            } else {
+                $run = $run && false;
+            }
+        }
+
+        // Check boolean whether insight should be regenerated over a day
+        if (!$regenerate_existing_insight) {
+            $insight_date = isset($insight_date) ? $insight_date : 'today';
+
+            $existing_insight = $this->insight_dao->getInsight($slug, $instance->id,
+            date('Y-m-d', strtotime($insight_date)));
+
+            if (isset($existing_insight)) {
                 $run = $run && false;
             } else {
                 $run = $run && true;

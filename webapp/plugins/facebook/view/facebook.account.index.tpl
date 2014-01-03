@@ -1,17 +1,81 @@
+
+{if isset($thinkupllc_endpoint)}
+
+      <div class="container">
+        <header>
+          <h1>Facebook</h1>
+        </header>
+
+        <ul class="list-group list-accounts">
+        {if count($instances) > 0 }
+          {foreach from=$instances key=iid item=i name=foo}
+          <li class="list-group-item list-accounts-item">
+            <div class="account-label">
+              <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
+              {if $i->auth_error}<span class="fa fa-warning text-warning" id="facebook-auth-error"></span>{/if}
+              <a href="{$site_root_path}?u={$i->network_username|urlencode}&amp;n={$i->network|urlencode}">{$i->network_username}</a>
+            </div>
+
+            <div class="account-action account-action-delete">
+              <form method="post" action="{$site_root_path}account/?p=facebook"
+                name="{$i->network_username}-delete">
+              <input type="hidden" name="instance_id" value="{$i->id}">
+              <input type="hidden" name="action" value="Delete">
+              {insert name="csrf_token"}
+              <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
+                onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
+                <i class="fa fa-minus-circle icon"></i>
+              </a>
+              </form>
+            </div>
+          </li>
+          {/foreach}
+        {/if}
+        {if $fbconnect_link}
+          <li class="list-group-item list-accounts-item-add"><a href="{$fbconnect_link}">
+            <div class="account-label">
+              {if count($owner_instances) eq 0 }Connect a Facebook account{else}Add another account&hellip;{/if}
+            </div>
+            <div class="account-action account-action-add">
+              <i class="fa fa-plus-circle icon"></i>
+            </div>
+          </a></li>
+        {/if}
+
+        </ul>
+
+        {foreach from=$instances key=iid item=i name=foo}
+            {if isset($i->auth_error)}
+              <p class="text-danger">{$i->network_username}'s' Facebook connection expired.  To fix it, <a href="{$fb_reconnect_link}">re-connect</a>.</p>
+            {/if}
+        {/foreach}
+
+        <p class="accounts-privacy">ThinkUp will never post without your permission.</p>
+
+
+        {include file="_usermessage.tpl" field="membership_cap"}
+
+      </div>
+    </div>
+
+{else}
+
+
+
 {include file="_usermessage.tpl"}
-    
+
 <div class="plugin-info">
 
     <span class="pull-right">{insert name="help_link" id='facebook'}</span>
     <h2>
-        <i class="icon-facebook icon-muted"></i> Facebook 
+        <i class="fa fa-facebook text-muted"></i> Facebook
     </h2>
 
 </div>
 
 {if $fbconnect_link}
 {include file="_usermessage.tpl" field="authorization"}
-<a href="{$fbconnect_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Facebook User</a>
+<a href="{$fbconnect_link}" class="btn btn-success add-account"><i class="fa fa-plus icon-white"></i> Add a Facebook User</a>
 {/if}
 
 {if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
@@ -22,19 +86,19 @@
 
     {foreach from=$instances key=iid item=i name=foo}
     <div class="row-fluid">
-        <div class="span3">
-            {if $i->auth_error}<span class="ui-icon ui-icon-alert" style="float: left; margin:0.25em 0 0 0;" id="facebook-auth-error"></span>{/if}
+        <div class="col-md-3">
+            {if $i->auth_error}<span class="fa fa-warning" id="facebook-auth-error"></span>{/if}
             <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
-        <div class="span3">
+        <div class="col-md-3">
             <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" value="Set {if $i->is_public}private{else}public{/if}" /></span>
         </div>
         {if $user_is_admin}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
         {/if}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
             <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="btn btn-danger" value="Delete" /></form></span>
@@ -53,18 +117,18 @@
     <div class="article">
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="row-fluid">
-        <div class="span3">
-            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
+        <div class="col-md-3">
+            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
-        <div class="span3">
+        <div class="col-md-3">
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="Set {if $i->is_public}private{else}public{/if}" /></span>
         </div>
         {if $user_is_admin}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
         {/if}
-        <div class="span3">
+        <div class="col-md-3">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete page csrf token -->
             <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="btn btn-danger" value="Delete" /></form></span>
@@ -188,3 +252,6 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
+
+
+{/if}<!-- end if hosted/OSP loop -->

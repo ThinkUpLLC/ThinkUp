@@ -3,7 +3,7 @@
  Plugin Name: Expand URLs
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/expandurls/
  Description: Expand shortened links.
- Icon: assets/img/plugin_icon.png
+ Icon: link
  Version: 0.01
  Author: Gina Trapani
  */

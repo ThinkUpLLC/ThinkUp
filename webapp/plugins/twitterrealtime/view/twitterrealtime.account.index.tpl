@@ -2,8 +2,8 @@
 
     <span class="pull-right">{insert name="help_link" id='twitterrealtime'}</span>
     <h1>
-        <img src="{$site_root_path}plugins/twitterrealtime/assets/img/twitter_icon.png" class="plugin-image">
-        Twitter Realtime Plugin
+        <i class="fa fa-twitter text-muted"></i>
+        Twitter Realtime
     </h1>
 
 {if count($owner_instances) > 0 }
@@ -20,10 +20,10 @@
     time streaming is launched.</p>
     {foreach from=$owner_instances key=iid item=i name=foo}
         <div class="row-fluid">
-            <div class="span6">
+            <div class="col-md-9">
                 <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
             </div>
-            <div class="span6">
+            <div class="col-md-9">
                 <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling and streaming{else}start crawling and streaming{/if}" /></span>
             </div>
         </div>

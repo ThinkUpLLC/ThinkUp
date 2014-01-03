@@ -1,4 +1,5 @@
 <?php
+
 /*
  Plugin Name: Reply Spike
  Description: Reply spikes and high insights for the past 7, 30, and 365 days.
@@ -38,6 +39,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
+        $insight_slug = '';
 
         $simplified_post_date = "";
 
@@ -69,15 +72,22 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 // Next compare post reply counts to baselines and store insights where there's a spike or high
                 if (isset($high_reply_count_365_days->value)
-                && $post->reply_count_cache >= $high_reply_count_365_days->value) {
+                && $post->reply_count_cache >= $high_reply_count_365_days->value
+                && isset($it_is_not_launch_day)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('reply_high_365_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 365-day record!","<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
-                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
+                        $insight_slug = 'reply_high_365_day_'.$post->id;
+                        $headline = "That ".$this->terms->getNoun('post'). " got <strong>" .
+                            number_format($post->reply_count_cache) . " " .
+                            $this->terms->getNoun('reply', InsightTerms::PLURAL) .
+                            "</strong> &mdash; your 365-day high!";
+                        $insight_text = "Why do you think $this->username's ".$this->terms->getNoun('post').
+                            " did so well?";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
@@ -88,16 +98,24 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 } elseif (isset($high_reply_count_30_days->value)
-                && $post->reply_count_cache >= $high_reply_count_30_days->value) {
+                && $post->reply_count_cache >= $high_reply_count_30_days->value
+                && isset($it_is_not_launch_day)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('reply_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 30-day record!", "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
-                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
+                        $insight_slug = 'reply_high_30_day_'.$post->id;
+
+                        $headline = "This ".$this->terms->getNoun('post'). " got " .
+                            $this->terms->getNoun('reply', InsightTerms::PLURAL) .
+                            " from <strong>" . number_format($post->reply_count_cache) .
+                            " people</strong>.";
+                        $insight_text = "That sets a new 30-day record for $this->username.";
+
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
@@ -112,10 +130,13 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('reply_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 7-day record!", "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".", $filename,
-                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
+                        $insight_slug = 'reply_high_7_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->reply_count_cache).
+                            " people</strong> replied to $this->username's ".$this->terms->getNoun('post').".";
+                        $insight_text = "That's a new 7-day record.";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
@@ -131,12 +152,14 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_30_days->value);
-                        $this->insight_dao->insertInsightDeprecated('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Conversation starter:",
-                        "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').", more than".
-                        " <strong>".$this->terms->getMultiplierAdverb($multiplier)."</strong> $this->username's 30-day".
-                        " average.", $filename, Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
+                        $insight_slug = 'reply_spike_30_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->reply_count_cache).
+                            " people</strong> replied to " . $this->username . "'s ".$this->terms->getNoun('post'). '.';
+                        $insight_text = "That's more than <strong>".$this->terms->getMultiplierAdverb($multiplier).
+                            "</strong> " . $this->username . "'s 30-day average.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $my_insight_posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
@@ -152,13 +175,14 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_7_days->value);
-                        $this->insight_dao->insertInsightDeprecated('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Conversation starter:",
-                        "<strong>".number_format($post->reply_count_cache).
-                        " people</strong> replied to $this->username's ".$this->terms->getNoun('post').", more than ".
-                        "<strong>" .$this->terms->getMultiplierAdverb($multiplier)."</strong> $this->username's 7-day".
-                        " average.", $filename, Insight::EMPHASIS_LOW,
-                        serialize(array($post, $hot_posts_data)));
+                        $insight_slug = 'reply_spike_7_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->reply_count_cache).
+                            " people</strong> replied to $this->username's ".$this->terms->getNoun('post'). '.';
+                        $insight_text = "That's more than "."<strong>" .$this->terms->getMultiplierAdverb($multiplier).
+                            "</strong> $this->username's 7-day average.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $my_insight_posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
@@ -167,6 +191,27 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 }
+
+                if (isset($headline) && isset($insight_slug)) {
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->slug = $insight_slug; //slug to label this insight's content
+                    $my_insight->date = $simplified_post_date; //date of the data this insight applies to
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = '';
+                    $my_insight->emphasis = $emphasis; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->setPosts($my_insight_posts);
+
+                    $this->insight_dao->insertInsight($my_insight);
+                }
+                //reset vars
+                $headline = null;
+                $insight_slug = null;
+                $insight_text = null;
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

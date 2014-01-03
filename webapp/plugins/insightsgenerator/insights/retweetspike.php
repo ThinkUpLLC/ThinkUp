@@ -37,10 +37,12 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $filename = basename(__FILE__, ".php");
+        $insight_text = '';
+        $header_image = '';
 
         $simplified_post_date = "";
         $share_verb = ($instance->network == 'twitter')?'retweeted':'reshared';
+        $present_tense_share_verb = ($instance->network == 'twitter')?'retweeting':'sharing';
         foreach ($last_week_of_posts as $post) {
             if ($post->all_retweets > 2) { //Only show insight for more than 2 reshares
                 // First get spike/high 7/30/365 day baselines
@@ -69,16 +71,18 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 // Next compare post retweet counts to baselines and store insights where there's a spike or high
                 if (isset($high_retweet_count_365_days->value)
-                && $post->all_retweets >= $high_retweet_count_365_days->value) {
+                && $post->all_retweets >= $high_retweet_count_365_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
+                        $insight_text = "That's a new 365-day record!";
                         $this->insight_dao->insertInsightDeprecated('retweet_high_365_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 365-day record!", "<strong>".number_format($post->all_retweets).
-                        " people</strong> $share_verb $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        $simplified_post_date, "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb $this->username's post.", $insight_text, $filename,
+                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -90,16 +94,27 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 } elseif (isset($high_retweet_count_30_days->value)
-                && $post->all_retweets >= $high_retweet_count_30_days->value) {
+                && $post->all_retweets >= $high_retweet_count_30_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
+                        $slug = 'retweet_high_30_day_'.$post->id;
+                        $headline = "This is the most one of " . $this->username . "'s " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " has been " . $share_verb .
+                            " in the past month!";
+                        $insight_text = number_format($post->all_retweets) . " people thought this ".
+                            $this->terms->getNoun('post') . " was worth sharing.";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $posts = array($post, $hot_posts_data);
+
+                        $insight_text = "That's a new 30-day record.";
                         $this->insight_dao->insertInsightDeprecated('retweet_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 30-day record!", "<strong>".number_format($post->all_retweets).
-                        " people</strong> $share_verb $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        $simplified_post_date, "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb $this->username's post.", $insight_text, $filename,
+                        Insight::EMPHASIS_HIGH, serialize(array($post, $hot_posts_data)));
 
                         $this->insight_dao->deleteInsight('retweet_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -115,10 +130,12 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('retweet_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 7-day record!", "<strong>".number_format($post->all_retweets).
-                        " people</strong> $share_verb $this->username's post.", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        $slug = 'retweet_high_7_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->all_retweets).
+                        " people</strong> $share_verb $this->username's " . $this->terms->getNoun('post') . ".";
+                        $insight_text = "That's a new 7-day record.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -135,11 +152,23 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->all_retweets/$average_retweet_count_30_days->value);
-                        $this->insight_dao->insertInsightDeprecated('retweet_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
-                        " people</strong> $share_verb $this->username's post, more than <strong>".$multiplier.
-                        "x</strong> $this->username's 30-day average.", $filename,
-                        Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
+                        $slug = 'retweet_spike_30_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->all_retweets). " people</strong> $share_verb "
+                            . "this one!";
+
+                        $insight_text = "Seems like this one is going viral. This " . $this->terms->getNoun('post') .
+                            " got more than <strong>" . $this->terms->getMultiplierAdverb($multiplier).
+                            "</strong> $this->username's 30-day average.";
+
+                        if ($post->id % 2) {
+                            $headline = "This " . $this->terms->getNoun('post') . " got $share_verb by "
+                            .number_format($post->all_retweets) . " people!";
+                            $insight_text = "$this->username got more than <strong>"
+                            . $this->terms->getMultiplierAdverb($multiplier). "</strong> the 30-day average "
+                            . "with this " . $this->terms->getNoun('post') . ".";
+                        }
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -156,11 +185,13 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->all_retweets/$average_retweet_count_7_days->value);
-                        $this->insight_dao->insertInsightDeprecated('retweet_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Going viral:", "<strong>".number_format($post->all_retweets).
-                        " people</strong> $share_verb $this->username's post, more than <strong>" .$multiplier.
-                        "x</strong> $this->username's 7-day average.", $filename, Insight::EMPHASIS_LOW,
-                        serialize(array($post, $hot_posts_data)));
+                        $slug = 'retweet_spike_7_day_'.$post->id;
+                        $headline = "<strong>".number_format($post->all_retweets). " people</strong> thought this " .
+                            $this->terms->getNoun('post') . " was worth " . $present_tense_share_verb . ".";
+                        $insight_text = "That's more than <strong>" .$this->terms->getMultiplierAdverb($multiplier).
+                            "</strong> $this->username's average over the last 7 days.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('retweet_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -170,6 +201,27 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 }
+
+                if (isset($headline) && isset ($slug)) {
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->slug = $slug; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $simplified_post_date; //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->emphasis = $emphasis; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->setPosts($posts);
+
+                    $this->insight_dao->insertInsight($my_insight);
+                }
+                //reset vars
+                $headline = null;
+                $insight_slug = null;
+                $insight_text = null;
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
