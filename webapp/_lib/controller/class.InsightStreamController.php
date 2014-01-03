@@ -42,8 +42,7 @@ class InsightStreamController extends ThinkUpController {
         $this->setViewTemplate('insights.tpl');
         $this->addToView('enable_bootstrap', true);
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
-
-        $this->addHeaderJavaScript('assets/js/d3.min.js');
+        $this->addToView('thinkup_application_url', Utils::getApplicationURL());
 
         if ($this->shouldRefreshCache() ) {
             if (isset($_GET['u']) && isset($_GET['n']) && isset($_GET['d']) && isset($_GET['s'])) {
@@ -62,7 +61,7 @@ class InsightStreamController extends ThinkUpController {
                 $this->addHeaderJavaScript('assets/js/notify-insights.js');
 
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
-                $instances = $instance_dao->getByOwner($owner);
+                $instances = $instance_dao->getByOwnerWithStatus($owner);
                 $this->addToView('instances', $instances);
                 $saved_searches = array();
                 if (sizeof($instances) > 0) {
@@ -70,6 +69,18 @@ class InsightStreamController extends ThinkUpController {
                     $saved_searches = $instancehashtag_dao->getHashtagsByInstances($instances);
                 }
                 $this->addToView('saved_searches', $saved_searches);
+
+                //Start off assuming connection doesn't exist
+                $connection_status = array('facebook'=>'inactive', 'twitter'=>'inactive');
+                foreach ($instances as $instance) {
+                    if ($instance->auth_error != '') {
+                        $connection_status[$instance->network] = 'error';
+                    } else { //connection exists, so it's active
+                        $connection_status[$instance->network] = 'active';
+                    }
+                }
+                $this->addToView('facebook_connection_status', $connection_status['facebook']);
+                $this->addToView('twitter_connection_status', $connection_status['twitter']);
             }
         }
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
@@ -146,8 +157,10 @@ class InsightStreamController extends ThinkUpController {
         if (isset($insights) && sizeof($insights) > 0) {
             if (sizeof($insights) == (self::PAGE_INSIGHTS_COUNT+1)) {
                 $this->addToView('next_page', $page+1);
-                $this->addToView('last_page', $page-1);
                 array_pop($insights);
+            }
+            if ($page != 1) {
+                $this->addToView('last_page', $page-1);
             }
             $this->addToView('insights', $insights);
         } else {
@@ -159,17 +172,31 @@ class InsightStreamController extends ThinkUpController {
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 }
                 $owned_instances = $instance_dao->getByOwner($owner, $force_not_admin = false, $only_active=true);
-                $site_root_path = Config::getInstance()->getValue('site_root_path');
+                $config = Config::getInstance();
+                $site_root_path = $config->getValue('site_root_path');
+                $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                 if (sizeof($owned_instances) > 0) {
                     $this->addToView('message_header', "ThinkUp doesn't have any insights for you yet.");
-                    $this->addToView('message_body', "Check back later, ".
-                    "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
+                    $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                    if (!isset($thinkupllc_endpoint)) {
+                        $this->addToView('message_body', "Check back later, ".
+                        "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
+                    } else {
+                        $this->addToView('message_body', "Check back later, or add another ".$plugin_link.
+                        "twitter\">Twitter</a> or "."".$plugin_link."facebook\">Facebook</a> account.");
+                    }
                 } else {
-                    $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                     $this->addToView('message_header', "Welcome to ThinkUp. Let's get started.");
-                    $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a>, ".
-                    "".$plugin_link."facebook\">Facebook</a>, ".$plugin_link.
-                    "googleplus\">Google+</a>, or ".$plugin_link."foursquare\">Foursquare</a> account.");
+
+                    $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                    if (isset($thinkupllc_endpoint)) {
+                        $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a> or ".
+                        "".$plugin_link."facebook\">Facebook</a> account.");
+                    } else {
+                        $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a>, ".
+                        "".$plugin_link."facebook\">Facebook</a>, ".$plugin_link.
+                        "googleplus\">Google+</a>, or ".$plugin_link."foursquare\">Foursquare</a> account.");
+                    }
                 }
             } else { //redirect to login
                 return false;

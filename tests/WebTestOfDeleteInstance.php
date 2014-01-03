@@ -81,7 +81,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertLink('@linkbaiter');
         $this->assertSubmit('Delete');
 
-        $this->click('Log Out');
+        $this->click('Log out');
         //        $this->assertText('You have successfully logged out');
         //        $this->showSource();
         $this->assertText("Log In");

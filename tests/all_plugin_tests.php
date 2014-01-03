@@ -77,6 +77,7 @@ $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 $plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
+$plugin_tests->add(new TestOfBiggestFansInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfFrequencyInsight());
 $plugin_tests->add(new TestOfListMembershipInsight());
@@ -98,6 +99,11 @@ $plugin_tests->add(new TestOfLikeSpikeInsight());
 $plugin_tests->add(new TestOfViewSpikeInsight());
 $plugin_tests->add(new TestOfSubscriberChangeInsight());
 $plugin_tests->add(new TestOfMinutesViewedInsight());
+$plugin_tests->add(new TestOfBiggestFansInsight());
+$plugin_tests->add(new TestOfFlashbackInsight());
+$plugin_tests->add(new TestOfRetweetSpikeInsight());
+$plugin_tests->add(new TestOfWeeklyGraphInsight());
+
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());

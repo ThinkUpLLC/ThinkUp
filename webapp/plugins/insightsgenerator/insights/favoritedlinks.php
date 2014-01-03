@@ -36,6 +36,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
         if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
         $regenerate_existing_insight=true)) {
@@ -62,17 +63,31 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 $post_type = '';
 
                 if ($favorited_links_count == 1) {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    $headline = $this->username." ".$this->terms->getVerb('liked')
                     ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
                 } else {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                    $headline = $this->username." ".$this->terms->getVerb('liked')
                     ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                     ."</strong> with links in them:";
                 }
 
-                $this->insight_dao->insertInsightDeprecated("favorited_links", $instance->id,
-                $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'favorited_links'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->setPosts($todays_favorited_posts_with_links);
+
+                $this->insight_dao->insertInsight($my_insight);
+
+
             }
         }
 

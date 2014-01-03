@@ -36,7 +36,7 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $filename = basename(__FILE__, ".php");
+        $headline = '';
 
         $simplified_post_date = "";
         foreach ($last_week_of_posts as $post) {
@@ -67,17 +67,22 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 // Next compare post favlike counts to baselines and store insights where there's a spike or high
                 if (isset($high_fave_count_365_days->value)
-                && $post->favlike_count_cache >= $high_fave_count_365_days->value) {
+                && $post->favlike_count_cache >= $high_fave_count_365_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('fave_high_365_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 365-day record!", "<strong>".
+
+                        $slug = 'fave_high_365_day_'.$post->id;
+                        $headline = "That's a 365-day record for " . $this->terms->getNoun('like', InsightTerms::PLURAL)
+                            . "!";
+                        $insight_text = "<strong>".
                         number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
-                        ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        ." $this->username's ".$this->terms->getNoun('post').".";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('fave_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -89,17 +94,21 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                         $simplified_post_date);
                     }
                 } elseif (isset($high_fave_count_30_days->value)
-                && $post->favlike_count_cache >= $high_fave_count_30_days->value) {
+                && $post->favlike_count_cache >= $high_fave_count_30_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('fave_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 30-day record!", "<strong>".
-                        number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
-                        ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+
+                        $slug = 'fave_high_30_day_'.$post->id;
+                        $headline = "That's the highest number of " . $this->terms->getNoun('like', InsightTerms::PLURAL)
+                        . $this->username . "'s gotten in the past 30 days.";
+                        $insight_text = "<strong>". number_format($post->favlike_count_cache)." people</strong> ".
+                        $this->terms->getVerb('liked') ." $this->username's ".$this->terms->getNoun('post').".";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('fave_high_7_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -115,11 +124,12 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                     $instance->id, $simplified_post_date);
 
                     if (isset($hot_posts_data)) {
-                        $this->insight_dao->insertInsightDeprecated('fave_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "New 7-day record!", "<strong>".
-                        number_format($post->favlike_count_cache)." people</strong> ".$this->terms->getVerb('liked')
-                        ." $this->username's ".$this->terms->getNoun('post').".", $filename, Insight::EMPHASIS_HIGH,
-                        serialize(array($post, $hot_posts_data)));
+                        $slug = 'fave_high_7_day_'.$post->id;
+                        $headline = 'This one really got some ' .$this->terms->getNoun('like', InsightTerms::PLURAL) .'.';
+                        $insight_text = "<strong>" . number_format($post->favlike_count_cache)." people</strong> "
+                        . $this->terms->getVerb('liked') . " $this->username's ".$this->terms->getNoun('post').".";
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('fave_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -136,13 +146,17 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->favlike_count_cache/$average_fave_count_30_days->value);
-                        $this->insight_dao->insertInsightDeprecated('fave_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Hearts and stars:", "<strong>"
-                        .number_format($post->favlike_count_cache)
+
+                        $slug = 'fave_spike_30_day_'.$post->id;
+                        $headline = 'This ' . $this->terms->getNoun('post') . ' got '
+                            . $this->terms->getMultiplierAdverb($multiplier) . ' the '
+                            . $this->terms->getNoun('like', InsightTerms::PLURAL) . ' for ' . $this->username . '.';
+                        $insight_text = "<strong>" .number_format($post->favlike_count_cache)
                         ." people</strong> ".$this->terms->getVerb('liked')
-                        ." $this->username's ".$this->terms->getNoun('post').", more than <strong>".$multiplier
-                        ."x</strong> $this->username's 30-day average.", $filename,
-                        Insight::EMPHASIS_LOW, serialize(array($post, $hot_posts_data)));
+                        ." $this->username's ".$this->terms->getNoun('post').", which is more than <strong>".$multiplier
+                        ."x</strong> $this->username's 30-day average.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $posts = array($post, $hot_posts_data);
 
                         $this->insight_dao->deleteInsight('fave_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
@@ -159,13 +173,16 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->favlike_count_cache/$average_fave_count_7_days->value);
-                        $this->insight_dao->insertInsightDeprecated('fave_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date, "Hearts and stars:",
-                        "<strong>".number_format($post->favlike_count_cache)
-                        ." people</strong> ".$this->terms->getVerb('liked')
-                        ." $this->username's ".$this->terms->getNoun('post').", more than <strong>" .$multiplier
-                        ."x</strong> $this->username's 7-day average.", $filename, Insight::EMPHASIS_LOW,
-                        serialize(array($post, $hot_posts_data)));
+
+                        $slug = 'fave_spike_7_day_'.$post->id;
+                        $headline = 'This one hit a nerve this week.';
+                        $insight_text = "<strong>".number_format($post->favlike_count_cache)
+                        ." people</strong> ".$this->terms->getVerb('liked') . " $this->username's ".
+                        $this->terms->getNoun('post').", more than <strong>" .$multiplier
+                        ."x</strong> $this->username's 7-day average.";
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $posts = array($post, $hot_posts_data);
+
                         $this->insight_dao->deleteInsight('fave_high_30_day_'.$post->id, $instance->id,
                         $simplified_post_date);
                         $this->insight_dao->deleteInsight('fave_high_7_day_'.$post->id, $instance->id,
@@ -174,6 +191,31 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                         $simplified_post_date);
                     }
                 }
+
+                if (isset($slug) && isset($headline)) {
+                    //Instantiate the Insight object
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->slug = $slug; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $simplified_post_date; //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = '';
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->emphasis = $emphasis; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    if (isset ($posts)) {
+                        $my_insight->setPosts($posts);
+                    }
+
+                    $this->insight_dao->insertInsight($my_insight);
+                }
+
+                //reset vars
+                $headline = null;
+                $insight_slug = null;
+                $insight_text = null;
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

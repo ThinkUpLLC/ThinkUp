@@ -116,23 +116,57 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
 
                 $insight_text = '';
                 arsort($total_posts);
-                $keys = array_keys($total_posts);
-                $last_type = end($keys);
+                $posts_positive = array();
+                $posts_zero = array();
                 foreach ($total_posts as $type => $total) {
-                    if ($type == $last_type) { //last item in list
-                        $insight_text .= "and ";
-                    }
-                    if ($insight_text == '') { //first item
-                        $insight_text .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
-                        (($total == 1)?"was a":"were")." ".(($total == 1)?substr($type, 0, -1):$type);
+                    if ($total == 0) {
+                        $posts_zero[$type] = $total;
                     } else {
-                        $insight_text .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
+                        $posts_positive[$type] = $total;
+                    }
+                }
+                $keys_pos = array_keys($posts_positive);
+                $last_type_pos = end($keys_pos);
+
+                foreach ($posts_positive as $type => $total) {
+                    if ($type == $last_type_pos && count($posts_positive) >= 2) { //last item in list
+                        $style_analysis .= "and ";
+                    }
+                    if ($style_analysis == '') { //first item
+                        $style_analysis .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
+                        (($total == 1)?"was a":"were")." ".(($total == 1)?substr($type, 0, -1):$type);
+                    } elseif ($total == 0) {
+
+                    } else {
+                        $style_analysis .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
                         (($total == 1)?substr($type, 0, -1):$type);
                     }
-                    if ($type == $last_type) {  //last item in list
-                        $insight_text .= ".";
+                    if ($type == $last_type_pos) {  //last item in list
+                        $style_analysis .= ".";
+                    } else if (count($posts_positive) > 2) {
+                        $style_analysis .= ", ";
                     } else {
-                        $insight_text .= ", ";
+                        $style_analysis .= " ";
+                    }
+                }
+
+                $keys_zero = array_keys($posts_zero);
+                $last_type_zero = end($keys_zero);
+                foreach ($posts_zero as $type => $total) {
+                    if ($type == $last_type_zero && count($posts_zero) >= 2) { //last item in list
+                        $style_analysis_neg .= "or ";
+                    }
+                    if ($style_analysis_neg == '') { //first item
+                        $style_analysis_neg .= "$this->username didn't post any $type";
+                    } else {
+                        $style_analysis_neg .= "$type";
+                    }
+                    if ($type == $last_type_zero) {  //last item in list
+                        $style_analysis_neg .= ".";
+                    } else if (count($posts_zero) > 2) {
+                        $style_analysis_neg .= ", ";
+                    } else {
+                        $style_analysis_neg .= " ";
                     }
                 }
 
@@ -172,17 +206,54 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                             }
                         }
                     }
-                    $insight_text .= $sentence;
                 }
-                //TODO: Stop using the cached dashboard data and generate fresh here
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, date('Y-m-d'));
 
-                if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),
-                    "Post style:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
-                    serialize($hot_posts_data));
+                if ($sentence) {
+                    $headline = $sentence;
+                    $insight_text = $style_analysis;
+                } elseif ($style_analysis_neg) {
+                    $headline = $style_analysis;
+                    $insight_text = $style_analysis_neg;
+                } else {
+                    $insight_text = '';
                 }
+
+                // $insight_text .= '</p><p class="style-stats-icon-graphs">';
+                // if ($total_posts["questions"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["questions"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-question fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["quotations"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["quotations"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-quote-left fa-fw"></i><i class="fa fa-quote-right fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["links"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["links"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-link fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["photos"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["photos"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-camera fa-fw"></i>';
+                //         }
+                // }
+
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'style_stats'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = date('Y-m-d'); //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = '';
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+
+                $this->insight_dao->insertInsight($my_insight);
+
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);

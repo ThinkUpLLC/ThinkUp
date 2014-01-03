@@ -365,6 +365,37 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual(count($result), 0);
     }
 
+    public function testGetByOwnerWithStatus(){
+        $data = array(
+            'id'=>2,
+            'user_name'=>'steven',
+            'full_name'=>'Steven Warren',
+            'email'=>'me@example.com',
+            'last_login'=>'Yesterday',
+            'is_admin'=>1,
+            'is_activated'=>1,
+            'failed_logins'=>0,
+            'account_status'=>''
+            );
+        $owner = new Owner($data);
+
+        $result = $this->DAO->getByOwnerWithStatus($owner);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $users = array('jack','jill');
+        $user_ids = array(10, 12);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $user_ids[$id]);
+            if ($i->network_user_id == 10) {
+                $this->assertEqual($i->auth_error, 'There has been an error.');
+            } else {
+                $this->assertEqual($i->auth_error, '');
+            }
+        }
+    }
+
     public function testGetByOwnerAndNetwork(){
         $data = array(
         'id'=>2,

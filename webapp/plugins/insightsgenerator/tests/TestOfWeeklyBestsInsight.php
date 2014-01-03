@@ -85,7 +85,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s most popular tweet from last week got /', $result->text);
+        $this->assertPattern('/This was \@testeriffic\'s tweet of the week./', $result->headline);
         $this->assertPattern('/5 replies/', $result->text);
         $this->assertPattern('/1 retweet/', $result->text);
         $this->assertPattern('/3 favorites/', $result->text);
@@ -128,7 +128,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/tester_fb\'s most popular status update from last week got /', $result->text);
+        $this->assertPattern('/This was tester_fb\'s status update of the week/', $result->headline);
         $this->assertPattern('/8 comments/', $result->text);
         $this->assertPattern('/3 likes/', $result->text);
     }
@@ -161,9 +161,8 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s most popular tweet from last week got /', $result->text);
+        $this->assertPattern('/This was \@testeriffic\'s tweet of the week/', $result->headline);
         $this->assertPattern('/1 reply/', $result->text);
-        $this->assertNoPattern('/,/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
     }
 
@@ -195,11 +194,10 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s most popular tweet from last week got /', $result->text);
+        $this->assertPattern('/This was \@testeriffic\'s tweet of the week/', $result->headline);
         $this->assertPattern('/3 favorites/', $result->text);
         $this->assertNoPattern('/reply/', $result->text);
         $this->assertNoPattern('/retweet/', $result->text);
-        $this->assertNoPattern('/,/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
     }
 
@@ -231,10 +229,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s most popular tweet from last week got /', $result->text);
+        $this->assertPattern('/This was \@testeriffic\'s tweet of the week/', $result->headline);
         $this->assertPattern('/4 replies/', $result->text);
         $this->assertPattern('/5 favorites/', $result->text);
-        $this->assertNoPattern('/,/', $result->text);
         $this->assertPattern('/and/', $result->text);
     }
 }
