@@ -35,15 +35,15 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
         if (self::shouldGenerateInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
-                $text = "$this->username posted <strong>$count times</strong> in the past week";
+                $headline = "$this->username posted <strong>$count times</strong> in the past week";
             } else {
-                $prefix = "Nudge, nudge:";
-                $text = "$this->username didn't post anything new in the past week";
+                $headline = "$this->username didn't post anything new in the past week";
             }
 
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -59,25 +59,23 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($last_monday_insight_baseline) ) {
                     //compare it to this Monday's  number, and add a sentence comparing it.
                     if ($last_monday_insight_baseline->value > ($count + 1) ) {
-                        $prefix = "Slowing down:";
                         $difference = $last_monday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer times than the prior week.";
+                        $headline .= ", $difference fewer times than the prior week.";
                     } elseif ($last_monday_insight_baseline->value < ($count - 1) ) {
-                        $prefix = "Ramping up:";
                         $difference = $count - $last_monday_insight_baseline->value;
-                        $text .= ", $difference more times than the prior week.";
+                        $headline .= ", $difference more times than the prior week.";
                     } else {
-                        $text .= ".";
+                        $headline .= ".";
                     }
                 } else {
-                    $text .= ".";
+                    $headline .= ".";
                 }
             } else {
-                $text .= ".";
+                $headline .= ".";
             }
-            $prefix = (isset($prefix))?$prefix:'Post rate:';
-            $this->insight_dao->insertInsightDeprecated("frequency", $instance->id, $this->insight_date, $prefix,
-            $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+            $headline = (isset($headline))?$headline:'Post rate:';
+            $this->insight_dao->insertInsightDeprecated("frequency", $instance->id, $this->insight_date, $headline,
+            $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

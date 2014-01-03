@@ -52,6 +52,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
             arsort($response_count);
             $response_factor = each($response_count);
+            $insight_text = '';
 
             if ($response_factor['value']) {
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -65,7 +66,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
                 : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
-                $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
                 ."</strong> every <strong>".$time_str."</strong> over the last week";
 
@@ -80,17 +81,17 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     if ($last_fri_time_per_response < $time_per_response) {
-                        $insight_text .= ", slower than the previous week's average of 1 "
+                        $headline .= ", slower than the previous week's average of 1 "
                         .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
                     } elseif ($last_fri_time_per_response > $time_per_response) {
-                        $insight_text .= ", faster than the previous week's average of 1 "
+                        $headline .= ", faster than the previous week's average of 1 "
                         .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
                     }
                 }
-                $insight_text .= '.';
+                $headline .= '.';
 
-                $this->insight_dao->insertInsightDeprecated("response_time", $instance->id, $this->insight_date, "Response time:",
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                $this->insight_dao->insertInsightDeprecated("response_time", $instance->id, $this->insight_date, $headline,
+                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_HIGH);
             }
         }
 

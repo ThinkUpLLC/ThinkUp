@@ -94,7 +94,7 @@ class TestOfLocalFollowersInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/<strong>2 people<\/strong> in San Francisco, CA followed \@testuser./', $result->text);
+        $this->assertPattern('/<strong>2 people<\/strong> in San Francisco, CA followed \@testuser./', $result->headline);
     }
 
     public function testLocalFollowersInsightWithoutLocation() {

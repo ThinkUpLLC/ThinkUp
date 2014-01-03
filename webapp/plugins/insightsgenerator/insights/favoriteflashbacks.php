@@ -36,6 +36,7 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
+        $insight_text = '';
 
         $days_ago = 0;
         while ($days_ago < $number_days) {
@@ -47,9 +48,9 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                 $instance->network, $since_date);
                 if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
                     $this->insight_dao->insertInsightDeprecated("favorites_year_ago_flashback", $instance->id,
-                    $since_date, "Stuff you liked:", "On this day in years past, $this->username "
-                    .$this->terms->getVerb('liked').": ", basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
-                    serialize($flashback_favs));
+                    $since_date, "On this day in years past, this is what $this->username "
+                    .$this->terms->getVerb('liked').". ", $insight_text, basename(__FILE__, ".php"), 
+                    Insight::EMPHASIS_LOW, serialize($flashback_favs));
                 }
             }
             $days_ago++;

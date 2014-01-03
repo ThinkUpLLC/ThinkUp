@@ -23,13 +23,13 @@ function show_advanced() {
         $(".advanced-option-input").hide();
         $('#adv-flip-prompt').html('Show');
         advanced_visible = false;
-        $("#advanced-icon").removeClass('icon-chevron-up').addClass('icon-chevron-down');
+        $("#advanced-icon").removeClass('fa-chevron-up').addClass('fa-chevron-down');
     } else {
         $(".advanced-option-label").show();
         $(".advanced-option-input").show();
         $('#adv-flip-prompt').html('Hide');
         advanced_visible = true;
-        $("#advanced-icon").removeClass('icon-chevron-down').addClass('icon-chevron-up');
+        $("#advanced-icon").removeClass('fa-chevron-down').addClass('fa-chevron-up');
     }
 }
 {/literal}
@@ -39,7 +39,7 @@ function show_advanced() {
 
 <div class="alert alert-success"  id="plugin_options_success" style="display: none;">
      <p>
-       <span class="icon-ok"></span>
+       <span class="fa fa-check"></span>
        Saved!
      </p>
  </div> 
@@ -47,7 +47,7 @@ function show_advanced() {
 
 <div class="alert urgent" id="plugin_option_server_error" style="display: none;">
     <p>
-        <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        <span class="fa fa-warning"></span>
         <span id="plugin_option_server_error_message"></span>
     </p>
 </div>
@@ -55,7 +55,7 @@ function show_advanced() {
 <div id="plugin_option_error" 
     class="alert alert-error" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
     <p>
-        <span class="icon-warning-sign"></span>
+        <span class="fa fa-warning"></span>
         Please complete all required fields
     </p>
 </div>
@@ -66,7 +66,7 @@ function show_advanced() {
     {if $option_obj.advanced and !isset($advanced_options)}
         <p>
             <a href="#" onclick="show_advanced(); return false" class="btn btn-small">
-            <i id="advanced-icon" class="icon-chevron-down"></i> <span id="adv-flip-prompt">Show</span>
+            <i id="advanced-icon" class="fa fa-chevron-down"></i> <span id="adv-flip-prompt">Show</span>
             Advanced Options
             </a>
         </p>
@@ -81,7 +81,7 @@ function show_advanced() {
 <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em; display: none;" 
     id="plugin_options_error_{$option_obj.name}">
     <p>
-        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;">&nbsp;</span>
+        <span class="fa fa-info-circle"></span>
         <span id="plugin_options_error_message_{$option_obj.name}">&nbsp;</span>
     </p>
 </div>

@@ -76,8 +76,8 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic mentioned \@mentionOne /', $result->text);
-        $this->assertPattern('/\@mentionOne <strong>twice<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@testeriffic mentioned \@mentionOne /', $result->headline);
+        $this->assertPattern('/\@mentionOne <strong>twice<\/strong> last week./', $result->headline);
     }
 
     public function testInteractionsInsightRelatedData() {
@@ -153,8 +153,8 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic mentioned /', $result->text);
-        $this->assertPattern('/\@mentionOne <strong>twice/', $result->text);
+        $this->assertPattern('/\@testeriffic mentioned /', $result->headline);
+        $this->assertPattern('/\@mentionOne <strong>twice/', $result->headline);
     }
 
     public function testInteractionsInsightMentionCasesIgnored() {
@@ -198,8 +198,8 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $dataset = unserialize($result->related_data);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic mentioned /', $result->text);
-        $this->assertPattern('/\@TwitterTestUser <strong>4 times/', $result->text);
+        $this->assertPattern('/\@testeriffic mentioned /', $result->headline);
+        $this->assertPattern('/\@TwitterTestUser <strong>4 times/', $result->headline);
         $this->assertEqual($dataset[0]['mention'], '@TwitterTestUser');
         $this->assertEqual($dataset[0]['count'], 4);
         $this->assertEqual($dataset[0]['user']->full_name, "Twitter Test User");

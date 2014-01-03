@@ -1,45 +1,45 @@
 
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 <div class="container">
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div id="tabs" class="embossed-block">
         <ul class="nav nav-tabs nav-stacked">
 
-          <li><a href="{$site_root_path}account/?m=manage#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li class="active"><a id="app-settings-tab" href="{$site_root_path}account/?m=manage#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
-          <li><a href="{$site_root_path}account/?m=manage#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a href="{$site_root_path}account/?m=manage#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
+          <li><a href="{$site_root_path}account/?m=manage#plugins"><i class="fa fa-list-alt"></i> Plugins <i class="fa fa-chevron-right"></i></a></li>
+          {if $user_is_admin}<li class="active"><a id="app-settings-tab" href="{$site_root_path}account/?m=manage#app_settings"><i class="fa fa-cogs"></i> Application <i class="fa fa-chevron-right"></i></a></li>{/if}
+          <li><a href="{$site_root_path}account/?m=manage#instances"><i class="fa fa-lock"></i> Account <i class="fa fa-chevron-right"></i></a></li>
+          {if $user_is_admin}<li><a href="{$site_root_path}account/?m=manage#ttusers"><i class="fa fa-group"></i> Users <i class="fa fa-chevron-right"></i></a></li>{/if}
         </ul>
       </div>
-    </div><!--/span3-->
-    <div class="span9">
+    </div><!--/col-md-3-->
+    <div class="col-md-9">
         <div class="white-card">
 
 
         <div class="section thinkup-canvas clearfix" id="backup_data">
 
-        <a href="javascript: history.go(-1)" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back</a>
+        <a href="javascript: history.go(-1)" class="btn btn-xs"><i class="fa fa-chevron-left icon-muted"></i> Back</a>
 
         <div class="plugin-info">
 
             <span class="pull-right">{insert name="help_link" id='backup'}</span>
             <h2>
-                <i class="icon-download-alt icon-muted"></i> Back up ThinkUp's entire database
+                <i class="fa fa-download icon-muted"></i> Back up ThinkUp's entire database
             </h2>
 
         </div>
 
-        {include file="_usermessage.tpl" enable_bootstrap=1}
+        {include file="_usermessage.tpl"}
 
 
             {if $no_zip_support}
                 <div class="alert alert-error"> 
                     <p>
-                    <span class="icon-info-sign"></span>
+                    <span class="fa fa-info-circle"></span>
                     It looks like your server setup does not support the
                     <code><a href="http://www.php.net/manual/en/book.zip.php">Zip</a></code> library that is required to complete a backup 
                     through this interface.
@@ -54,7 +54,7 @@
                     <!-- too many db records, use CLI interface? -->
                     <div class="alert"> 
                         <p>
-                        <span class="icon-info-sign"></span>
+                        <span class="fa fa-info-circle"></span>
                         Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table has 
                         <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
                         Since backing up such a big database can time out in the browser, we recommend that you use the 
@@ -74,7 +74,7 @@
 
 
 
-                <h2 style="padding-top : 40px;"><i class="icon-upload-alt icon-muted"></i> Restore Your Thinkup Database</h2>
+                <h2 style="padding-top : 40px;"><i class="fa fa-upload-alt icon-muted"></i> Restore Your Thinkup Database</h2>
 
                 <form name="backup_form" id="backup-form" class="form-horizontal" method="post" enctype="multipart/form-data" action="{$site_root_path}install/backup.php">
 
@@ -87,7 +87,7 @@
                     <div style="margin-top: 12px; margin-bottom: 12px; margin-right: 20px; float: left;">
                         <input type="submit" id="upload-backup-submit" name="Submit" 
                         class="btn btn-large btn-disabled" value="Upload Backup File">
-                        <span class="icon-2x icon-spinner icon-spin" id="uploading-status" style="display: none;"></span>
+                        <span class="icon-2x fa-spinner fa-spin" id="uploading-status" style="display: none;"></span>
                     </div> 
                
                 </form>
@@ -102,7 +102,7 @@
                         classButton: 'btn-primary btn-large',
                         textField: false,
                         icon: true,
-                        classIcon: 'icon-upload-alt icon-white'
+                        classIcon: 'fa fa-upload icon-white'
                     });
                     $('#backup_file').click( function() { $('#upload-backup-submit').addClass('btn-primary'); } );
                     $('#backup-form').submit( function() { $('#uploading-status').show() } );
@@ -121,4 +121,4 @@
 </div>
 
 
-{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0}

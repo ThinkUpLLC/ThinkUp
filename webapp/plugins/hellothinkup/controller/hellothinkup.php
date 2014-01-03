@@ -5,7 +5,7 @@
  Description: Developer example plugin.
  Class: HelloThinkUpPlugin
  Version: 0.01
- Icon: assets/img/plugin_icon.png
+ Icon: puzzle-piece
  Author: Gina Trapani
  */
 
