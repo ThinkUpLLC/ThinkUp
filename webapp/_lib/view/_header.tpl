@@ -9,107 +9,48 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
-{if $enable_bootstrap eq 1}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- styles -->
-    <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/insights.css" rel="stylesheet">
+    {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
+    isset($smarty.get.oauth_token) and isset($smarty.get.oauth_verifier)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=twitter">
+    {/if}
+    {if isset($smarty.get.p) and $smarty.get.p eq 'facebook' and
+    isset($smarty.get.code) and isset($smarty.get.state)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=facebook">
+    {/if}
 
-    <!-- IE6-8 support of HTML5 elements -->
+    <!-- styles -->
+{if isset($thinkupllc_endpoint)}
+{literal}<script type="text/javascript" src="//use.typekit.net/xzh8ady.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>{/literal}
+{/if}
+    <link href="{$site_root_path}assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="{$site_root_path}assets/css/vendor/font-awesome.min.css" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
+    <link href="{$site_root_path}assets/css/thinkup.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
-    <script src="{$site_root_path}assets/js/jquery.js"></script>
-    <script src="{$site_root_path}assets/js/bootstrap.js"></script>
+    {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+    {foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
+    {/foreach}
 
-    {literal}
-      <script type="text/javascript">
-
-        $(document).ready(function() {
-
-            $(".collapse").collapse();
-            $(function () {
-                $('#settingsTabs a:first').tab('show');
-            })
-
-    {/literal}
-        {if $logged_in_user}
-    {literal}
-            $('#search-keywords').focus(function() {
-                $('#search-refine').dropdown();
-                if ($('#search-keywords').val()) {
-                    $('#search-refine a span.searchterm').text($('#search-keywords').val());
-                }
-            }).blur(function() {
-                $('#search-refine').dropdown();
-            });
-
-            $('#search-keywords').keyup(function() {
-                $('#search-refine a span.searchterm').text($('#search-keywords').val());
-            });
-        });
-
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + encodeURIComponent(_mu);
-        }
-      }
-    {/literal}
-    {else}
-    {literal}
-        });
-    {/literal}
     {/if}
-    </script>
-
-{else} <!-- not bootstrap -->
-
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-    <!-- jquery -->
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
-
-    <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
-    <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
-
-    {literal}
-      <script type="text/javascript">
-      $(document).ready(function() {
-          $(".post").hover(
-            function() { $(this).children(".small").children(".metaroll").show(); },
-            function() { $(this).children(".small").children(".metaroll").hide(); }
-          );
-          $(".metaroll").hide();
-        });
-      </script>
-    {/literal}
-
-    <!-- custom css -->
-    {literal}
-    <style>
-        .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
-            margin: 8px auto;
-            height: 1px;
-        }
-        
-    </style>
-    {/literal}
-{/if}
 
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
 {/foreach}
-
-{foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-{/foreach}
+{include file="_usermessage-v2.tpl"}
 
 <script type="text/javascript">
     var site_root_path = '{$site_root_path}';
@@ -120,7 +61,6 @@
     var thinkup_api_key = '{$thinkup_api_key}';
     {/if}
 </script>
-
 
 {if $enable_tabs eq 1}
 <script type="text/javascript">
@@ -154,19 +94,14 @@
   <!-- google chart tools -->
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
-  
+
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
 
-{if $post->post_text} 
+{if $post->post_text}
     <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
     <meta itemprop="description" content="{$post->post_text|strip_tags}">
     <meta itemprop="image" content="http://thinkup.com/assets/img/thinkup-logo_sq.png">
 {/if}
 
 </head>
-<body>
-
-{if $enable_bootstrap eq 1}
-<div id="sticky-footer-fix-wrapper">
-{/if}
+<body class="{if $body_type}{$body_type}{else}insight-stream{/if}">

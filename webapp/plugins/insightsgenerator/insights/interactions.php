@@ -33,6 +33,84 @@
 
 require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
+function secondsToTextTime($inputSeconds, $maxPlaces = 2) {
+
+    $secondsInAMinute = 60;
+    $secondsInAnHour  = 60 * $secondsInAMinute;
+    $secondsInADay    = 24 * $secondsInAnHour;
+
+    // extract days
+    $days = floor($inputSeconds / $secondsInADay);
+
+    // extract hours
+    $hourSeconds = $inputSeconds % $secondsInADay;
+    $hours = floor($hourSeconds / $secondsInAnHour);
+
+    // extract minutes
+    $minuteSeconds = $hourSeconds % $secondsInAnHour;
+    $minutes = floor($minuteSeconds / $secondsInAMinute);
+
+    // extract the remaining seconds
+    $remainingSeconds = $minuteSeconds % $secondsInAMinute;
+    $seconds = ceil($remainingSeconds);
+
+    // return the final array
+    $obj = array(
+        'd' => (int) $days,
+        'h' => (int) $hours,
+        'm' => (int) $minutes,
+        's' => (int) $seconds,
+    );
+
+    $places = 0;
+    $text = '';
+
+    $milestones = array(
+        "per_row"    => 2,
+        "label_type" => "text",
+        "items" => array(),
+    );
+
+    if ($obj["d"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["d"],
+            "label"  => "days",
+        );
+        $places++;
+    }
+    if ($obj["h"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["h"],
+            "label"  => "hours",
+        );
+
+        $places++;
+    }
+    if ($obj["m"] && $places < $maxPlaces) {
+        if ($obj["m"] > 1) {
+            $milestones["items"][] = array(
+                "number" => $obj["m"],
+                "label"  => "minutes",
+            );
+        } else {
+            $milestones["items"][] = array(
+                "number" => $obj["m"],
+                "label"  => "minute",
+            );
+        }
+        $places++;
+    }
+    if ($obj["s"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["s"],
+            "label"  => "seconds",
+        );
+        $places++;
+    }
+
+    return $milestones;
+}
+
 class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
@@ -46,7 +124,15 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
             $mentions_count = array();
             $mentions_info = array();
+            $mentions_avatars = array();
             $insight_data = array();
+            $insight_text = '';
+
+            if ($instance->network == 'twitter') {
+                $talk_time = 15;
+            } else {
+                $talk_time = 38;
+            }
 
             foreach ($last_week_of_posts as $post) {
                 $post_text = $post->post_text;
@@ -85,21 +171,42 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $most_mentioned_user = each($mentions_count);
 
                 // Add mentions to dataset
-                foreach ($mentions_count as $mention => $count) {
+                $users_mentioned = array();
+                foreach (array_slice($mentions_count, 0, 10) as $mention => $count) {
                     $mention_info['mention'] = $mention;
                     $mention_info['count'] = $count;
                     $mention_info['user'] = $mentions_info[$mention];
-
-                    $insight_data[] = $mention_info;
+                    $users_mentioned[] = $mention_info;
                 }
             }
 
             if (isset($most_mentioned_user)) {
-                $insight_text = $this->username." mentioned ".$most_mentioned_user['key']
+                $headline = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
+                $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * $talk_time;
 
-                $this->insight_dao->insertInsightDeprecated('interactions', $instance->id, $this->insight_date, "BFFs:",
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($insight_data));
+                $milestones = secondsToTextTime($conversation_seconds);
+                $insight_text = 'Time spent in good conversation is time well spent.';
+                // $header_image = $users_mentioned[0][user]->avatar;
+                $header_image = $users_mentioned[0]["user"]->avatar;
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'interactions'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = $header_image; // '';
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->setPeople($users_mentioned);
+                $my_insight->setMilestones($milestones);
+
+                $this->insight_dao->insertInsight($my_insight);
+
             }
         }
 

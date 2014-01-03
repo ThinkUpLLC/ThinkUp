@@ -41,6 +41,7 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $filename = basename(__FILE__, ".php");
         $video_dao = DAOFactory::getDAO('VideoDAO');
+        $insight_text = '';
 
         $simplified_post_date = "";
 
@@ -84,14 +85,16 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($high_view_count_365_days->value)
                 && $video->views >= $high_view_count_365_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 365-day record!";
-                        $text = "<strong>".number_format($video->views)." people</strong> viewed ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $headline = "<strong>".number_format($video->views) . " people</strong> viewed ";
+                        $headline .= "$instance->network_username's video $video->post_text.";
+                        $insight_text = "That makes ";
+                        $insight_text .= "<a href=\"http://www.youtube.com/watch?v=$video->post_id\">$video->post_text</a>";
+                        $insight_text .= " a new 365-day record for ";
+                        $insight_text .= "<a href=\"http://plus.google.com/$instance->network_user_id\">";
+                        $insight_text .= "$instance->network_username</a>!";
 
                         $this->insight_dao->insertInsightDeprecated('view_high_365_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('view_high_90_day_'.$post->id, $instance->id,
@@ -106,14 +109,16 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 } elseif (isset($high_view_count_90_days->value)
                 && $video->views >= $high_view_count_90_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 90-day record!";
-                        $text = "<strong>".number_format($video->views)." people</strong> viewed ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $headline = "<strong>".number_format($video->views) . " people</strong> viewed ";
+                        $headline .= "$instance->network_username's video $video->post_text.";
+                        $insight_text = "That makes ";
+                        $insight_text .= "<a href=\"http://www.youtube.com/watch?v=$video->post_id\">$video->post_text</a>";
+                        $insight_text .= " a new 90-day record for ";
+                        $insight_text .= "<a href=\"http://plus.google.com/$instance->network_user_id\">";
+                        $insight_text .= "$instance->network_username</a>.";
 
                         $this->insight_dao->insertInsightDeprecated('view_high_90_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('view_high_30_day_'.$post->id, $instance->id,
@@ -124,14 +129,16 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 } elseif (isset($high_view_count_30_days->value)
                 && $video->views >= $high_view_count_30_days->value) {
                     if (isset($chart_data)) {
-                        $prefix = "New 30-day record!";
-                        $text = "<strong>".number_format($video->views)." people</strong> viewed ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>.";
+                        $headline = "<strong>".number_format($video->views) . " people</strong> viewed ";
+                        $headline .= "$instance->network_username's video $video->post_text.";
+                        $insight_text = "That makes ";
+                        $insight_text .= "<a href=\"http://www.youtube.com/watch?v=$video->post_id\">$video->post_text</a>";
+                        $insight_text .= " a new 30-day record for ";
+                        $insight_text .= "<a href=\"http://plus.google.com/$instance->network_user_id\">";
+                        $insight_text .= "$instance->network_username</a>.";
 
                         $this->insight_dao->insertInsightDeprecated('view_high_30_day_'.$video->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_HIGH,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_HIGH,
                         serialize(array($video, $chart_data)));
                     }
                 }
@@ -141,15 +148,15 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($chart_data)) {
                         $multiplier = floor($video->views/$average_view_count_30_days->value);
                         $multiplier = $this->terms->getMultiplierAdverb($multiplier);
-                        $prefix = "Viral video:";
-                        $text = "<strong>".number_format($video->views)." people</strong> viewed ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
-                        $text .= "the 90-day average.";
+                        $headline = "<strong>".number_format($video->views)." people</strong> viewed ";
+                        $headline .= "$video->post_text &mdash; looks like it's going viral.";
+                        $insight_text = "<a href=\"http://plus.google.com/$instance->network_user_id\">";
+                        $insight_text .= "$instance->network_username</a>'s video <a href=\"http://www.youtube.com/watch?v=";
+                        $insight_text .= "$video->post_id\">$video->post_text</a> got more than <strong>".$multiplier."</strong> ";
+                        $insight_text .= "the 90-day average of views.";
 
                         $this->insight_dao->insertInsightDeprecated('view_spike_90_day_'.$post->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
 
                         $this->insight_dao->deleteInsight('view_spike_30_day_'.$post->id, $instance->id,
@@ -160,15 +167,15 @@ class ViewSpikeInsight extends InsightPluginParent implements InsightPlugin {
                     if (isset($chart_data)) {
                         $multiplier = floor($video->views/$average_view_count_30_days->value);
                         $multiplier = $this->terms->getMultiplierAdverb($multiplier);
-                        $prefix = "Viral video:";
-                        $text = "<strong>".number_format($video->views)." people</strong> viewed ";
-                        $text .= "<a href=http://plus.google.com/$instance->network_user_id>";
-                        $text .= "$instance->network_username</a>'s video <a href=http://www.youtube.com/watch?v=";
-                        $text .= "$video->post_id>$video->post_text</a>, more than <strong>".$multiplier."</strong> ";
-                        $text .= "the 30-day average.";
+                        $headline = "<strong>".number_format($video->views)." people</strong> viewed ";
+                        $headline .= "$video->post_text &mdash; looks like it's doing pretty well.";
+                        $insight_text = "<a href=\"http://plus.google.com/$instance->network_user_id\">";
+                        $insight_text .= "$instance->network_username</a>'s video <a href=\"http://www.youtube.com/watch?v=";
+                        $insight_text .= "$video->post_id\">$video->post_text</a> got more than <strong>".$multiplier."</strong> ";
+                        $insight_text .= "the 30-day average of views.";
 
                         $this->insight_dao->insertInsightDeprecated('view_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date, $prefix, $text, $filename, Insight::EMPHASIS_LOW,
+                        $simplified_post_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
                         serialize(array($video, $chart_data)));
                     }
                 }

@@ -45,6 +45,7 @@ class ViewDurationInsight extends InsightPluginParent implements InsightPlugin {
 
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         foreach ($last_weeks_posts as $post) {
             // YouTube users can post replies to their videos and these get passed to us here also and have no
@@ -81,12 +82,10 @@ class ViewDurationInsight extends InsightPluginParent implements InsightPlugin {
             $change_month = round($view_duration - $average_month->value, 0);
             $change_all_time = round($view_duration - $average_all_time->value, 0);
             $change_90 = round($view_duration - $average_90->value, 0);
-            $text = "On average, viewers watched <a href=http://plus.google.com/".$instance->network_user_id.">";
-            $text .= $instance->network_username."</a>'s video";
-            $text .= " <a href=http://www.youtube.com/watch?v=".$video->post_id.">".$video->post_text."</a> ";
-            $text .= "<strong>".$view_duration."%</strong> of the way through, <strong>";
-            $increase_prefix = 'Captive audience:';
-            $decrease_prefix = 'Viewer time:';
+            $headline = "On average, viewers watched "; // <a href=http://plus.google.com/".$instance->network_user_id.">
+            $headline .= $instance->network_username."'s video"; //</a>
+            $headline .= " ".$video->post_text." "; //<a href=http://www.youtube.com/watch?v=".$video->post_id."></a>
+            $headline .= "<strong>".$view_duration."%</strong> of the way through.";
             $can_insert = false;
 
             // Increases or decreases compared to the average
@@ -94,134 +93,158 @@ class ViewDurationInsight extends InsightPluginParent implements InsightPlugin {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_HIGH;
                 if($change_all_time >=30) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_all_time."%</strong> longer than the all-time average.";
+                    $insight_text = "That's <strong>" . $change_all_time . "%</strong> longer than "
+                                    ."<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    .$instance->network_username . "</a>'s all-time average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_all_time)."%</strong> less than the all-time average.";
+                    $insight_text .= "That's <strong>" . abs($change_all_time) . "%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/". $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s all-time average.";
                 }
             } elseif( abs($change_90) >= 30 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_HIGH;
                 if($change_90 >=30) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_90."%</strong> longer than the 90-day average.";
+                    $insight_text = "That's <strong>" . $change_90 . "%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/". $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_90)."%</strong> less than the 90-day average.";
+                    $insight_text = "That's <strong>" . abs($change_90) . "%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 }
             } elseif( abs($change_month) >=30 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_HIGH;
                 if($change_month >=30) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_month."%</strong> longer than the 30-day average.";
+                    $insight_text = "That's <strong>" . $change_month."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_month)."%</strong> less than the 30-day average.";
+                    $insight_text = "That's <strong>" . abs($change_month)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 }
             } elseif( abs($change_all_time) >=15 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_MED;
                 if($change_all_time >=15) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_all_time."%</strong> longer than the all-time average.";
+                    $insight_text = "That's <strong>" . $change_all_time."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s all-time average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_all_time)."%</strong> less than the all-time average.";
+                    $insight_text = "That's <strong>" . abs($change_all_time)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s all-time average.";
                 }
             } elseif( abs($change_90) >= 15 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_MED;
                 if($change_90 >=15) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_90."%</strong> longer than the 90-day average.";
+                    $insight_text = "That's <strong>" . $change_90."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_90)."%</strong> less than the 90-day average.";
+                    $insight_text = "That's <strong>" . abs($change_90)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 }
             } elseif( abs($change_month) >=15 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_MED;
                 if($change_month >=15) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_month."%</strong> longer than the 30-day average.";
+                    $insight_text = "That's <strong>" . $change_month."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_month)."%</strong> less than the 30-day average.";
+                    $insight_text = "That's <strong>" . abs($change_month)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 }
             } elseif( abs($change_all_time) >=5 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_LOW;
                 if($change_all_time >=5) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_all_time."%</strong> longer than the all-time average.";
+                    $insight_text = "That's <strong>" . $change_all_time."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s all-time average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_all_time)."%</strong> less than the all-time average.";
+                    $insight_text = "That's <strong>" . abs($change_all_time)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s all-time average.";
                 }
             } elseif( abs($change_90) >=5 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_LOW;
                 if($change_90 >=5) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_90."%</strong> longer than the 90-day average.";
+                    $insight_text = "That's <strong>" . $change_90."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_90)."%</strong> less than the 90-day average.";
+                    $insight_text = "That's <strong>" . abs($change_90)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 90-day average.";
                 }
             } elseif( abs($change_month) >=5 ) {
                 $can_insert = true;
                 $emphasis = Insight::EMPHASIS_LOW;
                 if($change_month >=5) {
-                    $prefix = $increase_prefix;
-                    $text .= $change_month."%</strong> longer than the 30-day average.";
+                    $insight_text = "That's <strong>" . $change_month."%</strong> longer than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 } else {
-                    $prefix = $decrease_prefix;
-                    $text .= abs($change_month)."%</strong> less than the 30-day average.";
+                    $insight_text = "That's <strong>" . abs($change_month)."%</strong> less than "
+                                    . "<a href=\"http://plus.google.com/" . $instance->network_user_id . "\">"
+                                    . $instance->network_username . "</a>'s 30-day average.";
                 }
             }
 
             if($can_insert) {
                 $this->insight_dao->insertInsightDeprecated('view_duration', $instance->id, $simplified_post_date,
-                $prefix, $text, $filename, $emphasis, serialize(array($chart,$video)));
+                $headline, $insight_text, $filename, $emphasis, serialize(array($chart,$video)));
             }
 
             // New highs and lows
             $can_insert = false;
-            $text = "<a href=http://plus.google.com/$instance->network_user_id>$instance->network_username</a>'s ";
-            $text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>$video->post_text</a> was ";
-            $text .= "viewed <strong>".$view_duration."%</strong> of the way through on average.";
+            // $insight_text = "<a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s ";
+            // $insight_text .= "video <a href=\"http://www.youtube.com/watch?v=$video->post_id\">$video->post_text</a> was ";
+            // $insight_text .= "viewed <strong>".$view_duration."%</strong> of the way through on average.";
+            $headline = "$instance->network_username's ";
+            $headline .= "video $video->post_text was ";
+            $headline .= "viewed <strong>".$view_duration."%</strong> of the way through on average.";
 
             if($view_duration >= $high->value && $high->value != 0) {
-                $prefix = 'New all-time high!';
+                $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new all-time high!";
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($view_duration <= $low->value && $low->value != 0) {
-                $prefix = 'New all-time low!';
+                // $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new all-time low.";
+                // find a nicer way to say this.
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($view_duration >= $high_365->value && $high_365->value != 0) {
-                $prefix = 'New 365-day record!';
+                $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new 365-day record!";
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             } elseif($view_duration <= $low_365->value && $low_365->value != 0) {
-                $prefix = 'New 365-day record!';
+                // $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new 365-day low.";
+                // this one is too depressing.
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             }elseif($view_duration >= $high_90->value && $high_90->value != 0) {
-                $prefix = 'New 90-day record!';
+                $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new 90-day record.";
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             } elseif($view_duration <= $low_90->value && $low_90->value != 0) {
-                $prefix = 'New 90-day record!';
+                // $insight_text = "That's <a href=\"http://plus.google.com/$instance->network_user_id\">$instance->network_username</a>'s new 90-day low.";
+                // too much of a bummer.
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             }
 
             if($can_insert) {
                 $this->insight_dao->insertInsightDeprecated('view_duration_record', $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, $emphasis, serialize(array($chart,$video)));
+                $simplified_post_date, $headline, $insight_text, $filename, $emphasis, serialize(array($chart,$video)));
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

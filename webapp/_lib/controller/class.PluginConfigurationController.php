@@ -168,9 +168,9 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             $total_instances = sizeof($owner_instances);
             if ($total_instances >= 9) {
                 $this->do_show_add_button = false;
-                $this->addInfoMessage("You've connected ".$total_instances." of 10 accounts to ThinkUp.",
-                'membership_cap');
             }
+            $this->addInfoMessage("As a Pro member, you've connected ".$total_instances." of 10 accounts to ThinkUp.",
+            'membership_cap');
         }
     }
 

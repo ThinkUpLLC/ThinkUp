@@ -56,7 +56,7 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
         $controller = new ForgotPasswordController(true);
         $result = $controller->go();
 
-        $this->assertPattern('/Reset Your Password/', $result);
+        $this->assertPattern('/Forgot your password?/', $result);
     }
 
     public function testOfControllerWithBadEmailAddress() {

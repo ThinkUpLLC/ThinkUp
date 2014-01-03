@@ -66,110 +66,110 @@ class MinutesViewedInsight extends InsightPluginParent implements InsightPlugin 
                 break;
             }
 
-            $text = "Viewers watched ";
-            $text .= "<a href=http://plus.google.com/$instance->network_user_id>".$instance->network_username."</a>'s ";
-            $text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>".$video->post_text."</a> ";
-            $text .= 'for a total of <strong>';
-            $text .= InsightTerms::getSyntacticTimeDifference($video->minutes_watched*60).', ';
+            $headline = "Viewers watched ".$video->post_text . " ";
+            $headline .= 'for a total of ';
+            $headline .= InsightTerms::getSyntacticTimeDifference($video->minutes_watched*60).'.';
+            $insight_text = "<a href=http://plus.google.com/$instance->network_user_id>".$instance->network_username."</a>'s ";
+            $insight_text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>".$video->post_text."</a> ";
+            $insight_text .= "really left an impression. ";
             $can_insert = false;
-            $prefix = 'Making an impression:';
 
             // Higher than averages
             if($video->minutes_watched >= $average_mins_viewed_all_time->value * 10 &&
             $average_mins_viewed_all_time->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_all_time->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the all-time average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the all-time average.";
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_90->value * 10 &&
             $average_mins_viewed_90->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_90->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 90-day average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the 90-day average.";
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_month->value * 10 &&
             $average_mins_viewed_month->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_month->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 30-day average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the 30-day average.";
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_all_time->value * 5 &&
             $average_mins_viewed_all_time->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_all_time->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the all-time average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the all-time average.";
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_90->value * 5 &&
             $average_mins_viewed_90->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_90->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 90-day average.";
+                $insight_text .=  "That's <strong>" . multiplier."</strong> the 90-day average.";
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_month->value * 5 &&
             $average_mins_viewed_month->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_month->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 30-day average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the 30-day average.";
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_all_time->value * 2 &&
             $average_mins_viewed_all_time->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_all_time->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the all-time average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the all-time average.";
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_90->value * 2 &&
             $average_mins_viewed_90->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_90->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 90-day average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the 90-day average.";
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $average_mins_viewed_month->value * 2 &&
             $average_mins_viewed_month->value != 0) {
                 $multiplier = $this->terms->getMultiplierAdverb(round($video->minutes_watched/
                 $average_mins_viewed_month->value,2),'multiplier');
-                $text .=  $multiplier."</strong> the 30-day average.";
+                $insight_text .=  "That's <strong>" . $multiplier."</strong> the 30-day average.";
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             }
 
             if($can_insert) {
                 $this->insight_dao->insertInsightDeprecated('minutes_viewed'.$video->id, $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, $emphasis, serialize(array($video, $chart)));
+                $simplified_post_date, $headline, $insight_text, $filename, $emphasis, serialize(array($video, $chart)));
             }
 
-            $text = "Viewers watched ";
-            $text .= "<a href=http://plus.google.com/$instance->network_user_id>".$instance->network_username."</a>'s ";
-            $text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>".$video->post_text."</a> ";
-            $text .= 'for a total of <strong>';
-            $text .= InsightTerms::getSyntacticTimeDifference($video->minutes_watched*60).'</strong>.';
-            $can_insert = false;
+            $headline = "Viewers watched ".$video->post_text . " ";
+            $headline .= 'for a total of ';
+            $headline .= InsightTerms::getSyntacticTimeDifference($video->minutes_watched*60).'.';
+            $insight_text = "<a href=http://plus.google.com/$instance->network_user_id>".$instance->network_username."</a>'s ";
+            $insight_text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>".$video->post_text."</a> ";
+            $insight_text .= "really left an impression. ";
 
             // All time highs
             if($video->minutes_watched >= $max_mins_viewed->value && $max_mins_viewed->value != 0) {
-                $prefix = "New all-time high!";
+                $insight_text .= "set a new all-time high!";
                 $emphasis = Insight::EMPHASIS_HIGH;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $year_mins_viewed->value && $year_mins_viewed->value != 0) {
-                $prefix = "New 365-day high!";
+                $insight_text .= "set a new 365-day high!";
                 $emphasis = Insight::EMPHASIS_MED;
                 $can_insert = true;
             } elseif($video->minutes_watched >= $ninety_mins_viewed->value && $ninety_mins_viewed->value != 0) {
-                $prefix = "New 90-day high!";
+                $insight_text .= "set a new 90-day high!";
                 $emphasis = Insight::EMPHASIS_LOW;
                 $can_insert = true;
             }
 
             if($can_insert) {
                 $this->insight_dao->insertInsightDeprecated('minutes_viewed_high'.$video->id, $instance->id,
-                $simplified_post_date, $prefix, $text, $filename, $emphasis, serialize(array($video,$chart)));
+                $simplified_post_date, $headline, $insight_text, $filename, $emphasis, serialize(array($video,$chart)));
             }
         }
 

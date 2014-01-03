@@ -37,13 +37,11 @@ $web_tests->add(new WebTestOfCaptchaImage());
 $web_tests->add(new WebTestOfChangePassword());
 $web_tests->add(new WebTestOfCrawlerRun());
 $web_tests->add(new WebTestOfCSRFToken());
-$web_tests->add(new WebTestOfDashboard());
 $web_tests->add(new WebTestOfDeleteInstance());
 $web_tests->add(new WebTestOfLogin());
 $web_tests->add(new WebTestOfLogout());
 $web_tests->add(new WebTestOfPostDetailPage());
 $web_tests->add(new WebTestOfRegistration());
-$web_tests->add(new WebTestOfTwitterDashboard());
 
 $tr = new TextReporter();
 $start =  ((float)$usec + (float)$sec);
