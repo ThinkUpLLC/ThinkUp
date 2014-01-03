@@ -120,10 +120,9 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('like_high_365_day_1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'like_high_365_day_1');
-        $this->assertEqual($check->headline, 'New 365-day record!');
         $text = "<strong>50 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
         $text .= "outube.com/watch?v=1>My Great Video 1</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertEqual($check->headline, $text);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'likespike');
     }
@@ -157,10 +156,10 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('like_high_90_day_2', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'like_high_90_day_2');
-        $this->assertEqual($check->headline, 'New 90-day record!');
+        $this->assertPattern('/new 90-day record/', $check->text);
         $text = "<strong>40 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
         $text .= "outube.com/watch?v=2>My Great Video 2</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertEqual($check->headline, $text);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'likespike');
     }
@@ -199,10 +198,10 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('like_high_30_day_3', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'like_high_30_day_3');
-        $this->assertEqual($check->headline, 'New 30-day record!');
-        $text = "<strong>30 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
-        $text .= "outube.com/watch?v=3>My Great Video 3</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertPattern('/30-day record/', $check->text);
+        $headline = "<strong>30 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
+        $headline .= "outube.com/watch?v=3>My Great Video 3</a>.";
+        $this->assertEqual($check->headline, $headline);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'likespike');
     }
@@ -242,10 +241,9 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('like_spike_90_day_1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'like_spike_90_day_1');
-        $this->assertEqual($check->headline, 'Thumbs up:');
         $text = "<strong>500 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
         $text .= "outube.com/watch?v=1>My Great Video 1</a>, more than <strong>double</strong> the 90-day average.";
-        $this->assertEqual($check->text, $text);
+        $this->assertEqual($check->headline, $text);
         $this->assertEqual($check->emphasis, 0);
         $this->assertEqual($check->filename, 'likespike');
     }
@@ -290,10 +288,9 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('like_spike_30_day_4', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'like_spike_30_day_4');
-        $this->assertEqual($check->headline, 'Thumbs up:');
         $text = "<strong>400 people</strong> liked <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.y";
         $text .= "outube.com/watch?v=4>My Great Video 4</a>, more than <strong>double</strong> the 30-day average.";
-        $this->assertEqual($check->text, $text);
+        $this->assertEqual($check->headline, $text);
         $this->assertEqual($check->emphasis, 0);
         $this->assertEqual($check->filename, 'likespike');
     }

@@ -40,6 +40,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
+            $insight_text = '';
 
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
@@ -59,8 +60,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $insight_text = $this->username."'s most popular ".$this->terms->getNoun('post')
-                ." from last week got ";
+                $headline = "This was $this->username's ".$this->terms->getNoun('post') . " of the week.";
+                $insight_text = $this->username." earned ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
                         $insight_text .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
@@ -79,9 +80,19 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->id, $simplified_post_date);
 
                 if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsightDeprecated("weekly_best", $instance->id, $this->insight_date,
-                    "Post of the week:", $insight_text, basename(__FILE__, ".php"),
-                    Insight::EMPHASIS_LOW, serialize(array($most_popular_post, $hot_posts_data)));
+                    $my_insight = new Insight();
+
+                    $my_insight->slug = 'weekly_best'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->setPosts($most_popular_post);
+
+                    $this->insight_dao->insertInsight($my_insight);
                 }
             }
         }

@@ -68,8 +68,10 @@ var TUApplicationSettings = function() {
                                                 checked);
                             }
                             if (checked) {
+                                $('#default_instance').css('margin-top','20px');
                                 $('#recaptcha_enable_deps').show();
                             } else {
+                                $('#default_instance').css('margin-top','0px');
                                 $('#recaptcha_enable_deps').hide();
                             }
                         });

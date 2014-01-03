@@ -36,7 +36,14 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $filename = basename(__FILE__, ".php");
+
+        $my_insight = new Insight();
+        $my_insight->instance_id = $instance->id;
+        $my_insight->slug = 'my_test_insight_hello_thinkup'; //slug to label this insight's content
+        $my_insight->date = $this->insight_date; //date of the data this insight applies to
+
+        $my_insight->text = '';
+        $my_insight->filename = basename(__FILE__, ".php");
         $follow_dao = DAOFactory::getDAO('FollowDAO');
 
         // Least likely followers based on follower-to-followee ratio
@@ -45,14 +52,18 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
-                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
-                $this->insight_date, "Standouts:", '<strong>'.sizeof($least_likely_followers).
-                " interesting users</strong> ". "followed $this->username.", $filename, Insight::EMPHASIS_LOW,
-                serialize($least_likely_followers));
+                $my_insight->headline = '<strong>'.sizeof($least_likely_followers).
+                    " interesting people</strong> ". "followed $this->username.";
+                $my_insight->slug = 'least_likely_followers';
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->setPeople($least_likely_followers);
             } else {
-                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
-                $this->insight_date, "Standout:", "An interesting user followed $this->username.", $filename,
-                Insight::EMPHASIS_LOW, serialize($least_likely_followers));
+                $my_insight->headline = "Hey, did you see that " .
+                    $least_likely_followers[0]->full_name . " followed $this->username?";
+                $my_insight->header_image = $verified_followers[0]->avatar;
+                $my_insight->slug = 'least_likely_followers';
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->setPeople($least_likely_followers);
             }
         }
 
@@ -62,15 +73,24 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         if (sizeof($verified_followers) > 0 ) { //if not null, store insight
             if (sizeof($verified_followers) > 1) {
-                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
-                "Verified followers!", '<strong>'.sizeof($verified_followers)." verified users</strong> ".
-                "followed $this->username.", $filename, Insight::EMPHASIS_LOW, serialize($verified_followers));
+                $my_insight->slug = 'verified_followers';
+                $my_insight->headline = '<strong>'.sizeof($verified_followers)." verified users</strong> ".
+                    "followed $this->username!";
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->setPeople($verified_followers);
             } else {
-                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
-                "Verified follower!", "A verified user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
-                serialize($verified_followers));
+                $my_insight->slug = 'verified_followers';
+                $my_insight->headline = 'Wow: <strong>'.$verified_followers[0]->full_name.
+                    "</strong>, a verified user, followed $this->username.";
+                $my_insight->header_image = $verified_followers[0]->avatar;
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->setPeople($verified_followers);
             }
         }
+        if ($my_insight->headline) {
+            $this->insight_dao->insertInsight($my_insight);
+        }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }

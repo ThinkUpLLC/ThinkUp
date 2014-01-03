@@ -36,6 +36,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
             //if post was a retweet, check if insight exists
@@ -55,12 +56,29 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     //if user exists and has fewer followers than instance user, build and insert insight
                     if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
                         $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $insight_text = "$this->username broadcast this post to <strong>$add_audience</strong> ".
-                        "more people than its author originally reached.";
 
-                        $this->insight_dao->insertInsightDeprecated('amplifier_'.$post->id, $instance->id,
-                        $simplified_post_date, "Amplifier:", $insight_text, $filename, Insight::EMPHASIS_LOW,
-                        serialize($post));
+                        $headline = $add_audience . " more people saw " . $retweeted_user->username . "'s " .
+                            $this->terms->getNoun('post') . " thanks to " . $this->username . ".";
+
+                        // semi-randomly use a different phrasing
+                        if ($post->id % 2 == 0) {
+                            $headline = $retweeted_user->full_name . " can thank " . $this->username . " for " .
+                                $add_audience . " more people seeing this " . $this->terms->getNoun('post') . ".";
+                        }
+
+                        $my_insight = new Insight();
+
+                        $my_insight->instance_id = $instance->id;
+                        $my_insight->slug = 'amplifier_'.$post->id; //slug to label this insight's content
+                        $my_insight->date = $simplified_post_date; //date of the data this insight applies to
+                        $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                        $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                        $my_insight->header_image = $retweeted_user->avatar;
+                        $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                        $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                        $my_insight->setPosts(array($post));
+                        $my_insight->setPeople(array($retweeted_user));
+                        $this->insight_dao->insertInsight($my_insight);
                     }
                 }
             }

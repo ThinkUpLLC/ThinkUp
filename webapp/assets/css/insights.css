@@ -27,12 +27,12 @@ p {
   margin-left : 0px;
 }
 
-.navbar-static-top ul.nav.pull-right {
+.navbar-static-top ul.nav.navbar-right {
   border-left: 1px solid #ddd;
   border-right: 1px solid #fff;
 }
 
-.navbar-static-top ul.nav.pull-right > li > a {
+.navbar-static-top ul.nav.navbar-right > li > a {
   border-left: 1px solid #fff;
   border-right: 1px solid #ddd;
 }
@@ -44,6 +44,47 @@ p {
   display: block;
   padding: 10px 15px 10px;
   text-decoration: none;
+}
+
+.navbar-static-top {
+    min-height: 40px;
+    padding-right: 20px;
+    padding-left: 20px;
+    background-color: #fafafa;
+    background-image: -moz-linear-gradient(top,#fff,#f2f2f2);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#f2f2f2));
+    background-image: -webkit-linear-gradient(top,#fff,#f2f2f2);
+    background-image: -o-linear-gradient(top,#fff,#f2f2f2);
+    background-image: linear-gradient(to bottom,#fff,#f2f2f2);
+    background-repeat: repeat-x;
+    border: 1px solid #d4d4d4;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#fff2f2f2',GradientType=0);
+    -webkit-box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+}
+.navbar-header form input {
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border linear .2s,box-shadow linear .2s;
+    -moz-transition: border linear .2s,box-shadow linear .2s;
+    -o-transition: border linear .2s,box-shadow linear .2s;
+    transition: border linear .2s,box-shadow linear .2s;
+    padding: 4px 14px;
+    margin-bottom: 0;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: transparent;
 }
 
 #search-refine li > a:hover {
@@ -72,17 +113,18 @@ input#search-keywords {
     font-weight: bold;
 }
 
-form .control-group {
+form .form-group {
     margin : 6px;
 }
 
 form legend {
     background-color : #f5f5f5;
     font-weight: 200;
+    padding: 20px;
 }
 
 form legend:before {
-    content: '\a0 \a0 \a0 \a0 ';
+    content: '';
 }
 
 form fieldset .alert-error {
@@ -102,6 +144,11 @@ form .help-block ul {
 
 form .help-inline ul li {
     display: inline;
+}
+
+.form-actions {
+    padding-top: 40px;
+    padding-bottom: 20px;
 }
 
 div.white-card form legend {
@@ -257,7 +304,7 @@ color : #666;
     color:#ccc
 }
 
-.icon-foursquare:before {
+.icon-foursquare:before, .fa-foursquare:before {
     content:"\f046";
     content:"\f041";
 }
@@ -478,7 +525,7 @@ span.formError {
   border: 0;
 }
 
-.embossed-block .icon-chevron-right {
+.embossed-block .icon-chevron-right, embossed-block .fa-chevron-right {
   float: right;
   margin-top: 2px;
   margin-right: -6px;
@@ -548,7 +595,6 @@ input#plugin_options_oauth_consumer_secret {
 
 html, body {
     height: 100%;
-    margin: 0;
 }
 
 #sticky-footer-fix-wrapper {
@@ -563,7 +609,7 @@ html, body {
 }
 
 footer {
-    height: 60px;
+    height: 100px;
     padding: 20px 0;
     color: #fff;
     background: #333;
@@ -619,17 +665,17 @@ form.navbar-search {
  
 .label .icon-white,
 .nav-pills > .active > a > [class^="icon-"],
-.nav-pills > .active > a > [class*=" icon-"],
+.nav-pills > .active > a > [class*=" fa-"],
 .nav-list > .active > a > [class^="icon-"],
-.nav-list > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class*=" fa-"],
 .navbar-inverse .nav > .active > a > [class^="icon-"],
-.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class*=" fa-"],
 .dropdown-menu > li > a:hover > [class^="icon-"],
-.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class*=" fa-"],
 .dropdown-menu > .active > a > [class^="icon-"],
-.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-menu > .active > a > [class*=" fa-"],
 .dropdown-submenu:hover > a > [class^="icon-"],
-.dropdown-submenu:hover > a > [class*=" icon-"] {
+.dropdown-submenu:hover > a > [class*=" fa-"] {
   margin-left : -34px;
   margin-right : 14px;
 }
