@@ -77,6 +77,14 @@ class Owner {
      */
     var $email_notification_frequency;
     /**
+     * @var str Owner timezone.
+     */
+    var $timezone;
+    /**
+     * @var str ThinkUp.com membership level.
+     */
+    var $membership_level;
+    /**
      * @var arr Non-persistent, used for UI, array of instances associated with owner.
      */
     var $instances = null;
@@ -94,6 +102,8 @@ class Owner {
             $this->api_key = $row['api_key'];
             $this->api_key_private = $row['api_key_private'];
             $this->email_notification_frequency = $row['email_notification_frequency'];
+            $this->timezone = $row['timezone'];
+            $this->membership_level = $row['membership_level'];
         }
     }
     /**

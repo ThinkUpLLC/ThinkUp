@@ -148,7 +148,7 @@
     <h3><i class="icon-calendar icon-muted"></i> Notification Frequency</h3><br />
     <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" method="post" action="index.php?m=manage#instances">
         <div class="control-group">
-           <label class="control-label" for="confirm_password">Get insights via email:</label>
+           <label class="control-label" for="update_notification_frequency">Get insights via email:</label>
            <div class="controls">
              <select name="notificationfrequency">
              {foreach from=$notification_options item=description key=key}
@@ -165,6 +165,46 @@
          </div>
     </form>
     <br><br>
+
+
+    {include file="_usermessage.tpl" field='timezone'}
+     <form name="setTimezone" id="setTimezone" class="form-horizontal" method="post" action="index.php?m=manage#instances">
+         <div class="control-group">
+            <label class="control-label" for="update_timezone">Your Time Zone:</label>
+            <div class="controls">
+              <select name="timezone" id="timezone">
+              <option value=""{if $current_tz eq ''} selected{/if}>Select a Time Zone:</option>
+                {foreach from=$tz_list key=group_name item=group}
+                  <optgroup label='{$group_name}'>
+                    {foreach from=$group item=tz}
+                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $current_tz eq $tz.val} selected{/if}>{$tz.display}</option>
+                    {/foreach}
+                  </optgroup>
+                {/foreach}
+              </select>
+              <script type="text/javascript">
+              {literal}
+              var tz_info = jstz.determine();
+              var regionname = tz_info.name().split('/');
+              var tz_option_id = '#tz-' + regionname[1];
+              if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
+                  if( $(tz_option_id) ) {
+                      $('#timezone').val( tz_info.name());
+                  }
+              }
+              {/literal}
+              </script>
+           </div>
+         </div>
+         <div class="control-group">
+           <div class="controls">
+             {insert name="csrf_token"}
+             <input type="submit" name="updatetimezone" value="Save" class="btn btn-primary">
+           </div>
+          </div>
+     </form>
+     <br><br>
+
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
     <h3><i class="icon-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
     

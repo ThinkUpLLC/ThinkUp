@@ -65,7 +65,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
         'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$hashed_pass,
         'pwd_salt'=> OwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c',
-        'email_notification_frequency' => 'daily'));
+        'email_notification_frequency' => 'daily', 'timezone'=>'UTC'));
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. Admin',
         'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1));
@@ -844,6 +844,45 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/"daily"[^>]*selected/', $output);
         $this->assertPattern('/"both"[^>]*selected/', $output);
         $this->assertPattern('/email notification frequency has been updated/', $output);
+    }
+
+    public function testAuthControlLoggedInTimeZone() {
+        $owner_dao = new OwnerMySQLDAO();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        $this->assertEqual('UTC', $owner->timezone);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['timezone'] = 'America/New_York';
+        $controller = new AccountConfigurationController(true);
+        $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        // No CSRF shouldn't update
+        $this->assertNotEqual('America/NewYork', $owner->timezone);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['timezone'] = 'bananas';
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+
+        $controller = new AccountConfigurationController(true);
+        $output = $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        // bad value, shouldn't update
+        $this->assertNotEqual('bananas', $owner->timezone);
+        $this->assertEqual('UTC', $owner->timezone);
+        $this->assertNoPattern('/time zone has been saved/', $output);
+
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['timezone'] = 'America/New_York';
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+        $output = $controller->go();
+        $owner = $owner_dao->getByEmail('me@example.com');
+        $this->assertNotEqual('UTC', $owner->timezone);
+        $this->assertEqual('America/New_York', $owner->timezone);
+        $this->assertPattern('/time zone has been saved/', $output);
     }
 
     private function buildRSSData() {

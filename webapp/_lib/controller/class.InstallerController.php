@@ -198,7 +198,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('db_prefix', 'tu_');
         $this->addToView('db_socket', '');
         $this->addToView('db_port', '');
-        $this->addToView('tz_list', $this->getTimeZoneList());
+        $this->addToView('tz_list', Installer::getTimeZoneList());
         $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', '');
     }
@@ -323,7 +323,7 @@ class InstallerController extends ThinkUpController {
             $this->addToView('db_port', $db_config['db_port']);
             $this->addToView('db_type', $db_config['db_type']);
             $this->addToView('current_tz', $_POST['timezone']);
-            $this->addToView('tz_list', $this->getTimeZoneList());
+            $this->addToView('tz_list', Installer::getTimeZoneList());
             $this->addToView('site_email', $email);
             $this->addToView('full_name', $full_name);
             return;
@@ -476,41 +476,5 @@ class InstallerController extends ThinkUpController {
                 $this->addToView('action_form', $_SERVER['REQUEST_URI']);
             }
         }
-    }
-
-    /**
-     * Returns an array of time zone options formatted for display in a select field.
-     *
-     * @return array An associative array of options, ready for optgrouping.
-     */
-    protected function getTimeZoneList() {
-        $tz_options = timezone_identifiers_list();
-        $view_tzs = array();
-
-        foreach ($tz_options as $option) {
-            $option_data = explode('/', $option);
-
-            // don't allow user to select UTC
-            if ($option_data[0] == 'UTC') {
-                continue;
-            }
-
-            // handle things like the many Indianas
-            if (isset($option_data[2])) {
-                $option_data[1] = $option_data[1] . ': ' . $option_data[2];
-            }
-
-            //avoid undefined offset error
-            if (!isset($option_data[1])) {
-                $option_data[1] = $option_data[0];
-            }
-
-            $view_tzs[$option_data[0]][] = array(
-                'val' => $option,
-                'display' => str_replace('_', ' ', $option_data[1])
-            );
-        }
-
-        return $view_tzs;
     }
 }

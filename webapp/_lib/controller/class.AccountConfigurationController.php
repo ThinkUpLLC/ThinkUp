@@ -53,12 +53,14 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->disableCaching();
         $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
         $this->addHeaderJavaScript('assets/js/validate-fields.js');
+        $this->addHeaderJavaScript('assets/js/jstz-1.0.4.min.js');
 
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
         $this->addToView('notification_options', $this->notification_frequencies);
+        $this->addToView('tz_list', Installer::getTimeZoneList());
         $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
         $this->view_mgr->addHelp('users', 'userguide/settings/allaccounts');
@@ -280,11 +282,30 @@ class AccountConfigurationController extends ThinkUpAuthController {
             if ($new_freq && isset($this->notification_frequencies[$new_freq])) {
                 $updates = $owner_dao->setEmailNotificationFrequency($this->getLoggedInUser(), $new_freq);
             }
-            if ($updates) {
+            if ($updates > 0) {
                 // Update the user in the view to match
                 $owner->email_notification_frequency = $new_freq;
                 $this->addToView('owner', $owner);
                 $this->addSuccessMessage('Your email notification frequency has been updated.', 'notifications');
+            }
+        }
+
+        //process change to timezone
+        if (isset($_POST['updatetimezone'])) {
+            $this->validateCSRFToken();
+            $new_tz = isset($_POST['timezone']) ? $_POST['timezone'] : null;
+            $updates = 0;
+            if (isset($new_tz)) {
+                $possible_timezones = timezone_identifiers_list();
+                if (in_array($new_tz, $possible_timezones)) {
+                    $updates = $owner_dao->setTimezone($this->getLoggedInUser(), $new_tz);
+                }
+            }
+            if ($updates > 0) {
+                // Update the user in the view to match
+                $owner->timezone = $new_tz;
+                $this->addToView('owner', $owner);
+                $this->addSuccessMessage('Your time zone has been saved.', 'timezone');
             }
         }
 

@@ -229,4 +229,12 @@ interface OwnerDAO {
      * @return int Count of affected rows
      */
     public function setEmailNotificationFrequency($email, $email_notification_frequency);
+
+    /**
+     * Update an owner's timezone.
+     * @param str $email Email address of the owner to update
+     * @param str $timezone A valid PHP timezone string
+     * @return int Count of affected rows
+     */
+     public function setTimezone($email, $timezone);
 }

@@ -47,7 +47,8 @@ SELECT
     account_status,
     failed_logins,
     api_key,
-    email_notification_frequency
+    email_notification_frequency,
+    timezone
 FROM #prefix#owners AS o
 WHERE email = :email;
 SQL;
@@ -181,9 +182,12 @@ SQL;
             $pwd_salt = $this->generateSalt($email);
             $api_key = $this->generateAPIKey();
             $hashed_pwd = $this->hashPassword($pwd, $pwd_salt);
+            //By default an owner's timezone is the installation's timezone
+            $config = Config::getInstance();
+            $timezone = $config->getValue('timezone');
 
             $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:hashed_pwd, pwd_salt=:pwd_salt, joined=NOW(), ";
-            $q .= "activation_code=:activation_code, full_name=:full_name, api_key=:api_key";
+            $q .= "activation_code=:activation_code, full_name=:full_name, api_key=:api_key, timezone=:timezone";
 
             if ($is_admin) {
                 $q .= ", is_admin=1";
@@ -194,7 +198,8 @@ SQL;
                 ':pwd_salt'=>$pwd_salt,
                 ':activation_code'=>$activation_code,
                 ':full_name'=>$full_name,
-                ':api_key'=>$api_key
+                ':api_key'=>$api_key,
+                ':timezone'=>$timezone
             );
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $ps = $this->execute($q, $vars);
@@ -330,7 +335,8 @@ SQL;
              SET email_notification_frequency=:email_notification_frequency
              WHERE email=:email";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
-        $stmt = $this->execute($q, array(':email_notification_frequency' => $email_notification_frequency, ':email' => $email));
+        $stmt = $this->execute($q, array(':email_notification_frequency' => $email_notification_frequency, 
+        ':email' => $email));
         return $this->getUpdateCount($stmt);
     }
 
@@ -480,4 +486,12 @@ SQL;
         return ($db_private_api_key === $private_api_key);
     }
 
+    public function setTimezone($email, $timezone) {
+        $q = "UPDATE #prefix#owners
+             SET timezone=:timezone
+             WHERE email=:email";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $stmt = $this->execute($q, array(':timezone' => $timezone, ':email' => $email));
+        return $this->getUpdateCount($stmt);
+    }
 }
