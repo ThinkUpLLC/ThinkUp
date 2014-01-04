@@ -173,15 +173,16 @@
             <label class="control-label" for="update_timezone">Your Time Zone:</label>
             <div class="controls">
               <select name="timezone" id="timezone">
-              <option value=""{if $current_tz eq ''} selected{/if}>Select a Time Zone:</option>
+              <option value=""{if $owner->timezone eq 'UTC'} selected{/if}>Select a time zone:</option>
                 {foreach from=$tz_list key=group_name item=group}
                   <optgroup label='{$group_name}'>
                     {foreach from=$group item=tz}
-                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $current_tz eq $tz.val} selected{/if}>{$tz.display}</option>
+                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $owner->timezone eq $tz.val} selected{/if}>{$tz.display}</option>
                     {/foreach}
                   </optgroup>
                 {/foreach}
               </select>
+              {if $owner->timezone eq 'UTC'}
               <script type="text/javascript">
               {literal}
               var tz_info = jstz.determine();
@@ -194,6 +195,7 @@
               }
               {/literal}
               </script>
+              {/if}
            </div>
          </div>
          <div class="control-group">
