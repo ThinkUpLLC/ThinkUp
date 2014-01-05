@@ -28,20 +28,10 @@
  *
  */
 class FacebookPluginConfigurationController extends PluginConfigurationController {
-    /**
-     *
-     * @var Owner
-     */
-    var $owner;
-    /**
-     * Constructor
-     * @param Owner $owner
-     * @return FacebookPluginConfigurationController
-     */
+
     public function __construct($owner) {
         parent::__construct($owner, 'facebook');
         $this->disableCaching();
-        $this->owner = $owner;
     }
 
     public function authControl() {
@@ -116,17 +106,31 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $fb_user_profile = null;
             }
         }
-        //Plant unique token for CSRF protection during auth per https://developers.facebook.com/docs/authentication/
+        // Plant unique token for CSRF protection during auth per https://developers.facebook.com/docs/authentication/
         if (SessionCache::get('facebook_auth_csrf') == null) {
             SessionCache::put('facebook_auth_csrf', md5(uniqid(rand(), true)));
         }
 
-        $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
-        'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
-        'state'=>SessionCache::get('facebook_auth_csrf'));
+        if (isset($this->owner) && $this->owner->isMemberAtAnyLevel()) {
+            if ($this->owner->isMemberLevel()) {
+                $instance_dao = DAOFactory::getDAO('InstanceDAO');
+                $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
+                if (sizeof($owner_instances) > 0) {
+                    $this->do_show_add_button = false;
+                    $this->addInfoMessage("To connect another Facebook account to ThinkUp, upgrade your membership.",
+                    'membership_cap');
+                }
+            }
+        }
 
-        $fbconnect_link = $facebook->getLoginUrl($params);
-        $this->addToView('fbconnect_link', $fbconnect_link);
+        if ($this->do_show_add_button) {
+            $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
+            'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
+            'state'=>SessionCache::get('facebook_auth_csrf'));
+
+            $fbconnect_link = $facebook->getLoginUrl($params);
+            $this->addToView('fbconnect_link', $fbconnect_link);
+        }
 
         self::processPageActions($options, $facebook);
 
@@ -136,35 +140,38 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
 
-        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-        foreach ($instances as $instance) {
-            // TODO: figure out if the scope has changed since this instance last got its tokens,
-            // and we need to get re-request permission with the new scope
-            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
-            $access_token = $tokens['oauth_access_token'];
-            if ($instance->network == 'facebook') { //not a page
-                $pages = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/likes', $access_token);
-                if (@$pages->data) {
-                    $user_pages[$instance->network_user_id] = $pages->data;
-                }
+        if ($this->do_show_add_button) {
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+            foreach ($instances as $instance) {
+                // TODO: figure out if the scope has changed since this instance last got its tokens,
+                // and we need to get re-request permission with the new scope
+                $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+                $access_token = $tokens['oauth_access_token'];
+                if ($instance->network == 'facebook') { //not a page
+                    $pages = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/likes',
+                    $access_token);
+                    if (@$pages->data) {
+                        $user_pages[$instance->network_user_id] = $pages->data;
+                    }
 
-                $sub_accounts = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/accounts',
-                $access_token);
-                if (!empty($sub_accounts->data)) {
-                    $user_admin_pages[$instance->network_user_id] = array();
-                    foreach ($sub_accounts->data as $act) {
-                        if (self::isAccountPage($act->id, $access_token)) {
-                            $user_admin_pages[$instance->network_user_id][] = $act;
+                    $sub_accounts = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/accounts',
+                    $access_token);
+                    if (!empty($sub_accounts->data)) {
+                        $user_admin_pages[$instance->network_user_id] = array();
+                        foreach ($sub_accounts->data as $act) {
+                            if (self::isAccountPage($act->id, $access_token)) {
+                                $user_admin_pages[$instance->network_user_id][] = $act;
+                            }
                         }
                     }
                 }
+                if (isset($tokens['auth_error']) && $tokens['auth_error'] != '') {
+                    $instance->auth_error = $tokens['auth_error'];
+                }
             }
-            if (isset($tokens['auth_error']) && $tokens['auth_error'] != '') {
-                $instance->auth_error = $tokens['auth_error'];
-            }
+            $this->addToView('user_pages', $user_pages);
+            $this->addToView('user_admin_pages', $user_admin_pages);
         }
-        $this->addToView('user_pages', $user_pages);
-        $this->addToView('user_admin_pages', $user_admin_pages);
 
         $owner_instance_pages = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook page');
         if (count($owner_instance_pages) > 0) {

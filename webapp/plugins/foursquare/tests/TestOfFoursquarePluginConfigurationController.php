@@ -109,7 +109,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
 
     public function testConstructor() {
         // Create a new controller
-        $controller = new FoursquarePluginConfigurationController("me@example.com");
+        $controller = new FoursquarePluginConfigurationController(null);
         // Check the controller was created
         $this->assertNotNull($controller);
         // Check the controller is of type foursquare

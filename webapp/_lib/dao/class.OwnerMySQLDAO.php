@@ -48,6 +48,7 @@ SELECT
     failed_logins,
     api_key,
     email_notification_frequency,
+    membership_level,
     timezone
 FROM #prefix#owners AS o
 WHERE email = :email;

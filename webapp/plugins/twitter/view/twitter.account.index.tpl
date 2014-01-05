@@ -54,6 +54,8 @@
 </table>
 {/if}
 
+{include file="_usermessage.tpl" field="membership_cap"}
+
 
 {if $oauthorize_link}
 <a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Twitter account</a>

@@ -92,6 +92,16 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($owner_instances), 3);
     }
 
+    public function testGetByOwner() {
+        $dao = new OwnerInstanceMySQLDAO();
+        $builder1 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
+        $builder2 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>51) );
+        $builder3 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>52) );
+        $owner_instances = $dao->getByOwner(50);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+    }
+
     public function testInsertOwnerInstance() {
         $dao = new OwnerInstanceMySQLDAO();
         $result = $dao->insert(10, 20, 'aaa', 'bbb');

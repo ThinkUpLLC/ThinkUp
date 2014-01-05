@@ -88,7 +88,7 @@ class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTe
             $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
             $controller = new InsightsGeneratorPluginConfigurationController($owner);
         } else {
-            $controller = new InsightsGeneratorPluginConfigurationController(true);
+            $controller = new InsightsGeneratorPluginConfigurationController(null);
         }
         return $controller;
     }

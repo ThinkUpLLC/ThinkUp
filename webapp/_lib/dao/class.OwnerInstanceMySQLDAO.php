@@ -153,6 +153,20 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         return $owner_instances;
     }
 
+    public function getByOwner($owner_id) {
+        $q = "SELECT
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
+            FROM
+                #prefix#owner_instances
+            WHERE owner_id = :owner_id";
+
+        $vars = array(':owner_id' => $owner_id);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $stmt = $this->execute($q, $vars);
+        $owner_instances = $this->getDataRowsAsObjects($stmt, 'OwnerInstance');
+        return $owner_instances;
+    }
+
     public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '') {
         $q = "INSERT INTO #prefix#owner_instances
                 (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)

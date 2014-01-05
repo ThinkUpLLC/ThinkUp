@@ -56,7 +56,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1,
         'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888',
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c',
-        'email_notification_frequency'=>'both', 'timezone'=>'UTC'));
+        'email_notification_frequency'=>'both', 'timezone'=>'UTC', 'membership_level'=>'Member'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
         'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2,
@@ -87,6 +87,8 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($existing_owner->account_status, '');
         $this->assertEqual($existing_owner->api_key, 'c9089f3c9adaf0186f6ffb1ee8d6501c');
         $this->assertEqual($existing_owner->email_notification_frequency, 'both');
+        $this->assertEqual($existing_owner->timezone, 'UTC');
+        $this->assertEqual($existing_owner->membership_level, 'Member');
 
         //owner does not exist
         $non_existing_owner = $this->DAO->getByEmail('idontexist@example.com');

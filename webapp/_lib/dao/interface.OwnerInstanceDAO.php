@@ -53,11 +53,17 @@ interface OwnerInstanceDAO {
      */
     public function get($owner_id, $instance_id);
     /**
-     * Get owner instances by an instance id
+     * Get owner instances by an instance ID
      * @param int instance_id
      * @return array OwnerInstance objects
      */
     public function getByInstance($instance_id);
+    /**
+     * Get owner instances by an owner ID
+     * @param int owner_id
+     * @return array OwnerInstance objects
+     */
+    public function getByOwner($owner_id);
     /**
      * Inserts an owner instance record
      * @param int owner_id

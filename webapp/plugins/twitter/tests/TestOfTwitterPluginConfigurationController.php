@@ -50,7 +50,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //Add owner
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>'XXX', 'activation_code'=>8888));
+        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>'XXX', 'activation_code'=>8888, 'membership_level'=>null));
 
         //Add instance_owner
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
@@ -98,7 +98,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
      */
     public function testOutputNoParams() {
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
 
         //not logged in, no owner set
         $controller = new TwitterPluginConfigurationController(null, 'twitter');
@@ -124,7 +124,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
      */
     public function testConfigOptionsNotAdmin() {
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -146,7 +146,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testConfigOptionsIsAdmin() {
         $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -171,7 +171,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $_SERVER['HTTPS'] = true;
         $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -190,7 +190,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $_SERVER['HTTPS'] = null;
         $_SERVER['SERVER_NAME'] = 'localhost';
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -238,7 +238,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testForDeleteCSRFToken() {
         $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         // build some options data
-        $options_arry = $this->buildPluginOptions();
+        $options_array = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true, true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -300,7 +300,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
 
-        $controller = new TwitterPluginConfigurationController(null, 'twitter');
+        $owner = new Owner(array('id'=>1, 'email'=>'me@example.com'));
+
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $this->debug('Controller has been instantiated');
         $results = $controller->go();
 
@@ -331,7 +333,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         //Add instance_owner
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
 
-        $controller = new TwitterPluginConfigurationController(null, 'twitter');
+        $owner = new Owner(array('id'=>1, 'email'=>'me@example.com'));
+
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
@@ -340,5 +344,57 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual('ginatrapani on Twitter is already set up in ThinkUp! To add a different Twitter account, '.
         'log out of Twitter.com in your browser and authorize ThinkUp again.', $msgs['user_add']);
         $this->assertEqual('', $v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testOwnerMemberLevelWithAccountConnected() {
+        // build options data
+        $options_array = $this->buildPluginOptions();
+        //Add a connected Twitter account
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>14,
+        'network_username'=>'biz', 'is_public'=>1, 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        //Set membership_level to Member
+        $owner->membership_level = "Member";
+
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        $this->debug($output);
+
+        // Assert that the Add User button isn't there
+        $this->assertNoPattern('/Add a Twitter Account/', $output);
+        // Assert that the message about upgradiing is there
+        $this->assertPattern('/To connect another Twitter account to ThinkUp, upgrade your membership/', $output);
+    }
+
+    public function testOwnerProLevelWith9AccountsConnected() {
+        // build options data
+        $options_array = $this->buildPluginOptions();
+        //Add 9 connected Twitter accounts
+        $i = 9;
+        while ($i > 0) {
+            $builders[] = FixtureBuilder::build('instances', array('id'=>(1+$i), 'network_user_id'=>14,
+            'network_username'=>'biz', 'is_public'=>1, 'network'=>'twitter'));
+            $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>(1+$i)));
+            $i--;
+        }
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        //Set membership_level to Member
+        $owner->membership_level = "Pro";
+
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        $this->debug($output);
+
+        // Assert that the Add User button isn't there
+        $this->assertNoPattern('/Add a Twitter Account/', $output);
+        // Assert that the message about the membership cap is there
+        $this->assertPattern('/You&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
     }
 }

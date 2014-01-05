@@ -88,6 +88,12 @@ class Owner {
      * @var arr Non-persistent, used for UI, array of instances associated with owner.
      */
     var $instances = null;
+    /**
+     * Valid values for membership level.
+     * @var array
+     */
+    static $valid_membership_values = array('Early Bird', 'Member', 'Late Bird', 'Pro', 'Exec');
+
     public function __construct($row = false) {
         if ($row) {
             $this->id = $row['id'];
@@ -141,5 +147,30 @@ class Owner {
     public function validateRecoveryToken($token) {
         $data = explode('_', $this->password_token);
         return ((time() - $data[1] <= 86400) && ($token == $data[0]));
+    }
+
+    /**
+     * Check if the owner is a ThinkUp.com member of any level.
+     * @return bool Whether or not the owner is a member
+     */
+    public function isMemberAtAnyLevel() {
+        return (in_array($this->membership_level, self::$valid_membership_values));
+    }
+
+    /**
+     * Check if the owner is Member level, i.e., Early Bird, Member, or Late Bird.
+     * @return bool Whether or not the owner is a member at member level
+     */
+    public function isMemberLevel() {
+        return ($this->membership_level == 'Member' || $this->membership_level == 'Early Bird'
+        || $this->membership_level == 'Late Bird');
+    }
+
+    /**
+     * Check if the owner is Pro member level.
+     * @return bool Whether or not the owner is a Pro level
+     */
+    public function isProLevel() {
+        return ($this->membership_level === 'Pro');
     }
 }
