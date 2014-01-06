@@ -43,6 +43,9 @@
             " id="insight-{$i->id}">
   <div class="panel-heading ">
     <h2 class="panel-title">{$i->headline}</h2>
+    {if isset($i->header_image)}
+    <img src="$i->header_image" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
+    {/if}
   </div>
   <div class="panel-desktop-right">
     <div class="panel-body">

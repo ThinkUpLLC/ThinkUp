@@ -1,0 +1,66 @@
+@blue-border: #3187D1;
+
+body.account {
+  background: @blue;
+
+  .navbar-default {
+    border-bottom: 0;
+    box-shadow: 0 0 0;
+    position: absolute;
+    margin: 0;
+
+    .navbar-brand {
+      margin: 62px auto 0;
+      width: 190px;
+      height: 48px;
+      background-size: 190px 48px;
+    }
+  }
+
+  .container {
+    padding-top: 160px;
+
+    header {
+      margin-bottom: 45px;
+    }
+
+    .form-horizontal {
+      fieldset.fieldset-no-header, .form-group {
+        border-color: @blue-border;
+      }
+
+      .control-label {
+        color: #000;
+      }
+
+      .help-block {
+        border-color: fade(@blue-border, 30%);
+        color: @blue-border;
+      }
+
+      .btn-submit {
+        position: static;
+        width: 74px;
+        height: 74px;
+        padding: 30px 0;
+        border-radius: 37px;
+        margin: 15px auto 0;
+        display: block;
+      }
+
+    }
+
+    .form-note {
+      margin-top: 40px;
+
+      a {
+        color: #fff;
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
