@@ -172,6 +172,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'example.com'));
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
@@ -193,9 +195,11 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertNotNull($options['last_weekly_email']);
         $this->assertNotNull($options['last_daily_email']);
         $sent = Mailer::getLastMail();
+        $this->debug($sent);
         $this->assertNotEqual('', $sent);
         $this->assertPattern('/to.*weekly@example.com/', $sent);
         $this->assertPattern('/29 new lists/', $sent);
+        $this->assertPattern('/example.com/', $sent);
 
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin->crawl();
@@ -332,13 +336,17 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
 
         $this->simulateLogin('admin@example.com');
         $plugin->current_timestamp = strtotime('5pm');
         $plugin->crawl();
         $sent = Mailer::getLastMail();
+        $this->assertPattern('/http:\/\/downtonabb.ey/', $sent);
 
         // We can tell if it's HTML because we'll have a JSON block to decode
+        $this->debug($sent);
         $decoded = json_decode($sent);
         $this->assertNull($decoded);
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));

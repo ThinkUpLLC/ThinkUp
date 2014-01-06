@@ -216,7 +216,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $parameters = array();
             $parameters['insights'] = $insights;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
-            $parameters['app_url'] = Utils::getApplicationURL();
+            $parameters['application_url'] = Utils::getApplicationURL();
             $parameters['unsub_url'] = Utils::getApplicationURL().'account/index.php?m=manage#instances';;
             // It's a weekly digest if we're going back more than a day or two.
             $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
@@ -235,7 +235,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             }
         }
 
-        $view->assign('apptitle', $config->getValue('app_title_prefix')."ThinkUp" );
+        $view->assign('app_title', $config->getValue('app_title_prefix')."ThinkUp" );
         $view->assign('application_url', Utils::getApplicationURL());
         $view->assign('insights', $insights);
         $message = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).$template);

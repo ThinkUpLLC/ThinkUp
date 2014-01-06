@@ -9,5 +9,5 @@ This week's ThinkUp insights
 {/if}
 {/foreach}
 
-Sent to you by {$apptitle}.
+Sent to you by {$app_title}.
 Change your mail preferences: {$application_url}account/index.php?m=manage#instances
