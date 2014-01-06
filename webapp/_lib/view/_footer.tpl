@@ -16,15 +16,16 @@
             <p>
                 <a href="http://thinkup.com">ThinkUp</a>
                 {if $thinkup_version} {$thinkup_version}{/if} &#8226;
-                <a href="https://github.com/ThinkUpLLC/policy">Privacy & stuff</a> &#8226; It is nice to be nice.
+                <a href="https://github.com/ThinkUpLLC/policy">Privacy &amp; stuff</a> &#8226; It is nice to be nice.
             </p>
         </div>
       </footer>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{$site_root_path}assets/js/jpanelmenu.js"></script>
-    <script src="{$site_root_path}canonical-insight-generator.js "></script>
+    <script src="{$site_root_path}assets/js/vendor/jpanelmenu.js"></script>
+    <script src="{$site_root_path}assets/js/canonical-insight-generator.js"></script>
+    <script src="{$site_root_path}assets/js/thinkup.js "></script>
     {if $linkify neq 0}
     <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
     {/if}
