@@ -73,8 +73,6 @@
         <ul class="share-services">
         <li class="share-service"><a href="#"><i class="fa fa-twitter icon icon-share"></i></a></li>
         <li class="share-service"><a href="#"><i class="fa fa-facebook icon icon-share"></i></a></li>
-        <li class="share-service"><a href="#"><i class="fa fa-google-plus icon icon-share"></i></a></li>
-        <li class="share-service"><a href="#"><i class="fa fa-envelope icon icon-share"></i></a></li>
         </ul>
         <a class="share-button-close" href="#"><i class="fa fa-times-circle icon icon-share"></i></a>
       </div>
