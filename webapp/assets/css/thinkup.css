@@ -1,7 +1,7 @@
 body.settings .container {
   width: 100%;
-  padding: 0 10px;
-  margin: 45px auto 0;
+  padding: 45px 10px 0;
+  margin: 0 auto;
 }
 body.settings .container header {
   margin-top: 20px;
@@ -12,6 +12,14 @@ body.settings .container header h1 {
   font-weight: 600;
   font-size: 18px;
   line-height: 1.23;
+  margin: 0;
+}
+body.settings .container header h2 {
+  font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  font-weight: 300;
+  text-align: center;
   margin: 0;
 }
 body.settings .container .standard-element {
@@ -25,6 +33,9 @@ body.settings .container .form-horizontal {
 }
 body.settings .container .form-horizontal fieldset {
   margin-bottom: 25px;
+}
+body.settings .container .form-horizontal fieldset.fieldset-no-header {
+  border-top: 1px solid #b9c7ce;
 }
 body.settings .container .form-horizontal fieldset header {
   margin: 0;
@@ -50,6 +61,45 @@ body.settings .container .form-horizontal .form-group {
   margin: 0;
   border-bottom: 1px solid #b9c7ce;
 }
+body.settings .container .form-horizontal .form-group.form-group-warning,
+body.settings .container .form-horizontal .form-group.form-group-ok {
+  position: relative;
+}
+body.settings .container .form-horizontal .form-group.form-group-warning:before,
+body.settings .container .form-horizontal .form-group.form-group-ok:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+}
+body.settings .container .form-horizontal .form-group.form-group-warning:before,
+body.settings .container .form-horizontal .form-group.form-group-ok:before {
+  position: absolute;
+  right: 10px;
+  top: 17px;
+  font-size: 16px;
+}
+body.settings .container .form-horizontal .form-group.form-group-warning .form-control[type=text],
+body.settings .container .form-horizontal .form-group.form-group-ok .form-control[type=text] {
+  padding-right: 35px;
+}
+body.settings .container .form-horizontal .form-group.form-group-warning:before {
+  content: "\f071";
+  color: #d0021b;
+}
+body.settings .container .form-horizontal .form-group.form-group-warning .control-label,
+body.settings .container .form-horizontal .form-group.form-group-warning .help-block {
+  color: #d0021b;
+}
+body.settings .container .form-horizontal .form-group.form-group-ok:before {
+  content: "\f058";
+  color: #239a37;
+}
+body.settings .container .form-horizontal .form-group .help-block {
+  text-align: left;
+  border-bottom: 1px solid #dbdbdb;
+}
 body.settings .container .form-horizontal .btn-submit {
   position: fixed;
   top: 5px;
@@ -66,6 +116,17 @@ body.settings .container .form-horizontal .btn-submit {
   line-height: 1;
   font-weight: 600;
 }
+@media (min-width: 540px) {
+  body.settings .container .form-horizontal .btn-submit {
+    position: static;
+    width: 74px;
+    height: 74px;
+    padding: 30px 0;
+    border-radius: 37px;
+    margin: 15px auto 0;
+    display: block;
+  }
+}
 body.settings .container .form-horizontal .control-label {
   float: left;
   width: 100px;
@@ -78,8 +139,8 @@ body.settings .container .form-horizontal .control-label {
 }
 body.settings .container .form-horizontal .form-control {
   width: auto;
-  min-width: 140px;
-  max-width: 220px;
+  min-width: 180px;
+  max-width: 300px;
   margin-left: 100px;
   color: #000;
   height: 49px;
@@ -93,6 +154,20 @@ body.settings .container .form-horizontal .form-control {
   transition: 0;
   outline: 0;
   border-radius: 0;
+}
+body.settings .container .form-horizontal textarea.form-control {
+  width: 190px;
+  height: 112px;
+  padding: 0;
+  margin: 11px 10px 10px 0;
+}
+body.settings .container .form-horizontal .help-block {
+  padding: 4px 10px;
+  margin: 0;
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 12px;
+  line-height: 1.33;
 }
 body.settings .container .form-horizontal .form-group-toggle .control-label {
   width: 100%;
@@ -145,6 +220,7 @@ body.settings .container .form-horizontal .picker .icon {
   right: 0;
   padding: 18px 10px 17px;
   background: #f0f0f0;
+  z-index: -1;
 }
 body.settings .container .form-horizontal .picker select {
   width: 135%;
@@ -155,7 +231,7 @@ body.settings .container .form-horizontal .picker select {
   outline: 0;
   border-radius: 0;
   -webkit-appearance: none;
-  padding-right: 70px;
+  padding-right: 95px;
 }
 body.settings .container .form-horizontal .picker select:focus {
   color: #3ea5cf;
@@ -175,62 +251,70 @@ body.settings .container .list-group .list-group-item {
   border-bottom: 1px solid #b9c7ce;
   position: relative;
 }
-body.settings .container .list-group .list-group-item .account-label {
+body.settings .container .list-group .list-group-item .list-group-item-label {
+  float: left;
+  max-width: 130px;
+}
+body.settings .container .list-group .list-group-item .list-group-item-value {
+  margin-left: 130px;
+  font-weight: 600;
+}
+body.settings .container .list-accounts .list-group-item .account-label {
   font-weight: 400;
 }
-body.settings .container .list-group .list-group-item .account-label .account-photo {
+body.settings .container .list-accounts .list-group-item .account-label .account-photo {
   float: left;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
-body.settings .container .list-group .list-group-item .account-action {
+body.settings .container .list-accounts .list-group-item .account-action {
   position: absolute;
   top: 0;
   right: 0;
   font-size: 20px;
   line-height: 1;
 }
-body.settings .container .list-group .list-group-item .account-action button {
+body.settings .container .list-accounts .list-group-item .account-action a {
   display: block;
   padding: 15px 10px 14px;
   color: #d0021b;
-  border; none;
-  box-shadow: none;
-  background-color: transparent;
-  font-size: 14px;
 }
-body.settings .container .list-group .list-group-item.list-accounts-item-add {
+body.settings .container .list-accounts .list-group-item.list-accounts-item-add {
   padding: 0;
 }
-body.settings .container .list-group .list-group-item.list-accounts-item-add a {
+body.settings .container .list-accounts .list-group-item.list-accounts-item-add a {
   font-size: 14px;
   line-height: 2;
   padding: 11px 10px 10px;
   display: block;
   color: #333333;
 }
-body.settings .container .list-group .list-group-item.list-accounts-item-add a .account-action {
+body.settings .container .list-accounts .list-group-item.list-accounts-item-add a .account-action {
   padding: 15px 10px 14px;
   color: #666666;
 }
-body.settings .container .list-group .list-group-item.list-accounts-item-add a:hover {
+body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover {
   text-decoration: none;
   background: #e8e8e8;
 }
-body.settings .container .list-group .list-group-item.list-accounts-item-add a:hover .account-action-add {
+body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
   color: #595959;
 }
-body.settings .container .accounts-note,
-body.settings .container .accounts-privacy {
+body.settings .container .form-note {
   text-align: center;
   margin: 0 16% 20px;
-}
-body.settings .container .accounts-note {
   color: #999999;
 }
 body.settings .container .accounts-privacy {
   color: #417505;
+}
+body#settings-subscription .form-note .show-section {
+  margin-top: 10px;
+}
+body#settings-subscription #form-membership-contact {
+  margin-top: 40px;
+  display: none;
 }
 @media (min-width: 400px) {
   body.settings .container {
@@ -252,17 +336,67 @@ body.settings .container .accounts-privacy {
     margin-left: 160px;
     width: 220px;
   }
-}
-@media (min-width: 400px) and (min-width: 540px) {
-  body.settings .container .form-horizontal .btn-submit {
-    position: static;
-    width: 74px;
-    height: 74px;
-    padding: 30px 0;
-    border-radius: 37px;
-    margin: 15px auto 0;
-    display: block;
+  body.settings .container .form-horizontal textarea.form-control {
+    width: 210px;
   }
+}
+body.account {
+  background: #46bcff;
+}
+body.account .navbar-default {
+  border-bottom: 0;
+  box-shadow: 0 0 0;
+  position: absolute;
+  margin: 0;
+}
+body.account .navbar-default .navbar-brand {
+  margin: 62px auto 0;
+  width: 190px;
+  height: 48px;
+  background-size: 190px 48px;
+}
+body.account .container {
+  padding-top: 160px;
+}
+body.account .container header {
+  margin-bottom: 45px;
+}
+body.account .container .form-horizontal fieldset.fieldset-no-header,
+body.account .container .form-horizontal .form-group {
+  border-color: #3187d1;
+}
+body.account .container .form-horizontal .control-label {
+  color: #000;
+}
+body.account .container .form-horizontal .help-block {
+  border-color: rgba(49, 135, 209, 0.3);
+  color: #3187d1;
+}
+body.account .container .form-horizontal .btn-submit {
+  position: static;
+  width: 74px;
+  height: 74px;
+  padding: 30px 0;
+  border-radius: 37px;
+  margin: 15px auto 0;
+  display: block;
+}
+body.account .container .form-note {
+  margin-top: 40px;
+}
+body.account .container .form-note a {
+  color: #fff;
+  text-decoration: underline;
+}
+body.account .container .form-note a:hover {
+  text-decoration: none;
+}
+.fa-override-before:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
 }
 body {
   background-color: #f0f0f0;
@@ -304,7 +438,7 @@ a:hover {
 .navbar-default .navbar-header .navbar-brand {
   float: none;
   padding: 0;
-  background: url('../img/thinkup-logo.svg');
+  background: url(../img/thinkup-logo.svg);
   background-size: 79px 20px;
   text-indent: 100%;
   display: block;
@@ -327,6 +461,9 @@ a:hover {
   outline: 0;
   color: #2785d3;
 }
+body.menu-off .navbar-default .navbar-header .menu-trigger {
+  display: none;
+}
 #menu {
   display: none;
 }
@@ -334,6 +471,7 @@ a:hover {
 #menu {
   background: #cfdee6;
   border-right: 1px solid #b9c7ce;
+  overflow-y: auto !important;
 }
 #jPanelMenu-menu .menu-options li,
 #menu .menu-options li {
@@ -411,9 +549,71 @@ a:hover {
   bottom: -25px;
   right: 10px;
 }
-.container {
-  padding: 45px 0 0;
+.app-message {
+  position: fixed;
   width: 100%;
+  top: 40px;
+  left: 0;
+  background: #FFFABE;
+  border-bottom: 1px solid #BBC7CE;
+  font-size: 13px;
+  line-height: 1.23;
+  padding: 7px 0;
+  font-weight: 400;
+  text-align: center;
+  z-index: 100;
+}
+.app-message.app-message-warning {
+  color: #9d0214;
+  border-color: #d0021b;
+  background: #ec9aa4;
+}
+.app-message.app-message-warning .content:before {
+  padding-right: 5px;
+}
+.app-message.app-message-warning .app-message-close {
+  display: none;
+}
+.app-message.app-message-success {
+  color: #264403;
+  border-color: #417505;
+  background: #c6d6b4;
+}
+.app-message.app-message-success .content:before {
+  padding-right: 5px;
+}
+.app-message.app-message-success .app-message-close {
+  color: #264403;
+}
+.app-message .content {
+  padding: 0 40px;
+}
+.app-message .app-message-close {
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  top: 5px;
+  right: 5px;
+  color: #46bcff;
+}
+.app-message .app-message-close .icon {
+  vertical-align: top;
+}
+body.account .app-message {
+  top: 5px;
+}
+.app-message-hidden {
+  display: none;
+}
+.container {
+  padding: 46px 0 0;
+  width: 100%;
+}
+body.app-message-visible .container {
+  padding-top: 71px;
+}
+body.app-message-visible.account .container {
+  padding-top: 160px;
 }
 .stream {
   min-width: 320px;
@@ -782,7 +982,7 @@ a:hover {
 }
 .body-list {
   margin: 0;
-  padding: 0;
+  padding: 0 0 55px;
   list-style: none;
   overflow: hidden;
 }
@@ -797,6 +997,17 @@ a:hover {
 .body-list.all-items-visible {
   padding: 0;
   margin: 0 0 17px;
+}
+.btn-default {
+  background: #125c9c;
+  border: 0;
+  color: #fff;
+  font-weight: 300;
+}
+.btn-default:hover,
+.btn-default:focus {
+  background: #1777ca;
+  color: #fff;
 }
 .btn-see-all {
   width: 102%;
@@ -943,7 +1154,7 @@ a:hover {
   }
   .stream .date-marker.fixed {
     position: fixed;
-    top: 59px;
+    top: 60px;
   }
   .stream .date-marker.absolute {
     position: absolute;
@@ -960,6 +1171,9 @@ a:hover {
   .stream .insight {
     margin-left: 160px;
   }
+  body.app-message-visible .stream .date-marker.fixed {
+    top: 85px;
+  }
 }
 @media (min-width: 820px) {
   body.menu-open #menu {
@@ -969,19 +1183,23 @@ a:hover {
     top: 0;
     width: 280px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 100%;
     z-index: 2;
   }
   body.menu-open .navbar-default {
-    margin-left: 280px;
+    left: 280px;
+    right: 0;
+    width: auto;
     z-index: 1;
-  }
-  body.menu-open .navbar-default .navbar-header {
-    margin-left: -280px;
   }
   body.menu-open .navbar-default .menu-trigger {
     display: none;
+  }
+  body.menu-open .app-message {
+    left: 280px;
+    right: 0;
+    width: auto;
   }
   body.menu-open #page-content {
     margin-left: 280px;
