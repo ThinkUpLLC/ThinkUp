@@ -55,7 +55,7 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
 
                     $this->insight_dao->insertInsightDeprecated('local_followers', $instance->id, $this->insight_date,
                     $headline, $insight_text, basename(__FILE__, '.php'),
-                    Insight::EMPHASIS_LOW, serialize($followers));
+                    Insight::EMPHASIS_LOW, $followers);
                 }
             }
         }

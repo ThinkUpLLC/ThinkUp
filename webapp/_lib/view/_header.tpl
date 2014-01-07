@@ -29,7 +29,6 @@
 
     <script src="{$site_root_path}assets/js/jquery-1.10.2.min.js"></script>
     <script src="{$site_root_path}assets/js/bootstrap.min.js"></script>
-    <script src="{$site_root_path}assets/js/d3.min.js"></script>
  
     {literal}
       <script type="text/javascript">

@@ -471,5 +471,6 @@
       is_list: true
     }
   };
-
+  wt.canonical_insights = '';
+  
 }).call(this);

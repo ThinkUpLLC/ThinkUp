@@ -66,7 +66,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
 
                 $this->insight_dao->insertInsightDeprecated("long_lost_contacts", $instance->id, $this->insight_date,
                 $headline, $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($long_lost_contacts));
+                Insight::EMPHASIS_LOW, $long_lost_contacts);
             }
         }
 

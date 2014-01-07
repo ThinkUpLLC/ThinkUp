@@ -56,13 +56,13 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                     " interesting users</strong> ". "followed $this->username.";
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
-                $my_insight->setPeople(serialize($least_likely_followers));
+                $my_insight->setPeople($least_likely_followers);
             } else {
                 $my_insight->headline = "Hey, did you see that " . 
                     $least_likely_followers[0]->full_name . " followed $this->username?";
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
-                $my_insight->setPeople(serialize($least_likely_followers));
+                $my_insight->setPeople($least_likely_followers);
             }
         }
 
@@ -76,13 +76,13 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $my_insight->headline = '<strong>'.sizeof($verified_followers)." verified users</strong> ".
                     "followed $this->username!";
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
-                $my_insight->setPeople(serialize($verified_followers));
+                $my_insight->setPeople($verified_followers);
             } else {
                 $my_insight->slug = 'verified_followers';
                 $my_insight->headline = 'Wow, <strong>'.$least_likely_followers[0]->full_name.
                     "</strong>, a verified user, followed $this->username.";
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
-                $my_insight->setPeople(serialize($verified_followers));
+                $my_insight->setPeople($verified_followers);
             }
         }
         if ($my_insight->headline) {
