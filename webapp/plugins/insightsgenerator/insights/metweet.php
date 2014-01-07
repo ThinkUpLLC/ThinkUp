@@ -58,8 +58,8 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if ($metweet_count > 1) {
-                $insight_text = $this->username." retweeted ".$this->username." mentions "
-                ."<strong>".$this->terms->getOccurrencesAdverb($metweet_count)."</strong> last week";
+                $headline = $this->username." retweeted ".$this->username." mentions "
+                ."<strong>".$this->terms->getOccurrencesAdverb($metweet_count)."</strong> last week.";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("metweet_count", $instance->id, $metweet_count,
@@ -71,18 +71,16 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($last_monday_insight_baseline)) {
                     if ($last_monday_insight_baseline->value > $metweet_count ) {
                         $difference = $last_monday_insight_baseline->value - $metweet_count;
-                        $insight_text .= ", $difference fewer time".($difference>1?"s":"")." than the prior week.";
+                        $insight_text = "That's $difference fewer time".($difference>1?"s":"")." than the prior week.";
                     } elseif ($last_monday_insight_baseline->value < $metweet_count ) {
                         $difference = $metweet_count - $last_monday_insight_baseline->value;
-                        $insight_text .= ", $difference more time".($difference>1?"s":"")." than the prior week.";
-                    } else {
-                        $insight_text .= ".";
+                        $insight_text = "That's $difference more time".($difference>1?"s":"")." than the prior week.";
                     }
-                } else {
-                    $insight_text .= ".";
                 }
 
-                $this->insight_dao->insertInsightDeprecated("metweet", $instance->id, $this->insight_date, "Metweets:",
+                $insight_text .= " It's cool to let people know what others are saying, but too many can get annoying.";
+
+                $this->insight_dao->insertInsightDeprecated("metweet", $instance->id, $this->insight_date, $headline,
                 $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }

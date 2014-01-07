@@ -105,7 +105,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $time1_high = (($time1_high_hotd % 12) ? ($time1_high_hotd % 12) : 12)
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                $insight_text = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." from last week got <strong>".$most_responses['value']." "
                 .($most_responses['value'] > 1 ? 'responses' : 'response')."</strong>"
                 ." between <strong>".$time1_low." and ".$time1_high."</strong>";
@@ -121,16 +121,18 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                         $time2_high = (($time2_high_hotd % 12) ? ($time2_high_hotd % 12) : 12)
                         .((floor($time2_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                        $insight_comparison_text = ", as compared to <strong>".$value." "
+                        $insight_comparison_text = "That's compared to <strong>".$value." "
                         .($value > 1 ? 'responses' : 'response')."</strong>"
-                        ." between <strong>".$time2_low." and ".$time2_high."</strong>";
+                        ." between <strong>".$time2_low." and ".$time2_high."</strong>. ";
                     }
                 }
 
-                $insight_text .= $insight_comparison_text.".";
+                $insight_text .= $insight_comparison_text 
+                . "If you have an important " . $this->terms->getNoun('post') . " you might want to time it around " 
+                . $time1_low . ".";
 
                 $this->insight_dao->insertInsightDeprecated("outreach_punchcard", $instance->id, $this->insight_date,
-                "Time of day:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
+                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW,
                 serialize($punchcard));
             }
         }

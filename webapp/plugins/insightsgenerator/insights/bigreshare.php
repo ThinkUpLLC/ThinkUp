@@ -38,6 +38,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
         $service_user = $user_dao->getDetails($instance->network_user_id, $instance->network);
+        $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
             $big_reshares = $post_dao->getRetweetsByAuthorsOverFollowerCount($post->post_id, $instance->network,
@@ -51,17 +52,17 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 $post->network.'&v=fwds">';
 
                 if (sizeof($big_reshares) > 1) {
-                    $notification_text = "People with lots of followers ".$this->terms->getVerb('shared')." "
+                    $headline = "People with lots of followers ".$this->terms->getVerb('shared')." "
                     .$post_link."$this->username's post</a>.";
                 } else {
                     $follower_count_multiple =
                     intval(($big_reshares[0]->follower_count) / $service_user->follower_count);
                     if ($follower_count_multiple > 1 ) {
-                        $notification_text = "Someone with <strong>".$follower_count_multiple.
+                        $headline = "Someone with <strong>".$follower_count_multiple.
                         "x</strong> more followers than $this->username ".$this->terms->getVerb('shared')." "
                         .$post_link."this post</a>.";
                     } else {
-                        $notification_text = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
+                        $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
                         .$post_link."$this->username's post</a>.";
                     }
                 }
@@ -71,8 +72,8 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
                 $this->insight_dao->insertInsightDeprecated("big_reshare_".$post->id, $instance->id,
-                $simplified_post_date, "Big reshare!", $notification_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_HIGH, serialize($big_reshares));
+                $simplified_post_date, $headline, $insight_text, basename(__FILE__, ".php"),
+                Insight::EMPHASIS_HIGH, $big_reshares);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

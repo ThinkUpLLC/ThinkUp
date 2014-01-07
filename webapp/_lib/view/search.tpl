@@ -1,12 +1,12 @@
-{include file="_header.tpl" enable_bootstrap=$enable_bootstrap}
-{include file="_statusbar.tpl" enable_bootstrap=$enable_bootstrap}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
     <div id="main" class="container">
 
 {include file="_usermessage.tpl"}
 
 <div class="row">
-    <div class="span3">
+    <div class="col-md-3">
       <div class="embossed-block">
         <ul>
           <li>
@@ -14,9 +14,9 @@
           </li>
         </ul>
       </div>
-    </div><!--/span3-->
+    </div><!--/col-md-3-->
 
-    <div class="span9">
+    <div class="col-md-9">
     {if $smarty.get.c eq 'posts'}
         {if $posts|@count > 0}
         {foreach from=$posts key=pid item=post name=bar}
@@ -54,11 +54,11 @@
                     </td>
                     <td>
                         {if $u->network eq 'twitter'}
-                            <h3><img src="{$site_root_path}plugins/{$u->network}/assets/img/favicon.png" class="service-icon2"/> <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a>     <small>{$u->follower_count|number_format} followers</small></h3>
+                            <h3><i class="fa fa-{$u->network}"></i> <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a>     <small>{$u->follower_count|number_format} followers</small></h3>
                             <p>{$u->description|link_usernames_to_twitter}<br />
                             {$u->url}</p>
                         {else}
-                            <h3><img src="{$site_root_path}plugins/{$u->network}/assets/img/favicon.png" class="service-icon2"/> {$u->full_name}    {if $u->other.total_likes}<small style="color:gray">{$u->other.total_likes|number_format} likes</small>{/if}</h3>
+                            <h3><i class="fa fa-{$u->network}"></i> {$u->full_name}    {if $u->other.total_likes}<small style="color:gray">{$u->other.total_likes|number_format} likes</small>{/if}</h3>
                         {/if}
                     </td>
                     </tr>
@@ -69,22 +69,22 @@
          <h2>No followers found.</h2>
         {/if}
     {/if}
-    </div><!--/span9-->
+    </div><!--/col-md-9-->
 </div><!--/row-->
 
 <div class="row">
-    <div class="span3">&nbsp;</div>
-    <div class="span9">
+    <div class="col-md-3">&nbsp;</div>
+    <div class="col-md-9">
 
         <ul class="pager">
         {if $next_page}
           <li class="previous">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="icon-arrow-left"></i> Older</a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
           </li>
         {/if}
         {if $last_page}
           <li class="next">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="icon-arrow-right"></i></a>
+            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
           </li>
         {/if}
         </ul>

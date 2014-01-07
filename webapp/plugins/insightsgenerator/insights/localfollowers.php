@@ -35,6 +35,8 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
+        $insight_text = '';
+
         if (self::shouldGenerateInsight('local_followers', $instance, $insight_date='today',
         $regenerate_existing_insight=true)) {
             $user_dao = DAOFactory::getDAO('UserDAO');
@@ -47,13 +49,13 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
                 $user->location, 0);
 
                 if (count($followers)) {
-                    $insight_text = "<strong>"
+                    $headline = "<strong>"
                     .(count($followers) > 1 ? count($followers)." people" : "1 person")
                     ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
 
                     $this->insight_dao->insertInsightDeprecated('local_followers', $instance->id, $this->insight_date,
-                    "New neighbors:", $insight_text, basename(__FILE__, '.php'),
-                    Insight::EMPHASIS_LOW, serialize($followers));
+                    $headline, $insight_text, basename(__FILE__, '.php'),
+                    Insight::EMPHASIS_LOW, $followers);
                 }
             }
         }

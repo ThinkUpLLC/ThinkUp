@@ -116,7 +116,8 @@ class InsightPluginParent {
             }
         }
 
-        return $run;
+        return true;
+        // return $run;
     }
 
     public function renderConfiguration($owner) {

@@ -2,8 +2,8 @@
 
     <span class="pull-right">{insert name="help_link" id='geoencoder'}</span>
     <h1>
-        <img src="{$site_root_path}plugins/geoencoder/assets/img/geoencoder_icon.png" class="plugin-image">
-        GeoEncoder Plugin
+        <i class="fa fa-map-marker text-muted"></i>
+        GeoEncoder
     </h1>
 
     <p>The GeoEncoder plugin plots a post's responses on a Google Map and can lists them by distance from the original poster.</p>

@@ -142,9 +142,9 @@ class TestOfOutreachPunchcardInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual($punchcard['posts'][$post_dotw][$post_hotd], 3);
-        $this->assertPattern('/\@testeriffic\'s tweets from last week got/', $result->text);
-        $this->assertPattern('/<strong>3 responses<\/strong> between <strong>'.$time1str.'<\/strong>/', $result->text);
-        $this->assertPattern('/as compared to <strong>1 response<\/strong>/', $result->text);
+        $this->assertPattern('/\@testeriffic\'s tweets from last week got/', $result->headline);
+        $this->assertPattern('/<strong>3 responses<\/strong> between <strong>'.$time1str.'<\/strong>/', $result->headline);
+        $this->assertPattern('/That\'s compared to <strong>1 response<\/strong>/', $result->text);
         $this->assertPattern('/<strong>1 response<\/strong> between <strong>'.$time2str.'<\/strong>/', $result->text);
     }
 

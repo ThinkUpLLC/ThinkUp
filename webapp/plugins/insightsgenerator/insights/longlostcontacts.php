@@ -43,6 +43,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
             $contacts = $follow_dao->getFolloweesRepliedToThisWeekLastYear(
             $instance->network_user_id, $instance->network);
             $long_lost_contacts = array();
+            $insight_text = '';
 
             if (count($contacts)) {
                 $post_dao = DAOFactory::getDAO('PostDAO');
@@ -56,14 +57,16 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
             }
 
             if (count($long_lost_contacts)) {
-                $insight_text = $this->username." hasn't replied to "
+                $headline = $this->username." hasn't replied to "
                 .((count($long_lost_contacts) > 1) ?
                 "<strong>".count($long_lost_contacts)." contacts</strong> " : "a contact ")
                 ."in over a year: ";
 
+                $insight_text = "Sometimes it's good to reflect after a little bit of time has passed.";
+
                 $this->insight_dao->insertInsightDeprecated("long_lost_contacts", $instance->id, $this->insight_date,
-                "Keep in touch:", $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($long_lost_contacts));
+                $headline, $insight_text, basename(__FILE__, ".php"),
+                Insight::EMPHASIS_LOW, $long_lost_contacts);
             }
         }
 

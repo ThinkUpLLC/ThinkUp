@@ -52,9 +52,9 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->network, 30);
                 if (isset($fans) && sizeof($fans) > 0 ) {
                     $this->insight_dao->insertInsightDeprecated("biggest_fans_last_30_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
+                    $since_date, "These are the people who ".$this->terms->getVerb('liked')." $this->username's "
                     .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 30 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+                    $insight_text, $filename, Insight::EMPHASIS_LOW, $fans);
                 }
             }
         } else if ($insight_day_of_week == 0) { //it's Sunday
@@ -65,9 +65,9 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->network, 7);
                 if (isset($fans) && sizeof($fans) > 0 ) {
                     $this->insight_dao->insertInsightDeprecated("biggest_fans_last_7_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
+                    $since_date, "These are the people who ".$this->terms->getVerb('liked')." $this->username's "
                     .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 7 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+                    $insight_text, $filename, Insight::EMPHASIS_LOW, $fans);
                 }
             }
         }

@@ -35,6 +35,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
         if (self::shouldGenerateInsight('all_about_you', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
@@ -44,9 +45,9 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $count += self::countFirstPersonReferences($post->post_text);
             }
             if ($count > 1) {
-                $text = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
+                $headline = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
                 ." contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\" "
-                ."<strong>".$count." times</strong> in the last week";
+                ."<strong>".$count." times</strong> in the last week.";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("all_about_you", $instance->id, $count,
@@ -61,18 +62,16 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                     //compare it to this Sunday's number, and add a sentence comparing it.
                     if ($last_sunday_insight_baseline->value > $count ) {
                         $difference = $last_sunday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer time".($difference>1?"s":"")." than the prior week.";
+                        $insight_text = "That's $difference fewer time".($difference>1?"s":"")." than the prior week.";
                     } elseif ($last_sunday_insight_baseline->value < $count ) {
                         $difference = $count - $last_sunday_insight_baseline->value;
-                        $text .= ", $difference more time".($difference>1?"s":"")." than the prior week.";
+                        $insight_text = "That's $difference more time".($difference>1?"s":"")." than the prior week.";
                     } else {
-                        $text .= ".";
+                        $insight_text .= ".";
                     }
-                } else {
-                    $text .= ".";
                 }
                 $this->insight_dao->insertInsightDeprecated("all_about_you", $instance->id, $this->insight_date,
-                "All about you:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
 
