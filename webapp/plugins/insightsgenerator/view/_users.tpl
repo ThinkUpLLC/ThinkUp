@@ -8,12 +8,11 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
 
 <!--
 
-USERS 
+PRINT_R USERS
 
-  {$i->related_data.people|unserialize|@print_r}
+  {$i->related_data.people|@print_r}
 
 -->
-
 
 <ul class="body-list user-list all-items-visible" style="height: 445px;">
 
