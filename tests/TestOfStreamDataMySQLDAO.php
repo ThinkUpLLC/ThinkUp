@@ -106,6 +106,6 @@ class TestOfStreamDataMySQLDAO extends ThinkUpUnitTestCase {
         $this->dao->insertStreamData('new content 3');
         $this->dao->resetID(); // reset when not empty
         $res = $this->dao->retrieveNextItem();
-        $this->assertEqual(2, $res[0]);
+        $this->assertNull($res[0]);
     }
 }
