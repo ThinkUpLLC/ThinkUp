@@ -212,6 +212,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         // If we've got a Mandrill key and template, send HTML
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
             $view->assign('insights', $insights);
+            $view->assign('application_url', Utils::getApplicationURL());
             $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
             $parameters = array();
             $parameters['insights'] = $insights;
