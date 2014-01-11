@@ -214,7 +214,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':instance_id'=>$insight->instance_id,
             ':headline'=>$insight->headline,
             ':text'=>$insight->text,
-            ':related_data'=>$insight->related_data,
+            ':related_data'=>((isset($insight->related_data))?serialize($insight->related_data):null),
             ':emphasis'=>$insight->emphasis
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }

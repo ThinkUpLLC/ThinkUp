@@ -185,6 +185,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($e->getMessage(), 'Insight instance_id is not set.');
         $e = null;
 
+        //Test insight without related data
         $insight->instance_id = 1;
         $insight->slug = 'avg_replies_per_week';
         $insight->date = '2012-05-05';
@@ -213,6 +214,40 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
         $this->assertEqual($result->headline, 'Ohai updated headline' );
         $this->assertEqual($result->text, 'Updated: You rock');
+        //Filename shouldn't change on update
+        $this->assertEqual($result->filename, 'test_filename');
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        //Test insight with related data
+        $insight->instance_id = 1;
+        $insight->slug = 'avg_replies_per_week';
+        $insight->date = '2012-05-06';
+        $insight->headline = 'Oh hai!';
+        $insight->text = "You rock";
+        $insight->emphasis = Insight::EMPHASIS_MED;
+        $insight->filename = "test_filename";
+        $insight->related_data = array('favorite_color'=>'blue', 'favorite_fruit'=>'bananas');
+        $result = $dao->insertInsight($insight);
+        $this->assertTrue($result);
+
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-06');
+        $related_data = unserialize($result->related_data);
+        $this->assertIsA( $related_data, 'array');
+        $this->assertEqual( $related_data['favorite_color'], 'blue');
+
+        //inserting existing insight should update
+        $insight->headline = "Ohai updated headline";
+        $insight->text = 'Updated: You rock';
+        $insight->related_data = array('favorite_color'=>'purple', 'favorite_fruit'=>'Apple');
+        $result = $dao->insertInsight($insight);
+        $this->assertTrue($result);
+
+        //assert update was successful
+        $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-06');
+        $this->assertEqual($result->headline, 'Ohai updated headline' );
+        $this->assertEqual($result->text, 'Updated: You rock');
+        $related_data = unserialize($result->related_data);
+        $this->assertEqual( $related_data['favorite_color'], 'purple');
         //Filename shouldn't change on update
         $this->assertEqual($result->filename, 'test_filename');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
