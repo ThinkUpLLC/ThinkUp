@@ -146,8 +146,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s status updates averaged <strong>1 new like/', $result->headline);
         $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->headline);
-        $this->assertPattern('/slower than the previous week\'s average/', $result->headline);
-        $this->assertPattern('/of 1 like every '.$last_week_time_per_response.'./', $result->headline);
+        $this->assertPattern('/slower than the previous week\'s average/', $result->text);
+        $this->assertPattern('/of 1 like every '.$last_week_time_per_response.'./', $result->text);
     }
 
     public function testResponseTimeInsightForFoursquarePriorSmallerBaseline() {
@@ -195,8 +195,8 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s checkins averaged <strong>1 new comment/', $result->headline);
         $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->headline);
-        $this->assertPattern('/faster than the previous week\'s average/', $result->headline);
-        $this->assertPattern('/of 1 comment every '.$last_week_time_per_response.'./', $result->headline);
+        $this->assertPattern('/faster than the previous week\'s average/', $result->text);
+        $this->assertPattern('/of 1 comment every '.$last_week_time_per_response.'./', $result->text);
     }
 
     public function testResponseTimeInsightWithUnitTimeValue() {
@@ -230,7 +230,7 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new favorite/', $result->headline);
         $this->assertPattern('/every <strong>hour<\/strong>/', $result->headline);
-        $this->assertPattern('/faster than the previous week\'s average/', $result->headline);
-        $this->assertPattern('/of 1 favorite every day./', $result->headline);
+        $this->assertPattern('/faster than the previous week\'s average/', $result->text);
+        $this->assertPattern('/of 1 favorite every day./', $result->text);
     }
 }

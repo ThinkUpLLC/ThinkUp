@@ -3,7 +3,7 @@
       <ul class="list-unstyled menu-options">
         <li><a href="{$site_root_path}" {if !$controller_title}class="active"{/if}>Home</a></li>
 
-      {if !isset($thinkupllc_endpoint)} 
+      {if !isset($thinkupllc_endpoint)}
         <li><a href="{$site_root_path}account/?m=manage"{if $smarty.get.m eq "manage"} class="active"{/if}>Settings</a></li>
       {/if}
 
@@ -14,7 +14,7 @@
         <li class="service inactive"><a href="{$site_root_path}account/?p=instagram">Instagram <i class="fa fa-instagram icon"></i></a></li>
         -->
 
-      {if !isset($thinkupllc_endpoint)} 
+      {if !isset($thinkupllc_endpoint)}
 
         <li><a href="{$site_root_path}account/?m=manage#plugins"><i class="fa fa-list-alt text-muted"></i> Plugins</a></li>
         {if $user_is_admin}
@@ -31,11 +31,6 @@
 
   {/if}
 
-<!-- 
-        <li><a href="#">Subscription</a></li>
-        <li><a href="#">Help</a></li>
-
- -->
   {if isset($logged_in_user)}
         <li class="user-info logged-in">
           <img src="http://avatars.io/{$instances[0]->network}/{$instances[0]->network_user_id}" class="user-photo img-circle">
@@ -60,4 +55,4 @@
           </button>
           <a class="navbar-brand" href="{$site_root_path}"><strong>Think</strong>Up</span></a>
         </div>
-      </nav>    
+      </nav>

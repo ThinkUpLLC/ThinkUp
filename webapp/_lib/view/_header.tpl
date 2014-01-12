@@ -14,10 +14,12 @@
     <meta name="author" content="">
 
     <!-- styles -->
+{if !isset($thinkupllc_endpoint)}
     <script type="text/javascript" src="//use.typekit.net/zpi4jiv.js"></script>
     <script type="text/javascript">{literal}try{Typekit.load();}catch(e){}{/literal}</script>
-    <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
+{/if}
+    <link href="{$site_root_path}assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="{$site_root_path}assets/css/vendor/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
     <link href="{$site_root_path}assets/css/thinkup.css" rel="stylesheet">
 
@@ -27,58 +29,11 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
-    <script src="{$site_root_path}assets/js/jquery-1.10.2.min.js"></script>
-    <script src="{$site_root_path}assets/js/bootstrap.min.js"></script>
-    <script src="{$site_root_path}assets/js/d3.min.js"></script>
- 
-    {literal}
-      <script type="text/javascript">
-
-        $(document).ready(function() {
-
-            $(".collapse").collapse();
-            $(function () {
-                $('#settingsTabs a:first').tab('show');
-            })
-
-    {/literal}
-        {if $logged_in_user}
-    {literal}
-            $('#search-keywords').focus(function() {
-                $('#search-refine').dropdown();
-                if ($('#search-keywords').val()) {
-                    $('#search-refine a span.searchterm').text($('#search-keywords').val());
-                }
-            }).blur(function() {
-                $('#search-refine').dropdown();
-            });
-
-            $('#search-keywords').keyup(function() {
-                $('#search-refine a span.searchterm').text($('#search-keywords').val());
-            });
-        });
-
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + encodeURIComponent(_mu);
-        }
-      }
-    {/literal}
-    {else}
-    {literal}
-        });
-    {/literal}
-    {/if}
-    </script>
-
+    {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/jquery-1.10.2.min.js"><\/script>')</script>{/if}
 
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
-{/foreach}
-
-{foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
 {/foreach}
 
 <script type="text/javascript">
@@ -123,11 +78,10 @@
   <!-- google chart tools -->
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
-  
+
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
 
-{if $post->post_text} 
+{if $post->post_text}
     <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
     <meta itemprop="description" content="{$post->post_text|strip_tags}">
     <meta itemprop="image" content="http://thinkup.com/assets/img/thinkup-logo_sq.png">

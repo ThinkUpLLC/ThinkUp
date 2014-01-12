@@ -14,7 +14,8 @@ PRINT_R USERS
 
 -->
 
-<ul class="body-list user-list all-items-visible" style="height: 445px;">
+
+<ul class="body-list user-list {if $i->related_data.people|@count > 2}body-list-show-some{else}body-list-show-all{/if}">
 
 {foreach from=$i->related_data.people key=k item=u name=bar}
 <li class="list-item">
@@ -39,4 +40,4 @@ PRINT_R USERS
 
 </ul>
 
-<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all people</span> <i class="fa fa-chevron-down icon"></i></button>
+{if $i->related_data.people|@count > 2}<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$i->related_data.people|@count} people</span> <i class="fa fa-chevron-down icon"></i></button>{/if}

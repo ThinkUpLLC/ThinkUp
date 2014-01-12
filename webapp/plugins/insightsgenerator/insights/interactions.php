@@ -33,7 +33,7 @@
 
 require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
-function secondsToTextTime($inputSeconds) {
+function secondsToTextTime($inputSeconds, $maxPlaces = 2) {
 
     $secondsInAMinute = 60;
     $secondsInAnHour  = 60 * $secondsInAMinute;
@@ -53,7 +53,7 @@ function secondsToTextTime($inputSeconds) {
     // extract the remaining seconds
     $remainingSeconds = $minuteSeconds % $secondsInAMinute;
     $seconds = ceil($remainingSeconds);
-  
+
     // return the final array
     $obj = array(
         'd' => (int) $days,
@@ -61,7 +61,47 @@ function secondsToTextTime($inputSeconds) {
         'm' => (int) $minutes,
         's' => (int) $seconds,
     );
-    return $obj;
+
+    $places = 0;
+    $text = '';
+
+    $milestones = array(
+        "per_row"    => 2,
+        "label_type" => "text",
+        "items" => array(),
+    );
+
+    if ($obj["d"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["d"],
+            "label"  => "days",
+        );
+        $places++;
+    }
+    if ($obj["h"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["h"],
+            "label"  => "hours",
+        );
+
+        $places++;
+    }
+    if ($obj["m"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["m"],
+            "label"  => "minutes",
+        );
+        $places++;
+    }
+    if ($obj["s"] && $places < $maxPlaces) {
+        $milestones["items"][] = array(
+            "number" => $obj["s"],
+            "label"  => "seconds",
+        );
+        $places++;
+    }
+
+    return $milestones;
 }
 
 class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
@@ -117,12 +157,13 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $most_mentioned_user = each($mentions_count);
 
                 // Add mentions to dataset
-                foreach ($mentions_count as $mention => $count) {
+                $users_mentioned = array();
+                foreach (array_slice($mentions_count, 0, 10) as $mention => $count) {
                     $mention_info['mention'] = $mention;
                     $mention_info['count'] = $count;
                     $mention_info['user'] = $mentions_info[$mention];
 
-                    $insight_data[] = $mention_info;
+                    $users_mentioned[] = $mention_info;
                 }
             }
 
@@ -132,26 +173,26 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
                 $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * 15;
 
-                $insight_text = "That's roughly";
-                $conversation_time = secondsToTextTime($conversation_seconds);
+                $milestones = secondsToTextTime($conversation_seconds);
+                $insight_text = 'This is how much time they spent chatting.';
 
-                    if ($conversation_time["d"]) {
-                        $insight_text .= ' ' . $conversation_time["d"] . ' days';
-                    }
-                    if ($conversation_time["h"]) {
-                        $insight_text .= ' ' . $conversation_time["h"] . ' hours';
-                    }
-                    if ($conversation_time["m"]) {
-                        $insight_text .= ' ' . $conversation_time["m"] . ' minutes';
-                    }
-                    if ($conversation_time["s"]) {
-                        $insight_text .= ' ' . $conversation_time["s"] . ' seconds';
-                    }
+                //Instantiate the Insight object
+                $my_insight = new Insight();
 
-                    $insight_text .= ' spent chatting with each other.';
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'interactions'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = $mentioned_user->avatar; // '';
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->setPeople($users_mentioned);
+                $my_insight->setMilestones($milestones);
 
-                $this->insight_dao->insertInsightDeprecated('interactions', $instance->id, $this->insight_date, $headline,
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW, serialize($insight_data));
+                $this->insight_dao->insertInsight($my_insight);
+
             }
         }
 

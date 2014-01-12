@@ -1,4 +1,5 @@
 <?php
+
 /*
  Plugin Name: Response Time
  Description: How quickly your posts generate replies, favorites, and reshares every week.
@@ -68,7 +69,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                ."</strong> every <strong>".$time_str."</strong> over the last week";
+                ."</strong> every <strong>".$time_str."</strong> over the last week.";
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
@@ -81,17 +82,31 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     if ($last_fri_time_per_response < $time_per_response) {
-                        $headline .= ", slower than the previous week's average of 1 "
-                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                        $insight_text = "<i class=\"fa fa-tachometer fa-2x text-muted\"></i> That's slower than "
+                        . "the previous week's average of 1 "
+                        . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     } elseif ($last_fri_time_per_response > $time_per_response) {
-                        $headline .= ", faster than the previous week's average of 1 "
-                        .$this->terms->getNoun($response_factor['key'])." every " .$time_str1;
+                        $insight_text .= "<i class=\"fa fa-tachometer fa-2x text-muted\"></i> That's faster than "
+                        . "the previous week's average of 1 "
+                        . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }
                 }
-                $headline .= '.';
 
-                $this->insight_dao->insertInsightDeprecated("response_time", $instance->id, $this->insight_date, $headline,
-                $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_HIGH);
+                        //Instantiate the Insight object
+
+                        $my_insight = new Insight();
+
+                        //REQUIRED: Set the insight's required attributes
+                        $my_insight->instance_id = $instance->id;
+                        $my_insight->slug = 'response_time'; //slug to label this insight's content
+                        $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                        $my_insight->headline = $headline;
+                        $my_insight->text = $insight_text;
+                        $my_insight->header_image = '';
+                        $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                        $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+
+                        $this->insight_dao->insertInsight($my_insight);
             }
         }
 

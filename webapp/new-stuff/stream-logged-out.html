@@ -12,10 +12,10 @@
 
     <script type="text/javascript" src="//use.typekit.net/zpi4jiv.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
-    <link href="./canonical-insight-template.css" rel="stylesheet">
+    <link href="./css/thinkup.css" rel="stylesheet">
 
     <link rel="shortcut icon" href="http://thinkupapp.com/img/favicon.png" type="image/png" />
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./assets/ico/apple-touch-icon-144-precomposed.png">
@@ -31,7 +31,7 @@
 
   </head>
 
-  <body class="insight-stream">
+  <body class="insight-stream logged-out" data-app-message-text="Look, I'm created on load! And now I am much longer. In fact, now this message is impossibly long but I am doing that for testing purposes.">
 
     <div id="menu">
       <ul class="list-unstyled menu-options">
@@ -49,7 +49,7 @@
             John Appleseed
           </div>
         </li>
-        <li><a href="#">Logout</a></li>
+        <li><a href="#">Log out</a></li>
       </ul>
     </div>
 
@@ -62,8 +62,8 @@
           </button>
           <a class="navbar-brand" href="#"><strong>Think</strong>Up</span></a>
         </div>
-      </nav>    
-      
+      </nav>
+
       <div class="container">
 
         <div class="stream">
@@ -75,8 +75,10 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
-    <script src="./jpanelmenu.js"></script>
-    <script src="./canonical-insight-generator.js"></script>
+    <script>window.jQuery || document.write('<script src="./assets/js/jquery-1.10.2.min.js"><\/script>')</script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="./js/vendor/jpanelmenu.js"></script>
+    <script src="./js/canonical-insight-generator.js"></script>
+    <script src="./js/thinkup.js"></script>
   </body>
 </html>

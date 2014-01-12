@@ -116,23 +116,57 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
 
                 $insight_text = '';
                 arsort($total_posts);
-                $keys = array_keys($total_posts);
-                $last_type = end($keys);
+                $posts_positive = array();
+                $posts_zero = array();
                 foreach ($total_posts as $type => $total) {
-                    if ($type == $last_type) { //last item in list
+                    if ($total == 0) {
+                        $posts_zero[$type] = $total;
+                    } else {
+                        $posts_positive[$type] = $total;
+                    }
+                }
+                $keys_pos = array_keys($posts_positive);
+                $last_type_pos = end($keys_pos);
+
+                foreach ($posts_positive as $type => $total) {
+                    if ($type == $last_type_pos && count($posts_positive) >= 2) { //last item in list
                         $style_analysis .= "and ";
                     }
                     if ($style_analysis == '') { //first item
                         $style_analysis .= (($total == 0)?"None":$total)." of $this->username's posts this week ".
                         (($total == 1)?"was a":"were")." ".(($total == 1)?substr($type, 0, -1):$type);
+                    } elseif ($total == 0) {
+
                     } else {
                         $style_analysis .= (($total == 0)?"none":$total)." ".(($total == 1)?"was a":"were")." ".
                         (($total == 1)?substr($type, 0, -1):$type);
                     }
-                    if ($type == $last_type) {  //last item in list
+                    if ($type == $last_type_pos) {  //last item in list
                         $style_analysis .= ".";
-                    } else {
+                    } else if (count($posts_positive) > 2) {
                         $style_analysis .= ", ";
+                    } else {
+                        $style_analysis .= " ";
+                    }
+                }
+
+                $keys_zero = array_keys($posts_zero);
+                $last_type_zero = end($keys_zero);
+                foreach ($posts_zero as $type => $total) {
+                    if ($type == $last_type_zero && count($posts_zero) >= 2) { //last item in list
+                        $style_analysis_neg .= "or ";
+                    }
+                    if ($style_analysis_neg == '') { //first item
+                        $style_analysis_neg .= "$this->username didn't post any $type";
+                    } else {
+                        $style_analysis_neg .= "$type";
+                    }
+                    if ($type == $last_type_zero) {  //last item in list
+                        $style_analysis_neg .= ".";
+                    } else if (count($posts_zero) > 2) {
+                        $style_analysis_neg .= ", ";
+                    } else {
+                        $style_analysis_neg .= " ";
                     }
                 }
 
@@ -177,8 +211,11 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 if ($sentence) {
                     $headline = $sentence;
                     $insight_text = $style_analysis;
-                } else {
+                } elseif ($style_analysis_neg) {
                     $headline = $style_analysis;
+                    $insight_text = $style_analysis_neg;
+                } else {
+                    $insight_text = '';
                 }
 
                 $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),

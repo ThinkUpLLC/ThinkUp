@@ -43,8 +43,6 @@ class InsightStreamController extends ThinkUpController {
         $this->addToView('enable_bootstrap', true);
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
 
-        $this->addHeaderJavaScript('assets/js/d3.min.js');
-
         if ($this->shouldRefreshCache() ) {
             if (isset($_GET['u']) && isset($_GET['n']) && isset($_GET['d']) && isset($_GET['s'])) {
                 $this->displayIndividualInsight();

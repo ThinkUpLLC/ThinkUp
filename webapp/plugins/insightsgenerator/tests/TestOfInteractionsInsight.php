@@ -115,11 +115,11 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $dataset = unserialize($result->related_data);
-        $this->assertEqual($dataset[0]['mention'], '@mentionOne');
-        $this->assertEqual($dataset[0]['count'], 3);
-        $this->assertEqual($dataset[1]['mention'], '@mentionTwo');
-        $this->assertEqual($dataset[1]['count'], 2);
+        $dataset = unserialize($result->related_data.people);
+        $this->assertEqual($dataset["people"][0]['mention'], '@mentionOne');
+        $this->assertEqual($dataset["people"][0]['count'], 3);
+        $this->assertEqual($dataset["people"][1]['mention'], '@mentionTwo');
+        $this->assertEqual($dataset["people"][1]['count'], 2);
     }
 
     public function testInteractionsInsightTextWithMetweets() {
@@ -196,12 +196,12 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight("interactions", 10, $today);
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
-        $dataset = unserialize($result->related_data);
+        $dataset = unserialize($result->related_data.people);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic mentioned /', $result->headline);
         $this->assertPattern('/\@TwitterTestUser <strong>4 times/', $result->headline);
-        $this->assertEqual($dataset[0]['mention'], '@TwitterTestUser');
-        $this->assertEqual($dataset[0]['count'], 4);
-        $this->assertEqual($dataset[0]['user']->full_name, "Twitter Test User");
+        $this->assertEqual($dataset["people"][0]['mention'], '@TwitterTestUser');
+        $this->assertEqual($dataset["people"][0]['count'], 4);
+        $this->assertEqual($dataset["people"][0]['user']->full_name, "Twitter Test User");
     }
 }

@@ -71,9 +71,23 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                     ."</strong> with links in them:";
                 }
 
-                $this->insight_dao->insertInsightDeprecated("favorited_links", $instance->id,
-                $this->insight_date, $headline, $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'favorited_links'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->setPosts($todays_favorited_posts_with_links);
+
+                $this->insight_dao->insertInsight($my_insight);
+
+
             }
         }
 

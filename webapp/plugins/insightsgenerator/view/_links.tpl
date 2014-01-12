@@ -5,29 +5,33 @@ Parameters:
 $i (required) Insight object
 $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-css.html#icons
 *}
-
-
-      {if isset($i->related_data[0]->links)}
-          <ul class="body-list link-list" style="height: 109px;">
-          {foreach from=$i->related_data key=pid item=p name=bar}
+      {if isset($i->related_data.posts)}
+          <ul class="body-list link-list
+          {if count($i->related_data.posts) lte 2}body-list-show-all{else}body-list-show-some{/if}">
+          {foreach from=$i->related_data.posts key=pid item=p name=bar}
 
               {foreach from=$p->links key=lid item=l name=lnk}
               <li class="list-item">
                   <div class="link">
                       <div class="link-title">
                           <a href="{$l->url}">
-                              {if isset($l->title) and $l->title neq ''}
-                                  {$l->title|truncate:100}
-                              {else}
+                              {if $l->title}
+                                  {$l->title|truncate:100}title
+                              {elseif $l->expanded_url}
                                   {$l->expanded_url}
+                              {else}
+                                  {$l->url}
                               {/if}
                           </a>
                       </div>
                       <div class="link-metadata">
-                          Posted by {'@'|cat:$p->author_username|link_usernames_to_twitter} 
-                          on {if $p->network eq 'twitter'}<a href="http://twitter.com/{$p->author_user_id}/statuses/{$p->post_id}">{/if}
-                          {$p->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}
-                          {if $p->network eq 'twitter'}</a>{/if}
+                      {if $p->network eq 'twitter'}
+                          Posted by {'@'|cat:$p->author_username|link_usernames_to_twitter}
+                          on <a href="http://twitter.com/{$p->author_user_id}/statuses/{$p->post_id}">
+                          {$p->adj_pub_date|date_format:"%b %e"}</a>
+                      {else}
+                          Posted by {$p->author_fullname} on {$p->adj_pub_date|date_format:"%l:%M %p - %d %b %y"}
+                      {/if}
                       </div>
                   </div>
               </li>
@@ -36,6 +40,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
           {/foreach}
 
           </ul>
-
-          <button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all links</span> <i class="fa fa-chevron-down icon"></i></button>
+          {if count($i->related_data.posts) gt 2}
+          <button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$i->related_data.posts|@count} links</span> <i class="fa fa-chevron-down icon"></i></button>
+          {/if}
     {/if}

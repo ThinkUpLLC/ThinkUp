@@ -45,7 +45,8 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $count += self::countFirstPersonReferences($post->post_text);
             }
             if ($count > 1) {
-                $headline = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
+                $headline = "\"There could be no extreme vanity in my recognition of myself, if in fact there could be any at all.\"";
+                $insight_text = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
                 ." contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\" "
                 ."<strong>".$count." times</strong> in the last week.";
 
@@ -62,10 +63,10 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                     //compare it to this Sunday's number, and add a sentence comparing it.
                     if ($last_sunday_insight_baseline->value > $count ) {
                         $difference = $last_sunday_insight_baseline->value - $count;
-                        $insight_text = "That's $difference fewer time".($difference>1?"s":"")." than the prior week.";
+                        $insight_text .= " That's $difference fewer time".($difference>1?"s":"")." than the prior week.";
                     } elseif ($last_sunday_insight_baseline->value < $count ) {
                         $difference = $count - $last_sunday_insight_baseline->value;
-                        $insight_text = "That's $difference more time".($difference>1?"s":"")." than the prior week.";
+                        $insight_text .= " That's $difference more time".($difference>1?"s":"")." than the prior week.";
                     } else {
                         $insight_text .= ".";
                     }

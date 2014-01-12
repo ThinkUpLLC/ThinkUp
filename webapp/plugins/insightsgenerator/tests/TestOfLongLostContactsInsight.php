@@ -69,8 +69,8 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/in over a year: /', $result->headline);
         $this->assertNoPattern('/a contact/', $result->headline);
         $this->assertIsA($contacts, "array");
-        $this->assertIsA($contacts[0], "User");
-        $this->assertEqual(count($contacts), 2);
+        $this->assertIsA($contacts["people"][0], "User");
+        $this->assertEqual(count($contacts["people"]), 2);
     }
 
     private function buildData() {

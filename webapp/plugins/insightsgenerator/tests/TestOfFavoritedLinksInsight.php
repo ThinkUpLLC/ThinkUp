@@ -67,7 +67,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@testeriffic favorited \<strong\>1 tweet\<\/strong\>/', $result->headline);
         $this->assertNoPattern('/tweets/', $result->text);
         $this->assertIsA($fav_posts, "array");
-        $this->assertIsA($fav_posts[0], "Post");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
     }
 
@@ -92,8 +92,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic liked \<strong\>2 status updates\<\/strong\>/', $result->headline);
         $this->assertIsA($fav_posts, "array");
-        $this->assertIsA($fav_posts[0], "Post");
-        $this->assertEqual(count($fav_posts), 2);
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts["posts"]), 2);
     }
 
     public function testFavoritedLinksInsightForGooglePlusNoFavoritedLinks() {
