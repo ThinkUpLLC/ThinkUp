@@ -169,10 +169,18 @@ class Insight {
     }
     /**
      * Add milestone number to insight's related data.
-     * @param int
+     * @param arr Array of milestone number data
      * @return void
      */
-    public function setMilestoneNumber($milestone_number) {
-        $this->related_data["milestone_number"] = $milestone_number;
+    public function setMilestones($milestones) {
+        $this->related_data["milestones"] = $milestones;
+    }
+    /**
+     * Add button to insight's related data.
+     * @param arr Array of button data
+     * @return void
+     */
+    public function setButton($button) {
+        $this->related_data["button"] = $button;
     }
 }

@@ -33,6 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 class TestOfInsight extends ThinkUpBasicUnitTestCase {
     public function testInsightRelatedDataSetters() {
         $i = new Insight();
+        // @TODO Assign and assert that the data is in the array structure it should be
         $i->setPhotos ("this is my list of photos");
         $this->assertEqual($i->related_data["photos"], "this is my list of photos");
 
@@ -51,7 +52,10 @@ class TestOfInsight extends ThinkUpBasicUnitTestCase {
         $i->setLinks("listoflinks");
         $this->assertEqual($i->related_data["links"], "listoflinks");
 
-        $i->setMilestoneNumber("milestone_number");
-        $this->assertEqual($i->related_data["milestone_number"], "milestone_number");
+        $i->setMilestones("milestones");
+        $this->assertEqual($i->related_data["milestones"], "milestones");
+
+        $i->setButton("button");
+        $this->assertEqual($i->related_data["button"], "button");
     }
 }
