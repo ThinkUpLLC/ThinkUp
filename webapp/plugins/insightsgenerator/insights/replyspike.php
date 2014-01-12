@@ -83,7 +83,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                             $this->terms->getNoun('reply', InsightTerms::PLURAL) .
                             "</strong> &mdash; your 365-day high!";
                         $insight_text = "Why do you think $this->username's ".$this->terms->getNoun('post').
-                            "did so well?";
+                            " did so well?";
                         $emphasis = Insight::EMPHASIS_HIGH;
                         $my_insight_posts = array($post, $hot_posts_data);
 
@@ -190,7 +190,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
 
-                if (isset($headline) && isset($slug)) {
+                if (isset($headline) && isset($insight_slug)) {
                     $my_insight = new Insight();
 
                     //REQUIRED: Set the insight's required attributes

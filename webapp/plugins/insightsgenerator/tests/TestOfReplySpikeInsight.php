@@ -135,8 +135,8 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $check = $insight_dao->getInsight('reply_high_365_day_28', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_365_day_28');
-        $this->assertPattern('/new 365-day record!/', $check->text);
-        $this->assertEqual($check->headline, '<strong>50 people</strong> replied to @ev\'s tweet.');
+        $this->assertPattern('/Why do you think/', $check->text);
+        $this->assertEqual($check->headline, 'That tweet got <strong>50 replies</strong> &mdash; your 365-day high!');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -180,7 +180,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'reply_high_30_day_29');
         $this->assertPattern('/new 30-day record./', $check->text);
-        $this->assertEqual($check->headline, '<strong>40 people</strong> replied to @ev\'s tweet.');
+        $this->assertEqual($check->headline, 'This tweet got replies from <strong>40 people</strong>.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
@@ -316,7 +316,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($check->slug, 'reply_high_30_day_33');
         $this->assertPattern('/new 30-day record./', $check->text);
         $this->assertEqual($check->headline,
-        '<strong>26 people</strong> replied to @ev\'s tweet.');
+        'This tweet got replies from <strong>26 people</strong>.');
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'replyspike');
     }
