@@ -127,6 +127,14 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
                 throw new InsightFieldNotSetException("Insight ".$field ." is not set.");
             }
         }
+        if ($insight->related_data != null) {
+            $related_data_for_insert = serialize($insight->related_data);
+            if (strlen($related_data_for_insert) > 65535 ) {
+                throw new InsightFieldExceedsMaxLengthException("Insight's related data exceeds max length.");
+            }
+        } else {
+            $related_data_for_insert = null;
+        }
         $existing_insight = self::getInsight($insight->slug, $insight->instance_id, $insight->date);
         if ($existing_insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
@@ -141,7 +149,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             ':header_image'=>$insight->header_image,
             ':filename'=>$insight->filename,
             ':emphasis'=>$insight->emphasis,
-            ':related_data'=>((isset($insight->related_data))?serialize($insight->related_data):null),
+            ':related_data'=>$related_data_for_insert,
             ':time_generated'=>$insight->time_generated
             );
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }

@@ -256,6 +256,31 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         //Filename shouldn't change on update
         $this->assertEqual($result->filename, 'test_filename');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        //test too-long related data
+        $i = 1;
+        //generate related data that's exactly 1 char longer than the field can handle when serialized
+        $data_length = 65535 + 1 - 16; // serializing this particular data adds 16 chars
+        while ($i <= $data_length) {
+            if ($i != $data_length) {
+                $insight->related_data .= "-";
+            } else { // for debugging purposes, the last char of this related_data will be different than the rest
+                $insight->related_data .= "a";
+            }
+            $i++;
+        }
+        //$this->debug($insight->related_data);
+        $this->debug('Pre-insert length: '.strlen($insight->related_data));
+        $serialized_related_data = serialize($insight->related_data);
+        $this->debug('Pre-insert serialized length: '.strlen($serialized_related_data));
+
+        $this->expectException('InsightFieldExceedsMaxLengthException');
+        $result = $dao->insertInsight($insight);
+
+        //$retrieved_insight = $dao->getInsight('avg_replies_per_week', 1, '2012-05-06');
+        //$this->debug(Utils::varDumpToString($retrieved_insight));
+        //$this->debug('Post-insert length: '.strlen($retrieved_insight->related_data));
+        //$this->debug($retrieved_insight->related_data);
     }
 
     public function testupdateInsightDeprecated() {
