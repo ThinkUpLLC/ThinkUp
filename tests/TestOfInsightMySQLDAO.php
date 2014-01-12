@@ -39,7 +39,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'header_image'=>'headerme.jpg'));
 
         //Set up array of owner objects
         $o1["id"] = 10;
@@ -101,6 +101,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->headline, 'Booyah!');
         $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+        $this->assertEqual($result->header_image, 'headerme.jpg');
 
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-02');
         $this->assertNull($result);
@@ -203,18 +204,22 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->filename, 'test_filename');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+        $this->assertEqual($result->header_image, null);
 
         //inserting existing insight should update
         $insight->headline = "Ohai updated headline";
         $insight->text = 'Updated: You rock';
+        $insight->header_image = 'my_image.png';
         $result = $dao->insertInsight($insight);
         $this->assertTrue($result);
 
         //assert update was successful
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-05');
+        $this->debug(Utils::varDumpToString($result));
         $this->assertEqual($result->headline, 'Ohai updated headline' );
         $this->assertEqual($result->text, 'Updated: You rock');
-        //Filename shouldn't change on update
+        $this->assertEqual($result->header_image, 'my_image.png');
+        //Filename and emphasis shouldn't change on update
         $this->assertEqual($result->filename, 'test_filename');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
@@ -444,9 +449,9 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
+        //insight with filename set to 'dashboard' shouldn't be returned
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
+        'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
 
         //assert that page of insights includes from both private and public

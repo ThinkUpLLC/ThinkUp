@@ -28,7 +28,7 @@
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis ";
+        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image ";
         $q .= "FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
@@ -130,14 +130,15 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $existing_insight = self::getInsight($insight->slug, $insight->instance_id, $insight->date);
         if ($existing_insight == null) {
             $q = "INSERT INTO #prefix#insights SET slug=:slug, date=:date, instance_id=:instance_id, ";
-            $q .= "headline=:headline, text=:text, filename=:filename, emphasis=:emphasis, ";
-            $q .= "related_data=:related_data, time_generated=:time_generated";
+            $q .= "headline=:headline, text=:text, header_image=:header_image, filename=:filename, ";
+            $q .= "emphasis=:emphasis, related_data=:related_data, time_generated=:time_generated";
             $vars = array(
             ':slug'=>$insight->slug,
             ':date'=>$insight->date,
             ':instance_id'=>$insight->instance_id,
             ':headline'=>$insight->headline,
             ':text'=>$insight->text,
+            ':header_image'=>$insight->header_image,
             ':filename'=>$insight->filename,
             ':emphasis'=>$insight->emphasis,
             ':related_data'=>((isset($insight->related_data))?serialize($insight->related_data):null),
@@ -207,12 +208,14 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
 
     private function updateInsight(Insight $insight) {
         $q = "UPDATE #prefix#insights SET headline=:headline, text=:text, related_data=:related_data, ";
-        $q .= "emphasis=:emphasis WHERE slug=:slug AND date=:date AND instance_id=:instance_id";
+        $q .= "emphasis=:emphasis, header_image=:header_image ";
+        $q .= "WHERE slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$insight->slug,
             ':date'=>$insight->date,
             ':instance_id'=>$insight->instance_id,
             ':headline'=>$insight->headline,
+            ':header_image'=>$insight->header_image,
             ':text'=>$insight->text,
             ':related_data'=>((isset($insight->related_data))?serialize($insight->related_data):null),
             ':emphasis'=>$insight->emphasis
@@ -315,7 +318,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
         $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id AND time_generated > :since ";
-        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id;";
+        $q .= "AND i.filename != 'dashboard' ORDER BY date DESC, emphasis DESC, i.id;";
         $vars = array(
             ":owner_id"=>(int)$owner_id,
             ':since'=>$since
