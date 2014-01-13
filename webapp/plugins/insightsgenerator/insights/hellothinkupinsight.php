@@ -60,5 +60,5 @@ class HelloThinkUpInsight extends InsightPluginParent implements InsightPlugin {
     }
 }
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('HelloThinkUpInsight');
+//$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+//$insights_plugin_registrar->registerInsightPlugin('HelloThinkUpInsight');

@@ -104,5 +104,5 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
     }
 }
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('LinkPromptInsight');
+//$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+//$insights_plugin_registrar->registerInsightPlugin('LinkPromptInsight');
