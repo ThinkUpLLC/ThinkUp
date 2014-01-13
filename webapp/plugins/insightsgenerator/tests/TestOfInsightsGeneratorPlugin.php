@@ -38,6 +38,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
+        date_default_timezone_set('America/New_York');
     }
 
     public function tearDown() {
@@ -48,7 +49,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0));
+        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0, 'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -70,7 +71,9 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
-        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never'));
+        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never',
+        'timezone' => 'America/New_York'
+        ));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -118,7 +121,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
-        'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -163,7 +167,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
-        'email'=>'weekly@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'weekly'));
+        'email'=>'weekly@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'weekly',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -215,7 +220,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
-        'email'=>'both@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'both'));
+        'email'=>'both@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'both',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -269,7 +275,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
-        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. User','is_admin'=>0,
         'email'=>'normal@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5, 'id'=>1));
@@ -328,7 +335,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
-        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
@@ -401,7 +409,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         // if the email address contains "templateerror".
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
-        'email'=>'templateerror@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily'));
+        'email'=>'templateerror@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
@@ -433,5 +442,106 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $log = file($logger_file);
         $last_log = join("\n", array_slice($log, -10));
         $this->assertPattern('/invalid mandrill template/i', $last_log);
+    }
+
+    public function testTimezoneHandling() {
+        $tz = date_default_timezone_get();
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
+        'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/Los_Angeles'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/New_York');
+        $this->simulateLogin('daily@example.com');
+        $plugin = new InsightsGeneratorPlugin();
+        $plugin->current_timestamp = strtotime('5am'); // Should not yet be 4am in America/Los_Angeles of owner
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/Los_Angeles');
+        $plugin->current_timestamp = strtotime('3am'); // Still not time
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/Los_Angeles');
+        $plugin->current_timestamp = strtotime('5am'); // Should be time now.
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertTrue(count($options)>0);
+        date_default_timezone_set($tz);
+    }
+
+    public function testNoTimezoneHandling() {
+        $tz = date_default_timezone_get();
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
+        'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily','timezone'=>''));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        $config = Config::getInstance();
+        date_default_timezone_set($config->getValue('timezone'));
+        $this->simulateLogin('daily@example.com');
+        $plugin = new InsightsGeneratorPlugin();
+        $plugin->current_timestamp = strtotime('3am'); // Should not set yet
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        $plugin->current_timestamp = strtotime('5am'); // SHould send
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertTrue(count($options)>0);
+        date_default_timezone_set($tz);
     }
 }
