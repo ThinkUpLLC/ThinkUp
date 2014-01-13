@@ -5,10 +5,11 @@ Parameters:
 $i (required) Insight object
 $posts An array of posts (that contain links!)
 *}
+
 {if isset($posts)}
     <ul class="body-list link-list
-    {if count($posts) gy 2}body-list-show-some{else}body-list-show-all{/if}">
-    {foreach from=$posts key=pid item=p name=bar}
+    {if count($posts) gt 2}body-list-show-some{else}body-list-show-all{/if}">
+    {foreach from=$posts key=pid item=post name=bar}
 
         {foreach from=$post->links key=lid item=l name=link}
         <li class="list-item">
