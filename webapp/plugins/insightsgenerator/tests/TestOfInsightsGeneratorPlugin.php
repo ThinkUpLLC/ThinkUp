@@ -434,4 +434,58 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $last_log = join("\n", array_slice($log, -10));
         $this->assertPattern('/invalid mandrill template/i', $last_log);
     }
+
+    public function testTimezoneHandling() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
+        'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/Los_Angeles'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/New_York');
+        $this->simulateLogin('daily@example.com');
+        $plugin = new InsightsGeneratorPlugin();
+        $plugin->current_timestamp = strtotime('5am'); // Should not yet be 4am in America/Los_Angeles of owner
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/Los_Angeles');
+        $plugin->current_timestamp = strtotime('3am'); // Still not time
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        date_default_timezone_set('America/Los_Angeles');
+        $plugin->current_timestamp = strtotime('5am'); // Should be time now.
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual('', $sent);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertTrue(count($options)>0);
+    }
 }
