@@ -77,6 +77,7 @@ $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 $plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
+$plugin_tests->add(new TestOfBiggestFansInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfFrequencyInsight());
 $plugin_tests->add(new TestOfListMembershipInsight());
