@@ -152,8 +152,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_30_days->value);
                         $insight_slug = 'reply_spike_30_day_'.$post->id;
                         $headline = "<strong>".number_format($post->reply_count_cache).
-                            " people</strong> replied to " . $this->username . "'s ".$this->terms->getNoun('post').
-                            ", more than <strong>".$this->terms->getMultiplierAdverb($multiplier).
+                            " people</strong> replied to " . $this->username . "'s ".$this->terms->getNoun('post'). '.';
+                        $insight_text = "That's more than <strong>".$this->terms->getMultiplierAdverb($multiplier).
                             "</strong> " . $this->username . "'s 30-day average.";
                         $emphasis = Insight::EMPHASIS_LOW;
                         $my_insight_posts = array($post, $hot_posts_data);
@@ -175,8 +175,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_7_days->value);
                         $insight_slug = 'reply_spike_7_day_'.$post->id;
                         $headline = "<strong>".number_format($post->reply_count_cache).
-                            " people</strong> replied to $this->username's ".$this->terms->getNoun('post').
-                            ", more than "."<strong>" .$this->terms->getMultiplierAdverb($multiplier).
+                            " people</strong> replied to $this->username's ".$this->terms->getNoun('post'). '.';
+                        $insight_text = "That's more than "."<strong>" .$this->terms->getMultiplierAdverb($multiplier).
                             "</strong> $this->username's 7-day average.";
                         $emphasis = Insight::EMPHASIS_LOW;
                         $my_insight_posts = array($post, $hot_posts_data);
@@ -199,7 +199,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->date = $simplified_post_date; //date of the data this insight applies to
                     $my_insight->headline = $headline; // or just set a string like 'Ohai';
                     $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                    $my_insight->header_image = 'http://farm3.staticflickr.com/2713/4098259769_725b5fb65b_o.jpg';
+                    $my_insight->header_image = '';
                     $my_insight->emphasis = $emphasis; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                     $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                     $my_insight->setPosts($my_insight_posts);

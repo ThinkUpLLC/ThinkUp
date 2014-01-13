@@ -136,9 +136,11 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                         $mentioned_user = $user_dao->getUserByName($mention_in_post, $instance->network);
                         if (isset($mentioned_user)) {
                             $mention_in_post = '@'.$mentioned_user->username;
+                            $mention_avatar = $mentioned_user->avatar;
                             $mentions_info[$mention_in_post] = $mentioned_user;
                         } else {
                             $mention_in_post = '@'.$mention_in_post;
+                            $header_image = $mentioned_user->avatar;
                         }
 
                         // Update mention count
@@ -162,6 +164,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                     $mention_info['mention'] = $mention;
                     $mention_info['count'] = $count;
                     $mention_info['user'] = $mentions_info[$mention];
+                    $header_image = $mention_avatar;
 
                     $users_mentioned[] = $mention_info;
                 }
@@ -185,7 +188,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->date = $this->insight_date; //date of the data this insight applies to
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
-                $my_insight->header_image = $mentioned_user->avatar; // '';
+                $my_insight->header_image = $header_image; // '';
                 $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                 $my_insight->setPeople($users_mentioned);

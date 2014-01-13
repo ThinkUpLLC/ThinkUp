@@ -1,6 +1,6 @@
 
 <div class="insight-attachment-detail post">
-    {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data[0] hide_insight_header=true}
+    {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data.posts[0] hide_insight_header=true}
 </div>
 
     <div id="response_rates_{$i->id}">&nbsp;</div>

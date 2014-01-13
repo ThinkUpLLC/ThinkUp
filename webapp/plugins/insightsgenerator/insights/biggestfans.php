@@ -51,10 +51,10 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->slug = 'biggest_fans_last_30_days'; //slug to label this insight's content
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $since_date; //date is often this or $simplified_post_date
-                $my_insight->headline = "These are the people who ".$this->terms->getVerb('liked').
+                $my_insight->headline = "These were $this->username's biggest fans last month.";
+                $my_insight->text = "They ".$this->terms->getVerb('liked').
                 " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
-                " the most over the last 30 days: "; // or just set a string like 'Ohai';
-                $my_insight->text = ''; // or just set a strong like "Greetings humans";
+                " the most over the last 30 days."; // or just set a string like 'Ohai';
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($fans);
@@ -74,10 +74,9 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->slug = 'biggest_fans_last_7_days'; //slug to label this insight's content
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $since_date; //date is often this or $simplified_post_date
-                $my_insight->headline = "These are the people who ".$this->terms->getVerb('liked').
-                " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
-                " the most over the last 7 days: "; // or just set a string like 'Ohai';
-                $my_insight->text = ''; // or just set a strong like "Greetings humans";
+                $my_insight->headline = "Last week, these were $this->username's biggest admirers.";
+                $my_insight->text = "Here's who " .$this->terms->getVerb('liked')." $this->username's ".
+                    $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the last week.";
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->setPeople($fans);
                 $this->insight_dao->insertInsight($my_insight);

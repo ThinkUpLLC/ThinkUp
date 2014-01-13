@@ -63,7 +63,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                         // semi-randomly use a different phrasing
                         if ($post->id % 2 == 0) {
                             $headline = $retweeted_user->full_name . " can thank " . $this->username . " for " .
-                                $add_audience . " more people seeing that " . $this->terms->getNoun('post') . ".";
+                                $add_audience . " more people seeing this " . $this->terms->getNoun('post') . ".";
                         }
 
                         $my_insight = new Insight();

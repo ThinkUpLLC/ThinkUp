@@ -95,8 +95,8 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('biggest_fans_last_30_days', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('', $result->text);
-        $this->assertPattern('/These are the people who/', $result->headline);
+        $this->assertEqual('They favorited @angel\'s tweets the most over the last 30 days.', $result->text);
+        $this->assertPattern('/These were @angel\'s biggest fans last month./', $result->headline);
 
 
         // Assert that 7 days insight got inserted
@@ -105,7 +105,7 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('biggest_fans_last_7_days', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('', $result->text);
-        $this->assertPattern('/These are the people who/', $result->headline);
+        $this->assertEqual('Here\'s who favorited @angel\'s tweets most over the last week.', $result->text);
+        $this->assertPattern('/Last week, these were/', $result->headline);
     }
 }

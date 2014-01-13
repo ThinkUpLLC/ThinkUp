@@ -60,8 +60,15 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
                     $headline = "On this day&hellip;";
-                    $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
-                    ." <strong>$number_of_years_ago year$plural ago</strong>";
+                    $time = strtotime("-" . $number_of_years_ago . " year", time());
+                    $pastdate =date('Y', $time);
+                    if ($time % 2 == 0) {
+                        $insight_text = "On this day in " .$pastdate . ", this was $this->username's most popular "
+                        .$this->terms->getNoun('post').".";
+                    } else {
+                        $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
+                        ." <strong>$number_of_years_ago year$plural ago</strong>";
+                    }
                     $posts[] = $most_popular_post;
 
                     $my_insight = new Insight();
