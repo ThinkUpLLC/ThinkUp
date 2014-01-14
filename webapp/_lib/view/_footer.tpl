@@ -2,7 +2,7 @@
     <footer class="footer">
         <div class="footer-container">
             <p class="pull-right" style="text-align: right;"><a href="#">Back to top <i class="fa fa-chevron-up icon-white"></i></a><br />
-            &copy; ThinkUp LLC 2012-2013</p>
+            &copy; ThinkUp LLC 2012-2014</p>
             <p class="hidden-xs">
                 <a href="http://thinkup.com/docs/">Documentation</a> &#8226;
                 <a href="https://groups.google.com/forum/?fromgroups#!forum/thinkupapp" >Mailing List</a> &#8226;
