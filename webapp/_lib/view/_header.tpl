@@ -20,7 +20,7 @@
 {/if}
     <link href="{$site_root_path}assets/css/vendor/bootstrap.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/vendor/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
     <link href="{$site_root_path}assets/css/thinkup.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
