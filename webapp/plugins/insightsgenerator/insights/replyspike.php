@@ -206,7 +206,10 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
 
                     $this->insight_dao->insertInsight($my_insight);
                 }
-
+                //reset vars
+                $headline = null;
+                $insight_slug = null;
+                $insight_text = null;
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
