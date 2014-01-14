@@ -101,7 +101,21 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         }
 
         // Send email digest the first run after 4am
-        if ((int)date('G', $this->current_timestamp) >= 4) {
+        $tz = $current_owner->timezone;
+        if (empty($tz)) {
+            $config = Config::getInstance();
+            $tz = $config->getValue('timezone');
+        }
+
+        if (!empty($tz)) {
+            $original_tz = date_default_timezone_get();
+            date_default_timezone_set($tz);
+            $localized_hour = (int)date('G', $this->current_timestamp);
+            date_default_timezone_set($original_tz);
+        } else {
+            $localize_hour = (int)date('G', $this->current_timestamp);
+        }
+        if ($localized_hour >= 4) {
             //Get plugin options
             $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
             $options = $plugin_option_dao->getOptionsHash($this->folder_name, true);
