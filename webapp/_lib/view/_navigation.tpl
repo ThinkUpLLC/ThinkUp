@@ -26,7 +26,7 @@
         {/if}
         <li><a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" id="refresh-data" title="Refresh data"><i class="fa fa-refresh text-muted"></i> Refresh data</a></li>
       {else}
-        <li><a href="https://thinkup.com/user/">Membership</a></li>
+        <li><a href="{$thinkupllc_endpoint}membership.php">Membership</a></li>
       {/if}
 
   {/if}
