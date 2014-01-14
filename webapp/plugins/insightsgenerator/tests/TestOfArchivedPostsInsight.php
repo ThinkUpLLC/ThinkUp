@@ -52,7 +52,8 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network = 'twitter';
         $instance->network_username = 'marypoppins';
-        $instance->total_posts_in_system = 1500;
+        $instance->total_posts_in_system = 1684
+        ;
         $insight_plugin = new ArchivedPostsInsight();
         $insight_plugin->generateInsight($instance, $posts, 3);
 
@@ -63,7 +64,11 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/ThinkUp captured/', $result->headline);
-        $this->assertPattern('/1,500 tweets/', $result->headline);
+        $this->assertPattern('/1,600 tweets/', $result->headline);
+        //Assert singlular minute
+        $this->assertPattern('/7 hours 1 minute\</', $result->text);
+        //No seconds
+        $this->assertNoPattern('/second/', $result->text);
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;

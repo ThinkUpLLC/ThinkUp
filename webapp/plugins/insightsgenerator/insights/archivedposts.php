@@ -42,16 +42,13 @@ class ArchivedPostsInsight extends InsightPluginParent implements InsightPlugin 
         $insight_text = 'That\'s over<strong>';
         $posting_time = self::secondsToTime($posting_seconds);
         if ($posting_time["d"]) {
-            $insight_text .= ' ' . $posting_time["d"] . ' days';
+            $insight_text .= ' ' . $posting_time["d"] . ' day'.(($posting_time["d"]>1)?'s':'');
         }
         if ($posting_time["h"]) {
-            $insight_text .= ' ' . $posting_time["h"] . ' hours';
+            $insight_text .= ' ' . $posting_time["h"] . ' hour'.(($posting_time["h"]>1)?'s':'');
         }
         if ($posting_time["m"]) {
-            $insight_text .= ' ' . $posting_time["m"] . ' minutes';
-        }
-        if ($posting_time["s"]) {
-            $insight_text .= ' ' . $posting_time["s"] . ' seconds';
+            $insight_text .= ' ' . $posting_time["m"] . ' minute'.(($posting_time["m"]>1)?'s':'');
         }
 
         $insight_text .= '</strong> of '. $this->username.'\'s life.';
