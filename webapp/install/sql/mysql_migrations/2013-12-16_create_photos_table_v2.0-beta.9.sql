@@ -11,5 +11,5 @@ CREATE TABLE tu_photos (
     thumbnail_url varchar(255) COMMENT 'URL of thumbnail image file.',
     PRIMARY KEY (id),
     UNIQUE KEY post_key (post_key)
-) COMMENT='Photos posted by service users on a given network.';
+) ENGINE=MyISAM COMMENT='Photos posted by service users on a given network.';
 

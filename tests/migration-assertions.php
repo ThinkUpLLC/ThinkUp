@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '2.0-beta.9';
-$TOTAL_MIGRATION_COUNT = 293;
+$LATEST_VERSION = '2.0-beta.10';
+$TOTAL_MIGRATION_COUNT = 294;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -1053,7 +1053,7 @@ $MIGRATIONS = array(
 
      /* 2.0-beta.9 */
     '2.0-beta.9' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://thinkup.com/downloads/beta/thinkup-2.0-beta.9.zip',
         'migrations' => 0,
         'migration_assertions' => array(
             'sql' => array(
@@ -1150,6 +1150,28 @@ $MIGRATIONS = array(
                     // Add insights.header_image
                     'query' => "DESCRIBE tu_insights header_image;",
                     'match' => "/varchar\(255\)/",
+                    'column' => 'Type',
+                ),
+            )
+        )
+    ),
+
+     /* 2.0-beta.10 */
+    '2.0-beta.10' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 0,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Add tu_owners.timezone field
+                    'query' => 'DESCRIBE tu_owners timezone;',
+                    'match' => "/varchar\(50\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Add tu_owners.membership_level field
+                    'query' => 'DESCRIBE tu_owners membership_level;',
+                    'match' => "/varchar\(20\)/",
                     'column' => 'Type',
                 ),
             )

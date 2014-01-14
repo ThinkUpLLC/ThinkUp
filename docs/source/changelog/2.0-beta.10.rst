@@ -1,0 +1,14 @@
+2.0-beta.10 - 13 Jan 2014
+=========================
+
+
+Enhancements:
+-------------
+* Add user-level timezone in Settings > Account.
+* Receive insight email notifications on a per-user timezone basis.
+
+
+Bugfixes:
+---------
+* Fix broken links to insights in insight notification email.
+* Fix bug where insights disappeared on update (second generation).
