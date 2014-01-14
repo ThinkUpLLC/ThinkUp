@@ -60,7 +60,7 @@ class InsightStreamController extends ThinkUpController {
                 $this->addHeaderJavaScript('assets/js/notify-insights.js');
 
                 $instance_dao = DAOFactory::getDAO('InstanceDAO');
-                $instances = $instance_dao->getByOwner($owner);
+                $instances = $instance_dao->getByOwnerWithStatus($owner);
                 $this->addToView('instances', $instances);
                 $saved_searches = array();
                 if (sizeof($instances) > 0) {
@@ -68,6 +68,18 @@ class InsightStreamController extends ThinkUpController {
                     $saved_searches = $instancehashtag_dao->getHashtagsByInstances($instances);
                 }
                 $this->addToView('saved_searches', $saved_searches);
+
+                //Start off assuming connection doesn't exist
+                $connection_status = array('facebook'=>'inactive', 'twitter'=>'inactive');
+                foreach ($instances as $instance) {
+                    if ($instance->auth_error != '') {
+                        $connection_status[$instance->network] = 'error';
+                    } else { //connection exists, so it's active
+                        $connection_status[$instance->network] = 'active';
+                    }
+                }
+                $this->addToView('facebook_connection_status', $connection_status['facebook']);
+                $this->addToView('twitter_connection_status', $connection_status['twitter']);
             }
         }
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
