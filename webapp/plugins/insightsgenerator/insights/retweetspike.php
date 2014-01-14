@@ -153,9 +153,18 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $slug = 'retweet_spike_30_day_'.$post->id;
                         $headline = "<strong>".number_format($post->all_retweets). " people</strong> $share_verb "
                             . "this one!";
+
                         $insight_text = "Seems like this one is going viral. This " . $this->terms->getNoun('post') .
                             " got more than <strong>" . $this->terms->getMultiplierAdverb($multiplier).
                             "</strong> $this->username's 30-day average.";
+
+                        if ($post->id % 2) {
+                            $headline = "This " . $this->terms->getNoun('post') . " got $share_verb by "
+                            .number_format($post->all_retweets) . " people!";
+                            $insight_text = "$this->username got more than <strong>"
+                            . $this->terms->getMultiplierAdverb($multiplier). "</strong> the 30-day average "
+                            . "with this " . $this->terms->getNoun('post') . ".";
+                        }
                         $emphasis = Insight::EMPHASIS_LOW;
                         $posts = array($post, $hot_posts_data);
 

@@ -82,11 +82,11 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     if ($last_fri_time_per_response < $time_per_response) {
-                        $insight_text = "<i class=\"fa fa-tachometer fa-2x text-muted\"></i> That's slower than "
+                        $insight_text = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; color: #ddd;\"></i> That's slower than "
                         . "the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     } elseif ($last_fri_time_per_response > $time_per_response) {
-                        $insight_text .= "<i class=\"fa fa-tachometer fa-2x text-muted\"></i> That's faster than "
+                        $insight_text .= "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; color: #ddd;\"></i> That's faster than "
                         . "the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }

@@ -22,7 +22,7 @@
 
 
     {if ($smarty.get.m neq 'manage') and (!isset($smarty.get.p))}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/jquery-1.10.2.min.js"><\/script>')</script>{/if}
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>{/if}
 
     {literal}
       <script type="text/javascript">
@@ -68,7 +68,7 @@
     {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
     {/foreach}
-    <script src="{$site_root_path}assets/js/bootstrap.min.js"></script>
+    <script src="{$site_root_path}assets/js/vendor/bootstrap.min.js"></script>
     <script src="{$site_root_path}assets/js/vendor/jpanelmenu.js"></script>
     <script src="//platform.twitter.com/widgets.js"></script>
     <script src="{$site_root_path}assets/js/thinkup.js "></script>

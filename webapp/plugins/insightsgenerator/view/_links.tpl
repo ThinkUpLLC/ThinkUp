@@ -16,7 +16,7 @@ $icon (required) Icon glyph name, from http://twitter.github.com/bootstrap/base-
                       <div class="link-title">
                           <a href="{$l->url}">
                               {if $l->title}
-                                  {$l->title|truncate:100}title
+                                  {$l->title|truncate:100}
                               {elseif $l->expanded_url}
                                   {$l->expanded_url}
                               {else}

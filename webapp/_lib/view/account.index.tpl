@@ -6,6 +6,8 @@
 
 {include file="_navigation.tpl"}
 
+{if !isset($thinkupllc_endpoint)}
+
 <div id="main" class="container">
 
 <div class="row">
@@ -17,6 +19,7 @@
         <div class="section" id="plugins">
 
             {include file="_usermessage.tpl" field="account"}
+
               {if $installed_plugins}
                 {foreach from=$installed_plugins key=ipindex item=ip name=foo}
                   {if $smarty.foreach.foo.first}
@@ -61,7 +64,7 @@
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
 
-                
+
           <span class="pull-right">{insert name="help_link" id='backup'}</span>
           <h3><i class="fa fa-download icon-muted"></i> Back Up and Export Data</h3>
           <p style="padding-left : 20px;">
@@ -150,7 +153,7 @@
                   {/foreach}
                 </select>
                 </label>
-                
+
                 <span class="help-block">Set the service user to display by default. {insert name="help_link" id="default_service_user"}</span>
 
           <legend>Don't Share Data</legend>
@@ -171,13 +174,13 @@
                 <span class="help-block">Usage reporting helps us improve ThinkUp. <a href="http://thinkup.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a></span>
 
               <div style="text-align: center" id="save_setting_image">
-                  <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="50" height="50"  
+                  <img  id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="50" height="50"
                   style="display: none; margin: 10px;"/>
               </div>
-                  
+
               <div class="clearfix">
                 <div class="grid_10 prefix_9 left">
-                  <input type="submit" id="app-settings-save" name="Submit" 
+                  <input type="submit" id="app-settings-save" name="Submit"
                   class="btn btn-primary" value="Save Settings">
                 </div>
               </div>
@@ -188,7 +191,7 @@
           </div>
           <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
           <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
-                
+
         </div> <!-- end #app_setting -->
         {/if}
 
@@ -215,8 +218,8 @@
                         <span class="input-group">
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required 
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need a enter a password of at least 8 characters." 
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need a enter a password of at least 8 characters."
                             data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i> Must be at least 8 characters, with both numbers & letters.">
                         </span>
                         <span class="help-block"></span>
@@ -227,11 +230,11 @@
                     <label class="col-sm-2" for="confirm_password">Confirm&nbsp;new Password</label>
                     <div class="col-sm-8">
                         <span class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>            
-                            <input type="password" name="pass2" id="confirm_password" required 
-                             class="password form-control" 
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password confirmation is required." 
-                            data-validation-match-match="pass1" 
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <input type="password" name="pass2" id="confirm_password" required
+                             class="password form-control"
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password confirmation is required."
+                            data-validation-match-match="pass1"
                             data-validation-match-message="<i class='fa fa-exclamation-triangle'></i> Make sure this matches the password you entered above." >
                         </span>
                         <span class="help-block"></span>
@@ -319,12 +322,12 @@
 
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
     <h3><i class="fa fa-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
-    
+
     <h4>RSS</h4>
     <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
-    
+
     <p><a href="{$rss_crawl_url}" class="btn"><i class="fa fa-rss"></i> Secret ThinkUp Update Feed</a></p>
-    
+
     <h4>Scheduling</h4>
     <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
     <p>
@@ -356,7 +359,7 @@
       />
       </object>
     </p>
-    
+
 
         <h4>Your API Key</h4>
               {include file="_usermessage.tpl" field='api_key'}
@@ -366,15 +369,15 @@
               <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
               Click to view</a>
               </span>
-    
+
               <p>Accidentally share your secret RSS URL?</p>
-    
+
               <form method="post" action="index.php?m=manage#instances" id="api-key-form">
                 <input type="hidden" name="reset_api_key" value="Reset API Key" />
                 <span id="apikey_conf" style="display: none;">
                 Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
                 </span>
-                <input type="button" value="Reset Your API Key" 
+                <input type="button" value="Reset Your API Key"
                 class="btn btn-warning"
                 {literal}
                 onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
@@ -391,7 +394,7 @@
         <h3><i class="fa fa-user icon-muted"></i> Invite New User</h3>
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
-                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
+                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation"
                 class="btn btn-primary">
           </form>
         </div>
@@ -409,7 +412,7 @@
         </tr>
       </thead>
   {/if}
-  
+
       <tr>
         <td>
           <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
@@ -455,6 +458,78 @@
 </div>
 
 </div>
+
+{else}<!-- hosted -->
+
+
+
+
+
+<div id="main" class="container">
+
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-6">
+        <div class="white-card">
+
+        <div class="section" id="plugins">
+
+            {include file="_usermessage.tpl" field="account"}
+
+              {if $installed_plugins}
+                {foreach from=$installed_plugins key=ipindex item=ip name=foo}
+                  {if $smarty.foreach.foo.first}
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          {if $user_is_admin}<th class="action-button">&nbsp;</th>{/if}
+                        </tr>
+                      </thead>
+                  {/if}
+                  {if $user_is_admin || $ip->is_active}
+                        <tr>
+                            <td>
+                                <p class="lead" style="padding-left: 0px; margin : 0px;">
+                                <i class="fa fa-{$ip->icon} fa-fw text-muted"></i>
+                                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+                                </p>
+                                <span class="text-muted" style="padding-left: 2.3em;">{$ip->description}</span>
+                            </td>
+                    {if $user_is_admin}
+                      <td class="action-button">
+                      <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
+                        {if !$ip->isConfigured()}
+                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn btn-success"><i class="fa fa-cog"></i> Set Up</a>
+                        {/if}
+                      </span>
+                      <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
+                      </td>
+                    {/if}
+                      </tr>
+                  {/if}
+                {/foreach}
+                    </table>
+              {/if}
+        </div> <!-- end #plugins -->
+
+            {if $body}
+              {$body}
+            {/if}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+{/if} <!-- end of if OSP loop -->
+
 
 <script type="text/javascript">
   var show_plugin = {if $force_plugin}true{else}false{/if};
@@ -538,7 +613,7 @@ $(function() {
 
     $(function() {
     var activateOwner = function(u) {
-      //removing the "user" from id here to stop conflict with plugin    
+      //removing the "user" from id here to stop conflict with plugin
       u = u.substr(4);
       var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
       $.ajax({
@@ -596,7 +671,7 @@ $(function() {
     };
 
     var promoteOwner = function(u) {
-      //removing the "userAdmin" from id here to stop conflict with plugin    
+      //removing the "userAdmin" from id here to stop conflict with plugin
       u = u.substr(9);
       var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
       $.ajax({

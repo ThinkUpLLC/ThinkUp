@@ -61,7 +61,7 @@
 
     <span class="pull-right">{insert name="help_link" id='twitter'}</span>
     <h2>
-        <i class="fa fa-twitter text-muted"></i> Twitter 
+        <i class="fa fa-twitter text-muted"></i> Twitter
     </h2>
 
 </div>
@@ -82,7 +82,7 @@
         <th><i class="fa fa-tag fa-2x icon-muted"></i></th>
         <th><i class="fa fa-trash fa-2x icon-muted"></i></th>
     </tr>
-        
+
     {foreach from=$owner_instances key=iid item=i name=foo}
     <tr>
         <td>
@@ -98,14 +98,14 @@
         </td>
         {/if}
         <td class="action-button">
-            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
+            <a href="{$site_root_path}account/?p=twitter&amp;u={$i->network_username}&amp;n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
         </td>
         <td class="action-button">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
-            type="submit" name="action" class="btn btn-danger" 
+            type="submit" name="action" class="btn btn-danger"
             value="Delete" /></form></span>
         </td>
     </tr>
@@ -136,7 +136,7 @@
     Fill in the following settings.<br />
     Name: <span style="font-family:Courier;">{$twitter_app_name}</span><br />
     Description: <span style="font-family:Courier;">My ThinkUp installation</span><br />
-    Website: 
+    Website:
     <small>
       <code style="font-family:Courier;" id="clippy_2987">{$thinkup_site_url}</code>
     </small>

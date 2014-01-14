@@ -60,19 +60,19 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $headline = $this->username."'s most popular ".$this->terms->getNoun('post')
-                ." from last week got ";
+                $headline = "This was $this->username's ".$this->terms->getNoun('post') . " of the week.";
+                $insight_text = $this->username." earned ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
-                        $headline .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
+                        $insight_text .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
                     }
                 }
 
-                $headline = rtrim($headline, ", ");
-                $headline .= '.';
-                if (!(strpos($headline, ',') === false)) {
-                    $headline = substr_replace($headline, " and",
-                    strpos($headline, strrchr($headline, ',')), 1);
+                $insight_text = rtrim($insight_text, ", ");
+                $insight_text .= '.';
+                if (!(strpos($insight_text, ',') === false)) {
+                    $insight_text = substr_replace($insight_text, " and",
+                    strpos($insight_text, strrchr($insight_text, ',')), 1);
                 }
 
                 $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
@@ -80,9 +80,19 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $instance->id, $simplified_post_date);
 
                 if (isset($hot_posts_data)) {
-                    $this->insight_dao->insertInsightDeprecated("weekly_best", $instance->id, $this->insight_date,
-                    $headline, $insight_text, basename(__FILE__, ".php"),
-                    Insight::EMPHASIS_LOW, serialize(array($most_popular_post, $hot_posts_data)));
+                    $my_insight = new Insight();
+
+                    $my_insight->slug = 'weekly_best'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->setPosts(array($most_popular_post, $hot_posts_data));
+
+                    $this->insight_dao->insertInsight($my_insight);
                 }
             }
         }

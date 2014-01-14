@@ -14,7 +14,7 @@
     <meta name="author" content="">
 
     <!-- styles -->
-{if !isset($thinkupllc_endpoint)}
+{if isset($thinkupllc_endpoint)}
     <script type="text/javascript" src="//use.typekit.net/zpi4jiv.js"></script>
     <script type="text/javascript">{literal}try{Typekit.load();}catch(e){}{/literal}</script>
 {/if}
@@ -30,7 +30,7 @@
     <![endif]-->
 
     {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/jquery-1.10.2.min.js"><\/script>')</script>{/if}
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>{/if}
 
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />

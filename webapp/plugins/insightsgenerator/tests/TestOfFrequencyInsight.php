@@ -62,7 +62,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic didn\'t post anything new in the past week/', $result->headline);
+        $this->assertPattern('/\@testeriffic didn\'t post anything new on Twitter in the past week/',
+            $result->headline);
     }
 
     public function testFrequencyInsightNoPriorBaseline() {
@@ -82,7 +83,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic posted/', $result->headline);
+        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
         $this->assertPattern('/5 times/', $result->headline);
     }
 
@@ -108,9 +109,9 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic posted/', $result->headline);
+        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
         $this->assertPattern('/5 times/', $result->headline);
-        $this->assertPattern('/14 fewer times than the prior week/', $result->headline);
+        $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
     }
 
     public function testFrequencyInsightPriorSmallerBy2Baseline() {
@@ -135,9 +136,9 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic posted /', $result->headline);
+        $this->assertPattern('/\@testeriffic tweeted /', $result->headline);
         $this->assertPattern('/5 times/', $result->headline);
-        $this->assertPattern('/2 more times than the prior week/', $result->headline);
+        $this->assertPattern('/2 more tweets than the prior week/', $result->text);
     }
 
     public function testFrequencyInsightPriorSmallerBy1Baseline() {
@@ -162,7 +163,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic posted /', $result->headline);
+        $this->assertPattern('/\@testeriffic tweeted /', $result->headline);
         $this->assertPattern('/5 times/', $result->headline);
         $this->assertNoPattern('/1 more times than the prior week/', $result->text);
     }
@@ -189,7 +190,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic posted/', $result->headline);
+        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
         $this->assertPattern('/5 times/', $result->headline);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);

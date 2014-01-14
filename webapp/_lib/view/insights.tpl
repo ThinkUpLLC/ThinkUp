@@ -52,7 +52,7 @@
             " id="insight-{$i->id}">
   <div class="panel-heading ">
     <h2 class="panel-title">{$i->headline}</h2>
-    {if ($i->slug eq 'posts_on_this_day_popular_flashback' or $i->slug eq 'interactions')}
+    {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
     <p class="panel-subtitle">{$i->text|link_usernames_to_twitter}</p>{/if}
     {if $i->header_image neq ''}
     <img src="{$i->header_image}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
@@ -62,8 +62,8 @@
     <div class="panel-body">
 
       <div class="panel-body-inner">
-      {if $i->text neq '' and $i->slug neq 'posts_on_this_day_popular_flashback'
-      and $i->slug neq 'interactions'}<p id="insight-text-{$i->id}">{$i->text|link_usernames_to_twitter}</p>{/if}
+      {if $i->text neq '' and $i->slug neq 'posts_on_this_day_popular_flashback'}
+        <p id="insight-text-{$i->id}">{$i->text|link_usernames_to_twitter}</p>{/if}
 
       {if $i->filename neq ''}
           {assign var='tpl_filename' value=$i->filename|cat:'.tpl'}
@@ -80,12 +80,16 @@
         <a class="permalink" href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->date|date_format:"%b %e"}</a>
       </div>
       <div class="share-menu">
+        {if $i->instance->is_public eq 1}
         <a class="share-button-open" href="#"><i class="fa fa-share-square-o icon icon-share"></i></a>
         <ul class="share-services">
         <li class="share-service"><a href="#"><i class="fa fa-twitter icon icon-share"></i></a></li>
         <li class="share-service"><a href="#"><i class="fa fa-facebook icon icon-share"></i></a></li>
         </ul>
         <a class="share-button-close" href="#"><i class="fa fa-times-circle icon icon-share"></i></a>
+        {else}
+        <i class="fa fa-lock icon icon-share text-muted" title="This {$i->instance->network} account and its insights are private."></i>
+        {/if}
       </div>
     </div>
   </div>

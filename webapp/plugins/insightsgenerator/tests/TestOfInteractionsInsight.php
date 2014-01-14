@@ -200,6 +200,7 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic mentioned /', $result->headline);
         $this->assertPattern('/\@TwitterTestUser <strong>4 times/', $result->headline);
+        $this->assertPattern('/avatar.jpg/', $result->header_image);
         $this->assertEqual($dataset["people"][0]['mention'], '@TwitterTestUser');
         $this->assertEqual($dataset["people"][0]['count'], 4);
         $this->assertEqual($dataset["people"][0]['user']->full_name, "Twitter Test User");

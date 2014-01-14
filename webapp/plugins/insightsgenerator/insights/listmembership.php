@@ -65,7 +65,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                             }
                             if ($group_number < 10 ) {
                                 $group->setMetadata();
-                                $headline .= "\"" .$group->keyword . "\"";
+                                $headline .= "\"" . str_replace('-', ' ', $group->keyword) . "\"";
                                 $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                             }
                             $group_number++;
@@ -80,7 +80,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                                 }
                             }
                             $group->setMetadata();
-                            $headline .= ' '. $group->keyword;
+                            $headline .= ' '. str_replace('-', ' ', $group->keyword);
                             $group_name_list .= ' <a href="'.$group->url.'">'.$group->keyword.'</a>';
                         }
                     }
@@ -100,7 +100,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
 
                 } else {
                     $new_groups[0]->setMetadata();
-                    $headline = "Does \"" . $new_groups[0]->keyword . "\" seem like a good description of " 
+                    $headline = "Does \"" . str_replace('-', ' ', $new_groups[0]->keyword). "\" seem like a good description of "
                     . $this->username . "?";
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                     $new_groups[0]->keyword."</a>";

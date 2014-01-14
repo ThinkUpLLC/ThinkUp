@@ -117,6 +117,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
             $mentions_count = array();
             $mentions_info = array();
+            $mentions_avatars = array();
             $insight_data = array();
             $insight_text = '';
 
@@ -136,11 +137,9 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                         $mentioned_user = $user_dao->getUserByName($mention_in_post, $instance->network);
                         if (isset($mentioned_user)) {
                             $mention_in_post = '@'.$mentioned_user->username;
-                            $mention_avatar = $mentioned_user->avatar;
                             $mentions_info[$mention_in_post] = $mentioned_user;
                         } else {
                             $mention_in_post = '@'.$mention_in_post;
-                            $header_image = $mentioned_user->avatar;
                         }
 
                         // Update mention count
@@ -164,8 +163,6 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                     $mention_info['mention'] = $mention;
                     $mention_info['count'] = $count;
                     $mention_info['user'] = $mentions_info[$mention];
-                    $header_image = $mention_avatar;
-
                     $users_mentioned[] = $mention_info;
                 }
             }
@@ -173,11 +170,12 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             if (isset($most_mentioned_user)) {
                 $headline = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
-
                 $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * 15;
 
                 $milestones = secondsToTextTime($conversation_seconds);
-                $insight_text = 'This is how much time they spent chatting.';
+                $insight_text = 'Always good to know how much time is invested in a conversation.';
+                // $header_image = $users_mentioned[0][user]->avatar;
+                $header_image = $users_mentioned[0]["user"]->avatar;
 
                 //Instantiate the Insight object
                 $my_insight = new Insight();

@@ -42,7 +42,8 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
-                $headline = "$this->username posted <strong>$count times</strong> in the past week";
+                $headline = "$this->username " . $this->terms->getVerb('posted') .
+                    " <strong>$count times</strong> in the past week";
                 $milestones = array(
                     "per_row"    => 1,
                     "label_type" => "icon",
@@ -54,21 +55,24 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     ),
                 );
             } else {
-                $headline = "$this->username didn't post anything new in the past week";
+                $headline = "$this->username didn't post anything new on " . ucfirst($instance->network) .
+                    " in the past week";
                 $button = array();
                 switch ($instance->network) {
                     case 'twitter':
-                        $insight_text = "Aww jeez, that’s too bad. Maybe post something about your cat?";
+                        $insight_text = "Sometimes we just don't have anything to say. Maybe let someone know you"
+                            . " appreciate their work?";
                         $button = array(
-                            "url" => "http://twitter.com/intent/tweet?text=My cat is so cute.",
-                            "label"  => "Tweet about your cat",
+                            "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
+                            "label"  => "Tweet a word of praise",
                         );
                         break;
                     case 'facebook':
-                        $insight_text = "Aww jeez, that’s too bad. Maybe post some cat gifs?";
+                        $insight_text = "Nothing wrong with being quiet. If you would, you could ask your friends "
+                            ."what they've read lately.";
                         $button = array(
-                            "url" => "http://www.facebook.com/sharer/sharer.php?u=http://imgur.com/gallery/tleVt&t=I love cats.",
-                            "label"  => "Post some cat gifs",
+                            "url" => "http://www.facebook.com/sharer/sharer.php?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&t=Ready any good books lately?",
+                            "label"  => "Read any good books lately?",
                         );
                         break;
                     default:
@@ -94,10 +98,12 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     //compare it to this Monday's  number, and add a sentence comparing it.
                     if ($last_monday_insight_baseline->value > ($count + 1) ) {
                         $difference = $last_monday_insight_baseline->value - $count;
-                        $headline .= ", $difference fewer times than the prior week.";
+                        $insight_text = "That's $difference fewer " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
                     } elseif ($last_monday_insight_baseline->value < ($count - 1) ) {
                         $difference = $count - $last_monday_insight_baseline->value;
-                        $headline .= ", $difference more times than the prior week.";
+                        $insight_text .= "That's $difference more " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
                     } else {
                         $headline .= ".";
                     }
