@@ -364,6 +364,22 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $php_path =  (!empty($whichphp))?$whichphp:'php';
         $email = $this->getLoggedInUser();
 
+        // BEGIN: Populate the menu bar service user connections status icons
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $instances = $instance_dao->getByOwnerWithStatus($owner);
+        //Start off assuming connection doesn't exist
+        $connection_status = array('facebook'=>'inactive', 'twitter'=>'inactive');
+        foreach ($instances as $instance) {
+            if ($instance->auth_error != '') {
+                $connection_status[$instance->network] = 'error';
+            } else { //connection exists, so it's active
+                $connection_status[$instance->network] = 'active';
+            }
+        }
+        $this->addToView('facebook_connection_status', $connection_status['facebook']);
+        $this->addToView('twitter_connection_status', $connection_status['twitter']);
+        // END: Populate the menu bar service user connections status icons
+
         //rss_crawl_url
         $rss_crawl_url = Utils::getApplicationURL(). sprintf('crawler/rss.php?un=%s&as=%s', urlencode($email),
         $owner->api_key);
