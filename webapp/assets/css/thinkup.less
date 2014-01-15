@@ -471,25 +471,60 @@ body.app-message-visible {
 
 // Theme colors
 
-@orange: #FFBD54;
-@orange-dark: #FF9146;
-@red: #FC939E;
-@red-dark: #DA6070;
-@green: #9DD767;
-@green-dark: #5FAC1C;
-@mint: #41DAB3;
-@mint-dark: #24B98F;
-@purple: #B78EE4;
-@purple-dark: #6F36B7;
+@color-pea:                 #9DD767;
+@color-pea-dark:            #5FAC1C;
+@color-pea-darker:          #417505;
+@color-salmon:              #FC939E;
+@color-salmon-dark:         #DA6070;
+@color-salmon-darker:       darken(@color-salmon-dark, 10%);
+@color-creamsicle:          #FFBB4E;
+@color-creamsicle-dark:     #FF8F41;
+@color-creamsicle-darker:   darken(@color-creamsicle-dark, 15%);
+@color-sepia:               #C0BDAF;
+@color-sepia-dark:          #A19F8B;
+@color-sepia-darker:        darken(@color-sepia-dark, 10%);
+@color-purple:              #B690E2;
+@color-purple-dark:         #8E69C2;
+@color-purple-darker:       darken(@color-purple-dark, 10%);
+@color-mint:                #41DAB3;
+@color-mint-dark:           #24B98F;
+@color-mint-darker:         darken(@color-mint-dark, 10%);
+@color-bubblegum:           #F576B5;
+@color-bubblegum-dark:      #B3487C;
+@color-bubblegum-darker:    darken(@color-bubblegum-dark, 10%);
+@color-seabreeze:           #44C9D7;
+@color-seabreeze-dark:      #198A9C;
+@color-seabreeze-darker:    darken(@color-seabreeze-dark, 10%);
+@color-dijon:               #E4BF28;
+@color-dijon-dark:          #C59301;
+@color-dijon-darker:        darken(@color-dijon-dark, 10%);
+@color-sandalwood:          #FD8560;
+@color-sandalwood-dark:     #D13A0A;
+@color-sandalwood-darker:   darken(@color-sandalwood-dark, 10%);
+@color-caramel:             #DD814B;
+@color-caramel-dark:        #9E5E14;
+@color-caramel-darker:      darken(@color-caramel-dark, 10%);
 
-.insight-colors(@border-top: @red-dark, @headline-bgd: @red,
-    @body-bgd: #fff, @footer-borders: @gray-lighter) {
+.insight-colors(
+    @border-top: @color-salmon-dark,
+    @headline-bgd: @color-salmon,
+    @headline-color: @color-salmon-darker,
+    @body-bgd: #fff,
+    @footer-borders: @gray-lighter) {
     background: @headline-bgd;
     border-top-color: @border-top;
     border-bottom-color: @headline-bgd;
 
     .panel-heading {
         background: @headline-bgd;
+    }
+
+    &.insight-hero {
+        .panel-heading {
+            .panel-title {
+                color: @headline-color;
+            }
+        }
     }
 
     .panel-body, .panel-desktop-right, .panel-footer {
@@ -538,10 +573,10 @@ body.app-message-visible {
         .panel-title {
             font-family: "tablet-gothic-semi-condensed", sans-serif;
             font-weight: 600;
-            font-size: 18px;
-            line-height: 1.167;
+            font-size: 19px;
+            line-height: (21/19);
             margin-bottom: 6px;
-            font-weight: 600;
+            font-weight: 400;
             letter-spacing: .03em;
             color: white;
         }
@@ -675,34 +710,57 @@ body.app-message-visible {
 
         .panel-title {
             font-size: 24px;
-            line-height: 1;
+            line-height: (26/24);
             letter-spacing: .01em;
             margin-bottom: 8px;
+            font-weight: 600;
         }
     }
 }
 
-.insight-historical {
-    .insight-colors(#A19F8B, #C0BDAF, #E7E5D9, #D7D6CE);
+.insight-pea {
+    .insight-colors(@color-pea-dark, @color-pea, @color-pea-darker);
+}
+
+.insight-salmon {
+    .insight-colors(@color-salmon-dark, @color-salmon, @color-salmon-darker);
+}
+
+.insight-creamsicle {
+    .insight-colors(@color-creamsicle-dark, @color-creamsicle, @color-creamsicle-darker);
+}
+
+.insight-historical, .insight-sepia {
+    .insight-colors(@color-sepia-dark, @color-sepia,
+        @color-sepia-darker, #E7E5D9, #D7D6CE);
 }
 
 .insight-purple {
-    .insight-colors(@purple-dark, @purple);
+    .insight-colors(@color-purple-dark, @color-purple, @color-purple-darker);
 }
 
-.insight-orange {
-    .insight-colors(@orange-dark, @orange);
-}
-
-.insight-green {
-    .insight-colors(@green-dark, @green);
-}
-
-.insight-red {
-    .insight-colors(@red-dark, @red);
-}
 .insight-mint {
-    .insight-colors(@mint-dark, @mint);
+    .insight-colors(@color-mint-dark, @color-mint, @color-mint-darker);
+}
+
+.insight-bubblegum {
+    .insight-colors(@color-bubblegum-dark, @color-bubblegum, @color-bubblegum-darker);
+}
+
+.insight-seabreeze {
+    .insight-colors(@color-seabreeze-dark, @color-seabreeze, @color-seabreeze-darker);
+}
+
+.insight-dijon {
+    .insight-colors(@color-dijon-dark, @color-dijon, @color-dijon-darker);
+}
+
+.insight-sandalwood {
+    .insight-colors(@color-sandalwood-dark, @color-sandalwood, @color-sandalwood-darker);
+}
+
+.insight-caramel {
+    .insight-colors(@color-caramel-dark, @color-caramel, @color-caramel-darker);
 }
 
 .panel-heading h2.lead {

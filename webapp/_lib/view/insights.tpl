@@ -17,13 +17,18 @@
   {assign var='cur_date' value=$i->date}
   {capture name=permalink assign="permalink"}{$thinkup_application_url}?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}{/capture}
 
-  {math equation="x % 5" x=$i->id assign=random_color_num}
+  {math equation="x % 10" x=$i->id assign=random_color_num}
   {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}{assign var='color' value='historical'}
-  {elseif $random_color_num eq '0'}{assign var='color' value='mint'}
-  {elseif $random_color_num eq '1'}{assign var='color' value='purple'}
-  {elseif $random_color_num eq '2'}{assign var='color' value='orange'}
-  {elseif $random_color_num eq '3'}{assign var='color' value='green'}
-  {else}{assign var='color' value='red'}
+  {elseif $random_color_num eq '0'}{assign var='color' value='pea'}
+  {elseif $random_color_num eq '1'}{assign var='color' value='creamsicle'}
+  {elseif $random_color_num eq '2'}{assign var='color' value='purple'}
+  {elseif $random_color_num eq '3'}{assign var='color' value='mint'}
+  {elseif $random_color_num eq '4'}{assign var='color' value='bubblegum'}
+  {elseif $random_color_num eq '5'}{assign var='color' value='seabreeze'}
+  {elseif $random_color_num eq '6'}{assign var='color' value='dijon'}
+  {elseif $random_color_num eq '7'}{assign var='color' value='sandalwood'}
+  {elseif $random_color_num eq '8'}{assign var='color' value='caramel'}
+  {else}{assign var='color' value='salmon'}
   {/if}
 
 {if $previous_date neq $cur_date and !$smarty.foreach.insights.first}
