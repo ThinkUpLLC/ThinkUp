@@ -181,11 +181,25 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         //don't show insights
         $this->assertNoPattern('/Retweet spike! Jack\'s post publicly got retweeted 110 times/', $results);
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
+        $this->assertPattern('/Welcome to ThinkUp/', $results);
         $this->assertPattern('/Set up a/', $results);
         $this->assertPattern('/Twitter/', $results);
         $this->assertPattern('/Foursquare/', $results);
         $this->assertPattern('/Facebook/', $results);
         $this->assertPattern('/Google/', $results);
+        $this->assertPattern('/account/', $results);
+
+        $cfg = Config::getInstance();
+        $cfg->setValue('thinkupllc_endpoint', 'set to something');
+
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->assertPattern('/Welcome to ThinkUp/', $results);
+        $this->assertPattern('/Set up a/', $results);
+        $this->assertPattern('/Twitter/', $results);
+        $this->assertNoPattern('/Foursquare/', $results);
+        $this->assertPattern('/Facebook/', $results);
+        $this->assertNoPattern('/Google/', $results);
         $this->assertPattern('/account/', $results);
     }
 

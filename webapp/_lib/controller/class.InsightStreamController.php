@@ -169,7 +169,8 @@ class InsightStreamController extends ThinkUpController {
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 }
                 $owned_instances = $instance_dao->getByOwner($owner, $force_not_admin = false, $only_active=true);
-                $site_root_path = Config::getInstance()->getValue('site_root_path');
+                $config = Config::getInstance();
+                $site_root_path = $config->getValue('site_root_path');
                 if (sizeof($owned_instances) > 0) {
                     $this->addToView('message_header', "ThinkUp doesn't have any insights for you yet.");
                     $this->addToView('message_body', "Check back later, ".
@@ -177,9 +178,16 @@ class InsightStreamController extends ThinkUpController {
                 } else {
                     $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                     $this->addToView('message_header', "Welcome to ThinkUp. Let's get started.");
-                    $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a>, ".
-                    "".$plugin_link."facebook\">Facebook</a>, ".$plugin_link.
-                    "googleplus\">Google+</a>, or ".$plugin_link."foursquare\">Foursquare</a> account.");
+
+                    $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                    if (isset($thinkupllc_endpoint)) {
+                        $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a> or ".
+                        "".$plugin_link."facebook\">Facebook</a> account.");
+                    } else {
+                        $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a>, ".
+                        "".$plugin_link."facebook\">Facebook</a>, ".$plugin_link.
+                        "googleplus\">Google+</a>, or ".$plugin_link."foursquare\">Foursquare</a> account.");
+                    }
                 }
             } else { //redirect to login
                 return false;
