@@ -172,12 +172,18 @@ class InsightStreamController extends ThinkUpController {
                 $owned_instances = $instance_dao->getByOwner($owner, $force_not_admin = false, $only_active=true);
                 $config = Config::getInstance();
                 $site_root_path = $config->getValue('site_root_path');
+                $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                 if (sizeof($owned_instances) > 0) {
                     $this->addToView('message_header', "ThinkUp doesn't have any insights for you yet.");
-                    $this->addToView('message_body', "Check back later, ".
-                    "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
+                    $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                    if (!isset($thinkupllc_endpoint)) {
+                        $this->addToView('message_body', "Check back later, ".
+                        "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
+                    } else {
+                        $this->addToView('message_body', "Check back later, or add another ".$plugin_link.
+                        "twitter\">Twitter</a> or "."".$plugin_link."facebook\">Facebook</a> account.");
+                    }
                 } else {
-                    $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                     $this->addToView('message_header', "Welcome to ThinkUp. Let's get started.");
 
                     $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
