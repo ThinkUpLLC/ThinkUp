@@ -4,9 +4,6 @@
       <div class="container">
         <header>
           <h1>Facebook</h1>
-          {include file="_usermessage.tpl"}
-          {if count($instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
-          {if $fbconnect_link}{include file="_usermessage.tpl" field="authorization"}{/if}
         </header>
 
         <ul class="list-group list-accounts">
@@ -21,17 +18,16 @@
 
             <div class="account-action account-action-delete">
               {if $user_is_admin}
-                <span id="delete{$i->id}">
-                  <form method="post" action="{$site_root_path}account/?p=facebook">
-                  <input type="hidden" name="instance_id" value="{$i->id}">
-                  {insert name="csrf_token"}
-                  <button
-                    onClick="return confirm('Do you really want to delete the {$i->network_username} account?');"
-                    type="submit" name="action" class="btn" value="Delete">
-                    <i class="fa fa-minus-circle icon"></i>
-                    </button>
-                  </form>
-                </span>
+              <form method="post" action="{$site_root_path}account/?p=facebook"
+                name="{$i->network_username}-delete">
+              <input type="hidden" name="instance_id" value="{$i->id}">
+              <input type="hidden" name="action" value="Delete">
+              {insert name="csrf_token"}
+              <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
+                onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
+                <i class="fa fa-minus-circle icon"></i>
+              </a>
+              </form>
               {/if}
             </div>
           </li>
@@ -40,7 +36,7 @@
         {if $fbconnect_link}
           <li class="list-group-item list-accounts-item-add"><a href="{$fbconnect_link}">
             <div class="account-label">
-              Add another account&hellip;
+              {if count($owner_instances) eq 0 }Get started by adding a Facebook account{else}Add another account&hellip;{/if}
             </div>
             <div class="account-action account-action-add">
               <i class="fa fa-plus-circle icon"></i>
@@ -50,9 +46,9 @@
 
         </ul>
 
-        <p class="accounts-note">As a Pro user you can add more than one account.</p>
+        <!-- <p class="accounts-note">As a Pro user you can add more than one account.</p> -->
 
-        <p class="accounts-privacy">ThinkUp will never share your information or post on your behalf with your permission.</p>
+        <p class="accounts-privacy">ThinkUp will never post without your permission.</p>
       </div>
     </div>
 
@@ -61,12 +57,12 @@
 
 
 {include file="_usermessage.tpl"}
-    
+
 <div class="plugin-info">
 
     <span class="pull-right">{insert name="help_link" id='facebook'}</span>
     <h2>
-        <i class="fa fa-facebook text-muted"></i> Facebook 
+        <i class="fa fa-facebook text-muted"></i> Facebook
     </h2>
 
 </div>
@@ -116,7 +112,7 @@
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="row-fluid">
         <div class="col-md-3">
-            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
+            <a href="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a>
         </div>
         <div class="col-md-3">
             <span id="div{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="Set {if $i->is_public}private{else}public{/if}" /></span>

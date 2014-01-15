@@ -218,8 +218,41 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     $insight_text = '';
                 }
 
-                $this->insight_dao->insertInsightDeprecated('style_stats', $instance->id, date('Y-m-d'),
-                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_MED);
+                // $insight_text .= '</p><p class="style-stats-icon-graphs">';
+                // if ($total_posts["questions"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["questions"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-question fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["quotations"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["quotations"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-quote-left fa-fw"></i><i class="fa fa-quote-right fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["links"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["links"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-link fa-fw"></i>';
+                //         }
+                // }
+                // if ($total_posts["photos"] > 0 ) {
+                //         for ($icon_count = 1; $icon_count <= $total_posts["photos"]; $icon_count++) {
+                //             $insight_text .= '<i class="fa fa-camera fa-fw"></i>';
+                //         }
+                // }
+
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'style_stats'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = date('Y-m-d'); //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = '';
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+
+                $this->insight_dao->insertInsight($my_insight);
 
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).

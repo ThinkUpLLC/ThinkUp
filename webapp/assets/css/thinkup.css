@@ -1,6 +1,6 @@
 body.settings .container {
   width: 100%;
-  padding: 45px 10px 0;
+  padding: 45px 10px;
   margin: 0 auto;
 }
 body.settings .container header {
@@ -307,6 +307,7 @@ body.settings .container .form-note {
   color: #999999;
 }
 body.settings .container .accounts-privacy {
+  text-align: center;
   color: #417505;
 }
 body#settings-subscription .form-note .show-section {
@@ -438,13 +439,16 @@ a:hover {
 .navbar-default .navbar-header .navbar-brand {
   float: none;
   padding: 0;
-  background: url(../img/thinkup-logo.svg);
-  background-size: 79px 20px;
   text-indent: 100%;
   display: block;
-  width: 79px;
-  margin: 8px auto 6px;
+  background: url(../img/thinkup-logo-header@2x.png);
+  background-size: 70px 19px;
+  width: 70px;
+  height: 19px;
+  margin: 9px auto 6px;
   overflow: hidden;
+  font-size: 0;
+  line-height: 0;
 }
 .navbar-default .navbar-header .menu-trigger {
   position: absolute;
@@ -452,7 +456,7 @@ a:hover {
   font-size: 22px;
   line-height: 20px;
   color: #2785d3;
-  top: 4px;
+  top: 7px;
   left: 10px;
   background: transparent;
   border: 0;
@@ -502,25 +506,37 @@ body.menu-off .navbar-default .navbar-header .menu-trigger {
   width: 20px;
   text-align: center;
   line-height: 1;
-  color: #3ea5cf;
+  color: #666666;
+}
+#jPanelMenu-menu .menu-options li.service .icon:after,
+#menu .menu-options li.service .icon:after {
+  float: left;
+  margin-right: 4px;
+  font: 13px/1.538 "tablet-gothic-wide", helvetica, arial, sans-serif;
 }
 #jPanelMenu-menu .menu-options li.service.inactive .icon,
 #menu .menu-options li.service.inactive .icon {
   width: auto;
   text-align: right;
   margin-right: 1px;
+  color: #3ea5cf;
 }
 #jPanelMenu-menu .menu-options li.service.inactive .icon:after,
 #menu .menu-options li.service.inactive .icon:after {
-  float: left;
-  margin-right: 4px;
   color: #3ea5cf;
   content: "Add your account!";
-  font: 13px/1.538 "tablet-gothic-wide", helvetica, arial, sans-serif;
 }
 #jPanelMenu-menu .menu-options li.service.error .icon,
 #menu .menu-options li.service.error .icon {
   color: #d0021b;
+  width: auto;
+  text-align: right;
+  margin-right: 1px;
+}
+#jPanelMenu-menu .menu-options li.service.error .icon:after,
+#menu .menu-options li.service.error .icon:after {
+  color: #d0021b;
+  content: "Account error";
 }
 #jPanelMenu-menu .menu-options li.user-info,
 #menu .menu-options li.user-info {
@@ -548,6 +564,16 @@ body.menu-off .navbar-default .navbar-header .menu-trigger {
   position: absolute;
   bottom: -25px;
   right: 10px;
+}
+#jPanelMenu-menu .menu-options li.user-info a,
+#menu .menu-options li.user-info a {
+  color: #3ea5cf;
+  padding: 0;
+  display: inline;
+}
+#jPanelMenu-menu .menu-options li.user-info a:hover,
+#menu .menu-options li.user-info a:hover {
+  background: inherit;
 }
 .app-message {
   position: fixed;
@@ -610,9 +636,20 @@ body.account .app-message {
   width: 100%;
 }
 .footer {
+  margin-top: 14px;
   width: 100%;
   border-top: 1px solid #dbdbdb;
   padding: 14px 0 28px;
+}
+.footer:before,
+.footer:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+.footer:after {
+  clear: both;
 }
 .footer .footer-container {
   width: 100%;
@@ -620,18 +657,59 @@ body.account .app-message {
   min-width: 320px;
   padding: 0 5px;
   margin: 0 auto;
-}
-.footer .footer-container p {
-  margin: 0;
   color: #999999;
   font-size: 13px;
   line-height: 1.385;
+}
+.footer .footer-container .copyright-privacy,
+.footer .footer-container .motto {
+  float: left;
+  width: 50%;
+  margin-bottom: 18px;
+}
+.footer .footer-container .privacy {
+  display: block;
+  color: #46bcff;
+  text-decoration: none;
+}
+.footer .footer-container .motto {
+  text-align: right;
+}
+.footer .footer-container .follow-wrapper {
+  clear: both;
+  text-align: center;
+}
+.footer .footer-container .follow-wrapper .follow-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline;
+}
+.footer .footer-container .follow-wrapper .follow-links li {
+  display: inline-block;
+  margin: 0 20px;
+}
+.footer .footer-container .follow-wrapper .follow-links li a {
+  color: #46bcff;
+  text-decoration: none;
+  font-size: 20px;
+  line-height: 20px;
+}
+.footer .footer-container .follow-wrapper .follow-links li a:hover {
+  color: #3ea5cf;
 }
 body.app-message-visible .container {
   padding-top: 71px;
 }
 body.app-message-visible.account .container {
   padding-top: 160px;
+}
+.no-insights {
+  min-width: 310px;
+  max-width: 450px;
+  width: 100%;
+  margin: 40px auto;
+  text-align: center;
 }
 .stream {
   min-width: 320px;
@@ -813,8 +891,8 @@ body.app-message-visible.account .container {
   right: 12px;
 }
 .insight .panel-footer .share-menu .share-services {
-  width: 247px;
-  padding: 0 30px;
+  width: 232px;
+  padding: 0 25px;
   margin: 0 auto;
 }
 .insight .panel-footer .share-menu .share-services:before,
@@ -830,7 +908,12 @@ body.app-message-visible.account .container {
 .insight .panel-footer .share-menu .share-services .share-service {
   list-style: none;
   float: left;
-  margin: 0 15px;
+  margin: 0 20px;
+}
+.insight .panel-footer .share-menu .share-services .share-service .fa-link {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .insight .panel-footer .share-menu.open {
   border: 0;
@@ -1228,6 +1311,19 @@ body.app-message-visible.account .container {
   .stream .stream-pagination-control {
     width: 540px;
     margin: 0 auto;
+  }
+  .footer .footer-container .copyright-privacy,
+  .footer .footer-container .motto {
+    width: 20%;
+    min-width: 150px;
+    margin-bottom: 0;
+  }
+  .footer .footer-container .motto {
+    float: right;
+  }
+  .footer .footer-container .follow-wrapper {
+    clear: none;
+    text-align: center;
   }
   .insight:before,
   .insight:after {

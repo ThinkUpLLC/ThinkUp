@@ -87,10 +87,17 @@ function secondsToTextTime($inputSeconds, $maxPlaces = 2) {
         $places++;
     }
     if ($obj["m"] && $places < $maxPlaces) {
-        $milestones["items"][] = array(
-            "number" => $obj["m"],
-            "label"  => "minutes",
-        );
+        if ($obj["m"] > 1) {
+            $milestones["items"][] = array(
+                "number" => $obj["m"],
+                "label"  => "minutes",
+            );
+        } else {
+            $milestones["items"][] = array(
+                "number" => $obj["m"],
+                "label"  => "minute",
+            );
+        }
         $places++;
     }
     if ($obj["s"] && $places < $maxPlaces) {
@@ -120,6 +127,12 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             $mentions_avatars = array();
             $insight_data = array();
             $insight_text = '';
+
+            if ($instance->network == 'twitter') {
+                $talk_time = 15;
+            } else {
+                $talk_time = 38;
+            }
 
             foreach ($last_week_of_posts as $post) {
                 $post_text = $post->post_text;
@@ -170,10 +183,10 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             if (isset($most_mentioned_user)) {
                 $headline = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
-                $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * 15;
+                $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * $talk_time;
 
                 $milestones = secondsToTextTime($conversation_seconds);
-                $insight_text = 'Always good to know how much time is invested in a conversation.';
+                $insight_text = 'Time spent in good conversation is time well spent.';
                 // $header_image = $users_mentioned[0][user]->avatar;
                 $header_image = $users_mentioned[0]["user"]->avatar;
 

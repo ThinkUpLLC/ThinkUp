@@ -72,7 +72,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 // Next compare post reply counts to baselines and store insights where there's a spike or high
                 if (isset($high_reply_count_365_days->value)
-                && $post->reply_count_cache >= $high_reply_count_365_days->value) {
+                && $post->reply_count_cache >= $high_reply_count_365_days->value
+                && isset($it_is_not_launch_day)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
@@ -97,7 +98,8 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 } elseif (isset($high_reply_count_30_days->value)
-                && $post->reply_count_cache >= $high_reply_count_30_days->value) {
+                && $post->reply_count_cache >= $high_reply_count_30_days->value
+                && isset($it_is_not_launch_day)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);

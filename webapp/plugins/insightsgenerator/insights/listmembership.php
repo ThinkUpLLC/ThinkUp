@@ -52,10 +52,10 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     $group_number = 0;
                     $headline = "Do ";
                     foreach ($new_groups as $group) {
-                        if (sizeof($new_groups) > 10) { //If more than 10 lists, just display first 10
-                            if ($group_number >= 10) {
-                                if ($group_number == 10) {
-                                    $group_name_list .= ", and ". (sizeof($new_groups) - 10)." more";
+                        if (sizeof($new_groups) > 4) { //If more than 10 lists, just display first 10
+                            if ($group_number >= 4) {
+                                if ($group_number == 4) {
+                                    $group_name_list .= ", and ". (sizeof($new_groups) - 4)." more";
                                 }
                             } else {
                                 if ($group_name_list != '') {
@@ -63,16 +63,19 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                                     $group_name_list .= ", ";
                                 }
                             }
-                            if ($group_number < 10 ) {
+                            if ($group_number == 3) {
+                                $headline .= "and ";
+                            }
+                            if ($group_number < 4 ) {
                                 $group->setMetadata();
-                                $headline .= "\"" . str_replace('-', ' ', $group->keyword) . "\"";
+                                $headline .= "&ldquo;" . str_replace('-', ' ', $group->keyword) . "&rdquo;";
                                 $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                             }
                             $group_number++;
                         } else  { //Display all lists
                             if ($group == end($new_groups)) {
-                                $headline .= " and";
                                 $group_name_list .= " and";
+                                $headline .= "and ";
                             } else {
                                 if ($group_name_list != '') {
                                     $headline .= ",";
@@ -80,12 +83,15 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                                 }
                             }
                             $group->setMetadata();
+                            if ($group_number == sizeof($new_groups)){
+                                    $headline .= "and ";
+                            }
                             $headline .= ' '. str_replace('-', ' ', $group->keyword);
                             $group_name_list .= ' <a href="'.$group->url.'">'.$group->keyword.'</a>';
                         }
                     }
                     $headline .= ' sound like good descriptions of ' . $this->username . '?';
-                    $insight_text = "$this->username is on ".sizeof($new_groups)." new lists:".$group_name_list;
+                    $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
                     if (is_array($list_membership_count_history_by_day['history'])
                     && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);

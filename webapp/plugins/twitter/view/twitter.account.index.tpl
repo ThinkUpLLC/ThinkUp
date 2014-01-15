@@ -4,8 +4,6 @@
       <div class="container">
         <header>
           <h1>Twitter</h1>
-          {include file="_usermessage.tpl"}
-          {if count($owner_instances) > 0 }{include file="_usermessage.tpl" field="user_add"}{/if}
         </header>
 
         <ul class="list-group list-accounts">
@@ -16,29 +14,26 @@
               <img src="http://avatars.io/twitter/{$i->network_username}" class="account-photo img-circle">
               <a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a>
             </div>
-
             <div class="account-action account-action-delete">
-              {if $user_is_admin}
-                <span id="delete{$i->id}">
-                  <form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
-                  <input type="hidden" name="instance_id" value="{$i->id}">
-                  {insert name="csrf_token"}
-                  <button
-                    onClick="return confirm('Do you really want to delete the {$i->network_username} account?');"
-                    type="submit" name="action" class="btn" value="Delete">
-                    <i class="fa fa-minus-circle icon"></i>
-                    </button>
-                  </form>
-                </span>
-              {/if}
+              <form method="post" action="{$site_root_path}account/?p=twitter"
+                name="{$i->network_username}-delete">
+              <input type="hidden" name="instance_id" value="{$i->id}">
+              <input type="hidden" name="action" value="Delete">
+              {insert name="csrf_token"}
+              <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
+                onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
+                <i class="fa fa-minus-circle icon"></i>
+              </a>
+              </form>
             </div>
+
           </li>
           {/foreach}
         {/if}
         {if $oauthorize_link}
           <li class="list-group-item list-accounts-item-add"><a href="{$oauthorize_link}">
             <div class="account-label">
-              Add another account&hellip;
+              {if count($owner_instances) eq 0 }Get started by adding a Twitter account{else}Add another account&hellip;{/if}
             </div>
             <div class="account-action account-action-add">
               <i class="fa fa-plus-circle icon"></i>
@@ -48,9 +43,11 @@
 
         </ul>
 
+        <!--
         <p class="accounts-note">As a Pro user you can add more than one account.</p>
+        -->
 
-        <p class="accounts-privacy">ThinkUp will never share your information or post on your behalf with your permission.</p>
+        <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
       </div>
     </div>
 

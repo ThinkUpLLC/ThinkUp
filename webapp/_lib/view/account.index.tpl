@@ -1,12 +1,8 @@
 {if isset($thinkupllc_endpoint)}
-{include file="_header.tpl" body_type="settings menu-open"}
+  {include file="account.tucom.tpl"}
 {else}
 {include file="_header.tpl"}
-{/if}
-
 {include file="_navigation.tpl"}
-
-{if !isset($thinkupllc_endpoint)}
 
 <div id="main" class="container">
 
@@ -18,7 +14,7 @@
 
         <div class="section" id="plugins">
 
-            {include file="_usermessage.tpl" field="account"}
+            {if !isset($thinkupllc_endpoint)}{include file="_usermessage.tpl" field="account"}{/if}
 
               {if $installed_plugins}
                 {foreach from=$installed_plugins key=ipindex item=ip name=foo}
@@ -64,7 +60,6 @@
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
 
-
           <span class="pull-right">{insert name="help_link" id='backup'}</span>
           <h3><i class="fa fa-download icon-muted"></i> Back Up and Export Data</h3>
           <p style="padding-left : 20px;">
@@ -78,7 +73,6 @@
           </p>
 
           <div id="app_settings_div" style="">
-
 
             <span class="pull-right">{insert name="help_link" id='application_settings'}</span>
             <h3><i class="fa fa-cogs icon-muted"></i> Application Settings</h3>
@@ -209,7 +203,6 @@
                             <input name="oldpass" type="password" id="oldpass" class="password form-control" required>{insert name="csrf_token"}<!-- reset password -->
                         </span>
                         <span class="help-block"></span>
-
                     </div>
             </div>
             <div class="form-group">
@@ -218,9 +211,12 @@
                         <span class="input-group">
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password form-control" required
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need a enter a password of at least 8 characters."
-                            data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i> Must be at least 8 characters, with both numbers & letters.">
+                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal}
+                              class="password form-control" required
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need
+                              a enter a password of at least 8 characters."
+                            data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i> Must be at
+                              least 8 characters, with both numbers &amp; letters.">
                         </span>
                         <span class="help-block"></span>
 
@@ -233,9 +229,11 @@
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input type="password" name="pass2" id="confirm_password" required
                              class="password form-control"
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password confirmation is required."
+                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password
+                              confirmation is required."
                             data-validation-match-match="pass1"
-                            data-validation-match-message="<i class='fa fa-exclamation-triangle'></i> Make sure this matches the password you entered above." >
+                            data-validation-match-message="<i class='fa fa-exclamation-triangle'></i> Make sure this
+                              matches the password you entered above." >
                         </span>
                         <span class="help-block"></span>
                     </div>
@@ -250,7 +248,7 @@
     <br><br>
     <h3><i class="fa fa-envelope icon-muted"></i> Email Notification Frequency</h3><br />
     {include file="_usermessage.tpl" field='notifications'}
-    <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" method="post" action="index.php?m=manage#instances">
+    <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" action="index.php?m=manage#instances">
         <div class="form-group">
             <label class="col-sm-2" for="notificationfrequency">Get insights:</label>
             <div class="col-sm-8">
@@ -275,7 +273,6 @@
         </div>
     </form>
     <br><br>
-
 
     {include file="_usermessage.tpl" field='timezone'}
      <form name="setTimezone" id="setTimezone" class="form-horizontal" method="post" action="index.php?m=manage#instances">
@@ -359,7 +356,6 @@
       />
       </object>
     </p>
-
 
         <h4>Your API Key</h4>
               {include file="_usermessage.tpl" field='api_key'}
@@ -459,78 +455,6 @@
 
 </div>
 
-{else}<!-- hosted -->
-
-
-
-
-
-<div id="main" class="container">
-
-<div class="row">
-    <div class="col-md-2">
-    </div>
-    <div class="col-md-6">
-        <div class="white-card">
-
-        <div class="section" id="plugins">
-
-            {include file="_usermessage.tpl" field="account"}
-
-              {if $installed_plugins}
-                {foreach from=$installed_plugins key=ipindex item=ip name=foo}
-                  {if $smarty.foreach.foo.first}
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>&nbsp;</th>
-                          {if $user_is_admin}<th class="action-button">&nbsp;</th>{/if}
-                        </tr>
-                      </thead>
-                  {/if}
-                  {if $user_is_admin || $ip->is_active}
-                        <tr>
-                            <td>
-                                <p class="lead" style="padding-left: 0px; margin : 0px;">
-                                <i class="fa fa-{$ip->icon} fa-fw text-muted"></i>
-                                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                                </p>
-                                <span class="text-muted" style="padding-left: 2.3em;">{$ip->description}</span>
-                            </td>
-                    {if $user_is_admin}
-                      <td class="action-button">
-                      <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
-                        {if !$ip->isConfigured()}
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn btn-success"><i class="fa fa-cog"></i> Set Up</a>
-                        {/if}
-                      </span>
-                      <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
-                      </td>
-                    {/if}
-                      </tr>
-                  {/if}
-                {/foreach}
-                    </table>
-              {/if}
-        </div> <!-- end #plugins -->
-
-            {if $body}
-              {$body}
-            {/if}
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-{/if} <!-- end of if OSP loop -->
-
-
 <script type="text/javascript">
   var show_plugin = {if $force_plugin}true{else}false{/if};
   {literal}
@@ -609,7 +533,6 @@ $(function() {
       return false;
     });
   });
-
 
     $(function() {
     var activateOwner = function(u) {
@@ -763,3 +686,4 @@ $(function() {
 </script>
 
 {include file="_footer.tpl" linkify=0}
+{/if}

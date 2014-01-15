@@ -45,7 +45,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testLessThan10NewListMembershipNoHistory() {
+    public function testLessThan4NewListMembershipNoHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -68,10 +68,10 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
-        $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/', $result->text); // 
+        $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/', $result->text); //
     }
 
-    public function testLessThan10NewListMembershipWithHighHistory() {
+    public function testLessThan4NewListMembershipWithHighHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -94,11 +94,11 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
-        $this->assertPattern('/and list0/', $result->headline);
+        $this->assertPattern('/and &ldquo;list4&rdquo;/', $result->headline);
         $this->assertPattern('/bringing the total to \<strong\>58 lists\<\/strong\>\./', $result->text);
     }
 
-    public function testLessThan10NewListMembershipWithLowHistory() {
+    public function testLessThan4NewListMembershipWithLowHistory() {
         // Assert that insight doesn't exist
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
@@ -147,8 +147,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/"list16" sound like good descriptions of @ev?/', $result->headline);
-        $this->assertPattern('/and 16 more/', $result->text);
+        $this->assertPattern('/&ldquo;list22&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern('/and 22 more/', $result->text);
     }
 
     public function test1NewListMembershipNoHistory() {

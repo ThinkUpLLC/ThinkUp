@@ -48,22 +48,19 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 if (!isset($config)) {
                     $config = Config::getInstance();
                 }
-                $post_link = '<a href="'.$config->getValue('site_root_path'). 'post/?t='.$post->post_id.'&n='.
-                $post->network.'&v=fwds">';
-
                 if (sizeof($big_reshares) > 1) {
                     $headline = "People with lots of followers ".$this->terms->getVerb('shared')." "
-                    .$post_link."$this->username's post</a>.";
+                    ."$this->username's " . $this->terms->getNoun('post') . ".";
                 } else {
                     $follower_count_multiple =
                     intval(($big_reshares[0]->follower_count) / $service_user->follower_count);
                     if ($follower_count_multiple > 1 ) {
                         $headline = "Someone with <strong>".$follower_count_multiple.
                         "x</strong> more followers than $this->username ".$this->terms->getVerb('shared')." "
-                        .$post_link."this post</a>.";
+                        ."this " . $this->terms->getNoun('post') . ".";
                     } else {
                         $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
-                        .$post_link."$this->username's post</a>.";
+                        ."$this->username's " . $this->terms->getNoun('post') . ".";
                     }
                 }
                 //Replace each big resharer's bio line with the text of the post
@@ -83,6 +80,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                 $my_insight->setPeople($big_reshares);
+                $my_insight->setPosts($post);
 
                 $this->insight_dao->insertInsight($my_insight);
 

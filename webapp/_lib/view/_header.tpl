@@ -13,10 +13,19 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
+    isset($smarty.get.oauth_token) and isset($smarty.get.oauth_verifier)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=twitter">
+    {/if}
+    {if isset($smarty.get.p) and $smarty.get.p eq 'facebook' and
+    isset($smarty.get.code) and isset($smarty.get.state)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=facebook">
+    {/if}
+
     <!-- styles -->
 {if isset($thinkupllc_endpoint)}
-    <script type="text/javascript" src="//use.typekit.net/zpi4jiv.js"></script>
-    <script type="text/javascript">{literal}try{Typekit.load();}catch(e){}{/literal}</script>
+{literal}<script type="text/javascript" src="//use.typekit.net/xzh8ady.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>{/literal}
 {/if}
     <link href="{$site_root_path}assets/css/vendor/bootstrap.min.css" rel="stylesheet">
     <link href="{$site_root_path}assets/css/vendor/font-awesome.min.css" rel="stylesheet">
@@ -29,12 +38,19 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
-    {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>{/if}
+    {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+    {foreach from=$header_scripts item=script}
+    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
+    {/foreach}
+
+    {/if}
 
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
 {/foreach}
+{include file="_usermessage-v2.tpl"}
 
 <script type="text/javascript">
     var site_root_path = '{$site_root_path}';

@@ -29,7 +29,7 @@ function drawChart{/literal}{$i->id}() {literal}{
           legend: "none",
           interpolateNulls: true,
           pointSize: 4,
-          colors : ['#6f36b7'],
+          colors : ['#125c9c'],
           hAxis: {
               baselineColor: '#eee',
               format: 'MMM d',

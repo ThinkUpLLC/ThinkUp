@@ -8,8 +8,8 @@
       {/if}
 
   {if isset($logged_in_user)}
-        <li class="service {$facebook_connection_status}"><a href="{$site_root_path}account/?p=facebook" class="{if $smarty.get.p eq 'facebook'} active{/if}">Facebook<i class="fa fa-{if $facebook_connection_status eq 'active'}check-circle{elseif $facebook_connection_status eq 'error'}exclamation-triangle{else}facebook{/if} icon"></i></a></li>
-        <li class="service {$twitter_connection_status}"><a href="{$site_root_path}account/?p=twitter" class="service error{if $smarty.get.p eq 'twitter'} active{/if}">Twitter<i class="fa fa-{if $twitter_connection_status eq 'active'}check-circle{elseif $twitter_connection_status eq 'error'}exclamation-triangle{else}twitter{/if} icon"></i></a></li>
+        <li class="service {$facebook_connection_status}"><a href="{$site_root_path}account/?p=facebook" {if $smarty.get.p eq 'facebook'}class="active"{/if}>Facebook<i class="fa fa-{if $facebook_connection_status eq 'active'}check-circle{elseif $facebook_connection_status eq 'error'}exclamation-triangle{else}facebook-square{/if} icon"></i></a></li>
+        <li class="service {$twitter_connection_status}"><a href="{$site_root_path}account/?p=twitter" {if $smarty.get.p eq 'twitter'}class="active"{/if}>Twitter<i class="fa fa-{if $twitter_connection_status eq 'active'}check-circle{elseif $twitter_connection_status eq 'error'}exclamation-triangle{else}twitter{/if} icon"></i></a></li>
         <!--
         <li class="service inactive"><a href="{$site_root_path}account/?p=instagram">Instagram <i class="fa fa-instagram icon"></i></a></li>
         -->
@@ -33,7 +33,7 @@
 
   {if isset($logged_in_user)}
         <li class="user-info logged-in">
-          <img src="http://avatars.io/{$instances[0]->network}/{$instances[0]->network_user_id}" class="user-photo img-circle">
+          <img src="http://www.gravatar.com/avatar/{$logged_in_user|lower|md5}" class="user-photo img-circle">
           <div class="current-user">
             <div class="label">Logged in as</div>
             {$logged_in_user}
@@ -47,6 +47,7 @@
     </div>
 
     <div id="page-content">
+
       <nav class="navbar navbar-default" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">

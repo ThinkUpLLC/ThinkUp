@@ -279,7 +279,10 @@
     });
     $(window).load(function() {
       if ($("body").data("app-message-text")) {
-        return wt.appMessage.create($("body").data("app-message-text"), $("body").data("app-message-type"));
+        wt.appMessage.create($("body").data("app-message-text"), $("body").data("app-message-type"));
+      }
+      if ((typeof app_message !== "undefined" && app_message !== null) && (app_message.msg != null) && (app_message.type != null)) {
+        return wt.appMessage.create(app_message.msg, app_message.type);
       }
     });
     $("body").on("click", ".app-message .app-message-close", function(e) {

@@ -246,6 +246,8 @@ $ ->
   $(window).load ->
     if $("body").data "app-message-text"
       wt.appMessage.create $("body").data("app-message-text"), $("body").data("app-message-type")
+    if app_message? and app_message.msg? and app_message.type?
+      wt.appMessage.create app_message.msg, app_message.type
 
   $("body").on "click", ".app-message .app-message-close", (e) ->
     e.preventDefault()

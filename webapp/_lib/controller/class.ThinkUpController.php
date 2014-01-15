@@ -112,7 +112,6 @@ abstract class ThinkUpController {
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
 
-            
             $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
             if ($thinkupllc_endpoint != null) {
                 $this->addToView('thinkupllc_endpoint', $thinkupllc_endpoint);

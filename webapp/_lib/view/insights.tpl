@@ -2,18 +2,20 @@
 {include file="_navigation.tpl"}
 
 <div class="container">
+  {if $message_header}
+    <div class="no-insights">
+    {$message_header}
+    {$message_body}
+    </div>
+  {/if}
   <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
 
-{include file="_usermessage.tpl"}
-{if $message_header}
-  {$message_header}
-  {$message_body}
-{/if}
 {assign var='cur_date' value=''}
 {assign var='previous_date' value=''}
 {foreach from=$insights key=tid item=i name=insights}
   {assign var='previous_date' value=$cur_date}
   {assign var='cur_date' value=$i->date}
+  {capture name=permalink assign="permalink"}{$thinkup_application_url}?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}{/capture}
 
   {math equation="x % 5" x=$i->id assign=random_color_num}
   {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}{assign var='color' value='historical'}
@@ -70,21 +72,20 @@
           <!-- including {$tpl_filename} -->
           {include file=$tpl_path|cat:$tpl_filename}
       {/if}
-
       </div>
-
     </div>
     <div class="panel-footer">
       <div class="insight-metadata">
         <i class="fa fa-{$i->instance->network}-square icon icon-network"></i>
-        <a class="permalink" href="?u={$i->instance->network_username}&amp;n={$i->instance->network}&amp;d={$i->date|date_format:'%Y-%m-%d'}&amp;s={$i->slug}">{$i->date|date_format:"%b %e"}</a>
+        <a class="permalink" href="{$permalink}">{$i->date|date_format:"%b %e"}</a>
       </div>
       <div class="share-menu">
         {if $i->instance->is_public eq 1}
         <a class="share-button-open" href="#"><i class="fa fa-share-square-o icon icon-share"></i></a>
         <ul class="share-services">
-        <li class="share-service"><a href="#"><i class="fa fa-twitter icon icon-share"></i></a></li>
-        <li class="share-service"><a href="#"><i class="fa fa-facebook icon icon-share"></i></a></li>
+        <li class="share-service"><a href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$i->headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|escape:'url'}&amp;via=thinkup"><i class="fa fa-twitter icon icon-share"></i></a></li>
+        <li class="share-service"><a href="https://www.facebook.com/sharer.php?u={$permalink|escape:'url'}" target="_blank"><i class="fa fa-facebook icon icon-share"></i></a></li>
+        <li class="share-service"><a href="{$permalink}"><i class="fa fa-link icon icon-share"></i></a></li>
         </ul>
         <a class="share-button-close" href="#"><i class="fa fa-times-circle icon icon-share"></i></a>
         {else}

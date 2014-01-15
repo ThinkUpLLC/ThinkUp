@@ -67,7 +67,8 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 // Next compare post favlike counts to baselines and store insights where there's a spike or high
                 if (isset($high_fave_count_365_days->value)
-                && $post->favlike_count_cache >= $high_fave_count_365_days->value) {
+                && $post->favlike_count_cache >= $high_fave_count_365_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
@@ -93,7 +94,8 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                         $simplified_post_date);
                     }
                 } elseif (isset($high_fave_count_30_days->value)
-                && $post->favlike_count_cache >= $high_fave_count_30_days->value) {
+                && $post->favlike_count_cache >= $high_fave_count_30_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);

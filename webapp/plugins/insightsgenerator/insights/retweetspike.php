@@ -71,7 +71,8 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 // Next compare post retweet counts to baselines and store insights where there's a spike or high
                 if (isset($high_retweet_count_365_days->value)
-                && $post->all_retweets >= $high_retweet_count_365_days->value) {
+                && $post->all_retweets >= $high_retweet_count_365_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);
@@ -93,7 +94,8 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $simplified_post_date);
                     }
                 } elseif (isset($high_retweet_count_30_days->value)
-                && $post->all_retweets >= $high_retweet_count_30_days->value) {
+                && $post->all_retweets >= $high_retweet_count_30_days->value
+                && isset($it_is_not_launch_day)) {
                     //TODO: Stop using the cached dashboard data and generate fresh here
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
                     $instance->id, $simplified_post_date);

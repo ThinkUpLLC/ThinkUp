@@ -37,7 +37,7 @@
 
 body {
    background-color: @gray-lightest;
-   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
    font-weight: 300;
    font-size: 14px;
    line-height: 1.286;
@@ -83,13 +83,17 @@ a {
         .navbar-brand {
             float: none;
             padding: 0;
-            background: url(../img/thinkup-logo.svg);
-            background-size: 79px 20px;
             text-indent: 100%;
             display: block;
-            width: 79px;
-            margin: 8px auto 6px;
+            background: url(../img/thinkup-logo-header@2x.png);
+            background-size: 70px 19px;
+            width: 70px;
+            height: 19px;
+            margin: 9px auto 6px;
             overflow: hidden;
+            font-size: 0;
+            line-height: 0;
+
         }
 
         .menu-trigger {
@@ -98,7 +102,7 @@ a {
             font-size: 22px;
             line-height: 20px;
             color: @blue-darker;
-            top: 4px;
+            top: 7px;
             left: 10px;
             background: transparent;
             border: 0;
@@ -157,25 +161,37 @@ body.menu-off {
                     width: 20px;
                     text-align: center;
                     line-height: 1;
-                    color: @blue-dark;
+                    color: @gray;
+
+                    &:after {
+                        float: left;
+                        margin-right: 4px;
+                        font: 13px/1.538 "tablet-gothic-wide", helvetica, arial, sans-serif;
+                    }
                 }
 
                 &.inactive .icon {
                     width: auto;
                     text-align: right;
                     margin-right: 1px;
+                    color: @blue-dark;
 
                     &:after {
-                        float: left;
-                        margin-right: 4px;
                         color: @blue-dark;
                         content: "Add your account!";
-                        font: 13px/1.538 "tablet-gothic-wide", helvetica, arial, sans-serif;
-                    }                 
+                    }
                 }
 
                 &.error .icon {
                     color: @red-warning;
+                    width: auto;
+                    text-align: right;
+                    margin-right: 1px;
+
+                    &:after {
+                        color: @red-warning;
+                        content: "Account error";
+                    }
                 }
             }
 
@@ -204,10 +220,21 @@ body.menu-off {
                     bottom: -25px;
                     right: 10px;
                 }
+
+                a {
+                    color: @blue-dark;
+                    padding: 0;
+                    display: inline;
+
+                    &:hover {
+                        background: inherit;
+                    }
+                }
             }
         }
     }
 }
+
 
 .app-message {
     position: fixed;
@@ -290,9 +317,11 @@ body.account {
 }
 
 .footer {
+    margin-top: 14px;
     width: 100%;
     border-top: 1px solid @gray-lighter;
     padding: 14px 0 28px;
+    .clearfix;
 
     .footer-container {
         width: 100%;
@@ -300,12 +329,52 @@ body.account {
         min-width: 320px;
         padding: 0 5px;
         margin: 0 auto;
+        color: @gray-light;
+        font-size: 13px;
+        line-height: 1.385;
 
-        p {
-            margin: 0;
-            color: @gray-light;
-            font-size: 13px;
-            line-height: 1.385;
+        .copyright-privacy, .motto {
+          float: left;
+          width: 50%;
+          margin-bottom: 18px;
+        }
+
+        .privacy {
+          display: block;
+          color: @blue;
+          text-decoration: none;
+        }
+
+        .motto {
+          text-align: right;
+        }
+
+        .follow-wrapper {
+            clear: both;
+            text-align: center;
+
+            .follow-links {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                display: inline;
+
+                li {
+                    display: inline-block;
+                    margin: 0 20px;
+
+                    a {
+                    color: @blue;
+                    text-decoration: none;
+                    font-size: 20px;
+                    line-height: 20px;
+
+                        &:hover {
+                            color: @blue-dark;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -322,6 +391,14 @@ body.app-message-visible {
             padding-top: 160px;
         }
     }
+}
+
+.no-insights {
+    min-width: 310px;
+    max-width: 450px;
+    width: 100%;
+    margin: 40px auto;
+    text-align: center;
 }
 
 .stream {
@@ -405,7 +482,7 @@ body.app-message-visible {
 @purple: #B78EE4;
 @purple-dark: #6F36B7;
 
-.insight-colors(@border-top: @red-dark, @headline-bgd: @red, 
+.insight-colors(@border-top: @red-dark, @headline-bgd: @red,
     @body-bgd: #fff, @footer-borders: @gray-lighter) {
     background: @headline-bgd;
     border-top-color: @border-top;
@@ -564,14 +641,18 @@ body.app-message-visible {
 
             .share-services {
                 .clearfix;
-                width: 247px;
-                padding: 0 30px;
+                width: 232px;
+                padding: 0 25px;
                 margin: 0 auto;
 
                 .share-service {
                     list-style: none;
                     float: left;
-                    margin: 0 15px;
+                    margin: 0 20px;
+
+                    .fa-link {
+                        .rotate(90deg);
+                    }
                 }
             }
 
@@ -590,7 +671,7 @@ body.app-message-visible {
 
 .insight-hero {
     .panel-heading {
-        padding: 5px 10px 15px; 
+        padding: 5px 10px 15px;
 
         .panel-title {
             font-size: 24px;
@@ -787,7 +868,7 @@ body.app-message-visible {
             .big-number-label {
                 display: inline-block;
                 font-size: 4em;
-            }            
+            }
         }
     }
 
@@ -872,7 +953,7 @@ body.app-message-visible {
         .panel-body {
             .panel-body-inner {
                 padding: 10px;
-            }            
+            }
         }
     }
 
@@ -884,7 +965,7 @@ body.app-message-visible {
 
 // Tablet
 
-@media (min-width: 540px) {    
+@media (min-width: 540px) {
     .stream {
         padding: 0 10px;
 
@@ -893,6 +974,26 @@ body.app-message-visible {
             margin: 0 auto;
         }
     }
+
+    .footer {
+        .footer-container {
+            .copyright-privacy, .motto {
+              width: 20%;
+              min-width: 150px;
+              margin-bottom: 0;
+            }
+
+            .motto {
+                float: right;
+            }
+
+            .follow-wrapper {
+                clear: none;
+                text-align: center;
+            }
+        }
+    }
+
 
     .insight {
         .clearfix;

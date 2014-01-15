@@ -1,13 +1,13 @@
 <?php
 /*
- Plugin Name: Weekly Bests
- Description: Your most popular posts from last week.
- When: Thursdays
+ Plugin Name: Weekly Graph
+ Description: Show a simple chart of your last week's stats.
+ When: Wednesdays
  */
 
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/insights/weeklybests.php
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/weeklygraph.php
  *
  * Copyright (c) 2013 Nilaksh Das, Gina Trapani
  *
@@ -31,13 +31,13 @@
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
-class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
+class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('weekly_best', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
+        if (self::shouldGenerateInsight('weekly_graph', $instance, $insight_date='today',
+        $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
             $insight_text = '';
@@ -60,20 +60,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $headline = "This was $this->username's ".$this->terms->getNoun('post') . " of the week.";
-                $insight_text = $this->username." earned ";
-                foreach ($best_popularity_params as $key => $value) {
-                    if ($value && $key != 'index') {
-                        $insight_text .= "<strong>".$value." ".$this->terms->getNoun($key, ($value > 1))."</strong>, ";
-                    }
-                }
-
-                $insight_text = rtrim($insight_text, ", ");
-                $insight_text .= '.';
-                if (!(strpos($insight_text, ',') === false)) {
-                    $insight_text = substr_replace($insight_text, " and",
-                    strpos($insight_text, strrchr($insight_text, ',')), 1);
-                }
+                $headline = "This week's key stats for $this->username's "
+                    .$this->terms->getNoun('post', InsightTerms::PLURAL) . ".";
 
                 $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
                 $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
@@ -82,7 +70,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($hot_posts_data)) {
                     $my_insight = new Insight();
 
-                    $my_insight->slug = 'weekly_best'; //slug to label this insight's content
+                    $my_insight->slug = 'weekly_graph'; //slug to label this insight's content
                     $my_insight->instance_id = $instance->id;
                     $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
                     $my_insight->headline = $headline; // or just set a string like 'Ohai';
@@ -90,7 +78,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->header_image = $header_image;
                     $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                     $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                    $my_insight->setPosts($most_popular_post);
+                    $my_insight->setPosts(array($hot_posts_data));
 
                     $this->insight_dao->insertInsight($my_insight);
                 }
@@ -102,4 +90,4 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('WeeklyBestsInsight');
+$insights_plugin_registrar->registerInsightPlugin('WeeklyGraphInsight');

@@ -53,7 +53,6 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
             arsort($response_count);
             $response_factor = each($response_count);
-            $insight_text = '';
 
             if ($response_factor['value']) {
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -69,7 +68,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                ."</strong> every <strong>".$time_str."</strong> over the last week.";
+                ."</strong> every <strong>".$time_str."</strong> this week.";
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
@@ -90,6 +89,11 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                         . "the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }
+                }
+
+                if (!isset($insight_text)) {
+                    $insight_text = 'If you ' . $this->terms->getVerb('posted') . ' once every waking hour, that would'
+                        . 'be roughly 120 times a week.';
                 }
 
                         //Instantiate the Insight object
