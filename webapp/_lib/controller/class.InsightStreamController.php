@@ -157,8 +157,10 @@ class InsightStreamController extends ThinkUpController {
         if (isset($insights) && sizeof($insights) > 0) {
             if (sizeof($insights) == (self::PAGE_INSIGHTS_COUNT+1)) {
                 $this->addToView('next_page', $page+1);
-                $this->addToView('last_page', $page-1);
                 array_pop($insights);
+            }
+            if ($page != 1) {
+                $this->addToView('last_page', $page-1);
             }
             $this->addToView('insights', $insights);
         } else {
