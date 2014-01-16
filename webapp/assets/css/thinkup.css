@@ -1125,6 +1125,10 @@ body.app-message-visible.account .container {
 .tweet .tweet-actions .tweet-action:hover {
   color: #46bcff;
 }
+.tweet .tweet-actions .tweet-action-permalink {
+  font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 12px;
+}
 .tweet-without-photo .tweet-photo {
   display: none;
   margin-right: 0;

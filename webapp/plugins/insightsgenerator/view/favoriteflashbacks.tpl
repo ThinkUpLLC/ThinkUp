@@ -1,2 +1,1 @@
-
-{include file=$tpl_path|cat:"_posts.tpl" icon="heart"}
+{include file=$tpl_path|cat:"_posts.tpl" posts=$i->related_data.posts}
