@@ -44,7 +44,14 @@
 
         </ul>
 
+        {foreach from=$instances key=iid item=i name=foo}
+            {if isset($i->auth_error)}
+              <p class="text-danger">{$i->network_username}'s' Facebook connection expired.  To fix it, <a href="{$fb_reconnect_link}">re-connect</a>.</p>
+            {/if}
+        {/foreach}
+
         <p class="accounts-privacy">ThinkUp will never post without your permission.</p>
+
 
         {include file="_usermessage.tpl" field="membership_cap"}
 
