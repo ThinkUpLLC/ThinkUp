@@ -33,7 +33,7 @@
         {if $oauthorize_link}
           <li class="list-group-item list-accounts-item-add"><a href="{$oauthorize_link}">
             <div class="account-label">
-              {if count($owner_instances) eq 0 }Get started by adding a Twitter account{else}Add another account&hellip;{/if}
+              Connect a Twitter account
             </div>
             <div class="account-action account-action-add">
               <i class="fa fa-plus-circle icon"></i>
@@ -43,11 +43,10 @@
 
         </ul>
 
-        <!--
-        <p class="accounts-note">As a Pro user you can add more than one account.</p>
-        -->
-
         <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
+
+        {include file="_usermessage.tpl" field="membership_cap"}
+
       </div>
     </div>
 

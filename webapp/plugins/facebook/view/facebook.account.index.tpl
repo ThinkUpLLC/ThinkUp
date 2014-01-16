@@ -17,7 +17,6 @@
             </div>
 
             <div class="account-action account-action-delete">
-              {if $user_is_admin}
               <form method="post" action="{$site_root_path}account/?p=facebook"
                 name="{$i->network_username}-delete">
               <input type="hidden" name="instance_id" value="{$i->id}">
@@ -28,7 +27,6 @@
                 <i class="fa fa-minus-circle icon"></i>
               </a>
               </form>
-              {/if}
             </div>
           </li>
           {/foreach}
@@ -36,7 +34,7 @@
         {if $fbconnect_link}
           <li class="list-group-item list-accounts-item-add"><a href="{$fbconnect_link}">
             <div class="account-label">
-              {if count($owner_instances) eq 0 }Get started by adding a Facebook account{else}Add another account&hellip;{/if}
+              {if count($owner_instances) eq 0 }Connect a Facebook account{else}Add another account&hellip;{/if}
             </div>
             <div class="account-action account-action-add">
               <i class="fa fa-plus-circle icon"></i>
@@ -46,9 +44,10 @@
 
         </ul>
 
-        <!-- <p class="accounts-note">As a Pro user you can add more than one account.</p> -->
-
         <p class="accounts-privacy">ThinkUp will never post without your permission.</p>
+
+        {include file="_usermessage.tpl" field="membership_cap"}
+
       </div>
     </div>
 
