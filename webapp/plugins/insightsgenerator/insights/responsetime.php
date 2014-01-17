@@ -80,40 +80,39 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     substr(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response), 2)
                     : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
+                    $tachy_markup = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; "
+                    ."color: #ddd;\"></i> That's ";
+
                     if ($last_fri_time_per_response < $time_per_response) {
-                        $insight_text = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; color: #ddd;\"></i> That's slower than "
-                        . "the previous week's average of 1 "
+                        $insight_text .= $tachy_markup . "slower than the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     } elseif ($last_fri_time_per_response > $time_per_response) {
-                        $insight_text .= "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; color: #ddd;\"></i> That's faster than "
-                        . "the previous week's average of 1 "
+                        $insight_text .= $tachy_markup . "faster than the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }
                 }
 
                 if (!isset($insight_text)) {
-                    $insight_text = 'If you ' . $this->terms->getVerb('posted') . ' once every waking hour, that would'
-                        . 'be roughly 120 times a week.';
+                    $insight_text = 'If you ' . $this->terms->getVerb('posted') .
+                        ' once every waking hour, that would be roughly 120 times a week.';
                 }
 
-                        //Instantiate the Insight object
+                //Instantiate the Insight object
+                $my_insight = new Insight();
 
-                        $my_insight = new Insight();
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'response_time'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight
 
-                        //REQUIRED: Set the insight's required attributes
-                        $my_insight->instance_id = $instance->id;
-                        $my_insight->slug = 'response_time'; //slug to label this insight's content
-                        $my_insight->date = $this->insight_date; //date of the data this insight applies to
-                        $my_insight->headline = $headline;
-                        $my_insight->text = $insight_text;
-                        $my_insight->header_image = '';
-                        $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                        $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-
-                        $this->insight_dao->insertInsight($my_insight);
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
