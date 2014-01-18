@@ -38,6 +38,7 @@
 <ul class="nav nav-tabs" id="profiler-tabs">
   <li class="active"><a href="#log" data-toggle="tab">Query Log</a></li>
   {if $i}<li><a href="#insights" data-toggle="tab">Insights</a></li>{/if}
+  <li><a href="#smarty" data-toggle="tab">Smarty</a></li>
 </ul>
 
 	<div class="tab-content" style="background-color: white;
@@ -78,10 +79,13 @@
 			<pre class="profiler-insights-data" style="background-color: transparent; border: none;">
 {$insights|@print_r}
 			</pre>
-			{debug}
 		</div>
 
 {/if}
+
+		<div class="tab-pane" id="smarty">
+			{debug}
+		</div>
 
 	</div>
 
