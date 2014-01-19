@@ -61,51 +61,67 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         'network_username'=>'mary', 'network'=>'twitter', 'network_viewer_id'=>'10',
         'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
         'posts_per_week'=>77));
+        // Facebook public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'13',
+        'network_username'=>'spot', 'network'=>'facebook', 'network_viewer_id'=>'10',
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
+        'posts_per_week'=>77));
 
         //owner instances
         $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 1, 'owner_id'=>1) );
         $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 2, 'owner_id'=>1) );
         $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 3, 'owner_id'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 4, 'owner_id'=>1) );
 
         $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 1, 'owner_id'=>2) );
 
         //public insights
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'1', 'prefix'=>'Booyah!', 'text'=>'Hey these are some local followers!',
+        'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Hey these are some local followers!',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'localfollowers', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfUsers(), 'header_image'=>'http://example.com/header_image.gif'));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'1', 'prefix'=>'Booyah!', 'text'=>'This is a list of posts!',
+        'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'This is a list of posts!',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'favoriteflashbacks', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfPosts()));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'3', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
+        'instance_id'=>'3', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'3', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now));
+        'instance_id'=>'3', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts()));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'4', 'headline'=>'Booyah Facebook!', 'text'=>'This is Spot\'s Facebook post!',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
+        'time_generated'=>$time_now, 'related_data'=>self::getRelatedDataListOfPosts('facebook')));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
+        'instance_id'=>'4', 'headline'=>'Biggest Facebook fans!', 'text'=>'This is a list of users!',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'localfollowers', 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfUsers('facebook')));
 
         //private insights
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
+        'instance_id'=>'2', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
         'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
         'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'prefix'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
+        'instance_id'=>'2', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
         'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
         'time_generated'=>$time_now));
         return $builders;
     }
 
-    private function getRelatedDataListOfUsers() {
+    private function getRelatedDataListOfUsers($network='twitter') {
         $users = array();
         $i = 3;
         while ($i > 0) {
-            $user_array = array('id'=>$i, 'user_id'=>$i, 'user_name'=>'ginatrapani'.$i, 'full_name'=>'Gina Trapani',
-            'avatar'=>'http://example.com/avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger',
-            'url'=>'http://ginatrapani.org', 'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000,
-            'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc102');
+            $user_array = array('id'=>$i, 'user_id'=>$network.'-'.$i, 'user_name'=>'ginatrapani'.$i,
+            'full_name'=>'Gina Trapani', 'avatar'=>'http://example.com/avatar.jpg', 'location'=>'NYC',
+            'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_verified'=>1, 'is_protected'=>0,
+            'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>$network,
+            'last_post_id'=>'abc102');
             $user = new User($user_array, 'Test Insert');
             $users[] = $user;
             $i--;
@@ -115,17 +131,17 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         return serialize($related_data);
     }
 
-    private function getRelatedDataListOfPosts() {
+    private function getRelatedDataListOfPosts($network='twitter') {
         $posts = array();
         $i = 3;
         while ($i > 0) {
-            $post = new Post(array('id'=>1, 'author_user_id'=>'20', 'author_username'=>'no one',
+            $post = new Post(array('id'=>1, 'author_user_id'=>$network.'-20', 'author_username'=>'UserAt'.$network,
             'author_fullname'=>"No One", 'author_avatar'=>'http://example.com/yo.jpg', 'source'=>'TweetDeck',
             'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
             'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
             'retweet_count_api' =>'', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
             'post_id'=>'9021481076', 'is_protected'=>1, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-            'post_text'=>'I like cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
+            'post_text'=>'I like cookies', 'network'=>$network, 'geo'=>'', 'place'=>'', 'location'=>'',
             'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
             $posts[] = $post;
             $i--;
@@ -332,6 +348,22 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         //don't show no access message
         $this->assertNoPattern('/You don&#39;t have rights to view this service user/', $results);
         $this->debug($results);
+    }
+
+    public function testOfTwitterAndFacebookLinksAndUsernames() {
+        $builders = self::buildPublicAndPrivateInsights();
+        $this->simulateLogin('tuuser2@example.com', false);
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->debug($results);
+        //Assert Twitter user never links to Facebook
+        $this->assertNoPattern('/twitter.com/intent/user?user_id=facebook-20/', $results);
+        //Assert Facebook user never links to Twitter
+        $this->assertNoPattern("/facebook.com/twitter-20/", $results);
+        //Assert Twitter username is preceded by an @ sign
+        $this->assertPattern("/@UserAttwitter/", $results);
+        //Assert Facebook username is not preceded by an @ sign
+        $this->assertNoPattern("/@UserAtfacebook/", $results);
     }
 
     public function testOfHTTPSWithInsecureContent() {
