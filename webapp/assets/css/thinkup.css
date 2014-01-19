@@ -1,6 +1,6 @@
 body.settings .container {
   width: 100%;
-  padding: 45px 10px;
+  padding: 45px 10px 0;
   margin: 0 auto;
 }
 body.settings .container header {
@@ -17,7 +17,8 @@ body.settings .container header h1 {
 body.settings .container header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
-  line-height: 1.5714285714285714;
+  margin-top: 4px;
+  line-height: 1.2857142857142858;
   font-weight: 300;
   text-align: center;
   margin: 0;
@@ -97,6 +98,7 @@ body.settings .container .form-horizontal .form-group.form-group-ok:before {
   color: #239a37;
 }
 body.settings .container .form-horizontal .form-group .help-block {
+  margin: 0;
   text-align: left;
   border-bottom: 1px solid #dbdbdb;
 }
@@ -163,7 +165,7 @@ body.settings .container .form-horizontal textarea.form-control {
 }
 body.settings .container .form-horizontal .help-block {
   padding: 4px 10px;
-  margin: 0;
+  margin: 4px 0 0;
   text-align: center;
   color: #b3b3b3;
   font-size: 12px;
@@ -239,6 +241,7 @@ body.settings .container .form-horizontal .picker select:focus {
 body.settings .container .list-group {
   border-top: 1px solid #b9c7ce;
   margin-top: 20px;
+  margin-bottom: 14px;
 }
 body.settings .container .list-group .list-group-item {
   border-radius: 0;
@@ -259,8 +262,12 @@ body.settings .container .list-group .list-group-item .list-group-item-value {
   margin-left: 130px;
   font-weight: 600;
 }
+body.settings .container .list-accounts .list-group-item {
+  overflow: hidden;
+}
 body.settings .container .list-accounts .list-group-item .account-label {
   font-weight: 400;
+  margin-left: 0;
 }
 body.settings .container .list-accounts .list-group-item .account-label .account-photo {
   float: left;
@@ -275,10 +282,79 @@ body.settings .container .list-accounts .list-group-item .account-action {
   font-size: 20px;
   line-height: 1;
 }
-body.settings .container .list-accounts .list-group-item .account-action a {
+body.settings .container .list-accounts .list-group-item .account-action-delete {
+  left: -50px;
+  right: auto;
+}
+body.settings .container .list-accounts .list-group-item .account-action-delete a {
   display: block;
   padding: 15px 10px 14px;
   color: #d0021b;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label {
+  position: relative;
+  width: 110px;
+  height: 24px;
+  top: 12px;
+  right: 10px;
+  border-radius: 12px;
+  display: none;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  padding-left: 28px;
+  position: relative;
+  top: -1px;
+  font-weight: 600;
+  font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .icon {
+  -webkit-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  color: #b4eebe;
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  top: 2px;
+  left: 5px;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label:after {
+  position: absolute;
+  content: " ";
+  width: 22px;
+  height: 22px;
+  top: 1px;
+  right: 1px;
+  border-radius: 11px;
+  background: #fff;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio]:checked + .toggle-label {
+  display: block;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio] {
+  position: absolute;
+  opacity: 0;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-public + .toggle-label {
+  background: #4cd764;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label {
+  background: #d0021b;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .text {
+  padding-left: 32px;
+  color: #6b010e;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .icon {
+  color: #6b010e;
+  top: 4px;
+  left: 89px;
+  font-size: 18px;
+}
+body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
+  right: 87px;
 }
 body.settings .container .list-accounts .list-group-item.list-accounts-item-add {
   padding: 0;
@@ -301,14 +377,34 @@ body.settings .container .list-accounts .list-group-item.list-accounts-item-add 
 body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
   color: #595959;
 }
-body.settings .container .form-note {
+body.settings .container .account-buttons {
   text-align: center;
-  margin: 0 16% 20px;
+}
+body.settings .container .account-buttons .btn-account-remove,
+body.settings .container .account-buttons .btn-account-add {
+  margin: 0 0 14px;
+}
+body.settings .container .account-buttons .btn-account-add .icon {
+  margin-right: 10px;
+}
+body.settings .container .form-note,
+body.settings .container .form-notes {
+  text-align: center;
+  padding: 0 5% 14px;
   color: #999999;
 }
-body.settings .container .accounts-privacy {
-  text-align: center;
-  color: #417505;
+body.settings .container .form-notes {
+  border-top: 1px solid #b9c7ce;
+  padding-top: 14px;
+}
+body.settings .container .form-notes .alert,
+body.settings .container .form-notes .alert-info {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #999999;
 }
 body#settings-subscription .form-note .show-section {
   margin-top: 10px;
@@ -344,6 +440,20 @@ body#settings-subscription #form-membership-contact {
 body.account {
   background: #46bcff;
 }
+body.account ::-webkit-input-placeholder {
+  color: #2785d3;
+}
+body.account :-moz-placeholder {
+  /* Firefox 18- */
+  color: #2785d3;
+}
+body.account ::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #2785d3;
+}
+body.account :-ms-input-placeholder {
+  color: #2785d3;
+}
 body.account .navbar-default {
   border-bottom: 0;
   box-shadow: 0 0 0;
@@ -351,16 +461,20 @@ body.account .navbar-default {
   margin: 0;
 }
 body.account .navbar-default .navbar-brand {
-  margin: 62px auto 0;
-  width: 190px;
-  height: 48px;
-  background-size: 190px 48px;
+  margin: 66px auto 0;
+  background-image: url(../img/thinkup-logo-account@2x.png);
+  width: 161px;
+  height: 44px;
+  background-size: 161px 44px;
 }
 body.account .container {
   padding-top: 160px;
 }
 body.account .container header {
   margin-bottom: 45px;
+}
+body.account .container header h2 a {
+  color: #fff;
 }
 body.account .container .form-horizontal fieldset.fieldset-no-header,
 body.account .container .form-horizontal .form-group {
@@ -372,6 +486,12 @@ body.account .container .form-horizontal .control-label {
 body.account .container .form-horizontal .help-block {
   border-color: rgba(49, 135, 209, 0.3);
   color: #3187d1;
+}
+body.account .container .form-horizontal .help-block a {
+  color: #fff;
+}
+body.account .container .form-horizontal .help-block a:hover {
+  text-decoration: underline;
 }
 body.account .container .form-horizontal .btn-submit {
   position: static;
@@ -391,6 +511,28 @@ body.account .container .form-note a {
 }
 body.account .container .form-note a:hover {
   text-decoration: none;
+}
+body.account .footer {
+  border-top-color: #2785d3;
+}
+body.account .footer .footer-container {
+  color: #2785d3;
+}
+body.account .footer .footer-container a {
+  color: #fff;
+}
+body.account .footer .footer-container .follow-wrapper .follow-links li a {
+  color: #2785d3;
+}
+body.error-page .container header h1 {
+  font-size: 180px;
+  line-height: 1;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+body.error-page .container header h1,
+body.error-page .container header h2 {
+  color: #2785d3;
 }
 .fa-override-before:before {
   font-family: FontAwesome;
@@ -1443,6 +1585,15 @@ body.app-message-visible.account .container {
 .btn-default:focus {
   background: #1777ca;
   color: #fff;
+}
+.btn-transparent {
+  background: transparent;
+  color: #2785d3;
+}
+.btn-transparent:hover,
+.btn-transparent:focus {
+  background: transparent;
+  color: #46bcff;
 }
 .btn-see-all {
   width: 102%;
