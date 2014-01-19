@@ -292,11 +292,48 @@
     $("#control-username").on("keyup", function() {
       return checkUsername($(this));
     });
-    return $("body").on("click", ".show-section", function(e) {
+    $("body").on("click", ".show-section", function(e) {
       var $el;
       e.preventDefault();
       $el = $($(this).data("section-selector"));
       if ($el.length) return $el.show();
+    });
+    $(".privacy-toggle .toggle-label").click(function() {
+      var $target_radio, $this, dataString, p, u;
+      $this = $(this);
+      $target_radio = $("#" + $this.data("check-field"));
+      p = $target_radio.val();
+      u = $this.parent().data("id");
+      dataString = ("u=" + u + "&p=" + p + "&csrf_token=") + window.csrf_token;
+      $.ajax({
+        type: "GET",
+        url: window.site_root_path + "account/toggle-public.php",
+        data: dataString,
+        success: function() {
+          $this.removeAttr("checked");
+          $target_radio.attr("checked", "checked");
+          return window.location = window.site_root_path + ("account?p=" + ($this.parent().data("network")));
+        }
+      });
+      return false;
+    });
+    return $(".btn-account-remove").click(function() {
+      var $this, action_left, action_speed, label_margin, label_speed, text, vis;
+      $this = $(this);
+      vis = !$this.hasClass("visible");
+      label_margin = vis ? 37 : 0;
+      label_speed = vis ? 250 : 500;
+      action_speed = vis ? 500 : 250;
+      action_left = vis ? 0 : -50;
+      text = vis ? $(this).data("label-visible") : $(this).data("label-hidden");
+      $(".list-accounts-item").find(".account-label").animate({
+        marginLeft: label_margin
+      }, label_speed);
+      $(".list-accounts-item").find(".account-action-delete").animate({
+        left: action_left
+      }, action_speed);
+      $this.text(text);
+      return $this.toggleClass("visible");
     });
   });
 
