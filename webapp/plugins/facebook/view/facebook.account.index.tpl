@@ -4,6 +4,7 @@
       <div class="container">
         <header>
           <h1>Facebook</h1>
+          <h2>Manage accounts and choose which insights everyone (or just you) can see.</h2>
         </header>
 
         <ul class="list-group list-accounts">
@@ -11,9 +12,22 @@
           {foreach from=$instances key=iid item=i name=foo}
           <li class="list-group-item list-accounts-item">
             <div class="account-label">
-              <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
               {if $i->auth_error}<span class="fa fa-warning text-warning" id="facebook-auth-error"></span>{/if}
+              <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
               <a href="{$site_root_path}?u={$i->network_username|urlencode}&amp;n={$i->network|urlencode}">{$i->network_username}</a>
+            </div>
+
+            <div class="account-action account-action-privacy">
+              <div class="privacy-toggle fa-over" data-id="{$i->id}"
+                data-network="{$i->network}" data-network-name="{$i->network_username}">
+                <input type="radio" name="{$i->network_username|replace:" ":"_"}-privacy-toggle-control" value="0"
+                class="field-privacy-private"
+                {if not $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-private" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-private" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-public"><i class="fa fa-lock icon"></i><span class="text">Private</span></label>
+
+                <input type="radio" name="{$i->network_username|replace:" ":"_"}-privacy-toggle-control" value="1"
+                class="field-privacy-public"
+                {if $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-public" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-public" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-private"><i class="fa fa-globe icon"></i><span class="text">Public</span></label>
+              </div>
             </div>
 
             <div class="account-action account-action-delete">
@@ -31,36 +45,39 @@
           </li>
           {/foreach}
         {/if}
-        {if $fbconnect_link}
-          <li class="list-group-item list-accounts-item-add"><a href="{$fbconnect_link}">
-            <div class="account-label">
-              {if count($owner_instances) eq 0 }Connect a Facebook account{else}Add another account&hellip;{/if}
-            </div>
-            <div class="account-action account-action-add">
-              <i class="fa fa-plus-circle icon"></i>
-            </div>
-          </a></li>
-        {/if}
-
         </ul>
+
+        <div class="account-buttons">
+          {if $fbconnect_link}
+            <a class="btn btn-default btn-account-add" href="{$fbconnect_link}"><i class="fa fa-facebook icon"></i>Connect a Facebook account</a>
+          {/if}
+          {if $fbconnect_link and count($instances) > 0}<br>{/if}
+          {if count($instances) > 0 }
+          <button class="btn btn-transparent btn-account-remove"
+          data-label-visible="Cancel account removal" data-label-hidden="Remove an account">Remove an account</button>
+          {/if}
+        </div>
+
+        <div class="form-notes">
+          <p class="accounts-privacy">ThinkUp will never post on your behalf.</p>
+
+          {include file="_usermessage.tpl" field="membership_cap"}
+        </div>
 
         {foreach from=$instances key=iid item=i name=foo}
             {if isset($i->auth_error)}
-              <p class="text-danger">{$i->network_username}'s' Facebook connection expired.  To fix it, <a href="{$fb_reconnect_link}">re-connect</a>.</p>
+              <script>{literal}
+              var app_message = {};
+              app_message.msg = {/literal}"{$i->network_username}’s Facebook connection expired.  To fix it, <a href=\"{$fb_reconnect_link}\">re-connect</a>."{literal};
+              app_message.type = "warning";
+              {/literal}</script>
             {/if}
         {/foreach}
-
-        <p class="accounts-privacy">ThinkUp will never post without your permission.</p>
-
-
-        {include file="_usermessage.tpl" field="membership_cap"}
 
       </div>
     </div>
 
 {else}
-
-
 
 {include file="_usermessage.tpl"}
 

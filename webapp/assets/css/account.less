@@ -3,6 +3,22 @@
 body.account {
   background: @blue;
 
+  ::-webkit-input-placeholder {
+     color: @blue-darker;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+     color: @blue-darker;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+     color: @blue-darker;
+  }
+
+  :-ms-input-placeholder {
+     color: @blue-darker;
+  }
+
   .navbar-default {
     border-bottom: 0;
     box-shadow: 0 0 0;
@@ -10,10 +26,11 @@ body.account {
     margin: 0;
 
     .navbar-brand {
-      margin: 62px auto 0;
-      width: 190px;
-      height: 48px;
-      background-size: 190px 48px;
+      margin: 66px auto 0;
+      background-image: url(../img/thinkup-logo-account@2x.png);
+      width: 161px;
+      height: 44px;
+      background-size: 161px 44px;
     }
   }
 
@@ -22,6 +39,12 @@ body.account {
 
     header {
       margin-bottom: 45px;
+
+      h2 {
+        a {
+          color: #fff;
+        }
+      }
     }
 
     .form-horizontal {
@@ -36,6 +59,14 @@ body.account {
       .help-block {
         border-color: fade(@blue-border, 30%);
         color: @blue-border;
+
+        a {
+          color: #fff;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
 
       .btn-submit {
@@ -60,6 +91,40 @@ body.account {
         &:hover {
           text-decoration: none;
         }
+      }
+    }
+  }
+
+  .footer {
+    border-top-color: @blue-darker;
+
+    .footer-container {
+      color: @blue-darker;
+
+      a {
+        color: #fff;
+      }
+
+      .follow-wrapper .follow-links li a {
+        color: @blue-darker;
+      }
+    }
+  }
+
+}
+
+body.error-page {
+  .container {
+    header {
+      h1 {
+        font-size: 180px;
+        line-height: 1;
+        font-weight: 400;
+        margin-bottom: 20px;
+      }
+
+      h1,h2 {
+        color: @blue-darker;
       }
     }
   }
