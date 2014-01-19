@@ -1,7 +1,7 @@
 body.settings {
   .container {
     width: 100%;
-    padding: 45px 10px;
+    padding: 45px 10px 0;
     margin: 0 auto;
 
     header {
@@ -19,7 +19,8 @@ body.settings {
       h2 {
         font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
         font-size: 14px;
-        line-height: (22/14);
+        margin-top: 4px;
+        line-height: (18/14);
         font-weight: 300;
         text-align: center;
         margin: 0;
@@ -108,6 +109,7 @@ body.settings {
         }
 
         .help-block {
+          margin: 0;
           text-align: left;
           border-bottom: 1px solid @gray-lighter;
         }
@@ -175,7 +177,7 @@ body.settings {
 
       .help-block {
         padding: 4px 10px;
-        margin: 0;
+        margin: 4px 0 0;
         text-align: center;
         color: lighten(@gray-light,10%);
         font-size: 12px;
@@ -267,6 +269,7 @@ body.settings {
     .list-group {
       border-top: 1px solid @blue-pale;
       margin-top: 20px;
+      margin-bottom: 14px;
 
       .list-group-item {
         border-radius: 0;
@@ -280,7 +283,6 @@ body.settings {
 
         .list-group-item-label {
           float: left;
-
           max-width: 130px;
         }
 
@@ -293,8 +295,11 @@ body.settings {
 
     .list-accounts {
       .list-group-item {
+        overflow: hidden;
+
         .account-label {
           font-weight: 400;
+          margin-left: 0;
 
           .account-photo {
             float: left;
@@ -310,12 +315,98 @@ body.settings {
           right: 0;
           font-size: 20px;
           line-height: 1;
+        }
+
+        .account-action-delete {
+          left: -50px;
+          right: auto;
 
           a {
             display: block;
             padding: 15px 10px 14px;
             color: @red-warning;
           }
+        }
+        .account-action-privacy {
+          .privacy-toggle {
+
+            .toggle-label {
+              position: relative;
+              width: 110px;
+              height: 24px;
+              top: 12px;
+              right: 10px;
+              border-radius: 12px;
+              display: none;
+
+              .text {
+                color: #fff;
+                font-size: 12px;
+                line-height: 1;
+                padding-left: 28px;
+                position: relative;
+                top: -1px;
+                font-weight: 600;
+                font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+              }
+
+              .icon {
+                -webkit-transition: all 100ms ease-in;
+                transition: all 100ms ease-in;
+                color: lighten(@green-success, 25%);
+                position: absolute;
+                font-size: 20px;
+                line-height: 1;
+                top: 2px;
+                left: 5px;
+              }
+
+              &:after {
+                position: absolute;
+                content: " ";
+                width: 22px;
+                height: 22px;
+                top: 1px;
+                right: 1px;
+                border-radius: 11px;
+                background: #fff;
+              }
+            }
+
+            input[type=radio]:checked + .toggle-label {
+                display: block;
+            }
+
+            input[type=radio] {
+              position: absolute;
+              opacity: 0;
+            }
+
+            .field-privacy-public + .toggle-label {
+               background: @green-success;
+            }
+
+            .field-privacy-private + .toggle-label {
+               background: @red-warning;
+
+               .text {
+                padding-left: 32px;
+                color: darken(@red-warning, 20%);
+               }
+
+               .icon {
+                color: darken(@red-warning, 20%);
+                top: 4px;
+                left: 89px;
+                font-size: 18px;
+               }
+
+               &:after {
+                right: 87px;
+               }
+            }
+          }
+
         }
 
         &.list-accounts-item-add {
@@ -344,15 +435,38 @@ body.settings {
       }
     }
 
-    .form-note {
+    .account-buttons {
       text-align: center;
-      margin: 0 16% 20px;
+
+      .btn-account-remove, .btn-account-add {
+        margin: 0 0 14px;
+      }
+
+      .btn-account-add {
+        .icon {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .form-note, .form-notes {
+      text-align: center;
+      padding: 0 5% 14px;
       color: @gray-light;
     }
 
-    .accounts-privacy {
-      text-align: center;
-      color: @green-success-darker;
+    .form-notes {
+      border-top: 1px solid @blue-pale;
+      padding-top: 14px;
+
+      .alert, .alert-info {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: @gray-light;
+      }
     }
   }
 }

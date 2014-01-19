@@ -48,7 +48,7 @@ setActiveDateGroup = ->
     # Tracks if any of our date markers are active
     anyActive = false
     $(".date-group").each (i) ->
-      # Is the top of the screen inside a date group? 
+      # Is the top of the screen inside a date group?
       # The 45px is to account for the fixed hehader
       if $(@).offset().top < $(window).scrollTop() + wt.navHeight < $(@).data("scroll-bottom") - 14
         anyActive = true
@@ -259,3 +259,34 @@ $ ->
     e.preventDefault()
     $el = $($(@).data("section-selector"))
     if $el.length then $el.show()
+
+  $(".privacy-toggle .toggle-label").click ->
+    $this = $(@)
+    $target_radio = $("#"+ $this.data("check-field"))
+    p = $target_radio.val()
+    u = $this.parent().data("id")
+    dataString = "u=#{u}&p=#{p}&csrf_token=" + window.csrf_token
+    $.ajax({
+      type: "GET"
+      url: window.site_root_path + "account/toggle-public.php"
+      data: dataString
+      success: ->
+        $this.removeAttr "checked"
+        $target_radio.attr "checked", "checked"
+        window.location = window.site_root_path + "account?p=#{$this.parent().data("network")}"
+    })
+    return false
+
+  $(".btn-account-remove").click ->
+    $this = $(@)
+    vis = not $this.hasClass "visible"
+    label_margin = if vis then 37 else 0
+    label_speed  = if vis then 250 else 500
+    action_speed = if vis then 500 else 250
+    action_left  = if vis then 0 else -50
+    text = if vis then $(@).data("label-visible") else $(@).data("label-hidden")
+
+    $(".list-accounts-item").find(".account-label").animate({marginLeft: label_margin}, label_speed)
+    $(".list-accounts-item").find(".account-action-delete").animate({left: action_left}, action_speed)
+    $this.text text
+    $this.toggleClass "visible"
