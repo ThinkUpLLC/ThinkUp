@@ -23,6 +23,9 @@
 @gray-light: #999;
 @gray: #666;
 
+@link-color: @blue-darker;
+@link-hover-color: @blue;
+
 .fa-override-before {
     &:before {
       font-family: FontAwesome;
@@ -50,10 +53,10 @@ strong {
 }
 
 a {
-    color: @blue-darker;
+    color: @link-color;
 
     &:hover {
-        color: @blue;
+        color: @link-hover-color;
     }
 }
 
@@ -973,6 +976,16 @@ body.app-message-visible {
     &:hover, &:focus {
         background: lighten(@blue-action, 10%);
         color: #fff;
+    }
+}
+
+.btn-transparent {
+    background: transparent;
+    color: @link-color;
+
+    &:hover, &:focus {
+        background: transparent;
+        color: @link-hover-color;
     }
 }
 
