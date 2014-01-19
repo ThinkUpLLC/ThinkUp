@@ -14,6 +14,11 @@
               <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
               {if $i->auth_error}<span class="fa fa-warning text-warning" id="facebook-auth-error"></span>{/if}
               <a href="{$site_root_path}?u={$i->network_username|urlencode}&amp;n={$i->network|urlencode}">{$i->network_username}</a>
+              <a href="" class=" {if $i->is_public}btnPriv text-success{else}btnPub text-danger{/if}"
+                id="{$i->id}">
+                <i class="fa {if $i->is_public}fa-globe{else}fa-lock{/if} icon" id="icon-{$i->id}"></i>
+              </a>
+
             </div>
 
             <div class="account-action account-action-delete">
@@ -57,6 +62,58 @@
 
       </div>
     </div>
+  <script type="text/javascript">
+    var show_plugin = {if $force_plugin}true{else}false{/if};
+    {literal}
+  $(function() {
+      $(".btnPub").click(function() {
+        var element = $(this);
+        var u = element.attr("id");
+        var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
+        $.ajax({
+          type: "GET",
+          url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+          data: dataString,
+          success: function() {
+            $("#"+ u).toggleClass("btnPub");
+            $("#"+ u).toggleClass("btnPriv");
+            $("#"+ u).toggleClass("text-danger");
+            $("#"+ u).toggleClass("text-success");
+            $("#icon-"+ u).toggleClass("fa-lock");
+            $("#icon-"+ u).toggleClass("fa-globe");
+            $('#privacy-text-' + u).html("Everyone can see insights").hide().fadeIn(1500, function() {
+              $('#privacy-text-' + u);
+            });
+          }
+        });
+        return false;
+      });
+
+      $(".btnPriv").click(function() {
+        var element = $(this);
+        var u = element.attr("id");
+        var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
+        $.ajax({
+          type: "GET",
+          url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+          data: dataString,
+          success: function() {
+            $("#"+ u).toggleClass("btnPub");
+            $("#"+ u).toggleClass("btnPriv");
+            $("#"+ u).toggleClass("text-danger");
+            $("#"+ u).toggleClass("text-success");
+            $("#icon-"+ u).toggleClass("fa-lock");
+            $("#icon-"+ u).toggleClass("fa-globe");
+            $('#privacy-text-' + u).html("Only I can see insights").hide().fadeIn(1500, function() {
+              $('#privacy-text-' + u);
+            });
+          }
+        });
+        return false;
+      });
+    });
+    {/literal}
+  </script>
 
 {else}
 

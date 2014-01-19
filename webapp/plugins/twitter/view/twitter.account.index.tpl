@@ -13,10 +13,14 @@
             <div class="account-label">
               <img src="http://avatars.io/twitter/{$i->network_username}" class="account-photo img-circle">
               <a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a>
+              <a href="" class=" {if $i->is_public}btnPriv text-success{else}btnPub text-danger{/if}"
+                id="{$i->id}">
+                <i class="fa {if $i->is_public}fa-globe{else}fa-lock{/if} icon" id="icon-{$i->id}"></i>
+              </a>
             </div>
             <div class="account-action account-action-delete">
               <form method="post" action="{$site_root_path}account/?p=twitter"
-                name="{$i->network_username}-delete">
+                name="{$i->network_username}-delete" class="">
               <input type="hidden" name="instance_id" value="{$i->id}">
               <input type="hidden" name="action" value="Delete">
               {insert name="csrf_token"}
@@ -26,7 +30,6 @@
               </a>
               </form>
             </div>
-
           </li>
           {/foreach}
         {/if}
@@ -49,7 +52,58 @@
 
       </div>
     </div>
+<script type="text/javascript">
+  var show_plugin = {if $force_plugin}true{else}false{/if};
+  {literal}
+$(function() {
+    $(".btnPub").click(function() {
+      var element = $(this);
+      var u = element.attr("id");
+      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+        data: dataString,
+        success: function() {
+          $("#"+ u).toggleClass("btnPub");
+          $("#"+ u).toggleClass("btnPriv");
+          $("#"+ u).toggleClass("text-danger");
+          $("#"+ u).toggleClass("text-success");
+          $("#icon-"+ u).toggleClass("fa-lock");
+          $("#icon-"+ u).toggleClass("fa-globe");
+          $('#privacy-text-' + u).html("Everyone can see insights").hide().fadeIn(1500, function() {
+            $('#privacy-text-' + u);
+          });
+        }
+      });
+      return false;
+    });
 
+    $(".btnPriv").click(function() {
+      var element = $(this);
+      var u = element.attr("id");
+      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+        data: dataString,
+        success: function() {
+          $("#"+ u).toggleClass("btnPub");
+          $("#"+ u).toggleClass("btnPriv");
+          $("#"+ u).toggleClass("text-danger");
+          $("#"+ u).toggleClass("text-success");
+          $("#icon-"+ u).toggleClass("fa-lock");
+          $("#icon-"+ u).toggleClass("fa-globe");
+          $('#privacy-text-' + u).html("Only I can see insights").hide().fadeIn(1500, function() {
+            $('#privacy-text-' + u);
+          });
+        }
+      });
+      return false;
+    });
+  });
+  {/literal}
+</script>
 {else}
 
 
