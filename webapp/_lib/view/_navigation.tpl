@@ -33,7 +33,7 @@
 
   {if isset($logged_in_user)}
         <li class="user-info logged-in">
-          <img src="http://www.gravatar.com/avatar/{$logged_in_user|lower|md5}" class="user-photo img-circle">
+          <img src="https://www.gravatar.com/avatar/{$logged_in_user|lower|md5}" class="user-photo img-circle">
           <div class="current-user">
             <div class="label">Logged in as</div>
             {$logged_in_user}
