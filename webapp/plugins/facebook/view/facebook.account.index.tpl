@@ -81,9 +81,7 @@
             $("#"+ u).toggleClass("text-success");
             $("#icon-"+ u).toggleClass("fa-lock");
             $("#icon-"+ u).toggleClass("fa-globe");
-            $('#privacy-text-' + u).html("Everyone can see insights").hide().fadeIn(1500, function() {
-              $('#privacy-text-' + u);
-            });
+            location.reload();
           }
         });
         return false;
@@ -104,9 +102,7 @@
             $("#"+ u).toggleClass("text-success");
             $("#icon-"+ u).toggleClass("fa-lock");
             $("#icon-"+ u).toggleClass("fa-globe");
-            $('#privacy-text-' + u).html("Only I can see insights").hide().fadeIn(1500, function() {
-              $('#privacy-text-' + u);
-            });
+            location.reload();
           }
         });
         return false;
@@ -116,8 +112,6 @@
   </script>
 
 {else}
-
-
 
 {include file="_usermessage.tpl"}
 
