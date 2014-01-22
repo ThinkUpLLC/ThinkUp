@@ -52,7 +52,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     $group_number = 0;
                     $headline = "Do ";
                     foreach ($new_groups as $group) {
-                        if (sizeof($new_groups) > 4) { //If more than 10 lists, just display first 10
+                        if (sizeof($new_groups) > 4) { //If more than 4 lists, just display first 4
                             if ($group_number >= 4) {
                                 if ($group_number == 4) {
                                     $group_name_list .= ", and ". (sizeof($new_groups) - 4)." more";
@@ -75,10 +75,10 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         } else  { //Display all lists
                             if ($group == end($new_groups)) {
                                 $group_name_list .= " and";
-                                $headline .= "and ";
+                                $headline .= " and ";
                             } else {
                                 if ($group_name_list != '') {
-                                    $headline .= ",";
+                                    $headline .= ", ";
                                     $group_name_list .= ",";
                                 }
                             }
@@ -86,7 +86,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                             if ($group_number == sizeof($new_groups)){
                                     $headline .= "and ";
                             }
-                            $headline .= ' '. str_replace('-', ' ', $group->keyword);
+                            $headline .= "&ldquo;" . str_replace('-', ' ', $group->keyword). "&rdquo;";
                             $group_name_list .= ' <a href="'.$group->url.'">'.$group->keyword.'</a>';
                         }
                     }
@@ -106,8 +106,8 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
 
                 } else {
                     $new_groups[0]->setMetadata();
-                    $headline = "Does \"" . str_replace('-', ' ', $new_groups[0]->keyword). "\" seem like a good description of "
-                    . $this->username . "?";
+                    $headline = "Does \"" . str_replace('-', ' ', $new_groups[0]->keyword).
+                    "\" seem like a good description of " . $this->username . "?";
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                     $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
