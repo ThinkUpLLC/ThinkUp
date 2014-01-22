@@ -389,6 +389,41 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         }
     }
 
+    public function testGetPublicInsightsPaging() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        $time_now = date("Y-m-d H:i:s");
+
+        //Insert 25 insights
+        $time_now = date("Y-m-d H:i:s");
+        $i = 25;
+        while ($i > 0) {
+            //insert 2 insights for a private instance and 3 for a public instance
+            $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>2, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            $i--;
+        }
+
+        //Assert that a page of 10 insights with 1 extra comes back correctly
+        $dao = new InsightMySQLDAO();
+        $results = $dao->getPublicInsights($page_count=11, $page_number=1);
+        $this->assertEqual(sizeof($results), 11);
+        $this->assertEqual($results[0]->text, 'Insight 1');
+        $this->assertEqual($results[9]->text, 'Insight 10');
+        //$this->debug(Utils::varDumpToString($results));
+        $results = $dao->getPublicInsights($page_count=11, $page_number=2);
+        $this->assertEqual($results[0]->text, 'Insight 11');
+        $this->assertEqual($results[9]->text, 'Insight 20');
+    }
+
     public function testGetAllInsights() {
         $builders = array();
         //insert a public instance
@@ -429,6 +464,41 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         foreach ($results as $result) {
             $this->assertTrue(isset($result->instance));
         }
+    }
+
+    public function testGetAllInsightsPaging() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        $time_now = date("Y-m-d H:i:s");
+
+        //Insert 25 insights
+        $time_now = date("Y-m-d H:i:s");
+        $i = 25;
+        while ($i > 0) {
+            //insert 2 insights for a private instance and 3 for a public instance
+            $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>1, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            $i--;
+        }
+
+        //Assert that a page of 10 insights with 1 extra comes back correctly
+        $dao = new InsightMySQLDAO();
+        $results = $dao->getAllInstanceInsights($page_count=11, $page_number=1);
+        $this->assertEqual(sizeof($results), 11);
+        $this->assertEqual($results[0]->text, 'Insight 1');
+        $this->assertEqual($results[9]->text, 'Insight 10');
+        //$this->debug(Utils::varDumpToString($results));
+        $results = $dao->getAllInstanceInsights($page_count=11, $page_number=2);
+        $this->assertEqual($results[0]->text, 'Insight 11');
+        $this->assertEqual($results[9]->text, 'Insight 20');
     }
 
     public function testGetAllOwnerInstanceInsightsSince() {
@@ -544,6 +614,49 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         foreach ($results as $result) {
             $this->assertTrue(isset($result->instance));
         }
+    }
+
+    public function testGetAllOwnerInstanceInsightsPaging() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        $time_now = date("Y-m-d H:i:s");
+
+        //insert instance owner
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'Owner 1',
+        'email'=>'owner@example.com'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'network_username'=>'jill'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+
+        //Insert 25 insights
+        $time_now = date("Y-m-d H:i:s");
+        $i = 25;
+        while ($i > 0) {
+            //insert 2 insights for a private instance and 3 for a public instance
+            $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>2, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            $i--;
+        }
+
+        //Assert that a page of 10 insights with 1 extra comes back correctly
+        $dao = new InsightMySQLDAO();
+        $results = $dao->getAllOwnerInstanceInsights(1, $page_count=11, $page_number=1);
+        $this->debug(Utils::varDumpToString($results));
+        $this->assertEqual(sizeof($results), 11);
+        $this->assertEqual($results[0]->text, 'Insight 1');
+        $this->assertEqual($results[9]->text, 'Insight 10');
+        //$this->debug(Utils::varDumpToString($results));
+        $results = $dao->getAllOwnerInstanceInsights(1, $page_count=11, $page_number=2);
+        $this->assertEqual($results[0]->text, 'Insight 11');
+        $this->assertEqual($results[9]->text, 'Insight 20');
     }
 
     public function testDoesInsightExist() {

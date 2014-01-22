@@ -135,9 +135,10 @@ interface InsightDAO {
      * @param int $owner_id
      * @param int $page_count
      * @param int $page
+     * @param int $page_count_offset Default 1
      * @return array Insights
      */
-    public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page=1);
+    public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page=1, $page_count_offset=1);
     /**
      * Check whether or not a insight exists for an instance by slug.
      * @param $slug

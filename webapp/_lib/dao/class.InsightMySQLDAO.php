@@ -268,8 +268,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return self::getInsightsForInstances($page_count, $page_number, $public_only = false);
     }
 
-    public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page_number=1) {
-        $start_on_record = ($page_number - 1) * $page_count;
+    public function getAllOwnerInstanceInsights($owner_id, $page_count=20, $page_number=1, $page_count_offset=1) {
+        $start_on_record = ($page_number - 1) * ($page_count - $page_count_offset);
         $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
         $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
         $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
@@ -299,8 +299,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return $insights;
     }
 
-    private function getInsightsForInstances($page_count=10, $page_number=1, $public_only = true) {
-        $start_on_record = ($page_number - 1) * $page_count;
+    private function getInsightsForInstances($page_count=10, $page_number=1, $public_only = true,
+    $page_count_offset =1) {
+        $start_on_record = ($page_number - 1) * ($page_count - $page_count_offset);
         $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
         $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
