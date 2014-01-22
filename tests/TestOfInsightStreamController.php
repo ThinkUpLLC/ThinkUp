@@ -304,4 +304,16 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/You don&#39;t have rights to view this service user/', $results);
         $this->debug($results);
     }
+
+    //testOfHTTPSWithInsecureContent (Don't use http links on https pages)
+    public function testOfHTTPSWithInsecureContent() {
+        $builders = self::buildPublicAndPrivateInsights();
+        $this->simulateLogin('tuuser2@example.com', false);
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertNoPattern('/(script|meta|link|img) (src|href)="http:/', $results);
+        $this->assertNoPattern("/(script|meta|link|img) (src|href)='http:/", $results);
+    }
+
 }
