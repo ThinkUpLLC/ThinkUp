@@ -4,19 +4,28 @@
       <div class="container">
         <header>
           <h1>Twitter</h1>
+          <h2>Manage accounts and choose which ones are displayed to logged-out users</h2>
         </header>
 
-        <ul class="list-group list-accounts">
+        <ul class="list-group list-accounts form-horizontal">
         {if count($owner_instances) > 0 }
           {foreach from=$owner_instances key=iid item=i name=foo}
           <li class="list-group-item list-accounts-item">
             <div class="account-label">
               <img src="http://avatars.io/twitter/{$i->network_username}" class="account-photo img-circle">
               <a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a>
-              <a href="" class=" {if $i->is_public}btnPriv text-success{else}btnPub text-danger{/if}"
-                id="{$i->id}">
-                <i class="fa {if $i->is_public}fa-globe{else}fa-lock{/if} icon" id="icon-{$i->id}"></i>
-              </a>
+            </div>
+            <div class="account-action account-action-privacy">
+              <div class="privacy-toggle fa-over" data-id="{$i->id}"
+                data-network="{$i->network}" data-network-name="{$i->network_username}">
+                <input type="radio" name="{$i->network_username}-privacy-toggle-control" value="0"
+                class="field-privacy-private"
+                {if not $i->is_public}checked="checked"{/if} id="field-{$i->network_username}-privacy-private" /><label class="toggle-label" for="field-{$i->network_username}-privacy-private" data-check-field="field-{$i->network_username}-privacy-public"><i class="fa fa-lock icon"></i><span class="text">Just you</span></label>
+
+                <input type="radio" name="{$i->network_username}-privacy-toggle-control" value="1"
+                class="field-privacy-public"
+                {if $i->is_public}checked="checked"{/if} id="field-{$i->network_username}-privacy-public" /><label class="toggle-label" for="field-{$i->network_username}-privacy-public" data-check-field="field-{$i->network_username}-privacy-private"><i class="fa fa-globe icon"></i><span class="text">Everyone</span></label>
+              </div>
             </div>
             <div class="account-action account-action-delete">
               <form method="post" action="{$site_root_path}account/?p=twitter"
@@ -33,76 +42,26 @@
           </li>
           {/foreach}
         {/if}
-        {if $oauthorize_link}
-          <li class="list-group-item list-accounts-item-add"><a href="{$oauthorize_link}">
-            <div class="account-label">
-              Connect a Twitter account
-            </div>
-            <div class="account-action account-action-add">
-              <i class="fa fa-plus-circle icon"></i>
-            </div>
-          </a></li>
-        {/if}
-
         </ul>
 
-        <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
+        <div class="account-buttons">
+          {if $oauthorize_link}
+            <a class="btn btn-default btn-account-add" href="{$oauthorize_link}"><i class="fa fa-twitter icon"></i>Connect a Twitter account</a>
+          {/if}
+          {if $oauthorize_link and count($owner_instances) > 0}<br>{/if}
+          {if count($owner_instances) > 0 }
+          <button class="btn btn-transparent btn-account-remove"
+          data-label-visible="Cancel account removal" data-label-hidden="Remove an account">Remove an account</button>
+          {/if}
+        </div>
 
-        {include file="_usermessage.tpl" field="membership_cap"}
+        <div class="form-notes">
+          <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
 
+          {include file="_usermessage.tpl" field="membership_cap"}
+        </div>
       </div>
     </div>
-<script type="text/javascript">
-  var show_plugin = {if $force_plugin}true{else}false{/if};
-  {literal}
-$(function() {
-    $(".btnPub").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $("#"+ u).toggleClass("btnPub");
-          $("#"+ u).toggleClass("btnPriv");
-          $("#"+ u).toggleClass("text-danger");
-          $("#"+ u).toggleClass("text-success");
-          $("#icon-"+ u).toggleClass("fa-lock");
-          $("#icon-"+ u).toggleClass("fa-globe");
-          $('#privacy-text-' + u).html("Everyone can see insights").hide().fadeIn(1500, function() {
-            $('#privacy-text-' + u);
-          });
-          location.reload();
-        }
-      });
-      return false;
-    });
-
-    $(".btnPriv").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $("#"+ u).toggleClass("btnPub");
-          $("#"+ u).toggleClass("btnPriv");
-          $("#"+ u).toggleClass("text-danger");
-          $("#"+ u).toggleClass("text-success");
-          $("#icon-"+ u).toggleClass("fa-lock");
-          $("#icon-"+ u).toggleClass("fa-globe");
-          location.reload();
-        }
-      });
-      return false;
-    });
-  });
-  {/literal}
-</script>
 {else}
 
 
