@@ -56,6 +56,10 @@ class OwnerInstance {
      * @var str Last authorization error, if there was one.
      */
     var $auth_error;
+        /**
+     * @var bool Indicates if the oauth_access is taken from another referenced instance
+     */
+    var $is_twitter_referenced_instance = false;
     public function __construct($row = false) {
         if ($row) {
             $this->id = $row['id'];
@@ -64,6 +68,7 @@ class OwnerInstance {
             $this->oauth_access_token = $row['oauth_access_token'];
             $this->oauth_access_token_secret = $row['oauth_access_token_secret'];
             $this->auth_error = $row['auth_error'];
+            $this->is_twitter_referenced_instance = PDODAO::convertDBToBool($row['is_twitter_referenced_instance']);
         }
     }
 }

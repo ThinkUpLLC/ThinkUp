@@ -438,6 +438,9 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
             );
             $owner = new Owner($data);
 
+            //Now instance 3 has to be relation with an owner
+            $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>33, 'instance_id'=>3));
+
             // Test is-admin twitter
             $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
             $this->assertIsA($result, "array");
@@ -642,6 +645,92 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         //Still needs tests for:
         //earliest_reply_in_system
         //earliest_post_in_system
+    }
+
+    public function testGetByOwnerAndNetworkTwitterTeferencedInstance(){
+        
+        $data = array(
+            'id'=>2,
+            'user_name'=>'steven',
+            'full_name'=>'Steven Warren',
+            'email'=>'me@example.com',
+            'last_login'=>'Yesterday',
+            'is_admin'=>1,
+            'is_activated'=>1,
+            'failed_logins'=>0,
+            'account_status'=>''
+        );
+
+        $owner = new Owner($data);
+
+        //Now instance 3 has to be relation with an owner
+        $builders[] = FixtureBuilder::build('owner_instances', array(
+            'owner_id'=>33, 
+            'instance_id'=>3
+        ));
+
+        $builders[] = FixtureBuilder::build('instances', array(
+            'id'=>4,
+            'network_user_id'=>100, 
+            'network_username'=>'ecucurella',
+            'network'=>'twitter', 
+            'is_active'=>1,
+            'is_public'=>0
+        ));
+
+        $builders[] = FixtureBuilder::build('instances_twitter', array(
+            'id'=>4,
+            'last_reply_id'=>'10'
+        ));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array(
+            'owner_id'=>2,
+            'instance_id'=>4,
+            'is_twitter_referenced_instance'=>1
+        ));
+
+        // Test is-admin twitter
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 4);
+        foreach($result as $id=>$i){
+            if ($i->id == 4) { $this->assertEqual($i->is_twitter_referenced_instance, 1); }
+            else { $this->assertEqual($i->is_twitter_referenced_instance, 0); }
+        }
+
+        // Test is-admin twitter, active only
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter', true, true);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 3); //jill and jack active, stuart is not
+        foreach($result as $id=>$i){
+            if ($i->id == 4) { $this->assertEqual($i->is_twitter_referenced_instance, 1); }
+            else { $this->assertEqual($i->is_twitter_referenced_instance, 0); }
+        }
+
+        // Test is-admin Twitter, forced not
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter', true);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 3);
+        foreach($result as $id=>$i){
+            if ($i->id == 4) { $this->assertEqual($i->is_twitter_referenced_instance, 1); }
+            else { $this->assertEqual($i->is_twitter_referenced_instance, 0); }
+        }
+
+        // Test not admin twitter
+        $owner->is_admin = false;
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 3);
+        foreach($result as $id=>$i){
+            if ($i->id == 4) { $this->assertEqual($i->is_twitter_referenced_instance, 1); }
+            else { $this->assertEqual($i->is_twitter_referenced_instance, 0); }
+        }
+
+        $owner->id = 3;
+        //Try empty
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');;
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 0);
     }
 
 }

@@ -73,6 +73,9 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
             __METHOD__.','.__LINE__);
 
             $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+            
+            $is_twitter_referenced_instance = 
+            $owner_instance_dao->getIsTwitterReferencedInstance($current_owner->id, $instance->id);
 
             $num_twitter_errors =
             isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
@@ -94,11 +97,11 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $instance_dao->updateLastRun($instance->id);
 
                     $twitter_crawler->fetchInstanceUserTweets();
-                    $twitter_crawler->fetchInstanceUserMentions();
+                    if (!$is_twitter_referenced_instance) { $twitter_crawler->fetchInstanceUserMentions(); }
                     $twitter_crawler->fetchInstanceUserFriends();
                     $twitter_crawler->fetchInstanceUserFollowers();
                     $twitter_crawler->fetchInstanceUserGroups();
-                    $twitter_crawler->fetchRetweetsOfInstanceUser();
+                    if (!$is_twitter_referenced_instance) { $twitter_crawler->fetchRetweetsOfInstanceUser(); }
                     $twitter_crawler->fetchInstanceUserFavorites();
                     $twitter_crawler->updateStaleGroupMemberships();
                     $twitter_crawler->fetchStrayRepliedToTweets();

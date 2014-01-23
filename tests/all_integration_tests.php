@@ -43,6 +43,7 @@ $web_tests->add(new WebTestOfLogin());
 $web_tests->add(new WebTestOfPostDetailPage());
 $web_tests->add(new WebTestOfRegistration());
 $web_tests->add(new WebTestOfTwitterDashboard());
+$web_tests->add(new WebTestOfTwitterPublicAccountSettings());
 
 $tr = new TextReporter();
 $start =  ((float)$usec + (float)$sec);

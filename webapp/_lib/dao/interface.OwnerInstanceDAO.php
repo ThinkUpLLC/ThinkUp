@@ -70,9 +70,10 @@ interface OwnerInstanceDAO {
      * @param int instance_id
      * @param str auth_token
      * @param str oauth_token_secret
+     * @param bool $is_twitter_referenced_instance
      * @return bool - if insert was successful
      */
-    public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '');
+    public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '', $is_twitter_referenced_instance = false);
     /**
      * Delete an owner instance record
      * @param int owner_id
@@ -109,4 +110,11 @@ interface OwnerInstanceDAO {
      * @return array $token_assoc_array
      */
     public function getOAuthTokens($id);
+    /**
+     * Gets is_twitter_referenced_instance by owner instance     
+     * @param int owner_id
+     * @param int instance_id
+     * @return bool
+     */
+    public function getIsTwitterReferencedInstance($owner_id, $instance_id);
 }

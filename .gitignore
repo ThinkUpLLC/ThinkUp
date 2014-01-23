@@ -15,6 +15,7 @@ extras/scripts/lic_header.py
 data/
 !tests/data
 !webapp/data/README.md
+!webapp/plugins/twitter/tests/data
 
 # Compiled packages and process files
 build/

@@ -9,3 +9,4 @@ https://github.com/ginatrapani/ThinkUp/wiki/Configuration:-Twitter
    :maxdepth: 2
 
    savedsearches
+   publicaccount
