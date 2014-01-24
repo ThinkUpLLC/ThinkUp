@@ -227,7 +227,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
             $view->assign('insights', $insights);
             $view->assign('application_url', Utils::getApplicationURL());
-            $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
+            $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html_inlined.tpl');
             $parameters = array();
             $parameters['insights'] = $insights;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
