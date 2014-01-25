@@ -775,19 +775,7 @@ body.outlook p {
           text-align: right;
       }
 
-      .insight-creamsicle {
-          border-top-color: #ff8f41;
-          border-bottom-color: #ffbb4e;
-          background: #ffbb4e;
-      }
-
-      .insight-creamsicle td h6 a:hover {
-          color: #f36400 !important;
-      }
-
-      .insight-creamsicle .insight-footer {
-          border-top-color: #ff8f41;
-      }
+      /* Insight colors */
 
       .insight-pea {
           border-top-color: #5fac1c;
@@ -795,10 +783,65 @@ body.outlook p {
           background: #9dd767;
       }
 
-      .insight-pea td h6 a:hover {
-          color: #417505 !important;
+      .insight-salmon {
+          border-top-color: #DA6070;
+          border-bottom-color: #FC939E;
+          background: #FC939E;
       }
 
+      .insight-creamsicle {
+          border-top-color: #FF8F41;
+          border-bottom-color: #FFBB4E;
+          background: #FFBB4E;
+      }
+
+      .insight-sepia {
+          border-top-color: #A19F8B;
+          border-bottom-color: #C0BDAF;
+          background: #C0BDAF;
+      }
+
+      .insight-purple {
+          border-top-color: #8E69C2;
+          border-bottom-color: #B690E2;
+          background: #B690E2;
+      }
+
+      .insight-mint {
+          border-top-color: #24B98F;
+          border-bottom-color: #41DAB3;
+          background: #41DAB3;
+      }
+
+      .insight-bubblegum {
+          border-top-color: #B3487C;
+          border-bottom-color: #F576B5;
+          background: #F576B5;
+      }
+
+      .insight-seabreeze {
+          border-top-color: #198A9C;
+          border-bottom-color: #44C9D7;
+          background: #44C9D7;
+      }
+
+      .insight-dijon {
+          border-top-color: #C59301;
+          border-bottom-color: #E4BF28;
+          background: #E4BF28;
+      }
+
+      .insight-sandalwood {
+          border-top-color: #D13A0A;
+          border-bottom-color: #FD8560;
+          background: #FD8560;
+      }
+
+      .insight-caramel {
+          border-top-color: #9E5E14;
+          border-bottom-color: #DD814B;
+          background: #DD814B;
+      }
 
     table.footer {
           border-top: 1px solid #dbdbdb;
@@ -899,7 +942,108 @@ body.outlook p {
             <tr>
               <td>
 
-*|insights|*
+<table class="row">
+  <tr>
+    <td class="wrapper last">
+      <table class="twelve columns">
+        <tr>
+          <td class="center">
+              <h6 class="center">Today’s Insights</h6>
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+{foreach from=$insights item=insight}
+{capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username}&amp;n={$insight->instance->network}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
+{math equation="x % 10" x=$i->id assign=random_color_num}
+{if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
+  {assign var='color' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
+{elseif $random_color_num eq '0'}
+  {assign var='color_name' value='pea'}{assign var='color_dark' value='5fac1c'}{assign var='color' value='9dd767'}
+{elseif $random_color_num eq '1'}
+  {assign var='color_name' value='creamsicle'}{assign var='color_dark' value='FF8F41'}{assign var='color' value='FFBB4E'}
+{elseif $random_color_num eq '2'}
+  {assign var='color_name' value='purple'}{assign var='color_dark' value='8E69C2'}{assign var='color' value='B690E2'}
+{elseif $random_color_num eq '3'}
+  {assign var='color_name' value='mint'}{assign var='color_dark' value='24B98F'}{assign var='color' value='41DAB3'}
+{elseif $random_color_num eq '4'}
+  {assign var='color_name' value='bubblegum'}{assign var='color_dark' value='B3487C'}{assign var='color' value='F576B5'}
+{elseif $random_color_num eq '5'}
+  {assign var='color_name' value='seabreeze'}{assign var='color_dark' value='198A9C'}{assign var='color' value='44C9D7'}
+{elseif $random_color_num eq '6'}
+  {assign var='color' value='dijon'}{assign var='color_dark' value='C59301'}{assign var='color' value='E4BF28'}
+{elseif $random_color_num eq '7'}
+  {assign var='color' value='sandalwood'}{assign var='color_dark' value='D13A0A'}{assign var='color' value='FD8560'}
+{elseif $random_color_num eq '8'}
+  {assign var='color' value='caramel'}{assign var='color_dark' value='9E5E14'}{assign var='color' value='DD814B'}
+{else}
+  {assign var='color' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
+{/if}
+
+<table class="row insight insight-{$color}">
+  <tr>
+    <td class="wrapper last">
+
+      <table class="twelve columns insight-header">
+        <tr>
+          <td class="text-pad">
+              <h6><a href="{$permalink}">{$insight->headline|replace:":":""}</a></h6>
+          </td>
+          <td class="expander"></td>
+        </tr>
+        </table>
+{if $insight->text ne ''}
+      <table class="twelve columns insight-body">
+        <tr>
+          <td class="text-pad">
+              {$insight->text|strip_tags:false}
+          </td>
+          <td class="expander"></td>
+        </tr>
+        </table>
+{/if}
+        <table class="twelve columns">
+        <tr>
+          <td class="insight-footer sub-grid">
+              <table>
+                  <tr>
+                      <td class="six sub-columns permalink">
+                          <img src="{$application_url}assets/img/icons/twitter-gray.png" alt="twitter"><a href="{$permalink}">Jan 12</a>
+                      </td>
+                      <td class="six sub-columns date">
+                          <a href="{$permalink}">View this insight</a>
+                      </td>
+                  </tr>
+              </table>
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/foreach}
+
+<table class="row">
+  <tr>
+    <td class="wrapper last">
+      <table class="twelve columns">
+        <tr>
+          <td class="center">
+              <small class="center"><a href="{$unsub_url}">Change your email preferences</a></small>
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
 
               <!-- container end below -->
               </td>
@@ -925,7 +1069,7 @@ body.outlook p {
                                         <a class="privacy" href="https://github.com/ThinkUpLLC/policy">Privacy and stuff</a>
                                       </td>
                                       <td class="six sub-columns links">
-                                          <a href="https://twitter.com/thinkup"><img src="http://capndesign.com/scratch/tu-icons/twitter-blue.png" width="20" height="20"/></a><a href="https://facebook.com/thinkupapp"><img src="http://capndesign.com/scratch/tu-icons/facebook-blue.png" width="20" height="20"/></a><a href="https://plus.google.com/109397312975756759279"><img src="http://capndesign.com/scratch/tu-icons/google-plus-blue.png" width="20" height="20"/></a><a href="https://github.com/ginatrapani/ThinkUp"><img src="http://capndesign.com/scratch/tu-icons/github-blue.png" width="20" height="20"/></a>
+                                          <a href="https://twitter.com/thinkup"><img src="{$application_url}assets/img/icons/twitter-blue.png" width="20" height="20"/></a><a href="https://facebook.com/thinkupapp"><img src="{$application_url}assets/img/icons/facebook-blue.png" width="20" height="20"/></a><a href="https://plus.google.com/109397312975756759279"><img src="{$application_url}assets/img/icons/google-plus-blue.png" width="20" height="20"/></a><a href="https://github.com/ginatrapani/ThinkUp"><img src="{$application_url}assets/img/icons/github-blue.png" width="20" height="20"/></a>
                                       </td>
                                       <td class="three sub-columns motto">
                                           It is nice to be nice.
