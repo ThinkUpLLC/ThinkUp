@@ -227,14 +227,21 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
             $view->assign('insights', $insights);
             $view->assign('application_url', Utils::getApplicationURL());
+            $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+            if (isset($thinkupllc_endpoint)) {
+                $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
+            } else {
+                $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
+            }
+            // It's a weekly digest if we're going back more than a day or two.
+            $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
+            $view->assign('weekly_or_daily', ($days_ago > 2) ? 'Weekly' : 'Daily');
             $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
+
             $parameters = array();
             $parameters['insights'] = $insights;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
             $parameters['application_url'] = Utils::getApplicationURL();
-            $parameters['unsub_url'] = Utils::getApplicationURL().'account/index.php?m=manage#instances';;
-            // It's a weekly digest if we're going back more than a day or two.
-            $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
             $parameters['weekly_or_daily'] = $days_ago > 2 ? 'Weekly' : 'Daily';
 
             try {
