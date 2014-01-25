@@ -382,7 +382,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $decoded = json_decode($sent);
         $this->assertNotNull($decoded);
         $this->assertNotNull($decoded->global_merge_vars);
-        $this->assertEqual(count($decoded->global_merge_vars), 5);
+        $this->assertEqual(count($decoded->global_merge_vars), 4);
         $merge_vars = array();
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
