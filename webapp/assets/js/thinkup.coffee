@@ -268,12 +268,12 @@ $ ->
     dataString = "u=#{u}&p=#{p}&csrf_token=" + window.csrf_token
     $.ajax({
       type: "GET"
-      url: "/account/toggle-public.php"
+      url: window.site_root_path + "account/toggle-public.php"
       data: dataString
       success: ->
         $this.removeAttr "checked"
         $target_radio.attr "checked", "checked"
-        window.location = "/account"
+        window.location = window.site_root_path + "account?p=#{$this.parent().data("network")}"
     })
     return false
 
