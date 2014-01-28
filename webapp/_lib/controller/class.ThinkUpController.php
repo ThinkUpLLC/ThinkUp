@@ -121,8 +121,8 @@ abstract class ThinkUpController {
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
 
-            $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
-            if ($thinkupllc_endpoint != null) {
+            if (Utils::isThinkUpLLC()) {
+                $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $this->addToView('thinkupllc_endpoint', $thinkupllc_endpoint);
             }
 
