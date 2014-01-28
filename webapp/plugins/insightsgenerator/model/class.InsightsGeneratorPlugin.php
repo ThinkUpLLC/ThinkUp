@@ -227,8 +227,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
             $view->assign('insights', $insights);
             $view->assign('application_url', Utils::getApplicationURL());
-            $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
-            if (isset($thinkupllc_endpoint)) {
+            if (Utils::isThinkUpLLC()) {
+                $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
             } else {
                 $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
