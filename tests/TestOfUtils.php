@@ -354,4 +354,13 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $expected_url = 'http://localhost/Think+Up/';
         $this->assertEqual($utils_url, $expected_url);
     }
+
+    public function testOfIsThinkUpLLC() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('thinkupllc_endpoint', null);
+        $this->assertFalse(Utils::isThinkUpLLC());
+
+        $cfg->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+        $this->assertTrue(Utils::isThinkUpLLC());
+    }
 }

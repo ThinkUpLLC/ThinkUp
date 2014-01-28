@@ -177,8 +177,7 @@ class InsightStreamController extends ThinkUpController {
                 $plugin_link = '<a href="'.$site_root_path.'account/?p=';
                 if (sizeof($owned_instances) > 0) {
                     $this->addToView('message_header', "ThinkUp doesn't have any insights for you yet.");
-                    $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
-                    if (!isset($thinkupllc_endpoint)) {
+                    if (!Utils::isThinkUpLLC()) {
                         $this->addToView('message_body', "Check back later, ".
                         "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
                     } else {
