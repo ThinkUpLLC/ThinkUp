@@ -281,7 +281,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             "How are you doing?",
             "You're getting better at this.",
             "Here's what you've got:" );
-        $rand_index = rand(0, sizeof($header_text_choices));
+        $rand_index = rand(0, (sizeof($header_text_choices)-1));
         return $header_text_choices[$rand_index];
     }
 
@@ -310,7 +310,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             "This week's ThinkUp insights"
             );
         }
-        $rand_index = rand(0, sizeof($subject_line_choices));
+        $rand_index = rand(0, (sizeof($subject_line_choices)-1));
         return $subject_line_choices[$rand_index];
     }
 }
