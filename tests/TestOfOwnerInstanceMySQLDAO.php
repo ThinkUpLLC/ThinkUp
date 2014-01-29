@@ -291,9 +291,9 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache'][0]['follower_id'], 10);
     }
 
-    public function testSetAuthError() {
+    public function testSetAuthErrorByTokens() {
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50,
-        'auth_error'=>'') );
+        'auth_error'=>'', 'oauth_access_token'=>'1234', 'oauth_access_token_secret'=>'') );
 
         $dao = new OwnerInstanceMySQLDAO();
 
@@ -302,7 +302,8 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($owner_instance, 'OwnerInstance');
         $this->assertEqual($owner_instance->auth_error, '');
 
-        $res = $dao->setAuthError(50, 20, 'Error validating access token: Session has expired at unix time SOME_TIME. '.
+        $res = $dao->setAuthErrorByTokens(20, '1234', '',
+        'Error validating access token: Session has expired at unix time SOME_TIME. '.
         'The current unix time is SOME_TIME.');
         $this->assertTrue($res);
         $owner_instance = $dao->get(50, 20);
@@ -311,14 +312,32 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($owner_instance->auth_error, 'Error validating access token: Session has expired at '.
         'unix time SOME_TIME. The current unix time is SOME_TIME.');
 
-        $res = $dao->setAuthError(49, 20, 'Error validating access token: Session has expired at unix time SOME_TIME. '.
-        'The current unix time is SOME_TIME.');
+        $res = $dao->setAuthErrorByTokens(20, '1234', 'dfdfd', 'Error validating access token: Session has expired '.
+        'at unix time SOME_TIME. The current unix time is SOME_TIME.');
         $this->assertFalse($res);
 
-        $res = $dao->setAuthError(50, 20);
+        $res = $dao->setAuthErrorByTokens(20, '1234', '');
         $this->assertTrue($res);
         $owner_instance = $dao->get(50, 20);
         $this->assertIsA($owner_instance, 'OwnerInstance');
         $this->assertEqual($owner_instance->auth_error, '');
+    }
+
+    public function testGetOwnerEmailByInstanceTokens() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50,
+        'auth_error'=>'', 'oauth_access_token'=>'1234', 'oauth_access_token_secret'=>'') );
+        $builders[] = FixtureBuilder::build('owners', array('id' => 50, 'email'=>'tester@example.com' ));
+
+        $dao = new OwnerInstanceMySQLDAO();
+
+        $email = $dao->getOwnerEmailByInstanceTokens('20', '1234');
+        $this->assertEqual($email, 'tester@example.com');
+
+        $email = $dao->getOwnerEmailByInstanceTokens('20', 'abcd1234');
+        $this->assertNull($email);
+
+        $email = $dao->getOwnerEmailByInstanceTokens('21', '1234');
+        $this->assertNull($email);
     }
 }

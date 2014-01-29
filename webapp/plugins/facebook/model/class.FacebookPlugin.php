@@ -89,9 +89,12 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
                 $facebook_crawler->fetchPostsAndReplies();
             } catch (APIOAuthException $e) {
                 //The access token is invalid, save in owner_instances table
-                $owner_instance_dao->setAuthError($current_owner->id, $instance->id, $e->getMessage());
+                $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
                 //Send email alert
-                $this->sendInvalidOAuthEmailAlert($current_owner->email, $instance->network_username);
+                //Get owner by auth tokens first, then send to that person
+                $owner_email_to_notify = $owner_instance_dao->getOwnerEmailByInstanceTokens($instance->id,
+                $access_token, '');
+                $this->sendInvalidOAuthEmailAlert($owner_email_to_notify, $instance->network_username);
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
