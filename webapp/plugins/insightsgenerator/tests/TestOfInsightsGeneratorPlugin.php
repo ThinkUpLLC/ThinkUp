@@ -49,7 +49,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0, 'timezone' => 'America/New_York'));
+        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0,
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -161,7 +162,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
     public function testWeeklySendSetting() {
         $plugin = new InsightsGeneratorPlugin();
         $day_to_run = date('D', strtotime("Sunday +".(InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK)." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6).
+        " days"));
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
 
@@ -216,7 +218,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
         $day_to_run = date('D', strtotime("Sunday +".InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6).
+        " days"));
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
@@ -443,6 +446,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
         $this->debug($merge_vars['insights']);
+        $this->debug($decoded->subject);
 
         //assert correct unsub link
         $this->assertNoPattern('/http:\/\/downtonabb\.ey\/account\/index.php\?m\=manage\#instances/',
