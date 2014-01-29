@@ -227,6 +227,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
             $view->assign('insights', $insights);
             $view->assign('application_url', Utils::getApplicationURL());
+            $view->assign('header_text', $this->getEmailMessageHeaderText());
             if (Utils::isThinkUpLLC()) {
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
@@ -235,17 +236,19 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             }
             // It's a weekly digest if we're going back more than a day or two.
             $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
-            $view->assign('weekly_or_daily', ($days_ago > 2) ? 'Weekly' : 'Daily');
+            $daily_or_weekly = ($days_ago > 2) ? 'Weekly' : 'Daily';
+            $view->assign('weekly_or_daily', $daily_or_weekly);
             $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
 
             $parameters = array();
             $parameters['insights'] = $insights;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
             $parameters['application_url'] = Utils::getApplicationURL();
-            $parameters['weekly_or_daily'] = $days_ago > 2 ? 'Weekly' : 'Daily';
+            $parameters['weekly_or_daily'] = $daily_or_weekly;
 
             try {
-                Mailer::mailHTMLViaMandrillTemplate($owner->email, 'ThinkUp has new insights for you!',
+                $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly);
+                Mailer::mailHTMLViaMandrillTemplate($owner->email, $subject_line,
                 $options['mandrill_template']->option_value, $parameters);
                 return true;
             } catch (Mandrill_Unknown_Template $e) {
@@ -265,5 +268,49 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
         Mailer::mail($owner->email, $subject, $message);
         return true;
+    }
+
+    /**
+     * Return random email body header text.
+     * @return str
+     */
+    private function getEmailMessageHeaderText() {
+        $header_text_choices = array (
+            "Here's what's up!",
+            "Okay, check it out:",
+            "How are you doing?",
+            "You're getting better at this.",
+            "Here's what you've got:" );
+        $rand_index = rand(0, sizeof($header_text_choices));
+        return $header_text_choices[$rand_index];
+    }
+
+    /**
+     * Return random subject line text.
+     * @param str $daily_or_weekly "Daily" or "Weekly"
+     * @return str
+     */
+    private function getEmailMessageSubjectLine($daily_or_weekly) {
+        if ($daily_or_weekly == "Daily") {
+            $subject_line_choices = array (
+            "ThinkUp has new insights for you! Take a look",
+            "You have new insights from ThinkUp",
+            "Your new insights from ThinkUp",
+            "New ThinkUp insights are ready for you",
+            "These are your latest ThinkUp insights",
+            "A few new ThinkUp insights for you",
+            "New ThinkUp insights are waiting for you"
+            );
+        } else {
+            $subject_line_choices = array (
+            "This week was great! ThinkUp's got details",
+            "How did you do online this week? Here are your ThinkUp insights",
+            "Your ThinkUp insights this week",
+            "New ThinkUp insights are ready for you",
+            "This week's ThinkUp insights"
+            );
+        }
+        $rand_index = rand(0, sizeof($subject_line_choices));
+        return $subject_line_choices[$rand_index];
     }
 }
