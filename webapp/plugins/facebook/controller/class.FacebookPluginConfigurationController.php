@@ -268,7 +268,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 "different account, log  out of Facebook in a different browser tab and try again.", 'user_add');
             }
             //set auth error to empty string
-            $owner_instance_dao->setAuthError($this->owner->id, $instance->id);
+            $owner_instance_dao->setAuthErrorByTokens($instance->id, $fb_access_token, '');
         } else { //Instance does not exist
             $instance_dao->insert($fb_user_id, $fb_username, 'facebook');
             $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');

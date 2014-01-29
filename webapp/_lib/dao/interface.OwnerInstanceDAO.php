@@ -96,17 +96,27 @@ interface OwnerInstanceDAO {
      */
     public function updateTokens($owner_id, $instance_id, $oauth_token, $oauth_token_secret);
     /**
-     * Updates auth error for owner/instance, return true|false for update status
-     * @param int owner_id
-     * @param int instance_id
+     * Updates auth error for instance/auth tokens, return true|false for update status.
+     * @param int $instance_id
+     * @param str $oauth_access_token
+     * @param str $oauth_access_token_secret
      * @param str auth_error Optional, leave blank or null when there's no error during successful auth
      * @return bool
      */
-    public function setAuthError($owner_id, $instance_id, $auth_error='');
+    public function setAuthErrorByTokens($instance_id, $oauth_access_token, $oauth_access_token_secret,
+    $auth_error="");
     /**
      * Gets auth tokens by instance_id
      * @param int instance_id
      * @return array $token_assoc_array
      */
     public function getOAuthTokens($id);
+    /**
+     * Get owner email address by tokens
+     * @param str $instance_id
+     * @param str $access_token
+     * @param str $oauth_access_token_secret Defaults to empty string
+     * @return str Email address of the owner associated with auth tokens
+     */
+    public function getOwnerEmailByInstanceTokens($instance_id, $access_token, $oauth_access_token_secret='');
 }

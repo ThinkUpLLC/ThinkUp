@@ -103,9 +103,11 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'is_activated'=>1) );
-        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
-        'auth_error'=>''));
+        'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1) );
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp K. User',
+        'email'=>'notadmin@example.com', 'is_activated'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>5,
+        'auth_error'=>'', 'oauth_access_token'=>'zL11BPY2fZPPyYY', 'oauth_access_token_secret'=>''));
 
         //assert invalid_oauth_email_sent_timestamp option is not set
         $option_dao = DAOFactory::getDAO('OptionDAO');
@@ -116,7 +118,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertNull($last_email_timestamp);
 
         //log in as that owner
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('admin@example.com');
 
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
 
@@ -126,12 +128,13 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
 
         //assert that APIOAuthException was caught and recorded in owner_instances table
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
-        $owner_instance = $owner_instance_dao->get(1, 5);
+        $owner_instance = $owner_instance_dao->get(2, 5);
+        $this->debug(Utils::varDumpToString($owner_instance));
         $this->assertEqual($owner_instance->auth_error, 'Error validating access token: Session has expired at unix '.
         'time SOME_TIME. The current unix time is SOME_TIME.');
 
         //assert that the email notification was sent to the user
-        $expected_reg_email_pattern = '/to: me@example.com
+        $expected_reg_email_pattern = '/to: notadmin@example.com
 subject: Please re-authorize ThinkUp to access Liz Lemon on Facebook
 message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon Facebook account./';
 
