@@ -61,13 +61,13 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
 
                     $headline = "On this day&hellip;";
                     $time = strtotime("-" . $number_of_years_ago . " year", time());
-                    $pastdate =date('Y', $time);
+                    $past_date =date('Y', $time);
                     if ($time % 2 == 0) {
-                        $insight_text = "On this day in " .$pastdate . ", this was $this->username's most popular "
+                        $insight_text = "On this day in " .$past_date . ", this was $this->username's most popular "
                         .$this->terms->getNoun('post').".";
                     } else {
                         $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
-                        ." <strong>$number_of_years_ago year$plural ago</strong>";
+                        ." <strong>$number_of_years_ago year$plural ago</strong>.";
                     }
                     $posts[] = $most_popular_post;
 
@@ -76,18 +76,15 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->instance_id = $instance->id;
                     $my_insight->slug = 'posts_on_this_day_popular_flashback'; //slug to label this insight's content
                     $my_insight->date = $this->insight_date; //date of the data this insight applies to
-                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
-                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                    // $my_insight->header_image = $header_image;
-                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->headline = $headline;
+                    $my_insight->text = $insight_text;
+                    $my_insight->filename = basename(__FILE__, ".php");
                     $my_insight->setPosts($posts);
 
                     $this->insight_dao->insertInsight($my_insight);
                 }
             }
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
