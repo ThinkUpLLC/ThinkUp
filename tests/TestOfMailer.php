@@ -96,10 +96,48 @@ class TestOfMailer extends ThinkUpUnitTestCase {
         $this->assertEqual($json, $email_body);
     }
 
+    public function testMandrillThinkUpLLCEndpoint() {
+        $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "My Crazy Custom ");
+        $config->setValue("mandrill_api_key", "1234567890");
+        //From address should be team@thinkup.com when endpoint is set
+        $config->setValue("thinkupllc_endpoint", 'http://example.com/thinkup/');
+        $_SERVER['HTTP_HOST'] = "thinkup.com";
+        Mailer::mail('you@example.com', 'Testing 123', 'Me worky, yo?');
+        $email_body = Mailer::getLastMail();
+        $this->debug($email_body);
+
+        // Exact JSON structure copied from Mandrill's site
+        $json = '{"text":"Me worky, yo?","subject":"Testing 123","from_email":"team@thinkup.com",'.
+        '"from_name":"My Crazy Custom ThinkUp","to":[{"email":"you@example.com","name":"you@example.com"}]}';
+
+        // Compare JSON string, ignoring whitespace differences
+        $this->assertEqual($json, $email_body);
+    }
+
     public function testHTMLViaMandrillTemplate() {
         $config = Config::getInstance();
         $config->setValue("app_title_prefix", "Prefix ");
         $config->setValue("mandrill_api_key", "asdfasdfasdfadsfasd");
+        $_SERVER['HTTP_HOST'] = "thinkupapp.com";
+        Mailer::mailHTMLViaMandrillTemplate($to='chris@inarow.net',$subject='Test Subject','thinkup-digest',
+        array('insights' =>'test insights', 'merge2' => 'Some other text'));
+        $email_body = Mailer::getLastMail();
+        $this->debug($email_body);
+
+        $decoded = json_decode($email_body);
+        $this->debug($decoded);
+        $this->assertEqual($subject, $decoded->subject);
+        $this->assertEqual($to, $decoded->to[0]->email);
+        $this->assertEqual('notifications@thinkupapp.com', $decoded->from_email);
+        $this->assertEqual(2, count($decoded->global_merge_vars));
+    }
+
+    public function testHTMLViaMandrillTemplateThinkUpLLCEndpoint() {
+        $config = Config::getInstance();
+        $config->setValue("app_title_prefix", "Prefix ");
+        $config->setValue("mandrill_api_key", "asdfasdfasdfadsfasd");
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
         $_SERVER['HTTP_HOST'] = "thinkup.com";
         Mailer::mailHTMLViaMandrillTemplate($to='chris@inarow.net',$subject='Test Subject','thinkup-digest',
         array('insights' =>'test insights', 'merge2' => 'Some other text'));
@@ -107,6 +145,7 @@ class TestOfMailer extends ThinkUpUnitTestCase {
 
         $decoded = json_decode($email_body);
         $this->assertEqual($subject, $decoded->subject);
+        $this->assertEqual('team@thinkup.com', $decoded->from_email);
         $this->assertEqual($to, $decoded->to[0]->email);
         $this->assertEqual(2, count($decoded->global_merge_vars));
     }

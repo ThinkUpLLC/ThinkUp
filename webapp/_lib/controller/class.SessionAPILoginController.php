@@ -105,18 +105,16 @@ class SessionAPILoginController extends ThinkUpController {
                     $owner_dao->updateLastLogin($user_email);
                     $owner_dao->resetFailedLogins($user_email);
                     $owner_dao->clearAccountStatus($user_email);
-                    $this->succeed("Logged in successfully.");
+                    $this->succeed();
                 }
             }
         }
     }
     /**
-     * Redirect to the success URL with a given message on the query string (msg=).
-     * @param str $message
+     * Redirect to the success URL.
      */
-    private function succeed($message) {
-        $param_chainlink = (strpos($this->success_redir, '?') !== false)?'&':'?';
-        $this->redirect($this->success_redir.$param_chainlink."msg=".urlencode($message));
+    private function succeed() {
+        $this->redirect($this->success_redir);
     }
     /**
      * Redirect to the failure URL with a given message on the query string (msg=).

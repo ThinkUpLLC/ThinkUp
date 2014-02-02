@@ -112,6 +112,11 @@ abstract class ThinkUpController {
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
 
+            if (Utils::isThinkUpLLC()) {
+                $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                $this->addToView('thinkupllc_endpoint', $thinkupllc_endpoint);
+            }
+
             if (SessionCache::isKeySet('selected_instance_network') &&
             SessionCache::isKeySet('selected_instance_username')) {
                 $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));

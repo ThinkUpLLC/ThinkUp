@@ -475,4 +475,14 @@ class Utils {
     public static function isTest() {
         return (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS";
     }
+
+    /**
+     * Check if ThinkUp LLC endpoint is set in the configuration file.
+     * @return bool
+     */
+    public static function isThinkUpLLC() {
+        $cfg = Config::getInstance();
+        $thinkupllc_endpoint = $cfg->getValue('thinkupllc_endpoint');
+        return ($thinkupllc_endpoint !== null);
+    }
 }

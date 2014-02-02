@@ -35,6 +35,8 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
+        $insight_text = '';
+
         if (self::shouldGenerateInsight('local_followers', $instance, $insight_date='today',
         $regenerate_existing_insight=true)) {
             $user_dao = DAOFactory::getDAO('UserDAO');
@@ -47,13 +49,31 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
                 $user->location, 0);
 
                 if (count($followers)) {
-                    $insight_text = "<strong>"
+                    $headline = "<strong>"
                     .(count($followers) > 1 ? count($followers)." people" : "1 person")
                     ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
 
-                    $this->insight_dao->insertInsightDeprecated('local_followers', $instance->id, $this->insight_date,
-                    "New neighbors:", $insight_text, basename(__FILE__, '.php'),
-                    Insight::EMPHASIS_LOW, serialize($followers));
+                    if (count($followers) == 1) {
+                        $header_image = $followers[0]->avatar;
+                    } else {
+                        $header_image = '';
+                    }
+
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->slug = 'local_followers'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->setPeople($followers);
+
+                    $this->insight_dao->insertInsight($my_insight);
+
                 }
             }
         }

@@ -49,7 +49,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0, 'timezone' => 'America/New_York'));
+        'email'=>'never@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0,
+        'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
@@ -161,7 +162,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
     public function testWeeklySendSetting() {
         $plugin = new InsightsGeneratorPlugin();
         $day_to_run = date('D', strtotime("Sunday +".(InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK)." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6).
+        " days"));
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
 
@@ -216,7 +218,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
         $day_to_run = date('D', strtotime("Sunday +".InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK." days"));
-        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6).
+        " days"));
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
@@ -320,7 +323,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertPattern('/daily digest to normal@example/', $last_log);
     }
 
-    public function testMandrillHTML() {
+    public function testMandrillHTMLDaily() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
         $config = Config::getInstance();
@@ -382,13 +385,142 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $decoded = json_decode($sent);
         $this->assertNotNull($decoded);
         $this->assertNotNull($decoded->global_merge_vars);
-        $this->assertEqual(count($decoded->global_merge_vars), 5);
+        $this->assertEqual(count($decoded->global_merge_vars), 4);
+        $merge_vars = array();
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/You receive new insights from ThinkUp once a day./', $merge_vars['insights']);
+        $this->assertPattern('/To get insights once a week or unsubscribe altogether/', $merge_vars['insights']);
+        $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
+        $this->debug($merge_vars['insights']);
+        //assert unsub link
+        $this->assertPattern('/http:\/\/downtonabb\.ey\/account\/index.php\?m\=manage\#instances/',
+            $merge_vars['insights']);
+        $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+    }
+
+    public function testMandrillHTMLWeekly() {
+        $plugin = new InsightsGeneratorPlugin();
+        $day_to_run = date('D', strtotime("Sunday +".(InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK)." days"));
+        $day_not_to_run = date('D', strtotime("Sunday +".((InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK+1)%6).
+        " days"));
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
+        'email'=>'weekly@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'weekly',
+        'timezone' => 'America/New_York'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'CDMoyer is on 29 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'example.com'));
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key','1234');
+
+        $this->simulateLogin('weekly@example.com');
+
+        $plugin->current_timestamp = strtotime($day_not_to_run.' 5pm');
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent, 'Should not send on '.$day_not_to_run);
+
+        $plugin->current_timestamp = strtotime($day_to_run.' 5pm');
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNotNull($decoded);
+        $this->assertNotNull($decoded->global_merge_vars);
+        $this->assertEqual(count($decoded->global_merge_vars), 4);
+        $merge_vars = array();
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $this->debug($merge_vars['insights']);
+        $this->assertNotEqual('', $sent);
+        $this->assertPattern('/to.*weekly@example.com/', $sent);
+        $this->assertPattern('/29 new lists/', $sent);
+        $this->assertPattern('/example.com/', $sent);
+        $this->assertPattern('/You receive new insights from ThinkUp once a week./', $merge_vars['insights']);
+        $this->assertPattern('/To get insights once a day or unsubscribe altogether/', $merge_vars['insights']);
+
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertEqual('', $sent, 'Should not send again same day');
+    }
+
+    public function testMandrillHTMLThinkUpLLCUnsubLink() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key','1234');
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+
+        $this->simulateLogin('admin@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNotNull($decoded);
+        $this->assertNotNull($decoded->global_merge_vars);
+        $this->assertEqual(count($decoded->global_merge_vars), 4);
         $merge_vars = array();
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
         $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
+        $this->debug($merge_vars['insights']);
+        $this->debug($decoded->subject);
+
+        //assert correct unsub link
+        $this->assertNoPattern('/http:\/\/downtonabb\.ey\/account\/index.php\?m\=manage\#instances/',
+            $merge_vars['insights']);
+        $this->assertPattern('/http:\/\/example.com\/thinkup\/settings.php/',
+            $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
     }

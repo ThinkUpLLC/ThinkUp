@@ -43,7 +43,7 @@
 function smarty_insert_help_link($params, &$smarty) {
     if (isset($smarty->_tpl_vars['help'][$params['id']])){
         return '<a href="http://thinkup.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
-        '.html" title="Learn more" class="btn btn-mini btn-help">Help <i class="icon-question-sign "></i></a>';
+        '.html" title="Learn more" class="btn btn-xs btn-help">Help <i class="fa fa-question-circle "></i></a>';
     } else {
         return '';
     }
