@@ -38,8 +38,23 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
         if (parent::shouldGenerateInsight('outreach_punchcard', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts))) {
-            $cfg = Config::getInstance();
-            $local_timezone = new DateTimeZone($cfg->getValue('timezone'));
+
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+
+            $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+            $owner_id = $owner_instance[0]->owner_id;
+            $owner = $owner_dao->getById($owner_instance[0]->owner_id);
+            try {
+                $owner_timezone = new DateTimeZone($owner->timezone);
+            } catch (Exception $e) {
+                // In the odd case the owner has no or a malformed timezone
+                $cfg = Config::getInstance();
+                $owner_timezone = new DateTimeZone($cfg->getValue('timezone'));
+            }
+            $now = new DateTime();
+            $offset = timezone_offset_get($owner_timezone, $now);
+
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             $punchcard = array();
@@ -62,32 +77,16 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
                 foreach ($responses as $response) {
                     $response_pub_date = new DateTime($response->pub_date);
-                    $response_dotw = date('N',
-                    (date('U',
-                    strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
-                    )
-                    ); // Day of the week
-                    $response_hotd = date('G',
-                    (date('U',
-                    strtotime($response->pub_date)) + timezone_offset_get($local_timezone, $response_pub_date)
-                    )
-                    ); // Hour of the day
+                    $response_dotw = date('N', (date('U', strtotime($response->pub_date)+$offset))); // Day of week
+                    $response_hotd = date('G', (date('U', strtotime($response->pub_date)+$offset))); // Hour of day
                     $punchcard['responses'][$response_dotw][$response_hotd]++;
 
                     $responses_chron[$response_hotd]++;
                 }
 
                 $post_pub_date = new DateTime($post->pub_date);
-                $post_dotw = date('N',
-                (date('U',
-                strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
-                )
-                ); // Day of the week
-                $post_hotd = date('G',
-                (date('U',
-                strtotime($post->pub_date)) + timezone_offset_get($local_timezone, $post_pub_date)
-                )
-                ); // Hour of the day
+                $post_dotw = date('N', (date('U', strtotime($post->pub_date)+$offset))); // Day of the week
+                $post_hotd = date('G', (date('U', strtotime($post->pub_date)+$offset))); // Hour of the day
                 $punchcard['posts'][$post_dotw][$post_hotd]++;
             }
 
