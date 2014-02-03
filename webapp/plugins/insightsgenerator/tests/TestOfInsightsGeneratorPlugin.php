@@ -343,9 +343,18 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'Bill Cosby', 'id' => 7,
+        'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>7, 'id'=>2));
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
         'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>4, 'instance_id'=>6,
+        'slug'=>'posts_on_this_day_popular_flashback', 'prefix'=>'Made the List:',
+        'text'=>'This was your most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
@@ -391,6 +400,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
             $merge_vars[$mv->name] = $mv->content;
         }
         $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=Bill\+Cosby/', $merge_vars['insights'], 'Insight URL should not contain spaces');
         $this->assertPattern('/You receive new insights from ThinkUp once a day./', $merge_vars['insights']);
         $this->assertPattern('/To get insights once a week or unsubscribe altogether/', $merge_vars['insights']);
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
