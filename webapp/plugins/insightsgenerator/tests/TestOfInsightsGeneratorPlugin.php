@@ -129,10 +129,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -176,7 +176,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -230,7 +230,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_not_to_run.' 1am'))));
 
@@ -289,11 +289,11 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'joetest', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 99 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
 
@@ -343,9 +343,17 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+
+        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Cosby',
+        'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>7));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>4, 'instance_id'=>7,
+        'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Wow: Made the List:',
+        'text'=>'This was Bill Cosby\'s most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
@@ -390,7 +398,14 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
-        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\.*/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=Bill\+Cosby/', $merge_vars['insights'],
+            'Insight URL should not contain spaces');
+        $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
+            'Facebook icon should appear');
+        $this->assertPattern('/assets\/img\/icons\/twitter-gray\.png/', $merge_vars['insights'],
+            'Twitter icon should appear');
+        $this->assertPattern('/Wow:/', $merge_vars['insights'], 'Do not strip colons from headline');
         $this->assertPattern('/You receive new insights from ThinkUp once a day./', $merge_vars['insights']);
         $this->assertPattern('/To get insights once a week or unsubscribe altogether/', $merge_vars['insights']);
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
@@ -414,14 +429,23 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
         'email'=>'weekly@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'weekly',
         'timezone' => 'America/New_York'));
-        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        $builders[] = FixtureBuilder::build('owner_instances', array('id'=>1, 'owner_id'=>1, 'instance_id'=>5,
         'auth_error'=>''));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
+
+        $builders[] = FixtureBuilder::build('instances', array('id'=>6,'network_username'=>'Bill Cosby',
+        'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>6));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'headline'=>'Wow: Made the List:',
+        'text'=>'Bill Cosby is on 1,234 new lists',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
+
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'example.com'));
 
@@ -461,6 +485,13 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $this->assertPattern('/example.com/', $sent);
         $this->assertPattern('/You receive new insights from ThinkUp once a week./', $merge_vars['insights']);
         $this->assertPattern('/To get insights once a day or unsubscribe altogether/', $merge_vars['insights']);
+        $this->assertPattern('/http:\/\/example.com\/\?u=Bill\+Cosby/', $merge_vars['insights'],
+            'Insight URL should not contain spaces');
+        $this->assertPattern('/Wow:/', $merge_vars['insights'], 'Do not strip colons from headline');
+        $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
+            'Facebook icon should appear');
+        $this->assertPattern('/assets\/img\/icons\/twitter-gray\.png/', $merge_vars['insights'],
+            'Twitter icon should appear');
 
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin->crawl();
@@ -492,7 +523,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -547,7 +578,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
 
@@ -588,10 +619,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -643,10 +674,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 03:00:00')));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
-        'slug'=>'new_group_memberships', 'prefix'=>'Made the List:',
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d 01:00:00')));
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
