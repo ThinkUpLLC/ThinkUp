@@ -15,6 +15,7 @@ $posts An array of posts (that contain links!)
         <li class="list-item">
             <div class="link">
                 <div class="link-title">
+                    <img src="https://g.etfv.co/{$l->expanded_url|escape:'url'}?defaulticon=lightpng" alt="{$l->title}" width="16" height="16" />
                     <a href="{$l->url}">
                         {if $l->title}
                             {$l->title|truncate:100}
