@@ -625,7 +625,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         $config->setValue('THINKUP_VERSION', '0.4');
         $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
-        //print $results;
+        $this->debug($results);
         $this->assertPattern('/needs 1 database update/', $results);
 
         // snowflake update needed...
@@ -634,8 +634,11 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $this->testdb_helper->runSQL('ALTER TABLE ' . $this->table_prefix .'links ADD  post_id BIGINT( 20 ) NOT NULL,'.
         'ADD network VARCHAR( 20 ) NOT NULL');
+        $this->debug('Haven\'t instantiated controller yet');
         $controller = new UpgradeDatabaseController(true);
+        $this->debug('Just ran controller');
         $results = $controller->go();
+        $this->debug($results);
         $this->assertPattern('/needs 2 database updates/', $results);
         $v_mgr = $controller->getViewManager();
         $queries = $v_mgr->getTemplateDataItem('migrations');
@@ -646,6 +649,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         $_GET['migration_index'] = 1;
         $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
+        $this->debug($results);
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
         $stmt = $this->pdo->query("desc " . $this->table_prefix . "instances last_post_id");
@@ -658,6 +662,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         $_GET['migration_index'] = 2;
         $controller = new UpgradeDatabaseController(true);
         $results = $controller->go();
+        $this->debug($results);
         $this->assertTrue($obj->processed);
         $stmt = $this->pdo->query("desc " . $this->table_prefix . "instances last_post_id");
         $data = $stmt->fetch();
@@ -669,6 +674,7 @@ class TestOfUpgradeDatabaseController extends ThinkUpUnitTestCase {
         unset($_GET['migration_index']);
         $_GET['migration_done'] = true;
         $results = $controller->go();
+        $this->debug($results);
         $obj = json_decode($results);
         $this->assertTrue($obj->migration_complete);
         $this->assertFalse(SessionCache::isKeySet($snowflakekey));
