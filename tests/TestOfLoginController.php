@@ -293,4 +293,42 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $this->assertEqual($controller->redirect_destination, 'http://example.com/user/');
     }
+
+    public function testLoginFormWithOutRedirect() {
+        $_GET['redirect'] = 'http://example.com/redirect/';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertPattern( '/http\:\/\/example.com\/redirect/', $results);
+    }
+
+    public function testLoginFormWithRedirect() {
+        $_GET['redirect'] = 'http://example.com/redirect/';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertPattern( '/http\:\/\/example.com\/redirect/', $results);
+    }
+
+    public function testInvalidLoginWithCustomRedirect() {
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'dontexist@example.com';
+        $_POST['pwd'] = 'secretpassword';
+        $_POST['redirect'] = 'http://example.com/redirect/';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertPattern( '/http\:\/\/example.com\/redirect/', $results);
+    }
+
+    public function testValidLoginWithCustomRedirect() {
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'me@example.com';
+        $_POST['pwd'] = 'secretpassword';
+        $_POST['redirect'] = 'http://example.com/redirect/';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        $this->debug($controller->redirect_destination);
+        $this->assertPattern( '/example\.com\/redirect/', $controller->redirect_destination);
+    }
 }
