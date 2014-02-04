@@ -11,14 +11,14 @@
 
 
             {include file="_usermessage.tpl"}
-            
+
             <div class="panel panel-default">
 
             <form name="login-form" method="post" action="{$site_root_path}session/login.php" class="login form-horizontal">
 
             <fieldset>
             <legend class="panel-heading">Welcome to ThinkUp!</legend>
-            
+
                 <div class="panel-body">
 
                     <div class="form-group">
@@ -34,6 +34,9 @@
                         <div class="col-sm-8 input-group">
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             <input class="form-control" type="password" name="pwd" id="pwd">
+                            {if isset($redirect)}
+                            <input type="hidden" name="redirect" value="{$redirect}">
+                            {/if}
                         </div>
                     </div>
 
@@ -49,7 +52,7 @@
                                 </div>
                             </span>
                         </div>
-                        
+
                     </div>
 
                 </div>
