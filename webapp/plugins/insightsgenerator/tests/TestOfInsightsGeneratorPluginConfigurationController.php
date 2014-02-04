@@ -48,6 +48,7 @@ class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTe
 
     public function testLoginRequired  () {
         $controller = $this->getController(false);
+<<<<<<< HEAD
         $results = $controller->go();
         $this->assertPattern('/You must.*log in/', $results);
 
@@ -55,6 +56,10 @@ class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTe
         $controller->go();
         $v_mgr = $controller->getViewManager();
         $this->assertNoPattern('/You must.*log in/', $v_mgr->getTemplateDataItem('error_msg'));
+=======
+        $controller->go();
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
+>>>>>>> Remove REQUEST_URI dependency from login redirection
     }
 
     public function testPluginsListed () {
