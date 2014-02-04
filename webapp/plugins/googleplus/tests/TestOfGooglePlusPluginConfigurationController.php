@@ -60,9 +60,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new GooglePlusPluginConfigurationController(null, 'googleplus');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
-        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
 
         // logged in
         // build a user
@@ -73,7 +71,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner, 'googleplus');
         $output = $controller->go();
-        $v_mgr = $controller->getViewManager();
+        $this->assertPattern('/Google/', $output);
     }
 
     public function testOptionList2HashByOptionName() {

@@ -46,9 +46,7 @@ class TestOfSearchController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
 
         $results = $controller->go();
-        $this->assertPattern('/You must/', $results);
-        $this->assertPattern('/log in/', $results);
-        $this->assertPattern('/to do this/', $results);
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
     }
 
     public function testConstructor() {
