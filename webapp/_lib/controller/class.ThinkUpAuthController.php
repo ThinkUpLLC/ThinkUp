@@ -38,8 +38,9 @@ abstract class ThinkUpAuthController extends ThinkUpController {
 
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'logout.php') === false ) {
-            $this->url_mapping = 'http://'.Utils::getApplicationHostName().$_SERVER['REQUEST_URI'];
+        $request_uri = Utils::getApplicationRequestURI();
+        if (strpos($request_uri, 'logout.php') === false ) {
+            $this->url_mapping = Utils::getApplicationURL().$request_uri;
         }
     }
 
@@ -67,11 +68,10 @@ abstract class ThinkUpAuthController extends ThinkUpController {
 
     /**
      * Bounce user to public page or to error page.
+     * @throws ControllerAuthException
      */
     protected function bounce() {
-        if ($this->url_mapping != null ) {
-            $cfg = Config::getInstance();
-            $site_root_path = $cfg->getValue('site_root_path');
+        if ($this->content_type == 'text/html; charset=UTF-8' && $this->url_mapping != null) {
             $this->redirect(Utils::getApplicationURL().'session/login.php?redirect='.$this->url_mapping);
         } else {
             throw new ControllerAuthException('You must log in to access this controller: ' . get_class($this));
