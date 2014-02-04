@@ -46,7 +46,6 @@ $controller_test_list = array(
 "TestOfExportController",
 "TestOfExportServiceUserDataController",
 "TestOfForgotPasswordController",
-"TestOfGridController",
 "TestOfGridExportController",
 "TestOfInstallerController",
 "TestOfLoginController",
