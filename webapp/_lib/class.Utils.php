@@ -301,6 +301,38 @@ class Utils {
     }
 
     /**
+     * Wrapper for $_SERVER['REQUEST_URI'] that accounts for site_root_path.
+     * Returns the request URI for a ThinkUp file relative to site_root_path.
+     * For example, if the request is http://example.com/mythinkup/account/user.php, this will return
+     * account/user.php.
+     * Use this instead of directly referencing $_SERVER['REQUEST_URI'] to account for web server forwards, symlinks,
+     * and other tomfoolery.
+     * @return str
+     */
+    public static function getApplicationRequestURI() {
+        $dirs_under_root = array('account', 'post', 'session', 'user', 'install', 'tests', 'crawler');
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $current_script_path = explode('/', $_SERVER['REQUEST_URI']);
+        } else {
+            $current_script_path = array();
+        }
+        $req_url = array();
+        $req_url[] = array_pop($current_script_path);
+        if ( in_array( end($current_script_path), $dirs_under_root ) ) {
+            $req_url[] = array_pop($current_script_path);
+        }
+        // Account for API calls
+        if ( end($current_script_path) == 'v1' ) {
+            $req_url[] = array_pop($current_script_path);
+            if ( end($current_script_path) == 'api' ) {
+                $req_url[] = array_pop($current_script_path);
+            }
+        }
+        $req_url = implode('/', array_reverse($req_url));
+        return $req_url;
+    }
+
+    /**
      * Get the application's host name or server name, i.e., example.com.
      * @return str Host name either set by PHP global vars or stored in the database
      */
@@ -315,9 +347,13 @@ class Utils {
         //Finally fall back to stored application setting set by Installer::storeServerName
         if ($server == '') {
             $option_dao = DAOFactory::getDAO('OptionDAO');
-            $server_app_setting = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
-            if (isset($server_app_setting)) {
-                $server = $server_app_setting->option_value;
+            try {
+                $server_app_setting = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'server_name');
+                if (isset($server_app_setting)) {
+                    $server = $server_app_setting->option_value;
+                }
+            } catch (PDOException $e) {
+                //If retrieving the option doesn't work (ie, the options table doesn't exist), do nothing
             }
         }
         //domain name is always lowercase
