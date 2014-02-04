@@ -32,7 +32,11 @@
 class LoginController extends ThinkUpController {
 
     public function control() {
-        $this->redirectToThinkUpLLCEndpoint();
+        if (isset($_GET['redirect'])) {
+            $this->redirectToThinkUpLLCEndpoint($page=null, $redirect=$_GET['redirect']);
+        } else {
+            $this->redirectToThinkUpLLCEndpoint();
+        }
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->view_mgr->addHelp('login', 'userguide/accounts/index');
@@ -42,6 +46,15 @@ class LoginController extends ThinkUpController {
         $config = Config::getInstance();
         $is_registration_open = $config->getValue('is_registration_open');
         $this->addToView('is_registration_open', $is_registration_open);
+
+        // Set successful login redirect destination
+        if (isset($_GET['redirect'])) {
+            $this->addToView('redirect', $_GET['redirect']);
+        }
+        // If form has been submitted
+        if (isset($_POST['redirect'])) {
+            $this->addToView('redirect', $_POST['redirect']);
+        }
 
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
@@ -104,7 +117,14 @@ class LoginController extends ThinkUpController {
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);
                         $owner_dao->clearAccountStatus($user_email);
-                        if (!$this->redirect()) {
+
+                        if (isset($_POST['redirect']) && $_POST['redirect'] != '') {
+                            $success_redir = $_POST['redirect'];
+                        } else {
+                            $success_redir = Utils::getSiteRootPathFromFileSystem();
+                        }
+
+                        if (!$this->redirect($success_redir)) {
                             $controller = new InsightStreamController(true);
                             return $controller->go();
                         }
