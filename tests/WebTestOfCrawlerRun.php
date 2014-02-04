@@ -65,7 +65,7 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
 
     public function testNotLoggedIn() {
         $this->get($this->url.'/crawler/run.php');
-        $this->assertText('You must log in to do this.');
+        //should redirect to Log in page
+        $this->assertTitle('Log in | ThinkUp');
     }
-
 }
