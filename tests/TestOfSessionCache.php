@@ -71,4 +71,25 @@ class TestOfSessionCache extends ThinkUpUnitTestCase {
         $this->assertNull(SessionCache::get('my_key'));
         $this->assertFalse(SessionCache::isKeySet('my_key'));
     }
+
+    public function testInit() {
+        $this->assertEqual(session_id(), '');
+        SessionCache::init();
+
+        // We should be started now
+        $this->assertNotEqual(session_id(), '');
+    }
+
+    public function testVerifyDBness() {
+        SessionCache::init();
+        SessionCache::put('my_key', 'my_value2');
+        $dao = DAOFactory::getDAO('SessionDAO');
+
+        $data = $dao->read(session_id());
+        $this->assertEqual('', $data);
+
+        session_write_close();
+        $data = $dao->read(session_id());
+        $this->assertNotEqual('', $data);
+    }
 }
