@@ -3607,9 +3607,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res, $valid_json);
     }
 
-    public function testCountCheckinsToPlaceTypesLastWeek(){
-        // Build the pub_date string which needs to be a date within the last week
-        $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now")));
+    public function testCountCheckinsByPlaceType(){
+        $pub1 = date(date( 'Y-m-d H:i:s' , strtotime("now -2 week")));
         $pub2 = date(date( 'Y-m-d H:i:s' , strtotime("now +1 hour")));
 
         $hour1 = date('H',  strtotime("now") );
@@ -4279,5 +4278,110 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual($post->post_id, $counter);
             $counter = $counter-2;
         }
+    }
+
+    public function testcountCheckinsToPlaceTypesLastWeek() {
+        $dao = new PostMySQLDAO();
+        // Add place information for checkins
+        $place = array();
+        $place['place_id'] = '12345a';
+        $place['place_type'] = "Park";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
+        $this->builders[] = FixtureBuilder::build('places', $place);
+
+        $place = array();
+        $place['place_id'] = '12345b';
+        $place['place_type'] = "Museum";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
+        $this->builders[] = FixtureBuilder::build('places', $place);
+
+        $place = array();
+        $place['place_id'] = '12345c';
+        $place['place_type'] = "Museum";
+        $place['name'] = "A Park";
+        $place['full_name'] = "The Greatest Park";
+        $place['country_code'] = "UK";
+        $place['country'] = "United Kingdom";
+        $place['icon'] = "http://www.iconlocation.com";
+        $place['network'] = "foursquare";
+        $place['longlat'] = "GeometryFromText( 'Point(51.514 -0.1167)' )";
+        $place['bounding_box'] = "PolygonFromText( 'Polygon(-0.213503 51.512805,-0.105303 51.512805,".
+        "-0.105303 51.572068,-0.213503 51.572068, -0.213503 51.512805)')";
+        $place['map_image'] = "http://www.mapimage.com";
+        $this->builders[] = FixtureBuilder::build('places', $place);
+
+        // ensure this is not this week
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>'249', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>'2011-12-1 09:50:00', 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $res = $dao->countCheckinsToPlaceTypesLastWeek(20, 'foursquare');
+        // We now have posts, but they are way in the past.  Nothing this week
+        $this->assertEqual($res, '');
+
+        // now we add some this week.
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>'250', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>date('Y-m-d').' 09:50:00', 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345a',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>'251', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>date('Y-m-d').' 09:50:00', 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345c',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>'253', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'foursquare',
+        'post_text'=>'I just checked in', 'source'=>'', 'pub_date'=>date('Y-m-d').' 09:51:00', 'location'=>'England',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'place'=>'The Park', 'place_id'=>'12345b',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'foursquare',
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null,
+        'geo'=>'52.477192843264,-1.484333726346'));
+
+        // Now we have actual checkins this week.
+        // 2 Museums, 1 Park
+        // And we can verify the formatting for the charts.
+        $res = $dao->countCheckinsToPlaceTypesLastWeek(20, 'foursquare');
+        $this->assertNotEqual($res, '');
+        $res = json_decode($res);
+
+        $this->assertEqual($res->rows[0]->c[0]->v, 'Museum');
+        $this->assertEqual($res->rows[0]->c[0]->f, 'Museum');
+        $this->assertEqual($res->rows[0]->c[1]->v, 2);
+        $this->assertEqual($res->rows[1]->c[0]->v, 'Park');
+        $this->assertEqual($res->rows[1]->c[0]->f, 'Park');
+        $this->assertEqual($res->rows[1]->c[1]->v, 1);
+        $this->assertEqual($res->cols[0]->type, 'string');
+        $this->assertEqual($res->cols[0]->label, 'Place Type');
+        $this->assertEqual($res->cols[1]->type, 'number');
+        $this->assertEqual($res->cols[1]->label, 'Number of Checkins to this place type');
     }
 }
