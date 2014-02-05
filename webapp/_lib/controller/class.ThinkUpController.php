@@ -94,7 +94,7 @@ abstract class ThinkUpController {
      */
     public function __construct($session_started=false) {
         if (!$session_started) {
-            session_start();
+            SessionCache::init();
         }
         try {
             $config = Config::getInstance();

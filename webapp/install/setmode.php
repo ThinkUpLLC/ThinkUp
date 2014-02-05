@@ -25,7 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011-2013 Gina Trapani
  */
-session_start();
+SessionCache::init();
 if (strtolower($_GET['m']) == "tests") {
     putenv("MODE=TESTS");
     $_SESSION["MODE"] = "TESTS";

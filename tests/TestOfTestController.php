@@ -187,4 +187,16 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertEqual('Exception', $v_mgr->getTemplateDataItem('error_type'));
         unset($_GET['text']);
     }
+
+    /**
+     * Test that a session is started when the controller has run
+     */
+    public function testSessionStarted() {
+        $this->assertEqual('', session_id());
+        $controller = new TestController(true);
+        $this->assertEqual('', session_id());
+
+        $controller = new TestController(false);
+        $this->assertNotEqual('', session_id());
+    }
 }
