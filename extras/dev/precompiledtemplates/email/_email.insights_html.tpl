@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width"/>
-  <style>
+  <style>{literal}
 /**********************************************
 * Ink v1.0.5 - Copyright 2013 ZURB Inc        *
 **********************************************/
@@ -709,6 +709,27 @@ body.outlook p {
           font-size: 9px;
       }
 
+    .bottom-message {
+      background: #FFFABE;
+      border-bottom: 1px solid #BBC7CE;
+    }
+
+    .bottom-message .wrapper {
+      padding: 0;
+    }
+
+    .bottom-message table.columns td {
+      padding: 5px 0 5px 5px;
+      color: #222222;
+      font-size: 11px;
+      line-height: 19px;
+    }
+
+    .bottom-message a {
+      color: #2785D3;
+      text-decoration: underline;
+    }
+
     .header {
       background: #46bcff;
       border-bottom: 1px solid #2785d3;
@@ -843,6 +864,11 @@ body.outlook p {
           background: #DD814B;
       }
 
+    table.email-settings small {
+      color: #999;
+      font-size: 11px;
+    }
+
     table.footer {
           border-top: 1px solid #dbdbdb;
           color: #999;
@@ -875,7 +901,7 @@ body.outlook p {
       table.footer .motto {
           text-align: right;
       }
-  </style>
+  {/literal}</style>
 </head>
 <body>
   <table class="body">
@@ -895,7 +921,7 @@ body.outlook p {
                         <table class="twelve columns" align="center">
                           <tr>
                               <td class="center">
-                                  <center>Today’s ThinkUp insights</center>
+                                  <center>{$header_text}</center>
                             </td>
                             <td class="expander"></td>
                           </tr>
@@ -936,6 +962,34 @@ body.outlook p {
               </td>
             </tr>
           </table>
+
+          <table class="row bottom-message">
+            <tr>
+              <td class="center" align="center">
+                <center>
+
+                  <table class="container">
+                    <tr>
+                      <td class="wrapper last">
+
+                        <table class="twelve columns" align="center">
+                          <tr>
+                              <td class="center">
+                                  <center>This email is a brand new ThinkUp feature. <a href="http://blog.thinkup.com/post/75093414550/new-feature-insight-notification-emails">Find out more</a> and reply to this message to tell us what you think!</center>
+                            </td>
+                            <td class="expander"></td>
+                          </tr>
+                        </table>
+
+                      </td>
+                    </tr>
+                  </table>
+
+                </center>
+              </td>
+            </tr>
+          </table>
+
 <br>
 <br>
           <table class="container">
@@ -948,7 +1002,7 @@ body.outlook p {
       <table class="twelve columns">
         <tr>
           <td class="center">
-              <h6 class="center">Today’s Insights</h6>
+              <h6 class="center">{$header_text}</h6>
           </td>
           <td class="expander"></td>
         </tr>
@@ -958,8 +1012,8 @@ body.outlook p {
   </tr>
 </table>
 {foreach from=$insights item=insight}
-{capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username}&amp;n={$insight->instance->network}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
-{math equation="x % 10" x=$i->id assign=random_color_num}
+{capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
+{math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
   {assign var='color' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
 {elseif $random_color_num eq '0'}
@@ -984,14 +1038,14 @@ body.outlook p {
   {assign var='color' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
 {/if}
 
-<table class="row insight insight-{$color}">
+<table class="row insight insight-{$color_name}">
   <tr>
     <td class="wrapper last">
 
       <table class="twelve columns insight-header">
         <tr>
           <td class="text-pad">
-              <h6><a href="{$permalink}">{$insight->headline|replace:":":""}</a></h6>
+              <h6><a href="{$permalink}">{$insight->headline}</a></h6>
           </td>
           <td class="expander"></td>
         </tr>
@@ -1012,7 +1066,7 @@ body.outlook p {
               <table>
                   <tr>
                       <td class="six sub-columns permalink">
-                          <img src="{$application_url}assets/img/icons/twitter-gray.png" alt="twitter"><a href="{$permalink}">Jan 12</a>
+                          <img src="https://www.thinkup.com/join/assets/img/icons/{$insight->instance->network}-gray.png" alt="{$insight->instance->network}"><a href="{$permalink}">{$insight->date|date_format:"%b %d"}</a>
                       </td>
                       <td class="six sub-columns date">
                           <a href="{$permalink}">View this insight</a>
@@ -1028,13 +1082,13 @@ body.outlook p {
 </table>
 {/foreach}
 
-<table class="row">
+<table class="row email-settings">
   <tr>
     <td class="wrapper last">
       <table class="twelve columns">
         <tr>
           <td class="center">
-              <small class="center"><a href="{$unsub_url}">Change your email preferences</a></small>
+              <small class="center">You receive new insights from ThinkUp once a {if $weekly_or_daily eq 'Daily'}day{else}week{/if}.<br>To get insights once a {if $weekly_or_daily eq "Daily"}week{else}day{/if} or unsubscribe altogether, <a href="{$unsub_url}">change your email settings.</a><br>If you reply to this email, an actual human will read it.</small>
           </td>
           <td class="expander"></td>
         </tr>
@@ -1069,7 +1123,7 @@ body.outlook p {
                                         <a class="privacy" href="https://github.com/ThinkUpLLC/policy">Privacy and stuff</a>
                                       </td>
                                       <td class="six sub-columns links">
-                                          <a href="https://twitter.com/thinkup"><img src="{$application_url}assets/img/icons/twitter-blue.png" width="20" height="20"/></a><a href="https://facebook.com/thinkupapp"><img src="{$application_url}assets/img/icons/facebook-blue.png" width="20" height="20"/></a><a href="https://plus.google.com/109397312975756759279"><img src="{$application_url}assets/img/icons/google-plus-blue.png" width="20" height="20"/></a><a href="https://github.com/ginatrapani/ThinkUp"><img src="{$application_url}assets/img/icons/github-blue.png" width="20" height="20"/></a>
+                                          <a href="https://twitter.com/thinkup"><img src="https://www.thinkup.com/join/assets/img/icons/twitter-blue.png" width="20" height="20"/></a><a href="https://facebook.com/thinkupapp"><img src="https://www.thinkup.com/join/assets/img/icons/facebook-blue.png" width="20" height="20"/></a><a href="https://plus.google.com/109397312975756759279"><img src="https://www.thinkup.com/join/assets/img/icons/google-plus-blue.png" width="20" height="20"/></a><a href="https://github.com/ginatrapani/ThinkUp"><img src="https://www.thinkup.com/join/assets/img/icons/github-blue.png" width="20" height="20"/></a>
                                       </td>
                                       <td class="three sub-columns motto">
                                           It is nice to be nice.
