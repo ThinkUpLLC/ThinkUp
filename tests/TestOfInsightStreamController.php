@@ -63,7 +63,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         'posts_per_week'=>77));
         // Facebook public instance
         $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'13',
-        'network_username'=>'spot', 'network'=>'facebook', 'network_viewer_id'=>'10',
+        'network_username'=>'Bill Cõsby', 'network'=>'facebook', 'network_viewer_id'=>'10',
         'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
         'posts_per_week'=>77));
 
@@ -86,14 +86,16 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'favoriteflashbacks', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfPosts()));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'3', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
+        'instance_id'=>'3', 'headline'=>'Booyah!',
+        'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'3', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
+        'instance_id'=>'3', 'headline'=>'Booyah!',
+        'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfPosts()));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'4', 'headline'=>'Booyah Facebook!', 'text'=>'This is Spot\'s Facebook post!',
+        'instance_id'=>'4', 'headline'=>'Booyah Facebook!', 'text'=>'This is Bill Cõsby\'s Facebook post!',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
         'time_generated'=>$time_now, 'related_data'=>self::getRelatedDataListOfPosts('facebook')));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
@@ -380,5 +382,17 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $this->assertNoPattern("/img src=\"http\:\/\/example.com\/yo.jpg/", $results);
         //Assert insight header image not using http
         $this->assertNoPattern("/img src=\"http:\/\/example.com\/header_image.gif/", $results);
+    }
+
+    public function testOfNetworkUsernameEncoding() {
+        $builders = self::buildPublicAndPrivateInsights();
+        $this->simulateLogin('tuuser2@example.com', false);
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->debug($results);
+        //Assert spaces are encoded
+        $this->assertPattern('/Bill\+Cõsby/', $results);
+        //Assert accented characters are not encoded
+        $this->assertNoPattern('/Bill\+Cosby/', $results);
     }
 }
