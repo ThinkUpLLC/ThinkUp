@@ -15,7 +15,7 @@
 {foreach from=$insights key=tid item=i name=insights}
   {assign var='previous_date' value=$cur_date}
   {assign var='cur_date' value=$i->date}
-  {capture name=permalink assign="permalink"}{$thinkup_application_url}?u={$i->instance->network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}{/capture}
+  {capture name=permalink assign="permalink"}{$thinkup_application_url}?u={$i->instance->network_username|urlencode_network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}{/capture}
 
   {math equation="x % 10" x=$i->id assign=random_color_num}
   {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}{assign var='color' value='historical'}

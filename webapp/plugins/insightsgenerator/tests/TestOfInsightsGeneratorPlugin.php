@@ -344,7 +344,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
 
-        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Cosby',
+        //accented character
+        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Cõsby',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>7));
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
@@ -399,7 +400,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
             $merge_vars[$mv->name] = $mv->content;
         }
         $this->assertPattern('/http:\/\/downtonabb.ey\.*/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
-        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=Bill\+Cosby/', $merge_vars['insights'],
+        //Should preserve accented character
+        $this->assertPattern('/http:\/\/downtonabb.ey\.*/\?u=Bill\+Cõsby/', $merge_vars['insights'],
+            'Insight URL should not contain spaces');
+        $this->assertNoPattern('/http:\/\/downtonabb.ey\.*/\?u=Bill\+Cosby/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
         $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
             'Facebook icon should appear');
