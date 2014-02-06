@@ -192,6 +192,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
      * Test that a session is started when the controller has run
      */
     public function testSessionStarted() {
+        session_destroy(); // Make sure there's not sessio from previous tests.
         $this->assertEqual('', session_id());
         $controller = new TestController(true);
         $this->assertEqual('', session_id());
