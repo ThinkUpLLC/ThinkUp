@@ -121,7 +121,7 @@ class LoginController extends ThinkUpController {
                         if (isset($_POST['redirect']) && $_POST['redirect'] != '') {
                             $success_redir = $_POST['redirect'];
                         } else {
-                            $success_redir = Utils::getSiteRootPathFromFileSystem();
+                            $success_redir = $config->getValue('site_root_path');
                         }
 
                         if (!$this->redirect($success_redir)) {
