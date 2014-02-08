@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Plugin Maker
-# Generates all the necessary files and folders for a new CrawlerPlugin, DashboardPlugin and PostDetailPlugin.
+# Generates all the necessary files and folders for a new CrawlerPlugin
 # The 1st argument passed in is the name of the new plugin.
 
 plugin_name_lcase="$(tr [A-Z] [a-z] <<< "$1")"
@@ -250,7 +250,7 @@ preamble $1 'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Plugin.php'
 
 cat<< END >>'webapp/plugins/'$plugin_name_lcase'/model/class.'$1'Plugin.php'
 
-class $1Plugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class $1Plugin extends Plugin implements CrawlerPlugin {
 
     public function __construct(\$vals=null) {
         parent::__construct(\$vals);
@@ -274,13 +274,6 @@ class $1Plugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDet
 
     }
 
-    public function getDashboardMenuItems(\$instance) {
-
-    }
-
-    public function getPostDetailMenuItems(\$post) {
-
-    }
     public function renderInstanceConfiguration(\$owner, \$instance_username, \$instance_network) {
         return "";
     }

@@ -78,7 +78,6 @@ $model_tests->add(new TestOfUserMySQLDAO());
 $model_tests->add(new TestOfUserErrorMySQLDAO());
 $model_tests->add(new TestOfUtils());
 $model_tests->add(new TestOfWebapp());
-$model_tests->add(new TestOfMenuItem());
 $model_tests->add(new TestOfDataset());
 $model_tests->add(new TestOfPostIterator());
 $model_tests->add(new TestOfMutexMySQLDAO());
