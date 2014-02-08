@@ -54,66 +54,6 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertFalse($plugin->isConfigured());
     }
 
-    public function testMenuItemRegistration() {
-        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
-        $logger = Logger::getInstance();
-        $pd = DAOFactory::getDAO('PostDAO');
-        $instance = new Instance();
-        $instance->network_user_id = 1;
-
-        $menus = $webapp_plugin_registrar->getDashboardMenu($instance);
-        $posts_menu = $menus["posts-all"];
-
-        $this->assertEqual(sizeof($menus), 7);
-        $post_tab = $menus['posts-all'];
-        $this->assertEqual($post_tab->name, "All posts");
-        $this->assertEqual($post_tab->description, "All your status updates");
-
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "all_facebook_posts");
-        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getAllPosts");
-
-        $post_tab = $menus['posts-mostreplies'];
-        $this->assertEqual($post_tab->name, "Most replied-to");
-        $this->assertEqual($post_tab->description, "Posts with most replies");
-
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "most_replied_to_posts");
-        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getMostRepliedToPosts");
-
-        $post_tab = $menus['posts-mostlikes'];
-        $this->assertEqual($post_tab->name, "Most liked");
-        $this->assertEqual($post_tab->description, "Posts with most likes");
-
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "most_replied_to_posts");
-        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getMostFavedPosts");
-
-        $post_tab = $menus['posts-questions'];
-        $this->assertEqual($post_tab->name, "Inquiries");
-        $this->assertEqual($post_tab->description, "Inquiries, or posts with a question mark in them");
-
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "all_facebook_posts");
-        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getAllQuestionPosts");
-
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-
-        $logger->close();
-    }
 
     public function testDeactivate() {
         //all facebook and facebook page accounts should be set to inactive on plugin deactivation
