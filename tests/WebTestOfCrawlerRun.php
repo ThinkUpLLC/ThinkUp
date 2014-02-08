@@ -66,6 +66,8 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
     public function testNotLoggedIn() {
         $this->get($this->url.'/crawler/run.php');
         //should redirect to Log in page
-        $this->assertTitle('Log in | ThinkUp');
+        $cfg = Config::getInstance();
+        $app_title_prefix = $cfg->getValue('app_title_prefix');
+        $this->assertTitle('Log in | '.$app_title_prefix.'ThinkUp');
     }
 }

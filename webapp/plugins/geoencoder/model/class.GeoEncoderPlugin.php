@@ -31,7 +31,7 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin {
+class GeoEncoderPlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         parent::__construct($vals);
@@ -79,36 +79,5 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
 
     public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
         return '';
-    }
-
-    public function getPostDetailMenuItems($post) {
-        $menus = array();
-        $map_template_path = Utils::getPluginViewDirectory('geoencoder').'geoencoder.map.tpl';
-        if ($post->is_geo_encoded == 1) {
-        //Define a menu item
-            $map_menu_item = new MenuItem("Response Map", "", $map_template_path, 'GeoEncoder');
-            //Define a dataset to be displayed when that menu item is selected
-            $map_menu_item_dataset_1 = new Dataset("geoencoder_map", 'PostDAO', "getRelatedPosts",
-            array($post->post_id, $post->network, 'location') );
-            //Associate dataset with menu item
-            $map_menu_item->addDataset($map_menu_item_dataset_1);
-            //Add menu item to menu
-            $menus["geoencoder_map"] = $map_menu_item;
-
-            $nearest_template_path = Utils::getPluginViewDirectory('geoencoder').'geoencoder.nearest.tpl';
-            //Define a menu item
-            $nearest_menu_item = new MenuItem("Nearest Replies", "", $nearest_template_path);
-            //Define a dataset to be displayed when that menu item is selected
-            $nearest_dataset = new Dataset("geoencoder_nearest", 'PostDAO', "getRelatedPosts",
-            array($post->post_id, $post->network, !Session::isLoggedIn()));
-            //Associate dataset with menu item
-            $nearest_menu_item->addDataset($nearest_dataset);
-            $nearest_dataset_2 = new Dataset("geoencoder_options", 'PluginOptionDAO', 'getOptionsHash',
-            array('geoencoder', true));
-            $nearest_menu_item->addDataset($nearest_dataset_2);
-            //Add menu item to menu
-            $menus["geoencoder_nearest"] = $nearest_menu_item;
-        }
-        return $menus;
     }
 }

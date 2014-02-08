@@ -28,7 +28,7 @@
  * @copyright 2012-2013 Aaron Kalair
  */
 
-class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class FoursquarePlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         // Pass the values to the parents constructor
@@ -122,43 +122,5 @@ class FoursquarePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                 ucwords($instance->network), __METHOD__.','.__LINE__);
             }
         }
-    }
-
-    /**
-     * Get Dashboard menu
-     * @param $instance Instance
-     * @return array of MenuItem objects (Tweets, Friends, Followers, etc)
-     */
-    public function getDashboardMenuItems($instance) {
-        // An array to store our list of menu items in
-        $menus = array();
-
-        // Set the view template to checkins.tpl
-        $checkins_data_tpl = Utils::getPluginViewDirectory('foursquare').'checkins.tpl';
-        // Add a checkins link to the list of pages on the left
-        $checkins_menu_item = new MenuItem("Checkins", "Your checkins", $checkins_data_tpl);
-
-        // Get the data for our checkins link
-        $checkins_menu_ds_1 = new Dataset("all_checkins", 'PostDAO', "getAllCheckins",
-        array($instance->network_user_id, $instance->network, 15, "#page_number#"));
-        $checkins_menu_ds_1->addHelp('userguide/listings/foursquare/dashboard_posts');
-        $checkins_menu_item->addDataset($checkins_menu_ds_1);
-
-        // Add the checkins to our array of items
-        $menus['posts'] = $checkins_menu_item;
-
-        // Return the list of items we want to display
-        return $menus;
-    }
-
-    /**
-     * Get Post Detail menu
-     * @param $post Post
-     * @return array of Menu objects (Tweets, Friends, Followers, etc)
-     */
-    public function getPostDetailMenuItems($post){
-        // We need to return an array here or we get an error on the post detail page
-        $menu_items = array();
-        return $menu_items;
     }
 }

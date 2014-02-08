@@ -65,23 +65,4 @@ class TestOfFoursquarePlugin extends ThinkUpUnitTestCase {
         // Check we know the plugin still needs configuring
         $this->assertFalse($plugin->isConfigured());
     }
-
-    public function testMenuItemRegistration() {
-        $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
-        $instance = new Instance();
-        $instance->network_user_id = 1;
-
-        $menus = $webapp_plugin_registrar->getDashboardMenu($instance);
-        // We only have one menu so far, the checkins
-        $this->assertEqual(sizeof($menus), 1);
-        $post_tab = $menus['posts'];
-        $this->assertEqual($post_tab->name, "Checkins");
-        $this->assertEqual($post_tab->description, "Your checkins");
-        $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 1);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "all_checkins");
-        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getAllCheckins");
-    }
 }

@@ -94,7 +94,9 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         // And just to make sure, if we 'logout', we should be denied access now
         Session::logout();
         $results = $controller->go();
-        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
+        $this->assertPattern( '/ControllerAuthException/', $results);
+        $this->assertPattern( '/You must/', $results);
+        $this->assertPattern( '/log in/', $results);
     }
 
     public function testGetLoggedInUser() {
