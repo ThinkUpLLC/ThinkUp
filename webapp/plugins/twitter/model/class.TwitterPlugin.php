@@ -30,7 +30,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class TwitterPlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals = null) {
         parent::__construct($vals);
@@ -152,38 +152,5 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         } else {
             return "is_reply_by_friend DESC, follower_count DESC";
         }
-    }
-
-    /**
-     * @param Post $post
-     * @return array MenuItems
-     */
-    public function getPostDetailMenuItems($post) {
-        $payload_tpl = Utils::getPluginViewDirectory('twitter').'twitter.post.retweets.tpl';
-        $menus = array();
-        $rt_plugin_active = false;
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId('twitterrealtime');
-        if (isset($plugin_id)) {
-            $rt_plugin_active = $plugin_dao->isPluginActive($plugin_id);
-        }
-
-        if ($post->network == 'twitter') {
-            $retweets_menu_item = new MenuItem("Retweets", "Retweets of this tweet", $payload_tpl);
-            //if not logged in, show only public retweets
-            $retweets_dataset = new Dataset("retweets", 'PostDAO', "getRetweetsOfPost", array($post->post_id,
-            'twitter', 'default', 'km', !Session::isLoggedIn()) );
-            $retweets_menu_item->addDataset($retweets_dataset);
-            $menus['fwds'] = $retweets_menu_item;
-            if ($rt_plugin_active) {
-                $favd_menu_item = new MenuItem("Favorited", "Those who favorited this tweet", $payload_tpl);
-                //if not logged in, show only public fav'd info
-                $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
-                'twitter', !Session::isLoggedIn()) );
-                $favd_menu_item->addDataset($favd_dataset);
-                $menus['favs'] = $favd_menu_item;
-            }
-        }
-        return $menus;
     }
 }

@@ -47,16 +47,6 @@ class PluginRegistrarWebapp extends PluginRegistrar {
      */
     private $active_plugins = null;
     /**
-     *
-     * @var array MenuItem objects
-     */
-    private $post_detail_menus = null;
-    /**
-     *
-     * @var array MenuItem objects
-     */
-    private $dashboard_menus = null;
-    /**
      * Get the singleton instance of PluginRegistrarWebapp
      * @return PluginRegistrarWebapp
      */
@@ -87,78 +77,5 @@ class PluginRegistrarWebapp extends PluginRegistrar {
      */
     public function setActivePlugin($ap) {
         $this->active_plugin = $ap;
-    }
-
-    public function getDashboardMenu($instance) {
-        if ($this->dashboard_menus === null) {
-            $this->dashboard_menus = array();
-            $plugin_class_name = $this->getPluginObject($this->active_plugin);
-            $p = new $plugin_class_name;
-            if ($p instanceof DashboardPlugin) {
-                $this->dashboard_menus = $p->getDashboardMenuItems($instance);
-            }
-        }
-        return $this->dashboard_menus;
-    }
-
-    public function getPostDetailMenu($post) {
-        if ($this->post_detail_menus === null) {
-            $this->post_detail_menus = array();
-            //Get all active plugins
-            $plugin_dao = DAOFactory::getDAO('PluginDAO');
-            $this->active_plugins = $plugin_dao->getActivePlugins();
-            //For each active plugin, check if getPostDetailMenu method exists
-            foreach ($this->active_plugins as $plugin) {
-                try {
-                    $plugin_class_name = $this->getPluginObject($plugin->folder_name);
-                } catch (PluginNotFoundException $e) {
-                    //there's a plugin activated which doesn't exist in the source code, so deactivate it
-                    $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
-                    $plugin_dao->setActive($plugin_id, 0);
-                }
-
-                //if so, add to sidebar_menu
-                $p = new $plugin_class_name;
-                if ($p instanceof PostDetailPlugin) {
-                    $menus = $p->getPostDetailMenuItems($post);
-                    if (is_array($menus)) {
-                        $this->post_detail_menus = array_merge($this->post_detail_menus, $menus);
-                    }
-                }
-            }
-        }
-        return $this->post_detail_menus;
-    }
-    /**
-     * Get individual Dashboard MenuItem
-     * @param str $menu_item_short_name
-     * @param Instance $instance
-     * @return MenuItem for instance, null if none available for given short name
-     */
-    public function getDashboardMenuItem($menu_item_short_name, $instance) {
-        if ($this->dashboard_menus === null) {
-            $this->getDashboardMenu($instance);
-        }
-        if ( isset($this->dashboard_menus[$menu_item_short_name]) ) {
-            return $this->dashboard_menus[$menu_item_short_name];
-        } else {
-            return null;
-        }
-    }
-    /**
-     * Get individual post detail MenuItem
-     * @param str $menu_item_short_name
-     * @param Post $post
-     * @return MenuItem for instance, null if none available for given short name
-     */
-    public function getPostDetailMenuItem($menu_item_short_name, $post) {
-        if ($this->post_detail_menus === null) {
-            $this->getPostDetailMenu($post);
-        }
-        if ( isset($this->post_detail_menus[$menu_item_short_name]) ) {
-            return $this->post_detail_menus[$menu_item_short_name];
-        } else {
-            return null;
-        }
     }
 }
