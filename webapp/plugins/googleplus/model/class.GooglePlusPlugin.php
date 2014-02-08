@@ -24,7 +24,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011-2013 Gina Trapani
  */
-class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class GooglePlusPlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         parent::__construct($vals);
@@ -95,20 +95,5 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
                 ucwords($instance->network), __METHOD__.','.__LINE__);
             }
         }
-    }
-
-    public function getPostDetailMenuItems($post) {
-        $template_path = Utils::getPluginViewDirectory('googleplus').'googleplus.inline.view.tpl';
-        $menus = array();
-
-        if ($post->network == 'google+') {
-            $likes_menu_item = new MenuItem("+1s", "", $template_path);
-            //if not logged in, show only public fav'd info
-            $liked_dataset = new Dataset("plus1s", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
-            $post->network, !Session::isLoggedIn()) );
-            $likes_menu_item->addDataset($liked_dataset);
-            $menus['plus1s'] = $likes_menu_item;
-        }
-        return $menus;
     }
 }

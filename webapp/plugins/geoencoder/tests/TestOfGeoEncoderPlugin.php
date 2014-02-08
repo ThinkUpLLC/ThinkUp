@@ -209,40 +209,6 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($locations[5]['short_name'], "40.681839 -73.983734");
     }
 
-    public function testMenuItemRegistrationOnPostPageNotGeoencoded() {
-        //Test post page menu items
-        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
-        'retweet_count_api' => '', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
-        'post_id'=>'9021481076', 'is_protected'=>0, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
-        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
-
-        //Shouldn't register mapping items if is_geo_encoded is 0
-        $post_menus_array = $this->webapp_plugin_registrar->getPostDetailMenu($post);
-        $this->assertIsA($post_menus_array, 'Array');
-        $this->assertEqual(sizeof($post_menus_array), 1); //1 from Twitter plugin
-    }
-
-    public function testMenuItemRegistrationOnPostPageGeoencoded() {
-        //Test post page menu items
-        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
-        'retweet_count_api' => '', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
-        'post_id'=>'9021481076', 'is_protected'=>0, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
-        'is_geo_encoded'=>1, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
-
-        //Should register mapping items if is_geo_encoded is 1
-        $post_menus_array = $this->webapp_plugin_registrar->getPostDetailMenu($post);
-        $this->assertIsA($post_menus_array, 'Array');
-        $this->assertEqual(sizeof($post_menus_array), 3); //3 from Twitter plugin, 2 from GeoEncoder
-        $this->assertIsA($post_menus_array['geoencoder_map'], 'MenuItem');
-        $this->assertIsA($post_menus_array['geoencoder_nearest'], 'MenuItem');
-    }
-
     private function buildData() {
         $builders = array();
 
