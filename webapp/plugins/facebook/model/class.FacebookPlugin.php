@@ -26,7 +26,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2013 Gina Trapani, Mark Wilkie
  */
-class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class FacebookPlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         parent::__construct($vals);
@@ -152,21 +152,5 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
 
     public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
         return '';
-    }
-
-    public function getPostDetailMenuItems($post) {
-        $facebook_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.post.likes.tpl';
-        $menus = array();
-
-        if ($post->network == 'facebook' || $post->network == 'facebook page') {
-            $likes_menu_item = new MenuItem("Likes", "Those who liked this post", $facebook_data_tpl);
-            //if not logged in, show only public fav'd info
-            $liked_dataset = new Dataset("likes", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
-            $post->network, !Session::isLoggedIn()) );
-            $likes_menu_item->addDataset($liked_dataset);
-            $menus['likes'] = $likes_menu_item;
-        }
-
-        return $menus;
     }
 }
