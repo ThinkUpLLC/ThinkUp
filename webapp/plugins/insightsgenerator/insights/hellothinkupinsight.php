@@ -60,11 +60,8 @@ class HelloThinkUpInsight extends InsightPluginParent implements InsightPlugin {
         //$my_insight->setMilestones($my_insight_milestones);
         //etc
 
-        if ($this->DEBUG) { // just for the Hello, World example.
         $this->insight_dao->insertInsight($my_insight);
-        }
 
-        // $this->insight_dao->insertInsight($my_insight);
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }

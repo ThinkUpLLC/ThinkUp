@@ -36,7 +36,7 @@ require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.In
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/hellothinkupinsight.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/flashbacks.php';
 
-class TestOfHelloThinkUpInsight extends ThinkUpUnitTestCase {
+class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -49,15 +49,37 @@ class TestOfHelloThinkUpInsight extends ThinkUpUnitTestCase {
     public function testHelloThinkUpInsight() {
         $posts = array();
         $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_username = 'Katniss Everdeen';
+        $instance->network = 'facebook';
+        $builders = self::setUpPublicInsight($instance);
+
         $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
         $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
 
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, '2013-12-21');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
+
         $this->assertEqual($result->headline, 'Ohai');
-        $this->assertEqual($result->text, 'Greetings humans');
+        $this->assertEqual($result->text, 'Greetings, humans');
         $this->assertEqual($result->filename, 'hellothinkupinsight');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight.html
+         */
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'Katniss Everdeen';
+        $_GET['n'] = 'facebook';
+        $_GET['d'] = date ('Y-m-d');
+        $_GET['s'] = 'my_test_insight_hello_thinkup';
+        $results = $controller->go();
+        //output this to an HTML file to see the insight fully rendered
+        $this->debug($results);
     }
 }
