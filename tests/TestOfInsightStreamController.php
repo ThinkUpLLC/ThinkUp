@@ -386,7 +386,6 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
 
     public function testOfNetworkUsernameEncoding() {
         $builders = self::buildPublicAndPrivateInsights();
-        $this->simulateLogin('tuuser2@example.com', false);
         $controller = new InsightStreamController();
         $results = $controller->go();
         $this->debug($results);
