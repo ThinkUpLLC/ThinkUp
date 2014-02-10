@@ -46,6 +46,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->get($this->url.'/session/register.php');
         $this->assertText('Sorry, registration is closed on this installation of ');
 
+        $this->debug($this->url);
         //Log in as admin
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
