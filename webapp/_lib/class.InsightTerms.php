@@ -122,6 +122,10 @@ class InsightTerms {
                 return "followed ".$user;
                 break;
 
+            case 'instagram':
+                return "followed ".$user;
+                break;
+
             case 'google+':
                 return "added ".$user." to new circles";
                 break;
@@ -150,6 +154,10 @@ class InsightTerms {
 
             case 'foursquare':
                 return (!$plural) ? 'checkin' : 'checkins';
+                break;
+
+            case 'instagram':
+                return (!$plural) ? 'photo' : 'photos';
                 break;
 
             case 'youtube':
@@ -214,6 +222,10 @@ class InsightTerms {
                 return (!$plural) ? 'retweet' : 'retweets';
                 break;
 
+            case 'instagram':
+                return (!$plural) ? 'regram' : 'regrams';
+                break;
+
             default:
                 return (!$plural) ? 'reshare' : 'reshares';
                 break;
@@ -234,6 +246,11 @@ class InsightTerms {
 
             case 'youtube':
                 return (!$plural) ? 'viewer' : 'viewers';
+                break;
+
+
+            case 'instagram':
+                return (!$plural) ? 'follower' : 'followers';
                 break;
 
             default:
@@ -289,6 +306,10 @@ class InsightTerms {
         switch ($network) {
             case 'twitter':
                 return 'retweeted';
+                break;
+
+            case 'instagram':
+                return 'regrammed';
                 break;
 
             default:

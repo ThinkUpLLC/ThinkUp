@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "code": 200
+  },
+  "data": [
+    {
+      "created_time": "1376169734",
+      "text": "Epikinduna paixnidia",
+      "from": {
+        "username": "ni_ato",
+        "profile_picture": "http://images.ak.instagram.com/profiles/anonymousUser.jpg",
+        "id": "502993749",
+        "full_name": "niki"
+      },
+      "id": "519671854563291086"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+    "data": {
+        "id": "13096",
+        "username": "nancy",
+        "full_name": "Nancy Smith",
+        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_13096_75sq_1286441317.jpg",
+        "bio": "",
+        "website": "",
+        "counts": {
+            "media": 1320,
+            "follows": 420,
+            "followed_by": 3410
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "access_token": "newfauxaccesstoken11234567890",
+    "user": {
+        "id": "494785218",
+        "username": "snoopdogg",
+        "full_name": "Snoop Dogg",
+        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg"
+    }
+}

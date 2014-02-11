@@ -38,6 +38,10 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
         $filename = basename(__FILE__, ".php");
 
         foreach ($last_week_of_posts as $post) {
+            if($post->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+            }
             //if post was a retweet, check if insight exists
             if ($post->in_retweet_of_post_id != null && $post->in_rt_of_user_id != null) {
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));

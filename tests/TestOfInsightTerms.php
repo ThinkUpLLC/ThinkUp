@@ -74,6 +74,22 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($text, "Your video got 3 comments from 2 viewers");
     }
 
+    public function testInsightTermsForInstagram() {
+        $terms = new InsightTerms('instagram');
+
+        $count = 3;
+        $text = "Your ".$terms->getNoun('post')." got ".$count." ".$terms->getNoun('reply', ($count > 1))
+        ." from 2 ".$terms->getNoun('follower', InsightTerms::PLURAL)." and 1 ".$terms->getNoun('like')
+        ." and 1 ".$terms->getNoun('reshare');
+
+        $this->assertNotNull($terms);
+        $this->assertEqual($text, "Your photo got 3 comments from 2 followers and 1 like and 1 regram");
+
+        $text = "2 people ".$terms->getPhraseForAddingAsFriend('aaron')." and ".$terms->getVerb("shared").
+        " the photos";
+        $this->assertEqual($text, "2 people followed aaron and regrammed the photos");
+    }
+
     public function testGetMultiplierAdverb() {
         $terms = new InsightTerms('youtube');
         $this->assertEqual($terms->getMultiplierAdverb(1), '1x');

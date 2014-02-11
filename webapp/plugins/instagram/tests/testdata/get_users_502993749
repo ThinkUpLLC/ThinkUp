@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "code": 200
+  },
+  "data": {
+    "username": "ni_ato",
+    "bio": "",
+    "website": "",
+    "profile_picture": "http://images.ak.instagram.com/profiles/anonymousUser.jpg",
+    "full_name": "niki",
+    "counts": {
+      "media": 0,
+      "followed_by": 0,
+      "follows": 1
+    },
+    "id": "502993749"
+  }
+}

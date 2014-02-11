@@ -133,6 +133,48 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/3 likes/', $result->text);
     }
 
+    public function testWeeklyBestsInsightForInstagram() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+
+        $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5,
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        )); // popularity_index = 34
+        $posts[] = new Post(array(
+            'reply_count_cache' => 0,
+            'favlike_count_cache' => 15,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        )); // popularity_index = 33
+        $posts[] = new Post(array(
+            'reply_count_cache' => 2,
+            'favlike_count_cache' => 1,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        )); // popularity_index = 27
+
+        $insight_plugin = new WeeklyBestsInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_best', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/testeriffic\'s most popular photo from last week got /', $result->text);
+        $this->assertPattern('/5 comments/', $result->text);
+        $this->assertPattern('/3 likes/', $result->text);
+    }
+
     public function testWeeklyBestsInsightWithOneReply() {
         // Get data ready that insight requires
         $instance = new Instance();

@@ -60,6 +60,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
             $plugin_names[] = $plugin->name;
             $plugin_folder_names[] = $plugin->folder_name;
         }
+
         $this->assertTrue(in_array('Expand URLs', $plugin_names));
         $this->assertTrue(in_array('expandurls', $plugin_folder_names));
 
@@ -86,6 +87,12 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertTrue(in_array('Twitter Realtime', $plugin_names));
         $this->assertTrue(in_array('twitterrealtime', $plugin_folder_names));
+
+        $version = explode('.', PHP_VERSION);
+        if ($version[0] >= 5 && $version[1] >= 3) { // Instagram plugin should only be here if version is >= 5.3
+            $this->assertTrue(in_array('Instagram', $plugin_names));
+            $this->assertTrue(in_array('instagram', $plugin_folder_names));
+        }
     }
 
     public function testInsertPlugin() {

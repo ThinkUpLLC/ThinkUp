@@ -385,6 +385,51 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]->post_id, 'abadadfd1213');
     }
 
+    public function testGetFavoritesFromOneYearAgoWithPhoto() {
+        //build post published one year ago today
+        $builders[] = FixtureBuilder::build('posts', array('id'=>9999, 'post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-365d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'instagram',
+        'is_protected' => 0));
+
+        $photo_builder = FixtureBuilder::build('photos', array('id' => 3, 'post_key' => 9999, 'filter' => 'Lo-fi',
+        'standard_resolution_url' => 'http://instagramstandard.com',
+        'low_resolution_url' => 'http://instagramlow.com', 'thumbnail_url' => 'http://instagramthumb.com'));
+
+        //build favorite of that post by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'instagram'));
+
+        //get favorites from one year ago today
+        $result = $this->dao->getFavoritesFromOneYearAgo('13', 'instagram');
+
+        //assert post is returned
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->post_id, 'abadadfd1212');
+        $this->assertTrue($result[0] instanceof Photo );
+
+        //build post published one year and 4 days ago today
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+        'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'-369d',
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'instagram',
+        'is_protected' => 0));
+
+        //build favorite of that post by test user ev
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1213', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'13', 'network'=>'instagram'));
+
+        $since_date = date("Y-m-d", strtotime("-4 day"));
+        //get favorites from one year ago today
+        $result = $this->dao->getFavoritesFromOneYearAgo('13', 'instagram', $since_date);
+
+        //assert post is returned
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertEqual($result[0]->post_id, 'abadadfd1213');
+        $this->assertTrue($result[0] instanceof Photo );
+    }
+
     public function testGetUsersWhoFavoritedMostOfYourPosts() {
         //build post published 3 days ago
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
