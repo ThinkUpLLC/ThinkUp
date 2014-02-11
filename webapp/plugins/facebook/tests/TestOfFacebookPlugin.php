@@ -86,10 +86,10 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $logger->close();
     }
 
-    public function testCrawlWithAuthError() {
+    public function testCrawlWithSessionExpiredAuthError() {
         //build active instance owned by a owner
-        $instance_with_autherror = array('id'=>5, 'network_username'=>'Liz Lemon', 'network_user_id'=>'123456',
-        'network_viewer_id'=>'123456', 'last_post_id'=>'0',
+        $instance_with_autherror = array('id'=>5, 'network_username'=>'Liz Lemon',
+        'network_user_id'=>'123456-session-expired', 'network_viewer_id'=>'123456-session-expired', 'last_post_id'=>'0',
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
@@ -158,6 +158,60 @@ message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon F
         $fb_plugin->crawl();
 
         //Assert email has not been resent
+        $actual_reg_email = Mailer::getLastMail();
+        $this->debug($actual_reg_email);
+        $this->debug($actual_reg_email);
+        $this->assertEqual($actual_reg_email, '');
+    }
+
+    public function testCrawlWithApplicationRequestLimitReacheddAuthError() {
+        //build active instance owned by a owner
+        $instance_with_autherror = array('id'=>5, 'network_username'=>'Liz Lemon',
+        'network_user_id'=>'123456-app-throttled', 'network_viewer_id'=>'123456-app-throttled', 'last_post_id'=>'0',
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'1', 'network'=>'facebook',
+        'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
+        );
+
+        $instance_builder_1 = FixtureBuilder::build('instances', $instance_with_autherror);
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1) );
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp K. User',
+        'email'=>'notadmin@example.com', 'is_activated'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>5,
+        'auth_error'=>'', 'oauth_access_token'=>'zL11BPY2fZPPyYY', 'oauth_access_token_secret'=>''));
+
+        //assert invalid_oauth_email_sent_timestamp option is not set
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('facebook');
+        $last_email_timestamp = $option_dao->getOptionByName(OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id,
+        'invalid_oauth_email_sent_timestamp');
+        $this->assertNull($last_email_timestamp);
+
+        //log in as that owner
+        $this->simulateLogin('admin@example.com');
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+
+        //run the crawl
+        $fb_plugin = new FacebookPlugin();
+        $fb_plugin->crawl();
+
+        //assert that APIOAuthException was caught and recorded in owner_instances table
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $owner_instance = $owner_instance_dao->get(2, 5);
+        $this->debug(Utils::varDumpToString($owner_instance));
+        //assert that the application request throttling error was not saved
+        $this->assertEqual($owner_instance->auth_error, '');
+
+        //assert that the reauth email notification was not sent to user
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
         $this->assertEqual($actual_reg_email, '');

@@ -88,16 +88,30 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
             try {
                 $facebook_crawler->fetchPostsAndReplies();
             } catch (APIOAuthException $e) {
-                //The access token is invalid, save in owner_instances table
-                $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
-                //Send email alert
-                //Get owner by auth tokens first, then send to that person
-                $owner_email_to_notify = $owner_instance_dao->getOwnerEmailByInstanceTokens($instance->id,
-                $access_token, '');
-                $this->sendInvalidOAuthEmailAlert($owner_email_to_notify, $instance->network_username);
-                $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
+                $logger->logUserError(get_class($e).": ".$e->getMessage(), __METHOD__.','.__LINE__);
+                //Don't send reauth email if it's app-level API rate limting
+                //https://developers.facebook.com/docs/reference/ads-api/api-rate-limiting/#applimit
+                if ( strpos($e->getMessage(), 'Application request limit reached') === false ) {
+                    //The access token is invalid, save in owner_instances table
+                    $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
+                    //Send email alert
+                    //Get owner by auth tokens first, then send to that person
+                    $owner_email_to_notify = $owner_instance_dao->getOwnerEmailByInstanceTokens($instance->id,
+                    $access_token, '');
+                    $email_attempt = $this->sendInvalidOAuthEmailAlert($owner_email_to_notify,
+                    $instance->network_username);
+                    if ($email_attempt) {
+                        $logger->logUserInfo('Sent reauth email to '.$owner_email_to_notify, __METHOD__.','.__LINE__);
+                    } else {
+                        $logger->logInfo('Didn\'t send reauth email to '.$owner_email_to_notify,
+                        __METHOD__.','.__LINE__);
+                    }
+                } else {
+                    $logger->logInfo('Facebook is rate-limiting this app. Do nothing now and try again later',
+                    __METHOD__.','.__LINE__);
+                }
             } catch (Exception $e) {
-                $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
+                $logger->logUserError(get_class($e).": ".$e->getMessage(), __METHOD__.','.__LINE__);
             }
             $dashboard_module_cacher->cacheDashboardModules();
 
@@ -113,6 +127,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
      * In test mode, this will only write the message body to a file in the application data directory.
      * @param str $email
      * @param str $username
+     * @return bool Whether or not email was sent
      */
     private function sendInvalidOAuthEmailAlert($email, $username) {
         //Determine whether or not an email about invalid tokens was sent in the past 7 days
@@ -145,6 +160,9 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
             $message = $mailer_view_mgr->fetch(Utils::getPluginViewDirectory('facebook').'_email.invalidtoken.tpl');
 
             Mailer::mail($email, "Please re-authorize ThinkUp to access ". $username. " on Facebook", $message);
+            return true;
+        } else {
+            return false;
         }
     }
 
