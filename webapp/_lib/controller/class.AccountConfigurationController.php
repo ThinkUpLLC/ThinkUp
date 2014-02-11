@@ -149,6 +149,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         is_numeric($_POST['instance_id']) && !isset($_POST['hashtag_id']) && !isset($_POST['new_hashtag_name'])) {
             $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $twitter_instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
             $instancehashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
             $hashtagpost_dao = DAOFactory::getDAO('HashtagPostDAO');
             $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
@@ -173,7 +174,11 @@ class AccountConfigurationController extends ThinkUpAuthController {
                     //delete all owner_instances
                     $owner_instance_dao->deleteByInstance($instance->id);
                     //delete instance
-                    $instance_dao->delete($instance->network_username, $instance->network);
+                    if ($instance->network == 'twitter') {
+                        $twitter_instance_dao->delete($instance->network_username, $instance->network);                        
+                    } else {
+                        $instance_dao->delete($instance->network_username, $instance->network);                        
+                    }
                     $this->addSuccessMessage('Account '. (($deleted_searches > 0)?'and its saved searches ':'').
                     'deleted.', 'account');
                 } else  {
@@ -198,7 +203,11 @@ class AccountConfigurationController extends ThinkUpAuthController {
                                         $deleted_hashtag = $hashtag_dao->deleteHashtagByID($hashtag_id);
                                     }
                                 }
-                                $instance_dao->delete($instance->network_username, $instance->network);
+                                if ($instance->network == 'twitter') {
+                                    $twitter_instance_dao->delete($instance->network_username, $instance->network);
+                                } else {
+                                    $instance_dao->delete($instance->network_username, $instance->network);                                    
+                                }
                             }
                             $this->addSuccessMessage('Account '. (($deleted_searches > 0)?'and its saved searches ':'').
                             'deleted.', 'account');

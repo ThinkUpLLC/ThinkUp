@@ -39,6 +39,9 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'testconsumersecret'));
         $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
         'option_name'=>'oauth_consumer_key', 'option_value'=>'testconsumerkey'));
+        $this->builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $this->builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $this->builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>4));
     }
 
     public function tearDown() {

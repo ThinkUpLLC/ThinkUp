@@ -878,4 +878,14 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
             'full_name'=>'Gina Tost'));
         return $builders;
     }
+
+    public function testGetUserIdFromUserScreenName() {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserEduardCucurella();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_user_id = $twitter_crawler->getUserIdFromUserScreenName('tv3cat');
+        $this->assertEqual($twitter_user_id,28373820);
+        $twitter_user_id = $twitter_crawler->getUserIdFromUserScreenName('tv3caterror');
+        $this->assertEqual($twitter_user_id,'');
+    }
 }

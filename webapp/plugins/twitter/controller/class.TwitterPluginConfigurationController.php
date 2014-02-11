@@ -37,8 +37,9 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         Loader::definePathConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/twitter/view/twitter.account.index.tpl');
         $this->view_mgr->addHelp('twitter', 'userguide/settings/plugins/twitter/index');
+        $this->view_mgr->addHelp('publicaacount', 'userguide/settings/plugins/twitter/publicaacount');
 
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $twitter_instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
 
         // get plugin option values if defined...
         $plugin_options = $this->getPluginOptions();
@@ -50,10 +51,53 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $this->addToView('twitter_app_name', "ThinkUp ". $_SERVER['SERVER_NAME']);
         $this->addToView('thinkup_site_url', Utils::getApplicationURL(true));
 
+        //process public twitter account addition
+        if (isset($_POST['action']) && $_POST['action'] == 'add account'
+        && isset($_POST['owner_id']) && is_numeric($_POST['owner_id'])
+        && isset($_POST['instance_id']) && is_numeric($_POST['instance_id'])
+        && isset($_POST['screen_name'])) {
+
+            $owner_id = $_POST['owner_id'];
+            $instance_id = $_POST['instance_id'];
+            $screen_name = $_POST['screen_name'];
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+
+            $oi_reference = $owner_instance_dao->get($owner_id,$instance_id);
+            if (isset($oi_reference)) {
+
+                $twitter_id = $this->getTwitterUserId($screen_name, $twitter_instance_dao->get($instance_id), 
+                $oi_reference->oauth_access_token, $oi_reference->oauth_access_token_secret);
+
+                if ($twitter_id) {
+                    $i_inserted = $twitter_instance_dao->insert($twitter_id,$screen_name);
+                    if (isset($i_inserted) && is_numeric($i_inserted)) {
+                        $oi_inserted = $owner_instance_dao->insert($owner_id, $i_inserted, 
+                        $oi_reference->oauth_access_token , $oi_reference->oauth_access_token_secret, true);
+                        if ($oi_inserted) {
+                            $message = 'Public account '. $screen_name .' added !!';
+                            $this->addSuccessMessage($message,"add_public_account");
+                        } else {
+                            $this->addErrorMessage('Account '. $screen_name .' not added. '.
+                            'Owner Instance relation not added !!',"add_public_account");
+                        } 
+                    } else {
+                        $this->addErrorMessage('Twitter account '. $screen_name .' not added!',"add_public_account");
+                    }
+                } else {
+                    $this->addErrorMessage('Twitter account '. $screen_name .' not exists!',"add_public_account");
+                }
+               
+            } else {
+                $this->addErrorMessage('Pair owner_id = '. $owner_id .' and instance_id = '. $instance_id .
+                ' not exist !!',"add_public_account");
+            }
+        }
+
         $plugin = new TwitterPlugin();
         if ($plugin->isConfigured()) {
             $this->addToView('is_configured', true);
-            $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'twitter');
+            $owner_instances = $twitter_instance_dao->getByOwnerAndNetwork($this->owner, 'twitter');
+            $this->addToView('owner_id', $this->owner->id);
             $this->addToView('owner_instances', $owner_instances);
             if (isset($this->owner) && $this->owner->isMemberAtAnyLevel()) {
                 if ($this->owner->isMemberLevel()) {
@@ -96,6 +140,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
             $this->addToView('is_configured', false);
         }
+
         // add plugin options from
         $this->addOptionForm();
 
@@ -159,8 +204,8 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
             if ( isset($authed_twitter_user) && isset($authed_twitter_user['user_name'])
             && isset($authed_twitter_user['user_id'])) {
-                $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
-                $instance = $instance_dao->getByUsername($authed_twitter_user['user_name'], 'twitter');
+                $twitter_instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+                $instance = $twitter_instance_dao->getByUsername($authed_twitter_user['user_name'], 'twitter');
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 if (isset($instance)) {
                     $owner_instance = $owner_instance_dao->get($this->owner->id, $instance->id);
@@ -181,8 +226,8 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
                         }
                     }
                 } else {
-                    $instance_dao->insert($authed_twitter_user['user_id'], $authed_twitter_user['user_name']);
-                    $instance = $instance_dao->getByUsername($authed_twitter_user['user_name']);
+                    $twitter_instance_dao->insert($authed_twitter_user['user_id'], $authed_twitter_user['user_name']);
+                    $instance = $twitter_instance_dao->getByUsername($authed_twitter_user['user_name']);
                     if ($owner_instance_dao->insert( $this->owner->id, $instance->id, $token_array['oauth_token'],
                     $token_array['oauth_token_secret'])) {
                         $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].
@@ -198,5 +243,30 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
             $this->addErrorMessage($msg, "user_add");
         }
         $this->view_mgr->clear_all_cache();
+    }
+
+    /**
+     * Gets Twitter User Id using an instance reference and its oauth_token
+     * @param str $screen_name
+     * @param str $instance
+     * @param str $oauth_access_token
+     * @param str $oauth_access_token_secret
+     * @return int Twitter user id
+     */
+    private function getTwitterUserId($screen_name, $instance, $oauth_access_token, $oauth_access_token_secret) {
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('twitter', true);
+        
+        $archive_limit = isset($options['archive_limit']->option_value)?$options['archive_limit']->option_value:3200;
+
+        $num_twitter_errors =
+        isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
+        
+        $api = new CrawlerTwitterAPIAccessorOAuth($oauth_access_token, $oauth_access_token_secret, 
+        $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value, 
+        $archive_limit, $num_twitter_errors);
+
+        $twitter_crawler = new TwitterCrawler($instance, $api);
+        return $twitter_crawler->getUserIdFromUserScreenName($screen_name);
     }
 }

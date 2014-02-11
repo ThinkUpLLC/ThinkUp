@@ -135,4 +135,42 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+
+    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false, $active_only = false) {
+        $admin_status = (!$disregard_admin_status && $owner->is_admin ? true : false);
+        //add DISTINCT to no repit instances than have more than one owner
+        //add column is_twitter_referenced_instance from tu_owner_instances
+        //only select instances that have relation with an owner
+        $q  = "SELECT DISTINCT ".$this->getFieldList(). ", oi.is_twitter_referenced_instance ";
+        $q .= "FROM ".$this->getTableName()." ";
+        $q .= $this->getMetaTableJoin();
+        if (!$admin_status) {
+            $q .= "INNER JOIN #prefix#owner_instances AS oi ";
+            $q .= "ON ".$this->getTableName().".id = oi.instance_id ";
+        } else { 
+            //add table tu_owner_instances if admin_status
+            $q .= ", #prefix#owner_instances oi "; 
+        }
+        $q .= "WHERE network=:network ";
+        if (!$admin_status) {
+            $q .= "AND oi.owner_id = :ownerid ";
+        } else {
+            $q .= "AND #prefix#instances.id = oi.instance_id ";
+        }
+        if ($active_only) {
+            $q .= "AND is_active = 1 ";
+        }
+        $q .= "ORDER BY crawler_last_run DESC; ";
+        $vars = array(
+            ':ownerid'=>$owner->id,
+            ':network'=>$network
+        );
+        //Workaround for a PHP bug
+        if ($admin_status) {
+            unset ($vars[':ownerid']);
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, $this->object_name);
+    }
 }

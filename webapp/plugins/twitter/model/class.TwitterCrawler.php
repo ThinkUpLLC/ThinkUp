@@ -499,7 +499,7 @@ class TwitterCrawler {
             }
             $args['cursor'] = strval($next_cursor);
             $args['stringify_ids'] = 'true';
-
+            if (isset($this->user)) { $args['screen_name'] = $this->user->username; }
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 if ($http_status > 200) {
@@ -583,6 +583,7 @@ class TwitterCrawler {
                 $args = array();
                 $args['skip_status'] = 'true';
                 $args['include_entities'] = 'false';
+                $args['screen_name'] = $this->user->username;
                 if (!isset($next_cursor)) {
                     $next_cursor = -1;
                 }
@@ -727,7 +728,7 @@ class TwitterCrawler {
                     $next_cursor = -1;
                 }
                 $args['cursor'] = strval($next_cursor);
-
+                $args['screen_name'] = $this->user->username; 
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                 } catch (APICallLimitExceededException $e) {
@@ -823,6 +824,7 @@ class TwitterCrawler {
                 $args['cursor'] = strval($next_cursor);
                 $args['skip_status'] = 'true';
                 $args['include_user_entities'] = 'false';
+                $args['screen_name'] = $this->user->username;
 
                 try {
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
@@ -1293,6 +1295,30 @@ class TwitterCrawler {
                     $continue_fetching = false;
                 }
             }
+        }
+    }
+
+    /**
+     * Get Twitter user id from user screen name. If user not exist null is returned
+     * @param str $screen_name
+     * @return int twitter user id
+     */
+    public function getUserIdFromUserScreenName($screen_name) {
+        $endpoint = $this->api->endpoints['show_user'];
+        $args = array();
+        $args["screen_name"] = $screen_name;
+        list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
+        if ($http_status == 200) {
+            $user = $this->api->parseJSONUser($payload);
+            $this->user = new User($user);
+            if (isset($this->user)) {
+                $this->logger->logUserSuccess('Successfully getted id '. $this->user->user_id .' from username '.
+                $this->user->username, __METHOD__.','.__LINE__);
+                return $this->user->user_id;
+            } else {
+                $this->logger->logUserError("Twitter didn't return information for " .$this->user->username,
+                __METHOD__.','.__LINE__);
+             }
         }
     }
 }

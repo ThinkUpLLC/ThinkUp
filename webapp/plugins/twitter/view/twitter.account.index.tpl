@@ -13,8 +13,18 @@
 
 {if count($owner_instances) > 0 }
 
-<table class="table">
+  {assign var="auth" value="0"}
+  {assign var="public" value="0"}
+  {foreach from=$owner_instances key=iid item=i name=foo}
+    {if $i->is_twitter_referenced_instance == 0}
+      {assign var="auth" value="`$auth+1`"}
+    {else}
+      {assign var="public" value="`$public+1`"}
+    {/if}
+  {/foreach}
 
+<table class="table">
+  {if $auth > 0}
     <tr>
         <th><h4 class="pull-left">Account</h4></th>
         <th><i class="icon-lock icon-2x icon-muted"></i></th>
@@ -24,33 +34,74 @@
     </tr>
         
     {foreach from=$owner_instances key=iid item=i name=foo}
-    <tr>
-        <td>
-            <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
-        </td>
-        <td class="action-button">
-            <span id="div{$i->id}"><input type="submit" name="submit" class="btn
-            {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
-        </td>
-        {if $user_is_admin}
-        <td class="action-button">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause crawling{else}Start crawling{/if}" /></span>
-        </td>
-        {/if}
-        <td class="action-button">
-            <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
-        </td>
-        <td class="action-button">
-            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
-            <input type="hidden" name="instance_id" value="{$i->id}">
-            {insert name="csrf_token"}<input
-            onClick="return confirm('Do you really want to delete this Twitter account?');"
-            type="submit" name="action" class="btn btn-danger" 
-            value="Delete" /></form></span>
-        </td>
-    </tr>
+      {if $i->is_twitter_referenced_instance == 0}
+        <tr>
+            <td>
+                <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
+            </td>
+            <td class="action-button">
+                <span id="div{$i->id}"><input type="submit" name="submit" class="btn
+                {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
+            </td>
+            {if $user_is_admin}
+            <td class="action-button">
+                <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause crawling{else}Start crawling{/if}" /></span>
+            </td>
+            {/if}
+            <td class="action-button">
+                <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
+            </td>
+            <td class="action-button">
+                <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
+                <input type="hidden" name="instance_id" value="{$i->id}">
+                {insert name="csrf_token"}<input
+                onClick="return confirm('Do you really want to delete this Twitter account?');"
+                type="submit" name="action" class="btn btn-danger" 
+                value="Delete" /></form></span>
+            </td>
+        </tr>
+      {/if}
     {/foreach}
-
+  {/if}
+  {if $public > 0}
+    <tr>
+        <th><h4 class="pull-left">Public Account</h4></th>
+        <th><i class="icon-lock icon-2x icon-muted"></i></th>
+        {if $user_is_admin}<th><i class="icon-refresh icon-2x icon-muted"></i></th>{/if}
+        <th><i class="icon-tag icon-2x icon-muted"></i></th>
+        <th><i class="icon-trash icon-2x icon-muted"></i></th>
+    </tr>
+        
+    {foreach from=$owner_instances key=iid item=i name=foo}
+      {if $i->is_twitter_referenced_instance == 1}
+        <tr>
+            <td>
+                <h3 class="lead"><i class="icon-twitter icon-muted"></i>&nbsp;<a href="https://twitter.com/intent/user?screen_name={$i->network_username}">@{$i->network_username}</a></h3>
+            </td>
+            <td class="action-button">
+                <span id="div{$i->id}"><input type="submit" name="submit" class="btn
+                {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public} Set private{else}Set public{/if}" /></span>
+            </td>
+            {if $user_is_admin}
+            <td class="action-button">
+                <span id="divactivate{$i->id}"><input type="submit" name="submit" class="btn {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}Pause crawling{else}Start crawling{/if}" /></span>
+            </td>
+            {/if}
+            <td class="action-button">
+                <a href="{$site_root_path}account/?p=twitter&u={$i->network_username}&n=twitter#manage_plugin" class="btn btn-info btnHashtag">Saved searches</a>
+            </td>
+            <td class="action-button">
+                <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter#manage_plugin">
+                <input type="hidden" name="instance_id" value="{$i->id}">
+                {insert name="csrf_token"}<input
+                onClick="return confirm('Do you really want to delete this Twitter account?');"
+                type="submit" name="action" class="btn btn-danger" 
+                value="Delete" /></form></span>
+            </td>
+        </tr>
+      {/if}
+    {/foreach}
+  {/if}
 </table>
 {/if}
 
@@ -59,6 +110,48 @@
 
 {if $oauthorize_link}
 <a href="{$oauthorize_link}" class="btn btn-success add-account"><i class="icon-plus icon-white"></i> Add a Twitter account</a>
+{if $user_is_admin}
+{if count($owner_instances) > 0 }
+{include file="_usermessage.tpl" field="add_public_account"}
+<div>
+    <span class="pull-right">{insert name="help_link" id="publicaacount"}</span>
+    <h2>Add a public Twitter account</h2>
+    <form name="publicaccount" method="post" action="index.php?p=twitter">
+      <input type="hidden" name="p" value="twitter">
+      <input type="hidden" name="owner_id" value="{$owner_id}" />    
+      <div class="row-fluid">
+        <div class="span8">
+            <div style="float: left; margin-top: 10px; width: 150px;">
+              <label id="plugin_options_reference_account_label">Reference account:</label>
+            </div>
+            <div style="float: left; margin: 5px 0px 0px 5px;">            
+              <select name="instance_id">
+                {foreach from=$owner_instances key=iid item=i name=foo}
+                  {if $i->is_twitter_referenced_instance == 0}
+                    <option value="{$i->id}">{$i->network_username}</option> <br />
+                  {/if}
+                {/foreach}
+              </select>          
+            </div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span8">
+          <div style="float: left; margin-top: 10px; width: 150px;">
+            <label id="plugin_options_twitter_account_label">Twitter account:</label>
+          </div>
+          <div style="float: left; margin: 5px 0px 0px 5px;">  
+            <input type="text" value="" name="screen_name" id="screen_name" size="27">
+          </div>
+          <div style="float: left; margin: 5px 0px 0px 5px;">  
+            <input type="submit" name="action" class="btn btn-success add-account"  id="publicaccount" value="add account"/>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>
+{/if}
+{/if}
 {/if}
 
 

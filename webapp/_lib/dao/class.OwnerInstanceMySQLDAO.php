@@ -126,7 +126,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function get($owner_id, $instance_id) {
         $q = "SELECT
-                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error, is_twitter_referenced_instance
             FROM
                 #prefix#owner_instances
             WHERE
@@ -141,7 +141,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function getByInstance($instance_id) {
         $q = "SELECT
-                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error, is_twitter_referenced_instance
             FROM
                 #prefix#owner_instances
             WHERE  instance_id = :instance_id";
@@ -155,7 +155,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function getByOwner($owner_id) {
         $q = "SELECT
-                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret, auth_error, is_twitter_referenced_instance
             FROM
                 #prefix#owner_instances
             WHERE owner_id = :owner_id";
@@ -167,15 +167,17 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         return $owner_instances;
     }
 
-    public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '') {
+    public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '', $is_twitter_referenced_instance = false) {
+        $is_twitter_referenced_instance = $this->convertBoolToDB($is_twitter_referenced_instance);
         $q = "INSERT INTO #prefix#owner_instances
-                (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
-                    VALUES (:owner_id,:instance_id,:oauth_access_token,:oauth_access_token_secret)";
+                (owner_id, instance_id, oauth_access_token, oauth_access_token_secret, is_twitter_referenced_instance)
+                    VALUES (:owner_id,:instance_id,:oauth_access_token,:oauth_access_token_secret, :is_twitter_referenced_instance)";
 
         $vars = array(':owner_id' => $owner_id,
                       ':instance_id' => $instance_id,
                       ':oauth_access_token' => $oauth_token,
-                      ':oauth_access_token_secret' => $oauth_token_secret
+                      ':oauth_access_token_secret' => $oauth_token_secret,
+                      ':is_twitter_referenced_instance' => $is_twitter_referenced_instance
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $stmt = $this->execute($q, $vars);
@@ -252,5 +254,17 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         $stmt = $this->execute($q, array(':instance_id' => $id));
         $tokens = $this->getDataRowAsArray($stmt);
         return $tokens;
+    }
+
+    public function getIsTwitterReferencedInstance($owner_id, $instance_id) {
+        $q = "SELECT is_twitter_referenced_instance 
+            FROM #prefix#owner_instances 
+            WHERE owner_id = :owner_id 
+            AND instance_id = :instance_id LIMIT 1";
+        $vars = array(':owner_id' => $owner_id, ':instance_id' => $instance_id);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $stmt = $this->execute($q, $vars);
+        $row = $this->getDataRowAsArray($stmt);
+        return $this->convertDBToBool($row['is_twitter_referenced_instance']);
     }
 }

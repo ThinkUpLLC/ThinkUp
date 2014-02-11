@@ -39,6 +39,7 @@ if (isset($RUNNING_ALL_TESTS) && !$RUNNING_ALL_TESTS) {
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/controller/class.TwitterPluginConfigurationController.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
 
 class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
@@ -83,6 +84,9 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,
         'network_username'=>'ev', 'is_public'=>1, 'network'=>'twitter'));
 
+        //Test that twitter instance delete data in twitter_instance table
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>1, 'last_reply_id'=>'1234'));
+
         return $builders;
     }
 
@@ -122,6 +126,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 2);
         try {
+            $this->debug("Before control");
             $results = $controller->control();
             $this->fail("should throw InvalidCSRFTokenException");
         } catch(InvalidCSRFTokenException $e) {
@@ -150,6 +155,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 2);
 
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 1";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '1234');
+
         //process controller
         $controller->go();
 
@@ -161,6 +171,12 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instances = $owner_instance_dao->getByInstance(1);
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 0);
+
+        //instances_twitter should be deleted also
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 1";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertFalse($data);
 
         $v_mgr = $controller->getViewManager();
         $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
@@ -178,7 +194,9 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
         'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
 
-        //Not admin with access privs, no other owners (delete owner instance AND instance)
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>2, 'last_reply_id'=>'5678'));
+
+        //Not admin with access privs, no other owners (delete owner instance AND instance)     
         $instance_dao = new InstanceMySQLDAO();
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
@@ -191,12 +209,18 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         //before
         $instance = $instance_dao->get(2);
+        $this->debug(Utils::varDumpToString($instance));
         $this->assertNotNull($instance);
 
         $owner_instances = $owner_instance_dao->getByInstance(2);
         $this->assertNotNull($owner_instances);
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 1);
+
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = TwitterInstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '5678');
 
         //process controller
         $controller->go();
@@ -209,6 +233,13 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instances = $owner_instance_dao->getByInstance(2);
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 0);
+
+        //instances_twitter should be deleted also
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = TwitterInstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->debug(Utils::varDumpToString($data));
+        $this->assertFalse($data);
 
         $v_mgr = $controller->getViewManager();
         $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
@@ -230,6 +261,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
         'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
 
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>2, 'last_reply_id'=>'5678'));
+
         $instance_dao = new InstanceMySQLDAO();
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
@@ -249,6 +282,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 2);
 
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '5678');
+
         //process controller
         $controller->go();
 
@@ -260,6 +298,12 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instances = $owner_instance_dao->getByInstance(2);
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 1);
+
+        //instances_twitter should NOT be deleted also
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '5678');
 
         $v_mgr = $controller->getViewManager();
         $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
@@ -277,6 +321,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
         'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $builders[] = FixtureBuilder::build('instances_twitter', array('id'=>2, 'last_reply_id'=>'5678'));
 
         $instance_dao = new InstanceMySQLDAO();
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
@@ -297,6 +343,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 1);
 
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '5678');
+
         //process controller
         $controller->go();
 
@@ -308,6 +359,12 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instances = $owner_instance_dao->getByInstance(2);
         $this->assertIsA($owner_instances, 'Array');
         $this->assertEqual(sizeof($owner_instances), 1);
+
+        //instances_twitter should NOT be deleted also
+        $sql = "SELECT * FROM " . $this->table_prefix . "instances_twitter where id = 2";
+        $stmt = InstanceMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['last_reply_id'], '5678');
 
         $v_mgr = $controller->getViewManager();
         $this->assertNull($v_mgr->getTemplateDataItem('success_msgs'));
@@ -1543,5 +1600,238 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
             'favlike_count_cache' => 0));
 
         return $builders;
+    }
+
+    public function buildDataNoTwitter() {
+        
+        $builders = array();
+        
+        //Add instance_owner
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+
+        //Add instance facebook
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>131,
+        'network_username'=>'Eduard', 'is_public'=>1, 'network'=>'facebook'));
+
+        return $builders;        
+    }
+
+
+    public function testDeleteExistingInstanceNoCSRFTokenNoTwitter() {
+        $this->debug(__METHOD__);
+        $builders = $this->buildDataNoTwitter();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Admin: should delete all owner instances and instance
+        $this->simulateLogin('admin@example.com', true, true);
+        $_POST['action'] = "Delete";
+        $_POST["instance_id"] = 2;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+        try {
+            $this->debug("Before control");
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
+    public function testDeleteExistingInstanceAsAdminNoTwitter() {
+        $this->debug(__METHOD__);
+        $builders = $this->buildDataNoTwitter();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Admin: should delete all owner instances and instance
+        $this->simulateLogin('admin@example.com', true, true);
+        $_POST['action'] = "Delete";
+        $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+
+        //process controller
+        $controller->go();
+
+        //instance should be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNull($instance);
+
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testDeleteExistingInstanceWithPrivilegesNoOtherOwnersNoTwitter() {
+        $this->debug(__METHOD__);
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'facebook'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        //Not admin with access privs, no other owners (delete owner instance AND instance)
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance, and since there's no other owner, the instance itself
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['action'] = "Delete";
+        $_POST["instance_id"] = 3;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(3);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        //process controller
+        $controller->go();
+
+        //instance should be deleted
+        $instance = $instance_dao->get(3);
+        $this->assertNull($instance);
+
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testDeleteExistingInstanceWithPrivilegesWithOtherOwnersNoTwitter() {
+        $this->debug(__METHOD__);
+        //Not admin with access privs, with other owners (delete owner instance and NOT instance)
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'facebook'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>3,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['action'] = "Delete";
+        $_POST["instance_id"] = 3;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(3);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+
+        //process controller
+        $controller->go();
+
+        //instance should NOT be deleted
+        $instance = $instance_dao->get(3);
+        $this->assertNotNull($instance);
+
+        //just one owner_instance should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        $v_mgr = $controller->getViewManager();
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testDeleteExistingInstanceNoPrivilegesNoTwitter() {
+        $this->debug(__METHOD__);
+        //Not admin without access privs (set error messages)
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>3,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['action'] = "Delete";
+        $_POST["instance_id"] = 3;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(3);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        //process controller
+        $controller->go();
+
+        //instance should NOT be deleted
+        $instance = $instance_dao->get(3);
+        $this->assertNotNull($instance);
+
+        //owner instance should NOT be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(3);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertNull($v_mgr->getTemplateDataItem('success_msgs'));
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertNotNull($error_msgs);
+        $this->assertEqual($error_msgs['account'], 'Insufficient privileges.');
     }
 }

@@ -92,12 +92,12 @@ class TwitterAPIAccessorOAuth {
      */
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
     $oauth_consumer_secret, $num_twitter_errors, $log=true) {
-        $this->$oauth_access_token = $oauth_access_token;
-        $this->$oauth_access_token_secret = $oauth_access_token_secret;
+        $this->oauth_access_token = $oauth_access_token;
+        $this->oauth_access_token_secret = $oauth_access_token_secret;
         $this->log = $log;
 
-        $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
-        $this->$oauth_access_token_secret);
+        $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->oauth_access_token,
+        $this->oauth_access_token_secret);
         $this->endpoints = $this->prepAPI();
 
         $logger = Logger::getInstance();
