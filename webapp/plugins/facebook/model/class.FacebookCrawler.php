@@ -114,8 +114,8 @@ class FacebookCrawler {
     }
     /**
      * Convert decoded JSON data from Facebook into a ThinkUp user object.
-     * @param array $details
-     * @retun array $user_vals
+     * @param arr $details
+     * @return arr $user_vals
      */
     private function parseUserDetails($details) {
         if (isset($details->name) && isset($details->id)) {
@@ -142,13 +142,15 @@ class FacebookCrawler {
     /**
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
+     * @return void
+     * @throws APIOAuthException
      */
     public function fetchPostsAndReplies() {
         $id = $this->instance->network_user_id;
         $network = $this->instance->network;
 
         // fetch user's friends
-        $this->storeFriends();
+        $this->fetchAndStoreFriends();
 
         $fetch_next_page = true;
         $current_page_number = 1;
@@ -196,6 +198,7 @@ class FacebookCrawler {
      * @param Object $stream
      * @param str $source The network for the post, either 'facebook' or 'facebook page'
      * @param int Page number being processed
+     * @return void
      */
     private function processStream($stream, $network, $page_number) {
         $thinkup_posts = array();
@@ -295,7 +298,8 @@ class FacebookCrawler {
                       "post_text"=>isset($p->message)?$p->message:'',
                       "pub_date"=>$p->created_time,
                       "favlike_count_cache"=>$likes_count,
-                      "in_reply_to_user_id"=> isset($p->to->data[0]->id) ? $p->to->data[0]->id : '', // assume only one recipient
+                       // assume only one recipient
+                      "in_reply_to_user_id"=> isset($p->to->data[0]->id) ? $p->to->data[0]->id : '',
                       "in_reply_to_post_id"=>'',
                       "source"=>'',
                       'network'=>$network,
@@ -575,6 +579,12 @@ class FacebookCrawler {
         $total_added_users." user(s) and ".$total_added_likes." like(s)", __METHOD__.','.__LINE__);
     }
 
+    /**
+     * Store posts and authors.
+     * @param  arr $posts
+     * @param  str $posts_source Where posts were found
+     * @return int Total posts stored.
+     */
     private function storePostsAndAuthors($posts, $posts_source){
         $total_added_posts = 0;
         $added_post = 0;
@@ -593,6 +603,12 @@ class FacebookCrawler {
         return $total_added_posts;
     }
 
+    /**
+     * Store post and author.
+     * @param  arr $post
+     * @param  str $post_source Where post was found.
+     * @return int Internal unique ID of post stored.
+     */
     private function storePostAndAuthor($post, $post_source){
         $post_dao = DAOFactory::getDAO('PostDAO');
         if (isset($post['author_user_id'])) {
@@ -608,6 +624,11 @@ class FacebookCrawler {
         return $added_post_key;
     }
 
+    /**
+     * Store links.
+     * @param  arr $links
+     * @return int Total links stored
+     */
     private function storeLinks($links) {
         $total_links_added = 0;
         $link_dao = DAOFactory::getDAO('LinkDAO');
@@ -627,6 +648,12 @@ class FacebookCrawler {
         return $total_links_added;
     }
 
+    /**
+     * Store users.
+     * @param  arr $users
+     * @param  str $users_source Where user was found.
+     * @return int Total users stored
+     */
     private function storeUsers($users, $users_source) {
         $added_users = 0;
         if (count($users) > 0) {
@@ -640,6 +667,11 @@ class FacebookCrawler {
         return $added_users;
     }
 
+    /**
+     * Store likes.
+     * @param  arr $likes
+     * @return int Total likes added
+     */
     private function storeLikes($likes) {
         $added_likes = 0;
         if (count($likes) > 0) {
@@ -651,7 +683,12 @@ class FacebookCrawler {
         return $added_likes;
     }
 
-    private function storeFriends() {
+    /**
+     * Retrieve Facebook friends for current instance and store in datastore.
+     * @return void
+     * @throws APIOAuthException
+     */
+    private function fetchAndStoreFriends() {
         if ($this->instance->network != 'facebook') {
             return;
         }
