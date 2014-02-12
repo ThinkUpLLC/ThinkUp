@@ -105,13 +105,13 @@ abstract class ThinkUpController {
             if (!$session_started) {
                 SessionCache::init();
             }
+            $this->view_mgr = new ViewManager();
             if (SessionCache::isKeySet('selected_instance_network') &&
             SessionCache::isKeySet('selected_instance_username')) {
                 $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
                 $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
             }
 
-            $this->view_mgr = new ViewManager();
             if ($this->isLoggedIn()) {
                 $this->addToView('logged_in_user', $this->getLoggedInUser());
             }
