@@ -93,16 +93,25 @@ abstract class ThinkUpController {
      *  @return ThinkUpController
      */
     public function __construct($session_started=false) {
-        if (!$session_started) {
-            session_start();
-        }
         try {
             $config = Config::getInstance();
             $this->profiler_enabled = Profiler::isEnabled();
             if ( $this->profiler_enabled) {
                 $this->start_time = microtime(true);
             }
+            if ($config->getValue('timezone')) {
+                date_default_timezone_set($config->getValue('timezone'));
+            }
+            if (!$session_started) {
+                SessionCache::init();
+            }
             $this->view_mgr = new ViewManager();
+            if (SessionCache::isKeySet('selected_instance_network') &&
+            SessionCache::isKeySet('selected_instance_username')) {
+                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
+                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
+            }
+
             if ($this->isLoggedIn()) {
                 $this->addToView('logged_in_user', $this->getLoggedInUser());
             }
@@ -111,12 +120,6 @@ abstract class ThinkUpController {
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
-
-            if (SessionCache::isKeySet('selected_instance_network') &&
-            SessionCache::isKeySet('selected_instance_username')) {
-                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
-                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
-            }
         } catch (Exception $e) {
             Loader::definePathConstants();
             //echo 'sending this to Smarty:'.THINKUP_WEBAPP_PATH.'data/';
@@ -488,9 +491,6 @@ abstract class ThinkUpController {
         if ($classname != "InstallerController") {
             //Initialize config
             $config = Config::getInstance();
-            if ($config->getValue('timezone')) {
-                date_default_timezone_set($config->getValue('timezone'));
-            }
             if ($config->getValue('debug')) {
                 ini_set("display_errors", 1);
                 ini_set("error_reporting", E_STRICT);

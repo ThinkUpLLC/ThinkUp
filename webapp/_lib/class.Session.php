@@ -75,7 +75,8 @@ class Session {
         SessionCache::put('user_is_admin', $owner->is_admin);
         // set a CSRF token
         SessionCache::put('csrf_token', uniqid(mt_rand(), true));
-        if (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == 'TESTS') {
+        if (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == 'TESTS'
+            || (isset($_COOKIE['TU_MODE']) && $_COOKIE['TU_MODE']=='TESTS')) {
             SessionCache::put('csrf_token', 'TEST_CSRF_TOKEN');
         }
     }

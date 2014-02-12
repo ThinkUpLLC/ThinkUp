@@ -394,6 +394,13 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'PhotoMySQLDAO');
     }
 
+    public function testSessionDAO() {
+        $dao = DAOFactory::getDAO('SessionDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'SessionMySQLDAO');
+        $this->assertIsA($dao, 'SessionDAO');
+    }
+
     /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
@@ -406,7 +413,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 33);
+        $this->assertEqual(sizeof($result), 34);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'count_history');
         $this->restoreConfigFile();
     }
