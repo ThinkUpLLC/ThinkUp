@@ -74,7 +74,8 @@ $THINKUP_CFG['set_pdo_charset']           = false;
 
 //TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
-|| (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
+|| (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")
+|| (isset($_COOKIE['TU_MODE']) && $_COOKIE['TU_MODE']=='TESTS')) {
 // Full server path to /thinkup/ source code folder.
 //    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
 //    $THINKUP_CFG['db_user']                   = 'your_test_database_username';
