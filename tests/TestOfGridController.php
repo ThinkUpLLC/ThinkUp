@@ -62,7 +62,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com');
         $controller = new GridController(true);
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $ob = json_decode($results);
@@ -77,7 +77,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
 
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $ob = json_decode($results);
@@ -92,7 +92,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $_GET['n'] = 'twitter';
         ob_start();
         $controller = new GridController(true);
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $ob = json_decode($results);
@@ -109,7 +109,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -128,7 +128,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -148,7 +148,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -166,7 +166,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -200,7 +200,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $builders = $this->buildData($public);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -215,7 +215,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $builders = $this->buildData($public, $protected);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
@@ -236,7 +236,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
-        $controller->control();
+        $controller->go();
         $results = ob_get_contents();
         ob_end_clean();
         $json = substr($results, 29, strrpos($results, ';') - 30);
