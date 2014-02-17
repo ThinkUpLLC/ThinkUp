@@ -70,7 +70,6 @@ class SessionMySQLDAO extends PDODAO implements SessionDAO {
      * @return bool Always true
      */
     public function write($sid, $data) {
-        error_reporting(E_ALL); ini_set('display_errors', 1);
         $q = 'REPLACE INTO #prefix#sessions (session_id, data, updated) VALUES (:sid, :data, NOW())';
         $vars = array( ':sid'=>$sid, ':data' => $data );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
