@@ -25,6 +25,11 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2012-2013 Gina Trapani
  */
+
+ob_start();
+ini_set('session.use_cookies', 0);
+session_cache_limiter();
+
 include dirname(__FILE__) . '/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
