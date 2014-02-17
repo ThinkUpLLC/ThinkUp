@@ -25,6 +25,10 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2013 Gina Trapani
  */
+ob_start();
+ini_set('session.use_cookies', 0);
+session_cache_limiter();
+
 include 'init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
@@ -32,47 +36,47 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/mock_objects.php';
 
 /* CONTROLLER TESTS */
 $controller_test_list = array(
-"TestOfAccountConfigurationController",
-"TestOfActivateAccountController",
-"TestOfAppConfigController",
-"TestOfBackupController",
-"TestOfCheckCrawlerController",
-"TestOfCheckVersionController",
-"TestOfCrawlerAuthController",
-"TestOfDashboardController",
-"TestOfInsightStreamController",
-"TestOfInsightAPIController",
-"TestOfThinkUpEmbedController",
-"TestOfThreadJSController",
-"TestOfExportController",
-"TestOfExportServiceUserDataController",
-"TestOfForgotPasswordController",
-"TestOfGridController",
-"TestOfGridExportController",
-"TestOfInstallerController",
+#"TestOfAccountConfigurationController",
+#"TestOfActivateAccountController",
+#"TestOfAppConfigController",
+#"TestOfBackupController",
+#"TestOfCheckCrawlerController",
+#"TestOfCheckVersionController",
+#"TestOfCrawlerAuthController",
+#"TestOfDashboardController",
+#"TestOfInsightStreamController",
+#"TestOfInsightAPIController",
+#"TestOfThinkUpEmbedController",
+#"TestOfThreadJSController",
+#"TestOfExportController",
+#"TestOfExportServiceUserDataController",
+#"TestOfForgotPasswordController",
+#"TestOfGridController",
+#"TestOfGridExportController",
+#"TestOfInstallerController",
 "TestOfLoginController",
-"TestOfLogoutController",
-"TestOfPasswordResetController",
-"TestOfPostController",
-"TestOfRegisterController",
+#"TestOfLogoutController",
+#"TestOfPasswordResetController",
+#"TestOfPostController",
+#"TestOfRegisterController",
 "TestOfTestController",
-"TestOfTestAuthController",
-"TestOfTestAdminController",
-"TestOfToggleActiveInstanceController",
-"TestOfToggleActiveOwnerController",
-"TestOfToggleOwnerAdminController",
-"TestOfTogglePublicInstanceController",
-"TestOfUserController",
-"TestOfPluginOptionController",
-"TestOfTestAuthAPIController",
-"TestOfRSSController",
-"TestOfUpgradeDatabaseController",
-"TestOfPostAPIController",
-"TestOfSessionAPILoginController",
-"TestOfSearchController",
-"TestOfStreamerAuthController",
-"TestOfUpdateNowController",
-"TestOfUpgradeApplicationController"
+#"TestOfTestAuthController",
+#"TestOfTestAdminController",
+#"TestOfToggleActiveInstanceController",
+#"TestOfToggleActiveOwnerController",
+#"TestOfToggleOwnerAdminController",
+#"TestOfTogglePublicInstanceController",
+#"TestOfUserController",
+#"TestOfPluginOptionController",
+#"TestOfTestAuthAPIController",
+#"TestOfRSSController",
+#"TestOfUpgradeDatabaseController",
+#"TestOfPostAPIController",
+#"TestOfSessionAPILoginController",
+#"TestOfSearchController",
+#"TestOfStreamerAuthController",
+#"TestOfUpdateNowController",
+#"TestOfUpgradeApplicationController"
 );
 
 if (!getenv("TEST_TIMING")=="1") {

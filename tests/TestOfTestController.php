@@ -27,7 +27,6 @@
  * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-ob_start();
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
@@ -193,11 +192,16 @@ class TestOfTestController extends ThinkUpUnitTestCase {
      * Test that a session is started when the controller has run
      */
     public function testSessionStarted() {
+        if (isset($_COOKIE)) {
+            foreach ($_COOKIE as $cname) {
+                unset($_COOKIE[$cname]);
+            }
+        }
+
         if (session_id() != '') {
             session_destroy(); // Make sure there's not session from previous tests.
         }
 
-        $sid = session_id();
         $this->assertEqual('', session_id());
         $controller = new TestController(true);
         $this->assertEqual('', session_id());
