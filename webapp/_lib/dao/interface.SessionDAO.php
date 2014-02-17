@@ -59,7 +59,7 @@ interface SessionDAO {
      * @param str $sid Session ID
      * @return bool Always true
      */
-    public function destroy($sid, $data);
+    public function destroy($sid);
 
     /**
      * garbage collect sessions table
