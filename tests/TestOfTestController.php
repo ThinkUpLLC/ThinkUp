@@ -192,25 +192,22 @@ class TestOfTestController extends ThinkUpUnitTestCase {
      * Test that a session is started when the controller has run
      */
     public function testSessionStarted() {
-        if (isset($_COOKIE)) {
-            foreach ($_COOKIE as $cname) {
-                unset($_COOKIE[$cname]);
-            }
-        }
+        $dao = DAOFactory::getDAO('SessionDAO');
+        $sid = 'abcd';
+        session_id($sid);
 
-        if (session_id() != '') {
-            session_destroy(); // Make sure there's not session from previous tests.
-        }
-
-        $this->assertEqual('', session_id());
         $controller = new TestController(true);
-        $this->assertEqual('', session_id());
-        error_reporting(E_ALL); ini_set('display_errors', 1);
+
+        $session = $dao->read($sid);
+        $this->assertEqual('', $session);
+        session_write_close();
 
         $controller = new TestController(false);
-        $sid = session_id();
-        $this->assertNotEqual('', $sid);
+        $rand = md5(mt_rand(1,12122131231));
+        $_SESSION['test'] = $rand;
+        session_write_close();
+        $session = $dao->read($sid);
+        $this->assertPattern('/'.$rand.'/', $session);
 
-        session_destroy();
     }
 }
