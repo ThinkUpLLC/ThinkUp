@@ -27,6 +27,7 @@
  * @copyright 2009-2013 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
+ob_start();
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
@@ -192,24 +193,20 @@ class TestOfTestController extends ThinkUpUnitTestCase {
      * Test that a session is started when the controller has run
      */
     public function testSessionStarted() {
+        if (session_id() != '') {
+            session_destroy(); // Make sure there's not session from previous tests.
+        }
 
-        // Fails in travis.  Hmm.
-        //if (session_id() != '') {
-            //session_destroy(); // Make sure there's not session from previous tests.
-        //}
-        //$this->assertEqual('', session_id());
-        //$controller = new TestController(true);
-        //$this->assertEqual('', session_id());
+        $sid = session_id();
+        $this->assertEqual('', session_id());
+        $controller = new TestController(true);
+        $this->assertEqual('', session_id());
+        error_reporting(E_ALL); ini_set('display_errors', 1);
 
+        $controller = new TestController(false);
+        $sid = session_id();
+        $this->assertNotEqual('', $sid);
 
-        // simpletest returns 255 even if we expect these.  Gah.
-        //session_cache_limiter('');
-        //$ucookies = ini_get('session.use_cookies');
-        //ini_set('session.use_cookies', 0);
-        //$this->expectError(new PatternExpectation("/Cannot send session cookie/i"));
-        //$this->expectError(new PatternExpectation("/Cannot send session cache/i"));
-        //$controller = new TestController(false);
-        //$this->assertNotEqual('', session_id());
-        //ini_set('session.use_cookies', $ucookies);
+        session_destroy();
     }
 }
