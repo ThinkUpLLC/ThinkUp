@@ -1,4 +1,4 @@
 <?php
 //Edit this file on each new release
-$current_version = "2.0-beta.9";
-$current_version_download_link = "https://www.thinkup.com/downloads/beta/thinkup-2.0-beta.9.zip";
+$current_version = "2.0-beta.10";
+$current_version_download_link = "https://www.thinkup.com/downloads/beta/thinkup-2.0-beta.10.zip";
