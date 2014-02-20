@@ -54,7 +54,7 @@
         {/if}
 
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
-            {if $i->emphasis >= '1'}insight-hero{/if}
+            {if $i->emphasis > '1'}insight-hero{/if}
             insight-{$color|strip}
             " id="insight-{$i->id}">
   <div class="panel-heading ">
