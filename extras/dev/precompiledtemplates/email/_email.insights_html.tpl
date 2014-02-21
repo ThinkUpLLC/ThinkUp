@@ -756,8 +756,12 @@ body.outlook p {
           color: #417505 !important;
       }
 
-      .insight .insight-body {
+      .insight .insight-body, .insight .insight-image {
           background: #fff;
+      }
+
+      .insight .insight-image td {
+        padding: 0;
       }
 
       .insight .insight-body td {
@@ -963,33 +967,6 @@ body.outlook p {
             </tr>
           </table>
 
-          <table class="row bottom-message">
-            <tr>
-              <td class="center" align="center">
-                <center>
-
-                  <table class="container">
-                    <tr>
-                      <td class="wrapper last">
-
-                        <table class="twelve columns" align="center">
-                          <tr>
-                              <td class="center">
-                                  <center>This email is a brand new ThinkUp feature. <a href="http://blog.thinkup.com/post/75093414550/new-feature-insight-notification-emails">Find out more</a> and reply to this message to tell us what you think!</center>
-                            </td>
-                            <td class="expander"></td>
-                          </tr>
-                        </table>
-
-                      </td>
-                    </tr>
-                  </table>
-
-                </center>
-              </td>
-            </tr>
-          </table>
-
 <br>
 <br>
           <table class="container">
@@ -1015,7 +992,7 @@ body.outlook p {
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
-  {assign var='color' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
+  {assign var='color_name' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
 {elseif $random_color_num eq '0'}
   {assign var='color_name' value='pea'}{assign var='color_dark' value='5fac1c'}{assign var='color' value='9dd767'}
 {elseif $random_color_num eq '1'}
@@ -1029,13 +1006,13 @@ body.outlook p {
 {elseif $random_color_num eq '5'}
   {assign var='color_name' value='seabreeze'}{assign var='color_dark' value='198A9C'}{assign var='color' value='44C9D7'}
 {elseif $random_color_num eq '6'}
-  {assign var='color' value='dijon'}{assign var='color_dark' value='C59301'}{assign var='color' value='E4BF28'}
+  {assign var='color_name' value='dijon'}{assign var='color_dark' value='C59301'}{assign var='color' value='E4BF28'}
 {elseif $random_color_num eq '7'}
-  {assign var='color' value='sandalwood'}{assign var='color_dark' value='D13A0A'}{assign var='color' value='FD8560'}
+  {assign var='color_name' value='sandalwood'}{assign var='color_dark' value='D13A0A'}{assign var='color' value='FD8560'}
 {elseif $random_color_num eq '8'}
-  {assign var='color' value='caramel'}{assign var='color_dark' value='9E5E14'}{assign var='color' value='DD814B'}
+  {assign var='color_name' value='caramel'}{assign var='color_dark' value='9E5E14'}{assign var='color' value='DD814B'}
 {else}
-  {assign var='color' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
+  {assign var='color_name' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
 {/if}
 
 <table class="row insight insight-{$color_name}">
@@ -1050,6 +1027,18 @@ body.outlook p {
           <td class="expander"></td>
         </tr>
         </table>
+{if isset($insight->related_data.hero_image)}
+      <table class="twelve columns insight-image">
+        <tr>
+          <td>
+              <img src="{$insight->related_data.hero_image.url}" alt="{$insight->related_data.hero_image.alt_text}" class="center">
+              <small class="text-pad">{$insight->related_data.hero_image.credit}</small>
+          </td>
+          <td class="expander"></td>
+        </tr>
+        </table>
+{/if}
+
 {if $insight->text ne ''}
       <table class="twelve columns insight-body">
         <tr>

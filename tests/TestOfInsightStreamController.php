@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfInsightStreamController extends ThinkUpUnitTestCase {
+class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -113,44 +113,6 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
         'time_generated'=>$time_now));
         return $builders;
-    }
-
-    private function getRelatedDataListOfUsers($network='twitter') {
-        $users = array();
-        $i = 3;
-        while ($i > 0) {
-            $user_array = array('id'=>$i, 'user_id'=>$network.'-'.$i, 'user_name'=>'ginatrapani'.$i,
-            'full_name'=>'Gina Trapani', 'avatar'=>'http://example.com/avatar.jpg', 'location'=>'NYC',
-            'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_verified'=>1, 'is_protected'=>0,
-            'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>$network,
-            'last_post_id'=>'abc102');
-            $user = new User($user_array, 'Test Insert');
-            $users[] = $user;
-            $i--;
-        }
-        $related_data = array();
-        $related_data["people"] = $users;
-        return serialize($related_data);
-    }
-
-    private function getRelatedDataListOfPosts($network='twitter') {
-        $posts = array();
-        $i = 3;
-        while ($i > 0) {
-            $post = new Post(array('id'=>1, 'author_user_id'=>$network.'-20', 'author_username'=>'UserAt'.$network,
-            'author_fullname'=>"No One", 'author_avatar'=>'http://example.com/yo.jpg', 'source'=>'TweetDeck',
-            'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-            'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
-            'retweet_count_api' =>'', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
-            'post_id'=>'9021481076', 'is_protected'=>1, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-            'post_text'=>'I like cookies', 'network'=>$network, 'geo'=>'', 'place'=>'', 'location'=>'',
-            'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
-            $posts[] = $post;
-            $i--;
-        }
-        $related_data = array();
-        $related_data["posts"] = $posts;
-        return serialize($related_data);
     }
 
     public function tearDown() {
