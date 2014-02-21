@@ -62,7 +62,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             }
         }
 
-        if (self::shouldGenerateInsight('biggest_fans_last_7_days', $instance, $insight_date=$since_date,
+        if (self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance, $insight_date=$since_date,
         $regenerate_existing_insight=false, $day_of_week = 0 )) { //it's Sunday
             // Past 7 days
             $fav_dao = DAOFactory::getDAO('FavoritePostDAO');

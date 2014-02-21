@@ -38,7 +38,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $insight_text = '';
         $milestones = array();
 
-        if (self::shouldGenerateInsight('frequency', $instance, $insight_date='today',
+        if (self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
