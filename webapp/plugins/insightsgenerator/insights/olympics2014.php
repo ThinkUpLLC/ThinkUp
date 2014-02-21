@@ -37,7 +37,10 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
-        $header_image = 'https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large';
+        $hero_image = array(
+            'url' => 'https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large',
+            'alt_text' => 'Maria Sharapova runs with the Olympic torch'
+        );
 
         if (self::shouldGenerateInsight('olympics_2014', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
@@ -83,6 +86,7 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set this way
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Optional emphasis, default is Insight::EMPHASIS_LOW
+                $my_insight->setHeroImage($hero_image);
 
                 if ($event_count) {
                     $this->insight_dao->insertInsight($my_insight);

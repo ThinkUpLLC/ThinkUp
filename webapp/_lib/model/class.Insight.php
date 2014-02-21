@@ -183,4 +183,12 @@ class Insight {
     public function setButton($button) {
         $this->related_data["button"] = $button;
     }
+    /**
+     * Add a hero image to insight's related data.
+     * @param arr Array of hero image data
+     * @return void
+     */
+    public function setHeroImage($hero_image) {
+        $this->related_data["hero_image"] = $hero_image;
+    }
 }
