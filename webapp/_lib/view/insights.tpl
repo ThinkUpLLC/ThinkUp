@@ -66,8 +66,12 @@
   </div>
   <div class="panel-desktop-right">
     <div class="panel-body">
-      {if isset($i->related_data.hero_image)}<img src="{$i->related_data.hero_image.url}"
-      alt="{$i->related_data.hero_image.alt_text}" class="img-responsive">{/if}
+      {if isset($i->related_data.hero_image)}<figure class="insight-hero-image">{if
+      isset($i->related_data.hero_image.img_link)}<a href="{$i->related_data.hero_image.img_link}">{/if}
+        <img src="{$i->related_data.hero_image.url}" alt="{$i->related_data.hero_image.alt_text}" class="img-responsive">
+      {if isset($i->related_data.hero_image.img_link)}
+        <figcaption class="insight-hero-credit">{$i->related_data.hero_image.credit}</figcaption>{/if}
+      {if isset($i->related_data.hero_image.img_link)}</a>{/if}</figure>{/if}
       <div class="panel-body-inner">
       {if $i->text neq '' and $i->slug neq 'posts_on_this_day_popular_flashback'}
         <p id="insight-text-{$i->id}">{$i->text|link_usernames_to_twitter}</p>{/if}

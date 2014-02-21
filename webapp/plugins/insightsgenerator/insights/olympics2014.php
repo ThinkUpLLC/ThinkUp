@@ -38,8 +38,10 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
         $hero_image = array(
-            'url' => 'http://farm3.staticflickr.com/2806/12568057033_6a59d70b3a_c.jpg',
-            'alt_text' => 'The Olympic rings in Sochi'
+            'url' => '/assets/img/insight-illustrations/olympics2014.jpg',
+            'alt_text' => 'The Olympic rings in Sochi',
+            'credit' => 'Photo: Atos International',
+            'img_link' => 'http://www.flickr.com/photos/atosorigin/12568057033/'
         );
 
         if (self::shouldGenerateInsight('olympics_2014', $instance, $insight_date='today',
