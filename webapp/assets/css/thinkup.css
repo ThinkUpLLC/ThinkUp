@@ -977,6 +977,18 @@ body.app-message-visible.account .container {
   padding: 10px 2%;
   letter-spacing: .01em;
 }
+.insight .insight-hero-image {
+  position: relative;
+}
+.insight .insight-hero-image .insight-hero-credit {
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  text-shadow: 1px 1px 1px #333;
+  opacity: .9;
+}
 .insight .panel-footer {
   border-radius: 0;
   overflow: hidden;
