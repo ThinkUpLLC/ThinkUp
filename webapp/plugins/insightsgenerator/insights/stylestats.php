@@ -36,7 +36,7 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('style_stats', $instance, $insight_date='today',
+        if (self::shouldGenerateWeeklyInsight('style_stats', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts),
         $excluded_networks=array('foursquare'))) {
             $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
