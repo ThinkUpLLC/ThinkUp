@@ -60,7 +60,7 @@ class InsightPluginParent {
      * Determine whether an insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
      * @param int $count_related_posts if set, wouldn't run insight if there are no posts related to insight
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
@@ -109,7 +109,7 @@ class InsightPluginParent {
      * Determine whether a weekly insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
      * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
      * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
@@ -144,7 +144,7 @@ class InsightPluginParent {
      * Determine whether a monthly insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
      * @param int $day_of_month the day of the month on which the insight should run
      * @return bool Whether the insight should be generated or not
