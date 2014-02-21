@@ -57,38 +57,27 @@ class InsightPluginParent {
     }
 
     /**
-     * Determine whether an insight should be generated or not.
+     * Determine whether an insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
      * @param date $insight_date date for which the insight has to be generated
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
-     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
-     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
+     * @param int $count_related_posts if set, wouldn't run insight if there are no posts related to insight
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
-     * @return bool $run whether the insight should be generated or not
+     * @return bool Whether the insight should be generated or not
      */
     public function shouldGenerateInsight($slug, Instance $instance, $insight_date=null,
-    $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-    $excluded_networks=null) {
+        $regenerate_existing_insight=false, $count_related_posts=null, $excluded_networks=null) {
         $run = true;
 
-        // Check the number of posts from last week
-        if (isset($count_last_week_of_posts)) {
-            $run = $run && $count_last_week_of_posts;
-        }
-
-        // Check whether testing
+        // Always generate if testing
         if (Utils::isTest()) {
-            return ($run && Utils::isTest());
+            return true;
         }
 
-        // Check the day of the week (0 for Sunday through 6 for Saturday) on which the insight should run
-        if (isset($day_of_week)) {
-            if (date('w') == $day_of_week) {
-                $run = $run && true;
-            } else {
-                $run = $run && false;
-            }
+        // Check the number of related posts
+        if (isset($count_related_posts)) {
+            $run = $run && $count_related_posts;
         }
 
         // Check boolean whether insight should be regenerated over a day
@@ -113,52 +102,73 @@ class InsightPluginParent {
                 $run = $run && true;
             }
         }
-
         return $run;
     }
 
     /**
-     * Determine whether a monthly insight should be generated or not.
+     * Determine whether a weekly insight should be generated.
+     * @param str $slug slug of the insight to be generated
+     * @param Instance $instance user and network details for which the insight has to be generated
+     * @param date $insight_date date for which the insight has to be generated
+     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
+     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
+     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
+     * @param arr $excluded_networks array of networks for which the insight shouldn't be run
+     * @return bool Whether the insight should be generated or not
+     */
+    public function shouldGenerateWeeklyInsight($slug, Instance $instance, $insight_date=null,
+        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
+        $excluded_networks=null) {
+        $run = true;
+
+        // Always generate if testing
+        if (Utils::isTest()) {
+            return true;
+        } else {
+            $run = self::shouldGenerateInsight( $slug, $instance, $insight_date, $regenerate_existing_insight,
+                $count_last_week_of_posts, $excluded_networks);
+
+            // Check the day of the week (0 for Sunday through 6 for Saturday) on which the insight should run
+            if (isset($day_of_week)) {
+                if (date('w') == $day_of_week) {
+                    $run = $run && true;
+                } else {
+                    $run = $run && false;
+                }
+            }
+        }
+        return $run;
+    }
+
+    /**
+     * Determine whether a monthly insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
      * @param date $insight_date date for which the insight has to be generated
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
      * @param int $day_of_month the day of the month on which the insight should run
-     * @return bool $run whether the insight should be generated or not
+     * @return bool Whether the insight should be generated or not
      */
     public function shouldGenerateMonthlyInsight($slug, Instance $instance, $insight_date=null,
-    $regenerate_existing_insight=false, $day_of_month=null) {
+        $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=null, $excluded_networks=null) {
         $run = true;
 
-        // Check whether testing
-        $in_test_mode = ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE") == "TESTS");
-        if ($in_test_mode) {
-            return ($run && $in_test_mode);
-        }
+        // Always generate if testing
+        if (Utils::isTest()) {
+            return true;
+        } else {
+            $run = self::shouldGenerateInsight( $slug, $instance, $insight_date, $regenerate_existing_insight,
+                $count_related_posts, $excluded_networks);
 
-        // Check the day of the month
-        if (isset($day_of_month)) {
-            if (date('j') == $day_of_month) {
-                $run = $run && true;
-            } else {
-                $run = $run && false;
+            // Check the day of the month
+            if (isset($day_of_month)) {
+                if (date('j') == $day_of_month) {
+                    $run = $run && true;
+                } else {
+                    $run = $run && false;
+                }
             }
         }
-
-        // Check boolean whether insight should be regenerated over a day
-        if (!$regenerate_existing_insight) {
-            $insight_date = isset($insight_date) ? $insight_date : 'today';
-
-            $existing_insight = $this->insight_dao->getInsight($slug, $instance->id,
-            date('Y-m-d', strtotime($insight_date)));
-
-            if (isset($existing_insight)) {
-                $run = $run && false;
-            } else {
-                $run = $run && true;
-            }
-        }
-
         return $run;
     }
 
