@@ -37,8 +37,8 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
 
-        if (self::shouldGenerateInsight('all_about_you', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
+        if (self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
             $text = '';
             $count = 0;
             foreach ($last_week_of_posts as $post) {

@@ -37,8 +37,7 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('link_prompt', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
+        if (self::shouldGenerateLinkPromptInsight('link_prompt', $instance, $insight_date='today',
         $excluded_networks=array('foursquare', 'youtube'), $alternate_day=(((int)date('j')) % 2))) {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $link_dao = DAOFactory::getDAO('LinkDAO');
@@ -82,28 +81,25 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
     }
 
     /**
-     * Determine whether an insight should be generated or not.
+     * Determine whether the link prompt insight should be generated or not.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
      * @param date $insight_date date for which the insight has to be generated
-     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
-     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
-     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
      * @param bool $alternate_day whether today is an alternate day or not
      * @return bool $run whether the insight should be generated or not
      */
-    public function shouldGenerateInsight($slug, Instance $instance, $insight_date=null,
-    $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-    $excluded_networks=null, $alternate_day=true) {
+    public function shouldGenerateLinkPromptInsight($slug, Instance $instance, $insight_date=null, $excluded_networks,
+    $alternate_day=true) {
         if (Utils::isTest()) {
             return true;
         } else {
             return $alternate_day && parent::shouldGenerateInsight($slug, $instance, $insight_date,
-            $regenerate_existing_insight, $day_of_week, $count_last_week_of_posts, $excluded_networks);
+            $regenerate_existing_insight=false, $count_last_week_of_posts=null, $excluded_networks);
         }
     }
 }
 
+// This insight is annoying and repetitive and we need to do better. Uncomment out once it's fixed.
 //$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
 //$insights_plugin_registrar->registerInsightPlugin('LinkPromptInsight');
