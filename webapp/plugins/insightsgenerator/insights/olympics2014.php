@@ -38,8 +38,8 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
         $hero_image = array(
-            'url' => 'https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large',
-            'alt_text' => 'Maria Sharapova runs with the Olympic torch'
+            'url' => 'http://farm3.staticflickr.com/2806/12568057033_6a59d70b3a_c.jpg',
+            'alt_text' => 'The Olympic rings in Sochi'
         );
 
         if (self::shouldGenerateInsight('olympics_2014', $instance, $insight_date='today',
@@ -52,9 +52,7 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
             $this->logger->logInfo("there are $event_count Olympic event mentions", __METHOD__.','.__LINE__);
 
             if ($event_count > 0) {
-                $headline = "Do they give out medals for " .$this->terms->getNoun('post', InsightTerms::PLURAL) .
-                    " during the Games?";
-
+                $headline = "Do they give out medals for " .$this->terms->getNoun('post', InsightTerms::PLURAL) . "?";
                 $insight_text = "$this->username referenced ";
 
                 if ($event_count > 0) {

@@ -81,11 +81,10 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Do they give out medals for status updates during the Games?', $result->headline);
+        $this->assertEqual('Do they give out medals for status updates?', $result->headline);
         $this->assertEqual('Johnny Carson referenced the Olympics just as the whole world\'s attention was ' .
             'focused on the games, and that\'s a pretty great way to join a global conversation.',
             $result->text);
-        $this->assertEqual('https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large', $result->header_image);
 
         $controller = new InsightStreamController();
         $_GET['u'] = 'Johnny Carson';
@@ -133,11 +132,10 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Do they give out medals for status updates during the Games?', $result->headline);
-        $this->assertEqual('Johnny Carson referenced the Olympics 6 times since they started, which is kind of like ' .
-            'winning 6 gold medals in Facebook, right?',
+        $this->assertEqual('Do they give out medals for status updates?', $result->headline);
+        $this->assertEqual('Johnny Carson referenced the Olympics 6 times since they started, ' .
+                                'which is kind of like winning 6 gold medals in Facebook, right?',
             $result->text);
-        $this->assertEqual('https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large', $result->header_image);
 
         $controller = new InsightStreamController();
         $_GET['u'] = 'Johnny Carson';
@@ -181,11 +179,10 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Do they give out medals for tweets during the Games?', $result->headline);
+        $this->assertEqual('Do they give out medals for tweets?', $result->headline);
         $this->assertEqual('@catlady99 referenced the Olympics 5 times since they started, which is kind of like ' .
             'winning 5 gold medals in Twitter, right?',
             $result->text);
-        $this->assertEqual('https://pbs.twimg.com/media/Bf5LVvHCMAEwdC0.jpg:large', $result->header_image);
 
         $controller = new InsightStreamController();
         $_GET['u'] = 'Johnny Carson';
