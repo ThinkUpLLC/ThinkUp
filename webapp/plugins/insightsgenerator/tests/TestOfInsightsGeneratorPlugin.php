@@ -356,6 +356,18 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Wow: Made the List:',
         'text'=>'This was Bill Cosby\'s most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $hero_image = array(
+            'url' => 'https://www.thinkup.com/assets/images/insights/2014-02/olympics2014.jpg',
+            'alt_text' => 'The Olympic rings in Sochi',
+            'credit' => 'Photo: Atos International',
+            'img_link' => 'http://www.flickr.com/photos/atosorigin/12568057033/'
+        );
+        $builders[] = FixtureBuilder::build('insights', array('id'=>5, 'instance_id'=>6,
+        'slug'=>'olympics_2014', 'headline'=>'Do they give out medals for tweets?',
+        'text'=>'You tweeted a hundred thousand times during the Olympics.',
+        'related_data'=>serialize(array("hero_image"=>$hero_image)),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
 
@@ -417,6 +429,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         //assert unsub link
         $this->assertPattern('/http:\/\/downtonabb\.ey\/account\/index.php\?m\=manage\#instances/',
             $merge_vars['insights']);
+        $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
+        //assert hero image
+        $this->assertPattern('/<img src="https:\/\/www\.thinkup\.com\/assets\/images\/insights\/2014-02\/'.
+            'olympics2014.jpg" alt="The Olympic rings in Sochi"/', $merge_vars['insights']);
+        //assert CSS curly braces are preserved
+        $this->assertPattern('/a:hover {/', $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
     }
