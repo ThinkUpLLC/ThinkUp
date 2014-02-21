@@ -36,7 +36,6 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $insight_text = '';
         $hero_image = array(
             'url' => 'https://www.thinkup.com/assets/images/insights/2014-02/olympics2014.jpg',
             'alt_text' => 'The Olympic rings in Sochi',
@@ -51,7 +50,6 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
 
         if (self::shouldGenerateWeeklyInsight('olympics_2014', $instance, $insight_date='today',
         $regenerate_existing_insight=true, $day_of_week=0, count($last_month_of_posts))) {
-            $text = '';
             $event_count = 0;
             foreach ($last_month_of_posts as $post) {
                 $event_count += self::countOlympicReferences($post->post_text);
