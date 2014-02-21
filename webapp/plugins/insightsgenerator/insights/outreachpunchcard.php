@@ -36,7 +36,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (parent::shouldGenerateInsight('outreach_punchcard', $instance, $insight_date='today',
+        if (parent::shouldGenerateWeeklyInsight('outreach_punchcard', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts))) {
 
             $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');

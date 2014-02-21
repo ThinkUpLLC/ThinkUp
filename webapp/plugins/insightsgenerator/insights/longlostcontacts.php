@@ -36,7 +36,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('long_lost_contacts', $instance, $insight_date='today',
+        if (self::shouldGenerateWeeklyInsight('long_lost_contacts', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=4)) {
             $follow_dao = DAOFactory::getDAO('FollowDAO');
 
