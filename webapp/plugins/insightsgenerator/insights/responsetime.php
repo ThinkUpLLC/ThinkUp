@@ -37,7 +37,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('response_time', $instance, $insight_date='today',
+        if (self::shouldGenerateWeeklyInsight('response_time', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=5, count($last_week_of_posts))) {
             $response_count = array('reply' => 0, 'retweet' => 0, 'like' => 0);
 
