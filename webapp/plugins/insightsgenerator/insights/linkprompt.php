@@ -84,7 +84,7 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
      * Determine whether the link prompt insight should be generated or not.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
      * @param bool $alternate_day whether today is an alternate day or not
      * @return bool $run whether the insight should be generated or not
