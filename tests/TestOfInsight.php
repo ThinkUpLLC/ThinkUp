@@ -57,5 +57,8 @@ class TestOfInsight extends ThinkUpBasicUnitTestCase {
 
         $i->setButton("button");
         $this->assertEqual($i->related_data["button"], "button");
+
+        $i->setHeroImage("Hero Image");
+        $this->assertEqual($i->related_data["hero_image"], "Hero Image");
     }
 }
