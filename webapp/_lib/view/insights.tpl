@@ -54,9 +54,8 @@
         {/if}
 
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
-            {if $i->emphasis >= '1'}insight-hero{/if}
-            insight-{$color|strip}
-            " id="insight-{$i->id}">
+  {if $i->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
+  isset($i->related_data.hero_image) and $i->emphasis > '1'}insight-wide{/if}" id="insight-{$i->id}">
   <div class="panel-heading ">
     <h2 class="panel-title">{$i->headline}</h2>
     {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
@@ -67,7 +66,12 @@
   </div>
   <div class="panel-desktop-right">
     <div class="panel-body">
-
+      {if isset($i->related_data.hero_image)}<figure class="insight-hero-image">{if
+      isset($i->related_data.hero_image.img_link)}<a href="{$i->related_data.hero_image.img_link}">{/if}
+        <img src="{$i->related_data.hero_image.url}" alt="{$i->related_data.hero_image.alt_text}" class="img-responsive">
+      {if isset($i->related_data.hero_image.img_link)}
+        <figcaption class="insight-hero-credit">{$i->related_data.hero_image.credit}</figcaption>{/if}
+      {if isset($i->related_data.hero_image.img_link)}</a>{/if}</figure>{/if}
       <div class="panel-body-inner">
       {if $i->text neq '' and $i->slug neq 'posts_on_this_day_popular_flashback'}
         <p id="insight-text-{$i->id}">{$i->text|link_usernames_to_twitter}</p>{/if}
