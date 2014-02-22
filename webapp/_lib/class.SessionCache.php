@@ -1,5 +1,4 @@
-<?php
-/**
+<?php /**
  *
  * ThinkUp/webapp/_lib/class.SessionCache.php
  *
@@ -35,18 +34,21 @@ class SessionCache {
      * Start the session system running
      */
     public static function init() {
-        $session_dao = DAOFactory::getDAO('SessionDAO');
-        session_set_save_handler(
-            array($session_dao, 'open'),
-            array($session_dao, 'close'),
-            array($session_dao, 'read'),
-            array($session_dao, 'write'),
-            array($session_dao, 'destroy'),
-            array($session_dao, 'gc')
-        );
+        $config = Config::getInstance();
+        if ($config->getValue('use_db_sessions')) {
+            $session_dao = DAOFactory::getDAO('SessionDAO');
+            session_set_save_handler(
+                array($session_dao, 'open'),
+                array($session_dao, 'close'),
+                array($session_dao, 'read'),
+                array($session_dao, 'write'),
+                array($session_dao, 'destroy'),
+                array($session_dao, 'gc')
+            );
+            // the following prevents unexpected effects when using objects as save handlers
+            register_shutdown_function('session_write_close');
+        }
 
-        // the following prevents unexpected effects when using objects as save handlers
-        register_shutdown_function('session_write_close');
         session_start();
     }
 
