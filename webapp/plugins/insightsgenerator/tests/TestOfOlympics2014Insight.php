@@ -73,6 +73,9 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         $count = Olympics2014Insight::countOlympicReferences("Already the closing ceremony is hoppin");
         $this->assertEqual($count, 1);
 
+        $count = Olympics2014Insight::countOlympicReferences("Heartbroken for crestfallen Olympians");
+        $this->assertEqual($count, 1);
+
         $count = Olympics2014Insight::countOlympicReferences(
         "Now that I'm back on Android, realizing just howunder sung Google Now is. I want it everywhere.");
         $this->assertEqual($count, 0);
