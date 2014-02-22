@@ -105,7 +105,7 @@ class Olympics2014Insight extends InsightPluginParent implements InsightPlugin {
         preg_match_all("/\bolympic/i", $depunctuated_text, $matches);
         $count += sizeof($matches[0]);
 
-        preg_match_all("/\bolympian\b/i", $depunctuated_text, $matches);
+        preg_match_all("/\bolympian/i", $depunctuated_text, $matches);
         $count += sizeof($matches[0]);
 
         preg_match_all("/\bsochi/i", $depunctuated_text, $matches);
