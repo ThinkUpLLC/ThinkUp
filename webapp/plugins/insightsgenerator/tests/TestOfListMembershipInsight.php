@@ -70,6 +70,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
+        $this->assertPattern('/These are the most popular words in the list names: list2, list1, list0, list3/', $result->text);
     }
 
     public function testLessThan10NewListMembershipWithHighHistory() {
@@ -98,6 +99,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
         $this->assertPattern('/bringing the total to \<strong\>58 lists\<\/strong\>\./', $result->text);
+        $this->assertPattern('/These are the most popular words in the list names: list2, list1, list0, list3/', $result->text);
     }
 
     public function testLessThan10NewListMembershipWithLowHistory() {
@@ -126,6 +128,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->assertPattern('/and \<a href="http:\/\/twitter.com\/listmaker\/list0\"\>list0\<\/a\>/', $result->text);
         $this->assertNoPattern('/bringing your total to/', $result->text);
+        $this->assertPattern('/These are the most popular words in the list names: list2, list1, list0, list3/', $result->text);
     }
 
     public function testMoreThan10NewListMembershipNoHistory() {
@@ -153,6 +156,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on 26 new lists:/', $result->text);
         $this->assertPattern('/and 16 more/', $result->text);
+        $this->assertPattern('/These are the most popular words in the list names: list8, list7, list9, list10/', $result->text);
     }
 
     public function test1NewListMembershipNoHistory() {
@@ -180,6 +184,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on a new list,/', $result->text);
         $this->assertNoPattern('/bringing/', $result->text);
+        echo($result->text);
+        
     }
 
     public function test1NewListMembershipWithHistory() {
@@ -207,6 +213,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on a new list,/', $result->text);
         $this->assertPattern('/bringing the total to \<strong\>6 lists\<\/strong\>./', $result->text);
+        
     }
 
     private function buildData($total_lists, $build_history=false, $history_ceiling=50) {
