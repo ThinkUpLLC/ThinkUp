@@ -202,6 +202,8 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertEqual('', $session);
         session_write_close();
 
+        $config = Config::getInstance();
+        $config->setValue('use_db_sessions', true);
         $controller = new TestController(false);
         $rand = md5(mt_rand(1,12122131231));
         $_SESSION['test'] = $rand;
