@@ -1,0 +1,10 @@
+filter:
+ excluded_paths: [webapp/_lib/extlib/*, extras/*, docs/*]
+
+tools:
+ php_code_sniffer: true
+ php_cs_fixer: true
+ php_hhvm: true
+ php_pdepend: true
+ sensiolabs_security_checker: true
+ php_mess_detector: true
