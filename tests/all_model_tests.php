@@ -70,7 +70,7 @@ $model_tests->add(new TestOfPostMySQLDAO());
 $model_tests->add(new TestOfExportMySQLDAO());
 $model_tests->add(new TestOfPostErrorMySQLDAO());
 $model_tests->add(new TestOfProfiler());
-#$model_tests->add(new TestOfSession());
+$model_tests->add(new TestOfSession());
 #$model_tests->add(new TestOfSessionCache());
 $model_tests->add(new TestOfViewManager());
 $model_tests->add(new TestOfUserMySQLDAO());
