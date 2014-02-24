@@ -70,7 +70,7 @@ $THINKUP_CFG['enable_profiler']           = false;
 
 // Set this to true if you want your PDO object's database connection's charset to be explicitly set to utf8.
 // If false (or unset), the database connection's charset will not be explicitly set.
-$THINKUP_CFG['set_pdo_charset']           = false;
+$THINKUP_CFG['set_pdo_charset']           = true;
 
 //TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])

@@ -174,6 +174,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //sleep(1000);
         //Start installation process
+        @exec('chmod -R 555 webapp/test_installer/thinkup/data;');
         $this->get($this->url.'/test_installer/thinkup/');
         $this->assertTitle("ThinkUp");
 
@@ -203,6 +204,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);
         $this->setField('db_prefix', $THINKUP_CFG['table_prefix']);
+        @exec('chmod 555 webapp/test_installer/thinkup;');
         $this->clickSubmitByName('Submit');
 
         $this->assertNoText('ThinkUp has been installed successfully. Check your email account; an account activation '.
@@ -213,6 +215,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTrue(!file_exists($THINKUP_CFG['source_root_path'].
         '/webapp/test_installer/thinkup/config.inc.php'));
 
+        @exec('chmod 777 webapp/test_installer/thinkup;');
         @exec('touch webapp/test_installer/thinkup/config.inc.php;'.
         'chmod 777 webapp/test_installer/thinkup/config.inc.php');
 

@@ -37,6 +37,18 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     const CSRF_TOKEN = 'test_csrf_token_123';
 
     /**
+     * Constructor
+     * Occasionally spit out a . if we are running in travis so that travis doesn't give up on us.
+     */
+    public function __construct() {
+        parent::__construct();
+        if (getenv('TRAVIS') == 'true') {
+            if (mt_rand(1,20) == 1) print ".";
+            sleep(3);
+        }
+    }
+
+    /**
      * Initialize Config and Webapp objects, clear $_SESSION, $_POST, $_GET, $_REQUEST
      */
     public function setUp() {
