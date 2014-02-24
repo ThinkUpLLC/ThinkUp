@@ -1,9 +1,13 @@
 language: php
-php:
+notphp:
   - 5.5
   - 5.4
   - 5.3
   - 5.2
+
+php:
+  - 5.2
+
 
 before_script:
  - mysql -e 'create database thinkup'
