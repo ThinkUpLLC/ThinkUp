@@ -22,11 +22,11 @@
                 data-network="{$i->network}" data-network-name="{$i->network_username}">
                 <input type="radio" name="{$i->network_username|replace:" ":"_"}-privacy-toggle-control" value="0"
                 class="field-privacy-private"
-                {if not $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-private" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-private" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-public"><i class="fa fa-lock icon"></i><span class="text">Private</span></label>
+                {if not $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-private" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-private" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-public"><i class="fa fa-lock icon"></i><span class="text">Just you</span></label>
 
                 <input type="radio" name="{$i->network_username|replace:" ":"_"}-privacy-toggle-control" value="1"
                 class="field-privacy-public"
-                {if $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-public" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-public" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-private"><i class="fa fa-globe icon"></i><span class="text">Public</span></label>
+                {if $i->is_public}checked="checked"{/if} id="field-{$i->network_username|replace:" ":"_"}-privacy-public" /><label class="toggle-label" for="field-{$i->network_username|replace:" ":"_"}-privacy-public" data-check-field="field-{$i->network_username|replace:" ":"_"}-privacy-private"><i class="fa fa-globe icon"></i><span class="text">Everyone</span></label>
               </div>
             </div>
 
