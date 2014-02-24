@@ -101,13 +101,13 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
     }
 
     public function testController() {
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $this->assertIsA($controller, 'InsightStreamController');
     }
 
     //testOfNotLoggedInNoInsights (should redirect to login)
     public function testOfNotLoggedInNoInsights() {
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
         $this->assertPattern('/Log in/', $results);
         $this->assertPattern('/Email/', $results);
@@ -118,7 +118,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
     public function testOfNotLoggedInInsights() {
         $builders = self::buildPublicAndPrivateInsights();
 
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //don't show login screen
@@ -135,7 +135,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $builders = self::buildPublicAndPrivateInsights();
         $this->simulateLogin('tuuser1@example.com', false);
 
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //don't show login screen
@@ -152,7 +152,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $builders = self::buildPublicAndPrivateInsights();
         $this->simulateLogin('tuuser2@example.com', false);
 
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //don't show login screen
@@ -173,7 +173,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
 
         $this->simulateLogin('tuuser1@example.com', false);
 
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         $this->assertNoPattern('/Email/', $results);
@@ -206,7 +206,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
 
         $this->simulateLogin('tuuser1@example.com', false);
 
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         $this->assertNoPattern('/Email/', $results);
@@ -229,7 +229,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $_GET['n'] = 'twitter';
         $_GET['d'] = '2012-05-01';
         $_GET['s'] = 'avg_replies_per_week';
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //do show owned private insight
@@ -245,7 +245,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $_GET['n'] = 'twitter';
         $_GET['d'] = '2012-05-01';
         $_GET['s'] = 'avg_replies_per_week';
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //don't show owned private insight
@@ -263,7 +263,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $_GET['n'] = 'twitter';
         $_GET['d'] = '2012-05-01';
         $_GET['s'] = 'avg_replies_per_week';
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //don't show owned private insight
@@ -281,7 +281,7 @@ class TestOfInsightStreamController extends ThinkUpUnitTestCase {
         $_GET['n'] = 'twitter';
         $_GET['d'] = '2012-05-01';
         $_GET['s'] = 'avg_replies_per_week';
-        $controller = new InsightStreamController();
+        $controller = new InsightStreamController(true);
         $results = $controller->go();
 
         //do show public insight

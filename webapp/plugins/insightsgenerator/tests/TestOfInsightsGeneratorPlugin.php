@@ -387,7 +387,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
-        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));

@@ -27,6 +27,10 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+
+ini_set('session.use_cookies', 0);
+session_cache_limiter('');
+
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
@@ -35,6 +39,8 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 class TestOfSessionCache extends ThinkUpUnitTestCase {
 
     public function setUp(){
+        $config = Config::getInstance();
+        $config->setValue('use_db_sessions', false);
         parent::setUp();
     }
 
@@ -71,4 +77,41 @@ class TestOfSessionCache extends ThinkUpUnitTestCase {
         $this->assertNull(SessionCache::get('my_key'));
         $this->assertFalse(SessionCache::isKeySet('my_key'));
     }
+
+    public function testInit() {
+        $this->assertEqual(session_id(), '');
+        SessionCache::init();
+
+        // We should be started now
+        $this->assertNotEqual(session_id(), '');
+        session_destroy();
+    }
+
+    public function testUseDbSetting() {
+        session_id(md5(time()));
+        SessionCache::init();
+        SessionCache::put('my_key', 'my_value2');
+        $dao = DAOFactory::getDAO('SessionDAO');
+        session_write_close();
+
+        $data = $dao->read(session_id());
+        $this->assertEqual('', $data);
+    }
+
+    public function testVerifyDBness() {
+        $config = Config::getInstance();
+        $config->setValue('use_db_sessions', true);
+        session_id(md5(time()));
+        SessionCache::init();
+        SessionCache::put('my_key', 'my_value2');
+        $dao = DAOFactory::getDAO('SessionDAO');
+
+        $data = $dao->read(session_id());
+        $this->assertEqual('', $data);
+
+        session_write_close();
+        $data = $dao->read(session_id());
+        $this->assertNotEqual('', $data);
+    }
+
 }

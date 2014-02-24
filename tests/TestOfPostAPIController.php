@@ -2837,7 +2837,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET['type'] = 'keyword_posts';
         $_GET['keyword'] = 'first';
         $_GET['network'] = 'twitter';
-        $controller = new PostAPIController();
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
 
@@ -2857,7 +2857,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $_GET['page'] = 1;
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
-        $controller = new PostAPIController();
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
         $counter=301;
@@ -2867,7 +2867,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         }
 
         $_GET['page'] = 2;
-        $controller = new PostAPIController();
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 10);
         $counter=341;
@@ -2882,7 +2882,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
         //test #second
         $_GET['keyword'] = '#second';
-        $controller = new PostAPIController();
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
 

@@ -198,7 +198,10 @@ class DAOFactory {
     //Photo DAO
         'PhotoDAO' => array(
     //MySQL Version
-            'mysql' => 'PhotoMySQLDAO' )
+            'mysql' => 'PhotoMySQLDAO' ),
+        'SessionDAO' => array(
+    //MySQL Version
+            'mysql' => 'SessionMySQLDAO' )
 
     );
 

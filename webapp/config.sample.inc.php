@@ -22,6 +22,9 @@ $THINKUP_CFG['timezone']                  = 'UTC';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
+//
+// Should sessions be stored in the database?  (As opposed to the php default files)
+$THINKUP_CFG['use_db_sessions']               = true;
 
 // Smarty file cache lifetime in seconds; defaults to 600 (10 minutes) caching
 $THINKUP_CFG['cache_lifetime']               = 600;
@@ -79,7 +82,8 @@ $THINKUP_CFG['set_pdo_charset']           = false;
 
 //TESTS OVERRIDE: Assign variables below to use different settings during test builds
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
-|| (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
+|| (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")
+|| (isset($_COOKIE['TU_MODE']) && $_COOKIE['TU_MODE']=='TESTS')) {
     //    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
     //    $THINKUP_CFG['db_user']                   = 'your_test_database_username';
     //    $THINKUP_CFG['db_password']               = 'your_test_database_password';

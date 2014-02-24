@@ -48,9 +48,8 @@ class TestOfInsightsGeneratorPluginConfigurationController extends ThinkUpUnitTe
 
     public function testLoginRequired  () {
         $controller = $this->getController(false);
-        $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $this->assertPattern('/You must.*log in/', $v_mgr->getTemplateDataItem('error_msg'));
+        $res = $controller->go();
+        $this->assertPattern('/You must.*log in/', $res);
 
         $controller = $this->getController(true);
         $controller->go();
