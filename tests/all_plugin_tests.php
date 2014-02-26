@@ -105,6 +105,7 @@ $plugin_tests->add(new TestOfRetweetSpikeInsight());
 $plugin_tests->add(new TestOfWeeklyGraphInsight());
 $plugin_tests->add(new TestOfHelloThinkUpInsight());
 $plugin_tests->add(new TestOfOlympics2014Insight());
+$plugin_tests->add(new TestOfOscars2014Insight());
 
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
