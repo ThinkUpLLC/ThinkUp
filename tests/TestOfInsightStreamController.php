@@ -276,7 +276,8 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         //don't show owned private insight
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
         //do show no access message
-        $this->assertPattern('/You don&#39;t have rights to view this service user/', $results);
+        $this->assertPattern('/Log in/', $results);
+        $this->assertPattern('/to see this insight/', $results);
         $this->debug($results);
     }
 
@@ -293,7 +294,8 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         //don't show owned private insight
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
         //do show no access message
-        $this->assertPattern('/You don&#39;t have rights to view this service user/', $results);
+        $this->assertPattern('/Log in/', $results);
+        $this->assertPattern('/to see this insight/', $results);
         $this->debug($results);
     }
 
@@ -310,7 +312,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         //do show public insight
         $this->assertPattern('/Hey these are some local followers!/', $results);
         //don't show no access message
-        $this->assertNoPattern('/You don&#39;t have rights to view this service user/', $results);
+        $this->assertNoPattern('/to see this insight/', $results);
         $this->debug($results);
     }
 
