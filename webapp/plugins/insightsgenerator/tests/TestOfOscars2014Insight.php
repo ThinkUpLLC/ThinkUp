@@ -45,31 +45,51 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
         parent::tearDown();
     }
 
-    public function testDetectOscarTopicReferences() {
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("I *loved* watching american hustle!");
-        $this->assertEqual($mentioned_oscar_topic, "American Hustle");
+    public function testDetectOscarWinnerReferences() {
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("I *loved* watching american hustle!");
+        $this->assertEqual($mentioned_oscar_winner, "American Hustle");
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("can't believe Captain Phillips.");
-        $this->assertEqual($mentioned_oscar_topic, "Captain Phillips");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("can't believe Captain Phillips.");
+        $this->assertEqual($mentioned_oscar_winner, '');
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("Dallas Buyers club was terrific");
-        $this->assertEqual($mentioned_oscar_topic, "Dallas Buyers Club");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("Dallas Buyers club was terrific");
+        $this->assertEqual($mentioned_oscar_winner, "Dallas Buyers Club");
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("oscar for philomena, yo!");
-        $this->assertEqual($mentioned_oscar_topic, "Philomena");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("oscar for philomena, yo!");
+        $this->assertEqual($mentioned_oscar_winner, "Philomena");
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("So glad that 12 Years a Slave won.");
-        $this->assertEqual($mentioned_oscar_topic, "12 Years a Slave");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("So glad that 12 Years a Slave won.");
+        $this->assertEqual($mentioned_oscar_winner, "12 Years a Slave");
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("The Wolf of Wall Street was awful.");
-        $this->assertEqual($mentioned_oscar_topic, "Wolf of Wall Street");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("The Wolf of Wall Street was awful.");
+        $this->assertEqual($mentioned_oscar_winner, '');
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences("American Hustle was great.");
-        $this->assertEqual($mentioned_oscar_topic, "American Hustle");
+        $mentioned_oscar_winner = Oscars2014Insight::detectOscarWinnerReferences("American Hustle was great.");
+        $this->assertEqual($mentioned_oscar_winner, "American Hustle");
 
-        $mentioned_oscar_topic = Oscars2014Insight::detectOscarTopicReferences(
-        "Now that I'm back on Android, realizing just how undersung Google Now is. I want it everywhere.");
-        $this->assertEqual($mentioned_oscar_topic, 0);
+    }
+
+    public function testDetectOscarLoserReferences() {
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("I *loved* watching american hustle!");
+        $this->assertEqual($mentioned_oscar_loser, "");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("can't believe Captain Phillips.");
+        $this->assertEqual($mentioned_oscar_loser, "Captain Phillips");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("Dallas Buyers club was terrific");
+        $this->assertEqual($mentioned_oscar_loser, "");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("oscar for philomena, yo!");
+        $this->assertEqual($mentioned_oscar_loser, "");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("So glad that 12 Years a Slave won.");
+        $this->assertEqual($mentioned_oscar_loser, "");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("The Wolf of Wall Street was awful.");
+        $this->assertEqual($mentioned_oscar_loser, "Wolf of Wall Street");
+
+        $mentioned_oscar_loser = Oscars2014Insight::detectOscarLoserReferences("American Hustle was great.");
+        $this->assertEqual($mentioned_oscar_loser, "");
 
     }
 
@@ -87,18 +107,18 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
 
     }
 
-    public function testOscar2014OneEventReference() {
+    public function testOscars2014WinnerReference() {
         // Get data ready that insight requires
         $instance = new Instance();
-        $instance->id = 5;
-        $instance->network_username = 'Johnny Carson';
-        $instance->network = 'facebook';
+        $instance->id = 3;
+        $instance->network_username = 'catlady99';
+        $instance->network = 'twitter';
         $builders = self::setUpPublicInsight($instance);
 
         $builders[] = FixtureBuilder::build('posts',
             array(
-            'post_text' => 'So glad that American Hustle won!',
-            'pub_date' => '2014-02-07',
+            'post_text' => 'Hope that 12 Years a Slave wins.',
+            'pub_date' => '2014-02-19',
             'author_username' => $instance->network_username,
             'network' => $instance->network
             )
@@ -111,23 +131,129 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('oscars_2014', 5, $today);
+        $result = $insight_dao->getInsight('oscars_2014', 3, $today);
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Can we crash your Oscar party next year?', $result->headline);
-        $this->assertEqual('Johnny Carson mentioned the Oscars just as the whole world\'s attention was ' .
-            'focused on the Games. That\'s a pretty great way to join a global conversation.',
+        $this->assertEqual('Can we crash your Oscars party next year?', $result->headline);
+        $this->assertEqual('@catlady99 was talking about 12 Years a Slave before the Academy Award winners were '
+            . 'even announced!',
             $result->text);
 
         $controller = new InsightStreamController();
-        $_GET['u'] = 'Johnny Carson';
-        $_GET['n'] = 'facebook';
-        $_GET['d'] = date ('Y-m-d');
+        $_GET['u'] = 'catlady99';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = date ('Y-m-d') ;
         $_GET['s'] = 'oscars_2014';
         $results = $controller->go();
         //output this to an HTML file to see the insight fully rendered
         $this->debug($results);
     }
+
+    public function testOscars2014WinnerAndLoserReference() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_username = 'catlady99';
+        $instance->network = 'facebook';
+        $builders = self::setUpPublicInsight($instance);
+
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_text' => 'Hope that 12 Years a Slave wins.',
+            'pub_date' => '2014-02-19',
+            'author_username' => $instance->network_username,
+            'network' => $instance->network
+            )
+        );
+
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_text' => 'Really glad that Jonah Hill will not win an Oscar.',
+            'pub_date' => '2014-02-25',
+            'author_username' => $instance->network_username,
+            'network' => $instance->network
+            )
+        );
+
+        $posts = array();
+        $insight_plugin = new Oscars2014Insight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('oscars_2014', 1, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Can we crash your Oscars party next year?', $result->headline);
+        $this->assertEqual('catlady99 was talking about 12 Years a Slave before the Academy Award winners were '
+            . 'even announced!',
+            $result->text);
+
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'catlady99';
+        $_GET['n'] = 'facebook';
+        $_GET['d'] = date ('Y-m-d') ;
+        $_GET['s'] = 'oscars_2014';
+        $results = $controller->go();
+        //output this to an HTML file to see the insight fully rendered
+        $this->debug($results);
+    }
+
+    public function testOscars2014WinnerReferenceNotInLastMonth() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 3;
+        $instance->network_username = 'catlady99';
+        $instance->network = 'twitter';
+        $builders = self::setUpPublicInsight($instance);
+
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_text' => 'Hope that 12 Years a Slave wins.',
+            'pub_date' => '2014-02-19',
+            'author_username' => $instance->network_username,
+            'network' => $instance->network
+            )
+        );
+
+        //This post should not be counted because it's more than 30 days old
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_text' => 'Cannot wait for Dallas Buyers Club',
+            'pub_date' => '2014-01-01',
+            'author_username' => $instance->network_username,
+            'network' => $instance->network
+            )
+        );
+
+        $posts = array();
+        $insight_plugin = new Oscars2014Insight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('oscars_2014', 3, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Can we crash your Oscars party next year?', $result->headline);
+        $this->assertEqual('@catlady99 was talking about 12 Years a Slave before the Academy Award winners were '
+            . 'even announced!',
+            $result->text);
+
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'catlady99';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = date ('Y-m-d') ;
+        $_GET['s'] = 'oscars_2014';
+        $results = $controller->go();
+        //output this to an HTML file to see the insight fully rendered
+        $this->debug($results);
+    }
+
 
 }

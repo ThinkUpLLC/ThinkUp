@@ -53,16 +53,28 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
 
             if (self::shouldGenerateWeeklyInsight('oscars_2014', $instance, $insight_date='today',
             $regenerate_existing_insight=true, $day_of_week=0, count($last_month_of_posts))) {
-                $event_count = 0;
                 foreach ($last_month_of_posts as $post) {
-                    $mentioned_oscar_topic += self::detectOscarTopicReferences($post->post_text);
+                    //TODO see if $post date is before 2014-03-02 12:00:00
+                    $mentioned_oscar_winner = self::detectOscarWinnerReferences($post->post_text);
+                    $mentioned_oscar_loser = self::detectOscarLoserReferences($post->post_text);
+                    $oscar_mention_count = self::countOscarMentions($post->post_text);
+                    $this->logger->logInfo("A winner mention of $mentioned_oscar_winner", __METHOD__.','.__LINE__);
+                    $this->logger->logInfo("A loser mention of $mentioned_oscar_loser", __METHOD__.','.__LINE__);
                 }
-                $this->logger->logInfo("There is a mention of $mentioned_oscar_topic", __METHOD__.','.__LINE__);
 
-                if ($mentioned_oscar_topic) {
-                    $headline = "Can we crash your Oscar party next year?";
-                    $insight_text = "$this->username mentioned $mentioned_oscar_topic before the Academy Awards were"
-                                    . " even announced!";
+                if ($mentioned_oscar_winner | $mentioned_oscar_loser | $oscar_mention_count) {
+                    $headline = "Can we crash your Oscars party next year?";
+
+                    if ($mentioned_oscar_winner) {
+                        $insight_text .= "$this->username was talking about $mentioned_oscar_winner before the Academy"
+                                    . " Award winners were even announced!";
+                    }
+
+                    if ($mentioned_oscar_loser) {
+                        $insight_text .= " Looks like the Academy voters might have missed $this->username's "
+                            . $this->terms->getNoun('post', InsightTerms::PLURAL). " about " . $mentioned_oscar_loser
+                            . ", though.";
+                    }
 
                     $my_insight = new Insight();
                     $my_insight->slug = 'oscars_2014'; //slug to label this insight's content
@@ -86,19 +98,43 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
      * @param str $text
      * @return str Topic names in $text
      */
-    public static function detectOscarTopicReferences($text) {
+    public static function detectOscarWinnerReferences($text) {
         $topic = '';
         $matches = array();
         $url_free_text = preg_replace('!https?://[\S]+!', ' ', $text);
         $depunctuated_text = " ". preg_replace('/[^a-z0-9]+/i', ' ', $url_free_text) ." ";
 
-        if(preg_match_all("/\bamerican hustle/i", $depunctuated_text, $matches)) { $topic = 'American Hustle'; }
-
         if(preg_match_all("/\b12 years a slave/i", $depunctuated_text, $matches)) { $topic = '12 Years a Slave'; }
+        if(preg_match_all("/\bamerican hustle/i", $depunctuated_text, $matches)) { $topic = 'American Hustle'; }
+        if(preg_match_all("/\bbroken circle breakdown/i", $depunctuated_text, $matches)) { $topic = 'Broken Circle Breakdown'; }
+        if(preg_match_all("/\bcate blanchett/i", $depunctuated_text, $matches)) { $topic = 'Cate Blanchett'; }
+        if(preg_match_all("/\bcuaron/i", $depunctuated_text, $matches)) { $topic = 'Alfonso Cuaron'; }
+        if(preg_match_all("/\bdallas buyers club/i", $depunctuated_text, $matches)) { $topic = 'Dallas Buyers Club'; }
+        if(preg_match_all("/\bget a horse/i", $depunctuated_text, $matches)) { $topic = 'Get A Horse'; }
+        if(preg_match_all("/\bGravity/", $depunctuated_text, $matches)) { $topic = 'Gravity'; }
+        if(preg_match_all("/\bgreat gatsby/i", $depunctuated_text, $matches)) { $topic = 'Great Gatsby'; }
+        if(preg_match_all("/\bjared leto/i", $depunctuated_text, $matches)) { $topic = 'Jared Leto'; }
+        if(preg_match_all("/\blady in number 6/i", $depunctuated_text, $matches)) { $topic = 'Lady In Number 6'; }
+        if(preg_match_all("/\blupita nyong o/i", $depunctuated_text, $matches)) { $topic = 'Lupita Nyongo'; }
+        if(preg_match_all("/\blupita nyongo/i", $depunctuated_text, $matches)) { $topic = 'Lupita Nyongo'; }
+        if(preg_match_all("/\bphilomena/i", $depunctuated_text, $matches)) { $topic = 'Philomena'; }
+
+        return $topic;
+    }
+    /**
+     * detect the mention of Oscar-related terms in text.
+     * @param str $text
+     * @return str Topic names in $text
+     */
+    public static function detectOscarLoserReferences($text) {
+        $topic = '';
+        $matches = array();
+        $url_free_text = preg_replace('!https?://[\S]+!', ' ', $text);
+        $depunctuated_text = " ". preg_replace('/[^a-z0-9]+/i', ' ', $url_free_text) ." ";
+
         if(preg_match_all("/\b20 feet from stardom/i", $depunctuated_text, $matches)) { $topic = '20 Feet From Stardom'; }
         if(preg_match_all("/\bact of killing/i", $depunctuated_text, $matches)) { $topic = 'Act Of Killing'; }
         if(preg_match_all("/\ball is lost/i", $depunctuated_text, $matches)) { $topic = 'All Is Lost'; }
-        if(preg_match_all("/\bamerican hustle/i", $depunctuated_text, $matches)) { $topic = 'American Hustle'; }
         if(preg_match_all("/\bamy adams/i", $depunctuated_text, $matches)) { $topic = 'Amy Adams'; }
         if(preg_match_all("/\baquel no era yo/i", $depunctuated_text, $matches)) { $topic = 'Aquel No Era Yo'; }
         if(preg_match_all("/\bavant que de tout perdre/i", $depunctuated_text, $matches)) { $topic = 'Avant Que De Tout Perdre'; }
@@ -108,17 +144,15 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bblue jasmine/i", $depunctuated_text, $matches)) { $topic = 'Blue Jasmine'; }
         if(preg_match_all("/\bbook thief/i", $depunctuated_text, $matches)) { $topic = 'Book Thief'; }
         if(preg_match_all("/\bbradley cooper/i", $depunctuated_text, $matches)) { $topic = 'Bradley Cooper'; }
-        if(preg_match_all("/\bbroken circle breakdown/i", $depunctuated_text, $matches)) { $topic = 'Broken Circle Breakdown'; }
         if(preg_match_all("/\bbruce dern/i", $depunctuated_text, $matches)) { $topic = 'Bruce Dern'; }
         if(preg_match_all("/\bcaptain phillips/i", $depunctuated_text, $matches)) { $topic = 'Captain Phillips'; }
         if(preg_match_all("/\bcate blanchett/i", $depunctuated_text, $matches)) { $topic = 'Cate Blanchett'; }
         if(preg_match_all("/\bcavedigger/i", $depunctuated_text, $matches)) { $topic = 'Cavedigger'; }
-        if(preg_match_all("/\bchiwetel/i", $depunctuated_text, $matches)) { $topic = 'Chiwetel'; }
+        if(preg_match_all("/\bchiwetel/i", $depunctuated_text, $matches)) { $topic = 'Chiwetel Ejiofor'; }
         if(preg_match_all("/\bchiwetel ejiofor/i", $depunctuated_text, $matches)) { $topic = 'Chiwetel Ejiofor'; }
         if(preg_match_all("/\bchristian bale/i", $depunctuated_text, $matches)) { $topic = 'Christian Bale'; }
         if(preg_match_all("/\bcroods/i", $depunctuated_text, $matches)) { $topic = 'Croods'; }
         if(preg_match_all("/\bcutie and the boxer/i", $depunctuated_text, $matches)) { $topic = 'Cutie And The Boxer'; }
-        if(preg_match_all("/\bdallas buyers club/i", $depunctuated_text, $matches)) { $topic = 'Dallas Buyers Club'; }
         if(preg_match_all("/\bdesolation of smaug/i", $depunctuated_text, $matches)) { $topic = 'Desolation Of Smaug'; }
         if(preg_match_all("/\bdespicable me 2/i", $depunctuated_text, $matches)) { $topic = 'Despicable Me 2'; }
         if(preg_match_all("/\bdirty wars/i", $depunctuated_text, $matches)) { $topic = 'Dirty Wars'; }
@@ -127,17 +161,13 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bfacing fear/i", $depunctuated_text, $matches)) { $topic = 'Facing Fear'; }
         if(preg_match_all("/\bferal/i", $depunctuated_text, $matches)) { $topic = 'Feral'; }
         if(preg_match_all("/\bfrozen/i", $depunctuated_text, $matches)) { $topic = 'Frozen'; }
-        if(preg_match_all("/\bget a horse/i", $depunctuated_text, $matches)) { $topic = 'Get A Horse'; }
-        if(preg_match_all("/\bgravity/i", $depunctuated_text, $matches)) { $topic = 'Gravity'; }
         if(preg_match_all("/\bgreat beauty/i", $depunctuated_text, $matches)) { $topic = 'Great Beauty'; }
-        if(preg_match_all("/\bgreat gatsby/i", $depunctuated_text, $matches)) { $topic = 'Great Gatsby'; }
         if(preg_match_all("/\bhelium/i", $depunctuated_text, $matches)) { $topic = 'Helium'; }
         if(preg_match_all("/\bhobbit/i", $depunctuated_text, $matches)) { $topic = 'Hobbit'; }
         if(preg_match_all("/\binside llewyn davis/i", $depunctuated_text, $matches)) { $topic = 'Inside Llewyn Davis'; }
         if(preg_match_all("/\binto darkness/i", $depunctuated_text, $matches)) { $topic = 'Into Darkness'; }
         if(preg_match_all("/\binvisible woman/i", $depunctuated_text, $matches)) { $topic = 'Invisible Woman'; }
         if(preg_match_all("/\biron man 3/i", $depunctuated_text, $matches)) { $topic = 'Iron Man 3'; }
-        if(preg_match_all("/\bjared leto/i", $depunctuated_text, $matches)) { $topic = 'Jared Leto'; }
         if(preg_match_all("/\bjennifer lawrence/i", $depunctuated_text, $matches)) { $topic = 'Jennifer Lawrence'; }
         if(preg_match_all("/\bjonah hill/i", $depunctuated_text, $matches)) { $topic = 'Jonah Hill'; }
         if(preg_match_all("/\bjudi dench/i", $depunctuated_text, $matches)) { $topic = 'Judi Dench'; }
@@ -145,13 +175,10 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bjune squibb/i", $depunctuated_text, $matches)) { $topic = 'June Squibb'; }
         if(preg_match_all("/\bkaikki hoitaa/i", $depunctuated_text, $matches)) { $topic = 'Kaikki Hoitaa'; }
         if(preg_match_all("/\bkarama has no walls/i", $depunctuated_text, $matches)) { $topic = 'Karama Has No Walls'; }
-        if(preg_match_all("/\blady in number 6/i", $depunctuated_text, $matches)) { $topic = 'Lady In Number 6'; }
         if(preg_match_all("/\bleonardo dicaprio/i", $depunctuated_text, $matches)) { $topic = 'Leonardo Dicaprio'; }
         if(preg_match_all("/\blet it go/i", $depunctuated_text, $matches)) { $topic = 'Let It Go'; }
         if(preg_match_all("/\blone ranger/i", $depunctuated_text, $matches)) { $topic = 'Lone Ranger'; }
         if(preg_match_all("/\blone survivor/i", $depunctuated_text, $matches)) { $topic = 'Lone Survivor'; }
-        if(preg_match_all("/\blupita nyong o/i", $depunctuated_text, $matches)) { $topic = 'Lupita Nyong O'; }
-        if(preg_match_all("/\blupita nyongo/i", $depunctuated_text, $matches)) { $topic = 'Lupita Nyong\'o'; }
         if(preg_match_all("/\bmatthew mcconaughey/i", $depunctuated_text, $matches)) { $topic = 'Matthew Mcconaughey'; }
         if(preg_match_all("/\bmeryl streep/i", $depunctuated_text, $matches)) { $topic = 'Meryl Streep'; }
         if(preg_match_all("/\bmichael fassbender/i", $depunctuated_text, $matches)) { $topic = 'Michael Fassbender'; }
@@ -160,7 +187,6 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bmr hublot/i", $depunctuated_text, $matches)) { $topic = 'Mr Hublot'; }
         if(preg_match_all("/\bomar/i", $depunctuated_text, $matches)) { $topic = 'Omar'; }
         if(preg_match_all("/\bordinary lacelove/i", $depunctuated_text, $matches)) { $topic = 'Ordinary laceLove'; }
-        if(preg_match_all("/\bphilomena/i", $depunctuated_text, $matches)) { $topic = 'Philomena'; }
         if(preg_match_all("/\bprison terminal/i", $depunctuated_text, $matches)) { $topic = 'Prison Terminal'; }
         if(preg_match_all("/\broom on the broom/i", $depunctuated_text, $matches)) { $topic = 'Room On The Broom'; }
         if(preg_match_all("/\bsally hawkins/i", $depunctuated_text, $matches)) { $topic = 'Sally Hawkins'; }
@@ -182,7 +208,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
      * @param str $text
      * @return int count of Oscar metnions in $text
      */
-    public static function detectOscarMentions($text) {
+    public static function countOscarMentions($text) {
         $count = 0;
         $matches = array();
         $url_free_text = preg_replace('!https?://[\S]+!', ' ', $text);
@@ -192,6 +218,15 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         $count += sizeof($matches[0]);
 
         preg_match_all("/\bacademy award/i", $depunctuated_text, $matches);
+        $count += sizeof($matches[0]);
+
+        preg_match_all("/\bbest picture/i", $depunctuated_text, $matches);
+        $count += sizeof($matches[0]);
+
+        preg_match_all("/\bbest director/i", $depunctuated_text, $matches);
+        $count += sizeof($matches[0]);
+
+        preg_match_all("/\bbest supporting/i", $depunctuated_text, $matches);
         $count += sizeof($matches[0]);
 
         return $count;
