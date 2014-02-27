@@ -109,10 +109,16 @@ class InsightStreamController extends ThinkUpController {
                 if ($owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
                     $should_display_insight = true;
                 } else {
-                    $this->addErrorMessage("You don't have rights to view this service user.");
+                    $redirect_url = urlencode(Utils::getApplicationURL(). Utils::getApplicationRequestURI());
+                    $this->addToView('redirect_url', $redirect_url);
+                    $this->addErrorMessage("<a href='session/login.php?redirect=".$redirect_url.
+                        '\'>Log in</a> to see this insight.', null, true);
                 }
             } else  {
-                $this->addErrorMessage("You don't have rights to view this service user.");
+                $redirect_url = urlencode(Utils::getApplicationURL(). Utils::getApplicationRequestURI());
+                $this->addToView('redirect_url', $redirect_url);
+                $this->addErrorMessage("<a href='session/login.php?redirect=".$redirect_url.
+                    '\'>Log in</a> to see this insight.', null, true);
             }
         } else {
             $this->addErrorMessage(stripslashes($_GET["u"])." on ".ucfirst($_GET['n']) ." is not in ThinkUp.");
