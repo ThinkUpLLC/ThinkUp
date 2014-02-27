@@ -22,6 +22,9 @@ $THINKUP_CFG['timezone']                  = 'UTC';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
+//
+// Should sessions be stored in the database?  (As opposed to the php default files)
+$THINKUP_CFG['use_db_sessions']               = true;
 
 // Smarty file cache lifetime in seconds; defaults to 600 (10 minutes) caching
 $THINKUP_CFG['cache_lifetime']               = 600;

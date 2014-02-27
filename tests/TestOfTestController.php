@@ -187,4 +187,28 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertEqual('Exception', $v_mgr->getTemplateDataItem('error_type'));
         unset($_GET['text']);
     }
+
+    /**
+     * Test that a session is started when the controller has run
+     */
+    public function testSessionStarted() {
+        $dao = DAOFactory::getDAO('SessionDAO');
+        $sid = 'abcd';
+        session_id($sid);
+
+        $controller = new TestController(true);
+
+        $session = $dao->read($sid);
+        $this->assertEqual('', $session);
+        session_write_close();
+
+        $config = Config::getInstance();
+        $config->setValue('use_db_sessions', true);
+        $controller = new TestController(false);
+        $rand = md5(mt_rand(1,12122131231));
+        $_SESSION['test'] = $rand;
+        session_write_close();
+        $session = $dao->read($sid);
+        $this->assertPattern('/'.$rand.'/', $session);
+    }
 }
