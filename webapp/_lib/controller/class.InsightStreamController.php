@@ -50,7 +50,7 @@ class InsightStreamController extends ThinkUpController {
                 $this->displayIndividualInsight();
             } else {
                 if (!$this->displayPageOfInsights()) {
-                    $controller = new LoginController();
+                    $controller = new LoginController(true);
                     return $controller->go();
                 }
             }
