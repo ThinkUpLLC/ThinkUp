@@ -39,7 +39,7 @@
         </li>
         <li><a href="{$site_root_path}session/logout.php">Log out</a></li>
   {else}
-        <li><a href="{$site_root_path}session/login.php">Log in</a></li>
+        <li><a href="{$site_root_path}session/login.php{if isset($redirect_url)}?redirect={$redirect_url}{/if}">Log in</a></li>
   {/if}
       </ul>
     </div>
