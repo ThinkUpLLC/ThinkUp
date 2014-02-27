@@ -47,8 +47,7 @@ class Reporter {
             $referer_url .= "?u=".urlencode($instance->network_username)."&n=". urlencode($instance->network);
         }
 
-        $in_test_mode =  ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS");
-        if (!$in_test_mode) { //only make live request if we're not running the test suite
+        if (!Utils::isTest()) { //only make live request if we're not running the test suite
             //Make the cURL request
             $c = curl_init();
             curl_setopt($c, CURLOPT_URL, $report_back_url);

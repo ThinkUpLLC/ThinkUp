@@ -142,7 +142,7 @@ class Installer {
      */
     public function checkVersion($ver = '') {
         // when testing
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($ver) ) {
+        if ( Utils::isTest() && !empty($ver) ) {
             $version = $ver;
         } else {
             $version = PHP_VERSION;
@@ -207,7 +207,7 @@ class Installer {
             $ret['ZipArchive'] = true;
         }
         // when testing
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {
+        if ( Utils::isTest() && !empty($libs) ) {
             $ret = $libs;
         }
         return $ret;
@@ -248,7 +248,7 @@ class Installer {
         }
 
         // when testing
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($perms) ) {
+        if ( Utils::isTest() && !empty($perms) ) {
             $ret = $perms;
         }
         return $ret;
@@ -304,7 +304,7 @@ class Installer {
         $writable_session_permission = $this->isSessionDirectoryWritable();
 
         // when testing
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($pass) ) {
+        if ( Utils::isTest() && !empty($pass) ) {
             $ret = $pass;
         } else {
             $ret = ($version_compat && $lib_depends_ret && $writable_permission_ret && $writable_session_permission);
@@ -457,7 +457,7 @@ class Installer {
         // check version is met
         $version_met = self::checkStep1();
         // when testing
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($pass) ) {
+        if ( Utils::isTest() && !empty($pass) ) {
             $version_met = $pass;
         }
         if ( !$version_met ) {

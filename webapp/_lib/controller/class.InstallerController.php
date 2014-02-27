@@ -422,7 +422,7 @@ class InstallerController extends ThinkUpController {
 
         // check $THINKUP_CFG['repair'] is set to true
         // bypass this security check when running tests
-        if ( defined('TESTS_RUNNING') && TESTS_RUNNING ) {
+        if ( Utils::isTest() ) {
             $THINKUP_CFG['repair'] = true;
         }
         $this->installer->repairerIsDefined($THINKUP_CFG);

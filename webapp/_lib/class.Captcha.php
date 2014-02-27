@@ -84,7 +84,7 @@ class Captcha {
      */
     public function doesTextMatchImage() {
         //if in test mode, assume check is good if user_code is set to 123456
-        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+        if (Utils::isTest()) {
             if (isset($_POST['user_code']) && $_POST['user_code'] == '123456') {
                 return true;
             } else {

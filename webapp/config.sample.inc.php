@@ -78,7 +78,7 @@ $THINKUP_CFG['enable_profiler']           = false;
 $THINKUP_CFG['set_pdo_charset']           = false;
 
 //TESTS OVERRIDE: Assign variables below to use different settings during test builds
-if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
+if ((isset($_COOKIE['TU_MODE']) && $_COOKIE['TU_MODE']=='TESTS') && ! isset($_SESSION["RD_MODE"])
 || (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
     //    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
     //    $THINKUP_CFG['db_user']                   = 'your_test_database_username';

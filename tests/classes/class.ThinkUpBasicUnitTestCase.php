@@ -65,6 +65,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
+        ini_set('session.use_cookies', 0);
+        session_cache_limiter('');
+
         self::isTestEnvironmentReady();
     }
 
