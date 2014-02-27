@@ -239,7 +239,6 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $daily_or_weekly = ($days_ago > 2) ? 'Weekly' : 'Daily';
             $view->assign('weekly_or_daily', $daily_or_weekly);
             $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
-
             $parameters = array();
             $parameters['insights'] = $insights;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
