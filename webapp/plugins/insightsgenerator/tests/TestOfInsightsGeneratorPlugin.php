@@ -411,11 +411,11 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
-        $this->assertPattern('/http:\/\/downtonabb.ey\.*/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         //Should preserve accented character
-        $this->assertPattern('/http:\/\/downtonabb.ey\.*/\?u=Bill\+Cõsby/', $merge_vars['insights'],
+        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Cõsby/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
-        $this->assertNoPattern('/http:\/\/downtonabb.ey\.*/\?u=Bill\+Cosby/', $merge_vars['insights'],
+        $this->assertNoPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Cosby/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
         $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
             'Facebook icon should appear');
