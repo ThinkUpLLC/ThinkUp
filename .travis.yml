@@ -1,17 +1,24 @@
 language: php
+
 php:
   - 5.5
   - 5.4
   - 5.3
   - 5.2
 
-before_script:
- - mysql -e 'create database thinkup'
- - cp extras/dev/config/config.inc.php webapp/config.inc.php
- - cp extras/dev/config/config.tests.inc.php tests/config.tests.inc.php
- - chmod -R 777 webapp/data
- - mkdir webapp/data/logs/
- - touch webapp/data/logs/stream.log
- - touch webapp/data/logs/crawler.log
+env:
+  - JUST_INSTALL=1
+  - SKIP_UPGRADE_TESTS=1
 
-script: php tests/all_unit_tests.php
+matrix:
+    exclude:
+        - php: 5.5
+          env: JUST_INSTALL=1
+        - php: 5.3
+          env: JUST_INSTALL=1 
+        - php: 5.2
+          env: JUST_INSTALL=1 
+
+before_script: extras/dev/travis/before.sh
+
+script: php tests/all_tests.php

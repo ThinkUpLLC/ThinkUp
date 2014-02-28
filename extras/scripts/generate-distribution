@@ -9,7 +9,7 @@ if [ ! -d "$build" ]; then
 fi
 
 # Copy the webapp folder to build
-cp -R webapp build/.
+cp -R webapp build/. 2>/dev/null
 
 # Rename it thinkup
 mv build/webapp build/thinkup
@@ -23,7 +23,7 @@ rm -rf build/thinkup/plugins/*/tests/
 rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/test_installer/
 rm -rf build/thinkup/data/*
-rm build/thinkup/data/.ht*
+rm -f build/thinkup/data/.ht*
 cp -R webapp/data/README.md build/thinkup/data/.
 rm -rf build/thinkup/config.inc.php
 rm -rf build/thinkup/install/sql/build-db_mysql.sql

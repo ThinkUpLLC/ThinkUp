@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+  DocumentRoot %TRAVIS_BUILD_DIR%
+
+  <Directory "%TRAVIS_BUILD_DIR%">
+    Options FollowSymLinks MultiViews ExecCGI
+    AllowOverride All
+    Order deny,allow
+    Allow from all
+  </Directory>
+
+  ScriptAlias /local-bin %PHPPATH%
+  AddType application/x-httpd-php .php
+  AddHandler application/x-httpd-php5 php
+  Action application/x-httpd-php5 /local-bin/php-cgi
+</VirtualHost>
