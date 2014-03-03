@@ -72,7 +72,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
 
-                if ($mentioned_oscar_winner) {
+                if ($mentioned_oscar_winner | 1) {
 
                     $headline = "Somebody was ready for the Oscars party.";
 
