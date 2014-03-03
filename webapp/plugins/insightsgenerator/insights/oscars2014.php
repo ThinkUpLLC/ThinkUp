@@ -59,10 +59,12 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
                         $mentioned_oscar_loser = self::detectOscarLoserReferences($post->post_text);
                         $oscar_mention_count = self::countOscarMentions($post->post_text);
                         if ($mentioned_oscar_winner) {
-                            $this->logger->logInfo("A winner mention of $mentioned_oscar_winner", __METHOD__.','.__LINE__);
+                            $this->logger->logInfo("Winner mention: $mentioned_oscar_winner", __METHOD__.','.__LINE__);
+                        } else {
+                            $this->logger->logInfo("No winners mentioned, skipping insight. ", __METHOD__.','.__LINE__);
                         }
                         if ($mentioned_oscar_loser) {
-                            $this->logger->logInfo("A loser mention of $mentioned_oscar_loser", __METHOD__.','.__LINE__);
+                            $this->logger->logInfo("Loser mention: $mentioned_oscar_loser", __METHOD__.','.__LINE__);
                             $insight_text_suffix .= " Looks like the Academy voters might have missed "
                                 . "$this->username's " . $this->terms->getNoun('post', InsightTerms::PLURAL)
                                 . " about " . $mentioned_oscar_loser . ", though.";
@@ -84,7 +86,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->headline = $headline; // or just set a string like 'Ohai';
                     $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                     $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set this way
-                    $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Optional emphasis, default is Insight::EMPHASIS_LOW
+                    $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Optional emphasis, default Insight::EMPHASIS_LOW
                     $my_insight->setHeroImage($hero_image);
 
                     $this->insight_dao->insertInsight($my_insight);
@@ -108,7 +110,9 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\b12 years a slave/i", $depunctuated_text, $matches)) { $topic = '12 Years a Slave'; }
         if(preg_match_all("/\bbrad pitt/i", $depunctuated_text, $matches)) { $topic = '12 Years a Slave'; }
         if(preg_match_all("/\bmcqueen/i", $depunctuated_text, $matches)) { $topic = '12 Years a Slave'; }
-        if(preg_match_all("/\b20 feet from stardom/i", $depunctuated_text, $matches)) { $topic = '20 Feet From Stardom'; }
+        if(preg_match_all("/\b20 feet from stardom/i", $depunctuated_text, $matches)) {
+            $topic = '20 Feet From Stardom';
+        }
         if(preg_match_all("/\banderson lopez/i", $depunctuated_text, $matches)) { $topic = 'Let It Go'; }
         if(preg_match_all("/\bcate blanchett/i", $depunctuated_text, $matches)) { $topic = 'Cate Blanchett'; }
         if(preg_match_all("/\bdallas buyers club/i", $depunctuated_text, $matches)) { $topic = 'Dallas Buyers Club'; }
@@ -145,14 +149,18 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bamerican hustle/i", $depunctuated_text, $matches)) { $topic = 'American Hustle'; }
         if(preg_match_all("/\bamy adams/i", $depunctuated_text, $matches)) { $topic = 'Amy Adams'; }
         if(preg_match_all("/\baquel no era yo/i", $depunctuated_text, $matches)) { $topic = 'Aquel No Era Yo'; }
-        if(preg_match_all("/\bavant que de tout perdre/i", $depunctuated_text, $matches)) { $topic = 'Avant Que De Tout Perdre'; }
+        if(preg_match_all("/\bavant que de tout perdre/i", $depunctuated_text, $matches)) {
+            $topic = 'Avant Que De Tout Perdre';
+        }
         if(preg_match_all("/\bbad grandpa/i", $depunctuated_text, $matches)) { $topic = 'Bad Grandpa'; }
         if(preg_match_all("/\bbarkhad abdi/i", $depunctuated_text, $matches)) { $topic = 'Barkhad Abdi'; }
         if(preg_match_all("/\bbefore midnight/i", $depunctuated_text, $matches)) { $topic = 'Before Midnight'; }
         if(preg_match_all("/\bblue jasmine/i", $depunctuated_text, $matches)) { $topic = 'Blue Jasmine'; }
         if(preg_match_all("/\bbook thief/i", $depunctuated_text, $matches)) { $topic = 'Book Thief'; }
         if(preg_match_all("/\bbradley cooper/i", $depunctuated_text, $matches)) { $topic = 'Bradley Cooper'; }
-        if(preg_match_all("/\bbroken circle breakdown/i", $depunctuated_text, $matches)) { $topic = 'Broken Circle Breakdown'; }
+        if(preg_match_all("/\bbroken circle breakdown/i", $depunctuated_text, $matches)) {
+                $topic = 'Broken Circle Breakdown';
+        }
         if(preg_match_all("/\bbruce dern/i", $depunctuated_text, $matches)) { $topic = 'Bruce Dern'; }
         if(preg_match_all("/\bcaptain phillips/i", $depunctuated_text, $matches)) { $topic = 'Captain Phillips'; }
         if(preg_match_all("/\bcavedigger/i", $depunctuated_text, $matches)) { $topic = 'Cavedigger'; }
@@ -165,7 +173,9 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bdespicable me 2/i", $depunctuated_text, $matches)) { $topic = 'Despicable Me 2'; }
         if(preg_match_all("/\bdirty wars/i", $depunctuated_text, $matches)) { $topic = 'Dirty Wars'; }
         if(preg_match_all("/\bernest  celestine/i", $depunctuated_text, $matches)) { $topic = 'Ernest  Celestine'; }
-        if(preg_match_all("/\bernest and celestine/i", $depunctuated_text, $matches)) { $topic = 'Ernest And Celestine'; }
+        if(preg_match_all("/\bernest and celestine/i", $depunctuated_text, $matches)) {
+                $topic = 'Ernest And Celestine';
+        }
         if(preg_match_all("/\bfacing fear/i", $depunctuated_text, $matches)) { $topic = 'Facing Fear'; }
         if(preg_match_all("/\bferal/i", $depunctuated_text, $matches)) { $topic = 'Feral'; }
         if(preg_match_all("/\bget a horse/i", $depunctuated_text, $matches)) { $topic = 'Get A Horse'; }
@@ -197,7 +207,9 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bsally hawkins/i", $depunctuated_text, $matches)) { $topic = 'Sally Hawkins'; }
         if(preg_match_all("/\bsandra bullock/i", $depunctuated_text, $matches)) { $topic = 'Sandra Bullock'; }
         if(preg_match_all("/\bsaving mr banks/i", $depunctuated_text, $matches)) { $topic = 'Saving Mr Banks'; }
-        if(preg_match_all("/\bstar trek into darkness/i", $depunctuated_text, $matches)) { $topic = 'Star Trek Into Darkness'; }
+        if(preg_match_all("/\bstar trek into darkness/i", $depunctuated_text, $matches)) {
+                $topic = 'Star Trek Into Darkness';
+        }
         if(preg_match_all("/\bthe grandmaster/i", $depunctuated_text, $matches)) { $topic = 'The Grandmaster'; }
         if(preg_match_all("/\bthe hunt/i", $depunctuated_text, $matches)) { $topic = 'The Hunt'; }
         if(preg_match_all("/\bthe square/i", $depunctuated_text, $matches)) { $topic = 'The Square'; }
@@ -237,9 +249,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         return $count;
     }
 
-
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('Oscars
-2014Insight');
+$insights_plugin_registrar->registerInsightPlugin('Oscars2014Insight');
