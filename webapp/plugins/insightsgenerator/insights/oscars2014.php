@@ -2,7 +2,7 @@
 /*
  Plugin Name: Oscars 2014
  Description: Did you mention the Oscars?
- When: Monday, March 3, 2014
+ When: Tuesday, March 4, 2014
  */
 
 /**
@@ -34,7 +34,7 @@
 class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        if (Utils::isTest() || date("Y-m-d") == '2014-03-03') {
+        if (Utils::isTest() || date("Y-m-d") == '2014-03-04') {
             parent::generateInsight($instance, $last_week_of_posts, $number_days);
             $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
             $hero_image = array(
@@ -50,7 +50,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
             $iterator = false, $is_public = false);
 
             if (self::shouldGenerateWeeklyInsight('oscars_2014', $instance, $insight_date='today',
-            $regenerate_existing_insight=true, $day_of_week=0, count($last_month_of_posts))) {
+            $regenerate_existing_insight=true, $day_of_week=2, count($last_month_of_posts))) {
                 foreach ($last_month_of_posts as $post) {
                     $this->logger->logInfo("Post text is: " . $post->post_text, __METHOD__.','.__LINE__);
                     //  see if $post date is before the awards aired
@@ -60,24 +60,28 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
                         $oscar_mention_count = self::countOscarMentions($post->post_text);
                         if ($mentioned_oscar_winner) {
                             $this->logger->logInfo("Winner mention: $mentioned_oscar_winner", __METHOD__.','.__LINE__);
+                            $insight_body = "$this->username was talking about $mentioned_oscar_winner before the "
+                                . "Academy Award winners were even announced!";
                         } else {
                             $this->logger->logInfo("No winners mentioned, skipping insight. ", __METHOD__.','.__LINE__);
                         }
                         if ($mentioned_oscar_loser) {
                             $this->logger->logInfo("Loser mention: $mentioned_oscar_loser", __METHOD__.','.__LINE__);
-                            $insight_text_suffix .= " Looks like the Academy voters might have missed "
-                                . "$this->username's " . $this->terms->getNoun('post', InsightTerms::PLURAL)
-                                . " about " . $mentioned_oscar_loser . ", though.";
+                            $insight_body_suffix = " Looks like the Academy voters might have missed "
+                            . "$this->username's " . $this->terms->getNoun('post', InsightTerms::PLURAL)
+                            . " about " . $mentioned_oscar_loser . ", though.";
                         }
                     }
                 }
 
-                if ($mentioned_oscar_winner) {
+                if ($insight_body_suffix) {
+                    $insight_text = $insight_body . $insight_body_suffix;
+                } else {
+                    $insight_text = $insight_body;
+                }
 
+                if ($insight_body) {
                     $headline = "Somebody was ready for the Oscars party.";
-
-                    $insight_text .= "$this->username was talking about $mentioned_oscar_winner before the Academy"
-                                . " Award winners were even announced!" . $insight_text_suffix;
 
                     $my_insight = new Insight();
                     $my_insight->slug = 'oscars_2014'; //slug to label this insight's content
