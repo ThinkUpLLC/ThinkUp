@@ -130,7 +130,7 @@ class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bjared leto/i", $depunctuated_text, $matches)) { $topic = 'Jared Leto'; }
         if(preg_match_all("/\blady in number 6/i", $depunctuated_text, $matches)) { $topic = 'Lady In Number 6'; }
         if(preg_match_all("/\blupita/i", $depunctuated_text, $matches)) { $topic = 'Lupita Nyong\'o'; }
-        if(preg_match_all("/\bmcconaughey/i", $depunctuated_text, $matches)) { $topic = 'Matthew Mcconaughey'; }
+        if(preg_match_all("/\bmcconaughey/i", $depunctuated_text, $matches)) { $topic = 'Matthew McConaughey'; }
         if(preg_match_all("/\bjonze/i", $depunctuated_text, $matches)) { $topic = 'Spike Jonze'; }
         if(preg_match_all("/\bcuaron/i", $depunctuated_text, $matches)) { $topic = 'Alfonso Cuarón'; }
 
