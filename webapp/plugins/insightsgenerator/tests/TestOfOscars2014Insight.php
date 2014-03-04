@@ -188,7 +188,6 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
             )
         );
 
-
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
         $insight_plugin->generateInsight($instance, $posts, 3);
@@ -244,7 +243,6 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('oscars_2014', 3, $today);
         $this->debug(Utils::varDumpToString($result));
         $this->assertNull($result);
-
     }
 
 
