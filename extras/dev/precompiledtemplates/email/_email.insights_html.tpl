@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width"/>
-  <style>{literal}
+  {literal}<style>
 /**********************************************
 * Ink v1.0.5 - Copyright 2013 ZURB Inc        *
 **********************************************/
@@ -739,10 +739,14 @@ body.outlook p {
           padding-bottom: 28px;
       }
 
+      /*
+      These colors get replaced with variables, but Premailer discards bad values.
+      So we have generic colors we'd never use that get replaced in the Gruntfile.
+      */
       .insight {
-          background: #9dd767;
-          border-top: 5px solid #5fac1c;
-          border-bottom: 2px solid #9dd767;
+          background: #123456;
+          border-top: 5px solid #654321;
+          border-bottom: 2px solid #123456;
           margin-bottom: 14px;
       }
 
@@ -769,6 +773,36 @@ body.outlook p {
           font-size: 14px;
           line-height: 18px;
           padding-top: 10px;
+      }
+
+      .insight .object {
+        margin-bottom: 18px;
+      }
+
+      .insight .object .img-circle {
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+      }
+
+      .insight .tweet-body, .insight .byline {
+        font-family: georgia, serif;
+      }
+
+      .insight .tweet-body a, .insight .byline a {
+        color: #46bcff;
+      }
+
+      .insight .tweet-actions a {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .insight .user {
+        margin-bottom: 10px;
+      }
+
+      .insight .user-name {
+        font-weight: bold;
       }
 
       .insight .insight-footer {
@@ -905,7 +939,7 @@ body.outlook p {
       table.footer .motto {
           text-align: right;
       }
-  {/literal}</style>
+  </style>{/literal}
 </head>
 <body>
   <table class="body">
@@ -1039,15 +1073,72 @@ body.outlook p {
         </table>
 {/if}
 
-{if $insight->text ne ''}
-      <table class="twelve columns insight-body">
+{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)}
+    <table class="twelve columns insight-body">
+        {if $insight->text ne ''}
         <tr>
-          <td class="text-pad">
-              {$insight->text|strip_tags:false}
-          </td>
-          <td class="expander"></td>
+            <td class="text-pad">
+                {$insight->text|strip_tags:false}
+            </td>
+            <td class="expander"></td>
         </tr>
-        </table>
+        {/if}
+        {if isset($insight->related_data.people)}
+        {foreach from=$insight->related_data.people key=uid item=user}
+        <tr>
+            <td class="sub-grid object user text-pad">
+                <table>
+                    <tr>
+                        <td class="two sub-columns center">
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}"><img src="{$user->avatar|use_https}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
+                        </td>
+                        <td class="ten sub-columns">
+                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
+                            <div class="user-text">
+                                {if $user->network eq 'twitter'}
+                                    {$user->follower_count|number_format} followers
+                                {else}
+                                    {if isset($user->other.total_likes)}
+                                    {$user->other.total_likes|number_format} likes
+                                    {/if}
+                                {/if}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="expander"></td>
+        </tr>
+        {/foreach}
+        {/if}
+        {if isset($insight->related_data.posts)}
+        {foreach from=$insight->related_data.posts key=uid item=post name=bar}
+        <tr>
+            <td class="sub-grid object tweet text-pad">
+                <table>
+                    <tr>
+                        <td class="two sub-columns center">
+                            <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar|use_https}" alt="{$post->author_username}" width="60" height="60" class="img-circle"></a>
+                        </td>
+                        <td class="ten sub-columns">
+                            <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
+                            <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
+                            <div class="tweet-actions">
+                              <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
+                                class="tweet-action tweet-action-permalink">{$post->pub_date|date_format:'%b %e, %Y'}</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="expander"></td>
+        </tr>
+        {/foreach}
+        {/if}
+        {if isset($insight->related_data.posts) or isset($insight->related_data.people)}
+        <tr><td>&nbsp;</td></tr>
+        {/if}
+    </table>
 {/if}
         <table class="twelve columns">
         <tr>
