@@ -327,9 +327,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         //Assert Facebook user never links to Twitter
         $this->assertNoPattern("/facebook.com/twitter-20/", $results);
         //Assert Twitter username is preceded by an @ sign
-        $this->assertPattern("/@UserAttwitter/", $results);
+        $this->assertPattern("/@thinkup/", $results);
         //Assert Facebook username is not preceded by an @ sign
-        $this->assertNoPattern("/@UserAtfacebook/", $results);
+        $this->assertNoPattern("/@Matt Jacobs/", $results);
     }
 
     public function testOfHTTPSWithInsecureContent() {

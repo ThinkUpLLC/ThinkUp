@@ -34,7 +34,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightsGeneratorPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightPluginParent.php';
 
-class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
+class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -356,6 +356,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Wow: Made the List:',
         'text'=>'This was Bill Cosby\'s most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Hero image
         $hero_image = array(
             'url' => 'https://www.thinkup.com/assets/images/insights/2014-02/olympics2014.jpg',
             'alt_text' => 'The Olympic rings in Sochi',
@@ -366,6 +368,34 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         'slug'=>'olympics_2014', 'headline'=>'Do they give out medals for tweets?',
         'text'=>'You tweeted a hundred thousand times during the Olympics.',
         'related_data'=>serialize(array("hero_image"=>$hero_image)),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Tweets
+        $builders[] = FixtureBuilder::build('insights', array('id'=>6, 'instance_id'=>6,
+        'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'This was your fave a year ago.',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfPosts('twitter', 1, 5),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Facebook posts
+        $builders[] = FixtureBuilder::build('insights', array('id'=>7, 'instance_id'=>7,
+        'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Your top Facebook posts',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfPosts('facebook', 1, 5),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Twitter Users
+        $builders[] = FixtureBuilder::build('insights', array('id'=>8, 'instance_id'=>6,
+        'slug'=>'least_likely_followers', 'headline'=>'2 interesting people followed @snooki',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfUsers('twitter', 1, 5),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Facebook Users
+        $builders[] = FixtureBuilder::build('insights', array('id'=>9, 'instance_id'=>7,
+        'slug'=>'biggest_fans_last_7_days', 'headline'=>'Last week, these were Alice Cooper\'s biggest admirers.',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfUsers('facebook'),
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
 
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -444,6 +474,25 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpUnitTestCase {
         //assert hero image
         $this->assertPattern('/<img src="https:\/\/www\.thinkup\.com\/assets\/images\/insights\/2014-02\/'.
             'olympics2014.jpg" alt="The Olympic rings in Sochi"/', $merge_vars['insights']);
+        $this->assertPattern('/Photo: Atos International/', $merge_vars['insights']);
+        // Assert Twitter user list
+        $this->assertPattern('/2 interesting people followed @snooki/', $merge_vars['insights']);
+        $this->assertPattern('/https:\/\/pbs.twimg.com\/profile_images\/436950275908055040\/'.
+            '0Z8Pa9fD_normal.jpeg/', $merge_vars['insights']);
+        $this->assertPattern('/Jon Angelo Gjetting/', $merge_vars['insights']);
+        // Assert Facebook user list
+        $this->assertPattern('/Last week, these were Alice Cooper\'s biggest admirers./', $merge_vars['insights']);
+        $this->assertPattern('/Jonathan Wegener/', $merge_vars['insights']);
+        $this->assertPattern('/https:\/\/graph.facebook.com\/101531\/picture/', $merge_vars['insights']);
+        // Assert Twitter posts list
+        $this->assertPattern('/This was your fave a year ago./', $merge_vars['insights']);
+        $this->assertPattern('/@thinkup/', $merge_vars['insights']);
+        $this->assertPattern('/https:\/\/pbs.twimg.com\/profile_images\/2600723193\/'.
+            'rvi01vw1b4mtq8gudcs6_normal.png/', $merge_vars['insights']);
+        // Assert Facebook posts list
+        $this->assertPattern('/Your top Facebook posts/', $merge_vars['insights']);
+        $this->assertPattern('/Matt Jacobs/', $merge_vars['insights']);
+        $this->assertPattern('/https:\/\/graph.facebook.com\/502783489\/picture/', $merge_vars['insights']);
         //assert CSS curly braces are preserved
         $this->assertPattern('/a:hover {/', $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
