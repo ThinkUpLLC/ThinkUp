@@ -37,3 +37,6 @@ webapp/plugins/*
 
 # ThinkUpLLC-specific extensions
 thinkupllc*
+
+# Grunt and NPM files
+node_modules
