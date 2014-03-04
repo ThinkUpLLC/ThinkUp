@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/view/plugins/modifier.link_usernames_to_twitter.php
+ * ThinkUp/webapp/_lib/view/plugins/modifier.link_urls.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2014 Matt Jacobs
  *
  * LICENSE:
  *
@@ -31,11 +31,10 @@
  *
  * Type:     modifier<br>
  * Name:     link_urls<br>
- * Date:     July 4, 2009
+ * Date:     March 3, 2014
  * Purpose:  Creates a linked URL
  * Input:    post text
  * Example:  {$post->post_text|link_urls}
- * @TODO Find a more elegant way to do this that's totally regex-based, not loving this explode/implode approach
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2014 Matt Jacobs
  * @author   Matt Jacobs

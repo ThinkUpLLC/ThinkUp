@@ -65,22 +65,25 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Get serialized list of posts for insight tests.
-     * @param str $network
-     * @return str Serialized related_data
+     * Get a variably long list of posts for insight tests.
+     * @param str  $network
+     * @param int  $min: Smallest number of posts returned
+     * @param int  $max: Largest number of posts returned
+     * @param bool $serialize: Needs to be optional for insights that have multiple related data elements
+     * @return str Serialized related_data or unserialized array of posts
      */
-    protected function getRelatedDataListOfPosts($network='twitter',$min=1,$max=6,$id_start=1,$serialize=True) {
+    protected function getRelatedDataListOfPosts($network='twitter',$min=1,$max=6,$serialize=true) {
         $tweets = array();
-        $twid = $id_start;
         $tweets[] = new Post(array(
-            "id" => $twid,
+            "id" => 1,
             "post_id" => "435522083305836544",
             "author_user_id" => "100127476",
             "author_username" => "thinkup",
             "author_fullname" => "ThinkUp",
             "author_avatar" => "http://pbs.twimg.com/profile_images/2600723193/rvi01vw1b4mtq8gudcs6_normal.png",
             "author_follower_count" => null,
-            "post_text" => "Entrepreneur named us a Startup to Watch in 2014. Officially we're skeptical of these lists, but thanks @EntMagazine! http://t.co/Euiv1aMgVD",
+            "post_text" => "Entrepreneur named us a Startup to Watch in 2014. Officially we're skeptical of these ".
+                "lists, but thanks @EntMagazine! http://t.co/Euiv1aMgVD",
             "is_protected" => null,
             "source" => "Twitter for Mac",
             "location" => "New York, NY",
@@ -122,15 +125,15 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "permalink" => null,
             "adj_pub_date" => "2014-02-17 16:12:10"
         ));
-        $twid++;
-        $tweets[] = new Post(array("id" => $twid,
+        $tweets[] = new Post(array("id" => 1,
         "post_id" => "174270132116406274",
         "author_user_id" => "5504",
         "author_username" => "capndesign",
         "author_fullname" => "Matt Jacobs",
         "author_avatar" => "http://pbs.twimg.com/profile_images/14177592/twitter_normal.jpg",
         "author_follower_count" => null,
-        "post_text" => "The one and only @zefrank wants to bring back The Show. Help him fund it. I'll give you a hug. http://t.co/tFdZbL4Y",
+        "post_text" => "The one and only @zefrank wants to bring back The Show. Help him fund it. I'll give you a ".
+            "hug. http://t.co/tFdZbL4Y",
         "is_protected" => null,
         "source" => "Tweet Button",
         "location" => "Brooklyn, NY, USA",
@@ -158,7 +161,9 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "url" => "http://t.co/tFdZbL4Y",
             "expanded_url" => "http://www.kickstarter.com/projects/zefrank/a-show-with-ze-frank",
             "title" => "A Show with Ze Frank by Ze Frank — Kickstarter",
-            "description" => "Ze Frank is raising funds for A Show with Ze Frank on Kickstarter!\n\nIn 2006 I created a show called \"The Show with Ze Frank.\" With your help I'd like to start a new show. Same, same... but different.",
+            "description" => "Ze Frank is raising funds for A Show with Ze Frank on Kickstarter!\n\nIn 2006 I ".
+                "created a show called \"The Show with Ze Frank.\" With your help I'd like to start a new show. ".
+                "Same, same... but different.",
             "image_src" => "",
             "caption" => "",
             "post_key" => "2171",
@@ -172,15 +177,15 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         "permalink" => null,
         "adj_pub_date" => "2012-02-27 18:10:11",
         ));
-        $twid++;
-        $tweets[] = new Post(array("id" => $twid,
+        $tweets[] = new Post(array("id" => 1,
         "post_id" => "438739700409712640",
         "author_user_id" => "5504",
         "author_username" => "capndesign",
         "author_fullname" => "Matt Jacobs",
         "author_avatar" => "http://pbs.twimg.com/profile_images/14177592/twitter_normal.jpg",
         "author_follower_count" => null,
-        "post_text" => "Sneckdown (noun): Accumulation of snow on the street that reveals space that cars don’t use. via @backspace http://t.co/VErShzyTLd",
+        "post_text" => "Sneckdown (noun): Accumulation of snow on the street that reveals space that cars don’t use. ".
+            "via @backspace http://t.co/VErShzyTLd",
         "is_protected" => null,
         "source" => "Buffer",
         "location" => "Brooklyn, NY",
@@ -222,16 +227,16 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         "permalink" => null,
         "adj_pub_date" => "2014-02-26 13:17:50"
         ));
-        $twid++;
         $tweets[] = new Post(array(
-            "id" => $twid,
+            "id" => 1,
             "post_id" => "425973984883376128",
             "author_user_id" => "100127476",
             "author_username" => "thinkup",
             "author_fullname" => "ThinkUp",
             "author_avatar" => "http://pbs.twimg.com/profile_images/2600723193/rvi01vw1b4mtq8gudcs6_normal.png",
             "author_follower_count" => null,
-            "post_text" => "RT @jamesluscombe: Really loving @thinkup so far and it's only been 6 hrs. http://t.co/LJX175ezAg",
+            "post_text" => "RT @jamesluscombe: Really loving @thinkup so far and it's only been 6 hrs. ".
+                "http://t.co/LJX175ezAg",
             "is_protected" => null,
             "source" => "TweetDeck",
             "location" => "New York, NY",
@@ -261,8 +266,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "permalink" => null,
             "adj_pub_date" => "2014-01-22 07:51:26"
         ));
-        $twid++;
-        $tweets[] = new Post(array("id" => $twid,
+        $tweets[] = new Post(array("id" => 1,
         "post_id" => "439426788683689984",
         "author_user_id" => "2236986848",
         "author_username" => "dadkellan",
@@ -311,13 +315,13 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         "permalink" => null,
         "adj_pub_date" => "2014-02-28 20:48:05"
         ));
-        $twid++;
-        $tweets[] = new Post(array("id" => $twid,
+        $tweets[] = new Post(array("id" => 1,
         "post_id" => "439422552164007936",
         "author_user_id" => "1900720267",
         "author_username" => "MakingOfs",
         "author_fullname" => "Behind the Scenes",
-        "author_avatar" => "http://pbs.twimg.com/profile_images/378800000771067498/7229e32203e92559e972f13dd949b138_normal.jpeg",
+        "author_avatar" => "http://pbs.twimg.com/profile_images/378800000771067498/".
+            "7229e32203e92559e972f13dd949b138_normal.jpeg",
         "author_follower_count" => null,
         "post_text" => "Yoda, Stuart Freeborn and Irvin Kershner http://t.co/tMk0L1GoSX",
         "is_protected" => null,
@@ -364,9 +368,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
 
         // Facebook posts!
         $fb_posts = array();
-        $fbid = $id_start;
         $fb_posts[] = new Post(array(
-            "id" => $fbid,
+            "id" => 1,
             "post_id" => "10151443363283490",
             "author_user_id" => "502783489",
             "author_username" => "Matt Jacobs",
@@ -418,7 +421,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             ))
         ));
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152091246453490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -454,16 +457,16 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152087870783490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
             'author_fullname' => 'Matt Jacobs',
             'author_avatar' => 'https://graph.facebook.com/502783489/picture',
             'author_follower_count' => 0,
-            'post_text' => 'I am officially raising the #ShackFlag for 12:30pm today. Join me for a #snowburger. http://t.co/jINn08Y03',
+            'post_text' => 'I am officially raising the #ShackFlag for 12:30pm today. Join me for a #snowburger. '.
+                'http://t.co/jINn08Y03',
             'is_protected' => 1,
             'source' => null,
             'location' => 'New York, NY, USA',
@@ -492,9 +495,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152083771718490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -530,9 +532,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152082278478490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -568,9 +569,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152082263408490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -606,9 +606,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152081964948490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -644,9 +643,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152076585498490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -682,9 +680,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152076528568490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -720,9 +717,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "rt_threshold" => 0,
             'permalink' => NULL
         ));
-        $fbid++;
         $fb_posts[] = new Post(array(
-            'id' => $fbid,
+            'id' => 1,
             'post_id' => '10152075876848490',
             'author_user_id' => '502783489',
             'author_username' => 'Matt Jacobs',
@@ -776,9 +772,12 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
     /**
      * Get serialized list of users for insight tests.
      * @param str $network
-     * @return str Serialized related_data
+     * @param int  $min: Smallest number of users returned
+     * @param int  $max: Largest number of users returned
+     * @param bool $serialize: Needs to be optional for insights that have multiple related data elements
+     * @return str Serialized related_data or unserialized array of users
      */
-    protected function getRelatedDataListOfUsers($network='twitter',$min=1,$max=6,$serialize=True) {
+    protected function getRelatedDataListOfUsers($network='twitter',$min=1,$max=6,$serialize=true) {
         $tw_users = array();
         $tw_users[] = new User(array(
             "id" => 2756,
@@ -812,7 +811,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "full_name" => "Blake Samic",
             "avatar" => "http://pbs.twimg.com/profile_images/2218712648/6625198569_2f790a5a46_o_normal.jpeg",
             "location" => "San Francisco",
-            "description" => "Product and Partnerships at @Shoutlet. Fascinated by creative people, product design, tech, music, & travel.",
+            "description" => "Product and Partnerships at @Shoutlet. Fascinated by creative people, product design, ".
+                "tech, music, & travel.",
             "url" => "http://t.co/iepIgg4Ia6",
             "is_verified" => 0,
             "is_protected" => 0,
@@ -838,7 +838,8 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "full_name" => "Erika Hall",
             "avatar" => "http://pbs.twimg.com/profile_images/418628800293793792/FO4GD-Gj_normal.jpeg",
             "location" => "San Francisco",
-            "description" => "Sneckdown (noun): Accumulation of snow on the street that reveals space that cars don’t use. via @backspace http://t.co/VErShzyTLd",
+            "description" => "Sneckdown (noun): Accumulation of snow on the street that reveals space that cars ".
+                "don’t use. via @backspace http://t.co/VErShzyTLd",
             "url" => "http://t.co/wgppL6J8lV",
             "is_verified" => 0,
             "is_protected" => 0,

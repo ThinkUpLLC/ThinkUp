@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/view/plugins/modifier.link_usernames_to_twitter.php
+ * ThinkUp/webapp/_lib/view/plugins/modifier.color_html_email_links.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2014 Matt Jacobs
  *
  * LICENSE:
  *
@@ -31,7 +31,7 @@
  *
  * Type:     modifier<br>
  * Name:     color_html_email_links<br>
- * Date:     July 4, 2009
+ * Date:     March 4, 2014
  * Purpose:  Creates a linked URL
  * Input:    post text
  * Example:  {$post->post_text|color_html_email_links}
