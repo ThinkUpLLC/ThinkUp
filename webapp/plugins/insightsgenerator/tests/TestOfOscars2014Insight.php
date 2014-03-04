@@ -184,7 +184,6 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
             )
         );
 
-
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
         $insight_plugin->generateInsight($instance, $posts, 3);
