@@ -80,7 +80,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                 $my_insight->setPeople($big_reshares);
-                $my_insight->setPosts($post);
+                $my_insight->setPosts(array($post));
 
                 $this->insight_dao->insertInsight($my_insight);
 
