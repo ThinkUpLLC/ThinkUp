@@ -764,7 +764,7 @@ class TestOfInsightAPIController extends ThinkUpInsightUnitTestCase {
             'text'=>'Retweet spike! Your post got retweeted 110 times',
             'emphasis'=>Insight::EMPHASIS_HIGH,
             'time_generated'=>$time_now,
-            'related_data'=>$this->getRelatedDataListOfPosts()));
+            'related_data'=>$this->getRelatedDataListOfPosts('twitter',3,3)));
 
         $builders[] = FixtureBuilder::build('insights', array(
             'date'=>'2012-05-02',
@@ -773,7 +773,7 @@ class TestOfInsightAPIController extends ThinkUpInsightUnitTestCase {
             'text'=>'Retweet spike! Your post got retweeted 110 times',
             'emphasis'=>Insight::EMPHASIS_HIGH,
             'time_generated'=>$time_now,
-            'related_data'=>$this->getRelatedDataListOfPosts()));
+            'related_data'=>$this->getRelatedDataListOfPosts('twitter',3,3)));
 
         $builders[] = FixtureBuilder::build('insights', array(
             'date'=>'2012-05-03',
@@ -782,7 +782,7 @@ class TestOfInsightAPIController extends ThinkUpInsightUnitTestCase {
             'text'=>'Retweet spike! Your post got retweeted 110 times',
             'emphasis'=>Insight::EMPHASIS_HIGH,
             'time_generated'=>$time_now,
-            'related_data'=>$this->getRelatedDataListOfPosts()));
+            'related_data'=>$this->getRelatedDataListOfPosts('twitter',3,3)));
 
         $builders[] = FixtureBuilder::build('insights', array(
             'date'=>'2012-05-04',
@@ -791,7 +791,7 @@ class TestOfInsightAPIController extends ThinkUpInsightUnitTestCase {
             'text'=>'Retweet spike! Your post got retweeted 110 times',
             'emphasis'=>Insight::EMPHASIS_HIGH,
             'time_generated'=>$time_now,
-            'related_data'=>$this->getRelatedDataListOfPosts()));
+            'related_data'=>$this->getRelatedDataListOfPosts('twitter',3,3)));
 
         return $builders;
     }
