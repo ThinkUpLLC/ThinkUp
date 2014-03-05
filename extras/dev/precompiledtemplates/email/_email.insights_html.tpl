@@ -986,7 +986,7 @@ body.outlook p {
                         <table class="twelve columns" align="center">
                           <tr>
                               <td class="center">
-                                  <center><img class="center" src="http://capndesign.com/scratch/tu-icons/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19"></center>
+                                  <center><a href="{$application_url}" style="text-decoration:none;"><img class="center" src="https://www.thinkup.com/join/assets/img/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19"></a></center>
                             </td>
                             <td class="expander"></td>
                           </tr>
