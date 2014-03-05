@@ -38,13 +38,13 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
 
     /**
      * Constructor
-     * Occasionally spit out a . if we are running in travis so that travis doesn't give up on us.
+     * Occasionally spit out a . if we are running in Travis so that Travis doesn't give up on us.
      */
     public function __construct() {
         parent::__construct();
         if (getenv('TRAVIS') == 'true') {
-            if (mt_rand(1,20) == 1) print ".";
-            sleep(3);
+            if (mt_rand(1,10) == 1) print ".";
+            sleep(2);
         }
     }
 
