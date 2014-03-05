@@ -40,6 +40,7 @@ $web_tests->add(new WebTestOfCSRFToken());
 $web_tests->add(new WebTestOfDashboard());
 $web_tests->add(new WebTestOfDeleteInstance());
 $web_tests->add(new WebTestOfLogin());
+$web_tests->add(new WebTestOfLogout());
 $web_tests->add(new WebTestOfPostDetailPage());
 $web_tests->add(new WebTestOfRegistration());
 $web_tests->add(new WebTestOfTwitterDashboard());

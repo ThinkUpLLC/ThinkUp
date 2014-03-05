@@ -32,16 +32,34 @@
  *
  */
 class Session {
+    /**
+     * Name for Long-Session Cookie
+     * @var str
+     */
+    const COOKIENAME = 'thinkup_session';
 
     /**
+     * Check if we have an active session.
+     * If not, check if we have a long term sessions cookie and activate a session.
      * @return bool Is user logged into ThinkUp
      */
     public static function isLoggedIn() {
-        if (!SessionCache::isKeySet('user')) {
-            return false;
-        } else {
+        if (SessionCache::isKeySet('user')) {
             return true;
         }
+        if (!empty($_COOKIE[self::COOKIENAME])) {
+            $cookie_dao = DAOFactory::getDAO('CookieDAO');
+            $email = $cookie_dao->getEmailByCookie($_COOKIE[self::COOKIENAME]);
+            if ($email) {
+                $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                $owner = $owner_dao->getByEmail($email);
+                if ($owner) {
+                    self::completeLogin($owner);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -78,14 +96,55 @@ class Session {
         if (Utils::isTest()) {
             SessionCache::put('csrf_token', 'TEST_CSRF_TOKEN');
         }
+
+        // check for and validate an existing long-term cookie before creating one
+        $cookie_dao = DAOFactory::getDAO('CookieDAO');
+        $set_long_term = true;
+
+        if (!empty($_COOKIE[self::COOKIENAME])) {
+            $email = $cookie_dao->getEmailByCookie($_COOKIE[self::COOKIENAME]);
+            $set_long_term = $email != $owner->email;
+        }
+
+        if ($set_long_term) {
+            $cookie = $cookie_dao->generateForEmail($owner->email);
+            if (!headers_sent()) {
+                setcookie(self::COOKIENAME, $cookie, time()+(60*60*24*365*10), '/', self::getCookieDomain());
+            }
+        }
     }
 
     /**
-     * Log out
+     * Log out and ensure that long-term cookie is killed since the user explicitly logged out.
      */
     public static function logout() {
         SessionCache::unsetKey('user');
         SessionCache::unsetKey('user_is_admin');
+
+        if (!empty($_COOKIE[self::COOKIENAME])) {
+            if (!headers_sent()) {
+                setcookie(self::COOKIENAME, '', time() - 60*60*24, '/', self::getCookieDomain());
+            }
+            $cookie_dao = DAOFactory::getDAO('CookieDAO');
+            $cookie_dao->deleteByCookie($_COOKIE[self::COOKIENAME]);
+        }
+
+    }
+
+    /**
+     * Generate a domain for setting cookies
+     * @return str domain to use
+     */
+    public static function getCookieDomain() {
+        if (empty($_SERVER['HTTP_HOST'])) {
+            return false;
+        }
+        $parts = explode('.', $_SERVER['HTTP_HOST']);
+        if (count($parts) == 1) {
+            return $parts[0];
+        }
+
+        return '.'.$parts[count($parts)-2].'.'.$parts[count($parts)-1];
     }
 
     /**
