@@ -172,6 +172,42 @@ class InsightPluginParent {
         return $run;
     }
 
+    /**
+     * Take an array of string arrays, pick one at random and substitute each token with a value.
+     * Text is processed with InsightTerms::getProcessedText()
+     * The normal usage would be to pass an array of Insight fields, such as text, headline, etc.
+     *
+     * @param arr $copy_assoc_array Array of arrays. Key is a field name ('headline', 'text'), array is strings
+     *                              representing possible copy choices for that field.
+     * @param arr $substitutions Text replacement token/value pairs passed to getProccessedText(), in the form of
+     *                           '%token'=>'value'. See also: InsightTerms::getProcessedText
+     * @return arr The chosen and processed array
+     */
+    public function getVariableCopyArray($copy_assoc_array, $substitutions = array()) {
+        $substitutions['username'] = $this->username;
+        $choice = $copy_assoc_array[TimeHelper::getTime() % count($copy_assoc_array)];
+        foreach ($choice as $key => $val) {
+            $choice[$key] =  $this->terms->getProcessedText($choice[$key], $substitutions);
+        }
+        return $choice;
+    }
+
+    /**
+     * Take an array of strings, pick one at random and substitute each token with a value.
+     * Text is processed with InsightTerms::getProcessedText()
+     * The normal usage would be to pass a list of string choices for an Insight field, such as text, headline, etc.
+     *
+     * @param array $copy_array Array of possible strings
+     * @param array $substitutions Text replacement token/value pairs passed to getProccessedText(), in the form of
+     *                            '%token'=>'value'. See also: InsightTerms::getProcessedText
+     * @return str The chosen and processed array
+     */
+    public function getVariableCopy($copy_array, $substitutions = array()) {
+        $substitutions['username'] = $this->username;
+        $choice = $copy_array[TimeHelper::getTime() % count($copy_array)];
+        return $this->terms->getProcessedText($choice, $substitutions);
+    }
+
     public function renderConfiguration($owner) {
     }
 

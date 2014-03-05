@@ -385,4 +385,50 @@ class InsightTerms {
             return round($number,2).'x';
         }
     }
+
+    /**
+     * Take a string with various term-based tokens, replaced those and return it.
+     *
+     * Terms are prefixed with a % in a sprintf like format, and replaced with
+     * network-based insight * terms.  For example:
+     *
+     * "Bob %posted twelve %posts that were %shared!"
+     * might become
+     * "Bob tweeted twelve tweets that were retweeted!"
+     *
+     * Extra terms is an associative array, and the terms in the $text should be prefixed with a %, for example:
+     *
+     * $out = getProcessedText('%count tweets!', array('count' => 12));
+     * $out == '12 tweets!'
+     *
+     * @param str $text The string to process
+     * @param arr $extra_terms Extra variables to replace
+     * @return str The processed string
+     */
+    public function getProcessedText($text, $extra_terms=array()) {
+        // Some base replacements in most strings
+        $terms = array(
+            '%posts' => $this->getNoun('post', InsightTerms::PLURAL),
+            '%posted' => $this->getVerb('posted'),
+            '%post' => $this->getNoun('post', InsightTerms::SINGULAR),
+            '%likes' => $this->getNoun('like', InsightTerms::PLURAL),
+            '%liked' => $this->getVerb('liked'),
+            '%like' => $this->getNoun('like', InsightTerms::SINGULAR),
+            '%reply' => $this->getNoun('reply', InsightTerms::SINGULAR),
+            '%replies' => $this->getNoun('reply', InsightTerms::PLURAL),
+            '%retweets' => $this->getNoun('retweet', InsightTerms::PLURAL),
+            '%retweet' => $this->getNoun('retweet', InsightTerms::SINGULAR),
+            '%followers' => $this->getNoun('follower', InsightTerms::PLURAL),
+            '%follower' => $this->getNoun('follower', InsightTerms::SINGULAR),
+            '%shared' => $this->getVerb('shared'),
+        );
+        $search = array_keys($terms);
+        $replace = array_values($terms);
+        foreach ($extra_terms as $k => $v) {
+            $search[] = '%'.$k;
+            $replace[] = $v;
+        }
+        $text = str_replace($search, $replace, $text);
+        return $text;
+    }
 }
