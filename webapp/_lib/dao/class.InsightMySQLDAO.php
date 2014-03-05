@@ -70,7 +70,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $row = $this->getDataRowAsArray($ps);
         if (isset($row)) {
             $insight = new Insight($row);
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
             $insight->instance = new Instance($row);
@@ -97,7 +99,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getPreCachedInsightData($slug, $instance_id, $date) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if (isset($insight->related_data) && $insight->related_data != '') {
-            return unserialize($insight->related_data);
+            return Serializer::unserializeString($insight->related_data);
         } else {
             return null;
         }
@@ -186,7 +188,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $ps = $this->execute($q, $vars);
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($insight->related_data !== null) {
+                $insight->related_data = Serializer::unserializeString($insight->related_data);
+            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
         }
@@ -289,12 +293,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
-            $insights[] = $insight;
-        }
-        foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
-            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->date = $row['date']. " ".date('H').":".date('i');
+            $insights[] = $insight;
         }
         return $insights;
     }
@@ -322,12 +326,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
-            $insights[] = $insight;
-        }
-        foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
-            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->date = $row['date']. " ".date('H').":".date('i');
+            $insights[] = $insight;
         }
         return $insights;
     }
@@ -351,12 +355,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
-            $insights[] = $insight;
-        }
-        foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
-            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->date = $row['date']. " ".date('H').":".date('i');
+            $insights[] = $insight;
         }
         return $insights;
     }

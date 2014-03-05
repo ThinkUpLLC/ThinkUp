@@ -70,7 +70,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>7609 ));
 
         $builders[] = FixtureBuilder::build('insights', array('slug'=>'ShortLinkMySQLDAO::getRecentClickStats',
-        'date'=>$yesterday, 'instance_id'=>1));
+        'date'=>$yesterday, 'instance_id'=>1, 'related_data'=>serialize('sample click spike data')));
 
         // Get data ready that insight requires
         $post1_object = new Post($post1_builder->columns);
