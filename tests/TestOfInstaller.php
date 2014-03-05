@@ -157,6 +157,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         //$config->getValue('table_prefix')."follows, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -238,6 +239,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -310,6 +312,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -355,6 +358,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."groups, ".
         $config->getValue('table_prefix')."group_members, ".
@@ -438,6 +442,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
@@ -486,6 +491,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
@@ -534,6 +540,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $q = "DROP TABLE ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."cookies, ".
         $config->getValue('table_prefix')."count_history, ".
         $config->getValue('table_prefix')."follows, ".
         $config->getValue('table_prefix')."groups, ".
@@ -614,7 +621,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
 
-        $expected_tables = array('count_history', 'encoded_locations', 'favorites', 'follows',
+        $expected_tables = array('cookies', 'count_history', 'encoded_locations', 'favorites', 'follows',
         'group_members', 'groups', 'hashtags', 'hashtags_posts',
         'insight_baselines', 'insights', 'instances', 'instances_hashtags', 'instances_twitter', 'invites',
         'links', 'links_short', 'mentions', 'mentions_posts', 'options',

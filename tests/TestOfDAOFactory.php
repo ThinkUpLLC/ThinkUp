@@ -280,6 +280,15 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test get CookieDAO
+     */
+    public function testGetCookieDAO() {
+        $plugin_dao = DAOFactory::getDAO('CookieDAO');
+        $this->assertNotNull($plugin_dao);
+        $this->assertIsA($plugin_dao, 'CookieMySQLDAO');
+    }
+
+    /**
      * Test get MutexDAO
      */
     public function testGetMutexDAO() {
@@ -413,8 +422,9 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 34);
-        $this->assertEqual($result[0], $cfg_values["table_prefix"].'count_history');
+        $this->assertEqual(sizeof($result), 35);
+        $this->assertEqual($result[0], $cfg_values["table_prefix"].'cookies');
+        $this->assertEqual($result[1], $cfg_values["table_prefix"].'count_history');
         $this->restoreConfigFile();
     }
     /**

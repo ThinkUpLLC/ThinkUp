@@ -33,15 +33,12 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 
 class TestOfSession extends ThinkUpUnitTestCase {
-    var $builder1;
-    var $builder2;
-    var $builder3;
-
     public function setUp(){
         parent::setUp();
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
@@ -63,6 +60,20 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $this->assertEqual(Session::getLoggedInUser(), 'me@example.com');
     }
 
+    public function testIsLoggedInCookie() {
+        $email = 'me@example.com';
+        $this->builders[] = FixtureBuilder::build('owners', array('email' => $email));
+
+        $this->assertFalse(Session::isLoggedIn());
+
+        $cookie_dao = DAOFactory::getDAO('CookieDAO');
+        $cookie = $cookie_dao->generateForEmail($email);
+
+        $_COOKIE[Session::COOKIE_NAME] = $cookie;
+        $this->assertTrue(Session::isLoggedIn());
+        $this->assertEqual(Session::getLoggedInUser(), 'me@example.com');
+    }
+
     public function testIsNotAdmin() {
         $this->assertFalse(Session::isAdmin());
 
@@ -77,16 +88,27 @@ class TestOfSession extends ThinkUpUnitTestCase {
     }
 
     public function testCompleteLogin() {
+        $email = 'me@example.com';
         $val = array();
         $val["id"] = 10;
         $val["user_name"] = 'testuser';
         $val["full_name"] = 'Test User';
-        $val['email'] = 'me@example.com';
+        $val['email'] = $email;
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 0;
         $val["is_activated"] = 1;
         $val["failed_logins"] = 0;
         $val["account_status"] = '';
+        $val["timezone"] = 'America/New_York';
+        $val["joined"] = date('Y-m-d');
+        $val["api_key"] = '';
+        $val["api_key_private"] = '';
+        $val["email_notification_frequency"] = 'daily';
+        $val["membership_level"] = 0;
+
+        $cookie_dao = DAOFactory::getDAO('CookieDAO');
+        $deleted = $cookie_dao->deleteByEmail($email);
+        $this->assertFalse($deleted);
 
         $owner = new Owner($val);
 
@@ -94,11 +116,13 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $session->completeLogin($owner);
         $config = Config::getInstance();
         $this->assertTrue(isset($_SESSION[$config->getValue('source_root_path')]['user']));
-        $this->assertEqual($_SESSION[$config->getValue('source_root_path')]['user'], 'me@example.com');
+        $this->assertEqual($_SESSION[$config->getValue('source_root_path')]['user'], $email);
         $this->assertTrue(isset($_SESSION[$config->getValue('source_root_path')]['user_is_admin']));
         $this->assertFalse($_SESSION[$config->getValue('source_root_path')]['user_is_admin']);
         // we should have a CSRF token
         $this->assertNotNull($_SESSION[$config->getValue('source_root_path')]['csrf_token']);
+        $deleted = $cookie_dao->deleteByEmail($email);
+        $this->assertTrue($deleted);
     }
 
     public function testGetCSRFToken() {
@@ -112,6 +136,12 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val["is_activated"] = 1;
         $val["failed_logins"] = 0;
         $val["account_status"] = '';
+        $val["timezone"] = 'America/New_York';
+        $val["joined"] = date('Y-m-d');
+        $val["api_key"] = '';
+        $val["api_key_private"] = '';
+        $val["email_notification_frequency"] = 'daily';
+        $val["membership_level"] = 0;
         $owner = new Owner($val);
         $session = new Session();
         $this->assertNull($session->getCSRFToken());
@@ -130,6 +160,12 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val["is_activated"] = 1;
         $val["failed_logins"] = 0;
         $val["account_status"] = '';
+        $val["timezone"] = 'America/New_York';
+        $val["joined"] = date('Y-m-d');
+        $val["api_key"] = '';
+        $val["api_key_private"] = '';
+        $val["email_notification_frequency"] = 'daily';
+        $val["membership_level"] = 0;
 
         $owner = new Owner($val);
 
@@ -148,6 +184,12 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val["is_activated"] = 1;
         $val["failed_logins"] = 0;
         $val["account_status"] = '';
+        $val["timezone"] = 'America/New_York';
+        $val["joined"] = date('Y-m-d');
+        $val["api_key"] = '';
+        $val["api_key_private"] = '';
+        $val["email_notification_frequency"] = 'daily';
+        $val["membership_level"] = 0;
 
         $owner = new Owner($val);
         $session->completeLogin($owner);
@@ -157,26 +199,25 @@ class TestOfSession extends ThinkUpUnitTestCase {
     }
 
     public function testLogOut() {
-        $this->simulateLogin('me@example.com', true);
+        $email = 'me@example.com';
+        $cookie_dao = DAOFactory::getDAO('CookieDAO');
+        $cookie = $cookie_dao->generateForEmail($email);
+        $_COOKIE[Session::COOKIE_NAME] = $cookie;
+        $this->simulateLogin($email, true);
         $session = new Session();
         $this->assertTrue(Session::isLoggedIn());
         $this->assertTrue(Session::isAdmin());
-        $this->assertEqual(Session::getLoggedInUser(), 'me@example.com');
+        $this->assertEqual(Session::getLoggedInUser(), $email);
+
+        $test_email = $cookie_dao->getEmailByCookie($cookie);
+        $this->assertEqual($email, $test_email);
 
         $session->logOut();
         $this->assertFalse(Session::isLoggedIn());
         $this->assertFalse(Session::isAdmin());
         $this->assertNull(Session::getLoggedInUser());
-    }
 
-    private function buildData() {
-        $owner_builder = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'me@example.com', 
-            'pwd' => 'XXX', 
-            'is_activated' => 1
-        ));
-         
-        return array($owner_builder);
+        $test_email = $cookie_dao->getEmailByCookie($cookie);
+        $this->assertNull($test_email);
     }
 }
