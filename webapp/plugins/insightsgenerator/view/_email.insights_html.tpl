@@ -498,6 +498,7 @@ color: #417505 !important;
         {/if}
         {if isset($insight->related_data.posts)}
         {foreach from=$insight->related_data.posts key=uid item=post name=bar}
+        {if isset($post->network) and isset($post->author_user_id) and isset($post->author_avatar)}
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
             <td class="sub-grid object tweet text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 18px; padding: 10px;" align="left" valign="top">
                 <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
@@ -517,6 +518,7 @@ color: #417505 !important;
             </td>
             <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
         </tr>
+        {/if}
         {/foreach}
         {/if}
         {if isset($insight->related_data.posts) or isset($insight->related_data.people)}
