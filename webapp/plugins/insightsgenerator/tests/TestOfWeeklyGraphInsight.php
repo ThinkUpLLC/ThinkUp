@@ -53,7 +53,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -97,7 +97,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network = 'facebook';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>31, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -138,7 +138,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>32, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -170,7 +170,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>33, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -202,7 +202,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>34, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
