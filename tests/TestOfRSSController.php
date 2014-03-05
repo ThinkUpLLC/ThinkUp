@@ -117,7 +117,8 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
             'headline' => 'Hello:',
             'text' => 'This is a test of a hello world insight',
             'instance_id' => 1,
-            'time_generated' => $time_now
+            'time_generated' => $time_now,
+            'related_data'=>null
         ));
 
         return $builders;
