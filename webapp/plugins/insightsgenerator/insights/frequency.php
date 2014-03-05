@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/frequency.php
  *
- * Copyright (c) 2013 Gina Trapani
+ * Copyright (c) 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  *
  * LICENSE:
  *
@@ -26,24 +26,29 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Gina Trapani
+ * @copyright 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
+ * @author Anil Dash <anil[at]thinkup[dot]com>
+ * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
 class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
-
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $insight_text = '';
         $milestones = array();
 
+        $info = array('text' => '');
         if (self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
+            $this->logger->logInfo("Last week had $count posts", __METHOD__.','.__LINE__);
             if ($count > 1) {
-                $headline = "$this->username " . $this->terms->getVerb('posted') .
-                    " <strong>$count times</strong> in the past week";
+                $info['headline'] = $this->getVariableCopy(array(
+                    '%username %posted <strong>%count times</strong> in the past week.',
+                    '%username had <strong>%count %posts</strong> over the past week.',
+                    '%username had <strong>%count %posts</strong> over the past week.', // twice as likely on purpose
+                ), array('count' => $count));
                 $milestones = array(
                     "per_row"    => 1,
                     "label_type" => "icon",
@@ -55,66 +60,86 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     ),
                 );
             } else {
-                $headline = "$this->username didn't post anything new on " . ucfirst($instance->network) .
-                    " in the past week";
-                $button = array();
-                switch ($instance->network) {
-                    case 'twitter':
-                        $insight_text = "Sometimes we just don't have anything to say. Maybe let someone know you"
-                            . " appreciate their work?";
-                        $button = array(
-                            "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
-                            "label"  => "Tweet a word of praise",
-                        );
-                        break;
-                    case 'facebook':
-                        $insight_text = "Nothing wrong with being quiet. If you would, you could ask your friends "
-                            ."what they've read lately.";
-                        $button = array(
-                            "url" => "http://www.facebook.com/sharer/sharer.php?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&t=Ready any good books lately?",
-                            "label"  => "Read any good books lately?",
-                        );
-                        break;
-                    default:
-                        $insight_text = "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.";
-                        $button = array(
+                if ($instance->network == 'twitter') {
+                    $info = $this->getVariableCopyArray(array(
+                        array('headline' => "%username didn't have any new %posts this week.",
+                            'text' => "Nothing wrong with waiting until there's something to say.",
+                            'button' => array(
+                                    "url" => "http://twitter.com/intent/tweet?text=Hey there, friends.",
+                                    "label"  => "Have anything to say now?",
+                            )),
+                        array('headline' => '%username didn\'t post anything new on Twitter in the past week.',
+                            'text' => 'Sometimes we just don\'t have anything to say. Maybe let someone know you '
+                                    . 'appreciate their work?',
+                            'button' => array(
+                                    "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
+                                    "label"  => "Tweet a word of praise",
+                            )),
+                        array('headline' => "Seems like %username was pretty quiet on Twitter this past week.",
+                            'text' => "Nothing wrong with waiting until there's something to say.",
+                            'button' => array(
+                                    "url" => "http://twitter.com/intent/tweet?text=Sorry I haven't tweeted in a while!",
+                                    "label"  => "Or just say hi to everyone.",
+                            )),
+                    ));
+                } else if ($instance->network == 'facebook') {
+                    $info = $this->getVariableCopyArray(array(
+                        array('headline' => '%username didn\'t have any new %posts this week.',
+                            'text' => 'Nothing wrong with waiting until there\'s something to say.',
+                            'button' => array(
+                                'url' => 'http://www.facebook.com/sharer/sharer.php?t=ThinkUp told me to say hi.',
+                                'label' => 'Maybe you\'ve got something to say now?',
+                            )),
+                        array('headline' => '%username didn\'t post anything new on Facebook in the past week.',
+                            'text' => 'Nothing wrong with being quiet. If you want, you could ask your friends '.
+                                        'what they\'ve read lately.',
+                            'button' => array(
+                                'url' => 'http://www.facebook.com/sharer/sharer.php'.
+                                    '?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&'.
+                                    't=Ready any good books lately?',
+                                'label' => 'Read any good books lately?',
+                            )),
+                        array('headline' => 'Seems like %username was pretty quiet on Facebook this past week.',
+                            'text' => "Nothing wrong with waiting until there's something to say.",
+                            'button' => array(
+                                'url' => 'http://www.facebook.com/sharer/sharer.php?t=Hey there, friends!',
+                                'label' => 'Or jus say hi to your frients?',
+                            )),
+                        ));
+                } else {
+                    $info  = array(
+                       'headline '=> $info['headline'],
+                       'text' => "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.",
+                       'button' => array(
                             "url" => "http://www.donorschoose.org/",
                             "label"  => "Give to DonorsChoose.org",
-                        );
+                    ));
+
                 }
             }
 
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-            $insight_baseline_dao->insertInsightBaseline("frequency", $instance->id, $count,
-            $this->insight_date);
+            $insight_baseline_dao->insertInsightBaseline("frequency", $instance->id, $count, $this->insight_date);
 
             if ($count > 1) {
                 //Week over week comparison
                 //Get insight baseline from last Monday
                 $last_monday = date('Y-m-d', strtotime('-7 day'));
                 $last_monday_insight_baseline = $insight_baseline_dao->getInsightBaseline("frequency",
-                $instance->id, $last_monday);
+                    $instance->id, $last_monday);
                 if (isset($last_monday_insight_baseline) ) {
+                    $this->logger->logInfo("Baseline had $last_monday_insight_baseline->value posts",
+                        __METHOD__.','.__LINE__);
                     //compare it to this Monday's  number, and add a sentence comparing it.
-                    if ($last_monday_insight_baseline->value > ($count + 1) ) {
-                        $difference = $last_monday_insight_baseline->value - $count;
-                        $insight_text = "That's $difference fewer " .
-                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
-                    } elseif ($last_monday_insight_baseline->value < ($count - 1) ) {
-                        $difference = $count - $last_monday_insight_baseline->value;
-                        $insight_text .= "That's $difference more " .
-                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
-                    } else {
-                        $headline .= ".";
+                    $diff = abs($last_monday_insight_baseline->value - $count);
+                    $comp = ($last_monday_insight_baseline->value > ($count)) ? 'fewer' : 'more';
+                    if ($diff == 1) {
+                        $info['text'] =$this->terms->getProcessedText("That's 1 $comp %post than the prior week.");
+                    } elseif ($diff > 0) {
+                        $info['text'] =$this->terms->getProcessedText("That's $diff $comp %posts than the prior week.");
                     }
-                } else {
-                    $headline .= ".";
                 }
-            } else {
-                $headline .= ".";
             }
-            $headline = (isset($headline))?$headline:'Post rate:';
-
             //Instantiate the Insight object
             $my_insight = new Insight();
 
@@ -122,13 +147,15 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             $my_insight->instance_id = $instance->id;
             $my_insight->slug = 'frequency'; //slug to label this insight's content
             $my_insight->date = $this->insight_date; //date of the data this insight applies to
-            $my_insight->headline = $headline;
-            $my_insight->text = $insight_text;
             $my_insight->header_image = '';
             $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
             $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
             $my_insight->setMilestones($milestones);
-            $my_insight->setButton($button);
+            if (isset($info['button'])) {
+                $my_insight->setButton($info['button']);
+            }
+            $my_insight->headline = $info['headline'];
+            $my_insight->text = $info['text'];
 
             $this->insight_dao->insertInsight($my_insight);
 
