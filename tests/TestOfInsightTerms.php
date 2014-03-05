@@ -129,4 +129,26 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($result_2, "added testeriffic as a friend");
         $this->assertEqual($result_3, "followed @testeriffic");
     }
+
+
+    public function testGetProcessedText() {
+        $twitter_terms = new InsightTerms('twitter');
+        $result = $twitter_terms->getProcessedText('%posts %posted %post %likes %liked %like %reply %replies');
+        $this->assertEqual('tweets tweeted tweet favorites favorited favorite reply replies', $result);
+        $result = $twitter_terms->getProcessedText('%retweets %retweet %followers %follower %shared');
+        $this->assertEqual('retweets retweet followers follower retweeted', $result);
+
+        $fb_terms = new InsightTerms('facebook');
+        $result = $fb_terms->getProcessedText('%posts %posted %post %likes %liked %like %reply %replies');
+        $this->assertEqual('status updates posted status update likes liked like comment comments', $result);
+        $result = $fb_terms->getProcessedText('%retweets %retweet %followers %follower %shared');
+        $this->assertEqual('reshares reshare friends friend reshared', $result);
+
+
+        $result = $twitter_terms->getProcessedText('%animal %posted %thing', array('animal'=>'fox','thing'=>'video'));
+        $this->assertEqual('fox tweeted video', $result);
+
+        $result = $twitter_terms->getProcessedText('%animal %posted %thing');
+        $this->assertEqual('%animal tweeted %thing', $result);
+    }
 }
