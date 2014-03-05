@@ -86,7 +86,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'favoriteflashbacks', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfPosts()));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'3', 'headline'=>'Booyah!',
+        'instance_id'=>'3', 'headline'=>'Booyah!', 'related_data'=>null,
         'text'=>'Retweet spike! Mary\'s post publicly got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
@@ -107,11 +107,11 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
         'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
-        'time_generated'=>$time_now));
+        'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Jill\'s post privately got retweeted 110 '.
         'times', 'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
-        'time_generated'=>$time_now));
+        'time_generated'=>$time_now, 'related_data'=>null));
         return $builders;
     }
 
@@ -259,6 +259,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $results = $controller->go();
 
         //do show owned private insight
+        print_r($results);
         $this->assertPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
     }
 

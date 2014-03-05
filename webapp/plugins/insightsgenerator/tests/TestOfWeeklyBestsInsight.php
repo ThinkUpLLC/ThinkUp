@@ -36,9 +36,27 @@ require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.In
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/weeklybests.php';
 
 class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
+    var $sample_hot_posts_data;
 
     public function setUp(){
         parent::setUp();
+        $this->sample_hot_posts_data = 's:1610:"{"rows":[{"c":[{"v":'.
+        '"Check out our friends\' apps: @romantimatic to stay in love http:\/\/t.co\/KGyh2iL9uI & Kidpost to '.
+        'share..."},{"v":0},{"v":0},{"v":2}]},{"c":[{"v":"ThinkUp and Privacy: What we\'ve heard - Phew! '.
+        'We\u2019re through the initial launch rush of ThinkUp and..."},{"v":0},{"v":2},{"v":2}]},{"c":[{"v"'.
+        ':"One request we\'ve heard consistently is better privacy controls for insights in ThinkUp. Got ideas '.
+        'o..."},{"v":1},{"v":3},{"v":0}]},{"c":[{"v":"A number of you told us your credit card has changed (sigh, '.
+        'Target) since you signed up. We\'ll show ..."},{"v":3},{"v":0},{"v":2}]},{"c":[{"v":"Members: You should '.
+        'start to see your Amazon account charged over the next few hours if you backed o..."},{"v":2},{"v":0},'.
+        '{"v":0}]},{"c":[{"v":"We\'re busy faxing things over here at ThinkUp HQ. Didja know you have to fax things '.
+        'if you want to m..."},{"v":2},{"v":5},{"v":8}]},{"c":[{"v":"Now that many early members have had a chance '.
+        'to check out ThinkUp, we wanted to pause & offer a few..."},{"v":1},{"v":1},{"v":5}]},{"c":[{"v":"Also, '.
+        'a little tip: You gotta be logged in to see your Facebook insights. (Some good stuff in there...."},'.
+        '{"v":0},{"v":1},{"v":1}]},{"c":[{"v":"A number of users were seeing fewer insights when logged in. '.
+        'That was a bug, boooo! But now it\'s fix..."},{"v":0},{"v":0},{"v":2}]},{"c":[{"v":"Very nice article '.
+        'from @elongreen about the unfortunate necessity of blocking other users on network..."},{"v":0},{"v":0},'.
+        '{"v":1}]}],"cols":[{"type":"string","label":"Tweet"},{"type":"number","label":"Replies"},{"type":"number",'.
+        '"label":"Retweets"},{"type":"number","label":"Favorites"}]}";';
     }
 
     public function tearDown() {
@@ -53,7 +71,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -99,7 +117,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'facebook';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>31, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -141,7 +159,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>32, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -174,7 +192,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>33, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -209,7 +227,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
 
         $insight_builder = FixtureBuilder::build('insights', array('id'=>34, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
 
         $posts = array();
         $posts[] = new Post(array(

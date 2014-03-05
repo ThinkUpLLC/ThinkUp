@@ -190,7 +190,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
 
         // Insert a new post with a higher count than the baseline and a related hot posts insight
         $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>1,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $post1_builder = FixtureBuilder::build('posts', array('id'=>28, 'post_id'=>'28',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
@@ -326,7 +326,7 @@ class TestOfReplySpikeInsight extends ThinkUpUnitTestCase {
 
         // Insert a new post with a higher count than the baseline and a related hot posts insight
         $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>1,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-6d' ));
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-6d', 'related_data'=>serialize('sample hot posts data') ));
 
         $post1_builder = FixtureBuilder::build('posts', array('id'=>28, 'post_id'=>'28',
         'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
