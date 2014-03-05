@@ -73,6 +73,7 @@ $model_tests->add(new TestOfProfiler());
 $model_tests->add(new TestOfSession());
 $model_tests->add(new TestOfSessionMySQLDAO());
 $model_tests->add(new TestOfSessionCache());
+$model_tests->add(new TestOfTimeHelper());
 $model_tests->add(new TestOfViewManager());
 $model_tests->add(new TestOfUserMySQLDAO());
 $model_tests->add(new TestOfUserErrorMySQLDAO());
