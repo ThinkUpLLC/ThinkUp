@@ -66,6 +66,15 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->table_prefix = $config->getValue('table_prefix');
         $this->testdb_helper->create($THINKUP_CFG['source_root_path'].
         "/webapp/install/sql/build-db_mysql-upcoming-release.sql");
+        //If Travis is inexplicably dying, comment this in to see what test is
+        /*
+        if (getenv('TRAVIS') == 'true') {
+            $trace = debug_backtrace();
+            $caller = array_shift($trace);
+            print $caller['file'].'
+    ';
+        }
+        */
     }
     /**
      * Drop the database and kill the connection
