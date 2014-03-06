@@ -31,9 +31,8 @@
  */
 class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
     /**
-     *
      * Cached query results for doesOwnerHaveAccessToPost() reduces query load while looping through post results
-     * @var array $post_access_query_cache
+     * @var arr $post_access_query_cache
      */
     static $post_access_query_cache = array();
 

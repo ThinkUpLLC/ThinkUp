@@ -136,8 +136,7 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
                 $instagram_user_profile = $instagram->getCurrentUser()->getData();
                 $instagram_username = $instagram_user_profile->username;
                 $instagram_user_id = $instagram_user_profile->id;
-                $this->addSuccessMessage($this->saveAccessToken($instagram_user_id, $access_token, $instagram_username),
-                'authorization');
+                $this->saveAccessToken($instagram_user_id, $access_token, $instagram_username);
             } else {
                 $error_msg = "Problem authorizing your instagram account! Please correct your plugin settings.";
                 $this->addErrorMessage($error_msg, 'authorization', true);
@@ -169,7 +168,7 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
                 "a different account, log  out of Instagram in a different browser tab and try again.", 'user_add');
             }
             //set auth error to empty string
-            $owner_instance_dao->setAuthError($this->owner->id, $instance->id);
+            $owner_instance_dao->setAuthErrorByTokens($instance->id, $instagram_access_token, '');
         } else { //Instance does not exist
             $instance_dao->insert($instagram_user_id, $instagram_username, 'instagram');
             $instance = $instance_dao->getByUserIdOnNetwork($instagram_user_id, 'instagram');

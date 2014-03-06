@@ -424,6 +424,7 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $controller = new InstagramPluginConfigurationController($owner, 'instagram');
         $output = $controller->go();
+        $this->debug($output);
 
         $v_mgr = $controller->getViewManager();
         $msgs = $v_mgr->getTemplateDataItem('success_msgs');
