@@ -407,6 +407,36 @@ color: #417505 !important;
     </td>
   </tr>
 </table>
+{if isset($show_welcome_message) and $show_welcome_message}
+<table class="row insight welcome-insight" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #2785d3; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #46bcff; border-bottom-width: 2px; margin-bottom: 14px; background: #fff; padding: 0px;">
+  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+
+      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
+              <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: left; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="left">Thanks for being a ThinkUp member!</h6>
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+
+      <table class="twelve columns insight-body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+            <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px;" align="left" valign="top">
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">You can vist your insight stream at <a href="{$application_url}" style="color: #2ba6cb; text-decoration: none;">{$application_url}</a>.</p>
+
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Each day, you&rsquo;ll get an email offering insights like these, telling you how you&rsquo;re doing
+                on your social networks. You can add more networks or view your account settings from your
+                membership page. And just reply to this message if you have any questions or feedback, or need help.</p>
+            </td>
+            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/if}
 {foreach from=$insights item=insight}
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
