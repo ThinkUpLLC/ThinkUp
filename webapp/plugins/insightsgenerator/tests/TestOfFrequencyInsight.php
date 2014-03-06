@@ -58,7 +58,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
-        foreach (array(2, 5, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             // Assert that insight got inserted
@@ -69,12 +69,12 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
 
-            if ($modded_time < 3) {
+            if ($modded_time == 1) {
                 $this->assertEqual('@testeriffic didn\'t post anything new on Twitter in the past week.',
                 $result->headline);
                 $this->assertEqual('Sometimes we just don\'t have anything to say. Maybe let someone know you'
                                     . ' appreciate their work?', $result->text);
-            } elseif ($modded_time < 7) {
+            } elseif ($modded_time == 2) {
                 $this->assertEqual('Seems like @testeriffic was pretty quiet on Twitter this past week.',
                 $result->headline);
                 $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
@@ -100,7 +100,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network = 'facebook';
         $insight_plugin = new FrequencyInsight();
 
-        foreach (array(2, 5, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             // Assert that insight got inserted
@@ -111,12 +111,12 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
 
-            if ($modded_time < 3) {
+            if ($modded_time == 1) {
                 $this->assertEqual('Silent Bob didn\'t post anything new on Facebook in the past week.',
                 $result->headline);
                 $this->assertEqual('Nothing wrong with being quiet. If you want, you could ask your friends what ' .
                     'they\'ve read lately.', $result->text);
-            } elseif ($modded_time < 7) {
+            } elseif ($modded_time == 2) {
                 $this->assertEqual('Seems like Silent Bob was pretty quiet on Facebook this past week.',
                 $result->headline);
                 $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
@@ -143,7 +143,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             $today = date ('Y-m-d');
@@ -152,7 +152,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
                 $this->assertNull($result->insight_text);
             } else {
@@ -175,7 +175,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             $today = date ('Y-m-d');
@@ -184,7 +184,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('Test User posted <strong>5 times</strong> in the past week.', $result->headline);
                 $this->assertNull($result->insight_text);
             } else {
@@ -210,7 +210,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
         'instance_id'=>10, 'value'=>19));
 
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             // Assert that week-over-week comparison is correct
@@ -221,13 +221,12 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
-                $this->assertPattern('/14 fewer tweets than the prior week/',$result->text);
             } else {
                 $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
-                $this->assertPattern('/14 fewer tweets than the prior week/',$result->text);
             }
+            $this->assertPattern('/14 fewer tweets than the prior week/',$result->text);
         }
 
     }
@@ -248,7 +247,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             $today = date ('Y-m-d');
@@ -257,7 +256,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
                 $this->assertPattern('/2 more tweets than the prior week/',$result->text);
             } else {
@@ -284,7 +283,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             $today = date ('Y-m-d');
@@ -293,13 +292,12 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
-                $this->assertPattern('/1 more tweet than the prior week/', $result->text);
             } else {
                 $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
-                $this->assertPattern('/1 more tweet than the prior week/',$result->text);
             }
+            $this->assertPattern('/1 more tweet than the prior week/',$result->text);
         }
 
     }
@@ -320,7 +318,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(2, 9) as $modded_time) {
+        foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
             $insight_plugin->generateInsight($instance, $posts, 3);
             $today = date ('Y-m-d');
@@ -329,15 +327,14 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
             $this->assertNotNull($result);
             $this->assertIsA($result, "Insight");
             $this->assertNotNull($result->time_generated);
-            if ($modded_time < 3) {
+            if ($modded_time == 3) {
                 $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
                 //assert no comparison to prior week
-                $this->assertNoPattern('/prior week/', $result->text);
             } else {
                 $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
                 //assert no comparison to prior week
-                $this->assertNoPattern('/prior week/',$result->text);
             }
+            $this->assertNoPattern('/prior week/', $result->text);
         }
 
     }
