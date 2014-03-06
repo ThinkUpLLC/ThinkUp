@@ -76,24 +76,20 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
 
-                if (isset($hot_posts_data)) {
-                    $my_insight = new Insight();
+                $my_insight = new Insight();
 
-                    $my_insight->slug = 'weekly_best'; //slug to label this insight's content
-                    $my_insight->instance_id = $instance->id;
-                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
-                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
-                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                    $my_insight->header_image = $header_image;
-                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                    $my_insight->setPosts($most_popular_post);
+                $my_insight->slug = 'weekly_best'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $header_image;
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->setPosts(array($most_popular_post));
 
-                    $this->insight_dao->insertInsight($my_insight);
-                }
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 
