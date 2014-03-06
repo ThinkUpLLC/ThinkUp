@@ -169,6 +169,15 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 // Get most mentioned user
                 arsort($mentions_count);
                 $most_mentioned_user = each($mentions_count);
+
+                // Add mentions to dataset
+                $users_mentioned = array();
+                foreach (array_slice($mentions_count, 0, 10) as $mention => $count) {
+                    $mention_info['mention'] = $mention;
+                    $mention_info['count'] = $count;
+                    $mention_info['user'] = $mentions_info[$mention];
+                    $users_mentioned[] = $mention_info;
+                }
             }
 
             if (isset($most_mentioned_user)) {
@@ -193,6 +202,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->header_image = $header_image; // '';
                 $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->setPeople($users_mentioned);
                 $my_insight->setMilestones($milestones);
 
                 $this->insight_dao->insertInsight($my_insight);
