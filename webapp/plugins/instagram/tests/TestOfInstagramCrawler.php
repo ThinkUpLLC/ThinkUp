@@ -80,6 +80,18 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
         );
         $this->profile2_instance = new Instance($r);
+
+        $r = array('id'=>5, 'network_username'=>'ni_ato', 'network_user_id'=>'502993749',
+        'network_viewer_id'=>'502993749', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'7', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'2014-01-01 13:48:05', 'earliest_reply_in_system'=>'',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'instagram',
+        'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
+        );
+        $this->profile3_instance = new Instance($r);
     }
 
     public function tearDown() {
@@ -178,7 +190,6 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'http://images.ak.instagram.com/profiles/anonymousUser.jpg');
         $this->assertFalse($user->is_protected);
         $this->assertEqual($user->network, 'instagram');
-
         // Check the second photo was added, it has no comments and two likes
         $post = $photo_dao->getPhoto('519642461157682352_494785218', 'instagram');
         $this->assertEqual($post->post_id, '519642461157682352_494785218' );
@@ -231,5 +242,57 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $ic = new InstagramCrawler($this->profile2_instance, 'fauxaccesstokeninvalid', 10);
         $this->expectException('Instagram\Core\ApiAuthException', 'The "access_token" provided is invalid.');
         $ic->fetchPostsAndReplies();
+    }
+
+    public function testFetchNewestPosts() {
+        $user_dao = new UserMySQLDAO();
+        $photo_dao = new PhotoMySQLDAO();
+        $count_history_dao = new CountHistoryMySQLDAO();
+        $favorite_dao = new FavoritePostMySQLDAO();
+        $follow_dao = new FollowMySQLDAO();
+        $ic = new InstagramCrawler($this->profile3_instance, 'fauxaccesstoken', 120);
+
+        $config = Config::getInstance();
+        $instagram_crawler_log = $config->getValue('log_location');
+        // prepare log for reading after fetchPostsAndReplies.
+        $log_reader_handle = fopen($instagram_crawler_log, 'r');
+        fseek($log_reader_handle, 0, SEEK_END);
+        //Check if newest posts are returned.
+        $ic->fetchPostsAndReplies();
+
+        $post = $photo_dao->getPhoto('519671854563291086', 'instagram');
+        $this->assertEqual($post->post_id, '519671854563291086' );
+        $this->assertEqual($post->author_user_id, '502993749' );
+        $this->assertEqual($post->author_username, 'ni_ato' );
+        $this->assertEqual($post->author_fullname, 'niki' );
+        $avatar = 'http://images.ak.instagram.com/profiles/anonymousUser.jpg';
+        $this->assertEqual($post->author_avatar, $avatar);
+        $this->assertEqual($post->post_text, 'Epikinduna paixnidia');
+        $this->assertFalse($post->is_protected);
+        $this->assertEqual($post->pub_date, '2013-08-10 20:28:00');
+        $this->assertEqual($post->network, 'instagram');
+        $this->assertEqual($post->in_reply_to_user_id, '494785218');
+        $this->assertEqual($post->in_reply_to_post_id, '519644594447805677_494785218');
+    }
+
+    public function testFetchFriendsAfterTwoDays() {
+        $plugin_dao = new PluginMySQLDAO();
+        $plugin_id = $plugin_dao->getPluginId('instagram');
+        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
+        $option_dao = new OptionMySQLDAO();
+        $ic = new InstagramCrawler($this->profile3_instance, 'fauxaccesstoken', 120);
+        $ic->fetchPostsAndReplies();
+        //Checks to see if date value has been inserted into table after first crawl.
+        $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $this->assertNotNull($select_insert->option_value);
+        //Checks to see if date value hasn't changed after a crawl within two days of the last.
+        $ic->fetchPostsAndReplies();
+        $select_under_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $this->assertEqual($select_insert->option_value, $select_under_two_days->option_value);
+        //Checks to see if date value has changed after a crawl 3 days after last crawl.
+        $option_dao->updateOptionByName($namespace,'last_crawled_friends', '1396566000');
+        $ic->fetchPostsAndReplies();
+        $select_over_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $this->assertNotEqual($select_insert->option_value, $select_over_two_days->option_value);
     }
 }
