@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani, Chris Moyer
  *
  * LICENSE:
  *
@@ -25,8 +25,9 @@
  * Test for the example Hello ThinkUp insight class (and others).
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani, Chris Moyer
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
@@ -54,17 +55,32 @@ class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'facebook';
         $builders = self::setUpPublicInsight($instance);
 
+        // We have three random options, so we'll check each one here.
+        TimeHelper::setTime(3);
         $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
         $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
 
-        $insight_dao = new InsightMySQLDAO();
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
-
         $this->assertEqual($result->headline, 'Ohai');
         $this->assertEqual($result->text, 'Greetings, humans');
         $this->assertEqual($result->filename, 'hellothinkupinsight');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        TimeHelper::setTime(4);
+        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
+        $this->assertEqual($result->headline, 'Hello');
+        $this->assertEqual($result->text, 'Greetings, earthlings');
+
+        TimeHelper::setTime(5);
+        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
+        $this->assertEqual($result->headline, 'Yo');
+        $this->assertEqual($result->text, 'Greetings, peeps');
 
         /**
          * Use this code to output the individual insight's fully-rendered HTML to file.
