@@ -834,6 +834,19 @@ body.outlook p {
           text-align: right;
       }
 
+      .welcome-insight {
+          background: #fff;
+          border-top: 5px solid #2785d3;
+          border-bottom: 2px solid #46bcff;
+          margin-bottom: 14px;
+      }
+
+      .welcome-insight td h6 {
+          color: #2785d3 !important;
+          font-weight: bold;
+          font-size: 18px;
+      }
+
       /* Insight colors */
 
       .insight-pea {
@@ -1022,6 +1035,36 @@ body.outlook p {
     </td>
   </tr>
 </table>
+{if isset($show_welcome_message) and $show_welcome_message}
+<table class="row insight welcome-insight">
+  <tr>
+    <td class="wrapper last">
+
+      <table class="twelve columns insight-header">
+        <tr>
+          <td class="text-pad">
+              <h6>Thanks for being a ThinkUp member!</h6>
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+
+      <table class="twelve columns insight-body">
+        <tr>
+            <td class="text-pad">
+              <p>You can vist your insight stream at <a href="{$application_url}">{$application_url}</a>.</p>
+
+              <p>Each day, you&rsquo;ll get an email offering insights like these, telling you how you&rsquo;re doing
+                on your social networks. You can add more networks or view your account settings from your
+                membership page. And just reply to this message if you have any questions or feedback, or need help.</p>
+            </td>
+            <td class="expander"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/if}
 {foreach from=$insights item=insight}
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
