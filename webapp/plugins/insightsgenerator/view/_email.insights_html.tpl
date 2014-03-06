@@ -344,7 +344,8 @@ color: #417505 !important;
                         <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
                           <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
                               <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 9px; margin: 0; padding: 0 0 0px;" align="center" valign="top">
-                                  <center style="width: 100%; min-width: 580px;">{$header_text}</center>
+                                  <center style="width: 100%; min-width: 580px;">{if isset($show_welcome_message) and
+                                  $show_welcome_message}Welcome to ThinkUp!{else}{$header_text}{/if}</center>
                             </td>
                             <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 9px; margin: 0; padding: 0;" align="left" valign="top"></td>
                           </tr>
@@ -391,7 +392,7 @@ color: #417505 !important;
           <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
             <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
               <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
-
+{if !(isset($show_welcome_message) and $show_welcome_message)}
 <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
   <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
     <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
@@ -407,6 +408,7 @@ color: #417505 !important;
     </td>
   </tr>
 </table>
+{/if}
 {if isset($show_welcome_message) and $show_welcome_message}
 <table class="row insight welcome-insight" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #2785d3; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #46bcff; border-bottom-width: 2px; margin-bottom: 14px; background: #fff; padding: 0px;">
   <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
@@ -415,7 +417,7 @@ color: #417505 !important;
       <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
           <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
-              <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: left; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="left">Thanks for being a ThinkUp member!</h6>
+              <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: left; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="left">Thanks for joining ThinkUp!</h6>
           </td>
           <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
         </tr>
@@ -424,15 +426,28 @@ color: #417505 !important;
       <table class="twelve columns insight-body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
             <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px;" align="left" valign="top">
-              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">You can vist your insight stream at <a href="{$application_url}" style="color: #2ba6cb; text-decoration: none;">{$application_url}</a>.</p>
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Now you can sit back, relax, and keep doing what you&rsquo;re doing. Each day you&rsquo;ll get an email like this with your new insights from ThinkUp.</p>
+              <ul>
+                <li>Add more networks or update your settings from your
+                  <a href="https://thinkup.com/join/user/membership.php" style="color: #2ba6cb; text-decoration: none;">membership page</a>.</li>
+                <li>Have questions or need help? Just reply to this email.</li>
+              </ul>
 
-              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Each day, you&rsquo;ll get an email offering insights like these, telling you how you&rsquo;re doing
-                on your social networks. You can add more networks or view your account settings from your
-                membership page. And just reply to this message if you have any questions or feedback, or need help.</p>
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Check out your insight stream at <a href="{$application_url}" style="color: #2ba6cb; text-decoration: none;">{$application_url}</a>.
+                This is gonna be great.</p>
             </td>
             <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
         </tr>
       </table>
+        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="insight-footer" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; border-top-style: solid; border-top-color: #dbdbdb; border-top-width: 0; background: #fff; margin: 0; padding: 10px 10px 0;" align="left" valign="top">
+            <img src="https://www.thinkup.com/join/assets/img/chart-landscape.png" alt="Chart graphic" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block;" align="left" />
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+
     </td>
   </tr>
 </table>
