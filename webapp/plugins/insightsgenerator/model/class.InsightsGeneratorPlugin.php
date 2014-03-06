@@ -231,6 +231,9 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             if (Utils::isThinkUpLLC()) {
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
+                if (!isset($options['last_daily_email'])) {
+                    $view->assign('show_welcome_message', true);
+                }
             } else {
                 $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
             }
