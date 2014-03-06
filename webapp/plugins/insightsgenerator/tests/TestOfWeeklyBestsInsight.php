@@ -35,28 +35,11 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/weeklybests.php';
 
-class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
+class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
     var $sample_hot_posts_data;
 
     public function setUp(){
         parent::setUp();
-        $this->sample_hot_posts_data = 's:1610:"{"rows":[{"c":[{"v":'.
-        '"Check out our friends\' apps: @romantimatic to stay in love http:\/\/t.co\/KGyh2iL9uI & Kidpost to '.
-        'share..."},{"v":0},{"v":0},{"v":2}]},{"c":[{"v":"ThinkUp and Privacy: What we\'ve heard - Phew! '.
-        'We\u2019re through the initial launch rush of ThinkUp and..."},{"v":0},{"v":2},{"v":2}]},{"c":[{"v"'.
-        ':"One request we\'ve heard consistently is better privacy controls for insights in ThinkUp. Got ideas '.
-        'o..."},{"v":1},{"v":3},{"v":0}]},{"c":[{"v":"A number of you told us your credit card has changed (sigh, '.
-        'Target) since you signed up. We\'ll show ..."},{"v":3},{"v":0},{"v":2}]},{"c":[{"v":"Members: You should '.
-        'start to see your Amazon account charged over the next few hours if you backed o..."},{"v":2},{"v":0},'.
-        '{"v":0}]},{"c":[{"v":"We\'re busy faxing things over here at ThinkUp HQ. Didja know you have to fax things '.
-        'if you want to m..."},{"v":2},{"v":5},{"v":8}]},{"c":[{"v":"Now that many early members have had a chance '.
-        'to check out ThinkUp, we wanted to pause & offer a few..."},{"v":1},{"v":1},{"v":5}]},{"c":[{"v":"Also, '.
-        'a little tip: You gotta be logged in to see your Facebook insights. (Some good stuff in there...."},'.
-        '{"v":0},{"v":1},{"v":1}]},{"c":[{"v":"A number of users were seeing fewer insights when logged in. '.
-        'That was a bug, boooo! But now it\'s fix..."},{"v":0},{"v":0},{"v":2}]},{"c":[{"v":"Very nice article '.
-        'from @elongreen about the unfortunate necessity of blocking other users on network..."},{"v":0},{"v":0},'.
-        '{"v":1}]}],"cols":[{"type":"string","label":"Tweet"},{"type":"number","label":"Replies"},{"type":"number",'.
-        '"label":"Retweets"},{"type":"number","label":"Favorites"}]}";';
     }
 
     public function tearDown() {
@@ -69,27 +52,40 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
+        $builders = self::setUpPublicInsight($instance);
 
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 5,
             'retweet_count_cache' => 1,
             'favlike_count_cache' => 3,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 34
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
             'retweet_count_cache' => 1,
             'favlike_count_cache' => 15,
+            'post_text' => 'This is an even better post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 33
         $posts[] = new Post(array(
             'reply_count_cache' => 2,
             'retweet_count_cache' => 5,
             'favlike_count_cache' => 1,
+            'post_text' => 'This is THE BEST post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 27
 
@@ -107,6 +103,36 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/5 replies/', $result->text);
         $this->assertPattern('/1 retweet/', $result->text);
         $this->assertPattern('/3 favorites/', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight.html
+         */
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'testeriffic';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = $today;
+        $_GET['s'] = 'weekly_best';
+        $results = $controller->go();
+        //Uncomment this out to see web view of insight
+        //$this->debug($results);
+        $this->assertPattern('/This is a really good post/', $results);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
     public function testWeeklyBestsInsightForFacebook() {
@@ -115,24 +141,36 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'tester_fb';
         $instance->network = 'facebook';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>31, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
+        $builders = self::setUpPublicInsight($instance);
 
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 8,
             'favlike_count_cache' => 3,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 46
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
             'favlike_count_cache' => 15,
+            'post_text' => 'This is an even better post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 30
         $posts[] = new Post(array(
             'reply_count_cache' => 2,
             'favlike_count_cache' => 1,
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 12
 
@@ -149,6 +187,19 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/This was tester_fb\'s status update of the week/', $result->headline);
         $this->assertPattern('/8 comments/', $result->text);
         $this->assertPattern('/3 likes/', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
     public function testWeeklyBestsInsightWithOneReply() {
@@ -157,15 +208,18 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>32, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
+        $builders = self::setUpPublicInsight($instance);
 
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 1,
             'retweet_count_cache' => 0,
             'favlike_count_cache' => 0,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 5
 
@@ -182,6 +236,19 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/This was \@testeriffic\'s tweet of the week/', $result->headline);
         $this->assertPattern('/1 reply/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
     public function testWeeklyBestsInsightWithFavorites() {
@@ -190,15 +257,18 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>33, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
+        $builders = self::setUpPublicInsight($instance);
 
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 0,
             'retweet_count_cache' => 0,
             'favlike_count_cache' => 3,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 6
 
@@ -217,6 +287,19 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/reply/', $result->text);
         $this->assertNoPattern('/retweet/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
     public function testWeeklyBestsInsightWithRepliesAndFavorites() {
@@ -225,15 +308,18 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>34, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=> $this->sample_hot_posts_data ));
+        $builders = self::setUpPublicInsight($instance);
 
         $posts = array();
         $posts[] = new Post(array(
             'reply_count_cache' => 4,
             'retweet_count_cache' => 0,
             'favlike_count_cache' => 5,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 30
 
@@ -251,5 +337,18 @@ class TestOfWeeklyBestsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/4 replies/', $result->text);
         $this->assertPattern('/5 favorites/', $result->text);
         $this->assertPattern('/and/', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->assertPattern('/This is a really good post/', $email_insight);
     }
 }
