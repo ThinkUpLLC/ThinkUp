@@ -1085,6 +1085,7 @@ body.outlook p {
         {/if}
         {if isset($insight->related_data.people)}
         {foreach from=$insight->related_data.people key=uid item=user}
+        {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
         <tr>
             <td class="sub-grid object user text-pad">
                 <table>
@@ -1109,6 +1110,7 @@ body.outlook p {
             </td>
             <td class="expander"></td>
         </tr>
+        {/if}
         {/foreach}
         {/if}
         {if isset($insight->related_data.posts)}
