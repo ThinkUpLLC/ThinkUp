@@ -250,7 +250,11 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $parameters['weekly_or_daily'] = $daily_or_weekly;
 
             try {
-                $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly);
+                if (!isset($options['last_daily_email'])) {
+                    $subject_line = "Welcome to ThinkUp! Here are your insights.";
+                } else {
+                    $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly);
+                }
                 Mailer::mailHTMLViaMandrillTemplate($owner->email, $subject_line,
                 $options['mandrill_template']->option_value, $parameters);
                 return true;

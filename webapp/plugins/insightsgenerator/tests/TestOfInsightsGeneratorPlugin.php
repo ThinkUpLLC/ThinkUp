@@ -627,8 +627,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
 
         //Assert welcome message shows up
-        $this->assertPattern('/Thanks for being a ThinkUp member/', $merge_vars['insights']);
-        $this->assertPattern('/get an email offering insights like these/', $merge_vars['insights']);
+        $this->assertPattern('/Thanks for joining ThinkUp/', $merge_vars['insights']);
+        $this->assertPattern('/get an email like this/', $merge_vars['insights']);
+        //Assert welcome header text
+        $this->assertPattern('/Welcome to ThinkUp/', $merge_vars['insights']);
+        //Assert subject line is welcoming
+        $this->assertPattern('/Welcome to ThinkUp! Here are your insights./', $decoded->subject);
 
         $this->debug($merge_vars['insights']);
         $this->debug($decoded->subject);
@@ -688,9 +692,13 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
 
-        //Assert welcome message shows up
-        $this->assertNoPattern('/Thanks for being a ThinkUp member/', $merge_vars['insights']);
-        $this->assertNoPattern('/get an email offering insights like these/', $merge_vars['insights']);
+        //Assert no welcome message shows up
+        $this->assertNoPattern('/Thanks for joining ThinkUp/', $merge_vars['insights']);
+        $this->assertNoPattern('/get an email like this/', $merge_vars['insights']);
+        //Assert no welcome header text
+        $this->assertNoPattern('/Welcome to ThinkUp/', $merge_vars['insights']);
+        //Assert subject line is not welcoming
+        $this->assertNoPattern('/Welcome to ThinkUp! Here are your insights./', $decoded->subject);
 
         $this->debug($merge_vars['insights']);
         $this->debug($decoded->subject);
