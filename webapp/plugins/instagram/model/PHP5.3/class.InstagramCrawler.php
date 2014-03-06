@@ -107,7 +107,6 @@ class InstagramCrawler {
 
                 $user_vals["post_count"] = $details->getMediaCount();
                 $user_vals["follower_count"] = $details->getFollowersCount();
-
                 $user_vals["user_name"] = $details->getUserName();
                 $user_vals["full_name"] = $details->getFullName();
                 $user_vals["user_id"] = $details->getId();
@@ -132,16 +131,38 @@ class InstagramCrawler {
      * user's or pages archive of posts.
      */
     public function fetchPostsAndReplies() {
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('instagram');
+        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
         $id = $this->instance->network_user_id;
+        $option_dao = DAOFactory::getDAO('OptionDAO');
         $network = $this->instance->network;
-        // fetch user's friends
-        $this->storeFriends();
-
+        //Checks if last friends update is over 2 days ago and runs storeFriends if it is.
+        $friends_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $friends_last_updated_check = microtime(true) - 172800;
+        if($friends_last_updated == NULL) {
+            $this->storeFriends();
+            $option_dao->insertOption($namespace,'last_crawled_friends', microtime(true));
+        } elseif($friends_last_updated->option_value < $friends_last_updated_check) {
+            $this->storeFriends();
+            $option_dao->updateOptionByName($namespace,'last_crawled_friends', microtime(true));
+        }
+        
         $fetch_next_page = true;
         $current_page_number = 1;
+        $api_param = array();
+        if($this->instance->total_posts_in_system !=0) {
+            $last_crawl = $this->instance->crawler_last_run;
+            $crawl_less_week = date($last_crawl, strtotime("-1 week"));
+            $unix_less_week = strtotime($crawl_less_week);
+            $api_param = array('min_timestamp' => $unix_less_week ,'count' => 20);
+
+        } else {
+            $api_param = array('count' => 20);
+        }
 
         $this->logger->logUserInfo("About to request media",__METHOD__.','.__LINE__);
-        $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, array('count' => 20));
+        $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, $api_param);
         $this->logger->logUserInfo("Media requested",__METHOD__.','.__LINE__);
 
         //Cap crawl time for very busy pages with thousands of likes/comments
@@ -166,8 +187,8 @@ class InstagramCrawler {
                 $this->processPosts($posts, $network, $current_page_number);
 
                 if ($posts->getNext() != null) {
-                    $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token, array('count' => 20,
-                    'max_id' => $posts->getNext()));
+                    $api_param['max_id'] = $posts->getNext();
+                    $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token,$api_param);
                     $current_page_number++;
                 } else {
                     $fetch_next_page = false;
