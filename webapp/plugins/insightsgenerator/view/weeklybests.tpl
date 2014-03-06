@@ -1,2 +1,2 @@
 
-    {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data.posts}
+    {include file=$tpl_path|cat:"_posts.tpl" posts=$i->related_data.posts}
