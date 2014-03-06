@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/frequency.php
  *
- * Copyright (c) 2013 Gina Trapani
+ * Copyright (c) 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  *
  * LICENSE:
  *
@@ -26,8 +26,10 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Gina Trapani
+ * @copyright 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
+ * @author Anil Dash <anil[at]thinkup[dot]com>
+ * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
 class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
@@ -37,7 +39,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
         $milestones = array();
-        $randomizer = (time() % 10);
+        $randomizer = (TimeHelper::getTime() % 10);
 
         if (self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {

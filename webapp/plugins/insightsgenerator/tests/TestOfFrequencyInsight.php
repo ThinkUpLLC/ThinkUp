@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfFrequencyInsight.php
  *
- * Copyright (c) 2013 Gina Trapani
+ * Copyright (c) 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  *
  * LICENSE:
  *
@@ -25,8 +25,10 @@
  * Test for the FrequencyInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Gina Trapani
+ * @copyright 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Anil Dash <anil[at]thinkup[dot]com>
+ * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
@@ -46,6 +48,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
     }
 
     public function testFrequencyInsightNoPostsThisWeekTwitter() {
+        $insight_dao = new InsightMySQLDAO();
+
         // Get data ready that insight requires
         $posts = array();
         $instance = new Instance();
@@ -53,40 +57,41 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
-        // Assert that insight got inserted
-        $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        // print_r("\n".$randomizer."\n");
+        foreach (array(2, 5, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            // Assert that insight got inserted
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
 
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic didn\'t post anything new on Twitter in the past week.',
-            $result->headline);
-            $this->assertEqual('Sometimes we just don\'t have anything to say. Maybe let someone know you'
-                                . ' appreciate their work?', $result->text);
-        } elseif ($randomizer < 7) {
-            $this->assertEqual('Seems like @testeriffic was pretty quiet on Twitter this past week.',
-            $result->headline);
-            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
-            $result->text);
-        } else {
-            $this->assertEqual('@testeriffic didn\'t have any new tweets this week.',
-            $result->headline);
-            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
-            $result->text);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic didn\'t post anything new on Twitter in the past week.',
+                $result->headline);
+                $this->assertEqual('Sometimes we just don\'t have anything to say. Maybe let someone know you'
+                                    . ' appreciate their work?', $result->text);
+            } elseif ($modded_time < 7) {
+                $this->assertEqual('Seems like @testeriffic was pretty quiet on Twitter this past week.',
+                $result->headline);
+                $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+                $result->text);
+            } else {
+                $this->assertEqual('@testeriffic didn\'t have any new tweets this week.',
+                $result->headline);
+                $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+                $result->text);
+            }
         }
 
 
     }
 
     public function testFrequencyInsightNoPostsThisWeekFacebook() {
+        $insight_dao = new InsightMySQLDAO();
         // Get data ready that insight requires
         $posts = array();
         $instance = new Instance();
@@ -94,34 +99,34 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'Silent Bob';
         $instance->network = 'facebook';
         $insight_plugin = new FrequencyInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
-        // Assert that insight got inserted
-        $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 1, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        // print_r("\n".$randomizer."\n");
+        foreach (array(2, 5, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            // Assert that insight got inserted
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 1, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
 
-        if ($randomizer < 3) {
-            $this->assertEqual('Silent Bob didn\'t post anything new on Facebook in the past week.',
-            $result->headline);
-            $this->assertEqual('Nothing wrong with being quiet. If you want, you could ask your friends what ' .
-                'they\'ve read lately.', $result->text);
-        } elseif ($randomizer < 7) {
-            $this->assertEqual('Seems like Silent Bob was pretty quiet on Facebook this past week.',
-            $result->headline);
-            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
-            $result->text);
-        } else {
-            $this->assertEqual('Silent Bob didn\'t have any new status updates this week.',
-            $result->headline);
-            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
-            $result->text);
+            if ($modded_time < 3) {
+                $this->assertEqual('Silent Bob didn\'t post anything new on Facebook in the past week.',
+                $result->headline);
+                $this->assertEqual('Nothing wrong with being quiet. If you want, you could ask your friends what ' .
+                    'they\'ve read lately.', $result->text);
+            } elseif ($modded_time < 7) {
+                $this->assertEqual('Seems like Silent Bob was pretty quiet on Facebook this past week.',
+                $result->headline);
+                $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+                $result->text);
+            } else {
+                $this->assertEqual('Silent Bob didn\'t have any new status updates this week.',
+                $result->headline);
+                $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+                $result->text);
+            }
         }
 
 
@@ -135,23 +140,25 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
-            $this->assertNull($result->insight_text);
-        } else {
-            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
-            $this->assertNull($result->insight_text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
+                $this->assertNull($result->insight_text);
+            } else {
+                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
+                $this->assertNull($result->insight_text);
+            }
         }
 
     }
@@ -165,24 +172,26 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'Test User';
         $instance->network = 'facebook';
         $insight_plugin = new FrequencyInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 2, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('Test User posted <strong>5 times</strong> in the past week.', $result->headline);
-            $this->assertNull($result->insight_text);
-        } else {
-            $this->assertEqual('Test User had <strong>5 status updates</strong> over the past week.',
-                $result->headline);
-            $this->assertNull($result->insight_text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 2, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('Test User posted <strong>5 times</strong> in the past week.', $result->headline);
+                $this->assertNull($result->insight_text);
+            } else {
+                $this->assertEqual('Test User had <strong>5 status updates</strong> over the past week.',
+                    $result->headline);
+                $this->assertNull($result->insight_text);
+            }
         }
 
     }
@@ -200,23 +209,25 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
         'instance_id'=>10, 'value'=>19));
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
-        // Assert that week-over-week comparison is correct
-        $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
-            $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
-        } else {
-            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
-            $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            // Assert that week-over-week comparison is correct
+            $insight_dao = new InsightMySQLDAO();
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
+                $this->assertPattern('/14 fewer tweets than the prior week/',$result->text);
+            } else {
+                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
+                $this->assertPattern('/14 fewer tweets than the prior week/',$result->text);
+            }
         }
 
     }
@@ -234,23 +245,25 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
         'instance_id'=>10, 'value'=>3));
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
-            $this->assertPattern('/2 more tweets than the prior week/', $result->text);
-        } else {
-            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
-            $this->assertPattern('/2 more tweets than the prior week/', $result->text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
+                $this->assertPattern('/2 more tweets than the prior week/',$result->text);
+            } else {
+                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
+                $this->assertPattern('/2 more tweets than the prior week/',$result->text);
+            }
         }
 
     }
@@ -268,23 +281,25 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
         'instance_id'=>10, 'value'=>4));
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
-            $this->assertPattern('/1 more tweet than the prior week/', $result->text);
-        } else {
-            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
-            $this->assertPattern('/1 more tweet than the prior week/', $result->text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
+                $this->assertPattern('/1 more tweet than the prior week/', $result->text);
+            } else {
+                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
+                $this->assertPattern('/1 more tweet than the prior week/',$result->text);
+            }
         }
 
     }
@@ -302,25 +317,27 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
         'instance_id'=>10, 'value'=>5));
-        $insight_plugin->generateInsight($instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('frequency', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertNotNull($result->time_generated);
-        $randomizer = strtotime($result->time_generated) % 10;
-        if ($randomizer < 3) {
-            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
-            //assert no comparison to prior week
-            $this->assertNoPattern('/prior week/', $result->text);
-        } else {
-            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
-            //assert no comparison to prior week
-            $this->assertNoPattern('/prior week/', $result->text);
+        foreach (array(2, 9) as $modded_time) {
+            TimeHelper::setTime($modded_time);
+            $insight_plugin->generateInsight($instance, $posts, 3);
+            $today = date ('Y-m-d');
+            $result = $insight_dao->getInsight('frequency', 10, $today);
+            $this->debug(Utils::varDumpToString($result));
+            $this->assertNotNull($result);
+            $this->assertIsA($result, "Insight");
+            $this->assertNotNull($result->time_generated);
+            if ($modded_time < 3) {
+                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
+                //assert no comparison to prior week
+                $this->assertNoPattern('/prior week/', $result->text);
+            } else {
+                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
+                //assert no comparison to prior week
+                $this->assertNoPattern('/prior week/',$result->text);
+            }
         }
 
     }
