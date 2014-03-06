@@ -31,5 +31,5 @@ module.exports = (grunt) ->
     html = html.replace('</style>','{/literal}</style>')
     grunt.file.write 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl', html
   )
-  grunt.registerTask('default', ['premailer'])
+  grunt.registerTask('default', ['premailer', 'fixstyles'])
   grunt.registerTask('html_email', ['premailer', 'fixstyles'])
