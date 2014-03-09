@@ -176,7 +176,7 @@ class Installer {
      */
     public function checkDependency($libs = array()) {
         $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
-        'ZipArchive'=>false);
+        'ZipArchive'=>false, 'mbstring'=>false);
 
         // check curl
         if ( self::curlDependenciesMet() ) {
@@ -206,6 +206,10 @@ class Installer {
         if ( class_exists('ZipArchive')) {
             $ret['ZipArchive'] = true;
         }
+        // check mbString : Issue #1819
+        if ( extension_loaded('mbstring') ) {
+            $ret['mbstring'] = true;
+        }        
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {
             $ret = $libs;
