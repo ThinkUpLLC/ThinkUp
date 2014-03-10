@@ -297,7 +297,7 @@ class FacebookCrawler {
                       "favlike_count_cache"=>$likes_count,
                       "in_reply_to_user_id"=> isset($p->to->data[0]->id) ? $p->to->data[0]->id : '', // assume only one recipient
                       "in_reply_to_post_id"=>'',
-                      "source"=>"",
+                      "source"=>'',
                       'network'=>$network,
                       'is_protected'=>$is_protected,
                       'location'=>$profile->location
