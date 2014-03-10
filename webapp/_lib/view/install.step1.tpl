@@ -90,6 +90,14 @@
                         <th>ZipArchive Support</td>
                         <td>{if $libs.ZipArchive}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/class.ziparchive.php" target="_blank">ZipArchive PHP class</a> installed on your system.{/if}</td>
                     </tr>
+                    <tr class="{if $libs.xml}success{else}error{/if}">
+                        <th>XML Support</td>
+                        <td>{if $libs.xml}Confirmed{else}ThinkUp needs the <a href=http://www.php.net/manual/en/book.libxml.php" target="_blank">XML PHP class</a> installed on your system.{/if}</td>
+                    </tr>
+                    <tr class="{if $libs.mbstring}success{else}error{/if}">
+                        <th>MBString Support</td>
+                        <td>{if $libs.mbstring}Confirmed{else}ThinkUp needs the <a href="http://www.php.net/manual/en/mbstring.installation.php" target="_blank">MBstring PHP class</a> installed on your system.{/if}</td>
+                    </tr>
                 </tbody>
             </table>
 
