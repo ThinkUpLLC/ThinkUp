@@ -79,7 +79,19 @@ class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
         $_GET['d'] = date ('Y-m-d');
         $_GET['s'] = 'my_test_insight_hello_thinkup';
         $results = $controller->go();
-        //output this to an HTML file to see the insight fully rendered
-        $this->debug($results);
+        //Uncomment this out to see web view of insight
+        //$this->debug($results);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        //$this->debug($email_insight);
     }
 }
