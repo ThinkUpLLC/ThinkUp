@@ -333,6 +333,11 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         $_GET['s'] = 'olympics_2014';
         $results = $controller->go();
         //output this to an HTML file to see the insight fully rendered
-        $this->debug($results);
+        //$this->debug($results);
+
+        //Test email rendering
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //$this->debug($email_insight);
     }
 }
