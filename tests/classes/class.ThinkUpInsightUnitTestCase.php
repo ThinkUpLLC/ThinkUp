@@ -65,6 +65,22 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Get fully-rendered email markup for this insight.
+     * @param  Insight $insight Test insight to render in email HTML.
+     * @return str Insight email HTML with this insight
+     */
+    protected function getRenderedInsightInEmail(Insight $insight) {
+        $view = new ViewManager();
+        $view->caching=false;
+        $view->assign('insights', array($insight));
+        $view->assign('application_url', Utils::getApplicationURL());
+        $view->assign('header_text', 'Test header text');
+        $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
+        $view->assign('weekly_or_daily', 'Daily');
+        $email_insight = $view->fetch(THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/_email.insights_html.tpl');
+        return $email_insight;
+    }
+    /**
      * Get a variably long list of posts for insight tests.
      * @param str  $network
      * @param int  $min: Smallest number of posts returned
