@@ -36,7 +36,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/outreachpunchcard.php';
 
-class TestOfOutreachPunchcardInsight extends ThinkUpUnitTestCase {
+class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -130,6 +130,11 @@ class TestOfOutreachPunchcardInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies/', $result->headline);
         $this->assertPattern('/That\'s compared to 1 response/', $result->text);
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
+
+        //Test email rendering
+        $result->related_data = unserialize($result->related_data);
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        $this->debug($email_insight);
     }
 
     public function testOutreachPunchcardInsightNoResponse() {
