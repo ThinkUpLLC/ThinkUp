@@ -1104,7 +1104,7 @@ body.outlook p {
           <td class="expander"></td>
         </tr>
         </table>
-{if isset($insight->related_data.hero_image)}
+{if isset($insight->related_data.hero_image.url) && isset($insight->related_data.hero_image.alt_text) && isset($insight->related_data.hero_image.credit)}
       <table class="twelve columns insight-image">
         <tr>
           <td>
