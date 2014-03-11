@@ -150,15 +150,11 @@ setFixedPadding = ->
   $(".date-marker").css "top", (wt.navHeight + 14)
 
 timerUsername = null
-fakeUsernames = ['anildash', 'ginatrapani', 'capndesign', 'smarterware', 'anil', 'gina']
 checkUsername = ($el) ->
   if timerUsername then clearTimeout timerUsername
   timerUsername = setTimeout(->
     $group = $el.parent()
-    if $el.val() in fakeUsernames
-      $group.removeClass("form-group-ok").addClass("form-group-warning")
-      wt.appMessage.create "That username is not available", "warning"
-    else if $el.val().match(/^[\w]{3,15}$/gi)?.length isnt 1
+    if $el.val().match(/^[\w]{3,15}$/gi)?.length isnt 1
       $group.removeClass("form-group-ok").addClass("form-group-warning")
       wt.appMessage.create "Usernames must be 3-15 characters and contain only numbers and letters", "warning"
     else
