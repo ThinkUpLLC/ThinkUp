@@ -847,6 +847,11 @@ body.outlook p {
           font-size: 18px;
       }
 
+      .welcome-insight .insight-footer {
+        border-top: 0;
+        padding: 10px 10px 0;
+      }
+
       /* Insight colors */
 
       .insight-pea {
@@ -972,7 +977,8 @@ body.outlook p {
                         <table class="twelve columns" align="center">
                           <tr>
                               <td class="center">
-                                  <center>{$header_text}</center>
+                                  <center>{if isset($show_welcome_message) and
+                                  $show_welcome_message}Welcome to ThinkUp!{else}{$header_text}{/if}</center>
                             </td>
                             <td class="expander"></td>
                           </tr>
@@ -1019,7 +1025,7 @@ body.outlook p {
           <table class="container">
             <tr>
               <td>
-
+{if !(isset($show_welcome_message) and $show_welcome_message)}
 <table class="row">
   <tr>
     <td class="wrapper last">
@@ -1035,6 +1041,7 @@ body.outlook p {
     </td>
   </tr>
 </table>
+{/if}
 {if isset($show_welcome_message) and $show_welcome_message}
 <table class="row insight welcome-insight">
   <tr>
@@ -1043,7 +1050,7 @@ body.outlook p {
       <table class="twelve columns insight-header">
         <tr>
           <td class="text-pad">
-              <h6>Thanks for being a ThinkUp member!</h6>
+              <h6>Thanks for joining ThinkUp!</h6>
           </td>
           <td class="expander"></td>
         </tr>
@@ -1052,15 +1059,29 @@ body.outlook p {
       <table class="twelve columns insight-body">
         <tr>
             <td class="text-pad">
-              <p>You can vist your insight stream at <a href="{$application_url}">{$application_url}</a>.</p>
+              <p>You&rsquo;ll get an email like this each day with your insights.</p>
+              <ul>
+                <li>Add more networks or view your settings from your
+                  <a href="https://thinkup.com/join/user/membership.php">membership page</a>.</li>
+                <li>Have questions or feedback? Just email <a href="mailto:help@thinkup.com">help@thinkup.com</a> or
+                  reply to this message.</li>
+              </ul>
 
-              <p>Each day, you&rsquo;ll get an email offering insights like these, telling you how you&rsquo;re doing
-                on your social networks. You can add more networks or view your account settings from your
-                membership page. And just reply to this message if you have any questions or feedback, or need help.</p>
+              <p>Now, check out your insight stream at <a href="{$application_url}">{$application_url}</a>.
+                This is gonna be great.</p>
             </td>
             <td class="expander"></td>
         </tr>
       </table>
+        <table class="twelve columns">
+        <tr>
+          <td class="insight-footer">
+            <img src="https://www.thinkup.com/join/assets/img/chart-landscape.png" alt="Chart graphic">
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+
     </td>
   </tr>
 </table>

@@ -250,7 +250,11 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $parameters['weekly_or_daily'] = $daily_or_weekly;
 
             try {
-                $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly);
+                if (!isset($options['last_daily_email'])) {
+                    $subject_line = "Welcome to ThinkUp! Here are your insights.";
+                } else {
+                    $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly);
+                }
                 Mailer::mailHTMLViaMandrillTemplate($owner->email, $subject_line,
                 $options['mandrill_template']->option_value, $parameters);
                 return true;
@@ -278,14 +282,18 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * @return str
      */
     private function getEmailMessageHeaderText() {
-        $header_text_choices = array (
-            "Here's what's up!",
-            "Okay, check it out:",
-            "How are you doing?",
-            "You're getting better at this.",
-            "Here's what you've got:" );
-        $rand_index = rand(0, (sizeof($header_text_choices)-1));
-        return $header_text_choices[$rand_index];
+        if (isset($options['last_daily_email'])) {
+            return "Your ThinkUp insights";
+        } else {
+            $header_text_choices = array (
+                "Here's what's up!",
+                "Okay, check it out:",
+                "How are you doing?",
+                "You're getting better at this.",
+                "Here's what you've got:" );
+            $rand_index = rand(0, (sizeof($header_text_choices)-1));
+            return $header_text_choices[$rand_index];
+        }
     }
 
     /**

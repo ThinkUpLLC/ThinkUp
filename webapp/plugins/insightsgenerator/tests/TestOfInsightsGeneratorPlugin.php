@@ -627,8 +627,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
 
         //Assert welcome message shows up
-        $this->assertPattern('/Thanks for being a ThinkUp member/', $merge_vars['insights']);
-        $this->assertPattern('/get an email offering insights like these/', $merge_vars['insights']);
+        $this->assertPattern('/Thanks for joining ThinkUp/', $merge_vars['insights']);
+        $this->assertPattern('/get an email like this each day/', $merge_vars['insights']);
 
         $this->debug($merge_vars['insights']);
         $this->debug($decoded->subject);
