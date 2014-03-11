@@ -37,13 +37,20 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
         $milestones = array();
+        $randomizer = (time() % 10);
 
         if (self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
         $regenerate_existing_insight=false, $day_of_week=1)) {
             $count = sizeof($last_week_of_posts);
             if ($count > 1) {
-                $headline = "$this->username " . $this->terms->getVerb('posted') .
-                    " <strong>$count times</strong> in the past week";
+                $this->logger->logInfo("Last week had $count posts", __METHOD__.','.__LINE__);
+                if ($randomizer < 3) {
+                    $headline = "$this->username " . $this->terms->getVerb('posted') .
+                        " <strong>$count times</strong> in the past week.";
+                } else {
+                    $headline = "$this->username had <strong>$count " .
+                        $this->terms->getNoun('post', InsightTerms::PLURAL) . "</strong> over the past week.";
+                }
                 $milestones = array(
                     "per_row"    => 1,
                     "label_type" => "icon",
@@ -55,28 +62,74 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     ),
                 );
             } else {
-                $headline = "$this->username didn't post anything new on " . ucfirst($instance->network) .
-                    " in the past week";
+                $this->logger->logInfo("Last week had no posts", __METHOD__.','.__LINE__);
                 $button = array();
                 switch ($instance->network) {
                     case 'twitter':
-                        $insight_text = "Sometimes we just don't have anything to say. Maybe let someone know you"
-                            . " appreciate their work?";
-                        $button = array(
-                            "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
-                            "label"  => "Tweet a word of praise",
-                        );
+
+                        if ($randomizer < 3) {
+                            $headline = "$this->username didn't post anything new on " . ucfirst($instance->network)
+                                . " in the past week.";
+                            $insight_text = "Sometimes we just don't have anything to say. Maybe let someone know you"
+                                . " appreciate their work?";
+                            $button = array(
+                                "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
+                                "label"  => "Tweet a word of praise",
+                            );
+                        } elseif ($randomizer < 7) {
+                            $headline = "Seems like $this->username was pretty quiet on " . ucfirst($instance->network)
+                                . " this past week.";
+                            $insight_text = "Nothing wrong with waiting until there's something to say.";
+                            $button = array(
+                                "url" => "http://twitter.com/intent/tweet?text=Sorry I haven't tweeted in a while!",
+                                "label"  => "Or just say hi to everyone.",
+                            );
+                        } else {
+                            $headline = "$this->username didn't have any new " .
+                                $this->terms->getNoun('post', InsightTerms::PLURAL) . " this week.";
+                            $insight_text = "Nothing wrong with waiting until there's something to say.";
+                            $button = array(
+                                "url" => "http://twitter.com/intent/tweet?text=Hey there, friends.",
+                                "label"  => "Have anything to say now?",
+                            );
+                        }
+
                         break;
                     case 'facebook':
-                        $insight_text = "Nothing wrong with being quiet. If you would, you could ask your friends "
-                            ."what they've read lately.";
-                        $button = array(
-                            "url" => "http://www.facebook.com/sharer/sharer.php?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&t=Ready any good books lately?",
-                            "label"  => "Read any good books lately?",
-                        );
+
+                        if ($randomizer < 3) {
+                            $headline = "$this->username didn't post anything new on " . ucfirst($instance->network)
+                                . " in the past week.";
+                            $insight_text = "Nothing wrong with being quiet. If you want, you could ask your friends "
+                                ."what they've read lately.";
+                            $button = array(
+                                "url" => "http://www.facebook.com/sharer/sharer.php?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&t=Ready any good books lately?",
+                                "label"  => "Read any good books lately?",
+                            );
+
+                        } elseif ($randomizer < 7) {
+                            $headline = "Seems like $this->username was pretty quiet on " . ucfirst($instance->network)
+                                . " this past week.";
+                            $insight_text = "Nothing wrong with waiting until there's something to say.";
+                            $button = array(
+                                "url" => "http://www.facebook.com/sharer/sharer.php?t=Hey there, friends!",
+                                "label"  => "Or just say hi to your friends?",
+                            );
+                        } else {
+                            $headline = "$this->username didn't have any new " .
+                                $this->terms->getNoun('post', InsightTerms::PLURAL) . " this week.";
+                            $insight_text = "Nothing wrong with waiting until there's something to say.";
+                            $button = array(
+                                "url" => "http://www.facebook.com/sharer/sharer.php?t=ThinkUp told me to say hi.",
+                                "label"  => "Maybe you've got something to say now?",
+                            );
+                        }
+
+
                         break;
                     default:
-                        $insight_text = "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.";
+                        $insight_text = "Huh, nothing. Fill the emptiness inside you by donating to an underfunded " .
+                            "classroom.";
                         $button = array(
                             "url" => "http://www.donorschoose.org/",
                             "label"  => "Give to DonorsChoose.org",
@@ -95,26 +148,31 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 $last_monday_insight_baseline = $insight_baseline_dao->getInsightBaseline("frequency",
                 $instance->id, $last_monday);
                 if (isset($last_monday_insight_baseline) ) {
+                    $this->logger->logInfo("Baseline had $last_monday_insight_baseline->value posts",
+                        __METHOD__.','.__LINE__);
                     //compare it to this Monday's  number, and add a sentence comparing it.
-                    if ($last_monday_insight_baseline->value > ($count + 1) ) {
+                    if ($last_monday_insight_baseline->value > ($count) ) {
                         $difference = $last_monday_insight_baseline->value - $count;
-                        $insight_text = "That's $difference fewer " .
+                        if ($difference === 1) {
+                            $insight_text = "That's $difference fewer " .
+                            $this->terms->getNoun('post', InsightTerms::SINGULAR) . " than the prior week.";
+                        } else {
+                            $insight_text = "That's $difference fewer " .
                             $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
-                    } elseif ($last_monday_insight_baseline->value < ($count - 1) ) {
-                        $difference = $count - $last_monday_insight_baseline->value;
-                        $insight_text .= "That's $difference more " .
-                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
-                    } else {
-                        $headline .= ".";
-                    }
-                } else {
-                    $headline .= ".";
-                }
-            } else {
-                $headline .= ".";
-            }
-            $headline = (isset($headline))?$headline:'Post rate:';
+                        }
 
+                    } elseif ($last_monday_insight_baseline->value < ($count) ) {
+                        $difference = $count - $last_monday_insight_baseline->value;
+                        if ($difference === 1) {
+                            $insight_text = "That's $difference more " .
+                            $this->terms->getNoun('post', InsightTerms::SINGULAR) . " than the prior week.";
+                        } else {
+                            $insight_text = "That's $difference more " .
+                            $this->terms->getNoun('post', InsightTerms::PLURAL) . " than the prior week.";
+                        }
+                    }
+                }
+            }
             //Instantiate the Insight object
             $my_insight = new Insight();
 

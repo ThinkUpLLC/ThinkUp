@@ -45,7 +45,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testFrequencyInsightNoPostsThisWeek() {
+    public function testFrequencyInsightNoPostsThisWeekTwitter() {
         // Get data ready that insight requires
         $posts = array();
         $instance = new Instance();
@@ -62,8 +62,69 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic didn\'t post anything new on Twitter in the past week/',
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        // print_r("\n".$randomizer."\n");
+
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic didn\'t post anything new on Twitter in the past week.',
             $result->headline);
+            $this->assertEqual('Sometimes we just don\'t have anything to say. Maybe let someone know you'
+                                . ' appreciate their work?', $result->text);
+        } elseif ($randomizer < 7) {
+            $this->assertEqual('Seems like @testeriffic was pretty quiet on Twitter this past week.',
+            $result->headline);
+            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+            $result->text);
+        } else {
+            $this->assertEqual('@testeriffic didn\'t have any new tweets this week.',
+            $result->headline);
+            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+            $result->text);
+        }
+
+
+    }
+
+    public function testFrequencyInsightNoPostsThisWeekFacebook() {
+        // Get data ready that insight requires
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_username = 'Silent Bob';
+        $instance->network = 'facebook';
+        $insight_plugin = new FrequencyInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 1, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        // print_r("\n".$randomizer."\n");
+
+        if ($randomizer < 3) {
+            $this->assertEqual('Silent Bob didn\'t post anything new on Facebook in the past week.',
+            $result->headline);
+            $this->assertEqual('Nothing wrong with being quiet. If you want, you could ask your friends what ' .
+                'they\'ve read lately.', $result->text);
+        } elseif ($randomizer < 7) {
+            $this->assertEqual('Seems like Silent Bob was pretty quiet on Facebook this past week.',
+            $result->headline);
+            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+            $result->text);
+        } else {
+            $this->assertEqual('Silent Bob didn\'t have any new status updates this week.',
+            $result->headline);
+            $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
+            $result->text);
+        }
+
+
     }
 
     public function testFrequencyInsightNoPriorBaseline() {
@@ -83,8 +144,47 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
-        $this->assertPattern('/5 times/', $result->headline);
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
+            $this->assertNull($result->insight_text);
+        } else {
+            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
+            $this->assertNull($result->insight_text);
+        }
+
+    }
+
+
+    public function testFrequencyInsightNoPriorBaselineFacebook() {
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects();
+        $instance = new Instance();
+        $instance->id = 2;
+        $instance->network_username = 'Test User';
+        $instance->network = 'facebook';
+        $insight_plugin = new FrequencyInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 2, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('Test User posted <strong>5 times</strong> in the past week.', $result->headline);
+            $this->assertNull($result->insight_text);
+        } else {
+            $this->assertEqual('Test User had <strong>5 status updates</strong> over the past week.',
+                $result->headline);
+            $this->assertNull($result->insight_text);
+        }
+
     }
 
     public function testFrequencyInsightPriorGreaterBy2Baseline() {
@@ -109,9 +209,16 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
-        $this->assertPattern('/5 times/', $result->headline);
-        $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
+            $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
+        } else {
+            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
+            $this->assertPattern('/14 fewer tweets than the prior week/', $result->text);
+        }
+
     }
 
     public function testFrequencyInsightPriorSmallerBy2Baseline() {
@@ -136,9 +243,16 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic tweeted /', $result->headline);
-        $this->assertPattern('/5 times/', $result->headline);
-        $this->assertPattern('/2 more tweets than the prior week/', $result->text);
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
+            $this->assertPattern('/2 more tweets than the prior week/', $result->text);
+        } else {
+            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
+            $this->assertPattern('/2 more tweets than the prior week/', $result->text);
+        }
+
     }
 
     public function testFrequencyInsightPriorSmallerBy1Baseline() {
@@ -163,9 +277,16 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic tweeted /', $result->headline);
-        $this->assertPattern('/5 times/', $result->headline);
-        $this->assertNoPattern('/1 more times than the prior week/', $result->text);
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
+            $this->assertPattern('/1 more tweet than the prior week/', $result->text);
+        } else {
+            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
+            $this->assertPattern('/1 more tweet than the prior week/', $result->text);
+        }
+
     }
 
     public function testFrequencyInsightPriorEqualBaseline() {
@@ -190,10 +311,18 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic tweeted/', $result->headline);
-        $this->assertPattern('/5 times/', $result->headline);
-        //assert no comparison to prior week
-        $this->assertNoPattern('/prior week/', $result->text);
+        $this->assertNotNull($result->time_generated);
+        $randomizer = strtotime($result->time_generated) % 10;
+        if ($randomizer < 3) {
+            $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.', $result->headline);
+            //assert no comparison to prior week
+            $this->assertNoPattern('/prior week/', $result->text);
+        } else {
+            $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.', $result->headline);
+            //assert no comparison to prior week
+            $this->assertNoPattern('/prior week/', $result->text);
+        }
+
     }
 
     /**
