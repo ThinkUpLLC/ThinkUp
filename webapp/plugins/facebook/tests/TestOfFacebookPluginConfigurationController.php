@@ -247,7 +247,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         //with auth error
         $this->assertPattern('/facebook-auth-error"/', $output);
-
     }
 
     public function testConfiguredPluginWithOneFacebookUserNoLikedPagesNoAuthError() {
@@ -409,7 +408,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
         $this->assertNotNull($owner_instance); //Owner Instance created
         //OAuth token set
-        $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+        $this->assertEqual($owner_instance->oauth_access_token, 'swappedinlonglivetoken104567');
     }
 
     public function testConnectAccountSuccessfulNoServerName()  {

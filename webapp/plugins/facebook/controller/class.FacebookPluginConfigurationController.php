@@ -204,6 +204,17 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $access_token_response = FacebookGraphAPIAccessor::rawApiRequest($api_req, false);
                 parse_str($access_token_response);
                 if (isset($access_token)) {
+                    /**
+                     * Swap in short-term token for long-lived token as per
+                     * https://developers.facebook.com/docs/facebook-login/access-tokens/#extending
+                     */
+                    $api_req = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id='.
+                    $options['facebook_app_id']->option_value.'&client_secret='.
+                    $options['facebook_api_secret']->option_value. '&fb_exchange_token='.$access_token;
+
+                    $access_token_response = FacebookGraphAPIAccessor::rawApiRequest($api_req, false);
+                    parse_str($access_token_response);
+
                     $facebook->setAccessToken($access_token);
                     $fb_user_profile = $facebook->api('/me');
                     $fb_username = $fb_user_profile['name'];
