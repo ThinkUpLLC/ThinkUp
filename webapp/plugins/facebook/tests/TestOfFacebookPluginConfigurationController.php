@@ -450,7 +450,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
         $this->assertNotNull($owner_instance); //Owner Instance created
         //OAuth token set
-        $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+        $this->assertEqual($owner_instance->oauth_access_token, 'swappedinlonglivetoken104567');
     }
 
     public function testConnectAccountHTTPSSuccessful()  {
@@ -490,7 +490,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
         $this->assertNotNull($owner_instance); //Owner Instance created
         //OAuth token set
-        $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+        $this->assertEqual($owner_instance->oauth_access_token, 'swappedinlonglivetoken104567');
     }
 
     public function testConnectAccountInvalidCSRFToken()  {
@@ -566,7 +566,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
         $this->assertNotNull($owner_instance);
-        $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+        $this->assertEqual($owner_instance->oauth_access_token, 'swappedinlonglivetoken104567');
 
         //assert the auth error got reset to an empty string on successful reconnection
         $this->assertEqual($owner_instance->auth_error, '');
