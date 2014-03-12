@@ -259,7 +259,6 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $results = $controller->go();
 
         //do show owned private insight
-        print_r($results);
         $this->assertPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
     }
 
