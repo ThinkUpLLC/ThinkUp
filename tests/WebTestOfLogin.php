@@ -47,33 +47,12 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
         $cookie_dao = DAOFactory::getDao('CookieDAO');
         $cookie = $cookie_dao->generateForEmail($email);
 
-        $this->get($this->url.'/dashboard.php');
-        $this->assertNoText('Logged in as admin: '.$email);
+        $this->get($this->url.'/index.php');
+        $this->assertNoText($email);
         $this->getBrowser()->setCookie(Session::COOKIE_NAME, $cookie);
 
-        $this->get($this->url.'/dashboard.php');
-        $this->assertText('Logged in as admin: '.$email);
-    }
-
-    public function testLoginSuccessAndPrivateDashboard() {
-        $email = 'me@example.com';
-        $cookie_dao = DAOFactory::getDao('CookieDAO');
-        $deleted = $cookie_dao->deleteByEmail($email);
-        $this->assertFalse($deleted);
-
-        $this->get($this->url.'/session/login.php');
-        $this->setField('email', $email);
-        $this->setField('pwd', 'secretpassword');
-        $this->click("Log In");
-        $this->get($this->url.'/dashboard.php');
-
-        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
-        "ThinkUp");
-        $this->assertText('Logged in as admin: '.$email);
-
-        $cookie = $this->getBrowser()->getCurrentCookieValue(Session::COOKIE_NAME);
-        $deleted = $cookie_dao->deleteByEmail($email);
-        $this->assertTrue($deleted);
+        $this->get($this->url.'/index.php');
+        $this->assertText($email);
     }
 
     public function testLoginFailureAttemptThenSuccess() {
