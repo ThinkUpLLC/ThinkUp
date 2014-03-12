@@ -52,11 +52,10 @@ class WebTestOfLogout extends ThinkUpWebTestCase {
         $this->setField('email', $email);
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
-        $this->get($this->url.'/dashboard.php');
+        $this->get($this->url.'/index.php');
 
-        $this->assertTitle("thinkupapp's Dashboard | " . Config::getInstance()->getValue('app_title_prefix') .
-        "ThinkUp");
-        $this->assertText('Logged in as admin: '.$email);
+        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix') . "ThinkUp");
+        $this->assertText($email);
 
         $cookie = $this->getBrowser()->getCurrentCookieValue(Session::COOKIE_NAME);
 
@@ -64,8 +63,8 @@ class WebTestOfLogout extends ThinkUpWebTestCase {
         $cookie = $this->getBrowser()->getCurrentCookieValue(Session::COOKIE_NAME);
         $this->assertEqual('deleted',$cookie);
 
-        $this->get($this->url.'/dashboard.php');
-        $this->assertNoText('Logged in as admin: '.$email);
+        $this->get($this->url.'/index.php');
+        $this->assertNoText($email);
 
         $deleted = $cookie_dao->deleteByEmail($email);
         $this->assertFalse($deleted);
