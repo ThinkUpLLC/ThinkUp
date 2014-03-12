@@ -364,4 +364,32 @@ class InsightTerms {
             return round($number,2).'x';
         }
     }
+
+    public function getProcessedText($text, $extra_terms=array()) {
+        // Some base replacements in most strings
+        $terms = array(
+            '%posts' => $this->getNoun('post', InsightTerms::PLURAL),
+            '%posted' => $this->getVerb('posted'),
+            '%post' => $this->getNoun('post', InsightTerms::SINGULAR),
+            '%likes' => $this->getNoun('like', InsightTerms::PLURAL),
+            '%liked' => $this->getVerb('liked'),
+            '%like' => $this->getNoun('like', InsightTerms::SINGULAR),
+            '%reply' => $this->getNoun('reply', InsightTerms::SINGULAR),
+            '%replies' => $this->getNoun('reply', InsightTerms::PLURAL),
+            '%retweets' => $this->getNoun('retweet', InsightTerms::PLURAL),
+            '%retweet' => $this->getNoun('retweet', InsightTerms::SINGULAR),
+            '%followers' => $this->getNoun('follower', InsightTerms::PLURAL),
+            '%follower' => $this->getNoun('follower', InsightTerms::SINGULAR),
+            '%followed' => $this->getVerb('followed'),
+            '%shared' => $this->getVerb('shared'),
+        );
+        $search = array_keys($terms);
+        $replace = array_values($terms);
+        foreach ($extra_terms as $k => $v) {
+            $search[] = '%'.$k;
+            $replace[] = $v;
+        }
+        $text = str_replace($search, $replace, $text);
+        return $text;
+    }
 }

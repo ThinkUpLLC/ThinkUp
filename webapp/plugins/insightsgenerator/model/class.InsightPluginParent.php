@@ -172,6 +172,21 @@ class InsightPluginParent {
         return $run;
     }
 
+    public function pickAndProcessArray($options, $params = array()) {
+        $params['username'] = $this->username;
+        $choice = $options[TimeHelper::getTime() % count($options)];
+        foreach ($choice as $key => $val) {
+            $choice[$key] =  $this->terms->getProcessedText($choice[$key], $params);
+        }
+        return $choice;
+    }
+
+    public function pickAndProcessText($options, $params = array()) {
+        $params['username'] = $this->username;
+        $choice = $options[TimeHelper::getTime() % count($options)];
+        return $this->terms->getProcessedText($choice, $params);
+    }
+
     public function renderConfiguration($owner) {
     }
 
