@@ -91,7 +91,9 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
                 $logger->logUserError(get_class($e).": ".$e->getMessage(), __METHOD__.','.__LINE__);
                 //Don't send reauth email if it's app-level API rate limting
                 //https://developers.facebook.com/docs/reference/ads-api/api-rate-limiting/#applimit
-                if ( strpos($e->getMessage(), 'Application request limit reached') === false ) {
+                if ( strpos($e->getMessage(), 'Application request limit reached') === false
+                    //Don't send reauth email if Facebook is saying the app should try again later
+                    && strpos($e->getMessage(), 'Please retry your request later.') === false) {
                     //The access token is invalid, save in owner_instances table
                     $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
                     //Send email alert
@@ -107,8 +109,8 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
                         __METHOD__.','.__LINE__);
                     }
                 } else {
-                    $logger->logInfo('Facebook is rate-limiting this app. Do nothing now and try again later',
-                    __METHOD__.','.__LINE__);
+                    $logger->logInfo('Facebook API returned an error: '.$e->getMessage().
+                        ' Do nothing now and try again later', __METHOD__.','.__LINE__);
                 }
             } catch (Exception $e) {
                 $logger->logUserError(get_class($e).": ".$e->getMessage(), __METHOD__.','.__LINE__);
