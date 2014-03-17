@@ -30,7 +30,7 @@
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
 $LATEST_VERSION = '2.0-beta.10';
-$TOTAL_MIGRATION_COUNT = 74;
+$TOTAL_MIGRATION_COUNT = 294;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
