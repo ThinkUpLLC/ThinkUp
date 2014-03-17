@@ -310,7 +310,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             chdir(dirname(__FILE__) . '/../');
             //Extract into test_installer directory and set necessary folder permissions
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;cd webapp/test_installer/;'.
-            'rm -rf thinkup/_lib;rm -rf thinkup/plugins;unzip -o ' . $zipfile.';');
+            'rm -rf thinkup/_lib;unzip -o ' . $zipfile.';');
             $this->travisSleepTest();
             if (!file_exists($this->install_dir.'/thinkup/data/compiled_view')) {
                 if (!file_exists($this->install_dir.'/thinkup/data')) {
