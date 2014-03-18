@@ -32,6 +32,11 @@
  */
 class Facebook {
 
+    /**
+     * @var str type of user we want to mock
+     */
+    public static $user_type = "user";
+
     public function __construct($config) {
     }
 
@@ -61,7 +66,11 @@ class Facebook {
 
     public function api($str) {
         if ($str = '/me') {
-            return array('name'=>'Gina Trapani', 'id'=>'606837591');
+            if (Facebook::$user_type == 'business') {
+                return array('username'=>'businessaccount', 'id'=>'606837591');
+            } else {
+                return array('name'=>'Gina Trapani', 'id'=>'606837591');
+            }
         }
     }
 

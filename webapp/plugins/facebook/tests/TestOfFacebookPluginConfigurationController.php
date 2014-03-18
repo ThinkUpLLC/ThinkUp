@@ -411,6 +411,46 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner_instance->oauth_access_token, 'swappedinlonglivetoken104567');
     }
 
+    public function testConnectBusinessAccountUnsuccessful()  {
+        Facebook::$user_type = 'business';
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', '/');
+
+        $_SERVER['SERVER_NAME'] = "srvr";
+        SessionCache::put('facebook_auth_csrf', '123');
+        $_GET['p'] = 'facebook';
+        $_GET['code'] = '456';
+        $_GET['state'] = '123';
+
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNull($instance); //Instance doesn't exist
+
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual(count($msgs['user_add']), 0);
+        $this->debug(Utils::varDumpToString($msgs));
+
+        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->debug(Utils::varDumpToString($msgs));
+        $this->assertEqual($msgs['authorization'], 'Sorry, ThinkUp does not support business accounts.');
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNull($instance); //Instance not created
+        Facebook::$user_type = 'user';
+    }
+
     public function testConnectAccountSuccessfulNoServerName()  {
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
         $instance_dao = new InstanceMySQLDAO();

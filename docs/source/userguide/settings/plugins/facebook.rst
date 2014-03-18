@@ -39,6 +39,12 @@ To add a Facebook page, connect a regular Facebook user account to ThinkUp. Then
 existing page on Facebook.com.  Add it to ThinkUp from the pages dropdown in ThinkUp, which contains both pages you 
 manage and pages you "like."  Any pages you manage will be listed first.
 
+Note about business accounts
+----------------------------
+
+ThinkUp's Facebook plugin does not support business accounts. When you try to connect your Facebook business account
+to ThinkUp, you will see the error message "Sorry, ThinkUp does not support business accounts."
+
 Help! I don't see Facebook pages I manage in the dropdown list
 --------------------------------------------------------------
 

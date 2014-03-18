@@ -219,8 +219,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     $fb_user_profile = $facebook->api('/me');
                     $fb_username = $fb_user_profile['name'];
                     $fb_user_id = $fb_user_profile['id'];
-                    $this->addSuccessMessage($this->saveAccessToken($fb_user_id, $access_token, $fb_username),
-                    'authorization');
+
+                    if (empty($fb_username)) {
+                        $error = 'Sorry, ThinkUp does not support business accounts.';
+                        $this->addErrorMessage($error, 'authorization');
+                    } else {
+                        $this->addSuccessMessage($this->saveAccessToken($fb_user_id, $access_token, $fb_username),
+                            'authorization');
+                    }
                 } else {
                     $error_msg = "Problem authorizing your Facebook account! Please correct your plugin settings.";
                     $error_object = json_decode($access_token_response);
