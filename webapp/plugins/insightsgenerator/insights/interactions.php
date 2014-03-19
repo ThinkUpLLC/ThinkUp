@@ -180,7 +180,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 }
             }
 
-            if (isset($most_mentioned_user)) {
+            if (isset($most_mentioned_user) && $most_mentioned_user['value'] >= 2) {
                 $headline = $this->username." mentioned ".$most_mentioned_user['key']
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
                 $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * $talk_time;

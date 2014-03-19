@@ -80,6 +80,29 @@ class TestOfInteractionsInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/\@mentionOne <strong>twice<\/strong> last week./', $result->headline);
     }
 
+    public function testOneInteractionsNoInsight() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'post_text' => "Blah blah bleh @lonelyfriend blah",
+            'pub_date' => date("Y-m-d H:i:s",strtotime('-2 days')),
+        ));
+
+        $insight_plugin = new InteractionsInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // With only one mention, should be no insight
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight("interactions", 10, $today);
+        $this->assertNull($result);
+    }
+
     public function testInteractionsInsightRelatedData() {
         // Get data ready that insight requires
         $instance = new Instance();
