@@ -107,6 +107,56 @@
 
 {/foreach}
 
+{if count($insights) eq 1 and !isset($logged_in_user)}
+
+{assign var='tout_headline' value="Get more out of the time you spend online."}
+{if ($i->filename eq 'allaboutyou')}
+  {assign var='tout_headline' value="Find out how much you mention yourself online."}
+{elseif ($i->filename eq 'amplifier')}
+  {assign var='tout_headline' value="See which friends you're helping out on Twitter or Facebook."}
+{elseif ($i->filename eq 'biggestfan')}
+  {assign var='tout_headline' value="Find out who your biggest fans were each week on Facebook or Twitter."}
+{elseif ($i->filename eq 'bigreshare')}
+  {assign var='tout_headline' value="See which people have helped you reach new audiences on Twitter and Facebook."}
+{elseif ($i->filename eq 'favoriteflashbacks')}
+  {assign var='tout_headline' value="Remember what you found interesting online on this day in years past."}
+{elseif ($i->filename eq 'flashbacks')}
+  {assign var='tout_headline' value="Get a look back at what you were doing on Facebook or Twitter last year."}
+{elseif ($i->filename eq 'frequency')}
+  {assign var='tout_headline' value="Find out exactly how much time you're spending on Facebook and Twitter each week."}
+{elseif ($i->filename eq 'interactions')}
+  {assign var='tout_headline' value="Find out who you spent the most time talking to on Facebook and Twitter each week."}
+{elseif ($i->filename eq 'interestingfollowers')}
+  {assign var='tout_headline' value="Find out your most interesting new followers."}
+{elseif ($i->filename eq 'listmembership')}
+  {assign var='tout_headline' value="Find out exactly how people are describing you on Twitter and Facebook."}
+{elseif ($i->filename eq 'localfollowers')}
+  {assign var='tout_headline' value="See which new friends you've made in your neighborhood."}
+{elseif ($i->filename eq 'metweet')}
+  {assign var='tout_headline' value="Find out how often you're retweeting things people say about you."}
+{elseif ($i->filename eq 'olympics2014')}
+  {assign var='tout_headline' value="Find out how you've connected to the most important events online."}
+{elseif ($i->filename eq 'oscars2014')}
+  {assign var='tout_headline' value="You'll have proof of exactly how clever your tweets are."}
+{elseif ($i->filename eq 'outreachpunchcard')}
+  {assign var='tout_headline' value="Find out what time of day you get the biggest responses on Twitter and Facebook."}
+{/if}
+
+<div class="panel panel-default insight insight-default insight-hero insight-wide insight-message insight-tout">
+  <div class="panel-heading">
+    <h2 class="panel-title">{$tout_headline}</h2>
+  </div>
+  <div class="panel-desktop-right">
+    <div class="panel-body">
+      <div class="panel-body-inner">
+        <p><a href="{$signup_link}" class="btn btn-signup">Join ThinkUp now</a>
+        <span class="tout-more">or <a href="/">learn more</a>.</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
+
     </div><!-- end date-group -->
 
     <div class="stream-pagination-control">
