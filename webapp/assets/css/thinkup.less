@@ -751,6 +751,102 @@ body.app-message-visible {
     }
 }
 
+.insight-message {
+    .insight-colors(#2785d3, #fff, #2785d3);
+    border-bottom-color: #46bcff;
+
+    .panel-heading {
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    &.insight-wide {
+        .panel-heading {
+            padding-bottom: 0;
+        }
+
+        .panel-body {
+            padding: 0;
+        }
+    }
+}
+
+.insight-tout {
+    position: relative;
+    background: transparent;
+    box-shadow: 0 0 0;
+    min-height: 190px;
+
+    .panel-heading, .panel-desktop-right, .panel-body {
+        background: transparent;
+    }
+
+    &:after {
+        content: " ";
+        display: block;
+        background: url(https://www.thinkup.com/join/assets/img/crowd@2x.png) 0 0 no-repeat;
+        background-size: 105px 100px;
+        height: 100px;
+        width: 105px;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .panel-body {
+        margin-top: 15px;
+        font-size: (16/14em);
+        line-height: (34/16);
+        margin-right: 140px;
+
+        .btn-signup {
+            font-size: 1em;
+            position: relative;
+            top: -3px;
+            padding: 12px;
+            border-radius: 6px;
+            margin-right: 5px;
+            margin-top: 20px;
+        }
+
+        .tout-more {
+            display: block;
+            line-height: 1.25;
+            width: 156px;
+            text-align: center;
+        }
+    }
+
+    @media (min-width: 540px) {
+        min-height: 163px;
+
+        &:after {
+            top: 15%;
+            background-size: 125px 120px;
+            height: 120px;
+            width: 125px;
+        }
+
+        .panel-title {
+            padding-right: 150px;
+        }
+
+        .panel-body {
+            .btn-signup {
+                margin-top: 0;
+            }
+
+            .tout-more {
+                display: inline;
+                line-height: (34/16);
+                width: auto;
+                text-align: left;
+            }
+        }
+    }
+}
+
 .insight-pea {
     .insight-colors(@color-pea-dark, @color-pea, @color-pea-darker);
 }
@@ -1052,6 +1148,11 @@ body.app-message-visible {
         outline: 0;
         color: @gray-light;
     }
+}
+
+.btn-signup {
+    .btn-default;
+    background-color: #4A90E2;
 }
 
 @media (max-width: 420px) {
