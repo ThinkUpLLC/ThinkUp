@@ -1103,6 +1103,111 @@ body.app-message-visible.account .container {
   margin-bottom: 8px;
   font-weight: 600;
 }
+.insight-message {
+  background: #ffffff;
+  border-top-color: #2785d3;
+  border-bottom-color: #ffffff;
+  border-bottom-color: #46bcff;
+}
+.insight-message .panel-heading {
+  background: #ffffff;
+}
+.insight-message.insight-hero .panel-heading .panel-title {
+  color: #2785d3;
+}
+.insight-message .panel-body,
+.insight-message .panel-desktop-right,
+.insight-message .panel-footer {
+  background: #ffffff;
+}
+.insight-message .panel-footer {
+  border-top-color: #dbdbdb;
+}
+.insight-message .panel-footer .share-menu {
+  border-color: #dbdbdb;
+  background-color: #ffffff;
+}
+.insight-message .insight-color-text {
+  color: #ffffff;
+}
+.insight-message .insight-color-background {
+  background-color: #ffffff;
+}
+.insight-message .panel-heading a {
+  text-decoration: underline;
+}
+.insight-message.insight-wide .panel-heading {
+  padding-bottom: 0;
+}
+.insight-message.insight-wide .panel-body {
+  padding: 0;
+}
+.insight-tout {
+  position: relative;
+  background: transparent;
+  box-shadow: 0 0 0;
+  min-height: 190px;
+}
+.insight-tout .panel-heading,
+.insight-tout .panel-desktop-right,
+.insight-tout .panel-body {
+  background: transparent;
+}
+.insight-tout:after {
+  content: " ";
+  display: block;
+  background: url(https://www.thinkup.com/join/assets/img/crowd@2x.png) 0 0 no-repeat;
+  background-size: 105px 100px;
+  height: 100px;
+  width: 105px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.insight-tout .panel-body {
+  margin-top: 15px;
+  font-size: 1.14285714em;
+  line-height: 2.125;
+  margin-right: 140px;
+}
+.insight-tout .panel-body .btn-signup {
+  font-size: 1em;
+  position: relative;
+  top: -3px;
+  padding: 12px;
+  border-radius: 6px;
+  margin-right: 5px;
+  margin-top: 20px;
+}
+.insight-tout .panel-body .tout-more {
+  display: block;
+  line-height: 1.25;
+  width: 156px;
+  text-align: center;
+}
+@media (min-width: 540px) {
+  .insight-tout {
+    min-height: 163px;
+  }
+  .insight-tout:after {
+    top: 15%;
+    background-size: 125px 120px;
+    height: 120px;
+    width: 125px;
+  }
+  .insight-tout .panel-title {
+    padding-right: 150px;
+  }
+  .insight-tout .panel-body .btn-signup {
+    margin-top: 0;
+  }
+  .insight-tout .panel-body .tout-more {
+    display: inline;
+    line-height: 2.125;
+    width: auto;
+    text-align: left;
+  }
+}
 .insight-pea {
   background: #9dd767;
   border-top-color: #5fac1c;
@@ -1651,6 +1756,18 @@ body.app-message-visible.account .container {
 .btn-see-all:focus {
   outline: 0;
   color: #999999;
+}
+.btn-signup {
+  background: #125c9c;
+  border: 0;
+  color: #fff;
+  font-weight: 300;
+  background-color: #4A90E2;
+}
+.btn-signup:hover,
+.btn-signup:focus {
+  background: #1777ca;
+  color: #fff;
 }
 @media (max-width: 420px) {
   .insight .panel-body .panel-body-inner {
