@@ -105,7 +105,6 @@ class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
          * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
          * -t testHelloThinkUpInsight > webapp/insight_email.html
          */
-        $result->related_data = unserialize($result->related_data);
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         //$this->debug($email_insight);
