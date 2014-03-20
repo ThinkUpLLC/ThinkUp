@@ -242,6 +242,74 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/bringing the total to \<strong\>6 lists\<\/strong\>./', $result->text);
     }
 
+    public function testMultipleSameNamedLists() {
+        // Assert that insight doesn't exist
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNull($result);
+
+        $builders = self::buildData($total_lists = 1);
+        $builders[] = FixtureBuilder::build('groups', array('group_id'=>2, 'network'=>'twitter',
+        'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:'), 'group_name'=>'@listmaker/list0') );
+
+        $builders[] = FixtureBuilder::build('group_members', array('group_id'=>2, 'member_user_id'=>'13',
+        'network'=>'twitter', 'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:'). (10)));
+
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_user_id = '13';
+        $instance->network = 'twitter';
+        $instance->network_username = 'ev';
+        $stylestats_insight_plugin = new ListMembershipInsight();
+        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+
+        // Assert that insight got generated
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNotNull($result);
+        $this->assertEqual($result->slug, 'new_group_memberships');
+        $this->assertEqual($result->filename, 'listmembership');
+        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/@ev got added to a new list/', $result->text);
+    }
+
+    public function testMultipleSameNamedListsWithHistory() {
+        // Assert that insight doesn't exist
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNull($result);
+
+        $builders = self::buildData($total_lists = 2, $build_history = true, $history_ceiling = 5);
+        $builders[] = FixtureBuilder::build('groups', array('group_id'=>12, 'network'=>'twitter',
+        'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:'), 'group_name'=>'@listmaker/list0') );
+        $builders[] = FixtureBuilder::build('group_members', array('group_id'=>12, 'member_user_id'=>'13',
+        'network'=>'twitter', 'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:10')));
+        $builders[] = FixtureBuilder::build('groups', array('group_id'=>13, 'network'=>'twitter',
+        'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:'), 'group_name'=>'@listmaker/list1') );
+        $builders[] = FixtureBuilder::build('group_members', array('group_id'=>13, 'member_user_id'=>'13',
+        'network'=>'twitter', 'is_active'=>1, 'first_seen'=>date('Y-m-d H:i:11')));
+
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_user_id = '13';
+        $instance->network = 'twitter';
+        $instance->network_username = 'ev';
+        $stylestats_insight_plugin = new ListMembershipInsight();
+        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+
+        // Assert that insight got generated
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
+        $this->assertNotNull($result);
+        $this->assertEqual($result->slug, 'new_group_memberships');
+        $this->assertEqual($result->filename, 'listmembership');
+        $this->assertPattern('/Do &ldquo;list1&rdquo; and &ldquo;list0&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern('/@ev is on 2 new lists/', $result->text);
+        $this->assertPattern('/to <strong>7 lists/', $result->text);
+        $this->assertPattern('/>list1</', $result->text);
+        $this->assertPattern('/>list0</', $result->text);
+    }
+
     private function buildData($total_lists, $build_history=false, $history_ceiling=50) {
         $builders = array();
 
