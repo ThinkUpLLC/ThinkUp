@@ -143,6 +143,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
         $this->assertEqual($user->url, '');
         $this->assertTrue($user->is_protected);
+        $this->assertNotNull($user->joined);
     }
 
     public function testFetchPostsAndRepliesForProfile1() {
