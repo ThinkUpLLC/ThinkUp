@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/localfollowers.php';
 
-class TestOfLocalFollowersInsight extends ThinkUpUnitTestCase {
+class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -137,6 +137,8 @@ class TestOfLocalFollowersInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/<strong>1 person<\/strong> in San Francisco, CA followed \@testuser./',
             $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
+        $rendered = $this->getRenderedInsightInHTML($result);
+        $this->assertEqual(1, substr_count($rendered, 'avatar.jpg'));
     }
 
     public function testLocalFollowersInsightWithoutLocation() {
