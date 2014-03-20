@@ -33,84 +33,6 @@
 
 require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
-function secondsToTextTime($inputSeconds, $maxPlaces = 2) {
-
-    $secondsInAMinute = 60;
-    $secondsInAnHour  = 60 * $secondsInAMinute;
-    $secondsInADay    = 24 * $secondsInAnHour;
-
-    // extract days
-    $days = floor($inputSeconds / $secondsInADay);
-
-    // extract hours
-    $hourSeconds = $inputSeconds % $secondsInADay;
-    $hours = floor($hourSeconds / $secondsInAnHour);
-
-    // extract minutes
-    $minuteSeconds = $hourSeconds % $secondsInAnHour;
-    $minutes = floor($minuteSeconds / $secondsInAMinute);
-
-    // extract the remaining seconds
-    $remainingSeconds = $minuteSeconds % $secondsInAMinute;
-    $seconds = ceil($remainingSeconds);
-
-    // return the final array
-    $obj = array(
-        'd' => (int) $days,
-        'h' => (int) $hours,
-        'm' => (int) $minutes,
-        's' => (int) $seconds,
-    );
-
-    $places = 0;
-    $text = '';
-
-    $milestones = array(
-        "per_row"    => 2,
-        "label_type" => "text",
-        "items" => array(),
-    );
-
-    if ($obj["d"] && $places < $maxPlaces) {
-        $milestones["items"][] = array(
-            "number" => $obj["d"],
-            "label"  => "days",
-        );
-        $places++;
-    }
-    if ($obj["h"] && $places < $maxPlaces) {
-        $milestones["items"][] = array(
-            "number" => $obj["h"],
-            "label"  => "hours",
-        );
-
-        $places++;
-    }
-    if ($obj["m"] && $places < $maxPlaces) {
-        if ($obj["m"] > 1) {
-            $milestones["items"][] = array(
-                "number" => $obj["m"],
-                "label"  => "minutes",
-            );
-        } else {
-            $milestones["items"][] = array(
-                "number" => $obj["m"],
-                "label"  => "minute",
-            );
-        }
-        $places++;
-    }
-    if ($obj["s"] && $places < $maxPlaces) {
-        $milestones["items"][] = array(
-            "number" => $obj["s"],
-            "label"  => "seconds",
-        );
-        $places++;
-    }
-
-    return $milestones;
-}
-
 class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
@@ -185,7 +107,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
                 $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * $talk_time;
 
-                $milestones = secondsToTextTime($conversation_seconds);
+                $milestones = $this->convertSecondsToMilestone($conversation_seconds);
                 $insight_text = 'Time spent in good conversation is time well spent.';
                 // $header_image = $users_mentioned[0][user]->avatar;
                 $header_image = $users_mentioned[0]["user"]->avatar;
@@ -211,6 +133,90 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+
+    /**
+     * Take some seconds and make a pretty milestone.
+     * @param int $total_seconds How many seconds to covnert
+     * @param int $total_drill_down How many units to drill down from days
+     * @return array
+     */
+    protected function convertSecondsToMilestone($total_seconds, $total_drill_down = 2) {
+        $secondsInAMinute = 60;
+        $secondsInAnHour  = 60 * $secondsInAMinute;
+        $secondsInADay    = 24 * $secondsInAnHour;
+
+        // extract days
+        $days = floor($total_seconds / $secondsInADay);
+
+        // extract hours
+        $hourSeconds = $total_seconds % $secondsInADay;
+        $hours = floor($hourSeconds / $secondsInAnHour);
+
+        // extract minutes
+        $minuteSeconds = $hourSeconds % $secondsInAnHour;
+        $minutes = floor($minuteSeconds / $secondsInAMinute);
+
+        // extract the remaining seconds
+        $remainingSeconds = $minuteSeconds % $secondsInAMinute;
+        $seconds = ceil($remainingSeconds);
+
+        // return the final array
+        $obj = array(
+            'd' => (int) $days,
+            'h' => (int) $hours,
+            'm' => (int) $minutes,
+            's' => (int) $seconds,
+        );
+
+        $places = 0;
+        $text = '';
+
+        $milestones = array(
+            "per_row"    => 2,
+            "label_type" => "text",
+            "items" => array(),
+        );
+
+        if ($obj["d"] && $places < $total_drill_down) {
+            $milestones["items"][] = array(
+                "number" => $obj["d"],
+                "label"  => "days",
+            );
+            $places++;
+        }
+        if ($obj["h"] && $places < $total_drill_down) {
+            $milestones["items"][] = array(
+                "number" => $obj["h"],
+                "label"  => "hours",
+            );
+
+            $places++;
+        }
+        if ($obj["m"] && $places < $total_drill_down) {
+            if ($obj["m"] > 1) {
+                $milestones["items"][] = array(
+                    "number" => $obj["m"],
+                    "label"  => "minutes",
+                );
+            } else {
+                $milestones["items"][] = array(
+                    "number" => $obj["m"],
+                    "label"  => "minute",
+                );
+            }
+            $places++;
+        }
+        if ($obj["s"] && $places < $total_drill_down) {
+            $milestones["items"][] = array(
+                "number" => $obj["s"],
+                "label"  => "seconds",
+            );
+            $places++;
+        }
+
+        return $milestones;
     }
 }
 
