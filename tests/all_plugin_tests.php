@@ -103,6 +103,7 @@ $plugin_tests->add(new TestOfBiggestFansInsight());
 $plugin_tests->add(new TestOfFlashbackInsight());
 $plugin_tests->add(new TestOfRetweetSpikeInsight());
 $plugin_tests->add(new TestOfWeeklyGraphInsight());
+$plugin_tests->add(new TestOfInterestingFollowersInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
