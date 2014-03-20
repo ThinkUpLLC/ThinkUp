@@ -43,6 +43,88 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         parent::tearDown();
     }
 
+    public function testLeastLikely() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 9654000768;
+        $instance->network_username = 'testuser';
+        $instance->network = 'twitter';
+
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Followers
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
+        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000769',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Initialize and run the insight
+        $insight_plugin = new InterestingFollowersInsight();
+        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('least_likely_followers', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Hey, did you see that Popular Gal followed @testuser?', $result->headline);
+        $related = unserialize($result->related_data);
+        $this->assertIsA($related['people'], 'Array');
+        $this->assertEqual($related['people'][0]->username,'popular1');
+    }
+
+    public function testLeastLikelyNoName() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 9654000768;
+        $instance->network_username = 'testuser';
+        $instance->network = 'twitter';
+
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Followers
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
+        'full_name'=>null,'avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000769',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Initialize and run the insight
+        $insight_plugin = new InterestingFollowersInsight();
+        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('least_likely_followers', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Hey, did you see that @popular1 followed @testuser?', $result->headline);
+        $related = unserialize($result->related_data);
+        $this->assertIsA($related['people'], 'Array');
+        $this->assertEqual($related['people'][0]->username,'popular1');
+        $rendered = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/<div class="user">.*popular1/ms', $rendered);
+    }
+
     public function testNewVerifiedFollower() {
         // Get data ready that insight requires
         $instance = new Instance();
@@ -84,6 +166,5 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/avatar.jpg/', $result->header_image);
         $rendered = $this->getRenderedInsightInHTML($result);
         $this->assertEqual(1, substr_count($rendered, 'avatar.jpg'));
-        file_put_contents('/var/www/html/insight.html', $rendered);
     }
 }

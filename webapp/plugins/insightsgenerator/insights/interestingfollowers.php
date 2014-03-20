@@ -39,7 +39,6 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         $my_insight = new Insight();
         $my_insight->instance_id = $instance->id;
-        $my_insight->slug = 'my_test_insight_hello_thinkup'; //slug to label this insight's content
         $my_insight->date = $this->insight_date; //date of the data this insight applies to
 
         $my_insight->text = '';
@@ -48,7 +47,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
         // Least likely followers based on follower-to-followee ratio
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
-        $instance->network, 0, 3);
+            $instance->network, 0, 3);
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
@@ -58,8 +57,9 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
             } else {
-                $my_insight->headline = "Hey, did you see that " .
-                    $least_likely_followers[0]->full_name . " followed $this->username?";
+                $follower = $least_likely_followers[0];
+                $name = $this->getFollowerName($follower);
+                $my_insight->headline = "Hey, did you see that " .$name . " followed $this->username?";
                 $my_insight->header_image = $verified_followers[0]->avatar;
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
@@ -79,9 +79,10 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
             } else {
+                $follower = $verified_followers[0];
+                $name = $this->getFollowerName($follower);
                 $my_insight->slug = 'verified_followers';
-                $my_insight->headline = 'Wow: <strong>'.$verified_followers[0]->full_name.
-                    "</strong>, a verified user, followed $this->username.";
+                $my_insight->headline = 'Wow: <strong>'.$name."</strong>, a verified user, followed $this->username.";
                 $my_insight->header_image = $verified_followers[0]->avatar;
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
@@ -92,6 +93,24 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+    /**
+     * Return a string representing a follower's name.
+     * @param User $follower Follower to process
+     * @return str Name
+     */
+    public function getFollowerName($follower) {
+        if (!empty($follower->full_name)) {
+            return $follower->full_name;
+        }
+
+        $name = $follower->username;
+        if ($follower->network == 'twitter') {
+            $name = '@'. $name;
+        }
+
+        return $name;
     }
 }
 
