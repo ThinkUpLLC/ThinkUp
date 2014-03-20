@@ -43,7 +43,19 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
             $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
             $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
             $this->insight_date);
+
             if (sizeof($new_groups) > 0 ) { //if not null, store insight
+                // Clean up non-unique names, which just looks weird/bad
+                $unique_new_groups = array();
+                $seen_groups = array();
+                foreach ($new_groups as $group) {
+                    $group->setMetadata();
+                    if (!in_array($group->keyword, $seen_groups)) {
+                        $seen_groups[] = $group->keyword;
+                        $unique_new_groups[] = $group;
+                    }
+                }
+                $new_groups = $unique_new_groups;
                 $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
                 $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
                 $instance->network, 'DAY', 15, null, 'group_memberships');
@@ -67,7 +79,6 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                                 $headline .= "and ";
                             }
                             if ($group_number < 4 ) {
-                                $group->setMetadata();
                                 $headline .= "&ldquo;" . str_replace('-', ' ', $group->keyword) . "&rdquo;";
                                 $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
                             }
