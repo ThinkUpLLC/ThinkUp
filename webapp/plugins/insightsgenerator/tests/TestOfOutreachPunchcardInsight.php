@@ -132,7 +132,6 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
 
         //Test email rendering
-        $result->related_data = unserialize($result->related_data);
         $email_insight = $this->getRenderedInsightInEmail($result);
         $this->debug($email_insight);
     }
