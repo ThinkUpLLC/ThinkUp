@@ -336,7 +336,6 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
         //$this->debug($results);
 
         //Test email rendering
-        $result->related_data = unserialize($result->related_data);
         $email_insight = $this->getRenderedInsightInEmail($result);
         //$this->debug($email_insight);
     }
