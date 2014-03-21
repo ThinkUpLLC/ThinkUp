@@ -33,6 +33,10 @@ In order for the tests to pass, you must:
 -  Have a local installation of ThinkUp using your test database
 -  Have a working internet connection
 
+
+Running Tests
+-------------
+
 To run a particular test suite, like the UserDAO suite, in the ThinkUp
 source code root folder, use this command:
 
