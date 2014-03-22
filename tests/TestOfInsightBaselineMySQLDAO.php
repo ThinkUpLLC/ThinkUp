@@ -46,6 +46,18 @@ class TestOfInsightBaselineMySQLDAO extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testDoesInsightBaselineExistBefore() {
+        $dao = new InsightBaselineMySQLDAO();
+        $result = $dao->doesInsightBaselineExistBefore("avg_replies_per_week", 1, '2013-06-01');
+        $this->assertTrue($result);
+
+        $result = $dao->doesInsightBaselineExistBefore("avg_replies_per_week", 1, '2011-06-01');
+        $this->assertFalse($result);
+
+        $result = $dao->doesInsightBaselineExistBefore("some_fake_thing", 1, '2014-06-01');
+        $this->assertFalse($result);
+    }
+
     public function testDoesInsightBaselineExist() {
         $dao = new InsightBaselineMySQLDAO();
         $result = $dao->doesInsightBaselineExist("avg_replies_per_week", 1);
