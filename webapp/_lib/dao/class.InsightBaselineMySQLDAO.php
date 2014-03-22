@@ -108,4 +108,24 @@ class InsightBaselineMySQLDAO  extends PDODAO implements InsightBaselineDAO {
         $result = $this->getDataRowsAsObjects($ps, "InsightBaseline");
         return (sizeof($result) > 0);
     }
+
+    /**
+     * Determine if a given insight baseline was created for a particula instance, before a specified date
+     * @param str $slug The baseline slug name
+     * @param int $instance_id The instance
+     * @return bool Does a baseline exist?
+     */
+    public function doesInsightBaselineExistBefore($slug, $instance_id, $before_date) {
+        $q = "SELECT count(*) as c FROM #prefix#insight_baselines WHERE ";
+        $q .= "slug=:slug AND instance_id=:instance_id AND date < :before_date";
+        $vars = array(
+            ':slug'=>$slug,
+            ':instance_id'=>$instance_id,
+            ':before_date'=>$before_date
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        return $result['c'] > 0;
+    }
 }
