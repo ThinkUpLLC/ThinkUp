@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfFaveLikeSpikeInsight.php
+ * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfRetweetSpikeInsight.php
  *
  * Copyright (c) 2013 Gina Trapani
  *
@@ -20,9 +20,9 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Test of Fave Like Spike Insight
+ * Test of Retweet Spike Insight
  *
- * Test for FaveLikeSpikeInsight class.
+ * Test for RetweetSpikeInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2013 Gina Trapani
@@ -39,14 +39,238 @@ class TestOfRetweetSpikeInsight extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
+
+        $this->instance = new Instance();
+        $this->instance->id = 10;
+        $this->instance->network_username = 'buffy';
+        $this->instance->network = 'twitter';
+
+        $this->builders[] = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
+            'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>date('Y-m-d'),
+            'related_data'=>serialize('sample hot posts data') ));
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
     public function testConstructor() {
         $retweetspike_insight_plugin = new RetweetSpikeInsight();
         $this->assertIsA($retweetspike_insight_plugin, 'RetweetSpikeInsight' );
+    }
+
+    public function testUnpopularPost() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 1,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_high_7_day_1', 10, $today);
+        $this->assertNull($result);
+    }
+
+    public function test7dayAverage() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 10, 'favlike_count_cache' => 10,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual("<strong>10 people</strong> thought this tweet was worth retweeting.", $result->headline);
+        $this->assertEqual("That's more than <strong>5x</strong> @buffy's average over the last 7 days.",$result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+
+    }
+
+    public function test7dayHigh() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, 2, $today);
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_7_days', $this->instance->id, 2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 10, 'favlike_count_cache' => 10,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNull($result);
+
+        $result = $insight_dao->getInsight('retweet_high_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual("<strong>10 people</strong> retweeted @buffy's tweet.", $result->headline);
+        $this->assertEqual("That's a new 7-day record.", $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+    }
+
+    public function test30dayAverage() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_30_days', $this->instance->id, $avg=2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 10, 'favlike_count_cache' => 10,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNull($result);
+
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (31*24*60*60)));
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('This tweet got retweeted by 10 people!', $result->headline);
+        $this->assertEqual("@buffy got more than <strong>5x</strong> the 30-day average with this tweet.",
+            $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+
+    }
+
+    public function test30daySpike() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_30_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_30_days', $this->instance->id, $avg=2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 10, 'favlike_count_cache' => 10,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_30_day_1', 10, $today);
+        $this->assertNull($result);
+
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (31*24*60*60)));
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        // Also, the high supersedes the average
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_30_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual("This is the most one of @buffy's tweets has been retweeted in the past month!",
+            $result->headline);
+        $this->assertEqual("That's a new 30-day record.", $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+    }
+
+    public function test365dayHigh() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('avg_retweet_count_last_30_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_30_days', $this->instance->id, $avg=2, $today);
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $this->instance->id, $avg=2, $today);
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 10, 'favlike_count_cache' => 10,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        ));
+        $insight_plugin = new RetweetSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_365_day_1', 10, $today);
+        $this->assertNull($result);
+
+        $baseline_dao->insertInsightBaseline('high_retweet_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (366*24*60*60)));
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_30_day_1', 10, $today);
+        $this->assertNull($result);
+        $result = $insight_dao->getInsight('retweet_high_365_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual("<strong>10 people</strong> retweeted @buffy's post.", $result->headline);
+        $this->assertEqual("That's a new 365-day record!", $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
     }
 }

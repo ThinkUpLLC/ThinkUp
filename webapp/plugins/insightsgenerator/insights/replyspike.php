@@ -42,41 +42,51 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
         $insight_text = '';
         $insight_slug = '';
 
-        $simplified_post_date = "";
+        // We test for the presence of the high_reply_count_last_365_days since it's most likely to exist.
+        $do365 = $insight_baseline_dao->doesInsightBaselineExistBefore('high_reply_count_last_365_days', $instance->id,
+            date('Y-m-d', time() - (365*24*60*60)));
 
+        // We can skip this query if d0365 is already true.
+        $do30 = $do365 || $insight_baseline_dao->doesInsightBaselineExistBefore( 'high_reply_count_last_365_days',
+           $instance->id,  date('Y-m-d', time() - (30*24*60*60)));
+
+        $post_date = "";
         foreach ($last_week_of_posts as $post) {
             if ($post->reply_count_cache > 2) { // Only show insight for more than 2 replies
                 // First get spike/high 7/30/365 day baselines
-                if ($simplified_post_date != date('Y-m-d', strtotime($post->pub_date))) {
-                    $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+                if ($post_date != date('Y-m-d', strtotime($post->pub_date))) {
+                    $post_date = date('Y-m-d', strtotime($post->pub_date));
 
                     $average_reply_count_7_days =
-                    $insight_baseline_dao->getInsightBaseline('avg_reply_count_last_7_days', $instance->id,
-                    $simplified_post_date);
+                        $insight_baseline_dao->getInsightBaseline('avg_reply_count_last_7_days', $instance->id,
+                            $post_date);
 
-                    $average_reply_count_30_days =
-                    $insight_baseline_dao->getInsightBaseline('avg_reply_count_last_30_days', $instance->id,
-                    $simplified_post_date);
 
                     $high_reply_count_7_days =
-                    $insight_baseline_dao->getInsightBaseline('high_reply_count_last_7_days', $instance->id,
-                    $simplified_post_date);
+                        $insight_baseline_dao->getInsightBaseline('high_reply_count_last_7_days', $instance->id,
+                            $post_date);
 
-                    $high_reply_count_30_days =
-                    $insight_baseline_dao->getInsightBaseline('high_reply_count_last_30_days', $instance->id,
-                    $simplified_post_date);
+                    if ($do30) {
+                        $high_reply_count_30_days =
+                            $insight_baseline_dao->getInsightBaseline('high_reply_count_last_30_days', $instance->id,
+                                $post_date);
+                        $average_reply_count_30_days =
+                            $insight_baseline_dao->getInsightBaseline('avg_reply_count_last_30_days', $instance->id,
+                                $post_date);
+                    }
 
-                    $high_reply_count_365_days =
-                    $insight_baseline_dao->getInsightBaseline('high_reply_count_last_365_days', $instance->id,
-                    $simplified_post_date);
+                    if ($do365) {
+                        $high_reply_count_365_days =
+                            $insight_baseline_dao->getInsightBaseline('high_reply_count_last_365_days', $instance->id,
+                                $post_date);
+                    }
                 }
                 // Next compare post reply counts to baselines and store insights where there's a spike or high
-                if (isset($high_reply_count_365_days->value)
-                && $post->reply_count_cache >= $high_reply_count_365_days->value
-                && isset($it_is_not_launch_day)) {
+                if (isset($high_reply_count_365_days->value) && $do365
+                    && $post->reply_count_cache >= $high_reply_count_365_days->value) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                    $instance->id, $simplified_post_date);
+                        $instance->id, $post_date);
                     if (isset($hot_posts_data)) {
                         $insight_slug = 'reply_high_365_day_'.$post->id;
                         $headline = "That ".$this->terms->getNoun('post'). " got <strong>" .
@@ -88,21 +98,16 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $emphasis = Insight::EMPHASIS_HIGH;
                         $my_insight_posts = array($post, $hot_posts_data);
 
-                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id, $post_date);
                     }
-                } elseif (isset($high_reply_count_30_days->value)
-                && $post->reply_count_cache >= $high_reply_count_30_days->value
-                && isset($it_is_not_launch_day)) {
+                } elseif (isset($high_reply_count_30_days->value) && $do30
+                    && $post->reply_count_cache >= $high_reply_count_30_days->value) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                    $instance->id, $simplified_post_date);
+                    $instance->id, $post_date);
 
                     if (isset($hot_posts_data)) {
                         $insight_slug = 'reply_high_30_day_'.$post->id;
@@ -116,18 +121,15 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $emphasis = Insight::EMPHASIS_HIGH;
                         $my_insight_posts = array($post, $hot_posts_data);
 
-                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id, $post_date);
                     }
                 } elseif (isset($high_reply_count_7_days->value)
-                && $post->reply_count_cache >= $high_reply_count_7_days->value) {
+                    && $post->reply_count_cache >= $high_reply_count_7_days->value) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                    $instance->id, $simplified_post_date);
+                    $instance->id, $post_date);
 
                     if (isset($hot_posts_data)) {
                         $insight_slug = 'reply_high_7_day_'.$post->id;
@@ -137,18 +139,15 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $emphasis = Insight::EMPHASIS_HIGH;
                         $my_insight_posts = array($post, $hot_posts_data);
 
-                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id, $post_date);
                     }
-                } elseif (isset($average_reply_count_30_days->value)
-                && $post->reply_count_cache > ($average_reply_count_30_days->value*2)) {
+                } elseif (isset($average_reply_count_30_days->value) && $do30
+                    && $post->reply_count_cache > ($average_reply_count_30_days->value*2)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                    $instance->id, $simplified_post_date);
+                    $instance->id, $post_date);
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_30_days->value);
@@ -160,18 +159,15 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $emphasis = Insight::EMPHASIS_LOW;
                         $my_insight_posts = array($post, $hot_posts_data);
 
-                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_7_day_'.$post->id, $instance->id, $post_date);
                     }
                 } elseif (isset($average_reply_count_7_days->value)
-                && $post->reply_count_cache > ($average_reply_count_7_days->value*2)) {
+                    && $post->reply_count_cache > ($average_reply_count_7_days->value*2)) {
 
                     $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                    $instance->id, $simplified_post_date);
+                    $instance->id, $post_date);
 
                     if (isset($hot_posts_data)) {
                         $multiplier = floor($post->reply_count_cache/$average_reply_count_7_days->value);
@@ -183,12 +179,9 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                         $emphasis = Insight::EMPHASIS_LOW;
                         $my_insight_posts = array($post, $hot_posts_data);
 
-                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
-                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id,
-                        $simplified_post_date);
+                        $this->insight_dao->deleteInsight('reply_high_30_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_high_7_day_'.$post->id, $instance->id, $post_date);
+                        $this->insight_dao->deleteInsight('reply_spike_30_day_'.$post->id, $instance->id, $post_date);
                     }
                 }
 
@@ -198,7 +191,7 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
                     //REQUIRED: Set the insight's required attributes
                     $my_insight->instance_id = $instance->id;
                     $my_insight->slug = $insight_slug; //slug to label this insight's content
-                    $my_insight->date = $simplified_post_date; //date of the data this insight applies to
+                    $my_insight->date = $post_date; //date of the data this insight applies to
                     $my_insight->headline = $headline; // or just set a string like 'Ohai';
                     $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                     $my_insight->header_image = '';

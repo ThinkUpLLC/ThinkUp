@@ -39,6 +39,8 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
 
         $this->assertNotNull($terms);
         $this->assertEqual($text, "Two of your followers favorited your tweet");
+        $this->assertEqual($terms->getVerb('shared'), 'retweeted');
+        $this->assertEqual($terms->getVerb('sharing'), 'retweeting');
     }
 
     public function testInsightTermsForGooglePlus() {
@@ -50,6 +52,8 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
 
         $this->assertNotNull($terms);
         $this->assertEqual($text, "Two of your friends +1'd your post");
+        $this->assertEqual($terms->getVerb('shared'), 'reshared');
+        $this->assertEqual($terms->getVerb('sharing'), 'sharing');
     }
 
     public function testInsightTermsForFacebook() {

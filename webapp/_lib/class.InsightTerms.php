@@ -105,6 +105,10 @@ class InsightTerms {
                 return self::getPastTenseVerbToShare($this->network);
                 break;
 
+            case 'sharing':
+                return self::getPresentTenseVerbToShare($this->network);
+                break;
+
             default:
                 return null;
                 break;
@@ -293,6 +297,23 @@ class InsightTerms {
 
             default:
                 return 'reshared';
+                break;
+        }
+    }
+
+    /**
+     * Get the localized verb for the action 'sharing'
+     * @param str $network network whose localization has to be followed
+     * @return str localized verb for the action 'sharing'
+     */
+    private function getPresentTenseVerbToShare($network) {
+        switch ($network) {
+            case 'twitter':
+                return 'retweeting';
+                break;
+
+            default:
+                return 'sharing';
                 break;
         }
     }
