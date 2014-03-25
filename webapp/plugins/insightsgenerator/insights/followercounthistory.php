@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/followercounthistory.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  */
 
@@ -36,59 +36,91 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
     public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $filename = basename(__FILE__, ".php");
-        $insight_text = '';
 
-        // Follower count history milestone
-        $insight_date = new DateTime();
-        $insight_day_of_week = (int) $insight_date->format('w');
-        $insight_day_of_month = (int) $insight_date->format('j');
-
-        if ($insight_day_of_month == 1) { //it's the first day of the month
+        $did_monthly = false;
+        if ($this->shouldGenerateMonthlyInsight('follower_count_history_by_month_milestone', $instance)) {
             $count_dao = DAOFactory::getDAO('CountHistoryDAO');
-            //by month
             $follower_count_history_by_month = $count_dao->getHistory($instance->network_user_id,
-            $instance->network, 'MONTH', 15, $this->insight_date);
-            $headline = "<strong>";
-            if ( isset($follower_count_history_by_month['milestone'])
-            && $follower_count_history_by_month["milestone"]["will_take"] > 0
-            && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
-                $headline .= $follower_count_history_by_month['milestone']['will_take'].' month';
+                $instance->network, 'MONTH', 15, $this->insight_date, 'followers', 5);
+            if (isset($follower_count_history_by_month['milestone'])
+                && $follower_count_history_by_month["milestone"]["will_take"] > 0
+                && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
+                $insight = new Insight();
+                if ($follower_count_history_by_month['milestone']['will_take'] == 1) {
+                    $insight->headline = 'Nice: Only ';
+                } else {
+                    $insight->headline = 'Looks like it will be ';
+                }
+                $insight->headline .= '<strong>'.
+                    $follower_count_history_by_month['milestone']['will_take'].' month';
                 if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
-                    $headline .= 's';
+                    $insight->headline .= 's';
                 }
-                $headline .= "</strong> till $this->username reaches <strong>".
-                number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                $headline .= '</strong> followers at the current growth rate.';
-
-                $this->insight_dao->insertInsightDeprecated('follower_count_history_by_month_milestone', $instance->id,
-                $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
-                serialize($follower_count_history_by_month));
-            }
-        } else if ($insight_day_of_week == 0) { //it's Sunday
-            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
-            //by week
-            $follower_count_history_by_week = $count_dao->getHistory($instance->network_user_id,
-            $instance->network, 'WEEK', 15, $this->insight_date);
-            $headline = "<strong>";
-            if ( isset($follower_count_history_by_week['milestone'])
-            && $follower_count_history_by_week["milestone"]["will_take"] > 0
-            && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
-                $headline .= $follower_count_history_by_week['milestone']['will_take'].' week';
-                if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
-                    $headline .= 's';
+                $insight->headline .= "</strong> till $this->username reaches <strong>".
+                    number_format($follower_count_history_by_month['milestone']['next_milestone']);
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL).'.';
+                $insight->slug = 'follower_count_history_by_month_milestone';
+                $insight->related_data = $follower_count_history_by_month;
+                $insight->instance_id = $instance->id;
+                $insight->date = $this->insight_date;
+                $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_LOW;
+                if (isset($follower_count_history_by_month["trend"])
+                && $follower_count_history_by_month["trend"] !== false) {
+                    $insight->text = $this->username." is gaining ".$follower_count_history_by_month["trend"]." ".
+                        $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a month.";
+                } else {
+                    //This shouldn't happen
+                    $insight->text = '';
                 }
-                $headline .= "</strong> till $this->username reaches <strong>".
-                number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                $headline .= '</strong> followers at the current growth rate.';
-                $this->logger->logInfo("Storing insight ".$headline, __METHOD__.','
-                .__LINE__);
-
-                $this->insight_dao->insertInsightDeprecated('follower_count_history_by_week_milestone', $instance->id,
-                $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
-                serialize($follower_count_history_by_week));
+                $this->insight_dao->insertInsight($insight);
+                $did_monthly = true;
             }
         }
+
+        if (!$did_monthly
+            && $this->shouldGenerateWeeklyInsight('follower_count_history_by_week_milestone', $instance)) {
+            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
+            $follower_count_history_by_week = $count_dao->getHistory($instance->network_user_id,
+                $instance->network, 'WEEK', 15, $this->insight_date, 'followers', 5);
+            if (isset($follower_count_history_by_week['milestone'])
+                && $follower_count_history_by_week["milestone"]["will_take"] > 0
+                && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
+                $insight = new Insight();
+
+                if ($follower_count_history_by_week['milestone']['will_take'] == 1) {
+                    $insight->headline = 'Wow! Only ';
+                } else {
+                    $insight->headline = 'Looks like it will be ';
+                }
+                $insight->headline .= '<strong>'.
+                    $follower_count_history_by_week['milestone']['will_take'].' week';
+                if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
+                    $insight->headline .= 's';
+                }
+                $insight->headline .= "</strong> till $this->username reaches <strong>".
+                    number_format($follower_count_history_by_week['milestone']['next_milestone']);
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower', InsightTerms::PLURAL) . '.';
+                $this->logger->logInfo("Storing insight ".$headline, __METHOD__.','.__LINE__);
+                $insight->slug = 'follower_count_history_by_week_milestone';
+                $insight->related_data = $follower_count_history_by_week;
+
+                $insight->instance_id = $instance->id;
+                $insight->date = $this->insight_date;
+                $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_LOW;
+                if (isset($follower_count_history_by_week["trend"])
+                && $follower_count_history_by_week["trend"] !== false) {
+                    $insight->text = $this->username." is gaining ".$follower_count_history_by_week["trend"]." ".
+                        $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a week.";
+                } else {
+                    //This shouldn't happen
+                    $insight->text = '';
+                }
+                $this->insight_dao->insertInsight($insight);
+            }
+        }
+
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
