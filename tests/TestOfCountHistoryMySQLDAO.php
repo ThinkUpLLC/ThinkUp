@@ -836,6 +836,43 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result['milestone']);
     }
 
+    public function testGroupMembershipGetDayHistoryWithGapsTrendMinimum() {
+        // Filling gaps was only required by the old visualization library
+        $format = 'n/j';
+        $date = date ( $format );
+
+        $count_history = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-1d',
+        'type'=>'group_memberships', 'count'=>140);
+        $builder1 = FixtureBuilder::build('count_history', $count_history);
+
+        $count_history = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-2d',
+        'type'=>'group_memberships', 'count'=>100);
+        $builder2 = FixtureBuilder::build('count_history', $count_history);
+
+        $count_history = array('network_user_id'=>'930061', 'network'=>'twitter', 'date'=>'-5d',
+        'type'=>'group_memberships', 'count'=>120);
+        $builder3 = FixtureBuilder::build('count_history', $count_history);
+
+        $dao = new CountHistoryMySQLDAO();
+        $result = $dao->getHistory('930061', 'twitter', 'DAY', 5, null, 'group_memberships', 3);
+        $this->assertEqual($result['trend'], 7);
+        $this->assertEqual($result['milestone']['will_take'], 9);
+        $this->assertEqual($result['milestone']['next_milestone'], 200);
+        $this->assertEqual(sizeof($result['history']), 3);
+
+        $result = $dao->getHistory('930061', 'twitter', 'DAY', 5, null, 'group_memberships', 2);
+        $this->assertEqual($result['trend'], 7);
+        $this->assertEqual($result['milestone']['will_take'], 9);
+        $this->assertEqual($result['milestone']['next_milestone'], 200);
+        $this->assertEqual(sizeof($result['history']), 3);
+
+        $result = $dao->getHistory('930061', 'twitter', 'DAY', 5, null, 'group_memberships', 5);
+        $this->assertFalse($result['trend']);
+        $this->assertFalse($result['milestone']);
+        $this->assertEqual(sizeof($result['history']), 3);
+    }
+
+
     public function testGroupMembershipTrendMillionPlusGroupMemberships() {
         $format = 'n/j';
         $date = date ( $format );

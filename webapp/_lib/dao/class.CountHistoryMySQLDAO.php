@@ -51,7 +51,21 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
         return $this->getInsertCount($ps);
     }
 
-    public function getHistory($network_user_id, $network, $units, $limit=10, $before_date=null, $type='followers') {
+    /**
+     * Fetch information about a user's history for a given count
+     * The result will include trend data, a history array and visualization data, ex:
+     *
+     * @param int $network_user_id Network user id
+     * @param str $network Network such as "twitter"
+     * @param str $units Time units (DAY, WEEK, MONTH)
+     * @param int $limit How many units to go back
+     * @param str $before_data Fetch history before this date
+     * @param str $type What count (followers, group_memberships)
+     * @param int $trend_minimum How man entries we need to calculate a trend (defaults to $limit)
+     * @return array Array of history data
+     */
+    public function getHistory($network_user_id, $network, $units, $limit=10, $before_date=null, $type='followers',
+                               $trend_minimum = null) {
         if ($before_date == date('Y-m-d')) {
             $before_date = null;
         }
@@ -67,6 +81,9 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
         } else if ($units == 'MONTH') {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
             $date_format = "DATE_FORMAT(date,'%m/01/%Y')";
+        }
+        if ($trend_minimum === null) {
+            $trend_minimum = $limit;
         }
         $vars = array(
             ':network_user_id'=>(string) $network_user_id,
@@ -131,7 +148,7 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
             }
 
             $trend = false;
-            if (sizeof($history_rows) == $limit) { //we have a complete data set
+            if (sizeof($history_rows) >= $trend_minimum) { //we have a complete data set
                 //calculate the trend
                 $first_follower_count = reset($simplified_history);
                 $last_follower_count = end($simplified_history);
@@ -139,7 +156,8 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
                 $trend = intval(round($trend));
                 //complete data set
                 $history = $simplified_history;
-            } else { //there are dates with missing data
+            }
+            if (sizeof($history_rows) < $limit) { //there are dates with missing data
                 //set up an array of all the dates to show in the chart
                 $dates_to_display = array();
                 $format = 'n/j';

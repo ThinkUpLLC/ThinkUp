@@ -47,9 +47,11 @@ interface CountHistoryDAO  {
      * @param str $group_by 'DAY', 'WEEK', 'MONTH'
      * @param int $limit Defaults to 10
      * @param str $start_date Defaults to null (today)
+     * @param int $trend_minimum Minimum data points to calculate a trend (defaults to $limit)
      * @return array $history, $percentages
      */
-    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null, $type='followers');
+    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null,
+                               $type='followers', $trend_minimum=null);
     /**
      * Get all the counts for a post by its ID.
      * @param  str $post_id The ID of the post you want counts for
