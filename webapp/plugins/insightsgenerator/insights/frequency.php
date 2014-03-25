@@ -103,7 +103,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                             'text' => "Nothing wrong with waiting until there's something to say.",
                             'button' => array(
                                 'url' => 'http://www.facebook.com/sharer/sharer.php?t=Hey there, friends!',
-                                'label' => 'Or jus say hi to your frients?',
+                                'label' => 'Or just say hi to your friends?',
                             )),
                         ));
                 } else {
