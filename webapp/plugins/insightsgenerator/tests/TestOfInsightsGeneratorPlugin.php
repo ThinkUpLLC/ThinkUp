@@ -468,7 +468,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
         $this->debug($merge_vars['insights']);
         //assert unsub link
-        $this->assertPattern('/http:\/\/downtonabb\.ey\/account\/index.php\?m\=manage\#instances/',
+        $this->assertPattern('/http:\/\/downtonabb\.ey\/.*account\/index.php\?m\=manage\#instances/',
             $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         //assert hero image
@@ -567,7 +567,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/example.com/', $sent);
         $this->assertPattern('/You receive new insights from ThinkUp once a week./', $merge_vars['insights']);
         $this->assertPattern('/To get insights once a day or unsubscribe altogether/', $merge_vars['insights']);
-        $this->assertPattern('/http:\/\/example.com\/\?u=Bill\+Cosby/', $merge_vars['insights'],
+        $this->assertPattern('/http:\/\/example.com\/.*\?u=Bill\+Cosby/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
         $this->assertPattern('/Wow:/', $merge_vars['insights'], 'Do not strip colons from headline');
         $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
@@ -623,7 +623,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
-        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
 
         //Assert welcome message shows up
@@ -689,7 +689,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         foreach ($decoded->global_merge_vars as $mv) {
             $merge_vars[$mv->name] = $mv->content;
         }
-        $this->assertPattern('/http:\/\/downtonabb.ey\/\?u=/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=/', $merge_vars['insights'], 'Insights URL contains host');
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
 
         //Assert no welcome message shows up
