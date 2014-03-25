@@ -40,16 +40,38 @@ interface CountHistoryDAO  {
      * @return int Total inserted
      */
     public function insert($network_user_id, $network, $count, $post_id, $type, $date=null);
+
     /**
-     * Get count history for a user (by default follower count history).
-     * @param int $network_user_id
-     * @param str $network
-     * @param str $group_by 'DAY', 'WEEK', 'MONTH'
-     * @param int $limit Defaults to 10
-     * @param str $start_date Defaults to null (today)
-     * @return array $history, $percentages
+     * Fetch information about a user's history for a given count
+     * The result will include trend data, a history array and visualization data, ex:
+     * Array(
+     *    [history] => Array(
+     *            [02/10/2014] => 10
+     *            [02/11/2014] => 30
+     *            [02/12/2014] => 50
+     *            [02/13/2014] => 70
+     *            [02/14/2014] => 90
+     *   )
+     *   [trend] => 16
+     *   [milestone] => Array(
+     *            [next_milestone] => 100
+     *            [will_take] => 1
+     *            [units_of_time] => DAY
+     *   )
+     *   [vis_data] => {"rows":[{"c":[{"v": ... }
+     * )
+     *
+     * @param int $network_user_id Network user id
+     * @param str $network Network such as "twitter"
+     * @param str $units Time units (DAY, WEEK, MONTH)
+     * @param int $limit How many units to go back
+     * @param str $before_data Fetch history before this date
+     * @param str $type What count (followers, group_memberships)
+     * @param int $trend_minimum How man entries we need to calculate a trend (defaults to $limit)
+     * @return array Array of history data
      */
-    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null, $type='followers');
+    public function getHistory($network_user_id, $network, $group_by, $limit=10, $before_date=null,
+                               $type='followers', $trend_minimum=null);
     /**
      * Get all the counts for a post by its ID.
      * @param  str $post_id The ID of the post you want counts for
