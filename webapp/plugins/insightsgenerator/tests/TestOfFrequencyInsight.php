@@ -121,6 +121,8 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
                 $result->headline);
                 $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
                 $result->text);
+                $data = unserialize($result->related_data);
+                $this->assertEqual($data['button']['label'], 'Or just say hi to your friends?');
             } else {
                 $this->assertEqual('Silent Bob didn\'t have any new status updates this week.',
                 $result->headline);
