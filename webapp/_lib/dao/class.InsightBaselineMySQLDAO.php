@@ -110,7 +110,7 @@ class InsightBaselineMySQLDAO  extends PDODAO implements InsightBaselineDAO {
     }
 
     /**
-     * Determine if a given insight baseline was created for a particula instance, before a specified date
+     * Determine if a given insight baseline was created for a particular instance, before a specified date
      * @param str $slug The baseline slug name
      * @param int $instance_id The instance
      * @return bool Does a baseline exist?

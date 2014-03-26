@@ -106,7 +106,7 @@ class InsightTerms {
                 break;
 
             case 'sharing':
-                return self::getPresentTenseVerbToShare($this->network);
+                return self::getPresentParticipleVerbToShare($this->network);
                 break;
 
             default:
@@ -306,7 +306,7 @@ class InsightTerms {
      * @param str $network network whose localization has to be followed
      * @return str localized verb for the action 'sharing'
      */
-    private function getPresentTenseVerbToShare($network) {
+    private function getPresentParticipleVerbToShare($network) {
         switch ($network) {
             case 'twitter':
                 return 'retweeting';
