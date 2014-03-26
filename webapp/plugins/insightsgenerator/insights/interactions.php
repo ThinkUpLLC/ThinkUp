@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/interactions.php
  *
- * Copyright (c) 2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -27,11 +27,9 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2014 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
-
-require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
 class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
 
@@ -57,26 +55,12 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             foreach ($last_week_of_posts as $post) {
-                $post_text = $post->post_text;
-
-                // Extract mentions from post text
-                $text_parser = new Twitter_Extractor($post_text);
-                $elements = $text_parser->extract();
-
-                $mentions_in_post = $elements['mentions'];
-                foreach ($mentions_in_post as $mention_in_post) {
-                    if ($mention_in_post == $instance->network_username) {
-                        // Don't count metweets
-                        continue;
-                    } else {
-                        $mentioned_user = $user_dao->getUserByName($mention_in_post, $instance->network);
-                        if (isset($mentioned_user)) {
-                            $mention_in_post = '@'.$mentioned_user->username;
-                            $mentions_info[$mention_in_post] = $mentioned_user;
-                        } else {
-                            $mention_in_post = '@'.$mention_in_post;
-                        }
-
+                if ($post->in_reply_to_user_id && $instance->network_user_id != $post->in_reply_to_user_id) {
+                    $mentioned_user = $user_dao->getDetails($post->in_reply_to_user_id, $instance->network);
+                    if (isset($mentioned_user)) {
+                        $mention_in_post = $instance->network == 'twitter' ? '@' : '';
+                        $mention_in_post .= $mentioned_user->username;
+                        $mentions_info[$mention_in_post] = $mentioned_user;
                         // Update mention count
                         if (array_key_exists($mention_in_post, $mentions_count)) {
                             $mentions_count[$mention_in_post]++;
@@ -102,13 +86,13 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 }
             }
 
-            if (isset($most_mentioned_user) && $most_mentioned_user['value'] >= 2) {
-                $headline = $this->username." mentioned ".$most_mentioned_user['key']
-                ." <strong>".$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
+            if (isset($most_mentioned_user) && ($talk_time * $most_mentioned_user['value']) >= 60) {
+                $headline = $this->username." replied to ".$most_mentioned_user['key'] ." <strong>"
+                    .$this->terms->getOccurrencesAdverb($most_mentioned_user['value'])."</strong> last week.";
                 $conversation_seconds = $this->terms->getOccurrencesAdverb($most_mentioned_user['value']) * $talk_time;
 
                 $milestones = $this->convertSecondsToMilestone($conversation_seconds);
-                $insight_text = 'Time spent in good conversation is time well spent.';
+                $insight_text = 'Time having good conversation is time well spent.';
                 // $header_image = $users_mentioned[0][user]->avatar;
                 $header_image = $users_mentioned[0]["user"]->avatar;
 
