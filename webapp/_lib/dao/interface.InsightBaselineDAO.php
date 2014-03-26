@@ -68,4 +68,12 @@ interface InsightBaselineDAO {
      * @return bool
      */
     public function doesInsightBaselineExist($slug, $instance_id);
+
+    /**
+     * Determine if a given insight baseline was created for a particular instance, before a specified date
+     * @param str $slug The baseline slug name
+     * @param int $instance_id The instance
+     * @return bool Does a baseline exist?
+     */
+    public function doesInsightBaselineExistBefore($slug, $instance_id, $before_date);
 }
