@@ -12,6 +12,7 @@ mkdir webapp/data/logs/
 
 touch webapp/data/logs/stream.log
 touch webapp/data/logs/crawler.log
+sudo apt-get update
 sudo apt-get install apache2 libapache2-mod-fastcgi
 export PHPV=$(phpenv version-name)
 echo "Running PHP = $PHPV"
