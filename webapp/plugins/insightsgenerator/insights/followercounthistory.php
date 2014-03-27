@@ -2,7 +2,7 @@
 /*
  Plugin Name: Follower Count
  Description: Upcoming follower count milestones (chart).
- When: 1st of the month
+ When: Sundays and 1st of the month
  */
 
 /**
@@ -38,7 +38,8 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $did_monthly = false;
-        if ($this->shouldGenerateMonthlyInsight('follower_count_history_by_month_milestone', $instance)) {
+        if ($this->shouldGenerateMonthlyInsight($slug = 'follower_count_history_by_month_milestone', $instance,
+        $this->insight_date, $regenerate_existing_insight=false, $day_of_month=1)) {
             $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $follower_count_history_by_month = $count_dao->getHistory($instance->network_user_id,
                 $instance->network, 'MONTH', 15, $this->insight_date, 'followers', 5);
@@ -79,7 +80,9 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
         }
 
         if (!$did_monthly
-            && $this->shouldGenerateWeeklyInsight('follower_count_history_by_week_milestone', $instance)) {
+        && $this->shouldGenerateWeeklyInsight($slug='follower_count_history_by_week_milestone', $instance,
+        $insight_date = $this->insight_date, $regenerate_existing_insight=false, $day_of_week=0,
+        $count_last_week_of_posts=null, $excluded_networks=array('facebook') )) {
             $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $follower_count_history_by_week = $count_dao->getHistory($instance->network_user_id,
                 $instance->network, 'WEEK', 15, $this->insight_date, 'followers', 5);
