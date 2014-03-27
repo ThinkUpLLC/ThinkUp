@@ -83,10 +83,11 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     $tachy_markup = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; "
                     ."color: #ddd;\"></i> That's ";
 
-                    if ($last_fri_time_per_response < $time_per_response) {
+                    // Only show a comparison string if the rates are substantially different
+                    if ($last_fri_time_per_response < $time_per_response && $time_str1 != $time_str) {
                         $insight_text .= $tachy_markup . "slower than the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
-                    } elseif ($last_fri_time_per_response > $time_per_response) {
+                    } elseif ($last_fri_time_per_response > $time_per_response && $time_str1 != $time_str) {
                         $insight_text .= $tachy_markup . "faster than the previous week's average of 1 "
                         . $this->terms->getNoun($response_factor['key'])." every " .$time_str1 . ".";
                     }
