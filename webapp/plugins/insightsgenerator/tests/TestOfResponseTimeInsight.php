@@ -233,4 +233,71 @@ class TestOfResponseTimeInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/faster than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 favorite every day./', $result->text);
     }
+
+    public function testBarelyFaster() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => 44
+        ));
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_like',
+        'instance_id'=>10, 'value'=>43));
+
+        $insight_plugin = new ResponseTimeInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('response_time', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertNoPattern('/faster/', $result->text);
+        $this->assertNoPattern('/slower/', $result->text);
+        $this->assertNoPattern('/every.*3.*hour/', $result->text);
+        $this->assertPattern('/<strong>3 hours<\/strong>/', $result->headline);
+    }
+
+    public function testBarelySlower() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => 6
+        ));
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'response_count_like',
+        'instance_id'=>10, 'value'=>7));
+
+        $insight_plugin = new ResponseTimeInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('response_time', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertNoPattern('/slower/', $result->text);
+        $this->assertNoPattern('/every day/', $result->text);
+        $this->assertPattern('/<strong>day<\/strong>/', $result->headline);
+    }
 }
