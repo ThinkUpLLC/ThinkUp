@@ -47,6 +47,3 @@ function drawChart{/literal}{$i->id}() {literal}{
   }
   {/literal}
 </script>
-{if $i->related_data.milestone.units_of_time && $i->related_data.trend && $i->related_data.trend != 0}
-    Current growth rate: {if $i->related_data.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$i->related_data.trend|number_format}</span>/{$i->related_data.milestone.units_of_time|lower}
-{/if}

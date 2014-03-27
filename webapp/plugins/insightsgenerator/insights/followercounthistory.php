@@ -46,21 +46,33 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 && $follower_count_history_by_month["milestone"]["will_take"] > 0
                 && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
                 $insight = new Insight();
-                $insight->headline = '<strong>'.$follower_count_history_by_month['milestone']['will_take'].' month';
+                if ($follower_count_history_by_month['milestone']['will_take'] == 1) {
+                    $insight->headline = 'Nice: Only ';
+                } else {
+                    $insight->headline = 'Looks like it will be ';
+                }
+                $insight->headline .= '<strong>'.
+                    $follower_count_history_by_month['milestone']['will_take'].' month';
                 if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
                     $insight->headline .= 's';
                 }
                 $insight->headline .= "</strong> till $this->username reaches <strong>".
                     number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL)
-                    . ' at the current growth rate.';
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL).'.';
                 $insight->slug = 'follower_count_history_by_month_milestone';
                 $insight->related_data = $follower_count_history_by_month;
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
                 $insight->emphasis = Insight::EMPHASIS_LOW;
-                $insight->text = '';
+                if (isset($follower_count_history_by_month["trend"])
+                && $follower_count_history_by_month["trend"] !== false) {
+                    $insight->text = $this->username." is gaining ".$follower_count_history_by_month["trend"]." ".
+                        $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a month.";
+                } else {
+                    //This shouldn't happen
+                    $insight->text = '';
+                }
                 $this->insight_dao->insertInsight($insight);
                 $did_monthly = true;
             }
@@ -76,14 +88,19 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 && $follower_count_history_by_week["milestone"]["next_milestone"] > 0 ) {
                 $insight = new Insight();
 
-                $insight->headline = '<strong>'.$follower_count_history_by_week['milestone']['will_take'].' week';
+                if ($follower_count_history_by_week['milestone']['will_take'] == 1) {
+                    $insight->headline = 'Wow! Only ';
+                } else {
+                    $insight->headline = 'Looks like it will be ';
+                }
+                $insight->headline .= '<strong>'.
+                    $follower_count_history_by_week['milestone']['will_take'].' week';
                 if ($follower_count_history_by_week['milestone']['will_take'] > 1) {
                     $insight->headline .= 's';
                 }
                 $insight->headline .= "</strong> till $this->username reaches <strong>".
                     number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                $insight->headline .= '</strong> '.$this->terms->getNoun('follower', InsightTerms::PLURAL)
-                   . ' at the current growth rate.';
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower', InsightTerms::PLURAL) . '.';
                 $this->logger->logInfo("Storing insight ".$headline, __METHOD__.','.__LINE__);
                 $insight->slug = 'follower_count_history_by_week_milestone';
                 $insight->related_data = $follower_count_history_by_week;
@@ -92,7 +109,14 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
                 $insight->emphasis = Insight::EMPHASIS_LOW;
-                $insight->text = '';
+                if (isset($follower_count_history_by_week["trend"])
+                && $follower_count_history_by_week["trend"] !== false) {
+                    $insight->text = $this->username." is gaining ".$follower_count_history_by_week["trend"]." ".
+                        $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a week.";
+                } else {
+                    //This shouldn't happen
+                    $insight->text = '';
+                }
                 $this->insight_dao->insertInsight($insight);
             }
         }

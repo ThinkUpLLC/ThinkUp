@@ -70,8 +70,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('<strong>1 week</strong> till @hitchhiker reaches <strong>1,000</strong> '.
-            'followers at the current growth rate.', $result->headline);
+        $this->assertEqual('Wow! Only <strong>1 week</strong> till @hitchhiker reaches <strong>1,000</strong> '.
+            'followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 15);
@@ -100,8 +100,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('<strong>10 weeks</strong> till @hitchhiker reaches <strong>1,000</strong> '.
-            'followers at the current growth rate.', $result->headline);
+        $this->assertEqual('Looks like it will be <strong>10 weeks</strong> till @hitchhiker reaches '. 
+            '<strong>1,000</strong> followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 15);
@@ -131,7 +131,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
-    public function testMonthlyNextWeek() {
+    public function testMonthlyNextMonth() {
         $builders = array();
         for ($i=0; $i<20; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
@@ -147,8 +147,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('<strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
-            'followers at the current growth rate.', $result->headline);
+        $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
+            'followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 15);
@@ -180,8 +180,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('<strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
-            'followers at the current growth rate.', $result->headline);
+        $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
+            'followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 9);
@@ -210,8 +210,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('<strong>6 weeks</strong> till @hitchhiker reaches <strong>1,000</strong> '.
-            'followers at the current growth rate.', $result->headline);
+        $this->assertEqual('Looks like it will be <strong>6 weeks</strong> till @hitchhiker reaches '.
+            '<strong>1,000</strong> followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 9);
@@ -219,6 +219,9 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
         $this->assertEqual($data['milestone']['will_take'], 6);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testMonthlyTooFewMonths() {
