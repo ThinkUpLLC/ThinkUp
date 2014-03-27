@@ -201,7 +201,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<7; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'846' - ($i*10), 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'846' - ($i*10),
+                'date'=>date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
             'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-9 day'))));
