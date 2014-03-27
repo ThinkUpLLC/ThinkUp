@@ -51,19 +51,6 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
         return $this->getInsertCount($ps);
     }
 
-    /**
-     * Fetch information about a user's history for a given count
-     * The result will include trend data, a history array and visualization data, ex:
-     *
-     * @param int $network_user_id Network user id
-     * @param str $network Network such as "twitter"
-     * @param str $units Time units (DAY, WEEK, MONTH)
-     * @param int $limit How many units to go back
-     * @param str $before_data Fetch history before this date
-     * @param str $type What count (followers, group_memberships)
-     * @param int $trend_minimum How man entries we need to calculate a trend (defaults to $limit)
-     * @return array Array of history data
-     */
     public function getHistory($network_user_id, $network, $units, $limit=10, $before_date=null, $type='followers',
                                $trend_minimum = null) {
         if ($before_date == date('Y-m-d')) {

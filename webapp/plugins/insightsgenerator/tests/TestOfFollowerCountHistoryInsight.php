@@ -79,6 +79,9 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
         $this->assertEqual($data['milestone']['will_take'], 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyNextTenWeeks() {
@@ -106,6 +109,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
         $this->assertEqual($data['milestone']['will_take'], 10);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyNextTooManyWeeks() {
@@ -151,8 +156,11 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['milestone']['units_of_time'], 'MONTH');
         $this->assertEqual($data['milestone']['next_milestone'], 10000);
         $this->assertEqual($data['milestone']['will_take'], 1);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
 
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
+        $this->assertNull($result);
     }
 
 
@@ -183,6 +191,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['milestone']['will_take'], 1);
 
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
+        $this->assertNull($result);
     }
 
     public function testWeeklyUnder15Weeks() {
