@@ -121,6 +121,10 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($result['milestone']);
 
         $this->assertNotNull($result['vis_data']);
+        $vis_data = $result['vis_data'];
+        $vis_data = preg_replace("/(new Date[^)]+\))/", '"$1"', $vis_data);
+        $vis_data = json_decode($vis_data);
+        $this->assertEqual(3, count($vis_data->rows));
     }
 
     public function testFollowerCountGetDayHistoryFromSpecificStartDate() {
@@ -870,6 +874,10 @@ class TestOfCountHistoryMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result['trend']);
         $this->assertFalse($result['milestone']);
         $this->assertEqual(sizeof($result['history']), 3);
+        $vis_data = $result['vis_data'];
+        $vis_data = preg_replace("/(new Date[^)]+\))/", '"$1"', $vis_data);
+        $vis_data = json_decode($vis_data);
+        $this->assertEqual(3, count($vis_data->rows));
     }
 
 

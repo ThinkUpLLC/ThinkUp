@@ -144,39 +144,6 @@ class CountHistoryMySQLDAO extends PDODAO implements CountHistoryDAO {
                 //complete data set
                 $history = $simplified_history;
             }
-            if (sizeof($history_rows) < $limit) { //there are dates with missing data
-                //set up an array of all the dates to show in the chart
-                $dates_to_display = array();
-                $format = 'n/j';
-                $date = date ( $format );
-                $i = $limit;
-                while ($i > 0 ) {
-                    if ($units == "DAY") {
-                        $format = 'm/d/Y';
-                        $date_ago = date ($format, strtotime('-'.$i.' '.$units.$date));
-                    } else if ($units == "WEEK") {
-                        if ($i == $limit) {
-                            $last_saturday = Utils::getLastSaturday();
-                        }
-                        $date_ago = date ($format, strtotime('-'.$i.' '.$units.$last_saturday));
-                    } else {
-                        $first_day_of_this_month = date('n/1');
-                        $format = 'm/d/Y';
-                        $date_ago = date ($format, strtotime('-'.$i.' '.$units.$first_day_of_this_month));
-                    }
-                    $dates_to_display[$date_ago] = "no data";
-                    $i--;
-                }
-                //merge the data we do have with the dates we want
-                $history = array_merge($dates_to_display, $simplified_history);
-                //cut down oversized array
-                if (sizeof($history) > $limit) {
-                    $history = array_slice($history, (sizeof($history)-$limit));
-                }
-                if ($units=="DAY") {
-                    ksort($history);
-                }
-            }
 
             if ($type == 'group_memberships') {
                 //calculate the point percentages

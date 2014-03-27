@@ -100,7 +100,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Looks like it will be <strong>10 weeks</strong> till @hitchhiker reaches '. 
+        $this->assertEqual('Looks like it will be <strong>10 weeks</strong> till @hitchhiker reaches '.
             '<strong>1,000</strong> followers.', $result->headline);
 
         $data = unserialize($result->related_data);
@@ -198,7 +198,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<7; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'846' - ($i*10), 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
             'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-9 day'))));
@@ -210,15 +210,19 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Looks like it will be <strong>6 weeks</strong> till @hitchhiker reaches '.
+        $this->assertEqual('Looks like it will be <strong>4 weeks</strong> till @hitchhiker reaches '.
             '<strong>1,000</strong> followers.', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 9);
-        $this->assertEqual($data['trend'], 10);
+        $this->assertEqual($data['trend'], 17);
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
-        $this->assertEqual($data['milestone']['will_take'], 6);
+        $this->assertEqual($data['milestone']['will_take'], 4);
+        $vis_data = $data['vis_data'];
+        $vis_data = preg_replace("/(new Date[^)]+\))/", '"$1"', $vis_data);
+        $vis_data = json_decode($vis_data);
+        $this->assertEqual(9, count($vis_data->rows));
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
