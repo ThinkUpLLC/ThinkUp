@@ -309,11 +309,13 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             "These are your latest ThinkUp insights",
             "A few new ThinkUp insights for you",
             "New ThinkUp insights are waiting for you",
-            "ThinkUp found %total insights for you today. Here's a look.",
-            "You have %total new insights from ThinkUp",
             "ThinkUp: Today's insights",
             "These are your ThinkUp insights for ".date('l', $this->current_timestamp),
             );
+            if ($num_insights > 1) {
+                $subject_line_choices[] = "ThinkUp found %total insights for you today. Here's a look.";
+                $subject_line_choices[] = "You have %total new insights from ThinkUp";
+            }
         } else {
             $subject_line_choices = array (
             "This week was great! ThinkUp's got details",

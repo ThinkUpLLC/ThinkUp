@@ -741,10 +741,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
             4 => "These are your latest ThinkUp insights",
             5 => "A few new ThinkUp insights for you",
             6 => "New ThinkUp insights are waiting for you",
-            7 => "ThinkUp found 2 insights for you today. Here's a look.",
-            8 => "You have 2 new insights from ThinkUp",
-            9 => "ThinkUp: Today's insights",
-            10 => "These are your ThinkUp insights for ".date('l', $plugin->current_timestamp),
+            7 => "ThinkUp: Today's insights",
+            8 => "These are your ThinkUp insights for ".date('l', $plugin->current_timestamp),
+            9 => "ThinkUp found 2 insights for you today. Here's a look.",
+            10 => "You have 2 new insights from ThinkUp",
             11 => "ThinkUp has new insights for you! Take a look",
         );
 
@@ -760,6 +760,61 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         }
     }
 
+    public function testRandomizedDailySubjectsOneInsight() {
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key','1234');
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+        $plugin = new InsightsGeneratorPlugin();
+
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', date('2012-01-01'));
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+
+        $this->simulateLogin('admin@example.com');
+
+        $plugin->current_timestamp = strtotime('5pm');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+
+        $good_subjects = array(
+            1 => "You have new insights from ThinkUp",
+            2 => "Your new insights from ThinkUp",
+            3 => "New ThinkUp insights are ready for you",
+            4 => "These are your latest ThinkUp insights",
+            5 => "A few new ThinkUp insights for you",
+            6 => "New ThinkUp insights are waiting for you",
+            7 => "ThinkUp: Today's insights",
+            8 => "These are your ThinkUp insights for ".date('l', $plugin->current_timestamp),
+            9 => "ThinkUp has new insights for you! Take a look",
+            10 => "You have new insights from ThinkUp",
+            11 => "Your new insights from ThinkUp",
+        );
+
+        // Ensure we skip over the subjects involving the count to avoid pluralization issues
+        for ($i=1; $i<=11; $i++) {
+            unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+            TimeHelper::setTime($i);
+            $plugin_option_dao->updateOption($options['last_daily_email']->id,
+                'last_daily_email', date('Y-m-d', strtotime('last year')));
+            $plugin->crawl();
+            $sent = Mailer::getLastMail();
+            $decoded = json_decode($sent);
+            $this->assertEqual($decoded->subject, $good_subjects[$i]);
+        }
+    }
     public function testMandrillHTMLThinkUpLLCUnsubLinkWithOutWelcomeMessage() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
