@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/weeklygraph.php
  *
- * Copyright (c) 2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2014 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
@@ -40,12 +40,19 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
         $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts))) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
-            $insight_text = '';
+            $total_replies = 0;
+            $total_retweets = 0;
+            $total_likes = 0;
 
+            $engaged_posts = array();
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
                 $retweet_count = $post->retweet_count_cache;
                 $fav_count = $post->favlike_count_cache;
+
+                $total_replies += $reply_count;
+                $total_retweets += $retweet_count;
+                $total_likes += $fav_count;
 
                 $popularity_index = (5 * $reply_count) + (3 * $retweet_count) + (2 * $fav_count);
 
@@ -57,35 +64,103 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
 
                     $most_popular_post = $post;
                 }
+
+
+                if ($popularity_index > 0) {
+                    $post->popularity_index = $popularity_index;
+                    $engaged_posts[] = $post;
+                }
             }
 
             if (isset($most_popular_post)) {
-                $headline = "This week's key stats for $this->username's "
-                    .$this->terms->getNoun('post', InsightTerms::PLURAL) . ".";
 
-                $simplified_post_date = date('Y-m-d', strtotime($most_popular_post->pub_date));
-                $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-                $instance->id, $simplified_post_date);
+                usort($engaged_posts, array($this, 'compareEngagedPosts'));
+                $posts = array_slice($engaged_posts, 0, 10);
 
-                if (isset($hot_posts_data)) {
-                    $my_insight = new Insight();
 
-                    $my_insight->slug = 'weekly_graph'; //slug to label this insight's content
-                    $my_insight->instance_id = $instance->id;
-                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
-                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
-                    $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                    $my_insight->header_image = $header_image;
-                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                    $my_insight->setPosts(array($hot_posts_data));
-
-                    $this->insight_dao->insertInsight($my_insight);
+                if ($total_replies >= $total_likes && $total_replies >= $total_retweets) {
+                    $insight_text = "This week, ".$this->username." really inspired conversations";
+                    $lower = array();
+                    if ($total_replies > $total_likes) {
+                        $lower[] = $this->terms->getNoun('like', InsightTerms::PLURAL);
+                    }
+                    if ($total_replies > $total_retweets) {
+                        $lower[] = $this->terms->getNoun('retweet', InsightTerms::PLURAL);
+                    }
+                    if (count($lower) == 0) {
+                        $insight_text .= '.';
+                    } else {
+                        $insight_text .= ' &mdash; replies outnumbered '.join(' or ', $lower).'.';
+                    }
                 }
+                else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
+                    $insight_text = "Whatever ".$this->username." said this week must have been memorable";
+                    $insight_text .= ' &mdash; there were '.$total_likes.' '.
+                        $this->terms->getNoun('like', InsightTerms::PLURAL);
+                    $lower = array();
+                    if ($total_likes > $total_replies && $total_replies > 0) {
+                        $plural = $total_replies==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                        $lower[] = $total_replies.' '.  $this->terms->getNoun('reply', $plural);
+                    }
+                    if ($total_likes > $total_retweets && $total_retweets > 0) {
+                        $plural = $total_retweets==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                        $lower[] = $total_retweets.' '. $this->terms->getNoun('retweet', $plural);
+                    }
+                    if (count($lower) == 0) {
+                        $insight_text .= '.';
+                    } else {
+                        $insight_text .= ', beating out '.join(' and ', $lower).'.';
+                    }
+                }
+                else {
+                    $insight_text = $this->username." shared a lot of things people wanted to amplify this week.";
+                    $lower = array();
+                    if ($total_retweets > $total_replies) {
+                        $lower[] = $this->terms->getNoun('reply', InsightTerms::PLURAL) . ' by '
+                            .($total_retweets - $total_replies);
+                    }
+                    if ($total_retweets > $total_likes) {
+                        $lower[] = $this->terms->getNoun('like', InsightTerms::PLURAL) . ' by '
+                            .($total_retweets - $total_likes);
+                    }
+                    if (count($lower) > 0) {
+                        $insight_text .= ' '.ucfirst($this->terms->getNoun('retweet', InsightTerms::PLURAL))
+                            .' outnumbered '.join(' and ', $lower). '.';
+                    }
+                }
+
+                $headline = $this->getVariableCopy(array("What happened with %username's %posts this week."));
+
+                $my_insight = new Insight();
+                $my_insight->slug = 'weekly_graph';
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date;
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = $header_image;
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                if (count($posts) > 3) {
+                    $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
+                    $my_insight->setPosts($formatted_posts);
+                }
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+    /**
+     * Compare two posts by popularity - for sorting callback
+     *
+     * @param Post $a First post
+     * @param Post $b Second post
+     * @return int Sort value
+     */
+    private function compareEngagedPosts($a,$b) {
+        return $b->popularity_index - $a->popularity_index;
     }
 }
 
