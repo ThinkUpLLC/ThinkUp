@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfWeeklyGraphInsight.php
  *
- * Copyright (c) 2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the WeeklyGraphInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2014 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/weeklygraph.php';
 
-class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
+class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -52,23 +52,23 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>30, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
-
         $posts = array();
         $posts[] = new Post(array(
+            'post_text' => 'a',
             'reply_count_cache' => 5,
             'retweet_count_cache' => 1,
             'favlike_count_cache' => 3,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 34
         $posts[] = new Post(array(
+            'post_text' => 'b',
             'reply_count_cache' => 0,
             'retweet_count_cache' => 1,
             'favlike_count_cache' => 15,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 33
         $posts[] = new Post(array(
+            'post_text' => 'c',
             'reply_count_cache' => 2,
             'retweet_count_cache' => 5,
             'favlike_count_cache' => 1,
@@ -86,7 +86,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets./', $result->headline);
-        $this->assertPattern('//', $result->text);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; there were '
+            . '19 favorites, beating out 7 replies and 7 retweets.', $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyGraphInsightForFacebook() {
@@ -95,9 +98,6 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'tester_fb';
         $instance->network = 'facebook';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>31, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -127,7 +127,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This week\'s key stats for tester_fb\'s status updates/', $result->headline);
-        $this->assertPattern('//', $result->text);
+        $this->assertEqual('Whatever tester_fb said this week must have been memorable &mdash; there were 19 likes,'
+           . ' beating out 10 comments.', $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyGraphInsightWithOneReply() {
@@ -159,7 +162,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
-        $this->assertPattern('//', $result->text);
+        $this->assertEqual('This week, @testeriffic really inspired conversations &mdash; '
+            . 'replies outnumbered favorites or retweets.', $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyGraphInsightWithFavorites() {
@@ -191,7 +197,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
-        $this->assertPattern('//', $result->text);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; there were 3 favorites.',
+            $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testWeeklyGraphInsightWithRepliesAndFavorites() {
@@ -200,9 +209,6 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $instance->id = 10;
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
-
-        $insight_builder = FixtureBuilder::build('insights', array('id'=>34, 'instance_id'=>10,
-        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
 
         $posts = array();
         $posts[] = new Post(array(
@@ -223,6 +229,149 @@ class TestOfWeeklyGraphInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
-        $this->assertPattern('//', $result->text);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; '
+            .'there were 5 favorites, beating out 4 replies.', $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testPostLimitAndSorting() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        for ($i=0; $i<=10; $i++) {
+            $days = 1 + floor($i/2);
+            $posts[] = new Post(array(
+                'post_text' => 'not_cool',
+                'reply_count_cache' => 4,
+                'retweet_count_cache' => 0,
+                'favlike_count_cache' => 0,
+                'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+            )); // popularity_index = 20
+            $posts[] = new Post(array(
+                'post_text' => 'cool',
+                'reply_count_cache' => 5,
+                'retweet_count_cache' => 0,
+                'favlike_count_cache' => 0,
+                'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+            )); // popularity_index = 25
+        }
+
+        $insight_plugin = new WeeklyGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+
+        $data = unserialize($result->related_data);
+        $this->assertNotNull($data['posts']);
+        $posts = json_decode($data['posts'][0]);
+        $this->assertEqual(10, count($posts->rows));
+        // Ensure the popular posts are shown
+        for ($i=0; $i<10; $i++) {
+            $post = $posts->rows[$i];
+            //print_r($post);
+            $this->assertEqual('cool...', $post->c[0]->v);
+        }
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testInsightTexts() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $insight_plugin = new WeeklyGraphInsight();
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 3,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => 0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('This week, @testeriffic really inspired conversations &mdash; replies outnumbered '
+            .'favorites or retweets.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 3,
+            'favlike_count_cache' => 0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('@testeriffic shared a lot of things people wanted to amplify this week. '.
+            'Retweets outnumbered replies by 3 and favorites by 3.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 3,
+            'retweet_count_cache' => 3,
+            'favlike_count_cache' => 0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('This week, @testeriffic really inspired conversations &mdash; '.
+            'replies outnumbered favorites.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 3,
+            'retweet_count_cache' => 3,
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('This week, @testeriffic really inspired conversations.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 2,
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; '.
+            'there were 3 favorites, beating out 2 retweets.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 3,
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; there were '
+            .'3 favorites.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 1,
+            'retweet_count_cache' => 2,
+            'favlike_count_cache' => 3,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; '.
+            'there were 3 favorites, beating out 1 reply and 2 retweets.', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
     }
 }
