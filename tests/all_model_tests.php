@@ -99,6 +99,7 @@ $model_tests->add(new TestOfVideoMySQLDAO());
 $model_tests->add(new TestOfPhotoMySQLDAO());
 $model_tests->add(new TestOfCookieMySQLDAO());
 $model_tests->add(new TestOfSerializer());
+$model_tests->add(new TestOfChartHelper());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
