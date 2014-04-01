@@ -212,7 +212,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
+        $this->debug($result->headline);
+        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
         $this->assertNoPattern('/bringing/', $result->text);
     }
 
@@ -238,7 +239,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
         $this->assertPattern('/bringing the total to \<strong\>6 lists\<\/strong\>./', $result->text);
     }
 
@@ -269,7 +270,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Does "list0" seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
         $this->assertPattern('/@ev got added to a new list/', $result->text);
     }
 
