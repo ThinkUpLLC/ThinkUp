@@ -35,50 +35,52 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/allaboutyou.php';
 
-class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
+class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
     }
 
     public function tearDown() {
         parent::tearDown();
     }
 
-    public function testCountFirstPersonReferences() {
-        $count = AllAboutYouInsight::countFirstPersonReferences("I don't know, really? I thought so.");
-        $this->assertEqual($count, 2);
+    public function testHasFirstPersonReferences() {
+        $has = AllAboutYouInsight::hasFirstPersonReferences("I don't know, really? I thought so.");
+        $this->assertTrue($has);
 
-        $count = AllAboutYouInsight::countFirstPersonReferences(
-        "Now that I'm back on Android, realizing just how under sung Google Now is. I want it everywhere.");
-        $this->assertEqual($count, 2);
+        $has = AllAboutYouInsight::hasFirstPersonReferences(
+            "Now that I'm back on Android, realizing just how under sung Google Now is. I want it everywhere.");
+        $this->assertTrue($has);
 
-        $count = AllAboutYouInsight::countFirstPersonReferences(
-        "New Year’s Eve! Feeling very gay today, but not very homosexual.");
-        $this->assertEqual($count, 0);
+        $has = AllAboutYouInsight::hasFirstPersonReferences(
+            "New Year’s Eve! Feeling very gay today, but not very homosexual.");
+        $this->assertFalse($has);
 
-        $count = AllAboutYouInsight::countFirstPersonReferences("Tis the season for adorable cards w/ photos of my ".
-        "friends' kids & pets that remind me what I'd do for the holidays if I had my act together.");
-        $this->assertEqual($count, 5);
+        $has = AllAboutYouInsight::hasFirstPersonReferences("Tis the season for adorable cards w/ photos of my ".
+            "friends' kids & pets that remind me what I'd do for the holidays if I had my act together.");
+        $this->assertTrue($has);
 
-        $count = AllAboutYouInsight::countFirstPersonReferences("Took 1 firearms safety class to realize my ".
-        "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde");
-        $this->assertEqual($count, 1);
+        $has = AllAboutYouInsight::hasFirstPersonReferences("Took 1 firearms safety class to realize my ".
+            "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde");
+        $this->assertTrue($has);
 
-        $count = AllAboutYouInsight::countFirstPersonReferences("When @anildash told me he was writing this I was ".
-        "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ");
-        $this->assertEqual($count, 4);
+        $has = AllAboutYouInsight::hasFirstPersonReferences("When @anildash told me he was writing this I was ".
+            "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ");
+        $this->assertTrue($has);
     }
+
 
     public function testAllAboutYouInsightNoPriorBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -87,27 +89,24 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        if (strpos($result->headline, 'vanity')) {
-            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
-        } else {
-            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
-        }
+        $this->assertPattern('/<strong>80%</', $result->text);
+        $this->assertNoPattern('/up/', $result->text);
+        $this->assertNoPattern('/down/', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testAllAboutYouInsightPriorGreaterBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
-        'instance_id'=>10, 'value'=>19));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
+            'instance_id'=>10, 'value'=>99));
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -116,28 +115,21 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        if (strpos($result->headline, 'vanity')) {
-            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
-        } else {
-            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
-        }
-        $this->assertPattern('/10 fewer times than the prior week/', $result->text);
+        $this->assertPattern('/down 19 percentage points/', $result->text);
+
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testAllAboutYouInsightPriorGreaterBy1Baseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
-        'instance_id'=>10, 'value'=>10));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
+        'instance_id'=>10, 'value'=>81));
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -146,30 +138,21 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        if (strpos($result->headline, 'vanity')) {
-            $this->assertPattern('/There could be no extreme vanity in my recognition of myself, if in fact there could be any at all./', $result->headline);
-        } else {
-            $this->assertPattern('/But enough about me&hellip;/', $result->headline);
-        }
-        $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
-        $this->assertPattern('/1 fewer time than the prior week/', $result->text);
+        $this->assertPattern('/down 1 percentage point /', $result->text);
+
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testAllAboutYouInsightPriorSmallerBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
         'instance_id'=>10, 'value'=>7));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -179,24 +162,21 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
-        $this->assertPattern('/2 more times than the prior week/', $result->text);
+        $this->assertPattern('/<strong>80%</', $result->text);
+        $this->assertPattern('/up 73 percentage points/', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testAllAboutYouInsightPriorSmallerByOneBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
-        'instance_id'=>10, 'value'=>8));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
+        'instance_id'=>10, 'value'=>79));
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -206,24 +186,21 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
-        $this->assertPattern('/1 more time than the prior week/', $result->text);
+        $this->assertPattern('/<strong>80%</', $result->text);
+        $this->assertPattern('/up 1 percentage point /', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testAllAboutYouInsightPriorEqualBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
         $insight_plugin = new AllAboutYouInsight();
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
         'instance_id'=>10, 'value'=>9));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -233,10 +210,58 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
-        $this->assertPattern('/9 times/', $result->text);
+        $this->assertPattern('/<strong>80%</', $result->text);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);
-        $this->assertNoPattern('/prior week/', $result->text);
+        $this->assertNoPattern('/up/', $result->text);
+        $this->assertNoPattern('/down/', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testPercentRounding() {
+        $today = date ('Y-m-d');
+        $posts = self::getTestPostObjects();
+        $p = new Post();
+        $p->text = "This is not about the person posting.";
+        $posts[] = $p;
+
+        $insight_plugin = new AllAboutYouInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('all_about_you', 10, $today);
+        $this->assertPattern('/<strong>67%</', $result->text);
+        $this->assertNoPattern('/66.6/', $result->text);
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline = $baseline_dao->getInsightBaseline('all_about_you_percent', $this->instance->id, $today);
+        $this->assertEqual($baseline->value, 67);
+        $this->assertEqual($baseline->slug, 'all_about_you_percent');
+    }
+
+    public function testHeadlines() {
+        $posts = self::getTestPostObjects();
+        $insight_plugin = new AllAboutYouInsight();
+        $today = date ('Y-m-d');
+        $insight_plugin = new AllAboutYouInsight();
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+
+        $good_headlines = array(
+            null,
+            'It\'s getting personal.',
+            'But enough about me&hellip;',
+            'Self-reflection is powerful stuff.',
+            'Speaking from experience&hellip;',
+            'Sometimes twitter is a first-person story.',
+            'It\'s just me, myself and I.',
+            '@testeriffic is getting personal.',
+        );
+
+        for ($i=1; $i<=7; $i++) {
+            TimeHelper::setTime($i);
+            $insight_plugin->generateInsight($this->instance, $posts, 3);
+            $result = $insight_dao->getInsight('all_about_you', 10, $today);
+            $this->assertEqual($result->headline, $good_headlines[$i]);
+        }
     }
 
     /**
@@ -247,12 +272,12 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $post_text_arr = array();
         $post_text_arr[] = "I don't know, really? I thought so.";
         $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
-        "I want it everywhere.";
+            "I want it everywhere.";
         $post_text_arr[] = "New Year’s Eve! Feeling very gay today, but not very homosexual.";
         $post_text_arr[] = "Took 1 firearms safety class to realize my ".
-        "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde";
+            "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde";
         $post_text_arr[] = "When @anildash told me he was writing this I was ".
-        "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
+            "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
 
         $posts = array();
         foreach ($post_text_arr as $test_text) {
