@@ -104,12 +104,13 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $time1_high = (($time1_high_hotd % 12) ? ($time1_high_hotd % 12) : 12)
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
+                $plural = $most_responses['value']==1 ? InsightTerms::SINGULAR : InsightTerms::PLURAL;
                 $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                 ." from last week got"
                 ." the best response between <strong>".$time1_low." and ".$time1_high."</strong>"
                 . " - ".$most_responses['value']." "
                 // . ($most_responses['value'] > 1 ? 'responses' : 'response')."</strong> "
-                . $this->terms->getNoun('reply', InsightTerms::PLURAL)
+                . $this->terms->getNoun('reply', $plural)
                 . " in all.";
 
                 $insight_comparison_text = '';
