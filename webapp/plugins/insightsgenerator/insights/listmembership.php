@@ -117,8 +117,8 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
 
                 } else {
                     $new_groups[0]->setMetadata();
-                    $headline = "Does \"" . str_replace('-', ' ', $new_groups[0]->keyword).
-                    "\" seem like a good description of " . $this->username . "?";
+                    $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
+                    "&rdquo; seem like a good description of " . $this->username . "?";
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                     $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
