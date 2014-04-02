@@ -88,12 +88,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<20; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -'.($i+3).'week'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-9 day'))));
+            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -1 Week'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('-2 day'))));
+            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday This Week'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -168,12 +168,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<7; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.(95+($i*30)).' day'))));
+                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.(3+$i).' month'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-65 day'))));
+            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-2 month'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-35 day'))));
+            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-1 month'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
