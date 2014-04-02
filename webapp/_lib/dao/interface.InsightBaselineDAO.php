@@ -76,4 +76,12 @@ interface InsightBaselineDAO {
      * @return bool Does a baseline exist?
      */
     public function doesInsightBaselineExistBefore($slug, $instance_id, $before_date);
+
+    /**
+     * For a given slug and instance, get the latest baseline
+     * @param str $slug The baseline slug name
+     * @param int $instance_id The instance
+     * @return InsightBaseline the lastest InsightBaseline (if any)
+     */
+    public function getMostRecentInsightBaseline($slug, $instance_id);
 }
