@@ -77,13 +77,15 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                     $insight->header_image = $thankee->avatar;
                 }
                 else {
-                    $insight->headline = 'Gratitude is contagious. Saying &ldquo;thanks&rdquo; is a really great way '
-                        . 'to spend time on '.$instance->network.'.';
+                    $insight->headline = $this->getVariableCopy(array(
+                        'Gratitude is contagious.',
+                        'Saying &ldquo;thanks&rdquo; is a great way to spend time on '.ucfirst($instance->network).'.'
+                    ));
                 }
 
-                $times = $this_period_count == 1 ? 'time' : 'times';
-                $insight->text = $this->username.' thanked someone '.$this_period_count. ' '.$times. ' on '.
-                    $instance->network.' last month.';
+                $times = $this_period_count == 1 ? 'once' : $this_period_count.' times';
+                $insight->text = $this->username.' thanked someone '.$times. ' on '.
+                    ucfirst($instance->network).' last month.';
 
                 if ($this_period_count > $last_period_count && $last_period_count > 0) {
                     $month_name = date('F', strtotime('-2 month'));

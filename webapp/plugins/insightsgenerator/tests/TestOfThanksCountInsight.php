@@ -44,6 +44,8 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testy';
         $instance->network = 'twitter';
         $this->instance = $instance;
+
+        TimeHelper::setTime(2); // Force one headline for most tests
     }
 
     public function tearDown() {
@@ -82,9 +84,8 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline,
-            'Gratitude is contagious. Saying &ldquo;thanks&rdquo; is a really great way to spend time on twitter.');
-        $this->assertEqual($result->text, '@testy thanked someone 1 time on twitter last month.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->text, '@testy thanked someone once on Twitter last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -113,9 +114,8 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline,
-            'Gratitude is contagious. Saying &ldquo;thanks&rdquo; is a really great way to spend time on twitter.');
-        $this->assertEqual($result->text, '@testy thanked someone 3 times on twitter last month.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->text, '@testy thanked someone 3 times on Twitter last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -149,15 +149,33 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline,
-            'Gratitude is contagious. Saying &ldquo;thanks&rdquo; is a really great way to spend time on twitter.');
-        $this->assertEqual($result->text, '@testy thanked someone 3 times on twitter last month.'
+        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->text, '@testy thanked someone 3 times on Twitter last month.'
             .' Seems like there was even more to be thankful about than in '.date('F', strtotime('-2 month')).'.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
         $baseline = $insight_baseline_dao->getInsightBaseline($baseline_name, $this->instance->id, date('Y-m-d'));
         $this->assertEqual(3, $baseline->value);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testAlternateHeadline() {
+        TimeHelper::setTime(1);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new ThanksCountInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'Saying &ldquo;thanks&rdquo; is a great way to spend time on Twitter.');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -188,7 +206,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '@testuser had to have been happy to be thanked.');
-        $this->assertEqual($result->text, '@testy thanked someone 2 times on twitter last month.');
+        $this->assertEqual($result->text, '@testy thanked someone 2 times on Twitter last month.');
         $this->assertEqual('avatar.jpg', $result->header_image);
 
 
