@@ -33,6 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightsGeneratorPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightPluginParent.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.CriteriaMatchInsightPluginParent.php';
 
 class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
 
