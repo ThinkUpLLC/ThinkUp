@@ -128,4 +128,17 @@ class InsightBaselineMySQLDAO  extends PDODAO implements InsightBaselineDAO {
         $result = $this->getDataRowAsArray($ps);
         return $result['c'] > 0;
     }
+
+    public function getMostRecentInsightBaseline($slug, $instance_id) {
+        $q = "SELECT date, instance_id, slug, value FROM #prefix#insight_baselines WHERE instance_id=:instance_id ";
+        $q .= "AND slug=:slug ORDER BY date DESC  LIMIT 1";
+        $vars = array(
+            ':instance_id'=>$instance_id,
+            ":slug"=>$slug,
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsObject($ps, 'InsightBaseline');
+        return $result;
+    }
 }
