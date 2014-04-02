@@ -85,7 +85,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets./', $result->headline);
+        $this->assertEqual("What happened with @testeriffic's tweets this week.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; there were '
             . '19 favorites, beating out 7 replies and 7 retweets.', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -126,7 +126,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/This week\'s key stats for tester_fb\'s status updates/', $result->headline);
+        $this->assertEqual("What happened with tester_fb's status updates this week.", $result->headline);
         $this->assertEqual('Whatever tester_fb said this week must have been memorable &mdash; there were 19 likes,'
            . ' beating out 10 comments.', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -161,7 +161,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
+        $this->assertEqual("What happened with @testeriffic's tweets this week.", $result->headline);
         $this->assertEqual('This week, @testeriffic really inspired conversations &mdash; '
             . 'replies outnumbered favorites or retweets.', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -196,7 +196,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
+        $this->assertEqual("What happened with @testeriffic's tweets this week.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; there were 3 favorites.',
             $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -228,9 +228,64 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/This week\'s key stats for \@testeriffic\'s tweets/', $result->headline);
+        $this->assertEqual("What happened with @testeriffic's tweets this week.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said this week must have been memorable &mdash; '
             .'there were 5 favorites, beating out 4 replies.', $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testSkipInsightIfNoActivity() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        for ($i=0; $i<=20; $i++) {
+            $days = 1 + floor($i/2);
+            $posts[] = new Post(array(
+                'post_text' => 'not_cool',
+                'reply_count_cache' => 0,
+                'retweet_count_cache' => 0,
+                'favlike_count_cache' => 0,
+                'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+            ));
+        }
+        $insight_plugin = new WeeklyGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertNull($result);
+    }
+
+    public function testForAtLeastThreePosts() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        for ($i=0; $i<=2; $i++) {
+            $days = 1 + floor($i/2);
+            $posts[] = new Post(array(
+                'post_text' => 'not_cool',
+                'reply_count_cache' => 4,
+                'retweet_count_cache' => 0,
+                'favlike_count_cache' => 0,
+                'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+            ));
+        }
+        $insight_plugin = new WeeklyGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+
+        $data = unserialize($result->related_data);
+        $this->assertNull($data['posts']);
+        $this->assertEqual("What happened with @testeriffic's tweets this week.", $result->headline);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }

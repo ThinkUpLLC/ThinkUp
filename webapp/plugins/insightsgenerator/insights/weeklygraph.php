@@ -129,11 +129,9 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
 
-                $headline = "This week's key stats for $this->username's "
-                    .$this->terms->getNoun('post', InsightTerms::PLURAL) . ".";
+                $headline = $this->getVariableCopy(array("What happened with %username's %posts this week."));
 
                 $my_insight = new Insight();
-
                 $my_insight->slug = 'weekly_graph';
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $this->insight_date;
@@ -142,8 +140,10 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->header_image = $header_image;
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_LOW;
-                $formatted_posts =array(DashboardModuleCacher::getHotPostVisualizationData($posts, $instance->network));
-                $my_insight->setPosts($formatted_posts);
+                if (count($posts) > 3) {
+                    $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
+                    $my_insight->setPosts($formatted_posts);
+                }
 
                 $this->insight_dao->insertInsight($my_insight);
             }
