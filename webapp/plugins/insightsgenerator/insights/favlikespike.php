@@ -130,7 +130,8 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                         $insight_text = "<strong>" .number_format($post->favlike_count_cache)
                             . " people</strong> ".$this->terms->getVerb('liked')
                             . " $this->username's ".$this->terms->getNoun('post').", which is more than <strong>"
-                            . $multiplier ."x</strong> $this->username's 30-day average.";
+                            . $this->terms->getMultiplierAdverb($multiplier)
+                            . "</strong> $this->username's 30-day average.";
                         $emphasis = Insight::EMPHASIS_LOW;
                         $posts = array($post, $hot_posts_data);
 
@@ -149,8 +150,9 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
                         $headline = 'This one hit a nerve this week.';
                         $insight_text = "<strong>".number_format($post->favlike_count_cache)
                             . " people</strong> ".$this->terms->getVerb('liked') . " $this->username's "
-                            . $this->terms->getNoun('post').", more than <strong>" .$multiplier
-                            . "x</strong> $this->username's 7-day average.";
+                            . $this->terms->getNoun('post').", more than <strong>"
+                            . $this->terms->getMultiplierAdverb($multiplier)
+                            . "</strong> $this->username's 7-day average.";
                         $emphasis = Insight::EMPHASIS_LOW;
                         $posts = array($post, $hot_posts_data);
 
