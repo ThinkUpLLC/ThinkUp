@@ -109,6 +109,144 @@ class TestOfFaveLikeSpikeInsight extends ThinkUpUnitTestCase {
 
     }
 
+    public function test30DayMultiplierPhrase() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_fave_count_last_30_days', $this->instance->id, $avg=10, $today);
+        $baseline_dao->insertInsightBaseline('high_fave_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (31*24*60*60)));
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 21,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('This tweet got double the favorites for @buffy.', $result->headline);
+        $this->assertEqual("<strong>21 people</strong> favorited @buffy's tweet, which is more than" .
+            " <strong>double</strong> @buffy's 30-day average.", $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 31,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
+        $this->assertEqual("<strong>31 people</strong> favorited @buffy's tweet, which is more than" .
+            " <strong>triple</strong> @buffy's 30-day average.", $result->text);
+        $this->assertNotNull($result);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 41,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
+        $this->assertEqual("<strong>41 people</strong> favorited @buffy's tweet, which is more than" .
+            " <strong>quadruple</strong> @buffy's 30-day average.", $result->text);
+        $this->assertNotNull($result);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 51,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
+        $this->assertEqual("<strong>51 people</strong> favorited @buffy's tweet, which is more than" .
+            " <strong>5x</strong> @buffy's 30-day average.", $result->text);
+        $this->assertNotNull($result);
+
+    }
+
+    public function test7DayMultiplierPhrase() {
+        $today = date('Y-m-d');
+
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_dao->insertInsightBaseline('avg_fave_count_last_7_days', $this->instance->id, $avg=10, $today);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 21,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('This one hit a nerve this week.', $result->headline);
+        $this->assertEqual("<strong>21 people</strong> favorited @buffy's tweet, more than" .
+            " <strong>double</strong> @buffy's 7-day average.", $result->text);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 31,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
+        $this->assertEqual("<strong>31 people</strong> favorited @buffy's tweet, more than" .
+            " <strong>triple</strong> @buffy's 7-day average.", $result->text);
+        $this->assertNotNull($result);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 41,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
+        $this->assertEqual("<strong>41 people</strong> favorited @buffy's tweet, more than" .
+            " <strong>quadruple</strong> @buffy's 7-day average.", $result->text);
+        $this->assertNotNull($result);
+
+        $posts = array(new Post(array(
+            'reply_count_cache' => 5, 'retweet_count_cache' => 1, 'favlike_count_cache' => 51,
+            'post_text' => 'This is a really good post',
+            'author_username' => $this->instance->network_username, 'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d H:i:s'), 'id' => 1
+        )));
+        $insight_plugin = new FaveLikeSpikeInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
+        $this->assertEqual("<strong>51 people</strong> favorited @buffy's tweet, more than" .
+            " <strong>5x</strong> @buffy's 7-day average.", $result->text);
+        $this->assertNotNull($result);
+
+    }
+
     public function test7dayHigh() {
         $today = date('Y-m-d');
 
@@ -219,7 +357,8 @@ class TestOfFaveLikeSpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That's the highest number of favorites @buffy's gotten in the past 30 days.", $result->headline);
+        $this->assertEqual("That's the highest number of favorites @buffy's gotten in the past 30 days.",
+            $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
     }
