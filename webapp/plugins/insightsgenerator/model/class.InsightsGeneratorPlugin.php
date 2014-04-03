@@ -124,28 +124,37 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $plugin_id = $plugin_dao->getPluginId($this->folder_name);
             //Get today's date
             $today = date('Y-m-d', $this->current_timestamp);
+            $now = date('Y-m-d H:i:s', $this->current_timestamp);
 
             $do_daily = false;
             $do_weekly = false;
 
             $last_daily = isset($options['last_daily_email']) ? $options['last_daily_email']->option_value : null;
-            if ($last_daily != $today) {
+            $last_daily_day = null;
+            if ($last_daily) {
+                $last_daily_day = substr($last_daily, 0, 10);
+            }
+            if ($last_daily_day != $today) {
                 if ($last_daily === null) {
-                    $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', $today);
+                    $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', $now);
                 } else {
                     $plugin_option_dao->updateOption($options['last_daily_email']->id,
-                    'last_daily_email', $today);
+                        'last_daily_email', $now);
                 }
                 $do_daily = true;
             }
 
             $last_weekly = isset($options['last_weekly_email']) ? $options['last_weekly_email']->option_value : null;
-            if ($last_weekly != $today && date('w', $this->current_timestamp) == self::WEEKLY_DIGEST_DAY_OF_WEEK) {
+            $last_weekly_day = null;
+            if ($last_weekly) {
+                $last_weekly_day = substr($last_weekly, 0, 10);
+            }
+            if ($last_weekly_day != $today && date('w', $this->current_timestamp) == self::WEEKLY_DIGEST_DAY_OF_WEEK) {
                 if ($last_weekly === null) {
-                    $plugin_option_dao->insertOption($plugin_id, 'last_weekly_email', $today);
+                    $plugin_option_dao->insertOption($plugin_id, 'last_weekly_email', $now);
                 } else {
                     $plugin_option_dao->updateOption($options['last_weekly_email']->id,
-                    'last_weekly_email', $today);
+                        'last_weekly_email', $now);
                 }
                 $do_weekly = true;
             }
@@ -156,7 +165,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
             if ($do_daily) {
                 foreach ($owners as $owner) {
-                    if ($this->sendDailyDigest($owner, $options)) {
+                    if ($this->sendDailyDigest($owner, $options, $last_daily)) {
                         $logger->logUserSuccess("Mailed daily digest to ".$owner->email.".", __METHOD__.','.__LINE__);
                     }
                 }
@@ -164,7 +173,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
             if ($do_weekly) {
                 foreach ($owners as $owner) {
-                    if ($this->sendWeeklyDigest($owner, $options)) {
+                    if ($this->sendWeeklyDigest($owner, $options, $last_weekly)) {
                         $logger->logUserSuccess("Mailed weekly digest to ".$owner->email.".", __METHOD__.','.__LINE__);
                     }
                 }
@@ -176,12 +185,19 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * Email daily insight digest.
      * @param Owner $owner Owner to send for
      * @param array $options Plugin options
+     * @param str $last_sent When we last sent this message
      * return bool Whether email was sent
      */
-    private function sendDailyDigest($owner, $options) {
+    private function sendDailyDigest($owner, $options, $last_sent) {
         if (in_array($owner->email_notification_frequency, array('both','daily'))) {
-            return $this->sendDigestSinceWithTemplate($owner, 'Yesterday 4am', '_email.daily_insight_digest.tpl',
-            $options);
+            if ($last_sent === null) {
+                $last_sent = '-24 hour';
+            }
+            else if (strlen($last_sent) <= 10) {
+                $last_sent .= ' 04:00';
+            }
+            return $this->sendDigestSinceWithTemplate($owner, $last_sent, '_email.daily_insight_digest.tpl',
+                $options, false);
         } else {
             return false;
         }
@@ -192,12 +208,19 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * Email weekly insight digest.
      * @param Owner $owner Owner to send for
      * @param array $options Plugin options
+     * @param str $last_sent When we last sent this message
      * return bool Whether email was sent
      */
-    private function sendWeeklyDigest($owner, $options) {
+    private function sendWeeklyDigest($owner, $options, $last_sent) {
         if (in_array($owner->email_notification_frequency, array('both','weekly'))) {
-            return $this->sendDigestSinceWithTemplate($owner, '1 week ago 4am', '_email.weekly_insight_digest.tpl',
-            $options);
+            if ($last_sent === null) {
+                $last_sent = '-7 day';
+            }
+            else if (strlen($last_sent) <= 10) {
+                $last_sent .= ' 04:00';
+            }
+            return $this->sendDigestSinceWithTemplate($owner, $last_sent, '_email.weekly_insight_digest.tpl',
+                $options, true);
         } else {
             return false;
         }
@@ -209,9 +232,10 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
      * @param str $start When to start insight lookup
      * @param str $template Email view template to use
      * @param array $options Plugin options
+     * @param bool $weekly Is this a weekly email?
      * return bool Whether email was sent
      */
-    private function sendDigestSinceWithTemplate($owner, $start, $template, &$options) {
+    private function sendDigestSinceWithTemplate($owner, $start, $template, &$options, $weekly) {
         $insights_dao = DAOFactory::GetDAO('InsightDAO');
         $start_time = date( 'Y-m-d H:i:s', strtotime($start, $this->current_timestamp));
         $insights = $insights_dao->getAllOwnerInstanceInsightsSince($owner->id, $start_time);
@@ -239,8 +263,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
             }
             // It's a weekly digest if we're going back more than a day or two.
-            $days_ago = ($this->current_timestamp - strtotime($start)) / (60*60*24);
-            $daily_or_weekly = ($days_ago > 2) ? 'Weekly' : 'Daily';
+            $daily_or_weekly = $weekly ? 'Weekly' : 'Daily';
             $view->assign('weekly_or_daily', $daily_or_weekly);
             $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
 
