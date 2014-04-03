@@ -334,7 +334,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
         $this->assertEqual(count($options), 0, 'Starting with no settings');
 
-        $long_ago = date('Y-m-d', strtotime('last year'));
+        $long_ago = date('Y-m-d', strtotime('-7 day'));
 
         $builders = array();
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
@@ -1013,7 +1013,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         date_default_timezone_set($config->getValue('timezone'));
         $this->simulateLogin('daily@example.com');
         $plugin = new InsightsGeneratorPlugin();
-        $plugin->current_timestamp = strtotime('3am'); // Should not set yet
+        $plugin->current_timestamp = strtotime('3am'); // Should not send yet
         $plugin->crawl();
 
         $sent = Mailer::getLastMail();
@@ -1022,7 +1022,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
         $this->assertEqual(count($options), 0);
 
-        $plugin->current_timestamp = strtotime('5am'); // SHould send
+        $plugin->current_timestamp = strtotime('5am'); // Should send
         $plugin->crawl();
 
         $sent = Mailer::getLastMail();
@@ -1031,5 +1031,56 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
         $this->assertTrue(count($options)>0);
         date_default_timezone_set($tz);
+    }
+
+    public function testHandlingLastSentTime() {
+        $tz = date_default_timezone_get();
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User','is_admin'=>1,
+            'email'=>'daily@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+            'timezone'=>'America/New_York'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+            'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+            'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>1, 'instance_id'=>5,
+            'slug'=>'new_group_memberships', 'headline'=>'Made the List:', 'related_data'=>null,
+            'text'=>'CDMoyer is on 29 new lists', 'time_generated'=>date('Y-m-d 4:00', strtotime('-49 hour'))));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>5,
+            'slug'=>'new_group_memberships', 'headline'=>'Made the List:', 'related_data'=>null,
+            'text'=>'CDMoyer is on 99 new lists', 'time_generated'=>date('Y-m-d H:00:00', strtotime('-45 hour'))));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>5,
+            'slug'=>'new_group_memberships', 'headline'=>'Made the List:', 'related_data'=>null,
+            'text'=>'CDMoyer is on 42 new lists', 'time_generated'=>date('Y-m-d H:00:00', strtotime('-42 hour'))));
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $this->assertEqual(count($options), 0);
+
+        $config = Config::getInstance();
+        //date_default_timezone_set($config->getValue('timezone'));
+        $this->simulateLogin('daily@example.com');
+        $plugin = new InsightsGeneratorPlugin();
+        $plugin->current_timestamp = strtotime('Yesterday 4am'); // Should send
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNoPattern('/29 new lists/', $sent);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+
+        $plugin->current_timestamp = strtotime('4am'); // Should send
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email',
+            date('Y-m-d H:00:00', strtotime('-43 hour')));
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin->crawl();
+
+        $sent = Mailer::getLastMail();
+        $this->assertNoPattern('/29 new lists/', $sent);
+        $this->assertNoPattern('/99 new lists/', $sent);
+        $this->assertPattern('/42 new lists/', $sent);
     }
 }
