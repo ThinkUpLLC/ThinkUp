@@ -251,7 +251,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
             'But enough about me&hellip;',
             'Self-reflection is powerful stuff.',
             'Speaking from experience&hellip;',
-            'Sometimes twitter is a first-person story.',
+            'Sometimes Twitter is a first-person story.',
             'It\'s just me, myself and I.',
             '@testeriffic is getting personal.',
         );

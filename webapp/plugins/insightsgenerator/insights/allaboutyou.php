@@ -54,7 +54,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                     'Speaking from experience&hellip;',
                     'Sometimes %network is a first-person story.',
                     'It\'s just me, myself and I.',
-                ), array('network' => $instance->network));
+                ), array('network' => ucfirst($instance->network)));
                 $percent = round($count / count($last_week_of_posts) * 100);
                 $plural = count($last_week_of_posts) > 1;
                 $insight_text = "<strong>$percent%</strong> of $this->username's ".$this->terms->getNoun('post', $plural)
