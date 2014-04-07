@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Weekly Graph
- Description: Show a simple chart of your last week's stats.
+ Description: Summarize and display a simple chart of responses to last week's posts.
  When: Wednesdays
  */
 
@@ -36,8 +36,9 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('weekly_graph', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts))) {
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_graph', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts));
+        if ($should_generate_insight) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
             $total_replies = 0;
@@ -65,7 +66,6 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     $most_popular_post = $post;
                 }
 
-
                 if ($popularity_index > 0) {
                     $post->popularity_index = $popularity_index;
                     $engaged_posts[] = $post;
@@ -73,13 +73,11 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-
                 usort($engaged_posts, array($this, 'compareEngagedPosts'));
                 $posts = array_slice($engaged_posts, 0, 10);
 
-
                 if ($total_replies >= $total_likes && $total_replies >= $total_retweets) {
-                    $insight_text = "This week, ".$this->username." really inspired conversations";
+                    $insight_text = $this->username." really inspired conversations in the past week";
                     $lower = array();
                     if ($total_replies > $total_likes) {
                         $lower[] = $this->terms->getNoun('like', InsightTerms::PLURAL);
@@ -88,13 +86,14 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                         $lower[] = $this->terms->getNoun('retweet', InsightTerms::PLURAL);
                     }
                     if (count($lower) == 0) {
-                        $insight_text .= '.';
+                        $insight_text .= ', getting more '.
+                            $this->terms->getNoun('reply', InsightTerms::PLURAL)." than anything else.";
                     } else {
-                        $insight_text .= ' &mdash; replies outnumbered '.join(' or ', $lower).'.';
+                        $insight_text .= ' &mdash; '. $this->terms->getNoun('reply', InsightTerms::PLURAL).
+                            ' outnumbered '.join(' or ', $lower).'.';
                     }
-                }
-                else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
-                    $insight_text = "Whatever ".$this->username." said this week must have been memorable";
+                } else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
+                    $insight_text = "Whatever ".$this->username." said in the past week must have been memorable";
                     $insight_text .= ' &mdash; there were '.$total_likes.' '.
                         $this->terms->getNoun('like', InsightTerms::PLURAL);
                     $lower = array();
@@ -111,9 +110,9 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     } else {
                         $insight_text .= ', beating out '.join(' and ', $lower).'.';
                     }
-                }
-                else {
-                    $insight_text = $this->username." shared a lot of things people wanted to amplify this week.";
+                } else {
+                    $insight_text = $this->username.
+                        " shared a lot of things people wanted to amplify in the past week.";
                     $lower = array();
                     if ($total_retweets > $total_replies) {
                         $lower[] = $this->terms->getNoun('reply', InsightTerms::PLURAL) . ' by '
@@ -129,7 +128,13 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
 
-                $headline = $this->getVariableCopy(array("What happened with %username's %posts this week."));
+                $headline = $this->getVariableCopy(array(
+                    "What's going on with %username's %posts.",
+                    "What's up with %username's %posts.",
+                    "What's happening with %username's %posts?",
+                    "Here's the deal with %username's %posts.",
+                    "Last week in %username's %posts&hellip;"
+                ));
 
                 $my_insight = new Insight();
                 $my_insight->slug = 'weekly_graph';
