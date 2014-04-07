@@ -11,32 +11,27 @@ Director at ThinkUp's incubator, `Expert Labs <http://expertlabs.org>`_, from Fe
 Since then, she has been the cofounder of ThinkUp LLC, leading application development.
 
 *   `ginatrapani on GitHub <https://github.com/ginatrapani>`_
-*   `@ginatrapani on Twitter <https://twitter.com/ginatrapani>`_
-*   `+Gina Trapani on Google+ <https://plus.google.com/113612142759476883204>`_
+*   `ginatrapani's ThinkUp <https://ginatrapani.thinkup.com>`_
 
 **Anil Dash** founded ThinkUp's incubator, `Expert Labs <http://expertlabs.org>`_, and cofounded ThinkUp LLC
-with Gina Trapani. He is responsible for ThinkUp's look and feel. `See Anil's 
-ThinkUp contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=anildash>`_.
+with Gina Trapani. `See Anil's  ThinkUp 
+contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=anildash>`_.
 
 *   `anildash on GitHub <https://github.com/anildash>`_
-*   `@anildash on Twitter <https://twitter.com/anildash>`_
-*   `+Anil Dash on Google+ <https://plus.google.com/103012564142649561853/>`_
-*   `Anil Dash on Facebook <https://www.facebook.com/anil.dash>`_
+*   `anildash's ThinkUp <https://anildash.thinkup.com>`_
 
 **Mark Wilkie** worked on ThinkUp through Expert Labs from May of 2010 until March 2012 as a lead developer and
-application architect. `See Mark's ThinkUp 
+application architect, then in 2013 on internal systems for ThinkUp, LLC. `See Mark's ThinkUp 
 contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=mwilkie>`_.
 
 *   `mwilkie on GitHub <https://github.com/mwilkie>`_
-*   `@mwilkie on Twitter <https://twitter.com/mwilkie>`_
+*   `mwilkie's ThinkUp <https://mwilkie.thinkup.com/>`_
 
-**Andy Baio** worked on ThinkUp through Expert Labs from November of 2010 until March 2012, responsible for data
-analysis and visualization. Now he advises ThinkUp LLC. `See Andy's ThinkUp
-contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=waxpancake>`_.
+**Chris Moyer** started work on ThinkUp through ThinkUp, LLC in November 2013. `See Chris's ThinkUp 
+contributions <https://github.com/ginatrapani/ThinkUp/commits/master?author=cdmoyer>`_.
 
-*   `waxpancake on GitHub <https://github.com/waxpancake>`_
-*   `@waxpancake on Twitter <https://twitter.com/waxpancake>`_
-*   `+Andy Baio on Google+ <https://plus.google.com/103765655241162838230/>`_
+*   `cdmoyer on GitHub <https://github.com/cdmoyer>`_
+*   `cdmoyer's ThinkUp <https://cdmoyer.thinkup.com>`_
 
 Community
 ---------
