@@ -48,7 +48,7 @@ class InsightTerms {
 
     /**
      * Get the appropriate noun for a term.
-     * @param str $noun the term to be localized
+     * @param str $noun the term to be localized: 'post', 'like', 'reply', 'reshare', 'friend'
      * @param bool $quantity whether the term to be returned is plural or not
      * @return str localized noun for the required term
      */
