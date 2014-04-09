@@ -164,7 +164,7 @@ checkUsername = ($el) ->
   )
 
 $ ->
-  setListOpenData(true)
+  setListOpenData(true) unless $(".stream-permalink").length
   $(window).load -> setDateGroupData()
   setNavHeight()
 
