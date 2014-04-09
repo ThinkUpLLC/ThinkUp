@@ -189,7 +189,7 @@
 
   $(function() {
     var isjPMon, jPM;
-    setListOpenData(true);
+    if (!$(".stream-permalink").length) setListOpenData(true);
     $(window).load(function() {
       return setDateGroupData();
     });
