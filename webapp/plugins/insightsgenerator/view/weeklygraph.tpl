@@ -1,4 +1,4 @@
-
+{if isset($i->related_data.posts[0])}
     <div id="response_rates_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
@@ -38,3 +38,4 @@
         }
         {/literal}
     </script>
+{/if}
