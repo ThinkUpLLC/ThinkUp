@@ -162,7 +162,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    public function testAlternateHeadline() {
+    public function testAlternateHeadlines() {
         TimeHelper::setTime(1);
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
@@ -170,12 +170,58 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new ThanksCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
-
         $today = date ('Y-m-d');
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'Gratitude makes everybody happy.');
+
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+
+        TimeHelper::setTime(3);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Saying &ldquo;thanks&rdquo; is a great way to spend time on Twitter.');
+
+        TimeHelper::setTime(4);
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'Way to show appreciation.');
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testAlternateText() {
+        TimeHelper::setTime(1);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new ThanksCountInsight();
+        $today = date ('Y-m-d');
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertPattern('/\@testy tweeted 1 thank-you last month./', $result->text);
+
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
+
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertPattern('/\@testy tweeted 2 thank-yous last month./', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -206,7 +252,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '@testuser had to have been happy to be thanked.');
-        $this->assertEqual($result->text, '@testy thanked someone 2 times on Twitter last month.');
+        $this->assertEqual($result->text, '@testy thanked someone twice on Twitter last month.');
         $this->assertEqual('avatar.jpg', $result->header_image);
 
 

@@ -24,6 +24,15 @@
  * @copyright 2014 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
+/**
+ * Parent class for insights which track whether posts match certain criteria
+ *
+ * This parent class handles:
+ *     - the creation and tracking of baselines
+ *     - ensuring that enough posts are collected for the expected timeframe (as returned by getNumberOfDaysNeeded()
+ *     - passing posts through postMatchesCriteria to generate counts
+ *     - storing the (potentially) generated insight
+ */
 abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
     /**
      * Determine if this function should generate an insight.
@@ -59,7 +68,7 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
     public abstract function postMatchesCriteria(Post $post);
 
     /**
-     * Generate and insight based on the counts from this perion, last period, and matching posts
+     * Generate an insight based on the counts from this period, last period, and matching posts
      * This function may return null if an insight is not appropriate, but otherwise should instatiate and
      * return an Insight object with the appropriate headline, text, etc filled out.
      *
