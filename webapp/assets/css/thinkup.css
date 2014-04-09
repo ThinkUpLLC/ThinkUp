@@ -18,7 +18,7 @@ body.settings .container header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
   margin-top: 4px;
-  line-height: 1.2857142857142858;
+  line-height: 1.28571429;
   font-weight: 300;
   text-align: center;
   margin: 0;
@@ -899,6 +899,19 @@ body.app-message-visible.account .container {
 .stream.stream-permalink .insight {
   margin: 28px auto;
 }
+.stream.stream-permalink .insight .body-list {
+  padding: 0;
+  margin: 0 0 17px;
+}
+.stream.stream-permalink .insight .body-list .list-item {
+  display: block;
+}
+.stream.stream-permalink .insight .body-list .list-item:first-child {
+  display: block;
+}
+.stream.stream-permalink .insight .btn-see-all {
+  display: none;
+}
 .insight {
   border: 0;
   border-radius: 0px;
@@ -945,7 +958,7 @@ body.app-message-visible.account .container {
   font-family: "tablet-gothic-semi-condensed", sans-serif;
   font-weight: 600;
   font-size: 19px;
-  line-height: 1.105263157894737;
+  line-height: 1.10526316;
   margin-bottom: 6px;
   font-weight: 400;
   letter-spacing: .03em;
@@ -1085,7 +1098,7 @@ body.app-message-visible.account .container {
 }
 .insight-hero .panel-heading .panel-title {
   font-size: 24px;
-  line-height: 1.0833333333333333;
+  line-height: 1.08333333;
   letter-spacing: .01em;
   margin-bottom: 8px;
   font-weight: 600;
