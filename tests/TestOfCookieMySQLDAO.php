@@ -100,6 +100,20 @@ class TestOfCookieMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($email);
     }
 
+    public function testThatNonDuplicateExceptionsAreThrown() {
+
+        $config = Config::getInstance();
+        $prefix = $config->getValue('table_prefix');
+        PDODAO::$PDO->exec('RENAME TABLE '.$prefix.'cookies to '.$prefix.'cookies2');
+        try {
+            $cookie = $this->DAO->generateForEmail($em = 'testy@testy.com');
+        } catch (Exception $e) {
+            $this->assertNotNull($e);
+            $this->assertPattern('/Base table or view not found/', $e->getMessage());
+        }
+        PDODAO::$PDO->exec('RENAME TABLE '.$prefix.'cookies2 to '.$prefix.'cookies');
+    }
+
     public function tearDown() {
         $this->builders = null;
         parent::tearDown();

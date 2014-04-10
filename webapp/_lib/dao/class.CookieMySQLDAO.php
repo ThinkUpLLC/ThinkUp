@@ -50,6 +50,9 @@ class CookieMySQLDAO extends PDODAO implements CookieDAO {
                     break;
                 }
             } catch (PDOException $e) {
+                if (!preg_match("/Duplicate entry .* for key 'cookie'/", $e->getMessage())) {
+                    throw $e;
+                }
                 $try = null;
                 //do nothing, loop will come back around
             }
