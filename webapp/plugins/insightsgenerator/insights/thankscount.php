@@ -32,7 +32,7 @@
 class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements InsightPlugin {
     public function shouldGenerate(Instance $instance, $last_week_of_posts) {
         return $this->shouldGenerateMonthlyInsight($this->getSlug(), $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_month=2, count($last_week_of_posts), $excluded_networks=null);
+            $regenerate_existing_insight=false, $day_of_month=10, count($last_week_of_posts), $excluded_networks=null);
     }
 
     public function getSlug() {
@@ -92,8 +92,10 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                 ));
 
                 if ($this_period_count > $last_period_count && $last_period_count > 0) {
-                    $month_name = date('F', strtotime('-2 month'));
-                    $insight->text .= ' Seems like there was even more to be thankful about than in '.$month_name.'.';
+                    $two_months_ago_name = date('F', strtotime('-2 month'));
+                    $one_month_ago_name = date('F', strtotime('-1 month'));
+                    $insight->text .= ' Sounds like there was even more to be thankful about in '.$one_month_ago_name.
+                    ' than in '.$two_months_ago_name.'.';
                 }
                 $insight->filename = basename(__FILE__, ".php");
                 $insight->emphasis = Insight::EMPHASIS_LOW;
@@ -101,3 +103,6 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
         return $insight;
     }
 }
+
+$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+$insights_plugin_registrar->registerInsightPlugin('ThanksCountInsight');

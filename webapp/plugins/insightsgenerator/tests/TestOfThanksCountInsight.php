@@ -151,7 +151,8 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Gratitude is contagious.');
         $this->assertEqual($result->text, '@testy thanked someone 3 times on Twitter last month.'
-            .' Seems like there was even more to be thankful about than in '.date('F', strtotime('-2 month')).'.');
+            .' Sounds like there was even more to be thankful about in '.date('F', strtotime('-1 month'))
+            .' than in '.date('F', strtotime('-2 month')).'.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
