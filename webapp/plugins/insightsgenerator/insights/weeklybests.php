@@ -64,7 +64,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $headline = "This was $this->username's ".$this->terms->getNoun('post') . " of the week.";
+                $headline = "This was $this->username's most popular ".$this->terms->getNoun('post') . " of last week.";
                 $insight_text = $this->username." earned ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
