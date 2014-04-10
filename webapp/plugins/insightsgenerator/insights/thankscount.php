@@ -43,7 +43,10 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
         return date('t', strtotime('-1 month'));
     }
 
-    public function postMatchesCriteria(Post $post) {
+    public function postMatchesCriteria(Post $post, Instance $instance) {
+        if ($post->in_reply_to_user_id == $instance->network_user_id) {
+            return false;
+        }
         $text = strtolower($post->post_text);
         $has_thanks = preg_match('/(\W|^)(thanks|thank you)(\W|$)/', $text);
         if ($has_thanks) {
@@ -73,8 +76,11 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                 $insight->date = $this->insight_date;
                 $user_prefix = ($instance->network == 'twitter' ? '@' : '');
                 if ($thankee) {
-                    $insight->headline = $user_prefix. $thankee->username . ' had to have been happy to be thanked.';
+                    $insight->headline = $user_prefix. $thankee->username . ' probably appreciated it.';
                     $insight->header_image = $thankee->avatar;
+                    $insight->text = $this->getVariableCopy(array(
+                        '%username %posted '.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').' last month.'
+                    ));
                 }
                 else {
                     $insight->headline = $this->getVariableCopy(array(
@@ -83,13 +89,13 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                         'Gratitude is contagious.',
                         'Saying &ldquo;thanks&rdquo; is a great way to spend time on '.ucfirst($instance->network).'.'
                     ));
+                    $times = $this->terms->getOccurrencesAdverb($this_period_count);
+                    $insight->text = $this->getVariableCopy(array(
+                        '%username thanked someone '.$times. ' on '.  ucfirst($instance->network).' last month.',
+                        '%username %posted '.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').' last month.'
+                    ));
                 }
 
-                $times = $this->terms->getOccurrencesAdverb($this_period_count);
-                $insight->text = $this->getVariableCopy(array(
-                    '%username thanked someone '.$times. ' on '.  ucfirst($instance->network).' last month.',
-                    '%username %posted '.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').' last month.'
-                ));
 
                 if ($this_period_count > $last_period_count && $last_period_count > 0) {
                     $two_months_ago_name = date('F', strtotime('-2 month'));

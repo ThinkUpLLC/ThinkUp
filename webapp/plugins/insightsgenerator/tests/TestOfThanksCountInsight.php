@@ -252,8 +252,8 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@testuser had to have been happy to be thanked.');
-        $this->assertEqual($result->text, '@testy thanked someone twice on Twitter last month.');
+        $this->assertEqual($result->headline, '@testuser probably appreciated it.');
+        $this->assertEqual($result->text, '@testy tweeted 2 thank-yous last month.');
         $this->assertEqual('avatar.jpg', $result->header_image);
 
 
@@ -272,39 +272,45 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $post = new Post();
 
         $post->post_text = 'thank you';
-        $this->assertTrue($insight_plugin->postMatchesCriteria($post), $post->post_text.' not true');
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
 
         $post->post_text = 'Thanks!';
-        $this->assertTrue($insight_plugin->postMatchesCriteria($post), $post->post_text.' not true');
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
 
         $post->post_text = 'thanks!';
-        $this->assertTrue($insight_plugin->postMatchesCriteria($post), $post->post_text.' not true');
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
 
         $post->post_text = 'Hey, thank you for your help.';
-        $this->assertTrue($insight_plugin->postMatchesCriteria($post), $post->post_text.' not true');
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
 
         $post->post_text = 'No, thank you!';
-        $this->assertTrue($insight_plugin->postMatchesCriteria($post), $post->post_text.' not true');
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
 
         $post->post_text = 'No thanks.';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'No thank you';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'Thanks, but no.';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'Thanks but I have already got one.';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'Thanksgiving is great';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'I was thanking my mom.';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
 
         $post->post_text = 'no thanks';
-        $this->assertFalse($insight_plugin->postMatchesCriteria($post), $post->post_text.' not false');
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
+
+        $post->post_text = 'Thanks!';
+        $this->assertTrue($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not true');
+
+        $post->in_reply_to_user_id = $this->instance->network_user_id;
+        $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), $post->post_text.' not false');
     }
 }

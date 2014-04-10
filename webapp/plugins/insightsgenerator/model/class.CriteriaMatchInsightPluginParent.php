@@ -63,9 +63,10 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
      * Given a post, determine if this matches the criteria we're counting in this insight
      *
      * @param Post $post The Post to check
+     * @param Instance $instance The Instance we're currently examining
      * @return bool Does it match?
      */
-    public abstract function postMatchesCriteria(Post $post);
+    public abstract function postMatchesCriteria(Post $post, Instance $instance);
 
     /**
      * Generate an insight based on the counts from this period, last period, and matching posts
@@ -99,7 +100,7 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
             $count = 0;
             $matching_posts = array();
             foreach ($posts as $post) {
-                $matches = $this->postMatchesCriteria($post);
+                $matches = $this->postMatchesCriteria($post, $instance);
                 if ($matches) {
                     $count++;
                     $matching_posts[] = $post;
