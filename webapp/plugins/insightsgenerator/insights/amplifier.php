@@ -45,7 +45,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
 
                 //if insight doesn't exist fetch user details of original author and instance
                 if (self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
-                $insight_date=$simplified_post_date)) {
+                    $insight_date=$simplified_post_date)) {
                     if (!isset($user_dao)) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                     }
@@ -56,15 +56,20 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     //if user exists and has fewer followers than instance user, build and insert insight
                     if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
                         $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-
-                        $headline = $add_audience . " more people saw " . $retweeted_user->username . "'s " .
-                            $this->terms->getNoun('post') . " thanks to " . $this->username . ".";
-
-                        // semi-randomly use a different phrasing
-                        if ($post->id % 2 == 0) {
-                            $headline = $retweeted_user->full_name . " can thank " . $this->username . " for " .
-                                $add_audience . " more people seeing this " . $this->terms->getNoun('post') . ".";
+                        $multiplier = floor($instance_user->follower_count / $retweeted_user->follower_count);
+                        if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
+                            $add_audience = $multiplier.'x';
                         }
+
+                        $retweeted_username = $retweeted_user->username;
+                        if ($instance->network == 'twitter') {
+                            $retweeted_username = '@'.$retweeted_username;
+                        }
+                        $headline = $this->getVariableCopy(array(
+                            $retweeted_user->full_name." can thank %username for %added more people seeing this %post.",
+                            "%added more people saw %repostedee's %post thanks to %username.",
+                            '%username boosted '.$retweeted_user->full_name.'\'s %post to %added more people.'
+                        ), array('repostedee' => $retweeted_username, 'added' => $add_audience));
 
                         $my_insight = new Insight();
 
