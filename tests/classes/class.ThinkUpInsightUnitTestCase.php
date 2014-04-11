@@ -146,7 +146,13 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "retweet_count_api" => 2,
             "favlike_count_cache" => 3,
             "author" => null,
-            "links" => array(new Link(array(
+            "favorited" => null,
+            "all_retweets" => 2,
+            "rt_threshold" => 0,
+            "permalink" => null,
+            "adj_pub_date" => "2014-02-17 16:12:10"
+        ));
+        $tweets[0]->addLink(new Link(array(
                 "id" => 1510,
                 "url" => "http://t.co/Euiv1aMgVD",
                 "expanded_url" => null,
@@ -158,13 +164,22 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
                 "error" => null,
                 "container_post" => null,
                 "other" => array()
-            ))),
-            "favorited" => null,
-            "all_retweets" => 2,
-            "rt_threshold" => 0,
-            "permalink" => null,
-            "adj_pub_date" => "2014-02-17 16:12:10"
-        ));
+        )));
+        $tweets[0]->addLink(new Link(array(
+                "id" => "539",
+                "url" => "http://t.co/tFdZbL4Y",
+                "expanded_url" => "http://www.kickstarter.com/projects/zefrank/a-show-with-ze-frank",
+                "title" => "A Show with Ze Frank by Ze Frank — Kickstarter",
+                "description" => "Ze Frank is raising funds for A Show with Ze Frank on Kickstarter!\n\nIn 2006 I ".
+                    "created a show called \"The Show with Ze Frank.\" With your help I'd like to start a new show. ".
+                    "Same, same... but different.",
+                "image_src" => "",
+                "caption" => "",
+                "post_key" => "2171",
+                "error" => "",
+                "container_post" => "",
+                "other" => array()
+        )));
         $tweets[] = new Post(array(
             "id" => 1,
             "post_id" => "174270132116406274",
@@ -197,21 +212,6 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "retweet_count_api" => 7,
             "favlike_count_cache" => 3,
             "author" => null,
-            "links" => array(new Link(array(
-                "id" => "539",
-                "url" => "http://t.co/tFdZbL4Y",
-                "expanded_url" => "http://www.kickstarter.com/projects/zefrank/a-show-with-ze-frank",
-                "title" => "A Show with Ze Frank by Ze Frank — Kickstarter",
-                "description" => "Ze Frank is raising funds for A Show with Ze Frank on Kickstarter!\n\nIn 2006 I ".
-                    "created a show called \"The Show with Ze Frank.\" With your help I'd like to start a new show. ".
-                    "Same, same... but different.",
-                "image_src" => "",
-                "caption" => "",
-                "post_key" => "2171",
-                "error" => "",
-                "container_post" => "",
-                "other" => array()
-            ))),
             "favorited" => null,
             "all_retweets" => 7,
             "rt_threshold" => 0,
