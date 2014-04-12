@@ -38,13 +38,13 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         $filename = basename(__FILE__, ".php");
 
         if (self::shouldGenerateInsight('new_group_memberships', $instance, $insight_date='today',
-        $regenerate_existing_insight=true)) {
+            $regenerate_existing_insight=true)) {
             //get new group memberships per day
             $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
             $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
-            $this->insight_date);
+                $this->insight_date);
 
-            if (sizeof($new_groups) > 0 ) { //if not null, store insight
+            if (sizeof($new_groups) > 0 ) {
                 // Clean up non-unique names, which just looks weird/bad
                 $unique_new_groups = array();
                 $seen_groups = array();
@@ -58,7 +58,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 $new_groups = $unique_new_groups;
                 $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
                 $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
-                $instance->network, 'DAY', 15, null, 'group_memberships');
+                    $instance->network, 'DAY', 15, null, 'group_memberships');
                 if (sizeof($new_groups) > 1) {
                     $group_name_list = '';
                     $group_number = 0;
@@ -104,34 +104,39 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     $headline .= ' sound like good descriptions of ' . $this->username . '?';
                     $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
                     if (is_array($list_membership_count_history_by_day['history'])
-                    && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
+                        && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
                         $insight_text .=  ", bringing the total to <strong>". number_format($total_lists).
                         " lists</strong>.";
                     } else {
                         $insight_text .= ".";
                     }
-                    $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
-                    $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
-                    serialize($list_membership_count_history_by_day));
 
                 } else {
                     $new_groups[0]->setMetadata();
                     $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
-                    "&rdquo; seem like a good description of " . $this->username . "?";
+                        "&rdquo; seem like a good description of " . $this->username . "?";
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
-                    $new_groups[0]->keyword."</a>";
+                        $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
                         $insight_text .= ", bringing the total to <strong>". number_format($total_lists)
-                        . " lists</strong>";
+                            . " lists</strong>";
                     }
                     $insight_text .= ".";
-
-                    $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
-                    $this->insight_date, $headline, $insight_text, $filename, Insight::EMPHASIS_LOW,
-                    serialize($list_membership_count_history_by_day));
                 }
+                $insight = new Insight();
+                $insight->slug = 'new_group_memberships';
+                $insight->instance_id = $instance->id;
+                $insight->date = $this->insight_date;
+                $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_LOW;
+                $insight->headline = $headline;
+                $insight->text = $insight_text;
+                if (count($list_membership_count_history_by_day['history']) >= 3) {
+                    $insight->related_data = serialize($list_membership_count_history_by_day);
+                }
+                $this->insight_dao->insertInsight($insight);
             }
         }
 
