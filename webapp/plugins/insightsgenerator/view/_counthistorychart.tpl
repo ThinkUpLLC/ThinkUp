@@ -1,3 +1,4 @@
+{if $i->related_data.vis_data}
 
 <div id="count_history_{$i->id}" class="chart"></div>
 
@@ -47,3 +48,4 @@ function drawChart{/literal}{$i->id}() {literal}{
   }
   {/literal}
 </script>
+{/if}
