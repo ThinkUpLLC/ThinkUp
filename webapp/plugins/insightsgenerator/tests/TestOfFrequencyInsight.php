@@ -145,24 +145,10 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(1, 2, 3) as $modded_time) {
-            TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
-            $today = date ('Y-m-d');
-            $result = $insight_dao->getInsight('frequency', 10, $today);
-            $this->debug(Utils::varDumpToString($result));
-            $this->assertNotNull($result);
-            $this->assertIsA($result, "Insight");
-            $this->assertNotNull($result->time_generated);
-            if ($modded_time == 3) {
-                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
-                $this->assertNull($result->insight_text);
-            } else {
-                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
-                $this->assertNull($result->insight_text);
-            }
-        }
-
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 10, $today);
+        $this->assertNull($result);
     }
 
 
@@ -177,25 +163,10 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(1, 2, 3) as $modded_time) {
-            TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
-            $today = date ('Y-m-d');
-            $result = $insight_dao->getInsight('frequency', 2, $today);
-            $this->debug(Utils::varDumpToString($result));
-            $this->assertNotNull($result);
-            $this->assertIsA($result, "Insight");
-            $this->assertNotNull($result->time_generated);
-            if ($modded_time == 3) {
-                $this->assertEqual('Test User posted <strong>5 times</strong> in the past week.', $result->headline);
-                $this->assertNull($result->insight_text);
-            } else {
-                $this->assertEqual('Test User had <strong>5 status updates</strong> over the past week.',
-                    $result->headline);
-                $this->assertNull($result->insight_text);
-            }
-        }
-
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 2, $today);
+        $this->assertNull($result);
     }
 
     public function testFrequencyInsightPriorGreaterBy2Baseline() {
@@ -320,25 +291,10 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        foreach (array(1, 2, 3) as $modded_time) {
-            TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
-            $today = date ('Y-m-d');
-            $result = $insight_dao->getInsight('frequency', 10, $today);
-            $this->debug(Utils::varDumpToString($result));
-            $this->assertNotNull($result);
-            $this->assertIsA($result, "Insight");
-            $this->assertNotNull($result->time_generated);
-            if ($modded_time == 3) {
-                $this->assertEqual('@testeriffic tweeted <strong>5 times</strong> in the past week.',$result->headline);
-                //assert no comparison to prior week
-            } else {
-                $this->assertEqual('@testeriffic had <strong>5 tweets</strong> over the past week.',$result->headline);
-                //assert no comparison to prior week
-            }
-            $this->assertNoPattern('/prior week/', $result->text);
-        }
-
+        $insight_plugin->generateInsight($instance, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 10, $today);
+        $this->assertNull($result);
     }
 
     /**
