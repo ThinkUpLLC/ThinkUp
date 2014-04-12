@@ -155,9 +155,11 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->setButton($info['button']);
             }
             $my_insight->headline = $info['headline'];
-            $my_insight->text = $info['text'];
+            if (!empty($info['text'])) {
+                $my_insight->text = $info['text'];
+                $this->insight_dao->insertInsight($my_insight);
+            }
 
-            $this->insight_dao->insertInsight($my_insight);
 
         }
 
