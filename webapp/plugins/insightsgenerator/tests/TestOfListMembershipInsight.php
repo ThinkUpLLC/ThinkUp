@@ -72,7 +72,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
             'and &ldquo;list4&rdquo; sound like good descriptions of @ev?');
         $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
         $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/',
-        $result->text); //
+        $result->text);
     }
 
     public function testLessThan4NewListMembershipWithHighHistory() {
@@ -215,6 +215,8 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->debug($result->headline);
         $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
         $this->assertNoPattern('/bringing/', $result->text);
+        $data = unserialize($result->related_data);
+        $this->assertNull($data['vis_data']);
     }
 
     public function test1NewListMembershipWithHistory() {
@@ -309,6 +311,9 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/to <strong>7 lists/', $result->text);
         $this->assertPattern('/>list1</', $result->text);
         $this->assertPattern('/>list0</', $result->text);
+
+        $data = unserialize($result->related_data);
+        $this->assertNotNull($data['vis_data']);
     }
 
     private function buildData($total_lists, $build_history=false, $history_ceiling=50) {
