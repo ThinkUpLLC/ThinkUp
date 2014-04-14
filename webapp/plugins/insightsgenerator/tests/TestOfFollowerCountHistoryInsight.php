@@ -56,14 +56,14 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
 
     public function testWeeklyNextWeek() {
         $builders = array();
-        for ($i=0; $i<20; $i++) {
+        for ($i=0; $i<12; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'10', 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'10', 'date' => date('Y-m-d', strtotime('Sunday -'.($i+3).' week'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'900', 'date' => date('Y-m-d', strtotime('-9 day'))));
+            'type'=>'followers', 'count'=>'900', 'date' => date('Y-m-d', strtotime('Sunday -2 Week'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'950', 'date' => date('Y-m-d', strtotime('-2 day'))));
+            'type'=>'followers', 'count'=>'950', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -74,8 +74,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'followers.', $result->headline);
 
         $data = unserialize($result->related_data);
-        $this->assertEqual(count($data['history']), 15);
-        $this->assertEqual($data['trend'], 63);
+        $this->assertEqual(count($data['history']), 14);
+        $this->assertEqual($data['trend'], 67);
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
         $this->assertEqual($data['milestone']['will_take'], 1);
@@ -117,12 +117,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<20; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -'.($i+3).' month'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'746', 'date' => date('Y-m-d', strtotime('-9 day'))));
+            'type'=>'followers', 'count'=>'746', 'date' => date('Y-m-d', strtotime('Sunday -2 Month'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'840', 'date' => date('Y-m-d', strtotime('-2 day'))));
+            'type'=>'followers', 'count'=>'840', 'date' => date('Y-m-d', strtotime('Sunday Last Month'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -135,12 +135,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<20; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.(92+($i*30)).' day'))));
+                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.($i+4).' month'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-62 day'))));
+            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-3 month'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-32 day'))));
+            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-2 month'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -202,12 +202,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         for ($i=0; $i<7; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
                 'type'=>'followers', 'count'=>'846' - ($i*10),
-                'date'=>date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'date'=>date('Y-m-d', strtotime('-'.($i+3).' week'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-9 day'))));
+            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -2 Week'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('-2 day'))));
+            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -236,12 +236,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<2; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.(92+($i*30)).' day'))));
+                'type'=>'followers', 'count'=>'9320', 'date' => date('Y-m-d', strtotime('-'.($i+4).' month'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-62 day'))));
+            'type'=>'followers', 'count'=>'9900', 'date' => date('Y-m-d', strtotime('-3 month'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-32 day'))));
+            'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-2 month'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
@@ -254,12 +254,12 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         for ($i=0; $i<2; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-'.(16+($i*7)).' day'))));
+                'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -'.($i+3).' week'))));
         }
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('-9 day'))));
+            'type'=>'followers', 'count'=>'846', 'date' => date('Y-m-d', strtotime('Sunday -2 week'))));
         $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
-            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('-2 day'))));
+            'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
         $insight_plugin->generateInsight($this->instance, array(), 3);
