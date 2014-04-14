@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/allaboutyou.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  */
 
 class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
@@ -73,13 +73,18 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 if (isset($last_sunday_insight_baseline) ) {
                     //compare it to this Sunday's number, and add a sentence comparing it.
                     $difference = abs($last_sunday_insight_baseline->value - $percent);
-                    if ($last_sunday_insight_baseline->value > $percent ) {
-                        $comparison = 'down';
-                    } else {
-                        $comparison = 'up';
+                    if ($last_sunday_insight_baseline->value == $percent ) {
+                        $insight_text .= " So consistent: that's the same amount as the previous week.";
                     }
-                    $insight_text .= " That's $comparison $difference percentage point".($difference>1?"s":"")
-                        ." from the previous week.";
+                    else {
+                        if ($last_sunday_insight_baseline->value > $percent ) {
+                            $comparison = 'down';
+                        } else {
+                            $comparison = 'up';
+                        }
+                        $insight_text .= " That's $comparison $difference percentage point".($difference>1?"s":"")
+                            ." from the previous week.";
+                    }
                 }
 
                 $my_insight = new Insight();
