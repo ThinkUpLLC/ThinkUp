@@ -94,16 +94,16 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 } else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
                     $insight_text = "Whatever ".$this->username." said in the past week must have been memorable";
-                    $insight_text .= ' &mdash; there were '.$total_likes.' '.
+                    $insight_text .= ' &mdash; there were '.number_format($total_likes).' '.
                         $this->terms->getNoun('like', InsightTerms::PLURAL);
                     $lower = array();
                     if ($total_likes > $total_replies && $total_replies > 0) {
                         $plural = $total_replies==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                        $lower[] = $total_replies.' '.  $this->terms->getNoun('reply', $plural);
+                        $lower[] = number_format($total_replies).' '.  $this->terms->getNoun('reply', $plural);
                     }
                     if ($total_likes > $total_retweets && $total_retweets > 0) {
                         $plural = $total_retweets==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                        $lower[] = $total_retweets.' '. $this->terms->getNoun('retweet', $plural);
+                        $lower[] = number_format($total_retweets).' '. $this->terms->getNoun('retweet', $plural);
                     }
                     if (count($lower) == 0) {
                         $insight_text .= '.';
@@ -116,11 +116,11 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     $lower = array();
                     if ($total_retweets > $total_replies) {
                         $lower[] = $this->terms->getNoun('reply', InsightTerms::PLURAL) . ' by '
-                            .($total_retweets - $total_replies);
+                            .number_format($total_retweets - $total_replies);
                     }
                     if ($total_retweets > $total_likes) {
                         $lower[] = $this->terms->getNoun('like', InsightTerms::PLURAL) . ' by '
-                            .($total_retweets - $total_likes);
+                            .number_format($total_retweets - $total_likes);
                     }
                     if (count($lower) > 0) {
                         $insight_text .= ' '.ucfirst($this->terms->getNoun('retweet', InsightTerms::PLURAL))
