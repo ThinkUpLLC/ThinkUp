@@ -56,7 +56,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
 
     public function testWeeklyNextWeek() {
         $builders = array();
-        for ($i=0; $i<20; $i++) {
+        for ($i=0; $i<12; $i++) {
             $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
                 'type'=>'followers', 'count'=>'10', 'date' => date('Y-m-d', strtotime('Sunday -'.($i+3).' week'))));
         }
@@ -74,8 +74,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'followers.', $result->headline);
 
         $data = unserialize($result->related_data);
-        $this->assertEqual(count($data['history']), 15);
-        $this->assertEqual($data['trend'], 63);
+        $this->assertEqual(count($data['history']), 14);
+        $this->assertEqual($data['trend'], 67);
         $this->assertEqual($data['milestone']['units_of_time'], 'WEEK');
         $this->assertEqual($data['milestone']['next_milestone'], 1000);
         $this->assertEqual($data['milestone']['will_take'], 1);
