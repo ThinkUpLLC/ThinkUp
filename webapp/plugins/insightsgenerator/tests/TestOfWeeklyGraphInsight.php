@@ -240,6 +240,58 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+
+    public function  testForCommas() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 4179,
+            'retweet_count_cache' => 9999,
+            'favlike_count_cache' => 1234,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        )); // popularity_index = 30
+
+        TimeHelper::setTime(1); //use the first possible headline
+        $insight_plugin = new WeeklyGraphInsight();
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("What's up with @testeriffic's tweets.", $result->headline);
+        $this->assertEqual('@testeriffic shared a lot of things people wanted to amplify in the past week. '
+            . 'Retweets outnumbered replies by 5,820 and favorites by 8,765.', $result->text);
+
+
+        $posts = array();
+        $posts[] = new Post(array(
+            'reply_count_cache' => 4179,
+            'retweet_count_cache' => 4242,
+            'favlike_count_cache' => 999999,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        )); // popularity_index = 30
+
+        $insight_plugin->generateInsight($instance, $posts, 3);
+
+        // Assert that insight got inserted
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("What's up with @testeriffic's tweets.", $result->headline);
+        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '
+            . 'there were 999,999 favorites, beating out 4,179 replies and 4,242 retweets.', $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testSkipInsightIfNoActivity() {
         $instance = new Instance();
         $instance->id = 10;
