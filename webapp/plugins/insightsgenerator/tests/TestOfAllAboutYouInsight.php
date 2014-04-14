@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfAllAboutYouInsight.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the AllAboutYouInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
@@ -188,6 +188,30 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
         $this->assertPattern('/<strong>80%</', $result->text);
         $this->assertPattern('/up 1 percentage point /', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testAllAboutYouInsightPriorSame() {
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects();
+        $insight_plugin = new AllAboutYouInsight();
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
+        'instance_id'=>10, 'value'=>80));
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+
+        // Assert that week-over-week comparison is correct
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('all_about_you', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
+        $this->assertPattern('/<strong>80%</', $result->text);
+        $this->assertPattern("/So consistent: that's the same amount as the previous week./", $result->text);
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
