@@ -149,8 +149,8 @@
   <div class="panel-desktop-right">
     <div class="panel-body">
       <div class="panel-body-inner">
-        <p><a href="{$signup_link}" class="btn btn-signup">Join ThinkUp now</a>
-        <span class="tout-more">or <a href="/">learn more</a>.</span></p>
+        <p><a href="https://thinkup.com/join/join.php?utm_source=permalink_tout&utm_medium=banner&utm_campaign=touts" class="btn btn-signup">Join ThinkUp now</a>
+        <span class="tout-more">or <a href="http://thinkup.com/?utm_source=permalink_tout&utm_medium=banner&utm_campaign=touts">learn more</a>.</span></p>
       </div>
     </div>
   </div>
