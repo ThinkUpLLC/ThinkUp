@@ -943,14 +943,16 @@ body.app-message-visible {
     }
 }
 
-.tweet-without-photo {
-    .tweet-photo {
-        display: none;
-        margin-right: 0;
-    }
+.hide-photo {
+    &.user, &.tweet {
+        .user-photo {
+            display: none;
+            margin-right: 0;
+        }
 
-    .tweet-actions, .tweet-body {
-        margin-left: 0;
+        .tweet-actions, .tweet-body, .user-about {
+            margin-left: 0;
+        }
     }
 }
 
@@ -1212,7 +1214,7 @@ body.app-message-visible {
 
             .userpic-featured {
                 position: relative;
-                top: -5px;
+                top: 5px;
                 left: 145px;
                 right: auto;
                 bottom: auto;
