@@ -1579,12 +1579,17 @@ body.app-message-visible.account .container {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 12px;
 }
-.tweet-without-photo .tweet-photo {
+.hide-photo.user .user-photo,
+.hide-photo.tweet .user-photo {
   display: none;
   margin-right: 0;
 }
-.tweet-without-photo .tweet-actions,
-.tweet-without-photo .tweet-body {
+.hide-photo.user .tweet-actions,
+.hide-photo.tweet .tweet-actions,
+.hide-photo.user .tweet-body,
+.hide-photo.tweet .tweet-body,
+.hide-photo.user .user-about,
+.hide-photo.tweet .user-about {
   margin-left: 0;
 }
 .user a {
@@ -1817,7 +1822,7 @@ body.app-message-visible.account .container {
   }
   .insight .panel-heading .userpic-featured {
     position: relative;
-    top: -5px;
+    top: 5px;
     left: 145px;
     right: auto;
     bottom: auto;

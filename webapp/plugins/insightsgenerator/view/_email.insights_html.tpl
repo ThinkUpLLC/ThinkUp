@@ -526,12 +526,15 @@ color: #417505 !important;
                         <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
                             <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
                             <div class="user-text">
-                                {if $user->network eq 'twitter'}
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
+                                {/if}</p>
+                                {if $user->description neq ''}
+                                    <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$user->description}</p>
                                 {/if}
                             </div>
                         </td>
