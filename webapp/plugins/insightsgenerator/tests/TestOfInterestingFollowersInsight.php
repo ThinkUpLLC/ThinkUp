@@ -165,6 +165,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
             $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
         $rendered = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/Twitter Folower/', $rendered);
         $this->assertEqual(1, substr_count($rendered, 'avatar.jpg'));
     }
 
