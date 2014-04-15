@@ -56,7 +56,7 @@
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
   {if $i->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
   (isset($i->related_data.hero_image) and $i->emphasis > '1') | $i->slug eq 'weekly_graph'}insight-wide{/if}" id="insight-{$i->id}">
-  <div class="panel-heading ">
+  <div class="panel-heading{if $i->header_image neq ''} panel-heading-illustrated{/if}">
     <h2 class="panel-title">{$i->headline}</h2>
     {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
     <p class="panel-subtitle">{$i->text|link_usernames_to_twitter}</p>{/if}
