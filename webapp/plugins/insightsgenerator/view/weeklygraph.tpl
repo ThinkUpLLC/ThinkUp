@@ -1,5 +1,5 @@
 {if isset($i->related_data.posts[0])}
-    <div id="response_rates_{$i->id}">&nbsp;</div>
+    <div id="response_rates_{$i->id}" class="weekly_chart">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -17,19 +17,41 @@
               chartType: 'BarChart',
               dataTable: response_rates_data_{/literal}{$i->id}{literal},
               options: {
-                  colors: ['#3e5d9a', '#3c8ecc', '#BBCCDD'],
+                  backgroundColor: 'transparent',
+                  colors: ['#125C9C', '#2785D3', '#46BCFF'],
                   isStacked: true,
-                  width: 300,
                   height: 250,
-                  chartArea:{left:100,height:"80%"},
-                  legend: 'bottom',
+                  focusTarget: 'category',
+                  annotations: {
+                    textStyle: {
+                      fontName: 'tablet-gothic-wide, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif'
+                    },
+                  },
+                  chartArea:{
+                      height:"100%",
+                      left: 200
+                  },
+                  legend: {
+                    position: 'bottom',
+                    alignment: 'start'
+                  },
+                  tooltip: {
+                    showColorCode: true
+                  },
                   hAxis: {
-                    textStyle: { color: '#fff', fontSize: 1 }
+                    direction: 1,
+                    titleTextStyle: {
+                      left: -100
+                    }
                   },
                   vAxis: {
                     minValue: 0,
                     baselineColor: '#ccc',
-                    textStyle: { color: '#999' },
+                    textStyle: {
+                        color: '#000',
+                        fontName: 'Libre Baskerville, georgia, serif'
+                    },
+                    textPosition: 'out',
                     gridlines: { color: '#eee' }
                   },
                 }
