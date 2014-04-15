@@ -102,6 +102,11 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         'instance_id'=>'4', 'headline'=>'Biggest Facebook fans!', 'text'=>'This is a list of users!',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'localfollowers', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfUsers('facebook')));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'favorited_links',
+        'instance_id'=>'3', 'headline'=>'Favorite Links',
+        'text'=>'Look at those links.',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'favoritedlinks', 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',1,1)));
 
         //private insights
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
@@ -357,5 +362,18 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Bill\+Cõsby/', $results);
         //Assert accented characters are not encoded
         $this->assertNoPattern('/Bill\+Cosby/', $results);
+    }
+
+    public function testForIconLinks() {
+        $builders = self::buildPublicAndPrivateInsights();
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertPattern('/"\/\/g.etfv.co\/http%3A%2F%2Ft.co%2FEuiv1aMgVD\?defaulticon=lightpng"/', $results);
+        $this->assertPattern('/http:\/\/t.co\/Euiv1aMgVD/', $results);
+        $this->assertPattern('/src="\/\/g.etfv.co\/http%3A%2F%2Fwww.kickstarter.com%2Fprojects%2Fzefrank%2Fa-show-with-ze-frank\?defaulticon=lightpng/', $results);
+        $this->assertPattern('/href="http:\/\/t.co\/tFdZbL4Y">/', $results);
+        $this->assertPattern('/ A Show with Ze Frank by Ze Frank — Kickstarter/', $results);
+        $this->assertPattern('/ Posted by <a href="https:\/\/twitter.com\/intent\/user\?screen_name=thinkup">@thinkup<\/a>/', $results);
     }
 }
