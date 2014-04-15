@@ -369,9 +369,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $controller = new InsightStreamController();
         $results = $controller->go();
         $this->debug($results);
-        $this->assertPattern('/"\/\/g.etfv.co\/http%3A%2F%2Ft.co%2FEuiv1aMgVD\?defaulticon=lightpng"/', $results);
+        $this->assertPattern('/"\/\/getfavicon.appspot.com\/http%3A%2F%2Ft.co%2FEuiv1aMgVD\?defaulticon=lightpng"/', $results);
         $this->assertPattern('/http:\/\/t.co\/Euiv1aMgVD/', $results);
-        $this->assertPattern('/src="\/\/g.etfv.co\/http%3A%2F%2Fwww.kickstarter.com%2Fprojects%2Fzefrank%2Fa-show-with-ze-frank\?defaulticon=lightpng/', $results);
+        $this->assertPattern('/src="\/\/getfavicon.appspot.com\/http%3A%2F%2Fwww.kickstarter.com%2Fprojects%2Fzefrank%2Fa-show-with-ze-frank\?defaulticon=lightpng/', $results);
         $this->assertPattern('/href="http:\/\/t.co\/tFdZbL4Y">/', $results);
         $this->assertPattern('/ A Show with Ze Frank by Ze Frank — Kickstarter/', $results);
         $this->assertPattern('/ Posted by <a href="https:\/\/twitter.com\/intent\/user\?screen_name=thinkup">@thinkup<\/a>/', $results);
