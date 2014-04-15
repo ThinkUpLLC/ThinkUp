@@ -1159,12 +1159,15 @@ body.outlook p {
                         <td class="ten sub-columns">
                             <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
                             <div class="user-text">
-                                {if $user->network eq 'twitter'}
+                                <p>{if $user->network eq 'twitter'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
+                                {/if}</p>
+                                {if $user->description neq ''}
+                                    <p>{$user->description}</p>
                                 {/if}
                             </div>
                         </td>
