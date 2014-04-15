@@ -15,7 +15,7 @@ $posts An array of posts (that contain links!)
         <li class="list-item">
             <div class="link">
                 <div class="link-title">
-                    <img src="//g.etfv.co/{if $l->expanded_url}{$l->expanded_url|escape:'url'}{else}{$l->url|escape:'url'}{/if}?defaulticon=lightpng" alt="{$l->title}" width="16" height="16" />
+                    <img src="//getfavicon.appspot.com/{if $l->expanded_url}{$l->expanded_url|escape:'url'}{else}{$l->url|escape:'url'}{/if}?defaulticon=lightpng" alt="{$l->title}" width="16" height="16" />
                     <a href="{$l->url}">
                         {if $l->title}
                             {$l->title|truncate:100}
