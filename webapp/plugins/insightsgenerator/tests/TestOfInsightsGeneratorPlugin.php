@@ -481,6 +481,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/https:\/\/pbs.twimg.com\/profile_images\/436950275908055040\/'.
             '0Z8Pa9fD_normal.jpeg/', $merge_vars['insights']);
         $this->assertPattern('/Jon Angelo Gjetting/', $merge_vars['insights']);
+        $this->assertPattern('/Creative Director thriving/', $merge_vars['insights']);
         // Assert Facebook user list
         $this->assertPattern('/Last week, these were Alice Cooper\'s biggest admirers./', $merge_vars['insights']);
         $this->assertPattern('/Jonathan Wegener/', $merge_vars['insights']);
