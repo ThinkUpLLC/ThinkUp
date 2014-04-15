@@ -105,6 +105,7 @@ $plugin_tests->add(new TestOfRetweetSpikeInsight());
 $plugin_tests->add(new TestOfFollowerCountHistoryInsight());
 $plugin_tests->add(new TestOfWeeklyGraphInsight());
 $plugin_tests->add(new TestOfInterestingFollowersInsight());
+$plugin_tests->add(new TestOfThanksCountInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
