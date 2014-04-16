@@ -13,7 +13,7 @@ $user_text Determines what to show below the user's name
         <img src="{$user->avatar|use_https}" alt="{$user->full_name}" class="img-circle pull-left user-photo">
         {/if}
         <div class="user-about">
-            <div class="user-name">{if $user->full_name}{$user->full_name}{else}{$user->username}{/if} <i class="fa fa-{$user->network} icon icon-network"></i></div>
+            <div class="user-name">{$user->full_name} <i class="fa fa-{$user->network} icon icon-network"></i></div>
             <div class="user-text">
                 <p>{if $user->network eq 'twitter'}
                     {$user->follower_count|number_format} followers
