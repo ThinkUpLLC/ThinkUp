@@ -63,10 +63,6 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                         ."$this->username's " . $this->terms->getNoun('post') . ".";
                     }
                 }
-                //Replace each big resharer's bio line with the text of the post
-                foreach ($big_reshares as $sharer) {
-                    $sharer->description = '"'.$post->post_text.'"';
-                }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //Instantiate the Insight object
@@ -77,13 +73,12 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->headline = $headline; // or just set a string like 'Ohai';
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $header_image;
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                $my_insight->emphasis = Insight::EMPHASIS_HIGH; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($big_reshares);
                 $my_insight->setPosts(array($post));
 
                 $this->insight_dao->insertInsight($my_insight);
-
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
