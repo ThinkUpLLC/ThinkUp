@@ -63,10 +63,14 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                         ."$this->username's " . $this->terms->getNoun('post') . ".";
                     }
                 }
+                // I'm not sure why we were doing this, so I removed it.
+                // -- MBJ 2014-04-16
+
                 //Replace each big resharer's bio line with the text of the post
-                foreach ($big_reshares as $sharer) {
-                    $sharer->description = '"'.$post->post_text.'"';
-                }
+                // foreach ($big_reshares as $sharer) {
+                //     $sharer->description = '"'.$post->post_text.'"';
+                // }
+
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //Instantiate the Insight object
