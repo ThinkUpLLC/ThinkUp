@@ -14,6 +14,46 @@ featureTest = ( property, value, noPrefixes ) ->
 
   mStyle[ property ].indexOf( value ) != -1
 
+# For colors and other non-private constants
+constants = wt.constants = {}
+
+constants.colors =
+  pea: "#9dd767"
+  pea_dark: "#5fac1c"
+  pea_darker: "#417505"
+  salmon: "#fc939e"
+  salmon_dark: "#da6070"
+  salmon_darker: "#d0374b"
+  creamsicle: "#ffbb4e"
+  creamsicle_dark: "#ff8f41"
+  creamsicle_darker: "#f36400"
+  sepia: "#c0bdaf"
+  sepia_dark: "#a19f8b"
+  sepia_darker: "#8a876f"
+  historical: "#c0bdaf"
+  historical_dark: "#a19f8b"
+  historical_darker: "#8a876f"
+  purple: "#b690e2"
+  purple_dark: "#8e69c2"
+  purple_darker: "#7348b0"
+  mint: "#41dab3"
+  mint_dark: "#24b98f"
+  mint_darker: "#1c8e6e"
+  bubblegum: "#f576b5"
+  bubblegum_dark: "#b3487c"
+  bubblegum_darker: "#8f3963"
+  seabreeze: "#44c9d7"
+  seabreeze_dark: "#198a9c"
+  seabreeze_darker: "#126370"
+  dijon: "#e4bf28"
+  dijon_dark: "#c59301"
+  dijon_darker: "#926d01"
+  sandalwood: "#fd8560"
+  sandalwood_dark: "#d13a0a"
+  sandalwood_darker: "#a02c08"
+  caramel: "#dd814b"
+  caramel_dark: "#9e5e14"
+  caramel_darker: "#71430e"
 
 # This sets the size of the open and closed states of a list
 # It's called on page load and whenever the screen size changes
