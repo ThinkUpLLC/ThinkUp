@@ -11,6 +11,9 @@
         {/literal}
             var response_rates_data_{$i->id} = new google.visualization.DataTable({$i->related_data.posts[0]});
 
+            var c = window.tu.constants.colors;
+            var colors = [c.{$color}, c.{$color}_dark, c.{$color}_darker];
+
             {literal}
             var response_rates_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'response_rates_{/literal}{$i->id}{literal}',
@@ -18,7 +21,7 @@
               dataTable: response_rates_data_{/literal}{$i->id}{literal},
               options: {
                   backgroundColor: 'transparent',
-                  colors: ['#125C9C', '#2785D3', '#46BCFF'],
+                  colors: colors,
                   isStacked: true,
                   height: 250,
                   focusTarget: 'category',
