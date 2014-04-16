@@ -131,6 +131,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
@@ -197,6 +198,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
@@ -287,6 +289,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
@@ -337,6 +340,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
@@ -387,6 +391,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $email_insight = $this->getRenderedInsightInEmail($result);
         //Uncomment this out to see the email view of insight
         $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 }
