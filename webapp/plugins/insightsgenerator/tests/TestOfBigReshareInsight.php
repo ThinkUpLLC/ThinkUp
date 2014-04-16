@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/bigreshare.php';
 
-class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
+class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -65,8 +65,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
 
         //retweet author has 2x more followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'20', 'user_name'=>'user1',
-        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>160,
-        'network'=>'twitter'));
+        'full_name'=>'User 1', 'description'=>'I am a user', 'avatar'=>'avatar.jpg', 'is_protected'=>0,
+        'follower_count'=>160, 'network'=>'twitter'));
 
         // Get data ready that insight requires
         $posts = array();
@@ -84,10 +84,12 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $yesterday = date ('Y-m-d', strtotime('-1 day'));
         $result = $insight_dao->getInsight('big_reshare_1345', 10, $yesterday);
         $this->assertNotNull($result);
+        $this->debug(Utils::varDumpToString($result));
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than \@testeriffic retweeted/',
         $result->headline);
+        $this->debug($this->getRenderedInsightInHTML($result));
     }
 
     public function testMultipleBigReshare() {
@@ -110,8 +112,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
 
         // First retweet author has 2x more followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'20', 'user_name'=>'user1',
-        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>160,
-        'network'=>'twitter'));
+        'full_name'=>'User 1', 'description'=>'I am a user', 'avatar'=>'avatar.jpg', 'is_protected'=>0,
+        'follower_count'=>160, 'network'=>'twitter'));
 
         // Second big retweet
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>'138', 'author_user_id'=>'23',
@@ -142,8 +144,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/People with lots of followers retweeted/', $result->headline);
         $sharers = unserialize($result->related_data.people);
         $retweet_user = $sharers["people"][0];
-        $this->assertEqual($retweet_user->description,
-        '"Be liberal in what you accept and conservative in what you send"');
+        $this->assertEqual($retweet_user->description, 'I am a Jacob');
+        $this->debug($this->getRenderedInsightInHTML($result));
     }
 
     public function testSingleBigReshareWithLessThan2xFollowers() {
@@ -166,8 +168,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
 
         //retweet author has less than 2x more followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'20', 'user_name'=>'user1',
-        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>100,
-        'network'=>'twitter'));
+        'full_name'=>'User 1', 'description'=>'I am a user', 'avatar'=>'avatar.jpg', 'is_protected'=>0,
+        'follower_count'=>100, 'network'=>'twitter'));
 
         // Get data ready that insight requires
         $posts = array();
@@ -189,8 +191,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         $this->assertPattern('/Someone with lots of followers retweeted/', $result->headline);
         $sharers = unserialize($result->related_data.people);
         $retweet_user = $sharers["people"][0];
-        $this->assertEqual($retweet_user->description,
-        '"Be liberal in what you accept and conservative in what you send"');
+        $this->assertEqual($retweet_user->description, 'I am a user');
+        $this->debug($this->getRenderedInsightInHTML($result));
     }
 
     private function buildData() {
@@ -210,7 +212,8 @@ class TestOfBigReshareInsight extends ThinkUpUnitTestCase {
         'full_name'=>'Quotables', 'is_protected'=>0, 'follower_count'=>80, 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'23', 'user_name'=>'jacob',
-        'full_name'=>'Jacob', 'is_protected'=>0, 'follower_count'=>320, 'network'=>'twitter'));
+        'full_name'=>'Jacob', 'description'=>'I am a Jacob', 'is_protected'=>0, 'follower_count'=>320,
+        'network'=>'twitter'));
 
 
         //Add retweets of a original post
