@@ -239,7 +239,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic\'s most popular photo from last week got /', $result->text);
+        $this->assertPattern('/testeriffic earned \<strong\>5 comments<\/strong\> and \<strong\>3 likes\<\/strong\>./', $result->text);
         $this->assertPattern('/5 comments/', $result->text);
         $this->assertPattern('/3 likes/', $result->text);
     }
