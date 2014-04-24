@@ -2,7 +2,7 @@
 /*
  Plugin Name: Biggest Fans
  Description: Who has liked your posts the most over the last 7 and 30 days.
- When: Sundays and 1st of the month
+ When: Sundays for Twitter, Wednesdays otherwise, and 1st of the month for Twitter, 2nd otherwise
  */
 
 /**
@@ -39,8 +39,15 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
         $since_date = date("Y-m-d");
         $filename = basename(__FILE__, ".php");
 
-        if (self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance, $insight_date=$since_date,
-        $regenerate_existing_insight=false,  $day_of_month = 1)) { //it's the first day of the month
+        if ($instance->network == 'twitter') {
+            $day_of_month = 1;
+        } else {
+            $day_of_month = 2;
+        }
+        $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance, 
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month);
+
+        if ($should_generate_insight) { //it's the right day of the month
             // Past 30 days
             $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
             $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
@@ -62,8 +69,14 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             }
         }
 
-        if (self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance, $insight_date=$since_date,
-        $regenerate_existing_insight=false, $day_of_week = 0 )) { //it's Sunday
+        if ($instance->network == 'twitter') {
+            $day_of_week = 0;
+        } else {
+            $day_of_week = 3;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance,
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_week = $day_of_week );
+        if ($should_generate_insight) { //it's Sunday
             // Past 7 days
             $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
             $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,

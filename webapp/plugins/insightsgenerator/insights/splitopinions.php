@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name:  Split Opinions
- Description: Hightlights videos that split the audience with a like or dislike percentage of 40 - 60 percent
+ Description: Hightlights videos that split the audience with a like or dislike percentage of 40 - 60 percent.
  */
 /**
  *

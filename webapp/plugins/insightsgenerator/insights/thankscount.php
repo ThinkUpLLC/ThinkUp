@@ -2,7 +2,7 @@
 /*
  Plugin Name: Thanks Count
  Description: How often you used phrases of gratitude.
- When: 2nd of the month
+ When: 2nd of the month for Twitter, 4th otherwise
  */
 /**
  *
@@ -31,8 +31,13 @@
  */
 class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements InsightPlugin {
     public function shouldGenerate(Instance $instance, $last_week_of_posts) {
+        if ($instance->network == 'twitter') {
+            $day_of_month = 2;
+        } else {
+            $day_of_month = 4;
+        }
         return $this->shouldGenerateMonthlyInsight($this->getSlug(), $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_month=2, count($last_week_of_posts), $excluded_networks=null);
+            $regenerate_existing_insight=false, $day_of_month=$day_of_month, count($last_week_of_posts));
     }
 
     public function getSlug() {

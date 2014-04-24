@@ -2,7 +2,7 @@
 /*
  Plugin Name: Frequency
  Description: How frequently you posted this week as compared to last week.
- When: Mondays
+ When: Mondays for Twitter, Thursdays otherwise
  */
 /**
  *
@@ -39,8 +39,15 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $milestones = array();
 
         $info = array('text' => '');
-        if (self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=1)) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 1;
+        } else {
+            $day_of_week = 4;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=$day_of_week);
+
+        if ($should_generate_insight) {
             $count = sizeof($last_week_of_posts);
             $this->logger->logInfo("Last week had $count posts", __METHOD__.','.__LINE__);
             if ($count > 1) {
@@ -95,7 +102,8 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                                         'what they\'ve read lately.',
                             'button' => array(
                                 'url' => 'http://www.facebook.com/sharer/sharer.php'.
-                                    '?u=http://upload.wikimedia.org/wikipedia/en/4/43/FlanneryOConnorCompleteStories.jpg&'.
+                                    '?u=http://upload.wikimedia.org/wikipedia/en/4/43/'.
+                                    'FlanneryOConnorCompleteStories.jpg&'.
                                     't=Ready any good books lately?',
                                 'label' => 'Read any good books lately?',
                             )),
@@ -159,10 +167,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = $info['text'];
                 $this->insight_dao->insertInsight($my_insight);
             }
-
-
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }

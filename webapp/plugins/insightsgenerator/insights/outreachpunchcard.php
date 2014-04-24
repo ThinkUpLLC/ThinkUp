@@ -2,7 +2,7 @@
 /*
  Plugin Name: Outreach Punchcard
  Description: What times of day your posts get the biggest reaction.
- When: Saturdays
+ When: Saturdays for Twitter, Tuesdays otherwise
  */
 
 /**
@@ -36,9 +36,16 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (parent::shouldGenerateWeeklyInsight('outreach_punchcard', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 6;
+        } else {
+            $day_of_week = 2;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('outreach_punchcard', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=$day_of_week,
+            count($last_week_of_posts));
 
+        if ($should_generate_insight) {
             $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
@@ -147,7 +154,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = '';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->filename = basename(__FILE__, ".php");
                 // $my_insight->related_data = $punchcard;
                 $my_insight->related_data = $optimal_hour;
 
@@ -155,8 +162,6 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
             }
         }
-
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
