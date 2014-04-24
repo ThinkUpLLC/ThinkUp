@@ -2,7 +2,7 @@
 /*
  Plugin Name: Weekly Bests
  Description: Your most popular posts from last week.
- When: Thursdays
+ When: Thursdays for Twitter, Sunday otherwise
  */
 
 /**
@@ -36,8 +36,15 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('weekly_best', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 4;
+        } else {
+            $day_of_week = 0;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_best', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts));
+
+        if ($should_generate_insight) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
             $insight_text = '';
@@ -89,14 +96,13 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->headline = $headline; // or just set a string like 'Ohai';
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $header_image;
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
                 $my_insight->setPosts(array($most_popular_post));
 
                 $this->insight_dao->insertInsight($my_insight);
             }
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
