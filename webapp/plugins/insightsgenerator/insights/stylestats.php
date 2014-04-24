@@ -2,7 +2,7 @@
 /*
  Plugin Name: Style Stats
  Description: Stats on different types of posts in the past week.
- When: Saturdays
+ When: Saturdays for Twitter, Tuesdays otherwise
  */
 /**
  *
@@ -36,9 +36,17 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('style_stats', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=6, count($last_week_of_posts),
-        $excluded_networks=array('foursquare'))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 6;
+        } else {
+            $day_of_week = 2;
+        }
+
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('style_stats', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts),
+            $excluded_networks=array('foursquare'));
+
+        if ($should_generate_insight) {
             $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0); //, "photos" => 0);
             $total_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0); //, "photos" => 0);
             $average_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0);//, "photos" => 0);

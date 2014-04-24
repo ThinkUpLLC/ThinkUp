@@ -2,7 +2,7 @@
 /*
  Plugin Name: Interactions
  Description: People you mentioned in your posts in the last week.
- When: Wednesdays
+ When: Wednesdays for Twitter, Saturday otherwise
  */
 
 /**
@@ -37,9 +37,16 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('interactions', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts),
-        $excluded_networks=array('facebook', 'google+', 'foursquare', 'youtube'))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 3;
+        } else {
+            $day_of_week = 6;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('interactions', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts),
+            $excluded_networks=array('facebook', 'google+', 'foursquare', 'youtube'));
+
+        if ($should_generate_insight) {
             $user_dao = DAOFactory::getDAO('UserDAO');
 
             $mentions_count = array();
@@ -105,9 +112,9 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->date = $this->insight_date; //date of the data this insight applies to
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
-                $my_insight->header_image = $header_image; // '';
-                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->header_image = $header_image;
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->setPeople($users_mentioned);
                 $my_insight->setMilestones($milestones);
 

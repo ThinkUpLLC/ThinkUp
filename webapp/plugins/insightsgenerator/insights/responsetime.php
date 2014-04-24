@@ -3,7 +3,7 @@
 /*
  Plugin Name: Response Time
  Description: How quickly your posts generate replies, favorites, and reshares every week.
- When: Fridays
+ When: Fridays for Twitter, Mondays otherwise
  */
 
 /**
@@ -37,8 +37,15 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('response_time', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=5, count($last_week_of_posts))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 5;
+        } else {
+            $day_of_week = 1;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('response_time', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));
+
+        if ($should_generate_insight) {
             $response_count = array('reply' => 0, 'retweet' => 0, 'like' => 0);
 
             foreach ($last_week_of_posts as $post) {
