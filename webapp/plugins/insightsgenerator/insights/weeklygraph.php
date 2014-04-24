@@ -2,7 +2,7 @@
 /*
  Plugin Name: Weekly Graph
  Description: Summarize and display a simple chart of responses to last week's posts.
- When: Wednesdays
+ When: Wednesdays for Twitter, Saturday otherwise
  */
 
 /**
@@ -36,8 +36,14 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
+        if ($instance->network == 'twitter') {
+            $day_of_week = 3;
+        } else {
+            $day_of_week = 6;
+        }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_graph', $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_week=3, count($last_week_of_posts));
+            $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts));
+
         if ($should_generate_insight) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
@@ -149,7 +155,6 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
                     $my_insight->setPosts($formatted_posts);
                 }
-
                 $this->insight_dao->insertInsight($my_insight);
             }
         }

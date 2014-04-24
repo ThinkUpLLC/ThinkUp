@@ -2,7 +2,7 @@
 /*
  Plugin Name: All About You
  Description: How often you referred to yourself ("I", "me", "myself", "my") in the past week.
- When: Sundays
+ When: Sundays for Twitter, Wednesdays otherwise
  */
 
 /**
@@ -37,8 +37,14 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $insight_text = '';
 
-        if (self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 0;
+        } else {
+            $day_of_week = 3;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));
+        if ($should_generate_insight) {
             $text = '';
             $count = 0;
             foreach ($last_week_of_posts as $post) {
