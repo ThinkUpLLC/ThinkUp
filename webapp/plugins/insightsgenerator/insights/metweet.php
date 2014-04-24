@@ -38,9 +38,10 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateWeeklyInsight('metweet', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=2, count($last_week_of_posts),
-        $excluded_networks=array('facebook', 'google+', 'foursquare', 'youtube'))) {
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('metweet', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week=2, count($last_week_of_posts),
+            $excluded_networks=array('facebook', 'google+', 'foursquare', 'youtube'));
+        if ($should_generate_insight) {
             $metweet_count = 0;
 
             foreach ($last_week_of_posts as $post) {
