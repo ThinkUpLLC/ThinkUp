@@ -1,3 +1,10 @@
+.fa-override-before:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+}
 body.settings .container {
   width: 100%;
   padding: 45px 10px 0;
@@ -534,13 +541,6 @@ body.error-page .container header h1,
 body.error-page .container header h2 {
   color: #2785d3;
 }
-.fa-override-before:before {
-  font-family: FontAwesome;
-  font-weight: normal;
-  font-style: normal;
-  display: inline-block;
-  text-decoration: inherit;
-}
 body {
   background-color: #f0f0f0;
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -558,6 +558,17 @@ a {
 }
 a:hover {
   color: #46bcff;
+}
+.container {
+  padding: 46px 0 0;
+  width: 100%;
+}
+.no-insights {
+  min-width: 310px;
+  max-width: 450px;
+  width: 100%;
+  margin: 40px auto;
+  text-align: center;
 }
 .navbar-default {
   border-radius: 0;
@@ -606,6 +617,20 @@ a:hover {
 .navbar-default .navbar-header .menu-trigger:focus {
   outline: 0;
   color: #2785d3;
+}
+.navbar-default .navbar-header .navbar-search {
+  position: absolute;
+  padding: 0;
+  color: #2785d3;
+  top: 4px;
+  right: 10px;
+  margin: 0;
+  background: transparent;
+  border: 0;
+}
+#search-refine {
+  right: 0;
+  left: auto;
 }
 body.menu-off .navbar-default .navbar-header .menu-trigger {
   display: none;
@@ -773,9 +798,47 @@ body.account .app-message {
 .app-message-hidden {
   display: none;
 }
-.container {
-  padding: 46px 0 0;
-  width: 100%;
+body.app-message-visible .container {
+  padding-top: 71px;
+}
+body.app-message-visible.account .container {
+  padding-top: 160px;
+}
+@media (min-width: 780px) {
+  body.app-message-visible .stream .date-marker.fixed {
+    top: 85px;
+  }
+}
+@media (min-width: 820px) {
+  body.menu-open #menu {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    z-index: 2;
+  }
+  body.menu-open .navbar-default {
+    left: 280px;
+    right: 0;
+    width: auto;
+    z-index: 1;
+  }
+  body.menu-open .navbar-default .menu-trigger {
+    display: none;
+  }
+  body.menu-open .app-message {
+    left: 280px;
+    right: 0;
+    width: auto;
+  }
+  body.menu-open #page-content {
+    margin-left: 280px;
+    min-height: 100%;
+  }
 }
 .footer {
   margin-top: 14px;
@@ -840,18 +903,20 @@ body.account .app-message {
 .footer .footer-container .follow-wrapper .follow-links li a:hover {
   color: #3ea5cf;
 }
-body.app-message-visible .container {
-  padding-top: 71px;
-}
-body.app-message-visible.account .container {
-  padding-top: 160px;
-}
-.no-insights {
-  min-width: 310px;
-  max-width: 450px;
-  width: 100%;
-  margin: 40px auto;
-  text-align: center;
+@media (min-width: 540px) {
+  .footer .footer-container .copyright-privacy,
+  .footer .footer-container .motto {
+    width: 20%;
+    min-width: 150px;
+    margin-bottom: 0;
+  }
+  .footer .footer-container .motto {
+    float: right;
+  }
+  .footer .footer-container .follow-wrapper {
+    clear: none;
+    text-align: center;
+  }
 }
 .stream {
   min-width: 320px;
@@ -911,6 +976,58 @@ body.app-message-visible.account .container {
 }
 .stream.stream-permalink .insight .btn-see-all {
   display: none;
+}
+@media (min-width: 540px) {
+  .stream {
+    padding: 0 10px;
+  }
+  .stream .date-group,
+  .stream .stream-pagination-control {
+    width: 540px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 780px) {
+  .stream:before,
+  .stream:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  .stream:after {
+    clear: both;
+  }
+  .stream .date-group,
+  .stream .stream-pagination-control {
+    width: 780px;
+    margin: 0 auto;
+  }
+  .stream .stream-pagination-control {
+    padding: 0 80px 0 160px;
+  }
+  .stream .date-marker {
+    float: left;
+  }
+  .stream .date-marker.fixed {
+    position: fixed;
+    top: 60px;
+  }
+  .stream .date-marker.absolute {
+    position: absolute;
+  }
+  .stream .date-marker.sticky {
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -o-sticky;
+    position: -ms-sticky;
+    position: sticky;
+    top: 14px;
+    z-index: 1;
+  }
+  .stream .insight {
+    margin-left: 160px;
+  }
 }
 .insight {
   border: 0;
@@ -1093,6 +1210,70 @@ body.app-message-visible.account .container {
 .insight .panel-footer .share-menu.open .share-button-close {
   color: #ccc;
 }
+@media (max-width: 420px) {
+  .insight .panel-body .panel-body-inner {
+    padding: 10px;
+  }
+}
+@media (min-width: 540px) {
+  .insight:before,
+  .insight:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  .insight:after {
+    clear: both;
+  }
+  .insight .panel-heading {
+    float: left;
+    width: 230px;
+    padding: 5px 10px 12px 10px;
+  }
+  .insight .panel-heading .userpic-featured {
+    position: relative;
+    top: 5px;
+    left: 145px;
+    right: auto;
+    bottom: auto;
+    margin-bottom: -10px;
+  }
+  .insight .panel-desktop-right {
+    position: relative;
+    margin-left: 230px;
+  }
+  .insight .panel-desktop-right:before,
+  .insight .panel-desktop-right:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  .insight .panel-desktop-right:after {
+    clear: both;
+  }
+  .insight .panel-body,
+  .insight .panel-footer {
+    width: 310px;
+  }
+  .insight .panel-footer {
+    position: absolute;
+    bottom: 0;
+  }
+  .insight .panel-body {
+    padding-bottom: 37px;
+  }
+  .insight .panel-body .panel-body-inner {
+    padding: 10px;
+  }
+  .insight .panel-body:before,
+  .insight .panel-body:after {
+    content: "";
+    display: none;
+    clear: none;
+  }
+}
 .insight-hero .panel-heading {
   padding: 5px 10px 15px;
 }
@@ -1102,6 +1283,11 @@ body.app-message-visible.account .container {
   letter-spacing: .01em;
   margin-bottom: 8px;
   font-weight: 600;
+}
+@media (min-width: 540px) {
+  .insight-hero .panel-heading {
+    padding: 5px 10px 15px;
+  }
 }
 .insight-message {
   background: #ffffff;
@@ -1141,6 +1327,19 @@ body.app-message-visible.account .container {
 }
 .insight-message.insight-wide .panel-body {
   padding: 0;
+}
+@media (min-width: 540px) {
+  .insight-wide .panel-heading {
+    float: none;
+    width: 100%;
+    padding: 5px 10px 15px;
+  }
+  .insight-wide .panel-footer,
+  .insight-wide .panel-body,
+  .insight-wide .panel-desktop-right {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 .insight-tout {
   position: relative;
@@ -1762,6 +1961,18 @@ body.app-message-visible.account .container {
   outline: 0;
   color: #999999;
 }
+@media (max-width: 420px) {
+  .btn-see-all {
+    width: 104%;
+    margin: 0 -2%;
+  }
+}
+@media (min-width: 540px) {
+  .btn-see-all {
+    width: 104%;
+    margin: 0 -2%;
+  }
+}
 .btn-signup {
   background: #125c9c;
   border: 0;
@@ -1773,187 +1984,4 @@ body.app-message-visible.account .container {
 .btn-signup:focus {
   background: #1777ca;
   color: #fff;
-}
-@media (max-width: 420px) {
-  .insight .panel-body .panel-body-inner {
-    padding: 10px;
-  }
-  .btn-see-all {
-    width: 104%;
-    margin: 0 -2%;
-  }
-}
-@media (min-width: 540px) {
-  .stream {
-    padding: 0 10px;
-  }
-  .stream .date-group,
-  .stream .stream-pagination-control {
-    width: 540px;
-    margin: 0 auto;
-  }
-  .footer .footer-container .copyright-privacy,
-  .footer .footer-container .motto {
-    width: 20%;
-    min-width: 150px;
-    margin-bottom: 0;
-  }
-  .footer .footer-container .motto {
-    float: right;
-  }
-  .footer .footer-container .follow-wrapper {
-    clear: none;
-    text-align: center;
-  }
-  .insight:before,
-  .insight:after {
-    content: " ";
-    /* 1 */
-    display: table;
-    /* 2 */
-  }
-  .insight:after {
-    clear: both;
-  }
-  .insight .panel-heading {
-    float: left;
-    width: 230px;
-    padding: 5px 10px 12px 10px;
-  }
-  .insight .panel-heading .userpic-featured {
-    position: relative;
-    top: 5px;
-    left: 145px;
-    right: auto;
-    bottom: auto;
-    margin-bottom: -10px;
-  }
-  .insight .panel-desktop-right {
-    position: relative;
-    margin-left: 230px;
-  }
-  .insight .panel-desktop-right:before,
-  .insight .panel-desktop-right:after {
-    content: " ";
-    /* 1 */
-    display: table;
-    /* 2 */
-  }
-  .insight .panel-desktop-right:after {
-    clear: both;
-  }
-  .insight .panel-body,
-  .insight .panel-footer {
-    width: 310px;
-  }
-  .insight .panel-footer {
-    position: absolute;
-    bottom: 0;
-  }
-  .insight .panel-body {
-    padding-bottom: 37px;
-  }
-  .insight .panel-body .panel-body-inner {
-    padding: 10px;
-  }
-  .insight .panel-body:before,
-  .insight .panel-body:after {
-    content: "";
-    display: none;
-    clear: none;
-  }
-  .insight-hero .panel-heading {
-    padding: 5px 10px 15px;
-  }
-  .insight-wide .panel-heading {
-    float: none;
-    width: 100%;
-    padding: 5px 10px 15px;
-  }
-  .insight-wide .panel-footer,
-  .insight-wide .panel-body,
-  .insight-wide .panel-desktop-right {
-    width: 100%;
-    margin-left: 0;
-  }
-  .btn-see-all {
-    width: 104%;
-    margin: 0 -2%;
-  }
-}
-@media (min-width: 780px) {
-  .stream:before,
-  .stream:after {
-    content: " ";
-    /* 1 */
-    display: table;
-    /* 2 */
-  }
-  .stream:after {
-    clear: both;
-  }
-  .stream .date-group,
-  .stream .stream-pagination-control {
-    width: 780px;
-    margin: 0 auto;
-  }
-  .stream .stream-pagination-control {
-    padding: 0 80px 0 160px;
-  }
-  .stream .date-marker {
-    float: left;
-  }
-  .stream .date-marker.fixed {
-    position: fixed;
-    top: 60px;
-  }
-  .stream .date-marker.absolute {
-    position: absolute;
-  }
-  .stream .date-marker.sticky {
-    position: -webkit-sticky;
-    position: -moz-sticky;
-    position: -o-sticky;
-    position: -ms-sticky;
-    position: sticky;
-    top: 14px;
-    z-index: 1;
-  }
-  .stream .insight {
-    margin-left: 160px;
-  }
-  body.app-message-visible .stream .date-marker.fixed {
-    top: 85px;
-  }
-}
-@media (min-width: 820px) {
-  body.menu-open #menu {
-    display: block;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 280px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 100%;
-    z-index: 2;
-  }
-  body.menu-open .navbar-default {
-    left: 280px;
-    right: 0;
-    width: auto;
-    z-index: 1;
-  }
-  body.menu-open .navbar-default .menu-trigger {
-    display: none;
-  }
-  body.menu-open .app-message {
-    left: 280px;
-    right: 0;
-    width: auto;
-  }
-  body.menu-open #page-content {
-    margin-left: 280px;
-    min-height: 100%;
-  }
 }
