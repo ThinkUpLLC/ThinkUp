@@ -298,5 +298,5 @@ class FaveLikeSpikeInsight extends InsightPluginParent implements InsightPlugin 
 
 }
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('FaveLikeSpikeInsight');
+//$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+//$insights_plugin_registrar->registerInsightPlugin('FaveLikeSpikeInsight');
