@@ -77,15 +77,6 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
-    {if ($smarty.get.m eq 'manage') or (isset($smarty.get.p))}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-    {foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-    {/foreach}
-
-    {/if}
-
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
 {/foreach}

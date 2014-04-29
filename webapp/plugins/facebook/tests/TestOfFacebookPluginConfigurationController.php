@@ -208,8 +208,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->debug($output);
 
         $expected_pattern = '/copy and paste this:<br>
-    <small>
-      <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
+          <small>
+            <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
         $this->assertPattern($expected_pattern, $output);
     }
 
@@ -656,13 +656,15 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         //Set membership_level to Member
         $owner->membership_level = "Member";
 
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->debug($output);
 
         // Assert that the Add User button isn't there
         $this->assertNoPattern('/Add a Facebook Account/', $output);
-        // Assert that the message about upgradiing is there
+        // Assert that the message about upgrading is there
         $this->assertPattern('/To connect another Facebook account to ThinkUp, upgrade your membership/', $output);
     }
 
@@ -678,7 +680,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
             $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>(10+$i)));
             $i--;
         }
-
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
         $this->simulateLogin('me2@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -692,6 +695,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         // Assert that the Add User button isn't there
         $this->assertNoPattern('/Add a Facebook Account/', $output);
         // Assert that the message about the membership cap is there
-        $this->assertPattern('/you&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
+        $this->assertPattern('/you’ve connected 10 of 10 accounts to ThinkUp./', $output);
     }
 }
