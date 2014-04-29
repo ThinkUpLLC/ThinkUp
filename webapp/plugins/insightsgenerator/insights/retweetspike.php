@@ -317,5 +317,5 @@ class RetweetSpikeInsight extends InsightPluginParent implements InsightPlugin {
     }
 }
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('RetweetSpikeInsight');
+//$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+//$insights_plugin_registrar->registerInsightPlugin('RetweetSpikeInsight');

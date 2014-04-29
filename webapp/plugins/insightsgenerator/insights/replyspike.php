@@ -307,5 +307,5 @@ class ReplySpikeInsight extends InsightPluginParent implements InsightPlugin {
     }
 }
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('ReplySpikeInsight');
+//$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+//$insights_plugin_registrar->registerInsightPlugin('ReplySpikeInsight');
