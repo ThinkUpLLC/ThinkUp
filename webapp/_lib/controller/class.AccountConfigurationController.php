@@ -52,8 +52,13 @@ class AccountConfigurationController extends ThinkUpAuthController {
     public function authControl() {
         $this->disableCaching();
         $this->addHeaderJavaScript('assets/js/jqBootstrapValidation.js');
-        $this->addHeaderJavaScript('assets/js/validate-fields.js');
         $this->addHeaderJavaScript('assets/js/jstz-1.0.4.min.js');
+        if (!Utils::isThinkUpLLC()) {
+            $this->addHeaderJavaScript('assets/js/settings.js');
+            if ($this->isAdmin()) {
+                $this->addHeaderJavaScript('assets/js/appconfig.js');
+            }
+        }
 
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');
@@ -314,7 +319,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         /* Begin plugin-specific configuration handling */
         if (isset($_GET['p']) && !isset($_GET['u'])) {
             // add config js to header
-            if ($this->isAdmin()) {
+            if ($this->isAdmin() and !Utils::isThinkUpLLC()) {
                 $this->addHeaderJavaScript('assets/js/plugin_options.js');
             }
             $active_plugin = $_GET['p'];
