@@ -39,20 +39,24 @@ body.settings .container .form-horizontal {
   font-family: "tablet-gothic", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   margin-bottom: 25px;
 }
-body.settings .container .form-horizontal fieldset {
+body.settings .container fieldset,
+body.settings .container .settings-set {
   margin-bottom: 25px;
 }
-body.settings .container .form-horizontal fieldset.fieldset-no-header {
+body.settings .container fieldset.fieldset-no-header,
+body.settings .container .settings-set.fieldset-no-header {
   border-top: 1px solid #b9c7ce;
 }
-body.settings .container .form-horizontal fieldset header {
+body.settings .container fieldset header,
+body.settings .container .settings-set header {
   margin: 0;
   font-size: 14px;
   line-height: 2;
   padding: 11px 10px 10px;
   border-bottom: 1px solid #b9c7ce;
 }
-body.settings .container .form-horizontal fieldset header h2 {
+body.settings .container fieldset header h2,
+body.settings .container .settings-set header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
   line-height: 1;
@@ -60,83 +64,105 @@ body.settings .container .form-horizontal fieldset header h2 {
   color: #666666;
   margin: 0;
 }
-body.settings .container .form-horizontal fieldset header .help-text {
+body.settings .container fieldset header .help-text,
+body.settings .container .settings-set header .help-text {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 400;
   color: #999999;
 }
-body.settings .container .form-horizontal .form-group {
+body.settings .container .settings-set-simple header {
+  border: 0;
+  margin-bottom: 10px;
+}
+body.settings .container .settings-set-simple .btn {
+  margin-bottom: 20px;
+}
+body.settings .container .settings-set-simple code {
+  width: 100%;
+}
+body.settings .container .form-group {
   margin: 0;
   border-bottom: 1px solid #b9c7ce;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning,
-body.settings .container .form-horizontal .form-group.form-group-ok {
+body.settings .container .form-group.form-group-warning,
+body.settings .container .form-group.form-group-ok {
   position: relative;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning:before,
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+body.settings .container .form-group.form-group-warning:before,
+body.settings .container .form-group.form-group-ok:before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
   display: inline-block;
   text-decoration: inherit;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning:before,
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+body.settings .container .form-group.form-group-warning:before,
+body.settings .container .form-group.form-group-ok:before {
   position: absolute;
   right: 10px;
   top: 17px;
   font-size: 16px;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning .form-control[type=text],
-body.settings .container .form-horizontal .form-group.form-group-ok .form-control[type=text] {
+body.settings .container .form-group.form-group-warning .form-control[type=text],
+body.settings .container .form-group.form-group-ok .form-control[type=text] {
   padding-right: 35px;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning:before {
+body.settings .container .form-group.form-group-warning:before {
   content: "\f071";
   color: #d0021b;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning .control-label,
-body.settings .container .form-horizontal .form-group.form-group-warning .help-block {
+body.settings .container .form-group.form-group-warning .control-label,
+body.settings .container .form-group.form-group-warning .help-block {
   color: #d0021b;
 }
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+body.settings .container .form-group.form-group-ok:before {
   content: "\f058";
   color: #239a37;
 }
-body.settings .container .form-horizontal .form-group .help-block {
+body.settings .container .form-group .help-block {
   margin: 0;
   text-align: left;
-  border-bottom: 1px solid #dbdbdb;
 }
-body.settings .container .form-horizontal .btn-submit {
+body.settings .container .btn-default {
+  background: #125c9c;
+  color: #fff;
+  margin: 15px auto 0;
+}
+body.settings .container .btn-circle {
+  width: 74px;
+  height: 74px;
+  padding: 30px 0;
+  border-radius: 37px;
+}
+body.settings .container .btn-submit {
+  width: 140px;
+  display: block;
+}
+body.settings .container .btn-submit-single {
   position: fixed;
   top: 5px;
   right: 0;
   z-index: 101;
-  width: 64px;
-  height: 34px;
-  padding: 10px 0;
   border-radius: 0;
-  background: #125c9c;
-  color: #fff;
   margin: 0;
   border: 0;
   line-height: 1;
+  display: block;
   font-weight: 600;
+  width: 64px;
+  height: 34px;
+  padding: 10px 0;
 }
 @media (min-width: 540px) {
-  body.settings .container .form-horizontal .btn-submit {
+  body.settings .container .btn-submit-single {
     position: static;
     width: 74px;
     height: 74px;
     padding: 30px 0;
     border-radius: 37px;
-    margin: 15px auto 0;
-    display: block;
   }
 }
-body.settings .container .form-horizontal .control-label {
+body.settings .container .control-label {
   float: left;
   width: 100px;
   color: #999999;
@@ -146,7 +172,7 @@ body.settings .container .form-horizontal .control-label {
   text-align: left;
   font-weight: 400;
 }
-body.settings .container .form-horizontal .form-control {
+body.settings .container .form-control {
   width: auto;
   min-width: 180px;
   max-width: 300px;
@@ -164,13 +190,13 @@ body.settings .container .form-horizontal .form-control {
   outline: 0;
   border-radius: 0;
 }
-body.settings .container .form-horizontal textarea.form-control {
+body.settings .container textarea.form-control {
   width: 190px;
   height: 112px;
   padding: 0;
   margin: 11px 10px 10px 0;
 }
-body.settings .container .form-horizontal .help-block {
+body.settings .container .help-block {
   padding: 4px 10px;
   margin: 4px 0 0;
   text-align: center;
@@ -178,7 +204,7 @@ body.settings .container .form-horizontal .help-block {
   font-size: 12px;
   line-height: 1.33;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label {
+body.settings .container .form-group-toggle .control-label {
   width: 100%;
   min-width: 0;
   padding: 11px 80px 10px 10px;
@@ -186,14 +212,14 @@ body.settings .container .form-horizontal .form-group-toggle .control-label {
   position: relative;
   color: #000;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:before,
-body.settings .container .form-horizontal .form-group-toggle .control-label:after {
+body.settings .container .form-group-toggle .control-label:before,
+body.settings .container .form-group-toggle .control-label:after {
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
   position: absolute;
   content: " ";
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:before {
+body.settings .container .form-group-toggle .control-label:before {
   width: 40px;
   height: 24px;
   top: 12px;
@@ -201,7 +227,7 @@ body.settings .container .form-horizontal .form-group-toggle .control-label:befo
   background: #d0021b;
   border-radius: 12px;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:after {
+body.settings .container .form-group-toggle .control-label:after {
   width: 22px;
   height: 22px;
   top: 13px;
@@ -209,21 +235,33 @@ body.settings .container .form-horizontal .form-group-toggle .control-label:afte
   border-radius: 11px;
   background: #fff;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox] {
+body.settings .container .form-group-toggle input[type=checkbox] {
   position: absolute;
   opacity: 0;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
+body.settings .container .form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
   background: #4cd764;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
+body.settings .container .form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
   right: 11px;
 }
-body.settings .container .form-horizontal .picker {
+body.settings .container .form-group-checkbox {
+  position: relative;
+}
+body.settings .container .form-group-checkbox .control-label {
+  width: 100%;
+  padding-right: 40px;
+}
+body.settings .container .form-group-checkbox .form-control {
+  position: absolute;
+  right: 0;
+  width: 25px;
+}
+body.settings .container .picker {
   overflow: hidden;
   position: relative;
 }
-body.settings .container .form-horizontal .picker .icon {
+body.settings .container .picker .icon {
   position: absolute;
   top: 0;
   right: 0;
@@ -231,7 +269,7 @@ body.settings .container .form-horizontal .picker .icon {
   background: #f0f0f0;
   z-index: -1;
 }
-body.settings .container .form-horizontal .picker select {
+body.settings .container .picker select {
   width: 135%;
   border: 0;
   background: transparent;
@@ -242,7 +280,7 @@ body.settings .container .form-horizontal .picker select {
   -webkit-appearance: none;
   padding-right: 95px;
 }
-body.settings .container .form-horizontal .picker select:focus {
+body.settings .container .picker select:focus {
   color: #3ea5cf;
 }
 body.settings .container .list-group {
@@ -268,6 +306,10 @@ body.settings .container .list-group .list-group-item .list-group-item-label {
 body.settings .container .list-group .list-group-item .list-group-item-value {
   margin-left: 130px;
   font-weight: 600;
+}
+body.settings .container .list-group-plugins .list-group-item .icon {
+  float: left;
+  margin-right: 20px;
 }
 body.settings .container .list-accounts .list-group-item {
   overflow: hidden;
@@ -424,23 +466,23 @@ body#settings-subscription #form-membership-contact {
   body.settings .container {
     width: 400px;
   }
-  body.settings .container .form-horizontal {
+  body.settings .form-horizontal {
     font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   }
-  body.settings .container .form-horizontal fieldset header {
+  body.settings .form-horizontal fieldset header {
     width: 380px;
   }
-  body.settings .container .form-horizontal .form-group {
+  body.settings .form-horizontal .form-group {
     width: 380px;
   }
-  body.settings .container .form-horizontal .control-label {
+  body.settings .form-horizontal .control-label {
     width: 150px;
   }
-  body.settings .container .form-horizontal .form-control {
+  body.settings .form-horizontal .form-control {
     margin-left: 160px;
     width: 220px;
   }
-  body.settings .container .form-horizontal textarea.form-control {
+  body.settings .form-horizontal textarea.form-control {
     width: 210px;
   }
 }

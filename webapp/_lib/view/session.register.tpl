@@ -53,7 +53,7 @@
 
       </fieldset>
 
-      <input type="submit" name="Submit" id="login-save" value="Register" class="btn btn-circle btn-submit">
+      <input type="submit" name="Submit" id="login-save" value="Register" class="btn btn-submit-single">
 {else}
 
     <header>

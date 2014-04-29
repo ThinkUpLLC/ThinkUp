@@ -39,229 +39,269 @@ body.settings {
     .form-horizontal {
       font-family: "tablet-gothic", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
       margin-bottom: 25px;
+    }
 
-      fieldset {
-        margin-bottom: 25px;
+    fieldset, .settings-set {
+      margin-bottom: 25px;
 
-        &.fieldset-no-header {
-          border-top: 1px solid @blue-pale;
-        }
-
-        header {
-          margin: 0;
-          .standard-element;
-          border-bottom: 1px solid @blue-pale;
-
-          h2 {
-            font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-            font-size: 14px;
-            line-height: 1;
-            font-weight: 600;
-            color: @gray;
-            margin: 0;
-          }
-
-          .help-text {
-            font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-            font-weight: 400;
-            color: @gray-light;
-          }
-        }
+      &.fieldset-no-header {
+        border-top: 1px solid @blue-pale;
       }
 
-      .form-group {
+      header {
         margin: 0;
+        .standard-element;
         border-bottom: 1px solid @blue-pale;
 
-        &.form-group-warning, &.form-group-ok {
-          position: relative;
-          .fa-override-before;
-
-          &:before {
-            position: absolute;
-            right: 10px;
-            top: 17px;
-            font-size: 16px;
-          }
-
-          .form-control[type=text] {
-            padding-right: 35px;
-          }
-        }
-
-
-        &.form-group-warning {
-          &:before {
-            content: "\f071";
-            color: @red-warning;
-          }
-
-          .control-label, .help-block {
-            color: @red-warning;
-          }
-        }
-
-        &.form-group-ok {
-          &:before {
-            content: "\f058";
-            color: darken(@green-success, 20%);
-          }
-        }
-
-        .help-block {
+        h2 {
+          font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-size: 14px;
+          line-height: 1;
+          font-weight: 600;
+          color: @gray;
           margin: 0;
-          text-align: left;
-          border-bottom: 1px solid @gray-lighter;
+        }
+
+        .help-text {
+          font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 400;
+          color: @gray-light;
         }
       }
+    }
 
-      .btn-submit {
-        position: fixed;
-        top: 5px;
-        right: 0;
-        z-index: 101;
-        width: 64px;
-        height: 34px;
-        padding: 10px 0;
-        border-radius: 0;
-        background: @blue-action;
-        color: #fff;
-        margin: 0;
+    .settings-set-simple {
+      header {
         border: 0;
-        line-height: 1;
-        font-weight: 600;
+        margin-bottom: 10px;
+      }
 
-        @media (min-width: 540px) {
-          position: static;
-          width: 74px;
-          height: 74px;
-          padding: 30px 0;
-          border-radius: 37px;
-          margin: 15px auto 0;
-          display: block;
+      .btn {
+        margin-bottom: 20px;
+      }
+
+      code {
+        width: 100%;
+      }
+    }
+
+    .form-group {
+      margin: 0;
+      border-bottom: 1px solid @blue-pale;
+
+      &.form-group-warning, &.form-group-ok {
+        position: relative;
+        .fa-override-before;
+
+        &:before {
+          position: absolute;
+          right: 10px;
+          top: 17px;
+          font-size: 16px;
+        }
+
+        .form-control[type=text] {
+          padding-right: 35px;
         }
       }
+
+
+      &.form-group-warning {
+        &:before {
+          content: "\f071";
+          color: @red-warning;
+        }
+
+        .control-label, .help-block {
+          color: @red-warning;
+        }
+      }
+
+      &.form-group-ok {
+        &:before {
+          content: "\f058";
+          color: darken(@green-success, 20%);
+        }
+      }
+
+      .help-block {
+        margin: 0;
+        text-align: left;
+      }
+    }
+
+    .btn-default {
+      background: @blue-action;
+      color: #fff;
+      margin: 15px auto 0;
+    }
+
+    .btn-circle {
+      width: 74px;
+      height: 74px;
+      padding: 30px 0;
+      border-radius: 37px;
+    }
+
+    .btn-submit {
+      width: 140px;
+      display: block;
+    }
+
+    .btn-submit-single {
+      position: fixed;
+      top: 5px;
+      right: 0;
+      z-index: 101;
+      border-radius: 0;
+      margin: 0;
+      border: 0;
+      line-height: 1;
+      display: block;
+      font-weight: 600;
+      width: 64px;
+      height: 34px;
+      padding: 10px 0;
+
+      @media (min-width: 540px) {
+        position: static;
+        .btn-circle;
+      }
+    }
+
+    .control-label {
+      float: left;
+      width: 100px;
+      color: @gray-light;
+      .standard-element;
+      text-align: left;
+      font-weight: 400;
+    }
+
+    .form-control {
+      width: auto;
+      min-width: 180px;
+      max-width: 300px;
+      margin-left: 100px;
+      color: #000;
+      height: 49px;
+      .standard-element;
+      padding: 11px 10px 10px 0;
+      border: 0;
+      background: transparent;
+      box-shadow: 0 0 0;
+      transition: 0;
+      outline: 0;
+      border-radius: 0;
+    }
+
+    textarea.form-control {
+      width: 190px;
+      height: (28*4px);
+      padding: 0;
+      margin: 11px 10px 10px 0;
+    }
+
+    .help-block {
+      padding: 4px 10px;
+      margin: 4px 0 0;
+      text-align: center;
+      color: lighten(@gray-light,10%);
+      font-size: 12px;
+      line-height: 1.33;
+    }
+
+    .form-group-toggle {
 
       .control-label {
-        float: left;
-        width: 100px;
-        color: @gray-light;
-        .standard-element;
-        text-align: left;
-        font-weight: 400;
+        width: 100%;
+        min-width: 0;
+        padding: 11px 80px 10px 10px;
+        float: none;
+        position: relative;
+        color: #000;
+
+        &:before, &:after {
+          -webkit-transition: all 100ms ease-in;
+          transition: all 100ms ease-in;
+          position: absolute;
+          content: " ";
+        }
+
+        &:before {
+          width: 40px;
+          height: 24px;
+          top: 12px;
+          right: 10px;
+          background: @red-warning;
+          border-radius: 12px;
+        }
+
+        &:after {
+          width: 22px;
+          height: 22px;
+          top: 13px;
+          right: 27px;
+          border-radius: 11px;
+          background: #fff;
+        }
+      }
+
+      input[type=checkbox] {
+        position: absolute;
+        opacity: 0;
+      }
+
+      input[type=checkbox]:checked ~ .control-label:before {
+        background: @green-success;
+      }
+
+      input[type=checkbox]:checked ~ .control-label:after {
+        right: 11px;
+      }
+    }
+
+    .form-group-checkbox {
+      position: relative;
+
+      .control-label {
+        width: 100%;
+        padding-right: 40px;
       }
 
       .form-control {
-        width: auto;
-        min-width: 180px;
-        max-width: 300px;
-        margin-left: 100px;
-        color: #000;
-        height: 49px;
-        .standard-element;
-        padding: 11px 10px 10px 0;
+        position: absolute;
+        right: 0;
+        width: 25px;
+      }
+    }
+
+    .picker {
+      overflow: hidden;
+      position: relative;
+
+      .icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 18px 10px 17px;
+        background: @gray-lightest;
+        z-index: -1;
+      }
+
+      select {
+        width: 135%;
         border: 0;
         background: transparent;
         box-shadow: 0 0 0;
         transition: 0;
         outline: 0;
         border-radius: 0;
-      }
+        -webkit-appearance: none;
+        padding-right: 95px;
 
-      textarea.form-control {
-        width: 190px;
-        height: (28*4px);
-        padding: 0;
-        margin: 11px 10px 10px 0;
-      }
-
-      .help-block {
-        padding: 4px 10px;
-        margin: 4px 0 0;
-        text-align: center;
-        color: lighten(@gray-light,10%);
-        font-size: 12px;
-        line-height: 1.33;
-      }
-
-      .form-group-toggle {
-
-        .control-label {
-          width: 100%;
-          min-width: 0;
-          padding: 11px 80px 10px 10px;
-          float: none;
-          position: relative;
-          color: #000;
-
-          &:before, &:after {
-            -webkit-transition: all 100ms ease-in;
-            transition: all 100ms ease-in;
-            position: absolute;
-            content: " ";
-          }
-
-          &:before {
-            width: 40px;
-            height: 24px;
-            top: 12px;
-            right: 10px;
-            background: @red-warning;
-            border-radius: 12px;
-          }
-
-          &:after {
-            width: 22px;
-            height: 22px;
-            top: 13px;
-            right: 27px;
-            border-radius: 11px;
-            background: #fff;
-          }
-        }
-
-        input[type=checkbox] {
-          position: absolute;
-          opacity: 0;
-        }
-
-        input[type=checkbox]:checked ~ .control-label:before {
-          background: @green-success;
-        }
-
-        input[type=checkbox]:checked ~ .control-label:after {
-          right: 11px;
-        }
-
-      }
-
-      .picker {
-        overflow: hidden;
-        position: relative;
-
-        .icon {
-          position: absolute;
-          top: 0;
-          right: 0;
-          padding: 18px 10px 17px;
-          background: @gray-lightest;
-          z-index: -1;
-        }
-
-        select {
-          width: 135%;
-          border: 0;
-          background: transparent;
-          box-shadow: 0 0 0;
-          transition: 0;
-          outline: 0;
-          border-radius: 0;
-          -webkit-appearance: none;
-          padding-right: 95px;
-
-          &:focus {
-            color: @blue-dark;
-          }
+        &:focus {
+          color: @blue-dark;
         }
       }
     }
@@ -289,6 +329,15 @@ body.settings {
         .list-group-item-value {
           margin-left: 130px;
           font-weight: 600;
+        }
+      }
+    }
+
+    .list-group-plugins {
+      .list-group-item {
+        .icon {
+          float: left;
+          margin-right: 20px;
         }
       }
     }
@@ -477,7 +526,8 @@ body#settings-subscription {
       margin-top: 10px;
     }
   }
-// This is only shown when the user taps the contact link.
+
+  // This is only shown when the user taps the contact link.
   #form-membership-contact {
     margin-top: 40px;
     display: none;
@@ -488,34 +538,34 @@ body#settings-subscription {
   body.settings {
     .container {
       width: 400px;
+    }
 
-      .form-horizontal {
-        font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    .form-horizontal {
+      font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 
-        fieldset {
-          header {
-            width: 380px;
-          }
-        }
-
-        .form-group {
+      fieldset {
+        header {
           width: 380px;
         }
+      }
 
-        .control-label {
-          width: 150px;
-        }
+      .form-group {
+        width: 380px;
+      }
 
-        .form-control {
-          margin-left: 160px;
-          width: 220px;
-        }
+      .control-label {
+        width: 150px;
+      }
 
-        textarea.form-control {
-          width: 210px;
-        }
+      .form-control {
+        margin-left: 160px;
+        width: 220px;
+      }
 
+      textarea.form-control {
+        width: 210px;
       }
     }
+
   }
 }
