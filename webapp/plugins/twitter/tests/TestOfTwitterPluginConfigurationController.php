@@ -178,8 +178,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
 
         $expected_pattern = '/Callback URL:
-    <small>
-      <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
+        <small>
+          <code style="font-family:Courier;" id="clippy_2988">https:\/\//';
         $this->assertPattern($expected_pattern, $output);
 
         $this->assertNoPattern('/http:\/\/mytestthinkup/', $output);
@@ -353,6 +353,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         'network_username'=>'biz', 'is_public'=>1, 'network'=>'twitter'));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
 
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -381,6 +383,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
             $i--;
         }
 
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/user/');
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -394,6 +398,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         // Assert that the Add User button isn't there
         $this->assertNoPattern('/Add a Twitter Account/', $output);
         // Assert that the message about the membership cap is there
-        $this->assertPattern('/you&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
+        $this->assertPattern('/you’ve connected 10 of 10 accounts to ThinkUp./', $output);
     }
 }

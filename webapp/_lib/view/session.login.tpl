@@ -24,7 +24,7 @@
         {/if}
       </fieldset>
 
-      <input type="Submit" name="Submit" value="Log In" class="btn btn-circle btn-submit">
+      <input type="Submit" name="Submit" value="Log In" class="btn btn-submit-single">
 
       <p class="form-note">
         <a href="forgot.php">Forgot your password?</a>

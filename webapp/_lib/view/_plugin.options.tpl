@@ -17,21 +17,6 @@ var required_values_set = {if $required_values_set}true{else}false{/if};
 
 {literal}
 var advanced_visible = false;
-function show_advanced() {
-    if(advanced_visible) {
-        $(".advanced-option-label").hide();
-        $(".advanced-option-input").hide();
-        $('#adv-flip-prompt').html('Show');
-        advanced_visible = false;
-        $("#advanced-icon").removeClass('fa-chevron-up').addClass('fa-chevron-down');
-    } else {
-        $(".advanced-option-label").show();
-        $(".advanced-option-input").show();
-        $('#adv-flip-prompt').html('Hide');
-        advanced_visible = true;
-        $("#advanced-icon").removeClass('fa-chevron-down').addClass('fa-chevron-up');
-    }
-}
 {/literal}
 </script>
 
@@ -42,7 +27,7 @@ function show_advanced() {
        <span class="fa fa-check"></span>
        Saved!
      </p>
- </div> 
+ </div>
 
 
 <div class="alert urgent" id="plugin_option_server_error" style="display: none;">
@@ -52,7 +37,7 @@ function show_advanced() {
     </p>
 </div>
 
-<div id="plugin_option_error" 
+<div id="plugin_option_error"
     class="alert alert-error" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
     <p>
         <span class="fa fa-warning"></span>
@@ -78,7 +63,7 @@ function show_advanced() {
         </div>
     {/if}
 
-<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em; display: none;" 
+<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em; display: none;"
     id="plugin_options_error_{$option_obj.name}">
     <p>
         <span class="fa fa-info-circle"></span>
@@ -86,7 +71,7 @@ function show_advanced() {
     </p>
 </div>
 
-<div style="float: left; margin-top: 10px; width: 200px;{if $option_obj.advanced}display: none;{/if}" 
+<div style="float: left; margin-top: 10px; width: 200px;{if $option_obj.advanced}display: none;{/if}"
 {if $option_obj.advanced}class="advanced-option-label"{/if}>
     <label id="plugin_options_{$option_obj.name}_label">
     {if $option_obj.label}
@@ -102,20 +87,20 @@ function show_advanced() {
 {if $option_obj.advanced}class="advanced-option-input"{/if}>
 
     {if $option_obj.type eq 'text_element'}
-        <input type="text" 
+        <input type="text"
         value="{if isset($option_obj.value)}{$option_obj.value|filter_xss}{/if}"
             name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}"
             {if isset($option_obj.size)}size="{$option_obj.size}" {/if}{if ! $user_is_admin} disabled="true"{/if} />
     {/if}
     {if $option_obj.type eq 'radio_element'}
-    
+
         <div id="plugin_options_{$option_obj.name}">
-        
+
             {foreach from=$option_obj.values key=radio_name item=radio_value}
                 <div style="float: left;">
-                    <input type="radio" name="plugin_options_{$option_obj.name}" value="{$radio_value|escape:'html'}" 
-                        {if ! $user_is_admin} disabled="true"{/if} 
-                        {if  isset($option_obj.value) && $option_obj.value == $radio_value} checked="true"{/if} 
+                    <input type="radio" name="plugin_options_{$option_obj.name}" value="{$radio_value|escape:'html'}"
+                        {if ! $user_is_admin} disabled="true"{/if}
+                        {if  isset($option_obj.value) && $option_obj.value == $radio_value} checked="true"{/if}
                         /> {$radio_name|escape:'html'} &nbsp;
                 </div>
             {/foreach}
@@ -126,7 +111,7 @@ function show_advanced() {
     {/if}
     {if $option_obj.type eq 'select_element'}
         <div style="float: left;">
-        <select name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}" 
+        <select name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}"
         {if ! $user_is_admin} disabled="true"{/if} >
         {foreach from=$option_obj.values key=select_name item=select_value}
                 <option value="{$select_value|escape:'html'}"
@@ -157,4 +142,4 @@ function show_advanced() {
 </p>
 {/if}-->
 
-</form> 
+</form>

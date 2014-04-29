@@ -16,7 +16,7 @@
         </div>
       </fieldset>
 
-      <input type="submit" name="Submit" value="Send" class="btn btn-circle btn-submit">
+      <input type="submit" name="Submit" value="Send" class="btn btn-submit-single">
 
       <p class="form-note">
         <a href="login.php">Back to login</a>
