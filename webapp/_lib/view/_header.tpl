@@ -10,7 +10,6 @@
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
     <meta name="author" content="{if isset($logged_in_user)}{$logged_in_user}{/if}">
 
     {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
@@ -23,38 +22,38 @@
     {/if}
 
     {if count($insights) eq 1}
+    <meta property="og:site_name" content="ThinkUp" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@thinkup">
+    <meta name="twitter:domain" content="thinkup.com">
 
+    <meta property="og:url" content="{$thinkup_application_url}?u={$insights[0]->instance->network_username|urlencode_network_username}&n={$insights[0]->instance->network}&d={$insights[0]->date|date_format:'%Y-%m-%d'}&s={$insights[0]->slug}" />
 
-        <meta property="og:site_name" content="ThinkUp" />
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary">
-        <meta name="twitter:site" content="@thinkup">
-        <meta name="twitter:domain" content="thinkup.com">
+    <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+    <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+    <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
 
-        <meta property="og:url" content="{$thinkup_application_url}?u={$insights[0]->instance->network_username|urlencode_network_username}&n={$insights[0]->instance->network}&d={$insights[0]->date|date_format:'%Y-%m-%d'}&s={$insights[0]->slug}" />
+    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
+    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
+    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
 
-        <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
-        <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
-        <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
+    <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+    <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+    <meta property="og:image:secure" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+    <meta name="twitter:image:src" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
 
-        <meta itemprop="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
-        <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
+    <meta name="og:image:type" content="image/png">
+    <meta name="twitter:image:width" content="144">
+    <meta name="twitter:image:height" content="144">
+    <meta name="og:image:width" content="144">
+    <meta name="og:image:height" content="144">
 
-        <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
-        <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
-        <meta property="og:image:secure" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
-        <meta name="twitter:image:src" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
-
-        <meta name="og:image:type" content="image/png">
-        <meta name="twitter:image:width" content="144">
-        <meta name="twitter:image:height" content="144">
-        <meta name="og:image:width" content="144">
-        <meta name="og:image:height" content="144">
-
-        {if ($insights[0]->instance->network eq 'twitter')}
-        <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
-        {/if}
-
+    {if ($insights[0]->instance->network eq 'twitter')}
+    <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
+    {/if}
+    {else}
+    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
     {/if}
 
 
