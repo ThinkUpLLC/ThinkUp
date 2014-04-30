@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" itemscope itemtype="http://schema.org/Article">
-<head>
+<head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
     <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
@@ -10,8 +10,8 @@
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
+    <meta name="author" content="{if isset($logged_in_user)}{$logged_in_user}{/if}">
 
     {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
     isset($smarty.get.oauth_token) and isset($smarty.get.oauth_verifier)}
@@ -21,6 +21,45 @@
     isset($smarty.get.code) and isset($smarty.get.state)}
     <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=facebook">
     {/if}
+
+    {if count($insights) eq 1}
+
+
+        <meta property="og:site_name" content="ThinkUp" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@thinkup">
+        <meta name="twitter:domain" content="thinkup.com">
+
+        <meta property="og:url" content="{$thinkup_application_url}?u={$insights[0]->instance->network_username|urlencode_network_username}&n={$insights[0]->instance->network}&d={$insights[0]->date|date_format:'%Y-%m-%d'}&s={$insights[0]->slug}" />
+
+        <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+        <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+        <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
+
+        <meta itemprop="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
+        <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
+
+        <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+        <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+        <meta property="og:image:secure" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+        <meta name="twitter:image:src" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+
+        <meta name="og:image:type" content="image/png">
+        <meta name="twitter:image:width" content="144">
+        <meta name="twitter:image:height" content="144">
+        <meta name="og:image:width" content="144">
+        <meta name="og:image:height" content="144">
+
+        {if ($insights[0]->instance->network eq 'twitter')}
+        <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
+        {/if}
+
+    {/if}
+
+
+
+
 
     <!-- styles -->
 {if isset($thinkupllc_endpoint)}
@@ -96,12 +135,6 @@
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
-
-{if $post->post_text}
-    <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
-    <meta itemprop="description" content="{$post->post_text|strip_tags}">
-    <meta itemprop="image" content="http://thinkup.com/assets/img/thinkup-logo_sq.png">
-{/if}
 
 </head>
 <body class="{if $body_type}{$body_type}{else}insight-stream{/if}">
