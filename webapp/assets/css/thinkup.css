@@ -1065,6 +1065,9 @@ body.app-message-visible.account .container {
 .insight .insight-color-background {
   background-color: #fc939e;
 }
+.insight .tweet .photo {
+  background: rgba(252, 147, 158, 0.25);
+}
 .insight .panel-heading {
   border-radius: 0;
   border: 0;
@@ -1319,6 +1322,9 @@ body.app-message-visible.account .container {
 .insight-message .insight-color-background {
   background-color: #ffffff;
 }
+.insight-message .tweet .photo {
+  background: rgba(255, 255, 255, 0.25);
+}
 .insight-message .panel-heading a {
   text-decoration: underline;
 }
@@ -1436,6 +1442,9 @@ body.app-message-visible.account .container {
 .insight-pea .insight-color-background {
   background-color: #9dd767;
 }
+.insight-pea .tweet .photo {
+  background: rgba(157, 215, 103, 0.25);
+}
 .insight-salmon {
   background: #fc939e;
   border-top-color: #da6070;
@@ -1465,6 +1474,9 @@ body.app-message-visible.account .container {
 .insight-salmon .insight-color-background {
   background-color: #fc939e;
 }
+.insight-salmon .tweet .photo {
+  background: rgba(252, 147, 158, 0.25);
+}
 .insight-creamsicle {
   background: #ffbb4e;
   border-top-color: #ff8f41;
@@ -1493,6 +1505,9 @@ body.app-message-visible.account .container {
 }
 .insight-creamsicle .insight-color-background {
   background-color: #ffbb4e;
+}
+.insight-creamsicle .tweet .photo {
+  background: rgba(255, 187, 78, 0.25);
 }
 .insight-historical,
 .insight-sepia {
@@ -1533,6 +1548,10 @@ body.app-message-visible.account .container {
 .insight-sepia .insight-color-background {
   background-color: #c0bdaf;
 }
+.insight-historical .tweet .photo,
+.insight-sepia .tweet .photo {
+  background: rgba(192, 189, 175, 0.25);
+}
 .insight-purple {
   background: #b690e2;
   border-top-color: #8e69c2;
@@ -1561,6 +1580,9 @@ body.app-message-visible.account .container {
 }
 .insight-purple .insight-color-background {
   background-color: #b690e2;
+}
+.insight-purple .tweet .photo {
+  background: rgba(182, 144, 226, 0.25);
 }
 .insight-mint {
   background: #41dab3;
@@ -1591,6 +1613,9 @@ body.app-message-visible.account .container {
 .insight-mint .insight-color-background {
   background-color: #41dab3;
 }
+.insight-mint .tweet .photo {
+  background: rgba(65, 218, 179, 0.25);
+}
 .insight-bubblegum {
   background: #f576b5;
   border-top-color: #b3487c;
@@ -1619,6 +1644,9 @@ body.app-message-visible.account .container {
 }
 .insight-bubblegum .insight-color-background {
   background-color: #f576b5;
+}
+.insight-bubblegum .tweet .photo {
+  background: rgba(245, 118, 181, 0.25);
 }
 .insight-seabreeze {
   background: #44c9d7;
@@ -1649,6 +1677,9 @@ body.app-message-visible.account .container {
 .insight-seabreeze .insight-color-background {
   background-color: #44c9d7;
 }
+.insight-seabreeze .tweet .photo {
+  background: rgba(68, 201, 215, 0.25);
+}
 .insight-dijon {
   background: #e4bf28;
   border-top-color: #c59301;
@@ -1677,6 +1708,9 @@ body.app-message-visible.account .container {
 }
 .insight-dijon .insight-color-background {
   background-color: #e4bf28;
+}
+.insight-dijon .tweet .photo {
+  background: rgba(228, 191, 40, 0.25);
 }
 .insight-sandalwood {
   background: #fd8560;
@@ -1707,6 +1741,9 @@ body.app-message-visible.account .container {
 .insight-sandalwood .insight-color-background {
   background-color: #fd8560;
 }
+.insight-sandalwood .tweet .photo {
+  background: rgba(253, 133, 96, 0.25);
+}
 .insight-caramel {
   background: #dd814b;
   border-top-color: #9e5e14;
@@ -1735,6 +1772,9 @@ body.app-message-visible.account .container {
 }
 .insight-caramel .insight-color-background {
   background-color: #dd814b;
+}
+.insight-caramel .tweet .photo {
+  background: rgba(221, 129, 75, 0.25);
 }
 .panel-heading h2.lead {
   font-weight: 700;
@@ -1777,6 +1817,13 @@ body.app-message-visible.account .container {
 .tweet .tweet-actions .tweet-action-permalink {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 12px;
+}
+.photo {
+  text-align: center;
+  margin: 5px 0;
+}
+.photo .photo_img {
+  max-width: 100%;
 }
 .hide-photo.user .user-photo,
 .hide-photo.tweet .user-photo {
