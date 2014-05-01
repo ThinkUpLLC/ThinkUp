@@ -11,6 +11,11 @@ $hide_avatar (optional) do not display the user's avatar, typically used if the 
   <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar|use_https}" alt="{$post->author_username}" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
   <div class="tweet-body">{$post->post_text|filter_xss|link_usernames_to_twitter}</div>
+  {if isset($post->links[0]->image_src) and $post->links[0]->image_src neq ""}
+  <div class="photo clearfix">
+    <a href="{$post->links[0]->url}"><img src="{$post->links[0]->image_src}" class="photo_img" alt="Photo from {$post->author_fullname}"></a>
+  </div>
+  {/if}
   <div class="tweet-actions">
     <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if
       $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
