@@ -1,0 +1,654 @@
+// Builds on top of Bootstrap's .panel
+
+// This is the insight color schemer.
+// It will let you set colors for your insight type.
+
+.insight-colors(
+    @border-top: @color-salmon-dark,
+    @headline-bgd: @color-salmon,
+    @headline-color: @color-salmon-darker,
+    @body-bgd: #fff,
+    @footer-borders: @gray-lighter) {
+    background: @headline-bgd;
+    border-top-color: @border-top;
+    border-bottom-color: @headline-bgd;
+
+    .panel-heading {
+        background: @headline-bgd;
+    }
+
+    &.insight-hero {
+        .panel-heading {
+            .panel-title {
+                color: @headline-color;
+            }
+        }
+    }
+
+    .panel-body, .panel-desktop-right, .panel-footer {
+        background: @body-bgd;
+    }
+
+    .panel-footer {
+        border-top-color: @footer-borders;
+
+        .share-menu {
+            border-color: @footer-borders;
+            background-color: @body-bgd;
+        }
+    }
+
+    .insight-color-text {
+        color: @headline-bgd;
+    }
+
+    .insight-color-background {
+        background-color: @headline-bgd;
+    }
+}
+
+.insight {
+    // Undo Bootstrap defaults
+    border: 0;
+    border-radius: 0px;
+
+    .insight-colors();
+
+    max-width: 540px;
+    margin: 0 0 @font-size-base;
+    border-style: solid;
+    border-top-width: 5px;
+    border-bottom-width: 2px;
+
+    .panel-heading {
+        // Undo Bootstrap defaults
+        border-radius: 0;
+        border: 0;
+
+        padding: 5px 10px 12px;
+        position: relative;
+
+        .panel-title {
+            font-family: "tablet-gothic-semi-condensed", sans-serif;
+            font-weight: 600;
+            font-size: 19px;
+            line-height: (21/19);
+            margin-bottom: 6px;
+            font-weight: 400;
+            letter-spacing: .03em;
+            color: white;
+        }
+
+        .panel-subtitle {
+            line-height: 18px;
+            letter-spacing: .01em;
+            margin: 0;
+
+            a {
+                color: @text-color;
+                text-decoration: underline;
+            }
+        }
+
+        .userpic-featured {
+            position: absolute;
+            right: 10px;
+            bottom: -10px;
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    .panel-heading-illustrated {
+        padding-right: 80px;
+    }
+
+    .panel-body {
+        // Undo Bootstrap defaults
+        padding: 0;
+
+        .panel-body-inner {
+            padding: 10px 2%; // The 2% will shift to 10px once we hit 500px wide.
+            letter-spacing: .01em;
+        }
+    }
+
+    .insight-hero-image {
+        position: relative;
+
+        .insight-hero-credit {
+            color: #fff;
+            font-size: 12px;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            text-shadow: 1px 1px 1px #333;
+            opacity: .9;
+        }
+    }
+
+    .panel-footer {
+        border-radius: 0;
+        overflow: hidden;
+
+        color: @gray-light;
+        font-size: 12px;
+        line-height: 1.66;
+        padding: 8px 10px;
+        position: relative;
+
+        a {
+            text-decoration: none;
+            color: @gray-light;
+        }
+
+        .icon {
+            font-size: 20px;
+            vertical-align: bottom;
+        }
+
+        .icon-network {
+            margin-right: 8px;
+        }
+
+        .permalink {
+            font-weight: 700;
+
+            .prefix {
+                font-weight: 300;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .share-menu {
+            position: absolute;
+            width: 310px;
+            right: -275px;
+            top: 4px;
+            height: 28px;
+            padding: 4px 0 4px 8px;
+            border-left-width: 1px;
+            border-left-style: solid;
+            margin-left: 8px;
+            .clearfix;
+
+            .share-button-open {
+                position: absolute;
+                left: 8px;
+            }
+
+            .share-button-close {
+                position: absolute;
+                top: 4px;
+                right: 12px;
+            }
+
+            .share-services {
+                .clearfix;
+                width: 232px;
+                padding: 0 25px;
+                margin: 0 auto;
+
+                .share-service {
+                    list-style: none;
+                    float: left;
+                    margin: 0 20px;
+
+                    .fa-link {
+                        .rotate(90deg);
+                    }
+                }
+            }
+
+            &.open {
+                border: 0;
+
+                .share-button-open, .share-button-close {
+                    color: #ccc;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 420px) {
+        .panel-body {
+            .panel-body-inner {
+                padding: 10px;
+            }
+        }
+    }
+
+    @media (min-width: 540px) {
+        .clearfix;
+
+        .panel-heading {
+            float: left;
+            width: 230px;
+            padding: 5px 10px 12px 10px;
+
+            .userpic-featured {
+                position: relative;
+                top: 5px;
+                left: 145px;
+                right: auto;
+                bottom: auto;
+                margin-bottom: -10px;
+            }
+        }
+
+        .panel-desktop-right {
+            position: relative;
+            margin-left: 230px;
+            .clearfix();
+        }
+
+        .panel-body, .panel-footer {
+            width: 310px;
+        }
+
+        .panel-footer {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .panel-body {
+            padding-bottom: 37px;
+
+            .panel-body-inner {
+                padding: 10px;
+            }
+
+            &:before, &:after {
+                content: "";
+                display: none;
+                clear: none;
+            }
+        }
+    }
+}
+
+// Insight types
+
+.insight-hero {
+    .panel-heading {
+        padding: 5px 10px 15px;
+
+        .panel-title {
+            font-size: 24px;
+            line-height: (26/24);
+            letter-spacing: .01em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+    }
+
+    @media (min-width: 540px) {
+        .panel-heading {
+            padding: 5px 10px 15px;
+        }
+    }
+}
+
+.insight-message {
+    .insight-colors(#2785d3, #fff, #2785d3);
+    border-bottom-color: #46bcff;
+
+    .panel-heading {
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    &.insight-wide {
+        .panel-heading {
+            padding-bottom: 0;
+        }
+
+        .panel-body {
+            padding: 0;
+        }
+    }
+}
+
+
+.insight-wide {
+    @media (min-width: 540px) {
+        .panel-heading {
+            float: none;
+            width: 100%;
+            padding: 5px 10px 15px;
+        }
+
+        .panel-footer, .panel-body, .panel-desktop-right {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+}
+
+
+.insight-tout {
+    position: relative;
+    background: transparent;
+    box-shadow: 0 0 0;
+    min-height: 190px;
+
+    .panel-heading, .panel-desktop-right, .panel-body {
+        background: transparent;
+    }
+
+    &:after {
+        content: " ";
+        display: block;
+        background: url(https://www.thinkup.com/join/assets/img/crowd@2x.png) 0 0 no-repeat;
+        background-size: 105px 100px;
+        height: 100px;
+        width: 105px;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .panel-body {
+        margin-top: 15px;
+        font-size: (16/14em);
+        line-height: (34/16);
+        margin-right: 140px;
+
+        .btn-signup {
+            font-size: 1em;
+            position: relative;
+            top: -3px;
+            padding: 12px;
+            border-radius: 6px;
+            margin-right: 5px;
+            margin-top: 20px;
+        }
+
+        .tout-more {
+            display: block;
+            line-height: 1.25;
+            width: 156px;
+            text-align: center;
+        }
+    }
+
+    @media (min-width: 540px) {
+        min-height: 163px;
+
+        &:after {
+            top: 15%;
+            background-size: 125px 120px;
+            height: 120px;
+            width: 125px;
+        }
+
+        .panel-title {
+            padding-right: 150px;
+        }
+
+        .panel-body {
+            .btn-signup {
+                margin-top: 0;
+            }
+
+            .tout-more {
+                display: inline;
+                line-height: (34/16);
+                width: auto;
+                text-align: left;
+            }
+        }
+    }
+}
+
+.insight-pea {
+    .insight-colors(@color-pea-dark, @color-pea, @color-pea-darker);
+}
+
+.insight-salmon {
+    .insight-colors(@color-salmon-dark, @color-salmon, @color-salmon-darker);
+}
+
+.insight-creamsicle {
+    .insight-colors(@color-creamsicle-dark, @color-creamsicle, @color-creamsicle-darker);
+}
+
+.insight-historical, .insight-sepia {
+    .insight-colors(@color-sepia-dark, @color-sepia,
+        @color-sepia-darker, #E7E5D9, #D7D6CE);
+}
+
+.insight-purple {
+    .insight-colors(@color-purple-dark, @color-purple, @color-purple-darker);
+}
+
+.insight-mint {
+    .insight-colors(@color-mint-dark, @color-mint, @color-mint-darker);
+}
+
+.insight-bubblegum {
+    .insight-colors(@color-bubblegum-dark, @color-bubblegum, @color-bubblegum-darker);
+}
+
+.insight-seabreeze {
+    .insight-colors(@color-seabreeze-dark, @color-seabreeze, @color-seabreeze-darker);
+}
+
+.insight-dijon {
+    .insight-colors(@color-dijon-dark, @color-dijon, @color-dijon-darker);
+}
+
+.insight-sandalwood {
+    .insight-colors(@color-sandalwood-dark, @color-sandalwood, @color-sandalwood-darker);
+}
+
+.insight-caramel {
+    .insight-colors(@color-caramel-dark, @color-caramel, @color-caramel-darker);
+}
+
+.panel-heading h2.lead {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.083;
+}
+
+.tweet {
+    // Undo Bootstrap's blockquote defaults
+    padding: 0;
+    margin: 0;
+    border: 0;
+
+    font-family: 'Libre Baskerville', georgia, serif;
+    font-size: 13px;
+    line-height: 1.308;
+
+    .tweet-photo {
+        display: block;
+        margin-right: 10px;
+    }
+
+    .byline, .byline a {
+        color: #000;
+
+        .username {
+            color: #898989;
+        }
+    }
+
+    .tweet-body {
+        margin: 3px 0 3px 70px;
+    }
+
+    .tweet-actions {
+        margin-left: 70px;
+        .tweet-action {
+            color: @gray-light;
+            margin-right: 20px;
+
+            &:hover {
+                color: @blue;
+            }
+        }
+
+        .tweet-action-permalink {
+            font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-size: 12px;
+        }
+    }
+}
+
+.hide-photo {
+    &.user, &.tweet {
+        .user-photo {
+            display: none;
+            margin-right: 0;
+        }
+
+        .tweet-actions, .tweet-body, .user-about {
+            margin-left: 0;
+        }
+    }
+}
+
+.user {
+    a {
+        .clearfix;
+        display: block;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .user-photo {
+        float: left;
+        width: 60px;
+        height: 60px;
+    }
+
+    .user-about {
+        margin-left: 70px;
+        color: @text-color;
+
+        .user-name {
+            font-weight: 600;
+
+            .icon {
+                color: @gray-light;
+            }
+        }
+    }
+}
+
+.link {
+    .link-title {
+        font-weight: bold;
+
+        a { color: @text-color; }
+        a:hover {
+            text-decoration: none;
+            color: @blue;
+        }
+    }
+
+    .link-metadata {
+        font-size: 13px;
+        line-height: 1.385;
+        color: @gray
+    }
+}
+
+.big-numbers {
+    .big-number {
+        text-align: center;
+        font-weight: 600;
+
+        .big-number-number {
+            display: inline-block;
+        }
+
+        .big-number-label {
+            display: block;
+            opacity: .5;
+        }
+    }
+
+    &.big-numbers-per-row-1 {
+        .big-number {
+            .big-number-number {
+                font-size: 6em;
+                line-height: 1;
+            }
+
+            .big-number-label {
+                font-size: 3em;
+            }
+        }
+    }
+
+    &.big-numbers-per-row-2 {
+        .big-numbers-row {
+            .clearfix();
+        }
+        .big-number {
+            float: left;
+            width: 140px;
+
+            &:first-child {
+                margin-right: 10px;
+            }
+        }
+
+        .big-number-number {
+            font-size: 5em;
+            line-height: 1;
+        }
+
+        .big-number-label {
+            font-size: 2em;
+        }
+    }
+
+    &.big-numbers-label-icon {
+        .big-number {
+            line-height: 1;
+
+            .big-number-label {
+                display: inline-block;
+                font-size: 4em;
+            }
+        }
+    }
+
+}
+
+
+.body-list {
+    margin: 0;
+    padding: 0 0 55px;
+    list-style: none;
+    overflow: hidden;
+
+    .list-item {
+        margin-top: 17px;
+        display: none;
+
+        &:first-child {
+            display: block;
+            margin-top: 0;
+        }
+    }
+
+    &.all-items-visible, &.body-list-show-all {
+        padding: 0;
+        margin: 0 0 17px;
+
+        .list-item {
+            display: block;
+        }
+    }
+}

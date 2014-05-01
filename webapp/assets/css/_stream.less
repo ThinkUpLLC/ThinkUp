@@ -1,0 +1,126 @@
+.stream {
+    min-width: 320px;
+    width: 100%;
+    padding: 0 5px;
+
+    .date-group {
+        margin-top: 14px;
+        padding: 14px 0;
+
+        &:before {
+            width: 100%;
+            border-top: 1px solid @gray-lighter;
+            content: " ";
+            position: absolute;
+            left: 0;
+            margin-top: -14px;
+        }
+
+        .date-marker {
+            width: 160px;
+            line-height: 1.25;
+            margin: 0 0 @font-size-base/2;
+            // background: rgba(0,0,0,.25);
+
+            .relative {
+                color: @blue;
+                font-weight: 700;
+            }
+
+            .absolute {
+                font-size: 13px;
+                color: #cacaca;
+            }
+        }
+
+        &:first-child {
+            margin-top: 0;
+
+            &:before {
+                border: 0;
+                display: none;
+            }
+        }
+    }
+
+    .date-group-today {
+        .date-marker .absolute {
+            display: none;
+        }
+    }
+
+    &.stream-permalink {
+        .date-marker {
+            display: none;
+        }
+
+        .insight {
+            margin: 28px auto;
+
+            .body-list {
+                padding: 0;
+                margin: 0 0 17px;
+
+                .list-item {
+                    display: block;
+                    &:first-child {
+                        display: block;
+                    }
+                }
+            }
+
+            .btn-see-all {
+                display: none;
+            }
+        }
+    }
+
+    @media (min-width: 540px) {
+        padding: 0 10px;
+
+        .date-group, .stream-pagination-control {
+            width: 540px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (min-width: 780px) {
+        .clearfix;
+
+        .date-group, .stream-pagination-control {
+            width: 780px;
+            margin: 0 auto;
+        }
+
+        .stream-pagination-control {
+            padding: 0 80px 0 160px;
+        }
+
+        .date-marker {
+            float: left;
+
+            &.fixed {
+                position: fixed;
+                top: 14px + @nav-height;
+            }
+
+            &.absolute {
+                position: absolute;
+            }
+
+            &.sticky {
+                position: -webkit-sticky;
+                position: -moz-sticky;
+                position: -o-sticky;
+                position: -ms-sticky;
+                position: sticky;
+                top: 14px;
+                z-index: 1;
+            }
+        }
+
+        .insight {
+            margin-left: 160px;
+        }
+    }
+}
