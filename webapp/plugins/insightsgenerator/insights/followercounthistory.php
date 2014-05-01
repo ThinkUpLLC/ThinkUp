@@ -77,7 +77,8 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight->emphasis = Insight::EMPHASIS_LOW;
                 if (isset($follower_count_history_by_month["trend"])
                 && $follower_count_history_by_month["trend"] !== false) {
-                    $insight->text = $this->username." is gaining ".$follower_count_history_by_month["trend"]." ".
+                    $insight->text = $this->username." is gaining ".
+                        number_format($follower_count_history_by_month["trend"])." ".
                         $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a month.";
                 } else {
                     //This shouldn't happen
@@ -130,7 +131,8 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight->emphasis = Insight::EMPHASIS_LOW;
                 if (isset($follower_count_history_by_week["trend"])
                 && $follower_count_history_by_week["trend"] !== false) {
-                    $insight->text = $this->username." is gaining ".$follower_count_history_by_week["trend"]." ".
+                    $insight->text = $this->username." is gaining ".
+                        number_format($follower_count_history_by_week["trend"])." ".
                         $this->terms->getNoun( 'follower', InsightTerms::PLURAL) . " a week.";
                 } else {
                     //This shouldn't happen
