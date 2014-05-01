@@ -415,6 +415,10 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
         'fav_of_user_id'=>'21', 'network'=>'twitter'));
 
+        //build favorite of that post by the author (this should not get returned)
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abadadfd1212', 'author_user_id'=>'19',
+        'fav_of_user_id'=>'19', 'network'=>'twitter'));
+
         $result = $this->dao->getUsersWhoFavoritedMostOfYourPosts('19', 'twitter', 7);
         $this->debug(Utils::varDumpToString($result));
         $this->assertEqual(sizeof($result), 1);
