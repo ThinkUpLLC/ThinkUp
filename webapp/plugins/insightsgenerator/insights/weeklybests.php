@@ -1,8 +1,8 @@
 <?php
 /*
- Plugin Name: Weekly Bests
- Description: Your most popular posts from last week.
- When: Thursdays for Twitter, Sunday otherwise
+ Plugin Name: Weekly and Monthly Best Posts
+ Description: Your most popular posts from last week and last month.
+ When: Thursdays for Twitter, Sunday otherwise, and 1st of the month
  */
 
 /**
@@ -36,6 +36,79 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
+        //Monthly
+        $did_monthly = false;
+        $should_generate_insight = $this->shouldGenerateMonthlyInsight( $slug = 'monthly_best', $instance,
+            $this->insight_date, $regenerate_existing_insight=false, $day_of_month = 1);
+
+        if ($should_generate_insight) {
+            $most_popular_post = null;
+            $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
+            $insight_text = '';
+
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            //There's probably a better way to get the number of days in last month
+            $last_month_time = strtotime('first day of last month');
+            $last_month_year = date('Y', $last_month_time);
+            $last_month_month = date('m', $last_month_time);
+            $days_of_posts_to_retrieve = TimeHelper::getDaysInMonth( $last_month_year, $last_month_month) + 1; 
+
+            $last_months_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+                $instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $days_of_posts_to_retrieve,
+                $iterator = false, $is_public = false);
+
+            foreach ($last_months_posts as $post) {
+                if($post->network == 'instagram') {
+                    $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                    $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+                }
+                $reply_count = $post->reply_count_cache;
+                $retweet_count = $post->retweet_count_cache;
+                $fav_count = $post->favlike_count_cache;
+
+                $popularity_index = (5 * $reply_count) + (3 * $retweet_count) + (2 * $fav_count);
+
+                if ($popularity_index > $best_popularity_params['index']) {
+                    $best_popularity_params['index'] = $popularity_index;
+                    $best_popularity_params['reply'] = $reply_count;
+                    $best_popularity_params['retweet'] = $retweet_count;
+                    $best_popularity_params['like'] = $fav_count;
+
+                    $most_popular_post = $post;
+                }
+            }
+
+            if (isset($most_popular_post)) {
+                $my_insight = new Insight();
+
+                $my_insight->headline = $this->getVariableCopy(array(
+                    'Happy %new_month!',
+                    'Welcome to %new_month!'
+                ), array('new_month'=> date('F')));
+
+                $my_insight->text = $this->getVariableCopy(array(
+                    "This was %username's most popular %post of %last_month %month_year.",
+                    "Behold, %username's most popular %post of %last_month %month_year."
+                    ),
+                    array(
+                    'last_month'=> date('F', $last_month_time), 
+                    'month_year'=> date('Y', $last_month_time))
+                );
+
+                $my_insight->slug = 'monthly_best'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->setPosts(array($most_popular_post));
+
+                $this->insight_dao->insertInsight($my_insight);
+
+                $did_monthly = true;
+            }
+        }
+
+        //Weekly
         if ($instance->network == 'twitter') {
             $day_of_week = 4;
         } else {
@@ -44,7 +117,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_best', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts));
 
-        if ($should_generate_insight) {
+        if (!$did_monthly && $should_generate_insight) {
             $most_popular_post = null;
             $best_popularity_params = array('index' => 0, 'reply' => 0, 'retweet' => 0, 'like' => 0);
             $insight_text = '';
