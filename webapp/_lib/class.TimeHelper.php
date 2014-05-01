@@ -67,4 +67,14 @@ class TimeHelper {
     public static function clearTime() {
         self::setTime(0);
     }
+
+    /**
+     * Get the number of days in a given month and year.
+     * @param  int $year
+     * @param  int $month
+     * @return int
+     */
+    public static function getDaysInMonth($year, $month) {
+        return round((mktime(0, 0, 0, $month+1, 1, $year) - mktime(0, 0, 0, $month, 1, $year)) / 86400);
+    }
 }

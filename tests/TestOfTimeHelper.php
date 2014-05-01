@@ -54,4 +54,14 @@ class TestOfTimeHelper extends ThinkUpUnitTestCase {
         $now = TimeHelper::getTime();
         $this->assertNotEqual(4179, $now);
     }
+
+    public function testGetDaysInMonth() {
+        $this->assertEqual(TimeHelper::getDaysInMonth(2014, 2), 28);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2013, 2), 28);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2012, 2), 29);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2014, 1), 31);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2014, 3), 31);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2014, 4), 30);
+        $this->assertEqual(TimeHelper::getDaysInMonth(2014, 5), 31);
+    }
 }

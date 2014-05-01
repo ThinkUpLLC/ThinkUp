@@ -135,6 +135,143 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/This is a really good post/', $email_insight);
     }
 
+    public function testMonthlyBestInsightForTwitter() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $builders = self::setUpPublicInsight($instance);
+
+        $builders[] = FixtureBuilder::build('posts', array(
+            'reply_count_cache' => 5,
+            'retweet_count_cache' => 1,
+            'favlike_count_cache' => 3,
+            'post_text' => 'This is a really good post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
+            'pub_date' => '-1d'));
+
+        $builders[] = FixtureBuilder::build('posts', array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 1,
+            'favlike_count_cache' => 15,
+            'post_text' => 'This is an even better post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
+            'pub_date' => '-1d'));
+
+        $builders[] = FixtureBuilder::build('posts', array(
+            'reply_count_cache' => 2,
+            'retweet_count_cache' => 5,
+            'favlike_count_cache' => 1,
+            'post_text' => 'This is THE BEST post',
+            'author_username' => $instance->network_username,
+            'author_user_id' => 'abc',
+            'author_avatar' => 'http://example.com/example.jpg',
+            'network' => $instance->network,
+            'pub_date' => '-1d'));
+
+        TimeHelper::setTime(1);
+        $insight_plugin = new WeeklyBestsInsight();
+        $insight_plugin->generateInsight($instance, array(), 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('monthly_best', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/Welcome to '.date('F').'!/', $result->headline);
+
+        $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/Behold, @testeriffic\'s most popular tweet of '.date('F', $last_month_time).
+            ' '.date('Y', $last_month_time).'./', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight.html
+         */
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'testeriffic';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = $today;
+        $_GET['s'] = 'monthly_best';
+        $results = $controller->go();
+        //Uncomment this out to see web view of insight
+        //$this->debug($results);
+        $this->assertPattern('/This is a really good post/', $results);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertPattern('/This is a really good post/', $email_insight);
+
+        //Test alternate headline/body
+        TimeHelper::setTime(2);
+        $insight_plugin = new WeeklyBestsInsight();
+        $insight_plugin->generateInsight($instance, array(), 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('monthly_best', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/Happy '.date('F').'!/', $result->headline);
+
+        $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/This was @testeriffic\'s most popular tweet of '.date('F', $last_month_time).
+            ' '.date('Y', $last_month_time).'./', $result->text);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight.html
+         */
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'testeriffic';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = $today;
+        $_GET['s'] = 'monthly_best';
+        $results = $controller->go();
+        //Uncomment this out to see web view of insight
+        //$this->debug($results);
+        $this->assertPattern('/This is a really good post/', $results);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        $this->debug($email_insight);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertPattern('/This is a really good post/', $email_insight);
+    }
+
     public function testWeeklyBestsInsightForFacebook() {
         // Get data ready that insight requires
         $instance = new Instance();
