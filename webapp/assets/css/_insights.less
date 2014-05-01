@@ -45,6 +45,10 @@
     .insight-color-background {
         background-color: @headline-bgd;
     }
+
+    .tweet .photo {
+        background: fade(@headline-bgd, 25%);
+    }
 }
 
 .insight {
@@ -498,6 +502,15 @@
             font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
             font-size: 12px;
         }
+    }
+}
+
+.photo {
+    text-align: center;
+    margin: 5px 0;
+
+    .photo_img {
+        max-width: 100%;
     }
 }
 
