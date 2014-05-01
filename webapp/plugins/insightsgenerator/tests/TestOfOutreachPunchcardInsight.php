@@ -155,6 +155,12 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         //Test email rendering
         $email_insight = $this->getRenderedInsightInEmail($result);
         $this->debug($email_insight);
+
+        //Ugh, this number isn't serialized before it's stored, so we have to serialize it here
+        //TODO: Refactor how this number is stored in related_data
+        $result->related_data = serialize($result->related_data);
+        $html_insight = $this->getRenderedInsightInHTML($result);
+        $this->debug($html_insight);
     }
 
     public function testOutreachPunchcardInsightOneResponse() {

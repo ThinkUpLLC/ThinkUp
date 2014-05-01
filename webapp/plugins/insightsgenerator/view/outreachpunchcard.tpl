@@ -21,6 +21,10 @@
           ['12', 1],
         ]);
 
+        var c = window.tu.constants.colors;
+        {/literal}var color = c.{$color};
+        var color_dark = c.{$color}_dark;{literal}
+
         var options = {
           legend: 'none',
           tooltip: {
@@ -35,7 +39,7 @@
             fill: 'none',
           },
           width: 125,
-          pieSliceBorderColor: '#9dd767',
+          pieSliceBorderColor: color,
           pieSliceText: 'label',
           pieStartAngle: 15,
 
@@ -43,9 +47,9 @@
 {/literal}
 {section name=piecolors loop=13 start=1 }
 {if $smarty.section.piecolors.index eq $i->related_data}
-            '#5fac1c',
+            color_dark,
 {else}
-            '#9dd767',
+            color,
 {/if}
 {/section}
 {literal}

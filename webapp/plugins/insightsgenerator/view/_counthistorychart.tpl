@@ -15,6 +15,8 @@ function drawChart{/literal}{$i->id}() {literal}{
   {/literal}
   var count_history_data_{$i->id} = new google.visualization.DataTable(
   {$i->related_data.vis_data});
+  var c = window.tu.constants.colors;
+  var color = c.{$color};
   formatter.format(count_history_data_{$i->id}, 1);
   formatter_date.format(count_history_data_{$i->id}, 0);
 {literal}
@@ -30,7 +32,7 @@ function drawChart{/literal}{$i->id}() {literal}{
           legend: "none",
           interpolateNulls: true,
           pointSize: 4,
-          colors : ['#125c9c'],
+          colors : [color],
           hAxis: {
               baselineColor: '#eee',
               format: 'MMM d',
