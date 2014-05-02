@@ -80,7 +80,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -106,7 +106,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
             'instance_id'=>10, 'value'=>99));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -129,7 +129,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
         'instance_id'=>10, 'value'=>81));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -152,7 +152,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
         'instance_id'=>10, 'value'=>7));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -176,7 +176,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
         'instance_id'=>10, 'value'=>79));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -200,7 +200,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you_percent',
         'instance_id'=>10, 'value'=>80));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -224,7 +224,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'all_about_you',
         'instance_id'=>10, 'value'=>9));
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -250,7 +250,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $posts[] = $p;
 
         $insight_plugin = new AllAboutYouInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('all_about_you', 10, $today);
         $this->assertPattern('/<strong>67%</', $result->text);
@@ -282,7 +282,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
 
         for ($i=1; $i<=7; $i++) {
             TimeHelper::setTime($i);
-            $insight_plugin->generateInsight($this->instance, $posts, 3);
+            $insight_plugin->generateInsight($this->instance, null, $posts, 3);
             $result = $insight_dao->getInsight('all_about_you', 10, $today);
             $this->assertEqual($result->headline, $good_headlines[$i]);
         }

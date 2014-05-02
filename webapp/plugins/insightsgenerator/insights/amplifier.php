@@ -31,8 +31,8 @@
 
 class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $filename = basename(__FILE__, ".php");
@@ -51,14 +51,11 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     if (!isset($user_dao)) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                     }
-                    if (!isset($instance_user)) {
-                        $instance_user = $user_dao->getDetails($post->author_user_id, $post->network);
-                    }
                     $retweeted_user = $user_dao->getDetails($post->in_rt_of_user_id, $post->network);
                     //if user exists and has fewer followers than instance user, build and insert insight
-                    if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
-                        $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $multiplier = floor($instance_user->follower_count / $retweeted_user->follower_count);
+                    if (isset($retweeted_user) && $retweeted_user->follower_count < $user->follower_count) {
+                        $add_audience = number_format($user->follower_count - $retweeted_user->follower_count);
+                        $multiplier = floor($user->follower_count / $retweeted_user->follower_count);
                         if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
                             $add_audience = number_format($multiplier).'x';
                         }

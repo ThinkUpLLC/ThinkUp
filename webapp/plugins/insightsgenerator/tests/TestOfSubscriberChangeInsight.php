@@ -61,7 +61,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -90,7 +90,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -119,7 +119,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -148,7 +148,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -177,7 +177,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -206,7 +206,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -224,6 +224,11 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>20,
         'network'=>'youtube'));
         return $builders;
+    }
+
+    private function getUser($user_id=1, $network = 'youtube') {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        return $user_dao->getDetails($user_id, $network);
     }
 
 }

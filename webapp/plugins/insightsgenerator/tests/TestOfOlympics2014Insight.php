@@ -100,7 +100,7 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Olympics2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -167,7 +167,7 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Olympics2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -234,7 +234,7 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Olympics2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -293,7 +293,7 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Olympics2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -316,7 +316,7 @@ class TestOfOlympics2014Insight extends ThinkUpInsightUnitTestCase {
             'network' => $instance->network
             )
         );
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         // Assert that insight got updated
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('olympics_2014', 3, $today);

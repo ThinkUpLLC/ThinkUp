@@ -75,7 +75,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the average for 30 days is correct
         $avg_30 = $insight_baseline_dao->getInsightBaseline('avg_like_count_last_30_days', 1);
@@ -114,7 +114,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('like_high_365_day_1', 1, date('Y-m-d', strtotime('-1 day')));
@@ -150,7 +150,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('like_high_90_day_2', 1, date('Y-m-d', strtotime('-1 day')));
@@ -192,7 +192,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('like_high_30_day_3', 1, date('Y-m-d', strtotime('-1 day')));
@@ -235,7 +235,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('like_spike_90_day_1', 1, date('Y-m-d', strtotime('-1 day')));
@@ -282,7 +282,7 @@ class TestOfLikeSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $like_spike_insight = new LikeSpikeInsight();
-        $like_spike_insight->generateInsight($instance, $posts, 7);
+        $like_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('like_spike_30_day_4', 1, date('Y-m-d', strtotime('-1 day')));
