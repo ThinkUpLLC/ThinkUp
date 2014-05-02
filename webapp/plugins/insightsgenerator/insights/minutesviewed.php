@@ -33,8 +33,8 @@
 
 class MinutesViewedInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $video_dao = DAOFactory::getDAO('VideoDAO');
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         self::generateBaselines($instance);

@@ -125,7 +125,7 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -186,7 +186,7 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -231,7 +231,7 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -260,7 +260,7 @@ class TestOfOscars2014Insight extends ThinkUpInsightUnitTestCase {
 
         $posts = array();
         $insight_plugin = new Oscars2014Insight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

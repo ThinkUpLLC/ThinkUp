@@ -75,6 +75,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         //Get instances by owner
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
         $instances = $instance_dao->getByOwner($current_owner, false, true);
@@ -86,11 +87,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
 
         foreach ($instances as $instance) {
+            $user = $user_dao->getDetails($instance->network_user_id, $instance->network);
             $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
-            $network=$instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
-            $iterator = false, $is_public = false);
+                $network=$instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
+                $iterator = false, $is_public = false);
             $insights_plugin_registrar->runRegisteredPluginsInsightGeneration($instance, $last_week_of_posts,
-            $number_days);
+                $number_days, $user);
             $logger->logUserSuccess("Completed insight generation for ".$instance->network_username." on ".
             $instance->network, __METHOD__.','.__LINE__);
         }

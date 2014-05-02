@@ -32,8 +32,8 @@
  */
 
 class LongLostContactsInsight extends InsightPluginParent implements InsightPlugin {
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         if ($instance->network == 'twitter') {
@@ -41,7 +41,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
         } else {
             $day_of_week = 1;
         }
-        $should_generate_insight = self::shouldGenerateWeeklyInsight('long_lost_contacts', $instance, 
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('long_lost_contacts', $instance,
             $insight_date='today', $regenerate_existing_insight=false, $day_of_week = $day_of_week);
 
         if ($should_generate_insight) {

@@ -77,7 +77,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -119,7 +119,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -155,7 +155,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -191,7 +191,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -224,7 +224,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -257,7 +257,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -278,7 +278,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
         )); // popularity_index = 30
 
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
@@ -310,7 +310,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             ));
         }
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
@@ -336,7 +336,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         }
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
@@ -374,7 +374,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         }
 
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
@@ -410,7 +410,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(1); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's up with @testeriffic's tweets.", $result->headline);
         $this->assertEqual('@testeriffic really inspired conversations in the past week &mdash; replies outnumbered '
@@ -424,7 +424,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(2); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's happening with @testeriffic's tweets?", $result->headline);
         $this->assertEqual('@testeriffic shared a lot of things people wanted to amplify in the past week. '.
@@ -438,7 +438,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(3); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("Here's the deal with @testeriffic's tweets.", $result->headline);
         $this->assertEqual('@testeriffic really inspired conversations in the past week &mdash; '.
@@ -452,7 +452,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(4); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("Last week in @testeriffic's tweets&hellip;", $result->headline);
         $this->assertEqual('@testeriffic really inspired conversations in the past week, getting more replies than '.
@@ -466,7 +466,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(5); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with @testeriffic's tweets.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '.
@@ -479,7 +479,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 3,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with @testeriffic's tweets.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; there were '
@@ -492,7 +492,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 3,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with @testeriffic's tweets.", $result->headline);
         $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '.
@@ -516,7 +516,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(1); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's up with Jo Thinkup's status updates.", $result->headline);
         $this->assertEqual('Jo Thinkup really inspired conversations in the past week &mdash; comments outnumbered '
@@ -530,7 +530,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(2); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's happening with Jo Thinkup's status updates?", $result->headline);
         $this->assertEqual('Jo Thinkup shared a lot of things people wanted to amplify in the past week. '.
@@ -544,7 +544,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(3); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("Here's the deal with Jo Thinkup's status updates.", $result->headline);
         $this->assertEqual('Jo Thinkup really inspired conversations in the past week &mdash; '.
@@ -558,7 +558,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(4); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("Last week in Jo Thinkup's status updates&hellip;", $result->headline);
         $this->assertEqual('Jo Thinkup really inspired conversations in the past week, getting more comments than '.
@@ -572,7 +572,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
         TimeHelper::setTime(5); //set headline to expect
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with Jo Thinkup's status updates.", $result->headline);
         $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; '.
@@ -585,7 +585,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 3,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with Jo Thinkup's status updates.", $result->headline);
         $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; there were '
@@ -598,7 +598,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 3,
             'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
         )));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertEqual("What's going on with Jo Thinkup's status updates.", $result->headline);
         $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; '.
