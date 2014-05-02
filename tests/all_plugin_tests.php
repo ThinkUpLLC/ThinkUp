@@ -112,6 +112,7 @@ $plugin_tests->add(new TestOfThanksCountInsight());
 $plugin_tests->add(new TestOfLOLCountInsight());
 $plugin_tests->add(new TestOfFBombCountInsight());
 $plugin_tests->add(new TestOfActivitySpikeInsight());
+$plugin_tests->add(new TestOfFollowCountVisualizerInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
