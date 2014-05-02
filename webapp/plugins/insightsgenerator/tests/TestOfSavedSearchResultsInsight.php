@@ -59,7 +59,7 @@ class TestOfSavedSearchResultsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'facebook';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new SavedSearchResultsInsight();
-        $stylestats_insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();

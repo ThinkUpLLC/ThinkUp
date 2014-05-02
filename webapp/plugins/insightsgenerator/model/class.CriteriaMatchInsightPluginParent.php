@@ -81,8 +81,8 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
      */
     public abstract function getInsightForCounts($this_period_count, $last_period_count, $instance, $matching_posts);
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         if ($this->shouldGenerate($instance, $last_week_of_posts)) {

@@ -30,8 +30,8 @@
  */
 class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         self::generateInsightBaselines($instance, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
@@ -79,7 +79,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         if (isset($click_stats_data)) {
                             $insight_text = "That's a new 365-day record!";
                             $this->insight_dao->insertInsightDeprecated('click_high_365_day_'.$link->id, $instance->id,
-                            $simplified_post_date, 
+                            $simplified_post_date,
                             "Viewers clicked $this->username's link <strong>".
                             number_format($click_count). " times</strong>.", $insight_text, $filename, Insight::EMPHASIS_HIGH,
                             serialize(array($link, $click_stats_data)));
@@ -102,7 +102,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         if (isset($click_stats_data)) {
                             $insight_text = "That's a new 30-day record!";
                             $this->insight_dao->insertInsightDeprecated('click_high_30_day_'.$link->id, $instance->id,
-                            $simplified_post_date, 
+                            $simplified_post_date,
                             "Viewers clicked $this->username's link <strong>".
                             number_format( $click_count ). " times</strong>.", $insight_text, $filename, Insight::EMPHASIS_HIGH,
                             serialize(array($link, $click_stats_data)));
@@ -123,7 +123,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         if (isset($click_stats_data)) {
                             $insight_text = "That's a new 7-day record.";
                             $this->insight_dao->insertInsightDeprecated('click_high_7_day_'.$link->id, $instance->id,
-                            $simplified_post_date, 
+                            $simplified_post_date,
                             "Viewers clicked $this->username's link <strong>".
                             number_format($click_count). " times</strong>.", $insight_text, $filename, Insight::EMPHASIS_HIGH,
                             serialize(array($link, $click_stats_data)));
@@ -144,7 +144,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         if (isset($click_stats_data)) {
                             $multiplier = floor($click_count/$average_click_count_30_days->value);
                             $this->insight_dao->insertInsightDeprecated('click_spike_30_day_'.$link->id, $instance->id,
-                            $simplified_post_date, 
+                            $simplified_post_date,
                             "Viewers clicked $this->username's link <strong>". number_format($click_count).
                              " times</strong>, more than <strong>".$multiplier. "x</strong> your 30-day average.",
                             $insight_text, $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));
@@ -165,7 +165,7 @@ class ClickSpikeInsight extends InsightPluginParent implements InsightPlugin {
                         if (isset($click_stats_data)) {
                             $multiplier = floor($click_count/$average_click_count_7_days->value);
                             $this->insight_dao->insertInsightDeprecated('click_spike_7_day_'.$link->id, $instance->id,
-                            $simplified_post_date, 
+                            $simplified_post_date,
                             "Viewers clicked $this->username's link <strong>". number_format($click_count).
                             " times</strong>, more than <strong>" .$multiplier. "x</strong> your 7-day average.",
                             $insight_text, $filename, Insight::EMPHASIS_LOW, serialize(array($link, $click_stats_data)));

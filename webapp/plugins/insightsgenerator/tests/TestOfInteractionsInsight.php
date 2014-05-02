@@ -85,7 +85,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'twitter', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -124,7 +124,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'twitter', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // With only one mention, should be no insight
         $insight_dao = new InsightMySQLDAO();
@@ -180,7 +180,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'twitter', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -241,7 +241,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'twitter', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -298,7 +298,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'twitter', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -343,7 +343,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
             'network'=>'facebook', 'description'=>'A test Twitter user'));
 
         $insight_plugin = new InteractionsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

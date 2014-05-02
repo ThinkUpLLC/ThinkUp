@@ -47,7 +47,7 @@ class InsightPluginParent {
      * @var str
      */
     var $username;
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
         $this->insight_date = date("Y-m-d");
