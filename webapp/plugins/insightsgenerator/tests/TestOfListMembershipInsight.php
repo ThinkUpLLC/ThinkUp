@@ -59,7 +59,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -89,7 +89,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -119,7 +119,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -147,7 +147,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -175,7 +175,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -204,7 +204,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -233,7 +233,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -264,7 +264,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -298,7 +298,7 @@ class TestOfListMembershipInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new ListMembershipInsight();
-        $stylestats_insight_plugin->generateInsight($instance, array(), 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();

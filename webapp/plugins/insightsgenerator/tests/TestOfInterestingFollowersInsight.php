@@ -69,7 +69,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new InterestingFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -109,7 +109,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new InterestingFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -151,7 +151,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new InterestingFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -209,7 +209,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new InterestingFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

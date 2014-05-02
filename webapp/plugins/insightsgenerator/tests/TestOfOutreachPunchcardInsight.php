@@ -138,7 +138,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new OutreachPunchcardInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted with correct punchcard information
         $insight_dao = new InsightMySQLDAO();
@@ -213,7 +213,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'Tester Person';
         $instance->network = 'facebook';
         $insight_plugin = new OutreachPunchcardInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted with correct punchcard information
         $insight_dao = new InsightMySQLDAO();
@@ -244,7 +244,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new OutreachPunchcardInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight did not got inserted for no responses
         $insight_dao = new InsightMySQLDAO();

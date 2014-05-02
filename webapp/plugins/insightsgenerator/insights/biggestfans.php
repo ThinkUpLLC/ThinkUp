@@ -32,8 +32,8 @@
 
 class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $since_date = date("Y-m-d");
@@ -44,7 +44,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
         } else {
             $day_of_month = 2;
         }
-        $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance, 
+        $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance,
             $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month);
 
         if ($should_generate_insight) { //it's the right day of the month

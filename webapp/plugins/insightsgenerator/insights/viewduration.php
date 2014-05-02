@@ -36,8 +36,8 @@
 
 class ViewDurationInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_weeks_posts, $number_days) {
-        parent::generateInsight($instance, $last_weeks_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_weeks_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_weeks_posts, $number_days);
         self::generateBaselines($instance);
 
         $video_dao = DAOFactory::getDAO('VideoDAO');

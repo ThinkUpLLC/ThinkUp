@@ -85,7 +85,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $clickspike_insight_plugin = new ClickSpikeInsight();
-        $clickspike_insight_plugin->generateInsight($instance, $posts, 3);
+        $clickspike_insight_plugin->generateInsight($instance, null, $posts, 3);
         //sleep(1000);
 
         // Assert that insight got generated
