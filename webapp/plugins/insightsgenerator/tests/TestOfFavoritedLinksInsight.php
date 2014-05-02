@@ -54,7 +54,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new FavoritedLinksInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -80,7 +80,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'facebook';
         $insight_plugin = new FavoritedLinksInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -105,7 +105,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'google+';
         $insight_plugin = new FavoritedLinksInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -135,7 +135,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
         'fav_of_user_id'=>7612345, 'network'=>'twitter'));
 
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNull($result);
 
@@ -148,7 +148,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>135, 'author_user_id'=>7654321,
         'fav_of_user_id'=>7612345, 'network'=>'twitter'));
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNull($result);
     }
@@ -176,7 +176,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
         'fav_of_user_id'=>7612345, 'network'=>'twitter'));
 
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
 

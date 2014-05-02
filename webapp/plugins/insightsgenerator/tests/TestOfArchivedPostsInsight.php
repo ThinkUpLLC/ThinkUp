@@ -55,7 +55,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $instance->total_posts_in_system = 1684
         ;
         $insight_plugin = new ArchivedPostsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -72,7 +72,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -92,7 +92,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'Mary Poppins';
         $instance->total_posts_in_system = 1500;
         $insight_plugin = new ArchivedPostsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -105,7 +105,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -125,7 +125,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'Mary Poppins';
         $instance->total_posts_in_system = 1500;
         $insight_plugin = new ArchivedPostsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -138,7 +138,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -158,7 +158,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'mary@poppins.com';
         $instance->total_posts_in_system = 1500;
         $insight_plugin = new ArchivedPostsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -171,7 +171,7 @@ class TestOfArchivedPostsInsight extends ThinkUpUnitTestCase {
 
         // Increase number of posts in system for this instance
         $instance->total_posts_in_system = 167676;
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

@@ -65,7 +65,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => "This is a polite tweet."));
 
         $insight_plugin = new FBombCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), 10, $today);
@@ -79,7 +79,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Oh, fuck.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new FBombCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -109,7 +109,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Oh, fuck this.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new FBombCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -144,7 +144,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $last_month = date('Y-m-d', strtotime('-1 month'));
         $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 1, $last_month);
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -180,7 +180,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $last_month = date('Y-m-d', strtotime('-1 month'));
         $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 1, $last_month);
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -211,34 +211,34 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new FBombCountInsight();
         $today = date ('Y-m-d');
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'Been dropping those F bombs?');
 
         TimeHelper::setTime(2);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'F yeah!');
 
         TimeHelper::setTime(3);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'Been dropping those F bombs?');
 
         $this->instance->network = 'facebook';
 
         TimeHelper::setTime(1);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'Been dropping those F bombs?');
 
         TimeHelper::setTime(3);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'F yeah!');
 
         TimeHelper::setTime(2);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertEqual($result->headline, 'Facebook Users Curse Knowledgeably');
 
@@ -257,7 +257,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter', 'in_reply_to_post_id' => 1234,
             'post_text' => 'Fuck that.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new FBombCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -308,7 +308,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter', 'in_reply_to_post_id' => 1236,
             'post_text' => 'what the fuck?', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new FBombCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);

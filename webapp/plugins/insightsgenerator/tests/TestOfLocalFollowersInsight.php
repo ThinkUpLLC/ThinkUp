@@ -85,7 +85,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -125,7 +125,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -181,7 +181,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
 
         // Assert that insight did NOT get inserted
         $insight_dao = new InsightMySQLDAO();
