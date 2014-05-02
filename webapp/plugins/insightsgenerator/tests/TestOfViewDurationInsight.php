@@ -66,7 +66,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -99,7 +99,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -142,7 +142,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -180,7 +180,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -218,7 +218,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -261,7 +261,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -294,7 +294,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -327,7 +327,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -365,7 +365,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -403,7 +403,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -441,7 +441,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -484,7 +484,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -522,7 +522,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -560,7 +560,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -603,7 +603,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -652,7 +652,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -695,7 +695,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -732,7 +732,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -760,7 +760,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -793,7 +793,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -831,7 +831,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -869,7 +869,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );
@@ -912,7 +912,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder2->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-45 day')) );
@@ -960,7 +960,7 @@ class TestOfViewDurationInsight extends ThinkUpUnitTestCase {
         $posts[] = new Post($post_builder3->columns);
 
         $insight = new ViewDurationInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('view_duration_record', 1, date('Y-m-d', strtotime('-1 day')) );

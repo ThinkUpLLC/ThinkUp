@@ -79,7 +79,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new LinkPromptInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -107,7 +107,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new LinkPromptInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that no insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -134,7 +134,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new LinkPromptInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that no insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -154,7 +154,7 @@ class TestOfLinkPromptInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new LinkPromptInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that no insight got inserted
         $insight_dao = new InsightMySQLDAO();

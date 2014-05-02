@@ -57,7 +57,7 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new FlashbackInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
@@ -84,7 +84,7 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'facebook';
         $insight_plugin = new FlashbackInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');

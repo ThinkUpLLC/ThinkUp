@@ -90,7 +90,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 27
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -178,7 +178,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1);
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, array(), 3);
+        $insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -226,7 +226,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         //Test alternate headline/body
         TimeHelper::setTime(2);
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, array(), 3);
+        $insight_plugin->generateInsight($instance, null, array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -312,7 +312,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 12
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -367,7 +367,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 27
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -403,7 +403,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 5
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -452,7 +452,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 6
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -503,7 +503,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         )); // popularity_index = 30
 
         $insight_plugin = new WeeklyBestsInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
