@@ -49,6 +49,7 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
