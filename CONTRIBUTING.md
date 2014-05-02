@@ -5,6 +5,11 @@ Filing Issues
 
 When you file a ticket in ThinkUp's issue tracker, help us help you. First, make sure the issue has not already been filed. If you have a question or comment, discuss it on [the community mailing list](http://groups.google.com/group/thinkupapp) instead of filing a ticket.
 
+Most tickets fall under one of three categories.
+
+Bug report
+----------
+
 To report a bug, include:
 
 * The exact steps to reproduce the problem
@@ -13,7 +18,18 @@ To report a bug, include:
 * Your web host and the PHP and MySQL version running on your web server
 * The full text of the error, and the contents of your Apache logs (if it's a PHP error) and the contents of ThinkUp's crawler log (if it's a crawler error)
 
-If it's a feature request, rather than file an issue, propose it on [the community mailing list](http://groups.google.com/group/thinkupapp).
+New insights
+------------
+
+Use this [New Insight Issue template](https://gist.github.com/ginatrapani/11303222) to provide complete details of how your new insight would work.
+
+We're always on the lookout for new insight ideas! The more specific and detailed you can be about what a new insight could look like, the more likely it is we'll build it.
+
+Other Feature requests
+----------------------
+
+If your issue is a feature request, rather than file an issue, propose it on [the community mailing list](http://groups.google.com/group/thinkupapp) first. ThinkUp has been an active project for over five years now, so most feature requests have been discussed at one time or another.
+
 
 Pull Requests
 =============
