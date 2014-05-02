@@ -86,7 +86,7 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
             'fav_of_user_id'=>104, 'network'=>'twitter'));
 
         $insight_plugin = new BiggestFansInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         //sleep(1000);
 
         // Assert that 30 days insight got inserted

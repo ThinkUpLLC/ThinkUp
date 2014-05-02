@@ -60,7 +60,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
+            $insight_plugin->generateInsight($instance, null, $posts, 3);
             // Assert that insight got inserted
             $today = date ('Y-m-d');
             $result = $insight_dao->getInsight('frequency', 10, $today);
@@ -102,7 +102,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
+            $insight_plugin->generateInsight($instance, null, $posts, 3);
             // Assert that insight got inserted
             $today = date ('Y-m-d');
             $result = $insight_dao->getInsight('frequency', 1, $today);
@@ -145,7 +145,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('frequency', 10, $today);
         $this->assertNull($result);
@@ -163,7 +163,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('frequency', 2, $today);
         $this->assertNull($result);
@@ -185,7 +185,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
+            $insight_plugin->generateInsight($instance, null, $posts, 3);
             // Assert that week-over-week comparison is correct
             $insight_dao = new InsightMySQLDAO();
             $today = date ('Y-m-d');
@@ -222,7 +222,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
+            $insight_plugin->generateInsight($instance, null, $posts, 3);
             $today = date ('Y-m-d');
             $result = $insight_dao->getInsight('frequency', 10, $today);
             $this->debug(Utils::varDumpToString($result));
@@ -258,7 +258,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         foreach (array(1, 2, 3) as $modded_time) {
             TimeHelper::setTime($modded_time);
-            $insight_plugin->generateInsight($instance, $posts, 3);
+            $insight_plugin->generateInsight($instance, null, $posts, 3);
             $today = date ('Y-m-d');
             $result = $insight_dao->getInsight('frequency', 10, $today);
             $this->debug(Utils::varDumpToString($result));
@@ -291,7 +291,7 @@ class TestOfFrequencyInsight extends ThinkUpUnitTestCase {
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('frequency', 10, $today);
         $this->assertNull($result);

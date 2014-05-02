@@ -33,9 +33,9 @@
 
 class Oscars2014Insight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         if (Utils::isTest() || date("Y-m-d") == '2014-03-04') {
-            parent::generateInsight($instance, $last_week_of_posts, $number_days);
+            parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
             $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
             $hero_image = array(
                 'url' => 'https://www.thinkup.com/assets/images/insights/2014-03/oscars2014.jpg',
