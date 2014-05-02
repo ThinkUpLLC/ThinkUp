@@ -59,7 +59,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
@@ -88,7 +88,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
@@ -116,7 +116,7 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);

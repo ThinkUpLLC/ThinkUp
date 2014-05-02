@@ -32,8 +32,8 @@
  */
 
 class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         //Monthly
@@ -51,7 +51,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             $last_month_time = strtotime('first day of last month');
             $last_month_year = date('Y', $last_month_time);
             $last_month_month = date('m', $last_month_time);
-            $days_of_posts_to_retrieve = TimeHelper::getDaysInMonth( $last_month_year, $last_month_month); 
+            $days_of_posts_to_retrieve = TimeHelper::getDaysInMonth( $last_month_year, $last_month_month);
 
             $last_months_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
                 $instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $days_of_posts_to_retrieve,
@@ -91,7 +91,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                     "Behold, %username's most popular %post of %last_month %month_year."
                     ),
                     array(
-                    'last_month'=> date('F', $last_month_time), 
+                    'last_month'=> date('F', $last_month_time),
                     'month_year'=> date('Y', $last_month_time))
                 );
 

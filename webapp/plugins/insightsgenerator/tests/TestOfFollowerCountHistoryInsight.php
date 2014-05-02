@@ -66,7 +66,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'950', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
@@ -96,7 +96,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday -1 Week',0))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
@@ -125,7 +125,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'840', 'date' => date('Y-m-d', strtotime('Sunday Last Month'))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
         $this->assertNull($result);
@@ -160,7 +160,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         }
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
@@ -211,7 +211,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
 
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
@@ -245,7 +245,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
@@ -279,7 +279,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'9950', 'date' => date('Y-m-d', strtotime('-2 month'))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
         $this->assertNull($result);
@@ -297,7 +297,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
             'type'=>'followers', 'count'=>'940', 'date' => date('Y-m-d', strtotime('Sunday Last Week'))));
 
         $insight_plugin = new FollowerCountInsight();
-        $insight_plugin->generateInsight($this->instance, array(), 3);
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
         $this->assertNull($result);

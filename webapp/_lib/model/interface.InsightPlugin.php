@@ -32,10 +32,11 @@ interface InsightPlugin extends GenericPlugin {
     /**
      * Generate insight.
      * @param Instance $instance
+     * @param User $user User associated with the instance
      * @param arr Post objects from the last week
      * @param int $number_days Days to backfill insights
      * @return void
      */
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days);
 }
 
