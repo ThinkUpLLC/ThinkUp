@@ -883,6 +883,57 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
     }
 
+    public function testMandrillHTMLThinkUpLLCWithTout() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key','1234');
+        $config->setValue('thinkupllc_email_tout','Ohai! This is a tout, you should check out our blog');
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', date('2012-01-01'));
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+
+        $long_ago = date('Y-m-d', strtotime('last year'));
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
+        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
+        'timezone' => 'America/New_York'));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
+        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
+        'text'=>'Joe Test is on 1234 new lists', 'related_data'=>null,
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+
+        $this->simulateLogin('admin@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $this->assertNotEqual($sent, '');
+        $decoded = json_decode($sent);
+        $this->assertNotNull($decoded);
+        $this->assertNotNull($decoded->global_merge_vars);
+        $this->assertEqual(count($decoded->global_merge_vars), 4);
+        $merge_vars = array();
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        // Assert email tout shows up
+        $this->assertPattern('/Ohai/', $merge_vars['insights'], 'Insights URL contains host');
+        $this->debug($merge_vars['insights']);
+        $this->debug($decoded->subject);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+    }
+
     public function testMandrillHTMLWithExceptions() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
