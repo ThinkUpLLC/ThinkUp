@@ -58,7 +58,7 @@ class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
         // We have three random options, so we'll check each one here.
         TimeHelper::setTime(3);
         $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
-        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
 
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
@@ -69,14 +69,14 @@ class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         TimeHelper::setTime(4);
-        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
         $this->assertEqual($result->headline, 'Hello');
         $this->assertEqual($result->text, 'Greetings, earthlings');
 
         TimeHelper::setTime(5);
-        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
         $this->assertEqual($result->headline, 'Yo');

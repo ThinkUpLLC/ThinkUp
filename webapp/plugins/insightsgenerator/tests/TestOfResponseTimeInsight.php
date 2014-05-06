@@ -73,7 +73,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 25));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -137,7 +137,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 27));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -188,7 +188,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $last_week_time_per_response = InsightTerms::getSyntacticTimeDifference(floor((60 * 60 * 24 * 7) / 12));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -225,7 +225,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         'instance_id'=>10, 'value'=>7));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -262,7 +262,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         'instance_id'=>10, 'value'=>43));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -298,7 +298,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         'instance_id'=>10, 'value'=>7));
 
         $insight_plugin = new ResponseTimeInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

@@ -81,7 +81,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNull($result);
@@ -96,7 +96,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -120,7 +120,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -144,7 +144,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -168,7 +168,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -192,7 +192,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>46, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -216,7 +216,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -239,7 +239,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
@@ -264,7 +264,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);

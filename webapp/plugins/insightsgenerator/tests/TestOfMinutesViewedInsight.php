@@ -64,7 +64,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightBaselineMySQLDAO();
         $result = $insight_dao->getInsightBaseline('avg_minutes_viewed_all_time', 1, date ('Y-m-d'));
@@ -137,7 +137,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
 
@@ -190,7 +190,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed5', 1, date ('Y-m-d', strtotime('-41 day')));
@@ -240,7 +240,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -304,7 +304,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -362,7 +362,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -420,7 +420,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -505,7 +505,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -584,7 +584,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -668,7 +668,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -701,7 +701,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high2', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -733,7 +733,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high2', 1, date ('Y-m-d', strtotime('-1 day')));
@@ -771,7 +771,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high3', 1, date ('Y-m-d', strtotime('-1 day')));
