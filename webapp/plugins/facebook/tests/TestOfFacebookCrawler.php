@@ -243,10 +243,11 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '729597743');
 
-        // Test Facebook friends and followers. This user only exists in testing as a "friend."
+        // Test Facebook subscribers. This user only exists in testing as a subscriber
         $user = $user_dao->getUserByName('Poppy Linford', 'facebook');
         $this->assertTrue(isset($user));
         $this->assertEqual($user->user_id, '682523675');
+        $this->assertTrue($user->is_verified);
         // Test follow is set
         $follow_dao = new FollowMySQLDAO();
         $this->assertTrue($follow_dao->followExists('729597743', '682523675', 'facebook'));
@@ -262,7 +263,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         }
         $stmt->closeCursor();
 
-        $this->assertEqual($data[0]['count'], 1);
+        $this->assertEqual($data[0]['count'], 2);
     }
 
     public function testFetchPostsAndRepliesForProfile3Error() {

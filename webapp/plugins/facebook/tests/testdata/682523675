@@ -8,5 +8,12 @@
   "gender": "female", 
   "locale": "en_US", 
   "updated_time": "2011-03-28T17:48:49+0000", 
-  "type": "user"
-}
+  "type": "user",
+  "is_verified": true, 
+  "subscribers": {
+    "data": [
+    ], 
+    "summary": {
+      "total_count": 2
+    }
+  }}
