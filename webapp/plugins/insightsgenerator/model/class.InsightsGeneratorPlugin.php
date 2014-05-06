@@ -259,6 +259,10 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 if (!isset($options['last_daily_email'])) {
                     $view->assign('show_welcome_message', true);
                 }
+                $thinkupllc_email_tout = $config->getValue('thinkupllc_email_tout');
+                if (isset($thinkupllc_email_tout)) {
+                    $view->assign('thinkupllc_email_tout', $thinkupllc_email_tout);
+                }
             } else {
                 $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
             }
