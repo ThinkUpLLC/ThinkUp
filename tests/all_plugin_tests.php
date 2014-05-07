@@ -79,7 +79,6 @@ $plugin_tests->add(new TestOfInsightPluginParent());
 $plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 //Insights
-$plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfBiggestFansInsight());
