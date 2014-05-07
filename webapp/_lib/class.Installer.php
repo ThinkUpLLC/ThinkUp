@@ -176,7 +176,7 @@ class Installer {
      */
     public function checkDependency($libs = array()) {
         $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
-        'ZipArchive'=>false);
+        'ZipArchive'=>false, 'mbstring'=>false, 'xml'=>false);
 
         // check curl
         if ( self::curlDependenciesMet() ) {
@@ -206,6 +206,15 @@ class Installer {
         if ( class_exists('ZipArchive')) {
             $ret['ZipArchive'] = true;
         }
+        // check mbString : Issue #1819
+        if ( extension_loaded('mbstring') ) {
+            $ret['mbstring'] = true;
+        }
+        // check XML: Issue #1819
+        if ( extension_loaded('xml') ) {
+            $ret['xml'] = true;
+        } 
+        
         // when testing
         if ( Utils::isTest() && !empty($libs) ) {
             $ret = $libs;
