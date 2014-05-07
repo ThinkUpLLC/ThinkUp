@@ -65,7 +65,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => "I am not feeling that feeling of appreciating stuff."));
 
         $insight_plugin = new ThanksCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), 10, $today);
@@ -79,7 +79,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new ThanksCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -109,7 +109,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I want to thank you.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new ThanksCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -144,7 +144,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $last_month = date('Y-m-d', strtotime('-1 month'));
         $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 1, $last_month);
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -173,25 +173,25 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ThanksCountInsight();
         $today = date ('Y-m-d');
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Gratitude makes everybody happy.');
 
         TimeHelper::setTime(2);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Gratitude is contagious.');
 
         TimeHelper::setTime(3);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Saying &ldquo;thanks&rdquo; is a great way to spend time on Twitter.');
 
         TimeHelper::setTime(4);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Way to show appreciation.');
@@ -210,7 +210,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ThanksCountInsight();
         $today = date ('Y-m-d');
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertPattern('/\@testy tweeted 1 thank-you last month./', $result->text);
@@ -219,7 +219,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Thanks thank you thanks a lot!.', 'pub_date' => date('Y-m-d')));
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertPattern('/\@testy tweeted 2 thank-yous last month./', $result->text);
@@ -247,7 +247,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => 'Nope.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new ThanksCountInsight();
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);

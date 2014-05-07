@@ -65,7 +65,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => "That is not funny"));
 
         $insight_plugin = new LOLCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), 10, $today);
@@ -79,7 +79,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Hahaha, so funny.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new LOLCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -109,7 +109,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I am total rofling!', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new LOLCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -144,7 +144,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $last_month = date('Y-m-d', strtotime('-1 month'));
         $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 1, $last_month);
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -180,7 +180,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $last_month = date('Y-m-d', strtotime('-1 month'));
         $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 1, $last_month);
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -208,19 +208,19 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new LOLCountInsight();
         $today = date ('Y-m-d');
 
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'LOL activity detected!');
 
         TimeHelper::setTime(2);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
 
         TimeHelper::setTime(3);
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'LOLOLOLOL, indeed.');
@@ -240,7 +240,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter', 'in_reply_to_post_id' => 1234,
             'post_text' => 'Hahaha, so funny.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new LOLCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -290,7 +290,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> 'testy', 'network' => 'twitter', 'in_reply_to_post_id' => 1236,
             'post_text' => 'That line makes me rofl.', 'pub_date' => date('Y-m-d')));
         $insight_plugin = new LOLCountInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);

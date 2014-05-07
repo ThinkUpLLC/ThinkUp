@@ -32,8 +32,8 @@
 
 class SubscriberChangeInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_weeks_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_weeks_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
         $insight_text = '';
@@ -64,7 +64,7 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
             $insight_text = "<a href=http://plus.google.com/$instance->network_user_id>$instance->network_username</a>'s ";
             $insight_text .= "video <a href=http://www.youtube.com/watch?v=$video->post_id>$video->post_text</a> ";
             $insight_text .= "left an impression on $gain_or_loss subscribers.";
-            
+
             $subscriber_count = intval($subscriber_count);
             $total_before_video = intval($total_before_video);
             $rows = $video_dao->getNetSubscriberChange($instance->network_username, 'youtube', 10);
