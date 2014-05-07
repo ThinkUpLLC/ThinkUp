@@ -79,7 +79,6 @@ $plugin_tests->add(new TestOfInsightPluginParent());
 $plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 //Insights
-$plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfBiggestFansInsight());
@@ -114,6 +113,7 @@ $plugin_tests->add(new TestOfFBombCountInsight());
 $plugin_tests->add(new TestOfActivitySpikeInsight());
 $plugin_tests->add(new TestOfFollowCountVisualizerInsight());
 $plugin_tests->add(new TestOfCongratsCountInsight());
+$plugin_tests->add(new TestOfTimeSpentInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
