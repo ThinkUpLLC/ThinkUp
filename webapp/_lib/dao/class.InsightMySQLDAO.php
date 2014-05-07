@@ -84,8 +84,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     }
 
     public function doesInsightExist($slug, $instance_id) {
-        $q = "SELECT date, instance_id, slug, headline, text, related_data, emphasis FROM #prefix#insights WHERE ";
-        $q .= "slug=:slug AND instance_id=:instance_id";
+        $q = "SELECT count(*) as c FROM #prefix#insights WHERE slug=:slug AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
             ':instance_id'=>$instance_id
@@ -93,7 +92,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowsAsArrays($ps);
-        return (sizeof($result) > 0);
+        return $result[0]['c'] > 0;
     }
 
     public function getPreCachedInsightData($slug, $instance_id, $date) {
