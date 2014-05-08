@@ -85,7 +85,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, $this->getUser(), $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -125,7 +125,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, $this->getUser(), $posts=array(), 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -181,7 +181,7 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // Initialize and run the insight
         $insight_plugin = new LocalFollowersInsight();
-        $insight_plugin->generateInsight($instance, null, $posts=array(), 3);
+        $insight_plugin->generateInsight($instance, $this->getUser(), $posts=array(), 3);
 
         // Assert that insight did NOT get inserted
         $insight_dao = new InsightMySQLDAO();
@@ -189,6 +189,11 @@ class TestOfLocalFollowersInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('local_followers', 10, $today);
         $this->debug(Utils::varDumpToString($result));
         $this->assertNull($result);
+    }
+
+    private function getUser($user_id=9654000768, $network = 'twitter') {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        return $user_dao->getDetails($user_id, $network);
     }
 
 }
