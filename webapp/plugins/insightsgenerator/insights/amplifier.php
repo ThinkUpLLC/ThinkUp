@@ -48,19 +48,18 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //if insight doesn't exist fetch user details of original author and instance
-                if (self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
-                    $insight_date=$simplified_post_date)) {
+                $should_generate_insight = self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
+                    $insight_date=$simplified_post_date);
+
+                if ($should_generate_insight) {
                     if (!isset($user_dao)) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                     }
-                    if (!isset($instance_user)) {
-                        $instance_user = $user_dao->getDetails($post->author_user_id, $post->network);
-                    }
                     $retweeted_user = $user_dao->getDetails($post->in_rt_of_user_id, $post->network);
                     //if user exists and has fewer followers than instance user, build and insert insight
-                    if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
-                        $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $multiplier = floor($instance_user->follower_count / $retweeted_user->follower_count);
+                    if (isset($retweeted_user) && $retweeted_user->follower_count < $user->follower_count) {
+                        $add_audience = number_format($user->follower_count - $retweeted_user->follower_count);
+                        $multiplier = floor($user->follower_count / $retweeted_user->follower_count);
                         if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
                             $add_audience = $multiplier.'x';
                         }

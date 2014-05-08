@@ -36,13 +36,11 @@ class LocalFollowersInsight extends InsightPluginParent implements InsightPlugin
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $insight_text = '';
+        $should_generate_insight = self::shouldGenerateInsight('local_followers', $instance, $insight_date='today',
+            $regenerate_existing_insight=true);
 
-        if (self::shouldGenerateInsight('local_followers', $instance, $insight_date='today',
-        $regenerate_existing_insight=true)) {
-            $user_dao = DAOFactory::getDAO('UserDAO');
+        if ($should_generate_insight) {
             $follow_dao = DAOFactory::getDAO('FollowDAO');
-
-            $user = $user_dao->getDetails($instance->network_user_id, $instance->network);
 
             if (isset($user->location) && $user->location != "") {
                 $followers = $follow_dao->getFollowersFromLocationByDay($instance->network_user_id, $instance->network,

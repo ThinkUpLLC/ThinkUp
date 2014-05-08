@@ -36,13 +36,11 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $service_user = $user_dao->getDetails($instance->network_user_id, $instance->network);
         $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
             $big_reshares = $post_dao->getRetweetsByAuthorsOverFollowerCount($post->post_id, $instance->network,
-            $service_user->follower_count);
+            $user->follower_count);
 
             if (isset($big_reshares) && sizeof($big_reshares) > 0 ) {
                 if (!isset($config)) {
@@ -53,7 +51,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                     ."$this->username's " . $this->terms->getNoun('post') . ".";
                 } else {
                     $follower_count_multiple =
-                    intval(($big_reshares[0]->follower_count) / $service_user->follower_count);
+                    intval(($big_reshares[0]->follower_count) / $user->follower_count);
                     if ($follower_count_multiple > 1 ) {
                         $headline = "Someone with <strong>".$follower_count_multiple.
                         "x</strong> more followers than $this->username ".$this->terms->getVerb('shared')." "

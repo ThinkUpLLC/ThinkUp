@@ -41,8 +41,6 @@ class SubscriberChangeInsight extends InsightPluginParent implements InsightPlug
         $video_dao = DAOFactory::getDAO('VideoDAO');
 
         // Get the users subscriber count for comparing with later
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user = $user_dao->getDetails($instance->network_user_id, 'youtube');
         $subscriber_count = $user->follower_count;
 
         foreach($last_weeks_posts as $post) {
