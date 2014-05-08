@@ -77,7 +77,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'testeriffic';
         $bigreshare_insight_plugin = new BigReshareInsight();
-        $bigreshare_insight_plugin->generateInsight($instance, null, $posts, 3);
+        $bigreshare_insight_plugin->generateInsight($instance, $this->getUser(), $posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -132,7 +132,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_user_id = '22';
         $instance->network = 'twitter';
         $bigreshare_insight_plugin = new BigReshareInsight();
-        $bigreshare_insight_plugin->generateInsight($instance, null, $posts, 3);
+        $bigreshare_insight_plugin->generateInsight($instance, $this->getUser(), $posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -179,7 +179,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_user_id = '22';
         $instance->network = 'twitter';
         $bigreshare_insight_plugin = new BigReshareInsight();
-        $bigreshare_insight_plugin->generateInsight($instance, null, $posts, 3);
+        $bigreshare_insight_plugin->generateInsight($instance, $this->getUser(), $posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
@@ -243,5 +243,10 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         'reply_retweet_distance'=>1500, 'is_geo_encoded'=>1));
 
         return $builders;
+    }
+
+    private function getUser($user_id=22, $network = 'twitter') {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        return $user_dao->getDetails($user_id, $network);
     }
 }
