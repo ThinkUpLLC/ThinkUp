@@ -48,19 +48,25 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->builders = array();
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>42,'network'=>'twitter',
             'avatar' => 'avatar.jpg',
-            'user_name' => 'tester', 'full_name' => 'The Rewteetee', 'follower_count' => 100));
+            'user_name' => 'tester', 'full_name' => 'The Retweetee', 'follower_count' => 100));
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>43,'network'=>'twitter',
             'avatar' => 'avatar.jpg',
-            'user_name' => 'lowfollowers', 'full_name' => 'The Rewteetee', 'follower_count' => 10));
+            'user_name' => 'lowfollowers', 'full_name' => 'The Retweetee', 'follower_count' => 10));
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>44,'network'=>'twitter',
             'avatar' => 'avatar.jpg',
-            'user_name' => 'highfollowers', 'full_name' => 'The Rewteetee', 'follower_count' => 1000));
+            'user_name' => 'highfollowers', 'full_name' => 'The Retweetee', 'follower_count' => 1000));
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>45,'network'=>'twitter',
             'avatar' => 'avatar.jpg',
             'user_name' => 'midfollowers', 'full_name' => 'Some Followers', 'follower_count' => 51));
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>46,'network'=>'twitter',
             'avatar' => 'avatar.jpg',
             'user_name' => '49followers', 'full_name' => 'Some Followers', 'follower_count' => 49));
+        $this->builders[] = FixtureBuilder::build('users',array('user_id'=>47,'network'=>'twitter',
+            'avatar' => 'avatar.jpg',
+            'user_name' => 'tester', 'full_name' => 'The Retweetee', 'follower_count' => 10));
+        $this->builders[] = FixtureBuilder::build('users',array('user_id'=>48,'network'=>'twitter',
+            'avatar' => 'avatar.jpg',
+            'user_name' => 'tester', 'full_name' => 'The Retweetee', 'follower_count' => 1000000));
     }
 
     public function tearDown() {
@@ -124,7 +130,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@tester boosted The Rewteetee\'s tweet to 90 more people.');
+        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 90 more people.');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -148,7 +154,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'The Rewteetee can thank @tester for 90 more people seeing this tweet.');
+        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 90 more people seeing this tweet.');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -172,7 +178,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@tester boosted The Rewteetee\'s tweet to 10x more people.');
+        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 10x more people.');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -220,7 +226,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::GetDAO('InsightDAO');
         $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'The Rewteetee can thank @tester for 10x more people seeing this tweet.');
+        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 10x more people seeing this tweet.');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -230,6 +236,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
         $this->debug($this->getRenderedInsightInHTML($result));
     }
+
     public function testInsightV5b() {
         TimeHelper::setTime(33);
         $today = date('Y-m-d');
@@ -254,7 +261,6 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
     }
 
-
     public function testInsightV6() {
         TimeHelper::setTime(34);
         $today = date('Y-m-d');
@@ -273,6 +279,31 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
         $this->assertEqual($data['people'][0]->user_id, 43);
+        $this->assertEqual(count($data['posts']), 1);
+        $this->assertEqual($data['posts'][0]->post_text, 'A Post');
+        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->debug($this->getRenderedInsightInHTML($result));
+    }
+
+    public function testInsightV6WithFormattedNumber() {
+        TimeHelper::setTime(34);
+        $today = date('Y-m-d');
+        $this->instance->network_user_id = 48;
+        $posts = array();
+        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>47, 'network' => 'twitter','pub_date'=>$today));
+
+        $insight_plugin = new AmplifierInsight();
+        $insight_plugin->generateInsight($this->instance, $posts, 3);
+        $insight_dao = DAOFactory::GetDAO('InsightDAO');
+        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, '100,000x more people saw @tester\'s tweet thanks to @tester.');
+        $data = unserialize($result->related_data);
+        $this->assertEqual(count($data['people']), 1);
+        $this->assertEqual($data['people'][0]->username,'tester');
+        $this->assertEqual($data['people'][0]->user_id, 47);
         $this->assertEqual(count($data['posts']), 1);
         $this->assertEqual($data['posts'][0]->post_text, 'A Post');
         $this->debug($this->getRenderedInsightInEmail($result));
