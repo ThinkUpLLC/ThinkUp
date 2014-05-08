@@ -39,17 +39,15 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
         $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
-            if($post->network == 'instagram') {
-                $photo_dao = DAOFactory::getDAO('PhotoDAO');
-                $post =$photo_dao->getPhoto($post->post_id, 'instagram');
-            }
             //if post was a retweet, check if insight exists
             if ($post->in_retweet_of_post_id != null && $post->in_rt_of_user_id != null) {
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //if insight doesn't exist fetch user details of original author and instance
-                if (self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
-                    $insight_date=$simplified_post_date)) {
+                $should_generate_insight = self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
+                    $insight_date=$simplified_post_date);
+
+                if ($should_generate_insight) {
                     if (!isset($user_dao)) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                     }
@@ -62,7 +60,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                         $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
                         $multiplier = floor($instance_user->follower_count / $retweeted_user->follower_count);
                         if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
-                            $add_audience = $multiplier.'x';
+                            $add_audience = number_format($multiplier).'x';
                         }
 
                         $retweeted_username = $retweeted_user->username;
