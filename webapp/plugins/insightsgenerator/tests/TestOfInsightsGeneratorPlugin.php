@@ -674,6 +674,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists', 'related_data'=>null,
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
 
@@ -730,6 +732,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
 
         $this->simulateLogin('admin@example.com');
 
@@ -785,6 +789,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
 
         $this->simulateLogin('admin@example.com');
 
