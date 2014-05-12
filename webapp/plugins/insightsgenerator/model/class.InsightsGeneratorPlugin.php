@@ -91,8 +91,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
                 $network=$instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
                 $iterator = false, $is_public = false);
-            $insights_plugin_registrar->runRegisteredPluginsInsightGeneration($instance, $last_week_of_posts,
-                $number_days, $user);
+            $insights_plugin_registrar->runRegisteredPluginsInsightGeneration($instance, $user, $last_week_of_posts,
+                $number_days);
             $logger->logUserSuccess("Completed insight generation for ".$instance->network_username." on ".
             $instance->network, __METHOD__.','.__LINE__);
         }
