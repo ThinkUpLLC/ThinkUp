@@ -46,8 +46,11 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         $follow_dao = DAOFactory::getDAO('FollowDAO');
 
         // Least likely followers based on follower-to-followee ratio
+        // We grab up to 10 possibilities, then filter for some spam account criteria and take the top 3 that remain
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
-            $instance->network, 0, 3);
+            $instance->network, 0, 10);
+        $least_likely_followers = array_filter($least_likely_followers, array($this, 'filterFollowers'));
+        $least_likely_followers = array_slice($least_likely_followers, 0, 3);
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
@@ -93,6 +96,31 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+    /**
+     * Check new followers for various spammy criteria
+     *
+     * @param Follower $follower The follower to examine
+     * @return bool True for OK users, False for Questionable/Spam users
+     */
+    public function filterFollowers($follower) {
+        // Show users that post
+        if ($follower->post_count < 100) {
+            return false;
+        }
+
+        // Show users that take the time to set a profile
+        if (strstr($follower->avatar, 'default_profile') !== false) {
+            return false;
+        }
+
+        // Show users that have info for us to display
+        if (empty($follower->description) || empty($follower->url)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
