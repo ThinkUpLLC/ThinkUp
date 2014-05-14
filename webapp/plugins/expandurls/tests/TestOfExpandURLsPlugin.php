@@ -105,6 +105,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->debug($link->url);
         $this->assertEqual($link->expanded_url, 'http://thinkup.com/');
         $this->assertEqual($link->error, '');
+        //assert image source didn't get overwritten
+        $this->assertEqual($link->image_src, 'http://thinkup.com/logo.jpg');
 
         $link = $link_dao->getLinkById(6);
         $this->debug($link->url);
@@ -243,7 +245,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'image_src' => '',
+            'image_src' => 'http://thinkup.com/logo.jpg',
             'error' => null
         ));
 
