@@ -39,7 +39,7 @@ class URLExpander {
      * @return str Expanded URL
      */
     public static function expandURL($tinyurl, $original_link, $current_number, $total_number, $link_dao, $logger) {
-        if (getenv("MODE")=="TESTS") { //for testing without actually making requests
+        if (Utils::isTest()) { //for testing without actually making requests
             return $original_link.'/expandedversion';
         }
         $error_log_prefix = $current_number." of ".$total_number." links: ";
