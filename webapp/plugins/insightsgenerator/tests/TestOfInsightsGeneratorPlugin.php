@@ -1136,4 +1136,23 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertNoPattern('/99 new lists/', $sent);
         $this->assertPattern('/42 new lists/', $sent);
     }
+
+    public function testForSurivingLackOfUser() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'user@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0,
+        'timezone' => 'America/New_York'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>5,
+        'auth_error'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 5,
+        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+
+        $this->simulateLogin('user@example.com');
+        $plugin = new InsightsGeneratorPlugin();
+
+        $elevel = error_reporting();
+        error_reporting(E_ALL &~ E_NOTICE);
+        $plugin->crawl();
+        error_reporting($elevel);
+    }
 }
