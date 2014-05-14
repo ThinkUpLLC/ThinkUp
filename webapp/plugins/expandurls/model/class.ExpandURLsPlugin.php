@@ -169,7 +169,11 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
                 }
                 if (!$has_expanded_flickr_link) {
                     if ($expanded_url != '' ) {
-                        $image_src = URLProcessor::getImageSource($expanded_url);
+                        if (!isset($link->image_src) || $link->image_src == '') {
+                            $image_src = URLProcessor::getImageSource($expanded_url);
+                        } else {
+                            $image_src = $link->image_src;
+                        }
                         $url_details = URLExpander::getWebPageDetails($expanded_url);
                         try {
                             $this->link_dao->saveExpandedUrl($link->url, $expanded_url, $url_details['title'],
