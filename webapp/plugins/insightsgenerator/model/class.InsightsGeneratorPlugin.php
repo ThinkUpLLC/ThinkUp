@@ -88,6 +88,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
         foreach ($instances as $instance) {
             $user = $user_dao->getDetails($instance->network_user_id, $instance->network);
+            if ($user === null) {
+                $user = new User();
+                $user->user_name = $instance->network_username;
+                $user->user_id = $instance->network_user_id;
+                $user->network = $instance->network;
+            }
             $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
                 $network=$instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
                 $iterator = false, $is_public = false);
