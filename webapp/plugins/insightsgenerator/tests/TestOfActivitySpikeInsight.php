@@ -33,7 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/activityspike.php';
 
-class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
+class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -94,6 +94,9 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_high_7_day_1', 10, $today);
         $this->assertNull($result);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
 
@@ -149,6 +152,9 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual("That's more than <strong>double</strong> @buffy's average over the last 7 days.",
             $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function test7dayHigh() {
@@ -216,6 +222,9 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual("This one really got some favorites.", $result->headline);
         $this->assertEqual("<strong>50 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function test30dayAverage() {
@@ -261,6 +270,8 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_spike_30_day_1', 10, $today);
 
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function test30daySpike() {
@@ -306,7 +317,7 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That's the highest number of favorites @buffy's gotten in the past 30 days.",
+        $this->assertEqual("That's the highest number of favorites @buffy's tweets have gotten in the past 30 days.",
             $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
@@ -333,6 +344,9 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual("This tweet got replies from <strong>10 people</strong>.", $result->headline);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
         $this->assertEqual("That sets a new 30-day record for @buffy.", $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function test365dayHigh() {
@@ -405,6 +419,9 @@ class TestOfActivitySpikeInsight extends ThinkUpUnitTestCase {
         $this->assertEqual("That's a new 365-day record!", $result->headline);
         $this->assertEqual("<strong>100 people</strong> retweeted @buffy's post.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     private function makePost($replies, $retweets, $faves) {
