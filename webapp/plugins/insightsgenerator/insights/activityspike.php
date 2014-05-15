@@ -155,7 +155,8 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                                 case 'fave':
                                     $headline = "That's the highest number of "
                                         . $this->terms->getNoun('like', InsightTerms::PLURAL)
-                                        . " " .$this->username . "'s gotten in the past 30 days.";
+                                        . " " .$this->username . "'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                                        . " have gotten in the past 30 days.";
                                     $insight_text = "<strong>". number_format($post->favlike_count_cache)
                                         . " people</strong> "
                                         . $this->terms->getVerb('liked') ." $this->username's "
