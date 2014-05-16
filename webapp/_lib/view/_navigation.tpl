@@ -48,7 +48,7 @@
           </button>
           <a class="navbar-brand" href="{$site_root_path}"><strong>Think</strong>Up</span></a>
 
-            {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances}
+            {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances && !isset($thinkupllc_endpoint)}
 
                 <!--search posts-->
                 <form class="navbar-form navbar-search dropdown hidden-xs" style="" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&amp;n={$instances[0]->network|urlencode}&amp;c=posts&amp;q=');">
