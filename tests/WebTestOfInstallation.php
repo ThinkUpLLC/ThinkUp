@@ -128,7 +128,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //sleep(1000);
         //Test bad activation code
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
-        $this->assertText('Houston, we have a problem: Account activation failed.');
+        $this->assertPattern("/Houston, we have a problem: Account activation failed\./");
 
         //Get activation code for user from database
         Utils::setDefaultTimezonePHPini();
@@ -140,14 +140,14 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
         $activation_code);
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
-        $this->assertText('Success! Your account has been activated. Please log in.');
+        $this->assertPattern("/Your account has been activated\./");
 
         //Try to activate again
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
         $activation_code);
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
         $this->assertNoText('Success! Your account has been activated. Please log in.');
-        $this->assertText('You have already activated your account. Please log in.');
+        $this->assertPattern("/You have already activated your account\./");
 
         //Log into ThinkUp
         $this->clickLink('Log in');
