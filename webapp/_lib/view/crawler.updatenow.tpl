@@ -3,17 +3,13 @@
 
 
 <div class="container">
+  <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
+    <div class="date-group{if $i->date|relative_day eq "today"} today{/if}">
 
-<div class="row">
+        <iframe width="100%" height="600" src="run.php{if $log == 'full'}?log=full{/if}" style="border:none;"></iframe>
 
-    <div class="col-md-1">
-    </div><!--/col-md-1-->
-    <div class="col-md-9">
-        <iframe width="100%" height="600" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px"></iframe>
-    </div>
-</div>
-
-
-</div>
+    </div><!-- end date-group -->
+  </div><!-- end stream -->
+</div><!-- end container -->
 
 {include file="_footer.tpl"}
