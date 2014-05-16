@@ -13,7 +13,7 @@
             {/if}
             {if $error_msgs.$field}
              <span class="label label-error">
-                    
+
                     <i class="fa fa-warning"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msgs.$field}
@@ -25,7 +25,7 @@
             {/if}
             {if $info_msgs.$field}
             {if $success_msgs.$field OR $error_msgs.$field}<br />{/if}
-            <span class="label label-info"> 
+            <span class="label label-info">
 
                      {if $info_msg_no_xss_filter}
                         {$info_msgs.$field|filter_xss}
@@ -49,7 +49,7 @@
             {/if}
             {if $error_msg}
              <span class="label label-error" style="">
- 
+
                     <i class="fa fa-warning"></i>
                    {if $error_msg_no_xss_filter}
                        {$error_msg}
@@ -61,7 +61,7 @@
             {/if}
             {if $info_msg}
                 {if $success_msg OR $error_msg}<br />{/if}
-            <span class="label label-success"> 
+            <span class="label label-success">
 
                      {if $info_msg_no_xss_filter}
                         {$info_msg}
@@ -100,9 +100,9 @@
             {/if}
             {if $info_msgs.$field}
             {if $success_msgs.$field OR $error_msgs.$field}<br />{/if}
-            <div class="alert alert-info"> 
+            <div class="alert alert-info">
                 <p>
-                     
+
                      {if $info_msg_no_xss_filter}
                         {$info_msgs.$field|filter_xss}
                      {else}
@@ -136,9 +136,9 @@
             {/if}
             {if $info_msg}
                 {if $success_msg OR $error_msg}<br />{/if}
-            <div class="alert alert-success"> 
+            <div class="alert alert-success">
                 <p>
-                     
+
                      {if $info_msg_no_xss_filter}
                         {$info_msg}
                      {else}
