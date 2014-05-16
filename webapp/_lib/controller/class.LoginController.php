@@ -82,7 +82,7 @@ class LoginController extends ThinkUpController {
                     $this->addToView('email', $user_email);
                     $owner = $owner_dao->getByEmail($user_email);
                     if (!$owner) {
-                        $this->addErrorMessage("Incorrect email");
+                        $this->addErrorMessage("Hmm, that email seems wrong?");
                         return $this->generateView();
                     } elseif (!$owner->is_activated) {
                         $error_msg = 'Inactive account. ';
@@ -99,7 +99,7 @@ class LoginController extends ThinkUpController {
                         return $this->generateView();
                         // If the credentials supplied by the user are incorrect
                     } elseif (!$owner_dao->isOwnerAuthorized($user_email, $_POST['pwd']) ) {
-                        $error_msg = 'Incorrect password';
+                        $error_msg = "Hmm, that password seems wrong?";
                         if ($owner->failed_logins == 9) { // where 9 represents the 10th attempt!
                             $owner_dao->deactivateOwner($user_email);
                             $status = 'Account deactivated due to too many failed logins';

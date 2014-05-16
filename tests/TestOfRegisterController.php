@@ -487,9 +487,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        '<p>Sorry, registration is closed on this installation of Bo\'s ThinkUp.</p>'.
-        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
-        'server.</a></p>');
+        'Sorry, registration is closed on Bo\'s ThinkUp. '.
+        'Try <a href="https://thinkup.com">ThinkUp.com</a>?');
     }
 
     public function testInviteExpiredCodeNoAppTitlePrefix() {
@@ -517,9 +516,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        '<p>Sorry, registration is closed on this installation of ThinkUp.</p>'.
-        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
-        'server.</a></p>');
+        'Sorry, registration is closed on ThinkUp. '.
+        'Try <a href="https://thinkup.com">ThinkUp.com</a>?');
     }
 
     public function testInviteInvalidCode() {
@@ -547,9 +545,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        '<p>Sorry, registration is closed on this installation of Bo\'s ThinkUp.</p>'.
-        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
-        'server.</a></p>');
+        'Sorry, registration is closed on Bo\'s ThinkUp. '.
+        'Try <a href="https://thinkup.com">ThinkUp.com</a>?');
     }
 
     public function testInviteInvalidCodeNoAppTitlePrefix() {
@@ -577,9 +574,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        '<p>Sorry, registration is closed on this installation of ThinkUp.</p>'.
-        '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own '.
-        'server.</a></p>');
+        'Sorry, registration is closed on ThinkUp. '.
+        'Try <a href="https://thinkup.com">ThinkUp.com</a>?');
     }
 
     public function testOfThinkUpLLCRedirect() {
