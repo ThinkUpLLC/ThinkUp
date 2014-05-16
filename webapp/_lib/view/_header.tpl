@@ -137,4 +137,4 @@
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
 
 </head>
-<body class="{if $body_type}{$body_type}{else}insight-stream{/if}">
+<body {if isset($body_classes)} class="{$body_classes}"{else}class="{if $body_type}{$body_type}{else}insight-stream{/if}"{/if}{if isset($body_id)} id="{$body_id}"{/if}>

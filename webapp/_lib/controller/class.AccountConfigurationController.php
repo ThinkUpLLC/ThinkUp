@@ -68,7 +68,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->view_mgr->addHelp('account', 'userguide/settings/account');
 
         //process password change
-        if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
+        if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
 
             // Check their old password is correct
@@ -208,7 +208,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                     }
                 }
             } else {
-                $this->addErrorMessage('Instance doesn\'t exist.', 'account');
+                $this->addErrorMessage("Could not find that account.", 'account');
             }
         }
 
@@ -275,7 +275,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         }
 
         //process change to notification frequency
-        if (isset($_POST['updatefrequency'])) {
+        if (isset($_POST['updatepreferences'])) {
             $this->validateCSRFToken();
             $new_freq = isset($_POST['notificationfrequency']) ? $_POST['notificationfrequency'] : null;
             $updates = 0;
@@ -286,12 +286,12 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 // Update the user in the view to match
                 $owner->email_notification_frequency = $new_freq;
                 $this->addToView('owner', $owner);
-                $this->addSuccessMessage('Your email notification frequency has been updated.', 'notifications');
+                $this->addSuccessMessage('Your email notification frequency has been updated.', 'preferences');
             }
         }
 
         //process change to timezone
-        if (isset($_POST['updatetimezone'])) {
+        if (isset($_POST['updatepreferences'])) {
             $this->validateCSRFToken();
             $new_tz = isset($_POST['timezone']) ? $_POST['timezone'] : null;
             $updates = 0;
@@ -305,7 +305,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 // Update the user in the view to match
                 $owner->timezone = $new_tz;
                 $this->addToView('owner', $owner);
-                $this->addSuccessMessage('Your time zone has been saved.', 'timezone');
+                $this->addSuccessMessage('Your time zone has been saved.', 'preferences');
             }
         }
 

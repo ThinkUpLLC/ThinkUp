@@ -337,7 +337,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNull($v_mgr->getTemplateDataItem('success_msg'));
         $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
         $this->assertNotNull($error_msgs);
-        $this->assertEqual($error_msgs['account'], 'Instance doesn\'t exist.');
+        $this->assertEqual($error_msgs['account'], 'Could not find that account.');
     }
 
     public function testControlNotLoggedIn() {
@@ -451,7 +451,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpassword1';
         $_POST['pass2'] = 'newpassword1';
@@ -470,7 +470,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = '123newpassword';
         $_POST['pass2'] = '123newpassword';
@@ -508,7 +508,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com');
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldddpassword';
         $_POST['pass1'] = 'newpassword';
         $_POST['pass2'] = 'newpassword';
@@ -539,7 +539,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com');
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = '';
         $_POST['pass1'] = 'newpassword';
         $_POST['pass2'] = 'newpassword';
@@ -570,7 +570,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com');
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpassword1';
         $_POST['pass2'] = 'newpassword2';
@@ -602,7 +602,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com');
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'new1';
         $_POST['pass2'] = 'new1';
@@ -635,7 +635,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->debug(__METHOD__);
 
         $this->simulateLogin('me@example.com');
-        $_POST['changepass'] = 'Change password';
+        $_POST['changepass'] = 'Change';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpasscode';
         $_POST['pass2'] = 'newpasscode';
@@ -807,7 +807,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/"both"[^>]*selected/', $output);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['notificationfrequency'] = 'both';
         $controller = new AccountConfigurationController(true);
         $controller->go();
@@ -816,7 +816,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNotEqual('both', $owner->email_notification_frequency);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['notificationfrequency'] = 'bananas';
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
 
@@ -829,7 +829,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/email notification frequency has been updated/', $output);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatefrequency'] = 'Update Frequency';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['notificationfrequency'] = 'both';
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);
@@ -848,7 +848,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual('UTC', $owner->timezone);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['timezone'] = 'America/New_York';
         $controller = new AccountConfigurationController(true);
         $controller->go();
@@ -857,7 +857,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNotEqual('America/NewYork', $owner->timezone);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['timezone'] = 'bananas';
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
 
@@ -870,7 +870,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/time zone has been saved/', $output);
 
         $this->simulateLogin('me@example.com', false, true);
-        $_POST['updatetimezone'] = 'Update Time Zone';
+        $_POST['updatepreferences'] = 'Update';
         $_POST['timezone'] = 'America/New_York';
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);

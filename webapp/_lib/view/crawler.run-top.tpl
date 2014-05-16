@@ -2,9 +2,6 @@
 
 <style type="text/css">
   {literal}
-  body { background-color:white!important;}
-  html {background:white!important;}
-
   .form-group.warning {
     color: #c09853;
   }

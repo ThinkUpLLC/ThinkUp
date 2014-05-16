@@ -1,8 +1,152 @@
 {if isset($thinkupllc_endpoint)}
   {include file="account.tucom.tpl"}
 {else}
-{include file="_header.tpl"}
+{include file="_header.tpl" body_classes="settings menu-open" body_id="settings-main"}
 {include file="_navigation.tpl"}
+
+
+  <div class="container">
+
+  {if $body}
+    {include file="_usermessage-v2.tpl" field="account"}
+    {$body}
+  {else}
+
+
+    <header>
+      <h1>Settings</h1>
+    </header>
+
+        {include file="_usermessage.tpl" field="preferences"}
+        <form name="setPreferences" id="setPreferences" class="form-horizontal" action="index.php?m=manage"
+          method="POST">
+
+          <fieldset class="fieldset-personal">
+            <header>
+            </header>
+            <div class="form-group">
+              <label class="control-label" for="notificationfrequency">Insights email</label>
+              <div class="form-control picker">
+              <i class="fa fa-chevron-down icon"></i>
+              <select name="notificationfrequency">
+             {foreach from=$notification_options item=description key=key}
+                 <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
+             {/foreach}
+             </select>
+             </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="control-timezone">Time zone</label>
+              <div class="form-control picker">
+                <i class="fa fa-chevron-down icon"></i>
+                <select id="control-timezone" name="timezone">
+                  <option value=""{if $current_tz eq ''} selected{/if}>Select a time zone:</option>
+                  {foreach from=$tz_list key=group_name item=group}
+                    <optgroup label="{$group_name}">
+                    {foreach from=$group item=tz}
+                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $owner->timezone eq $tz.val} selected{/if}>{$tz.display}</option>
+                    {/foreach}
+                    </optgroup>
+                  {/foreach}
+                </select>
+                {if $owner->timezone eq 'UTC'}
+                <script type="text/javascript">
+                {literal}
+                var tz_info = jstz.determine();
+                var regionname = tz_info.name().split('/');
+                var tz_option_id = '#tz-' + regionname[1];
+                if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
+                    if( $(tz_option_id) ) {
+                        $('#timezone').val( tz_info.name());
+                    }
+                }
+                {/literal}
+                </script>
+                {/if}
+              </div>
+            </div>
+
+               {insert name="csrf_token"}
+          </fieldset>
+          <input type="submit" value="Update" name="updatepreferences" class="btn btn-circle btn-submit">
+        </form>
+
+        <form name="changepass" id="changepass" class="form-horizontal" method="post"
+          action="index.php?m=manage#changepass">
+
+          <fieldset class="fieldset-password">
+            <header>
+              <h2>Change Password</h2>
+            </header>
+            {include file="_usermessage.tpl" field='password'}
+            <div class="form-group">
+              <label class="control-label" for="control-password-current">Current</label>
+              <input type="password" class="form-control" id="control-password-current" name="oldpass" required>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="control-password-new">New</label>
+              <input type="password" class="form-control" id="control-password-new" name="pass1" required
+                data-validation-required-message="You'll need
+                  a enter a password of at least 8 characters."
+                data-validation-pattern-message="Must be at
+                  least 8 characters, with both numbers &amp; letters.">
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="control-password-verify">Verify New</label>
+              <input type="password" class="form-control" id="control-password-verify" name="pass2" required
+                data-validation-required-message="Password confirmation is required."
+                data-validation-match-match="pass1"
+                data-validation-match-message="Make sure this
+                  matches the password you entered above." >
+            </div>
+          </fieldset>
+          {insert name="csrf_token"}
+          <input type="submit" value="Change" name="changepass" class="btn btn-circle btn-submit">
+        </form>
+
+          <header>
+            <h1>Plugins</h1>
+          </header>
+
+          {if $installed_plugins}
+          <ul class="list-group">
+
+            {foreach from=$installed_plugins key=ipindex item=ip name=foo}
+            <li class="list-group-item list-accounts-item">
+              <div class="account-label">
+                {if !$ip->isConfigured()}
+                  <i class="fa fa-{$ip->icon} fa-fw text-danger"></i>
+                {else}
+                  <i class="fa fa-{$ip->icon} fa-fw text-primary"></i>
+                {/if}
+
+                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin"
+                  class="manage_plugin {if !$ip->isConfigured()}text-danger{/if}"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+
+                <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
+
+              </div>
+
+            </li>
+            {/foreach}
+
+          </ul>
+          {/if}
+
+
+          <header>
+            <h1>Backup &amp; Export</h1>
+          </header>
+
+            <p class="form-note">Download a copy of your entire database</p>
+            <p><a href="{$site_root_path}install/backup.php" class="show-section btn btn-default">Back up ThinkUp</a></p>
+            <p class="form-note">Transfer a single account</p>
+            <p><a href="{$site_root_path}install/exportuserdata.php" class="show-section btn btn-default">Export a ThinkUp account</a></p>
+
+  {/if}<!-- /if no $body -->
+
+  </div><!-- end container -->
+
 
 <div id="main" class="container">
 
@@ -10,52 +154,7 @@
     <div class="col-md-2">
     </div>
     <div class="col-md-6">
-        <div class="white-card">
 
-        <div class="section" id="plugins">
-
-            {if !isset($thinkupllc_endpoint)}{include file="_usermessage.tpl" field="account"}{/if}
-
-              {if $installed_plugins}
-                {foreach from=$installed_plugins key=ipindex item=ip name=foo}
-                  {if $smarty.foreach.foo.first}
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>&nbsp;</th>
-                          {if $user_is_admin}<th class="action-button">&nbsp;</th>{/if}
-                        </tr>
-                      </thead>
-                  {/if}
-                  {if $user_is_admin || $ip->is_active}
-                        <tr>
-                            <td>
-                                <p class="lead" style="padding-left: 0px; margin : 0px;">
-                                <i class="fa fa-{$ip->icon} fa-fw text-muted"></i>
-                                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                                </p>
-                                <span class="text-muted" style="padding-left: 2.3em;">{$ip->description}</span>
-                            </td>
-                    {if $user_is_admin}
-                      <td class="action-button">
-                      <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
-                        {if !$ip->isConfigured()}
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn btn-success"><i class="fa fa-cog"></i> Set Up</a>
-                        {/if}
-                      </span>
-                      <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
-                      </td>
-                    {/if}
-                      </tr>
-                  {/if}
-                {/foreach}
-                    </table>
-              {/if}
-        </div> <!-- end #plugins -->
-
-            {if $body}
-              {$body}
-            {/if}
 
         {if $user_is_admin}
         <div class="section thinkup-canvas clearfix" id="app_settings">
@@ -189,133 +288,6 @@
         </div> <!-- end #app_setting -->
         {/if}
 
-        <div class="section" id="instances">
-          {include file="_usermessage.tpl" field='password'}
-          <span class="pull-right">{insert name="help_link" id='account'}</span>
-          <h3><i class="fa fa-key icon-muted"></i> Change Password</h3>
-          <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-
-            <div class="form-group">
-                    <label class="col-sm-2" for="oldpass">Current password</label>
-                    <div class="col-sm-8">
-                        <span class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                            <input name="oldpass" type="password" id="oldpass" class="password form-control" required>{insert name="csrf_token"}<!-- reset password -->
-                        </span>
-                        <span class="help-block"></span>
-                    </div>
-            </div>
-            <div class="form-group">
-                    <label class="col-sm-2" for="password">New Password</label>
-                    <div class="col-sm-8">
-                        <span class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                            <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal}
-                              class="password form-control" required
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> You'll need
-                              a enter a password of at least 8 characters."
-                            data-validation-pattern-message="<i class='fa fa-exclamation-triangle'></i> Must be at
-                              least 8 characters, with both numbers &amp; letters.">
-                        </span>
-                        <span class="help-block"></span>
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2" for="confirm_password">Confirm&nbsp;new Password</label>
-                    <div class="col-sm-8">
-                        <span class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                            <input type="password" name="pass2" id="confirm_password" required
-                             class="password form-control"
-                            data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> Password
-                              confirmation is required."
-                            data-validation-match-match="pass1"
-                            data-validation-match-message="<i class='fa fa-exclamation-triangle'></i> Make sure this
-                              matches the password you entered above." >
-                        </span>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-            <div class="form-group">
-                    <label class="col-sm-2" for="submit"></label>
-              <div class="col-sm-8">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">
-              </div>
-            </div>
-          </form>
-    <br><br>
-    <h3><i class="fa fa-envelope icon-muted"></i> Email Notification Frequency</h3><br />
-    {include file="_usermessage.tpl" field='notifications'}
-    <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" action="index.php?m=manage#instances">
-        <div class="form-group">
-            <label class="col-sm-2" for="notificationfrequency">Get insights:</label>
-            <div class="col-sm-8">
-                <span class="input-group">
-                    <select name="notificationfrequency" class="form-control">
-                    {foreach from=$notification_options item=description key=key}
-                     <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
-                    {/foreach}
-                    </select>
-                </span>
-                <span class="help-block"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2" for=""></label>
-            <div class="col-sm-8">
-                <span class="input-group">
-                    {insert name="csrf_token"}
-                    <input type="submit" name="updatefrequency" value="Save" class="btn btn-primary">
-                </span>
-            </div>
-        </div>
-    </form>
-    <br><br>
-
-    {include file="_usermessage.tpl" field='timezone'}
-     <form name="setTimezone" id="setTimezone" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-         <div class="form-group">
-            <label class="col-sm-2" for="update_timezone">Your time zone:</label>
-            <div class="col-sm-8">
-              <select name="timezone" id="timezone" class="form-control">
-              <option value=""{if $current_tz eq ''} selected{/if}>Select a Time Zone:</option>
-                {foreach from=$tz_list key=group_name item=group}
-                  <optgroup label='{$group_name}'>
-                    {foreach from=$group item=tz}
-                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $owner->timezone eq $tz.val} selected{/if}>{$tz.display}</option>
-                    {/foreach}
-                  </optgroup>
-                {/foreach}
-              </select>
-              {if $owner->timezone eq 'UTC'}
-              <script type="text/javascript">
-              {literal}
-              var tz_info = jstz.determine();
-              var regionname = tz_info.name().split('/');
-              var tz_option_id = '#tz-' + regionname[1];
-              if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
-                  if( $(tz_option_id) ) {
-                      $('#timezone').val( tz_info.name());
-                  }
-              }
-              {/literal}
-              </script>
-              {/if}
-           </div>
-         </div>
-         <div class="form-group">
-         <label class="col-sm-2" for=""></label>
-           <div class="col-sm-8">
-           <span class="input-group">
-             {insert name="csrf_token"}
-             <input type="submit" name="updatetimezone" value="Save" class="btn btn-primary">
-             </span>
-           </div>
-          </div>
-     </form>
-     <br><br>
 
     <span class="pull-right">{insert name="help_link" id='rss'}</span>
     <h3><i class="fa fa-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
@@ -381,6 +353,7 @@
                 {insert name="csrf_token"}<!-- reset api_key -->
               </form>
         </div> <!-- end #instances -->
+      </div>
 
     {if $user_is_admin}
       <div class="section" id="ttusers">
@@ -450,7 +423,6 @@
 
         </div>
     {/if} <!-- end is_admin -->
-    </div>
 </div>
 
 </div>

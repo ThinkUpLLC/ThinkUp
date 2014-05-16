@@ -47,17 +47,19 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
     }
 
     public function testDeleteInstance() {
-        $this->get($this->url.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
+        $email = 'me@example.com';
+        $cookie_dao = DAOFactory::getDao('CookieDAO');
+        $cookie = $cookie_dao->generateForEmail($email);
 
-        $this->click("Log In");
-        $this->assertTitle(Config::getInstance()->getValue('app_title_prefix') .
-        "ThinkUp");
-        $this->assertText('me@example.com');
+        $this->get($this->url.'/index.php');
+        $this->assertNoText($email);
+        $this->getBrowser()->setCookie(Session::COOKIE_NAME, $cookie);
+
+        $this->get($this->url.'/index.php');
+        $this->assertText($email);
 
         $this->click("Settings");
-        $this->click("Twitter");
+        $this->get($this->url.'/account/index.php?p=twitter#manage_plugin');
         $this->assertLink('@ev');
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
@@ -67,7 +69,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         //delete existing instance
         $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'3',
         'csrf_token' => self::TEST_CSRF_TOKEN));
-        $this->assertText('Account deleted.');
+        $this->assertPattern("/Account deleted\./");
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
         $this->assertNoLink('@shutterbug');
@@ -76,7 +78,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         //delete non-existent instance
         $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'231',
         'csrf_token' => self::TEST_CSRF_TOKEN));
-        $this->assertText("Instance doesn't exist.");
+        $this->assertPattern("/Could not find that account\./");
         $this->assertLink('@thinkupapp');
         $this->assertLink('@linkbaiter');
         $this->assertSubmit('Delete');
@@ -84,7 +86,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->click('Log out');
         //        $this->assertText('You have successfully logged out');
         //        $this->showSource();
-        $this->assertText("Log In");
+        $this->assertText("Log in");
 
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me2@example.com');
@@ -95,6 +97,6 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'Delete', 'instance_id'=>'2',
         'csrf_token' => self::TEST_CSRF_TOKEN));
 
-        $this->assertText("Insufficient privileges.");
+        $this->assertPattern("/Insufficient privileges\./");
     }
 }
