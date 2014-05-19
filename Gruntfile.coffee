@@ -26,7 +26,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('fixstyles', 'This fixes the stuff premailer breaks', ->
     html = grunt.file.read 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl'
-    html = html.replace(/123456/g,'{$color}').replace(/654321/g,'{$color_dark}')
+    html = html.replace(/123456/g,'{$color}').replace(/654321/g,'{$color_dark}').replace(/ABCDEF/g,'{$color_light}')
     html = html.replace('<style type="text/css">','<style type="text/css">{literal}')
     html = html.replace('</style>','{/literal}</style>')
     grunt.file.write 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl', html

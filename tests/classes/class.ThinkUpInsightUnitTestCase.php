@@ -218,6 +218,19 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "permalink" => null,
             "adj_pub_date" => "2012-02-27 18:10:11",
         ));
+        $tweets[1]->addLink(new Link(array(
+                "id" => '675',
+                "url" => 'http://instagr.am/p/EYhds/',
+                "expanded_url" => 'http://instagr.am/p/EYhds/',
+                "title" => '',
+                "description" => '',
+                "image_src" => 'http://instagr.am/p/EYhds/media/',
+                "caption" => '',
+                "post_key" => '372',
+                "error" => '',
+                "container_post" => '',
+                "other" => Array()
+        )));
         $tweets[] = new Post(array(
             "id" => 1,
             "post_id" => "438739700409712640",
@@ -464,6 +477,19 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
                 "map_image" => null,
             ))
         ));
+        $fb_posts[0]->addLink(new Link(array(
+                "id" => '2297',
+                "url" => 'https://www.facebook.com/photo.php?fbid=10152090546942592&set=a.10150271482787592.335919.606837591&type=1&relevant_count=1',
+                "expanded_url" => 'https://www.facebook.com/photo.php?fbid=10152090546942592&set=a.10150271482787592.335919.606837591&type=1&relevant_count=1',
+                "title" => 'Gina Trapani - Timeline Photos | Facebook',
+                "description" => 'Gina Trapani posted this photo on 2014-05-14. 27 likes. 3 comments. 0 shares.',
+                "image_src" => 'https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-prn2/t1.0-0/10257006_10152090546942592_818305084183485605_s.jpg',
+                "caption" => '',
+                "post_key" => '205793',
+                "error" => '',
+                "container_post" => '',
+                "other" => Array()
+        )));
         $fb_posts[] = new Post(array(
             'id' => 1,
             'post_id' => '10152091246453490',
