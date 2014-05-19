@@ -472,27 +472,60 @@ color: #417505 !important;
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
-  {assign var='color_name' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
+  {assign var='color_name' value='sepia'}
+  {assign var='color_dark' value='A19F8B'}
+  {assign var='color' value='C0BDAF'}
+  {assign var='color_light' value='efefeb'}
 {elseif $random_color_num eq '0'}
-  {assign var='color_name' value='pea'}{assign var='color_dark' value='5fac1c'}{assign var='color' value='9dd767'}
+  {assign var='color_name' value='pea'}
+  {assign var='color_dark' value='5fac1c'}
+  {assign var='color' value='9dd767'}
+  {assign var='color_light' value='e7f5d9'}
 {elseif $random_color_num eq '1'}
-  {assign var='color_name' value='creamsicle'}{assign var='color_dark' value='FF8F41'}{assign var='color' value='FFBB4E'}
+  {assign var='color_name' value='creamsicle'}
+  {assign var='color_dark' value='FF8F41'}
+  {assign var='color' value='FFBB4E'}
+  {assign var='color_light' value='ffeed3'}
 {elseif $random_color_num eq '2'}
-  {assign var='color_name' value='purple'}{assign var='color_dark' value='8E69C2'}{assign var='color' value='B690E2'}
+  {assign var='color_name' value='purple'}
+  {assign var='color_dark' value='8E69C2'}
+  {assign var='color' value='B690E2'}
+  {assign var='color_light' value='ede3f8'}
 {elseif $random_color_num eq '3'}
-  {assign var='color_name' value='mint'}{assign var='color_dark' value='24B98F'}{assign var='color' value='41DAB3'}
+  {assign var='color_name' value='mint'}
+  {assign var='color_dark' value='24B98F'}
+  {assign var='color' value='41DAB3'}
+  {assign var='color_light' value='d0f6ec'}
 {elseif $random_color_num eq '4'}
-  {assign var='color_name' value='bubblegum'}{assign var='color_dark' value='B3487C'}{assign var='color' value='F576B5'}
+  {assign var='color_name' value='bubblegum'}
+  {assign var='color_dark' value='B3487C'}
+  {assign var='color' value='F576B5'}
+  {assign var='color_light' value='fddded'}
 {elseif $random_color_num eq '5'}
-  {assign var='color_name' value='seabreeze'}{assign var='color_dark' value='198A9C'}{assign var='color' value='44C9D7'}
+  {assign var='color_name' value='seabreeze'}
+  {assign var='color_dark' value='198A9C'}
+  {assign var='color' value='44C9D7'}
+  {assign var='color_light' value='d0f2f5'}
 {elseif $random_color_num eq '6'}
-  {assign var='color_name' value='dijon'}{assign var='color_dark' value='C59301'}{assign var='color' value='E4BF28'}
+  {assign var='color_name' value='dijon'}
+  {assign var='color_dark' value='C59301'}
+  {assign var='color' value='E4BF28'}
+  {assign var='color_light' value='f8efc9'}
 {elseif $random_color_num eq '7'}
-  {assign var='color_name' value='sandalwood'}{assign var='color_dark' value='D13A0A'}{assign var='color' value='FD8560'}
+  {assign var='color_name' value='sandalwood'}
+  {assign var='color_dark' value='D13A0A'}
+  {assign var='color' value='FD8560'}
+  {assign var='color_light' value='ffe1d7'}
 {elseif $random_color_num eq '8'}
-  {assign var='color_name' value='caramel'}{assign var='color_dark' value='9E5E14'}{assign var='color' value='DD814B'}
+  {assign var='color_name' value='caramel'}
+  {assign var='color_dark' value='9E5E14'}
+  {assign var='color' value='DD814B'}
+  {assign var='color_light' value='f7e0d2'}
 {else}
-  {assign var='color_name' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
+  {assign var='color_name' value='salmon'}
+  {assign var='color_dark' value='DA6070'}
+  {assign var='color' value='FC939E'}
+  {assign var='color_light' value='fee4e7'}
 {/if}
 
 <table class="row insight insight-{$color_name}" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #{$color_dark}; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #{$color}; border-bottom-width: 2px; margin-bottom: 14px; background: #{$color}; padding: 0px;">
@@ -572,7 +605,7 @@ color: #417505 !important;
                         <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
                             <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}" style="color: #2ba6cb; text-decoration: none;"><img src="{$post->author_avatar|use_https}" alt="{$post->author_username}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
                         </td>
-                        <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
+                        <td class="ten sub-columns last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px 0;" align="left" valign="top">
                             <div class="byline" style="font-family: georgia, serif;"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}" style="color: #46bcff; text-decoration: none;"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
                             <div class="tweet-body" style="font-family: georgia, serif;">{$post->post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
                             <div class="tweet-actions">
@@ -585,8 +618,24 @@ color: #417505 !important;
             <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
         </tr>
         {/if}
+
+        {if isset($post->links[0]->image_src) and $post->links[0]->image_src neq ""}
+        <tr class="insight-image-inline" style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="sub-grid" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 10px;" align="left" valign="top">
+            <table class="twelve sub-columns last" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; background: #{$color_light}; padding: 0;">
+              <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 0px;" align="left" valign="top">
+                    <a href="{$post->links[0]->url}" style="color: #2ba6cb; text-decoration: none;"><img src="{$post->links[0]->image_src}" alt="{$post->author_fullname}" class="center" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a>
+                </td>
+                <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {/if}
         {/foreach}
         {/if}
+
         {if isset($insight->related_data.posts) or isset($insight->related_data.people)}
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px;" align="left" valign="top">&nbsp;</td></tr>
         {/if}
