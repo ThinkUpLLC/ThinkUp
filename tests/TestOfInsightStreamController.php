@@ -343,8 +343,10 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $controller = new InsightStreamController();
         $results = $controller->go();
         $this->debug($results);
-        //Assert script/meta/link/img not using http
-        $this->assertNoPattern('/(script|meta|link|img) (src|href)="http:/', $results);
+        //Assert script/meta/link not using http
+        //For now, we're allowing non https imgs even though there is a browser warning because not all photos
+        //attached to links are available via https
+        $this->assertNoPattern('/(script|meta|link) (src|href)="http:/', $results);
         //Assert user avatars are not using http
         $this->assertNoPattern("/img src=\"http\:\/\/example.com\/avatar.jpg/", $results);
         //Assert post author_avatars not using http

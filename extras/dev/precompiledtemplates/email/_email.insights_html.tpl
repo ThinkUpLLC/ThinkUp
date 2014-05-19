@@ -764,6 +764,20 @@ body.outlook p {
           background: #fff;
       }
 
+      .insight .insight-image-inline .sub-grid {
+        padding: 0 10px;
+      }
+
+      .insight .insight-image-inline .twelve {
+        /* Yep, this gets replaced in Grunt */
+        background: #ABCDEF;
+      }
+
+      .insight .insight-image-inline td, .insight .insight-image-inline .sub-columns td {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
       .insight .insight-image td {
         padding: 0;
       }
@@ -850,74 +864,6 @@ body.outlook p {
       .welcome-insight .insight-footer {
         border-top: 0;
         padding: 10px 10px 0;
-      }
-
-      /* Insight colors */
-
-      .insight-pea {
-          border-top-color: #5fac1c;
-          border-bottom-color: #9dd767;
-          background: #9dd767;
-      }
-
-      .insight-salmon {
-          border-top-color: #DA6070;
-          border-bottom-color: #FC939E;
-          background: #FC939E;
-      }
-
-      .insight-creamsicle {
-          border-top-color: #FF8F41;
-          border-bottom-color: #FFBB4E;
-          background: #FFBB4E;
-      }
-
-      .insight-sepia {
-          border-top-color: #A19F8B;
-          border-bottom-color: #C0BDAF;
-          background: #C0BDAF;
-      }
-
-      .insight-purple {
-          border-top-color: #8E69C2;
-          border-bottom-color: #B690E2;
-          background: #B690E2;
-      }
-
-      .insight-mint {
-          border-top-color: #24B98F;
-          border-bottom-color: #41DAB3;
-          background: #41DAB3;
-      }
-
-      .insight-bubblegum {
-          border-top-color: #B3487C;
-          border-bottom-color: #F576B5;
-          background: #F576B5;
-      }
-
-      .insight-seabreeze {
-          border-top-color: #198A9C;
-          border-bottom-color: #44C9D7;
-          background: #44C9D7;
-      }
-
-      .insight-dijon {
-          border-top-color: #C59301;
-          border-bottom-color: #E4BF28;
-          background: #E4BF28;
-      }
-
-      .insight-sandalwood {
-          border-top-color: #D13A0A;
-          border-bottom-color: #FD8560;
-          background: #FD8560;
-      }
-
-      .insight-caramel {
-          border-top-color: #9E5E14;
-          border-bottom-color: #DD814B;
-          background: #DD814B;
       }
 
     table.email-settings small {
@@ -1105,27 +1051,60 @@ body.outlook p {
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
-  {assign var='color_name' value='sepia'}{assign var='color_dark' value='A19F8B'}{assign var='color' value='C0BDAF'}
+  {assign var='color_name' value='sepia'}
+  {assign var='color_dark' value='A19F8B'}
+  {assign var='color' value='C0BDAF'}
+  {assign var='color_light' value='efefeb'}
 {elseif $random_color_num eq '0'}
-  {assign var='color_name' value='pea'}{assign var='color_dark' value='5fac1c'}{assign var='color' value='9dd767'}
+  {assign var='color_name' value='pea'}
+  {assign var='color_dark' value='5fac1c'}
+  {assign var='color' value='9dd767'}
+  {assign var='color_light' value='e7f5d9'}
 {elseif $random_color_num eq '1'}
-  {assign var='color_name' value='creamsicle'}{assign var='color_dark' value='FF8F41'}{assign var='color' value='FFBB4E'}
+  {assign var='color_name' value='creamsicle'}
+  {assign var='color_dark' value='FF8F41'}
+  {assign var='color' value='FFBB4E'}
+  {assign var='color_light' value='ffeed3'}
 {elseif $random_color_num eq '2'}
-  {assign var='color_name' value='purple'}{assign var='color_dark' value='8E69C2'}{assign var='color' value='B690E2'}
+  {assign var='color_name' value='purple'}
+  {assign var='color_dark' value='8E69C2'}
+  {assign var='color' value='B690E2'}
+  {assign var='color_light' value='ede3f8'}
 {elseif $random_color_num eq '3'}
-  {assign var='color_name' value='mint'}{assign var='color_dark' value='24B98F'}{assign var='color' value='41DAB3'}
+  {assign var='color_name' value='mint'}
+  {assign var='color_dark' value='24B98F'}
+  {assign var='color' value='41DAB3'}
+  {assign var='color_light' value='d0f6ec'}
 {elseif $random_color_num eq '4'}
-  {assign var='color_name' value='bubblegum'}{assign var='color_dark' value='B3487C'}{assign var='color' value='F576B5'}
+  {assign var='color_name' value='bubblegum'}
+  {assign var='color_dark' value='B3487C'}
+  {assign var='color' value='F576B5'}
+  {assign var='color_light' value='fddded'}
 {elseif $random_color_num eq '5'}
-  {assign var='color_name' value='seabreeze'}{assign var='color_dark' value='198A9C'}{assign var='color' value='44C9D7'}
+  {assign var='color_name' value='seabreeze'}
+  {assign var='color_dark' value='198A9C'}
+  {assign var='color' value='44C9D7'}
+  {assign var='color_light' value='d0f2f5'}
 {elseif $random_color_num eq '6'}
-  {assign var='color_name' value='dijon'}{assign var='color_dark' value='C59301'}{assign var='color' value='E4BF28'}
+  {assign var='color_name' value='dijon'}
+  {assign var='color_dark' value='C59301'}
+  {assign var='color' value='E4BF28'}
+  {assign var='color_light' value='f8efc9'}
 {elseif $random_color_num eq '7'}
-  {assign var='color_name' value='sandalwood'}{assign var='color_dark' value='D13A0A'}{assign var='color' value='FD8560'}
+  {assign var='color_name' value='sandalwood'}
+  {assign var='color_dark' value='D13A0A'}
+  {assign var='color' value='FD8560'}
+  {assign var='color_light' value='ffe1d7'}
 {elseif $random_color_num eq '8'}
-  {assign var='color_name' value='caramel'}{assign var='color_dark' value='9E5E14'}{assign var='color' value='DD814B'}
+  {assign var='color_name' value='caramel'}
+  {assign var='color_dark' value='9E5E14'}
+  {assign var='color' value='DD814B'}
+  {assign var='color_light' value='f7e0d2'}
 {else}
-  {assign var='color_name' value='salmon'}{assign var='color_dark' value='DA6070'}{assign var='color' value='FC939E'}
+  {assign var='color_name' value='salmon'}
+  {assign var='color_dark' value='DA6070'}
+  {assign var='color' value='FC939E'}
+  {assign var='color_light' value='fee4e7'}
 {/if}
 
 <table class="row insight insight-{$color_name}">
@@ -1205,7 +1184,7 @@ body.outlook p {
                         <td class="two sub-columns center">
                             <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{$post->author_avatar|use_https}" alt="{$post->author_username}" width="60" height="60" class="img-circle"></a>
                         </td>
-                        <td class="ten sub-columns">
+                        <td class="ten sub-columns last">
                             <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
                             <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
                             <div class="tweet-actions">
@@ -1219,8 +1198,24 @@ body.outlook p {
             <td class="expander"></td>
         </tr>
         {/if}
+
+        {if isset($post->links[0]->image_src) and $post->links[0]->image_src neq ""}
+        <tr class="insight-image-inline">
+          <td class="sub-grid">
+            <table class="twelve sub-columns last">
+              <tr>
+                <td>
+                    <a href="{$post->links[0]->url}"><img src="{$post->links[0]->image_src}" alt="{$post->author_fullname}" class="center"></a>
+                </td>
+                <td class="expander"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {/if}
         {/foreach}
         {/if}
+
         {if isset($insight->related_data.posts) or isset($insight->related_data.people)}
         <tr><td>&nbsp;</td></tr>
         {/if}
