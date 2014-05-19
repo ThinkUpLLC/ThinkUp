@@ -212,8 +212,10 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                                         . " $this->username's ".$this->terms->getNoun('post').".";
                                     break;
                                 case 'reply':
-                                    $headline = "<strong>".number_format($post->reply_count_cache). " people</strong> "
-                                        . "replied to $this->username's ".$this->terms->getNoun('post').".";
+                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                        . " got <strong>".number_format($post->reply_count_cache)." "
+                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
                                     $insight_text = "That's a new 7-day record.";
                                     break;
                                 case 'retweet':
@@ -263,8 +265,10 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                                         . "</strong> $this->username's 30-day average.";
                                     break;
                                 case 'reply':
-                                    $headline = "<strong>".number_format($post->reply_count_cache). " people</strong>"
-                                        . " replied to " . $this->username . "'s ".$this->terms->getNoun('post'). '.';
+                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                        . " got <strong>".number_format($post->reply_count_cache)." "
+                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
                                     $insight_text = "That's more than <strong>"
                                          .$this->terms->getMultiplierAdverb($winning_multiplier)
                                         . "</strong> " . $this->username . "'s 30-day average.";
@@ -316,9 +320,10 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                                         . "</strong> $this->username's 7-day average.";
                                     break;
                                 case 'reply':
-                                    $headline = "<strong>".number_format($post->reply_count_cache)
-                                        . " people</strong> replied to $this->username's "
-                                        . $this->terms->getNoun('post'). '.';
+                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                        . " got <strong>".number_format($post->reply_count_cache)." "
+                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
                                     $insight_text = "That's more than <strong>"
                                         . $this->terms->getMultiplierAdverb($winning_multiplier)
                                         . "</strong> $this->username's 7-day average.";
