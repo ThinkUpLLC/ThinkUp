@@ -399,6 +399,22 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'related_data'=>$this->getRelatedDataListOfUsers('facebook'),
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
 
+        // Facebook Photo
+        $builders[] = FixtureBuilder::build('insights', array('id'=>10, 'instance_id'=>7,
+        'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'This is a test of a Facebook photo',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfPosts('facebook', 1, 1),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Twitter photo
+        $builders[] = FixtureBuilder::build('insights', array('id'=>11, 'instance_id'=>7,
+        'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'This is a Twitter photo',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfPosts('twitter', 2, 2),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+
+
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
 
@@ -495,6 +511,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Your top Facebook posts/', $merge_vars['insights']);
         $this->assertPattern('/Matt Jacobs/', $merge_vars['insights']);
         $this->assertPattern('/https:\/\/graph.facebook.com\/502783489\/picture/', $merge_vars['insights']);
+        // Assert Facebook image post
+        $this->assertPattern('/This is a test of a Facebook photo/', $merge_vars['insights']);
+        $this->assertPattern('/https:\/\/fbcdn-photos-b-a.akamaihd.net\/hphotos-ak-prn2\/t1.0-0\/10257006_10152090546942592_818305084183485605_s.jpg/', $merge_vars['insights']);
+        // Assert Twitter image post
+        $this->assertPattern('/This is a Twitter photo/', $merge_vars['insights']);
+        $this->assertPattern('/http:\/\/instagr.am\/p\/EYhds/', $merge_vars['insights']);
         //assert CSS curly braces are preserved
         $this->assertPattern('/a:hover {/', $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
