@@ -134,7 +134,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_spike_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("<strong>10 people</strong> replied to @buffy's tweet.", $result->headline);
+        $this->assertEqual("@buffy's tweet got <strong>10 replies</strong>.", $result->headline);
         $this->assertEqual("That's more than <strong>5x</strong> @buffy's 7-day average.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
 
@@ -207,7 +207,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("<strong>10 people</strong> replied to @buffy's tweet.", $result->headline);
+        $this->assertEqual("@buffy's tweet got <strong>10 replies</strong>.", $result->headline);
         $this->assertEqual("That's a new 7-day record.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
