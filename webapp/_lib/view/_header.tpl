@@ -34,9 +34,10 @@
     <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
     <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
 
-    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
-    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
-    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200}">
+    {capture name=desc_default}Check out {$insights[0]->instance->network_username}'s insight{/capture}
+    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
 
     <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
     <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
