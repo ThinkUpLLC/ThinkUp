@@ -47,23 +47,28 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         //Insert test data into test table
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1234567890', 'user_name'=>'jack',
+        'joined' => '2008-01-01',
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124,
         'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Square founder, Twitter creator'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1324567890', 'user_name'=>'ev',
+        'joined' => '2009-01-01',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'2005-01-01 13:58:25',
         'follower_count'=>36000, 'is_protected'=>0, 'network'=>'twitter',
         'description'=>'Former Googler, Twitter creator'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1623457890', 'user_name'=>'private',
+        'joined' => '2010-01-01',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'is_verified'=>0, 'friend_count'=>1345));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1723457890', 'user_name'=>'facebookuser1',
+        'joined' => '2011-01-01',
         'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'1823457890', 'user_name'=>'facebookuser2',
+        'joined' => '2012-01-01',
         'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342,
         'friend_count'=>1345, 'network'=>'facebook'));
 
@@ -97,6 +102,11 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1723457890', 'follower_id'=>'1823457890',
         'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1',
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1234567890', 'follower_id'=>'1',
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
         return $builders;
     }
@@ -143,7 +153,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $unloaded_followers = $this->DAO->getUnloadedFollowerDetails(1324567890, 'twitter');
 
         $this->assertIsA($unloaded_followers, "array");
-        $this->assertEqual(count($unloaded_followers), 2);
+        $this->assertEqual(count($unloaded_followers), 3);
         $this->assertEqual($unloaded_followers[0]['follower_id'], 17);
         $this->assertEqual($unloaded_followers[1]['follower_id'], 14);
     }
@@ -484,5 +494,31 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($result[0], "User");
         $this->assertEqual(count($result), 1);
         $this->assertEqual($result[0]->full_name, "Jack Dorsey");
+    }
+
+    public function testGetFriendsJoinedInTimeFrame() {
+        $result = $this->DAO->getFriendsJoinedInTimeFrame(1234567890, 'twitter', '2008-02-01', '2010-02-01');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual("ev", $result[0]->username);
+
+        $result = $this->DAO->getFriendsJoinedInTimeFrame(1, 'twitter', '2008-02-01', '2011-02-01');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual("ev", $result[0]->username);
+
+        $result = $this->DAO->getFriendsJoinedInTimeFrame(1, 'twitter', '2006-02-01', '2011-02-01');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual("jack", $result[0]->username);
+        $this->assertEqual("ev", $result[1]->username);
+    }
+
+    public function testCountTotalFriendsJoinedAfterDate() {
+        $result = $this->DAO->countTotalFriendsJoinedAfterDate(1234567890, 'twitter', '2009-02-01');
+        $this->assertEqual(1, $result);
+        $result = $this->DAO->countTotalFriendsJoinedAfterDate(1234567890, 'twitter', '2008-02-01');
+        $this->assertEqual(2, $result);
+        $result = $this->DAO->countTotalFriendsJoinedAfterDate(1234567890, 'twitter', '2018-02-01');
+        $this->assertEqual(0, $result);
+        $result = $this->DAO->countTotalFriendsJoinedAfterDate(1234567890, 'facebook', '1812-02-01');
+        $this->assertEqual(0, $result);
     }
 }
