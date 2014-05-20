@@ -104,7 +104,15 @@ interface FollowDAO {
      */
     public function countTotalFriends($user_id, $network);
     /**
-     * Gets the number of friends that is protected.
+     * Gets the number of friends of a user that joined the network after the specified date
+     * @param int $user_id
+     * @param str $network
+     * @param str $date Fetch friends joined after this date
+     * @return int Number of friends that joined after date
+     */
+    public function countTotalFriendsJoinedAfterDate($user_id, $network, $date);
+    /**
+     * Gets the number of friends that are protected.
      * Includes inactive friendships in count.
      * @param int $user_id
      * @param str $network
@@ -261,4 +269,13 @@ interface FollowDAO {
      * @param int $page_count
      */
     public function searchFollowers(array $keywords, $network, $user_id, $page_number=1, $page_count=20);
+    /**
+     * Gets the followers that joined just before user
+     * @param str $user_id
+     * @param str $network
+     * @param str $earliest_date Earliest date a friend should have joined to be returned
+     * @param str $latest_date Latest date a friend should have joined to be returned
+     * @return array Array of User objects
+     **/
+    public function getFriendsJoinedInTimeFrame($user_id, $network, $earliest_date, $latest_date);
 }

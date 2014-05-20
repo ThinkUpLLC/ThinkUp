@@ -202,6 +202,22 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataCountResult($ps);
     }
 
+    public function countTotalFriendsJoinedAfterDate($user_id, $network, $date) {
+        $q = "SELECT count( * ) AS count FROM #prefix#follows AS f ";
+        $q .= "INNER JOIN #prefix#users u ON u.user_id = f.user_id ";
+        $q .= "WHERE f.follower_id = :user_id AND u.joined>:date AND u.network=:network AND f.network = u.network ";
+        $q .= "AND f.active=1";
+        $vars = array(
+            ':user_id'=>(int)$user_id,
+            ':network'=>$network,
+            ':date'=>$date
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataCountResult($ps);
+    }
+
     public function countTotalFriendsProtected($user_id, $network) {
         $q = "SELECT count( * ) AS count FROM #prefix#follows AS f ";
         $q .= "INNER JOIN #prefix#users u ON u.user_id = f.user_id ";
@@ -672,6 +688,25 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             $vars[':start_on_record'] = (int)$start_on_record;
         }
 
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
+
+    public function getFriendsJoinedInTimeFrame($user_id, $network, $earliest_date, $latest_date) {
+        $q  = "SELECT u.* ";
+        $q .= "FROM #prefix#users AS u ";
+        $q .= "INNER JOIN #prefix#follows f ON u.user_id = f.user_id ";
+        $q .= "WHERE f.follower_id = :user_id AND f.network=:network AND u.network=f.network AND active=1 ";
+        $q .= "AND (u.joined >= :early AND u.joined <= :late) AND u.is_protected=0 ";
+        $q .= "ORDER BY u.user_id ASC";
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':early'=>$earliest_date,
+            ':late'=>$latest_date
+        );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
