@@ -746,7 +746,9 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
         'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
-        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+            'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1, 'network_user_id'=>'11'));
+        $builders[] = FixtureBuilder::build('users', array('user_id' => '11', 'network' => 'twitter',
+            'joined' => date('Y-m-d', strtotime('-10 day'))));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
         $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
         'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
@@ -807,7 +809,9 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
         'timezone' => 'America/New_York'));
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
-        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
+            'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1, 'network_user_id'=>'11'));
+        $builders[] = FixtureBuilder::build('users', array('user_id' => '11', 'network' => 'twitter',
+            'joined' => date('Y-m-d', strtotime('-10 day'))));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
         'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
