@@ -332,6 +332,11 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
             "Here are some conga-rats for you." => false,
             "C O N G R A T U L A T I O N S" => false,
             "whatever" => false,
+            "Sometimes we say mazel tov!" => true,
+            "I spell mazal tov with two As." => true,
+            "Mazel tov" => true,
+            "Let me say mazel tov, to you" => true,
+            "I'm stuck in a maze to view this." => false,
         );
 
         $this->assertFalse($insight_plugin->postMatchesCriteria($post, $this->instance), 'No in reply user');

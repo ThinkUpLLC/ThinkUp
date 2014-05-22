@@ -50,7 +50,7 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
             return false;
         }
         $text = strtolower($post->post_text);
-        return preg_match('/(\W|^)(congrat.*)(\W|$)/', $text);
+        return preg_match('/(\W|^)(maz[ae]l tov|congrat.*)(\W|$)/', $text);
     }
 
     public function getInsightForCounts($this_period_count, $last_period_count, $instance, $matching_posts) {
