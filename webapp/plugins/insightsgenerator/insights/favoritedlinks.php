@@ -42,6 +42,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
             $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
             $todays_favorited_posts_with_links = array();
 
+            $num_good_links = 0;
             foreach ($favorited_posts as $post) {
                 if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
                     $good_links = array();
@@ -50,6 +51,7 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                         // Skipping photos that look like links
                         if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
                             $good_links[] = $link;
+                            $num_good_links++;
                         }
                     }
                     if (count($good_links)) {
@@ -62,12 +64,17 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
             $favorited_links_count = count($todays_favorited_posts_with_links);
             if ($favorited_links_count) {
                 if ($favorited_links_count == 1) {
-                    $headline = $this->username." ".$this->terms->getVerb('liked')
-                        ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                    if ($num_good_links == 1) {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                    } else {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with $num_good_links links in it.";
+                    }
                 } else {
                     $headline = $this->username." ".$this->terms->getVerb('liked')
                         ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                        ."</strong> with links in them:";
+                        ."</strong> with $num_good_links links in them.";
                 }
 
                 //Instantiate the Insight object
