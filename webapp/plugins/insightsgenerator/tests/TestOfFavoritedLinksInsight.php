@@ -64,7 +64,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic favorited \<strong\>1 tweet\<\/strong\>/', $result->headline);
+        $this->assertEqual('@testeriffic favorited <strong>1 tweet</strong> with a link in it.', $result->headline);
         $this->assertNoPattern('/tweets/', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -179,11 +179,55 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
+        $this->assertEqual('@testeriffic favorited <strong>1 tweet</strong> with 2 links in it.', $result->headline);
 
         $email = $this->getRenderedInsightInEmail($result);
         $count = substr_count($email, '2 links:');
         $this->assertEqual(1, $count);
         $this->debug($email);
+    }
+
+    public function testMultipleLinksAndPosts() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $now = date('Y-m-d H:i:s');
+        $today = date ('Y-m-d');
+        $insight_dao  = DAOFactory::getDAO('InsightDAO');
+        $insight_plugin = new FavoritedLinksInsight();
+        $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7654321,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
+        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::Build('links', array('post_key'=>134, 'url'=>'http://t.co/mcr7QsU7Ki',
+            'expanded_url' => 'http://google.com/'));
+        $builders[] = FixtureBuilder::Build('links', array('post_key'=>134, 'url'=>'http://inarow.net',
+            'expanded_url' => ''));
+        $builders[] = FixtureBuilder::build('posts', array('id'=>135, 'post_id'=>135, 'author_user_id'=>7654321,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
+        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::Build('links', array('post_key'=>135, 'url'=>'http://t.co/mcr7QsU7Ki',
+            'expanded_url' => 'http://google.com/moogley'));
+        $builders[] = FixtureBuilder::Build('links', array('post_key'=>135, 'url'=>'http://inarow.net/fish',
+            'expanded_url' => ''));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
+        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>135, 'author_user_id'=>7654321,
+        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        $result = $insight_dao->getInsight('favorited_links', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('@testeriffic favorited <strong>2 tweets</strong> with 4 links in them.', $result->headline);
+        $fav_posts = unserialize($result->related_data);
+        $this->assertEqual(2, count($fav_posts['posts']));
+        $this->assertEqual(2, count($fav_posts['posts'][0]->links));
+        $this->assertEqual(2, count($fav_posts['posts'][1]->links));
     }
 
     private function buildData() {
