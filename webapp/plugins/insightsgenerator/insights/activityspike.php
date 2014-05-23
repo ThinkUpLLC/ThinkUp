@@ -97,35 +97,32 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
 
                     if ($winning_activity) {
-                        $hot_posts_data = $this->getHotPostData($instance->id, $post_date);
-                        if ($hot_posts_data) {
-                            $slug = $winning_activity.'_high_365_day_'.$post->id;
-                            $emphasis = Insight::EMPHASIS_HIGH;
-                            $my_insight_posts = array($post, $hot_posts_data);
-                            switch ($winning_activity) {
-                                case 'fave':
-                                    $headline = "That's a 365-day record for "
-                                        . $this->terms->getNoun('like', InsightTerms::PLURAL) . "!";
-                                    $insight_text = "<strong>"
+                        $slug = $winning_activity.'_high_365_day_'.$post->id;
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post);
+                        switch ($winning_activity) {
+                            case 'fave':
+                                $headline = "That's a 365-day record for "
+                                    . $this->terms->getNoun('like', InsightTerms::PLURAL) . "!";
+                                $insight_text = "<strong>"
                                         . number_format($post->favlike_count_cache)." people</strong> "
-                                        . $this->terms->getVerb('liked')
-                                        . " $this->username's ".$this->terms->getNoun('post').".";
-                                    break;
-                                case 'reply':
-                                    $headline = "That ".$this->terms->getNoun('post'). " got <strong>" .
-                                        number_format($post->reply_count_cache) . " " .
-                                        $this->terms->getNoun('reply', InsightTerms::PLURAL) .
-                                        "</strong> &mdash; your 365-day high!";
-                                    $insight_text = "Why do you think $this->username's ".$this->terms->getNoun('post').
-                                        " did so well?";
-                                    break;
-                                case 'retweet':
-                                    $headline = "That's a new 365-day record!";
-                                    $insight_text = "<strong>".number_format($post->all_retweets)
-                                        . " people</strong> $share_verb $this->username's post.";
-                                    break;
+                                    . $this->terms->getVerb('liked')
+                                    . " $this->username's ".$this->terms->getNoun('post').".";
+                                break;
+                            case 'reply':
+                                $headline = "That ".$this->terms->getNoun('post'). " got <strong>" .
+                                    number_format($post->reply_count_cache) . " " .
+                                    $this->terms->getNoun('reply', InsightTerms::PLURAL) .
+                                    "</strong> &mdash; your 365-day high!";
+                                $insight_text = "Why do you think $this->username's ".$this->terms->getNoun('post').
+                                    " did so well?";
+                                break;
+                            case 'retweet':
+                                $headline = "That's a new 365-day record!";
+                                $insight_text = "<strong>".number_format($post->all_retweets)
+                                    . " people</strong> $share_verb $this->username's post.";
+                                break;
 
-                            }
                         }
                     }
                 }
@@ -146,38 +143,35 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
 
                     if ($winning_activity) {
-                        $hot_posts_data = $this->getHotPostData($instance->id, $post_date);
-                        if ($hot_posts_data) {
-                            $slug = $winning_activity.'_high_30_day_'.$post->id;
-                            $emphasis = Insight::EMPHASIS_HIGH;
-                            $my_insight_posts = array($post, $hot_posts_data);
-                            switch ($winning_activity) {
-                                case 'fave':
-                                    $headline = "That's the highest number of "
-                                        . $this->terms->getNoun('like', InsightTerms::PLURAL)
-                                        . " " .$this->username . "'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                                        . " have gotten in the past 30 days.";
-                                    $insight_text = "<strong>". number_format($post->favlike_count_cache)
-                                        . " people</strong> "
-                                        . $this->terms->getVerb('liked') ." $this->username's "
-                                        . $this->terms->getNoun('post').".";
-                                    break;
-                                case 'reply':
-                                    $headline = "This ".$this->terms->getNoun('post'). " got " .
-                                        $this->terms->getNoun('reply', InsightTerms::PLURAL) .
-                                        " from <strong>" . number_format($post->reply_count_cache) .
-                                        " people</strong>.";
-                                    $insight_text = "That sets a new 30-day record for $this->username.";
-                                    break;
-                                case 'retweet':
-                                    $headline = "This is the most one of " . $this->username . "'s " .
-                                        $this->terms->getNoun('post', InsightTerms::PLURAL). " has been " . $share_verb
-                                        . " in the past month!";
-                                    $insight_text = "<strong>" . number_format($post->all_retweets)
-                                        . " people</strong> $share_verb $this->username's post.";
-                                    break;
+                        $slug = $winning_activity.'_high_30_day_'.$post->id;
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post);
+                        switch ($winning_activity) {
+                            case 'fave':
+                                $headline = "That's the highest number of "
+                                    . $this->terms->getNoun('like', InsightTerms::PLURAL)
+                                    . " " .$this->username . "'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                                    . " have gotten in the past 30 days.";
+                                $insight_text = "<strong>". number_format($post->favlike_count_cache)
+                                    . " people</strong> "
+                                    . $this->terms->getVerb('liked') ." $this->username's "
+                                    . $this->terms->getNoun('post').".";
+                                break;
+                            case 'reply':
+                                $headline = "This ".$this->terms->getNoun('post'). " got " .
+                                    $this->terms->getNoun('reply', InsightTerms::PLURAL) .
+                                    " from <strong>" . number_format($post->reply_count_cache) .
+                                    " people</strong>.";
+                                $insight_text = "That sets a new 30-day record for $this->username.";
+                                break;
+                            case 'retweet':
+                                $headline = "This is the most one of " . $this->username . "'s " .
+                                    $this->terms->getNoun('post', InsightTerms::PLURAL). " has been " . $share_verb
+                                    . " in the past month!";
+                                $insight_text = "<strong>" . number_format($post->all_retweets)
+                                    . " people</strong> $share_verb $this->username's post.";
+                                break;
 
-                            }
                         }
                     }
                 }
@@ -198,35 +192,32 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
 
                     if ($winning_activity) {
-                        $hot_posts_data = $this->getHotPostData($instance->id, $post_date);
-                        if ($hot_posts_data) {
-                            $slug = $winning_activity.'_high_7_day_'.$post->id;
-                            $emphasis = Insight::EMPHASIS_HIGH;
-                            $my_insight_posts = array($post, $hot_posts_data);
-                            switch ($winning_activity) {
-                                case 'fave':
-                                    $headline = 'This one really got some '
-                                        . $this->terms->getNoun('like', InsightTerms::PLURAL).'.';
-                                    $insight_text = "<strong>" . number_format($post->favlike_count_cache)
-                                        . " people</strong> " . $this->terms->getVerb('liked')
-                                        . " $this->username's ".$this->terms->getNoun('post').".";
-                                    break;
-                                case 'reply':
-                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
-                                        . " got <strong>".number_format($post->reply_count_cache)." "
-                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
-                                    $insight_text = "That's a new 7-day record.";
-                                    break;
-                                case 'retweet':
-                                    $headline = "<strong>".number_format($post->all_retweets)
-                                        . " people</strong> $share_verb $this->username's "
-                                        . $this->terms->getNoun('post') . ".";
-                                    $insight_text = "That's a new 7-day record.";
-                                    $emphasis = Insight::EMPHASIS_LOW;
-                                    break;
+                        $slug = $winning_activity.'_high_7_day_'.$post->id;
+                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $my_insight_posts = array($post);
+                        switch ($winning_activity) {
+                            case 'fave':
+                                $headline = 'This one really got some '
+                                    . $this->terms->getNoun('like', InsightTerms::PLURAL).'.';
+                                $insight_text = "<strong>" . number_format($post->favlike_count_cache)
+                                    . " people</strong> " . $this->terms->getVerb('liked')
+                                    . " $this->username's ".$this->terms->getNoun('post').".";
+                                break;
+                            case 'reply':
+                                $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                    . " got <strong>".number_format($post->reply_count_cache)." "
+                                    . $this->terms->getNoun('reply', $plural).'</strong>.';
+                                $insight_text = "That's a new 7-day record.";
+                                break;
+                            case 'retweet':
+                                $headline = "<strong>".number_format($post->all_retweets)
+                                    . " people</strong> $share_verb $this->username's "
+                                    . $this->terms->getNoun('post') . ".";
+                                $insight_text = "That's a new 7-day record.";
+                                $emphasis = Insight::EMPHASIS_LOW;
+                                break;
 
-                            }
                         }
                     }
                 }
@@ -248,42 +239,38 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
 
                     if ($winning_activity) {
-                        $hot_posts_data = $this->getHotPostData($instance->id, $post_date);
-                        if ($hot_posts_data) {
-                            $slug = $winning_activity.'_spike_30_day_'.$post->id;
-                            $emphasis = Insight::EMPHASIS_LOW;
-                            $my_insight_posts = array($post, $hot_posts_data);
-                            switch ($winning_activity) {
-                                case 'fave':
-                                    $headline = 'This ' . $this->terms->getNoun('post') . ' got '
-                                        . $this->terms->getMultiplierAdverb($winning_multiplier) . ' the '
-                                        . $this->terms->getNoun('like', InsightTerms::PLURAL) . " for $this->username.";
-                                    $insight_text = "<strong>" .number_format($post->favlike_count_cache)
-                                        . " people</strong> ".$this->terms->getVerb('liked')
-                                        . " $this->username's ".$this->terms->getNoun('post').", which is more than "
-                                        . "<strong>" . $this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> $this->username's 30-day average.";
-                                    break;
-                                case 'reply':
-                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
-                                        . " got <strong>".number_format($post->reply_count_cache)." "
-                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
-                                    $insight_text = "That's more than <strong>"
-                                         .$this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> " . $this->username . "'s 30-day average.";
-                                    break;
-                                case 'retweet':
-                                    $headline = "<strong>".number_format($post->all_retweets). " people</strong>"
-                                        . " $share_verb " . "this one!";
-                                    $insight_text = "Seems like this one is going viral. This "
-                                        . $this->terms->getNoun('post')
-                                        . " got more than <strong>"
-                                        . $this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> $this->username's 30-day average.";
-                                    break;
-
-                            }
+                        $slug = $winning_activity.'_spike_30_day_'.$post->id;
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $my_insight_posts = array($post);
+                        switch ($winning_activity) {
+                            case 'fave':
+                                $headline = 'This ' . $this->terms->getNoun('post') . ' got '
+                                    . $this->terms->getMultiplierAdverb($winning_multiplier) . ' the '
+                                    . $this->terms->getNoun('like', InsightTerms::PLURAL) . " for $this->username.";
+                                $insight_text = "<strong>" .number_format($post->favlike_count_cache)
+                                    . " people</strong> ".$this->terms->getVerb('liked')
+                                    . " $this->username's ".$this->terms->getNoun('post').", which is more than "
+                                    . "<strong>" . $this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> $this->username's 30-day average.";
+                                break;
+                            case 'reply':
+                                $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                    . " got <strong>".number_format($post->reply_count_cache)." "
+                                    . $this->terms->getNoun('reply', $plural).'</strong>.';
+                                $insight_text = "That's more than <strong>"
+                                     .$this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> " . $this->username . "'s 30-day average.";
+                                break;
+                            case 'retweet':
+                                $headline = "<strong>".number_format($post->all_retweets). " people</strong>"
+                                    . " $share_verb " . "this one!";
+                                $insight_text = "Seems like this one is going viral. This "
+                                    . $this->terms->getNoun('post')
+                                    . " got more than <strong>"
+                                    . $this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> $this->username's 30-day average.";
+                                break;
                         }
                     }
                 }
@@ -305,39 +292,35 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
 
                     if ($winning_activity) {
-                        $hot_posts_data = $this->getHotPostData($instance->id, $post_date);
-                        if ($hot_posts_data) {
-                            $slug = $winning_activity.'_spike_7_day_'.$post->id;
-                            $emphasis = Insight::EMPHASIS_LOW;
-                            $my_insight_posts = array($post, $hot_posts_data);
-                            switch ($winning_activity) {
-                                case 'fave':
-                                    $headline = 'This one hit a nerve this week.';
-                                    $insight_text = "<strong>".number_format($post->favlike_count_cache)
-                                        . " people</strong> ".$this->terms->getVerb('liked') . " $this->username's "
-                                        . $this->terms->getNoun('post').", more than <strong>"
-                                        . $this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> $this->username's 7-day average.";
-                                    break;
-                                case 'reply':
-                                    $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                                    $headline = $this->username."'s ".$this->terms->getNoun('post')
-                                        . " got <strong>".number_format($post->reply_count_cache)." "
-                                        . $this->terms->getNoun('reply', $plural).'</strong>.';
-                                    $insight_text = "That's more than <strong>"
-                                        . $this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> $this->username's 7-day average.";
-                                    break;
-                                case 'retweet':
-                                    $headline = "<strong>".number_format($post->all_retweets)
-                                        . " people</strong> thought this " .  $this->terms->getNoun('post')
-                                        . " was worth " . $present_tense_share_verb . ".";
-                                    $insight_text = "That's more than <strong>"
-                                        . $this->terms->getMultiplierAdverb($winning_multiplier)
-                                        . "</strong> $this->username's average over the last 7 days.";
-                                    break;
-
-                            }
+                        $slug = $winning_activity.'_spike_7_day_'.$post->id;
+                        $emphasis = Insight::EMPHASIS_LOW;
+                        $my_insight_posts = array($post);
+                        switch ($winning_activity) {
+                            case 'fave':
+                                $headline = 'This one hit a nerve this week.';
+                                $insight_text = "<strong>".number_format($post->favlike_count_cache)
+                                    . " people</strong> ".$this->terms->getVerb('liked') . " $this->username's "
+                                    . $this->terms->getNoun('post').", more than <strong>"
+                                    . $this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> $this->username's 7-day average.";
+                                break;
+                            case 'reply':
+                                $plural = $post->reply_count_cache==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
+                                $headline = $this->username."'s ".$this->terms->getNoun('post')
+                                    . " got <strong>".number_format($post->reply_count_cache)." "
+                                    . $this->terms->getNoun('reply', $plural).'</strong>.';
+                                $insight_text = "That's more than <strong>"
+                                    . $this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> $this->username's 7-day average.";
+                                break;
+                            case 'retweet':
+                                $headline = "<strong>".number_format($post->all_retweets)
+                                    . " people</strong> thought this " .  $this->terms->getNoun('post')
+                                    . " was worth " . $present_tense_share_verb . ".";
+                                $insight_text = "That's more than <strong>"
+                                    . $this->terms->getMultiplierAdverb($winning_multiplier)
+                                    . "</strong> $this->username's average over the last 7 days.";
+                                break;
                         }
                     }
                 }
@@ -455,19 +438,6 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
             }
         }
     }
-
-    /**
-     * Fetch hot posts for displaying in related data
-     * @param int $instance_id Which instance
-     * @param str $post_date What day to fetch info for
-     * @return mixed Array or hot posts or null
-     */
-    private function getHotPostData($instance_id, $post_date) {
-        //TODO: Stop using the cached dashboard data and generate fresh here
-        return $hot_posts_data = $this->insight_dao->getPreCachedInsightData('PostMySQLDAO::getHotPosts',
-            $instance_id, $post_date);
-    }
-
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
