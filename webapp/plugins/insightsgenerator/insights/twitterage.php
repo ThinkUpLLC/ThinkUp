@@ -49,7 +49,10 @@ class TwitterAgeInsight extends InsightPluginParent implements InsightPlugin {
                 // echo "Second half of Twitter's lifetime currently starts on ".gmdate("Y-m-d", $start);
                 $explainer = '';
 
-                if ($joined_timestamp < strtotime('March 5, 2007')) {
+                if ($joined_timestamp <= strtotime('July 15, 2006')) {
+                    $headline = $this->username.' was either a super-early Twitter user or an Odeo employee.';
+                    $explainer = "That's before Twitter even launched!";
+                } else if ($joined_timestamp < strtotime('March 5, 2007')) {
                     $headline = 'Before Barack Obama joined Twitter...';
                 } else if ($joined_timestamp < strtotime('August 23, 2007')) {
                     $headline = 'Before the hashtag, there was '.$this->username.'.';
