@@ -85,7 +85,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last week.');
+        $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -115,7 +115,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last week.');
+        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -150,7 +150,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 2 things LOL-worthy in the last week. '
+        $this->assertEqual($result->text, 'Looks like @testy found 2 things LOL-worthy in the last month. '
             .'That\'s 1 more laugh than the prior month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -186,7 +186,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last week. '
+        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last month. '
             .'That\'s 2 more laughs than the prior month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -246,7 +246,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last week.');
+        $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -296,7 +296,7 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'OMG LOL!');
-        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last week.');
+        $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
