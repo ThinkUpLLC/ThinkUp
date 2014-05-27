@@ -789,4 +789,14 @@ interface PostDAO {
      * @return arr of Post objects
      */
     public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
+
+    /**
+     * Retrieves Fitness Application Posts within range defined using from and until.
+     * @param int $author_id
+     * @param str $network
+     * @param date $from
+     * @param date $until
+     * @param arr of Post objects 
+     */
+    public function getOldDistancePosts($author_id, $network, $from, $until);
 }
