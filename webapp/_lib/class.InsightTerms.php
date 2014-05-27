@@ -375,12 +375,20 @@ class InsightTerms {
             } else {
                 return round($number,2).'x';
             }
+        } elseif ($number >= 0.75) {
+            return 'three quarters of';
+        } elseif ($number >= 0.66) {
+            return 'two thirds of';
         } elseif ($number >= 0.5) {
             return 'half';
         } elseif ($number >= 0.3) {
             return 'a third of';
         } elseif ($number >= 0.25) {
             return 'a quarter of';
+        } elseif ($number >= 0.20) {
+            return 'a fifth of';
+        } elseif ($number >= 0.10) {
+            return 'a tenth of';
         } else {
             return round($number,2).'x';
         }

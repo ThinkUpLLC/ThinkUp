@@ -33,7 +33,7 @@ class MutexMySQLDAO extends PDODAO implements MutexDAO {
     /**
      * NOTE: PDO does not seem to bind params in MySQL functions, so we escape parameters and concat them manually.
      */
-    public function getMutex($name, $timeout=1) {
+    public function getMutex($name, $timeout=10) {
         $lock_name = $this->config->getValue('db_name').'.'.$name;
         /*
          $q = "SELECT GET_LOCK(':name', ':timeout') AS result";

@@ -789,4 +789,5 @@ interface PostDAO {
      * @return arr of Post objects
      */
     public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
+
 }
