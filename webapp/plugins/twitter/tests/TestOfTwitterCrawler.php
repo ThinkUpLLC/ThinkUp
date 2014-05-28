@@ -798,6 +798,64 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($follow_dao->followExists('930061', '36823', 'twitter', true), false);
     }
 
+    public function testMediaHandling() {
+        $r = array('id'=>1, 'network_username'=>'ecucurella', 'network_user_id'=>'13771532',
+            'network_viewer_id'=>'13771532', 'last_post_id'=>'0', 'last_reply_id'=>'10001',
+            'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+            'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+            'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+            'avg_replies_per_day'=>'0', 'is_public'=>'0', 'is_active'=>'1', 'network'=>'twitter',
+            'last_favorite_id' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
+            'total_posts_by_owner'=>0, 'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50,
+            'percentage_links'=>50, 'earliest_post_in_system'=>'2009-01-01 13:48:05');
+        $this->instance = new TwitterInstance($r);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth($oauth_token='111', $oauth_token_secret='222',
+            $oauth_consumer_key = 'fake_key', $oauth_consumer_secret ='fake_secret', $archive_limit= 3200,
+            $num_twitter_errors=2);
+        $this->instance->is_archive_loaded_follows = true;
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/cdmoyer/');
+        $twitter_crawler->fetchInstanceUserTweets();
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+
+        // NOrmal photo
+        $post = $post_dao->getPost("471310898695794688", 'twitter');
+        $this->assertNotNull($post);
+        $this->assertEqual("Just hanging out under the couch, like you do. http://t.co/1z8GGl5Zrv", $post->post_text);
+        $this->assertEqual(1, count($post->links));
+        $this->assertEqual('http://pbs.twimg.com/media/Bopuw9BIEAAAYVN.jpg', $post->links[0]->image_src);
+        $this->assertEqual('http://t.co/1z8GGl5Zrv', $post->links[0]->url);
+        $this->assertEqual('http://twitter.com/CDMoyer/status/471310898695794688/photo/1',
+            $post->links[0]->expanded_url);
+
+
+        // Normal Photo
+        $post = $post_dao->getPost("458015480960532480", 'twitter');
+        $this->assertEqual('http://pbs.twimg.com/media/BlsypxzIIAAwgnw.jpg', $post->links[0]->image_src);
+        $this->assertEqual('http://t.co/gELt0NIzCx', $post->links[0]->url);
+        $this->assertEqual('http://twitter.com/CDMoyer/status/458015480960532480/photo/1',
+            $post->links[0]->expanded_url);
+
+        // Photo and link in retweet
+        $post = $post_dao->getPost("462748167357091840", 'twitter');
+        $this->assertEqual(2, count($post->links));
+        $this->assertEqual('http://t.co/uGLsKU8Qkc', $post->links[0]->url);
+        $this->assertEqual('',$post->links[0]->expanded_url);
+        $this->assertEqual('http://t.co/wpdAD4iQzB', $post->links[1]->url);
+        $this->assertEqual('http://twitter.com/pourmecoffee/status/462748167357091840/photo/1',
+            $post->links[1]->expanded_url);
+        $this->assertEqual('http://pbs.twimg.com/media/BmwDAUoCIAAM_H4.jpg',$post->links[1]->image_src);
+
+        // Nothing
+        $post = $post_dao->getPost("454606554801524736", 'twitter');
+        $this->assertEqual(0, count($post->links));
+    }
+
     public function buildDataPostUser() {
         $builders = array();
         $builders[] = FixtureBuilder::build('posts', array(
