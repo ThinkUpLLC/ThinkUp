@@ -1,0 +1,98 @@
+{
+  "id": 12145232,
+  "id_str": "12145232",
+  "name": "Chris Moyer",
+  "screen_name": "CDMoyer",
+  "location": "Buffalo, NY",
+  "description": "I love building things on the internet. \nFan of books, video games, music. \nI might tweet puppy or kid pics.",
+  "url": "http://t.co/8NCBQ5WBQU",
+  "entities": {
+    "url": {
+      "urls": [
+        {
+          "url": "http://t.co/8NCBQ5WBQU",
+          "expanded_url": "http://inarow.net/",
+          "display_url": "inarow.net",
+          "indices": [
+            0,
+            22
+          ]
+        }
+      ]
+    },
+    "description": {
+      "urls": []
+    }
+  },
+  "protected": false,
+  "followers_count": 443,
+  "friends_count": 245,
+  "listed_count": 38,
+  "created_at": "Sat Jan 12 05:50:44 +0000 2008",
+  "favourites_count": 169,
+  "utc_offset": -14400,
+  "time_zone": "Eastern Time (US & Canada)",
+  "geo_enabled": true,
+  "verified": false,
+  "statuses_count": 937,
+  "lang": "en",
+  "status": {
+    "created_at": "Wed May 28 15:24:30 +0000 2014",
+    "id": 471673373765156860,
+    "id_str": "471673373765156864",
+    "text": "Ever found yourself googling \"add commas to a number in javascript?\"  You have?  Me too.  This is a better solution: http://t.co/HpQrJ0u6j6",
+    "source": "<a href=\"http://bufferapp.com\" rel=\"nofollow\">Buffer</a>",
+    "truncated": false,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "in_reply_to_screen_name": null,
+    "geo": null,
+    "coordinates": null,
+    "place": null,
+    "contributors": null,
+    "retweet_count": 0,
+    "favorite_count": 2,
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "url": "http://t.co/HpQrJ0u6j6",
+          "expanded_url": "http://bit.ly/1gxe53m",
+          "display_url": "bit.ly/1gxe53m",
+          "indices": [
+            117,
+            139
+          ]
+        }
+      ],
+      "user_mentions": []
+    },
+    "favorited": false,
+    "retweeted": false,
+    "possibly_sensitive": false,
+    "lang": "en"
+  },
+  "contributors_enabled": false,
+  "is_translator": false,
+  "is_translation_enabled": false,
+  "profile_background_color": "FFFFFF",
+  "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/689573892/616919f89b717f8c18802b9cf7caa32c.jpeg",
+  "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/689573892/616919f89b717f8c18802b9cf7caa32c.jpeg",
+  "profile_background_tile": true,
+  "profile_image_url": "http://pbs.twimg.com/profile_images/421641487051272192/IfEg0PgG_normal.jpeg",
+  "profile_image_url_https": "https://pbs.twimg.com/profile_images/421641487051272192/IfEg0PgG_normal.jpeg",
+  "profile_banner_url": "https://pbs.twimg.com/profile_banners/12145232/1400821585",
+  "profile_link_color": "101A73",
+  "profile_sidebar_border_color": "FFFFFF",
+  "profile_sidebar_fill_color": "C0DFEC",
+  "profile_text_color": "000000",
+  "profile_use_background_image": true,
+  "default_profile": false,
+  "default_profile_image": false,
+  "following": false,
+  "follow_request_sent": false,
+  "notifications": false
+}

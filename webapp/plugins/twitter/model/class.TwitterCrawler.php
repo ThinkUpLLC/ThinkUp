@@ -196,6 +196,7 @@ class TwitterCrawler {
 
                         $post_dao = DAOFactory::getDAO('PostDAO');
                         $new_username = false;
+                        $link_dao = DAOFactory::getDAO('LinkDAO');
                         foreach ($tweets as $tweet) {
                             $tweet['network'] = 'twitter';
 
@@ -203,9 +204,49 @@ class TwitterCrawler {
                             if ( $inserted_post_key !== false) {
                                 $count = $count + 1;
                                 $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
-                                //expand and insert links contained in tweet
-                                URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
-                                $this->logger);
+                                // Expand and insert links contained in tweet
+                                $extracted_urls = Post::extractURLs($tweet['post_text']);
+                                $urls = array();
+                                // Skip over URLs where we are extracting image media
+                                foreach ($extracted_urls as $url) {
+                                    $add_url = true;
+                                    if (!empty($tweet['photos'])) {
+                                        foreach ($tweet['photos'] as $media) {
+                                            if ($media->display_url == $url || $media->url == $url) {
+                                                $add_url = false;
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    if ($add_url) {
+                                        $urls[] = $url;
+                                    }
+                                }
+                                if (count($urls)) {
+                                    URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                                        $this->logger, $urls);
+                                }
+                                if (!empty($tweet['photos'])) {
+                                    foreach ($tweet['photos'] as $photo) {
+                                        $link = new Link(array(
+                                            'url' => $photo->url,
+                                            'expanded_url' => $photo->expanded_url,
+                                            'image_src' => $photo->media_url,
+                                            'post_key' => $inserted_post_key
+                                        ));
+                                        try {
+                                            $link_dao->insert($link);
+                                            $this->logger->logSuccess("Inserted $photo->url into links table",
+                                                __METHOD__.','.__LINE__);
+                                        } catch (DuplicateLinkException $e) {
+                                            $this->logger->logInfo($photo->url." already exists in links table",
+                                                __METHOD__.','.__LINE__);
+                                        } catch (DataExceedsColumnWidthException $e) {
+                                            $this->logger->logInfo($photo->url."data exceeds table column width",
+                                                __METHOD__.','.__LINE__);
+                                        }
+                                    }
+                                }
                             }
 
                             if ($this->instance->last_post_id == "" || $fetching_archive) {
