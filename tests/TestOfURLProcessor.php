@@ -59,7 +59,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $post_text = "This is a Twitpic post http://twitpic.com/blah Yay!";
         $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
         'post_text'=>$post_text));
-        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
+        $urls = URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://twitpic.com/blah');
@@ -69,6 +69,9 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->image_src, 'http://twitpic.com/show/thumb/blah');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_key, 100);
+        $this->assertEqual(count($urls), 1);
+        $this->assertEqual($urls[0], 'http://twitpic.com/blah');
+
 
         //Yfrog
         $post_id = 101;
@@ -196,6 +199,25 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         'http://api.plixi.com/api/tpapi.svc/imagefromurl?url=http://plixi.com/p/138376416&size=thumbnail');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_key, 108);
+    }
+
+    public function testProcessPostMultipleURLs() {
+        $post_id = 100;
+        $network = 'twitter';
+        $post_text = "http://awesome.com/ http://cool.com/";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
+        $urls = URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
+        $this->assertEqual(count($urls), 2);
+        $this->assertEqual($urls[0], 'http://awesome.com/');
+        $this->assertEqual($urls[1], 'http://cool.com/');
+
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $result = $link_dao->getLinksForPost($post_id, 'twitter');
+        $this->assertEqual(count($result), 2);
+        $this->assertIsA($result[0], 'Link');
+        $this->assertEqual($result[0]->url, 'http://awesome.com/');
+        $this->assertEqual($result[1]->url, 'http://cool.com/');
     }
 
     // Don't run this test on every build b/c it makes live request
