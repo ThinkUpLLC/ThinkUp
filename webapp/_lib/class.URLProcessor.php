@@ -67,6 +67,7 @@ class URLProcessor {
                 }
             }
         }
+        return $urls;
     }
 
     /**

@@ -634,7 +634,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             if ($entities && isset($entities['urls'])) {
                 $urls = $entities['urls'];
             }
-            URLProcessor::processPostURLs($vals['post_text'], $vals['post_id'], 'twitter', $this->logger, $urls);
+            $urls = URLProcessor::processPostURLs($vals['post_text'], $vals['post_id'], 'twitter', $this->logger,$urls);
+            if ($vals['photos']) {
+                $link_dao = DAOFactory::getDAO('LinkDAO');
+                foreach ($vals['photos'] as $photo) {
+                    $photo = (object) $photo;
+                    $link_dao->saveExpandedURL($photo->url, $photo->expanded_url, null, $photo->media_url, null);
+                }
+            }
 
             if (isset($entities)) {
                 if (isset($entities['mentions'])) {
@@ -689,7 +696,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 $retweeted_post_user_array = null;
             }
             $this->addPostAndAssociatedInfo($retweeted_post_data, $retweeted_post_entities,
-            $retweeted_post_user_array);
+                $retweeted_post_user_array);
         }
 
         if ($this->hasAllRequiredFields($vals)) {
