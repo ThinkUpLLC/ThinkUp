@@ -92,9 +92,23 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testParseJSONTweetWithPhotos() {
+        $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
+            $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+        $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/phototweet.json');
+        $results = $api->parseJSONTweet($data);
+        $this->assertNotNull($results['photos']);
+        $this->assertEqual(count($results['photos']), 1);
+        $this->assertEqual("http://pbs.twimg.com/media/Bopuw9BIEAAAYVN.jpg", $results['photos'][0]->media_url);
+        $this->assertEqual("http://twitter.com/CDMoyer/status/471310898695794688/photo/1",
+            $results['photos'][0]->expanded_url);
+        $this->assertEqual("http://t.co/1z8GGl5Zrv",
+            $results['photos'][0]->url);
+    }
+
     public function testParseJSONTweet() {
         $api = new TwitterAPIAccessorOAuth($oauth_access_token='111', $oauth_access_token_secret='222',
-        $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
+            $oauth_consumer_key=1234, $oauth_consumer_secret=1234, $num_twitter_errors=5, $log=true);
 
         $data = file_get_contents(THINKUP_ROOT_PATH . $this->test_data_path.'json/tweet.json');
 
