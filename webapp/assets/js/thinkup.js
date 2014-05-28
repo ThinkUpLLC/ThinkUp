@@ -352,7 +352,7 @@
       });
       return false;
     });
-    return $(".btn-account-remove").click(function() {
+    $(".btn-account-remove").click(function() {
       var $this, action_left, action_speed, label_margin, label_speed, text, vis;
       $this = $(this);
       vis = !$this.hasClass("visible");
@@ -369,6 +369,13 @@
       }, action_speed);
       $this.text(text);
       return $this.toggleClass("visible");
+    });
+    return $(window).load(function() {
+      var delay, delayed;
+      delayed = function() {
+        return $('body').hide().show();
+      };
+      return delay = window.setTimeout(delayed, 1000);
     });
   });
 

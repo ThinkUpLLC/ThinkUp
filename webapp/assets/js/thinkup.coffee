@@ -326,3 +326,8 @@ $ ->
     $(".list-accounts-item").find(".account-action-delete").animate({left: action_left}, action_speed)
     $this.text text
     $this.toggleClass "visible"
+
+  # This is a temporary fix for a font rendering issue.
+  $(window).load ->
+    delayed = -> $('body').hide().show()
+    delay = window.setTimeout delayed, 1000
