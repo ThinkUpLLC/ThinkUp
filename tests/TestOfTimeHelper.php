@@ -32,7 +32,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 
-class TestOfTimeHelper extends ThinkUpUnitTestCase {
+class TestOfTimeHelper extends ThinkUpBasicUnitTestCase {
     public function testGetTime() {
         $time = time();
         $time2 = TimeHelper::getTime();
@@ -115,5 +115,5 @@ class TestOfTimeHelper extends ThinkUpUnitTestCase {
 
         $result = array('d'=>2, 'h'=>0, 'm'=>6, 's'=>11);
         $this->assertEqual($result, TimeHelper::secondsToExactTime((48*(60*60))+(60*6)+11));
-]    }
+    }
 }
