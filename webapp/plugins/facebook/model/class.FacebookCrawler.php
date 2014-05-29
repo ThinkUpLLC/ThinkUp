@@ -79,7 +79,7 @@ class FacebookCrawler {
         $user_object = null;
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website':'';
+            $fields = $network!='facebook page'?'id,name,gender,about,location,website':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
             if (isset($user_details)) {
                 $user_details->network = $network;
@@ -124,6 +124,7 @@ class FacebookCrawler {
             $user_vals["user_name"] = $details->name;
             $user_vals["full_name"] = $details->name;
             $user_vals["user_id"] = $details->id;
+            $user_vals["gender"] = $details->gender;
             $user_vals["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
             $user_vals['url'] = isset($details->website)?$details->website:'';
             $user_vals["follower_count"] = 0;
@@ -293,6 +294,7 @@ class FacebookCrawler {
                       "post_id"=>$post_id,
                       "author_username"=>$profile->username,
                       "author_fullname"=>$profile->username,
+                      "author_gender"=>$profile->gender,
                       "author_avatar"=>$profile->avatar,
                       "author_user_id"=>$p->from->id,
                       "post_text"=>isset($p->message)?$p->message:'',
@@ -364,6 +366,7 @@ class FacebookCrawler {
                                             $comment_to_process = array("post_id"=>$comment_id,
                                               "author_username"=>$c->from->name,
                                               "author_fullname"=>$c->from->name,
+                                              "author_gender"=>$c->from->gender,
                                               "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture',
                                               "author_user_id"=>$c->from->id,"post_text"=>$c->message,
                                               "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
@@ -413,6 +416,7 @@ class FacebookCrawler {
                                             if (!isset($comment_in_storage)) {
                                                 $comment_to_process = array("post_id"=>$comment_id,
                                                 "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
+                                                "author_gender"=>$c->from->gender,
                                                 "author_avatar"=>'https://graph.facebook.com/'.
                                                 $c->from->id.'/picture', "author_user_id"=>$c->from->id,
                                                 "post_text"=>$c->message, "pub_date"=>$c->created_time,
@@ -470,7 +474,7 @@ class FacebookCrawler {
                                     if (isset($l->name) && isset($l->id)) {
                                         //Get users
                                         $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                        "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                        "user_id"=>$l->id, "gender"=>$l->gender, "avatar"=>'https://graph.facebook.com/'.$l->id.
                                         '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                         "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
                                         "network"=>'facebook'); //Users are always set to network=facebook
@@ -518,7 +522,7 @@ class FacebookCrawler {
                                         if (isset($l->name) && isset($l->id)) {
                                             //Get users
                                             $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                            "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                            "user_id"=>$l->id, "gender"=>$l->gender, "avatar"=>'https://graph.facebook.com/'.$l->id.
                                             '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                             "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
                                             "network"=>'facebook'); //Users are always set to network=facebook
@@ -616,6 +620,7 @@ class FacebookCrawler {
             if (isset($user_object)) {
                 $post["author_username"] = $user_object->full_name;
                 $post["author_fullname"] = $user_object->full_name;
+                $post["author_gender"] = $user_object->gender;
                 $post["author_avatar"] = $user_object->avatar;
                 $post["location"] = $user_object->location;
             }

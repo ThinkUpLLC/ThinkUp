@@ -56,6 +56,11 @@ class User {
     var $avatar;
     /**
      *
+     * @var str
+     */
+    var $gender;
+    /**
+     *
      * @var location
      */
     var $location;
@@ -156,6 +161,7 @@ class User {
             $this->full_name = $val['full_name'];
             $this->user_id = $val['user_id'];
             $this->avatar = $val['avatar'];
+            $this->gender = $val['gender'];
             $this->location = $val['location'];
             $this->description = $val['description'];
             $this->url = $val['url'];
