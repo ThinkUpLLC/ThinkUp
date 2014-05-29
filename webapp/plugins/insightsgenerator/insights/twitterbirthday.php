@@ -84,13 +84,13 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
             $bonus_text = array();
             $people = array();
             if ($just_before) {
-                $time = $this->secondsToRelativeTime(abs($joined_ts - strtotime($just_before->joined, 
+                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_before->joined, 
                     TimeHelper::getTime())));
                 $bonus_text[] = "@".$just_before->username." just beat ".$this->username.", joining $time earlier";
                 $people[] = $just_before;
             }
             if ($just_after) {
-                $time = $this->secondsToRelativeTime(abs($joined_ts - strtotime($just_after->joined, 
+                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_after->joined, 
                     TimeHelper::getTime())));
                 $bonus_text[] = "@".$just_after->username." was a little slower, getting on Twitter $time later";
                 $people[] = $just_after;
@@ -105,27 +105,6 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
-    }
-
-    public function secondsToRelativeTime($seconds) {
-        if ($seconds >= (60*60*24*7)) {
-            $weeks = floor($seconds / (60*60*24*7));
-            return $weeks." week".($weeks==1?'':'s');
-        }
-        if ($seconds >= (60*60*24)) {
-            $days = floor($seconds / (60*60*24));
-            return $days." day".($days==1?'':'s');
-        }
-        if ($seconds >= (60*60)) {
-            $hours = floor($seconds / (60*60));
-            return $hours." hour".($hours==1?'':'s');
-        }
-        if ($seconds >= 60) {
-            $minutes = floor($seconds / 60);
-            return $minutes." minute".($minutes==1?'':'s');
-        }
-
-        return $seconds." second".($seconds==1?'':'s');
     }
 }
 
