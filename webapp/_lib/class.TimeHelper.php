@@ -77,4 +77,65 @@ class TimeHelper {
     public static function getDaysInMonth($year, $month) {
         return round((mktime(0, 0, 0, $month+1, 1, $year) - mktime(0, 0, 0, $month, 1, $year)) / 86400);
     }
+
+    /**
+     * Convert seconds to a general, non-exact, conversational unit of time, i.e., a day, 5 minutes, 2 weeks.
+     * @param  int $seconds
+     * @return str
+     */
+    public static function secondsToGeneralTime($seconds) {
+        if ($seconds >= (60*60*24*7)) {
+            $weeks = floor($seconds / (60*60*24*7));
+            return $weeks." week".($weeks==1?'':'s');
+        }
+        if ($seconds >= (60*60*24)) {
+            $days = floor($seconds / (60*60*24));
+            return $days." day".($days==1?'':'s');
+        }
+        if ($seconds >= (60*60)) {
+            $hours = floor($seconds / (60*60));
+            return $hours." hour".($hours==1?'':'s');
+        }
+        if ($seconds >= 60) {
+            $minutes = floor($seconds / 60);
+            return $minutes." minute".($minutes==1?'':'s');
+        }
+
+        return $seconds." second".($seconds==1?'':'s');
+    }
+
+    /**
+     * Get exact number of days, hours, minutes, and seconds a total number of seconds represents.
+     *
+     * @param int $seconds How many seconds
+     * @return arr Units of time array ('d'=>$days, 'h'=> $hours, 'm'=>$minutes, 's'=>$seconds)
+     */
+    public static function secondsToExactTime($seconds) {
+        $seconds_in_a_minute = 60;
+        $seconds_in_an_hour  = 60 * $seconds_in_a_minute;
+        $seconds_in_a_day    = 24 * $seconds_in_an_hour;
+
+        // extract days
+        $days = floor($seconds / $seconds_in_a_day);
+
+        // extract hours
+        $hour_seconds = $seconds % $seconds_in_a_day;
+        $hours = floor($hour_seconds / $seconds_in_an_hour);
+
+        // extract minutes
+        $minute_seconds = $hour_seconds % $seconds_in_an_hour;
+        $minutes = floor($minute_seconds / $seconds_in_a_minute);
+
+        // extract the remaining seconds
+        $remaining_seconds = $minute_seconds % $seconds_in_a_minute;
+        $seconds = ceil($remaining_seconds);
+
+        // return the final array
+        return array(
+            'd' => (int) $days,
+            'h' => (int) $hours,
+            'm' => (int) $minutes,
+            's' => (int) $seconds,
+        );
+    }
 }
