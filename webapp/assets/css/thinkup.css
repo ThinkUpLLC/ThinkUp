@@ -1123,6 +1123,10 @@ body.app-message-visible.account .container {
 .insight .panel-body .panel-body-inner {
   padding: 10px 2%;
   letter-spacing: .01em;
+  overflow: hidden;
+}
+.insight .panel-body .panel-body-inner a {
+  word-wrap: break-word;
 }
 .insight .insight-hero-image {
   position: relative;
@@ -1817,6 +1821,10 @@ body.app-message-visible.account .container {
 }
 .tweet .tweet-body {
   margin: 3px 0 3px 70px;
+  overflow: hidden;
+}
+.tweet .tweet-body a {
+  word-wrap: break-word;
 }
 .tweet .tweet-actions {
   margin-left: 70px;

@@ -114,6 +114,11 @@
         .panel-body-inner {
             padding: 10px 2%; // The 2% will shift to 10px once we hit 500px wide.
             letter-spacing: .01em;
+            overflow: hidden;
+
+            a {
+                word-wrap: break-word;
+            }
         }
     }
 
@@ -485,6 +490,11 @@
 
     .tweet-body {
         margin: 3px 0 3px 70px;
+        overflow: hidden;
+
+        a {
+            word-wrap: break-word;
+        }
     }
 
     .tweet-actions {
