@@ -170,9 +170,10 @@ class Mailer {
             if (Utils::isTest()) {
                 self::setLastMail(json_encode($message));
             } else {
+
                 $result = $mandrill->messages->send($message, $async, $ip_pool);
                 //DEBUG
-                //print_r($result);
+                print_r($result);
             }
         } catch (Mandrill_Error $e) {
             throw new Exception('An error occurred while sending email via Mandrill. ' . get_class($e) .

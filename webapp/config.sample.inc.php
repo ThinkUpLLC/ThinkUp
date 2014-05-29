@@ -35,7 +35,7 @@ $THINKUP_CFG['rss_crawler_refresh_rate']  = 20;
 
 // Optional Mandrill API key. Set this to a valid key to send email via Mandrill instead of PHP's mail() function..
 // Get key at https://mandrillapp.com/settings/ in "SMTP & API Credentials"
-$THINKUP_CFG['mandrill_api_key'] = '';
+$THINKUP_CFG['mandrill_api_key'] = 'obKDerfXlAXoh4up4ByKRA';
 
 /************************************************/
 /***  DATABASE CONFIG                         ***/
