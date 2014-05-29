@@ -110,7 +110,7 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
         $posting_seconds = ($number_of_posts * 15);
 
         $insight_text = 'That\'s over<strong>';
-        $posting_time = self::secondsToTime($posting_seconds);
+        $posting_time = TimeHelper::secondsToExactTime($posting_seconds);
         if ($posting_time["d"]) {
             $insight_text .= ' ' . $posting_time["d"] . ' day'.(($posting_time["d"]>1)?'s':'');
         }
@@ -124,42 +124,6 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
         $insight_text .= '</strong> of '. $this->username.'\'s life.';
 
         return $insight_text;
-    }
-
-    /**
-     * Convert seconds to larger units of time.
-     *
-     * @param int $input_seconds How many seconds
-     * @return array Units of time array
-     */
-    private function secondsToTime($input_seconds) {
-        $seconds_in_a_minute = 60;
-        $seconds_in_an_hour  = 60 * $seconds_in_a_minute;
-        $seconds_in_a_day    = 24 * $seconds_in_an_hour;
-
-        // extract days
-        $days = floor($input_seconds / $seconds_in_a_day);
-
-        // extract hours
-        $hour_seconds = $input_seconds % $seconds_in_a_day;
-        $hours = floor($hour_seconds / $seconds_in_an_hour);
-
-        // extract minutes
-        $minute_seconds = $hour_seconds % $seconds_in_an_hour;
-        $minutes = floor($minute_seconds / $seconds_in_a_minute);
-
-        // extract the remaining seconds
-        $remainingSeconds = $minute_seconds % $seconds_in_a_minute;
-        $seconds = ceil($remainingSeconds);
-
-        // return the final array
-        $obj = array(
-            'd' => (int) $days,
-            'h' => (int) $hours,
-            'm' => (int) $minutes,
-            's' => (int) $seconds,
-        );
-        return $obj;
     }
 }
 

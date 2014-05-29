@@ -184,28 +184,6 @@ class TestOfTwitterBirthdayInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    public function testSecondsToRelativeTime() {
-        $insight_plugin = new TwitterBirthdayInsight();
-        $minute = 60;
-        $hour = 60 * $minute;
-        $day = $hour * 24;
-        $week = $day * 7;
-
-        $this->assertEqual('1 second', $insight_plugin->secondsToRelativeTime(1));
-        $this->assertEqual('0 seconds', $insight_plugin->secondsToRelativeTime(0));
-        $this->assertEqual('11 seconds', $insight_plugin->secondsToRelativeTime(11));
-        $this->assertEqual('1 minute', $insight_plugin->secondsToRelativeTime($minute));
-        $this->assertEqual('6 minutes', $insight_plugin->secondsToRelativeTime($minute*6));
-        $this->assertEqual('1 hour', $insight_plugin->secondsToRelativeTime($hour));
-        $this->assertEqual('23 hours', $insight_plugin->secondsToRelativeTime($hour*23));
-        $this->assertEqual('1 day', $insight_plugin->secondsToRelativeTime($hour*26));
-        $this->assertEqual('3 days', $insight_plugin->secondsToRelativeTime($day*3));
-        $this->assertEqual('1 week', $insight_plugin->secondsToRelativeTime($week));
-        $this->assertEqual('1 week', $insight_plugin->secondsToRelativeTime($day * 8));
-        $this->assertEqual('3 weeks', $insight_plugin->secondsToRelativeTime($day * 23));
-        $this->assertEqual('2 weeks', $insight_plugin->secondsToRelativeTime($week*2));
-    }
-
     /**
      * Create a test user.
      * @param username $username The user's username
