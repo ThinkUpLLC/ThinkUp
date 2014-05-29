@@ -84,7 +84,7 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
             );
 
             $insight->text = 'Looks like '.$this->username.' found '.number_format($this_period_count).' thing'
-                . ($this_period_count==1?'':'s') . ' LOL-worthy in the last week.';
+                . ($this_period_count==1?'':'s') . ' LOL-worthy in the last month.';
 
             if ($this_period_count > $last_period_count && $last_period_count > 0) {
                 $potential_headlines[] = $network.' must be getting even funnier!';
