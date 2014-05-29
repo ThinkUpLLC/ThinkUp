@@ -1,96 +1,110 @@
 {include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_navigation.tpl"}
 
-    <div id="main" class="container">
+<div class="container">
+  {if $message_header}
+    <div class="no-insights">
+    {$message_header}
+    {$message_body}
+    </div>
+  {/if}
+  <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
 
-{include file="_usermessage.tpl"}
+    <div class="date-group{if $i->date|relative_day eq "today"} today{/if}">
+        <div class="date-marker">
 
-<div class="row">
-    <div class="col-md-3">
-      <div class="embossed-block">
-        <ul>
-          <li>
-{if $current_page eq 1}First {$posts|@count} s{else}S{/if}earch results for "{$smarty.get.q}"
-          </li>
-        </ul>
-      </div>
-    </div><!--/col-md-3-->
+            <div class="relative"></div>
+            <div class="absolute"></div>
+        </div>
 
-    <div class="col-md-9">
+<div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
+  {if $i->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
+  isset($i->related_data.hero_image) and $i->emphasis > '1'}insight-wide{/if}" id="insight-{$i->id}">
+  <div class="panel-heading ">
+    <h2 class="panel-title">
+        {if $smarty.get.c eq 'posts'}
+          {if $posts|@count > 0}
+            Are these the posts you were looking for?
+          {else}
+            Hmm, didn't find anything for that.
+          {/if}
+        {/if}
+        {if $smarty.get.c eq 'followers'}
+          {if $users|@count > 0}
+            Looks like {$users|@count} people answer to "{$smarty.get.q}".
+          {else}
+            Hmm, no luck looking for "{$smarty.get.q}" people.
+          {/if}
+        {/if}
+    </h2>
+    <!--
+    <p class="panel-subtitle">
+        Here are the {if $current_page eq 1}first {$posts|@count} {/if}results
+    </p>
+    -->
+    {if $i->header_image neq ''}
+    <img src="{$i->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
+    {/if}
+  </div>
+  <div class="panel-desktop-right">
+    <div class="panel-body">
+      <div class="panel-body-inner">
     {if $smarty.get.c eq 'posts'}
         {if $posts|@count > 0}
-        {foreach from=$posts key=pid item=post name=bar}
-            <div class="alert insight-item">
-            {include file=$tpl_path|cat:"_post.tpl" post=$post hide_insight_header='1'}
-            {include file=$tpl_path|cat:'_footer.tpl'}
-        {/foreach}
+            {include file=$tpl_path|cat:"_posts.tpl" posts=$posts}
         {else}
-         <h2>No posts found.</h2>
+         <p>Sorry, ThinkUp couldn't find anything for your search.</p>
         {/if}
-    {/if}
+    {/if}<!-- / posts -->
     {if $smarty.get.c eq 'searches'}
         {if $posts|@count > 0}
-        {foreach from=$posts key=pid item=post name=bar}
-            <div class="alert insight-item">
-            {include file=$tpl_path|cat:"_post.tpl" post=$post hide_insight_header='1'}
-            {include file=$tpl_path|cat:'_footer.tpl'}
-        {/foreach}
+            {include file=$tpl_path|cat:"_posts.tpl" posts=$posts}
         {else}
-         <h2>No posts found.</h2>
+         <p>ThinkUp couldn't find any matching results.</p>
         {/if}
-    {/if}
+    {/if}<!-- / searches -->
     {if $smarty.get.c eq 'followers'}
         {if $users|@count > 0}
-        {foreach from=$users key=uid item=u name=bar}
-            <div class="alert insight-item">
-                <table class="table table-condensed">
-                    <tr>
-                    <td class="avatar-data">
-                        {if $u->network eq 'twitter'}
-                            <h3><a href="https://twitter.com/intent/user?user_id={$u->user_id}" title="{$u->username} has {$u->follower_count|number_format} followers and {$u->friend_count|number_format} friends"><img src="{$u->avatar}" class="avatar2"  width="48" height="48"/></a></h3>
-                        {else}
-                            <h3><img src="{$u->avatar}" class="avatar2" width="48" height="48"/></h3>
-                        {/if}
-                    </td>
-                    <td>
-                        {if $u->network eq 'twitter'}
-                            <h3><i class="fa fa-{$u->network}"></i> <a href="https://twitter.com/intent/user?user_id={$u->user_id}">{$u->full_name}</a>     <small>{$u->follower_count|number_format} followers</small></h3>
-                            <p>{$u->description|link_usernames_to_twitter}<br />
-                            {$u->url}</p>
-                        {else}
-                            <h3><i class="fa fa-{$u->network}"></i> {$u->full_name}    {if $u->other.total_likes}<small style="color:gray">{$u->other.total_likes|number_format} likes</small>{/if}</h3>
-                        {/if}
-                    </td>
-                    </tr>
-                </table>
-            </div>
-        {/foreach}
+          {include file=$tpl_path|cat:"_users.tpl" users=$users }
         {else}
-         <h2>No followers found.</h2>
+          <p>Sorry, that search doesn't turn up any followers.</p>
         {/if}
-    {/if}
-    </div><!--/col-md-9-->
-</div><!--/row-->
+    {/if}<!-- / followers -->
 
-<div class="row">
-    <div class="col-md-3">&nbsp;</div>
-    <div class="col-md-9">
-
-        <ul class="pager">
-        {if $next_page}
-          <li class="previous">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
-          </li>
-        {/if}
-        {if $last_page}
-          <li class="next">
-            <a href="{$site_root_path}search.php?{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&{/if}{if $smarty.get.k}k={$smarty.get.k|urlencode}&{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
-          </li>
-        {/if}
-        </ul>
-
+        </div><!-- / panel-body-inner -->
+      </div><!-- / panel-body -->
+    <div class="panel-footer">
+      <div class="insight-metadata">
+        <i class="fa fa-{$u->network}-square icon icon-network"></i>
+        <a class="permalink" href="{$permalink}">{$i->date|date_format:"%b %e"}</a>
+      </div>
+      <div class="share-menu">
+        <i class="fa fa-lock icon icon-share text-muted" title="Search results are private."></i>
+      </div>
     </div>
+  </div>
 </div>
+
+
+
+    <div class="stream-pagination-control">
+      <ul class="pager">
+      {if $next_page}
+        <li class="previous">
+          <a href="{$site_root_path}search.php?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&amp;{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&amp;{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
+        </li>
+      {/if}
+      {if $last_page}
+        <li class="next">
+          <a href="{$site_root_path}search.php?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}{if $smarty.get.c}c={$smarty.get.c|urlencode}&amp;{/if}{if $smarty.get.q}q={$smarty.get.q|urlencode}&amp;{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
+        </li>
+      {/if}
+      </ul>
+    </div>
+
+  </div><!-- end stream -->
+</div><!-- end container -->
+
 
 
 {include file="_footer.tpl" linkify=1}

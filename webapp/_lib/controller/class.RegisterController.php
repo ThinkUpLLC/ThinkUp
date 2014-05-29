@@ -77,9 +77,9 @@ class RegisterController extends ThinkUpController {
             if ( !$is_registration_open && !$is_invite_code_valid ){
                 $this->addToView('closed', true);
                 $disable_xss = true;
-                $this->addErrorMessage('<p>Sorry, registration is closed on this installation of '.
-                $config->getValue('app_title_prefix')."ThinkUp.</p>".
-                '<p><a href="http://thinkup.com" class="btn">Install ThinkUp on your own server.</a></p>', null,
+                $this->addErrorMessage('Sorry, registration is closed on '.
+                $config->getValue('app_title_prefix')."ThinkUp. ".
+                'Try <a href="https://thinkup.com">ThinkUp.com</a>?', null,
                 $disable_xss);
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
@@ -95,7 +95,7 @@ class RegisterController extends ThinkUpController {
                     if (!$this->is_missing_param) {
                         $valid_input = true;
                         if (!Utils::validateEmail($_POST['email'])) {
-                            $this->addErrorMessage("Incorrect email. Please enter valid email address.", 'email');
+                            $this->addErrorMessage("Sorry, that email address looks wrong. Can you double-check it?", 'email');
                             $valid_input = false;
                         }
 
@@ -109,7 +109,7 @@ class RegisterController extends ThinkUpController {
                         }
 
                         if (!$captcha->doesTextMatchImage()) {
-                            $this->addErrorMessage("Entered text didn't match the image. Please try again.",
+                            $this->addErrorMessage("Hmm, that code did not match the image. Please try again?",
                             'captcha');
                             $valid_input = false;
                         }
