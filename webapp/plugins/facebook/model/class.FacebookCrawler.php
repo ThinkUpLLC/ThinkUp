@@ -78,9 +78,9 @@ class FacebookCrawler {
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_object = null;
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
-            // Get owner user details and save them to DB
+        	// Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,gender,about,location,website':'';
-            $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
+            $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields );
             if (isset($user_details)) {
                 $user_details->network = $network;
             }
@@ -226,7 +226,7 @@ class FacebookCrawler {
 
         $post_dao = DAOFactory::getDAO('PostDAO');
 
-        foreach ($stream->data as $index=>$p) {
+        foreach ($stream->data as $index=>$p) {        	
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
             $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
@@ -294,7 +294,6 @@ class FacebookCrawler {
                       "post_id"=>$post_id,
                       "author_username"=>$profile->username,
                       "author_fullname"=>$profile->username,
-                      "author_gender"=>$profile->gender,
                       "author_avatar"=>$profile->avatar,
                       "author_user_id"=>$p->from->id,
                       "post_text"=>isset($p->message)?$p->message:'',
@@ -470,7 +469,7 @@ class FacebookCrawler {
                             $post_likes = $p->likes->data;
                             $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
                             if (is_array($post_likes) && sizeof($post_likes) > 0) {
-                                foreach ($post_likes as $l) {
+                                foreach ($post_likes as $l) {                                	
                                     if (isset($l->name) && isset($l->id)) {
                                         //Get users
                                         $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
@@ -516,11 +515,12 @@ class FacebookCrawler {
                             $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
                             $this->access_token.$offset_str;
                             do {
-                                $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                                $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($ap_call);
                                 if (isset($likes_stream) && is_array($likes_stream->data)) {
                                     foreach ($likes_stream->data as $l) {
                                         if (isset($l->name) && isset($l->id)) {
                                             //Get users
+                                        	
                                             $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
                                             "user_id"=>$l->id, "gender"=>$l->gender, "avatar"=>'https://graph.facebook.com/'.$l->id.
                                             '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
@@ -620,7 +620,6 @@ class FacebookCrawler {
             if (isset($user_object)) {
                 $post["author_username"] = $user_object->full_name;
                 $post["author_fullname"] = $user_object->full_name;
-                $post["author_gender"] = $user_object->gender;
                 $post["author_avatar"] = $user_object->avatar;
                 $post["location"] = $user_object->location;
             }
