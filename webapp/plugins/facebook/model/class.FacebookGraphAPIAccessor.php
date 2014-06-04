@@ -47,8 +47,7 @@ class FacebookGraphAPIAccessor {
         if ($fields != null ) {
             $url = $url.'&fields='.$fields;
         }
-        $result = Utils::getURLContents($url);   
-                    
+        $result = Utils::getURLContents($url);        
         return json_decode($result);
     }
     /**
@@ -62,7 +61,7 @@ class FacebookGraphAPIAccessor {
      */
     public static function rawApiRequest($path, $decode_json=true) {
         if ($decode_json) {
-            $result = Utils::getURLContents($path);           
+            $result = Utils::getURLContents($path);      
             return json_decode($result);
         } else {
             return Utils::getURLContents($path);

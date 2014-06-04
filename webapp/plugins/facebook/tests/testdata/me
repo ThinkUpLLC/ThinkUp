@@ -3,7 +3,8 @@
    "name": "Gina Trapani",
    "location": {
       "id": "110714572282163",
-      "name": "San Diego, California"
+      "name": "San Diego, California",
+      "gender": "female"
    },
    "about": "Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google."
 }

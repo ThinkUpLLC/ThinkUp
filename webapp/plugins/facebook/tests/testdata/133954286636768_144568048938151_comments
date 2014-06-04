@@ -4,7 +4,8 @@
          "id": "144568048938151_1230814",
          "from": {
             "name": "Brian Poole",
-            "id": "510971571"
+            "id": "510971571",
+            "gender": "male"
          },
          "message": "Congrats to all and happy hacking!",
          "created_time": "2011-02-06T00:06:11+0000"
@@ -13,7 +14,8 @@
          "id": "144568048938151_1230823",
          "from": {
             "name": "Aditya Permana",
-            "id": "1302210867"
+            "id": "1302210867",
+            "gender": "female"
          },
          "message": "first",
          "created_time": "2011-02-06T00:07:23+0000"
@@ -22,7 +24,8 @@
          "id": "144568048938151_1230826",
          "from": {
             "name": "Imen En Tu Estereo",
-            "id": "100000576705814"
+            "id": "100000576705814",
+            "gender": "male"
          },
          "message": "yeah\u00a1\u00a1",
          "created_time": "2011-02-06T00:07:32+0000"
@@ -31,7 +34,8 @@
          "id": "144568048938151_1230836",
          "from": {
             "name": "Jarrod Parker",
-            "id": "24409159"
+            "id": "24409159",
+            "gender": "male"
          },
          "message": "lmao only 150 made it out of 1673 or whatever it was",
          "created_time": "2011-02-06T00:08:49+0000"
@@ -40,7 +44,8 @@
          "id": "144568048938151_1230837",
          "from": {
             "name": "Jarrod Parker",
-            "id": "24409159"
+            "id": "24409159",
+            "gender": "male"
          },
          "message": "well, got one right",
          "created_time": "2011-02-06T00:09:00+0000"
@@ -49,7 +54,8 @@
          "id": "144568048938151_1230852",
          "from": {
             "name": "Ville Hellman",
-            "id": "517413587"
+            "id": "517413587",
+            "gender": "male"
          },
          "message": "Congrats to the top 150 for correct solutions, disappointed that some problem definitions changed halfway through the competition...",
          "created_time": "2011-02-06T00:11:16+0000",
@@ -59,7 +65,8 @@
          "id": "144568048938151_1230861",
          "from": {
             "name": "Gutzsu Lyla Yusuf",
-            "id": "100000058303131"
+            "id": "100000058303131",
+            "gender": "female"
          },
          "message": "prettttttt",
          "created_time": "2011-02-06T00:12:25+0000"
@@ -68,7 +75,8 @@
          "id": "144568048938151_1230878",
          "from": {
             "name": "Steve Wallis",
-            "id": "818460536"
+            "id": "818460536",
+            "gender": "male"
          },
          "message": "It would be nice if they could give us the stats on how many qualified people actually participated in each round. (e.g. this round had 1,673 qualified people. How many of them actually participated during the 3-hour duration? It's obviously more than the 364 people who submitted something.)",
          "created_time": "2011-02-06T00:14:42+0000",
@@ -78,7 +86,8 @@
          "id": "144568048938151_1230880",
          "from": {
             "name": "Andre Holzner",
-            "id": "100000773664809"
+            "id": "100000773664809",
+            "gender": "male"
          },
          "message": "interesting.. I see one O(N *M) solution for problem 1 which has passed...",
          "created_time": "2011-02-06T00:15:35+0000",
@@ -88,7 +97,8 @@
          "id": "144568048938151_1230886",
          "from": {
             "name": "Brian Poole",
-            "id": "510971571"
+            "id": "510971571",
+            "gender": "male"
          },
          "message": "So I've got a biased idea! How about everyone who participated in round 2 gets a tshirt.  I mean.. it's only 64 more tshirts than anticipated!",
          "created_time": "2011-02-06T00:16:09+0000",
@@ -98,7 +108,8 @@
          "id": "144568048938151_1230887",
          "from": {
             "name": "Audrey Pierrot",
-            "id": "667404345"
+            "id": "667404345",
+            "gender": "male"
          },
          "message": "I can't :(((",
          "created_time": "2011-02-06T00:16:13+0000"
@@ -107,7 +118,8 @@
          "id": "144568048938151_1230888",
          "from": {
             "name": "Francisco Fernandez Berrocal",
-            "id": "1452734980"
+            "id": "1452734980",
+            "gender": "male"
          },
          "message": "Too brutal questions!",
          "created_time": "2011-02-06T00:16:26+0000",
@@ -117,7 +129,8 @@
          "id": "144568048938151_1230890",
          "from": {
             "name": "Arnab Bose",
-            "id": "665721288"
+            "id": "665721288",
+            "gender": "male"
          },
          "message": "Andre - Interesting... where?",
          "created_time": "2011-02-06T00:16:53+0000",
@@ -127,7 +140,8 @@
          "id": "144568048938151_1230891",
          "from": {
             "name": "Daniel Saunders",
-            "id": "1123122807"
+            "id": "1123122807",
+            "gender": "male"
          },
          "message": "Google chrome ......your mine",
          "created_time": "2011-02-06T00:17:07+0000"
@@ -136,7 +150,8 @@
          "id": "144568048938151_1230894",
          "from": {
             "name": "Eric Alejandro Destefanis",
-            "id": "1123359465"
+            "id": "1123359465",
+            "gender": "male"
          },
          "message": "Hey! somehow, my source is in the place  of my output (and the output in the place of my source)... does anyone know if this is rejudgable? Or who may I email?",
          "created_time": "2011-02-06T00:18:09+0000"
@@ -145,7 +160,8 @@
          "id": "144568048938151_1230907",
          "from": {
             "name": "Hongliang Liu",
-            "id": "682021444"
+            "id": "682021444",
+            "gender": "female"
          },
          "message": "\u0040Eric, just forget about it. Have fun in your weekend.",
          "created_time": "2011-02-06T00:20:44+0000",
@@ -155,7 +171,8 @@
          "id": "144568048938151_1230919",
          "from": {
             "name": "Arnab Bose",
-            "id": "665721288"
+            "id": "665721288",
+            "gender": "male"
          },
          "message": "Eric, I'd say it should definitely be considered (though that's my personal opinion). Hopefully the organizers will see your post here!",
          "created_time": "2011-02-06T00:22:58+0000",
@@ -165,7 +182,8 @@
          "id": "144568048938151_1230928",
          "from": {
             "name": "Kamil Sadkowski",
-            "id": "100000694633914"
+            "id": "100000694633914",
+            "gender": "female"
          },
          "message": "\u0040Andre Holzner I see even more than one.",
          "created_time": "2011-02-06T00:25:56+0000",
@@ -175,7 +193,8 @@
          "id": "144568048938151_1230935",
          "from": {
             "name": "Arnab Bose",
-            "id": "665721288"
+            "id": "665721288",
+            "gender": "male"
          },
          "message": "\u0040Andre, Kamil - I wonder what computer / language they were using. In my system, which is fairly modern, running _empty_ nested loop of 250000 iterations each takes (estimated) 30-40 minutes.",
          "created_time": "2011-02-06T00:27:58+0000"
@@ -184,7 +203,8 @@
          "id": "144568048938151_1230936",
          "from": {
             "name": "Greg Knox",
-            "id": "510782039"
+            "id": "510782039",
+            "gender": "male"
          },
          "message": "After looking at some of these solutions, don't feel so bad about not getting any of them right -- Well done anyone who actually got any of these things :)",
          "created_time": "2011-02-06T00:28:14+0000",
@@ -194,7 +214,8 @@
          "id": "144568048938151_1230946",
          "from": {
             "name": "Jozef Vodicka",
-            "id": "1240057308"
+            "id": "1240057308",
+            "gender": "male"
          },
          "message": "Congrats guys, enjoy Palo Alto & Hacker Cup T-Shirt :)",
          "created_time": "2011-02-06T00:30:37+0000"
@@ -203,7 +224,8 @@
          "id": "144568048938151_1230952",
          "from": {
             "name": "Erik Ramsgaard Wognsen",
-            "id": "738668796"
+            "id": "738668796",
+            "gender": "male"
          },
          "message": "\u0040Brian Poole: 364 is the number of people who uploaded anything; the number of participants is larger. But yeah, t-shirts ftw :-P",
          "created_time": "2011-02-06T00:31:20+0000"
@@ -212,7 +234,8 @@
          "id": "144568048938151_1230956",
          "from": {
             "name": "Robert Burke",
-            "id": "23917679"
+            "id": "23917679",
+            "gender": "male"
          },
          "message": "\u0040Brian: No, a lot of people did the contest and got 0 correct answers and 0 wrong answers.  364 is only the number of people who got 1 or more answers.",
          "created_time": "2011-02-06T00:32:08+0000"
@@ -221,7 +244,8 @@
          "id": "144568048938151_1230959",
          "from": {
             "name": "Steve Wallis",
-            "id": "818460536"
+            "id": "818460536",
+            "gender": "male"
          },
          "message": "\u0040Andre, Kamil, Arnab... perhaps they knew a way to download the source file without starting the timer, like in previous rounds?",
          "created_time": "2011-02-06T00:33:55+0000"
@@ -230,7 +254,8 @@
          "id": "144568048938151_1230965",
          "from": {
             "name": "Edward T. Tonai",
-            "id": "520613319"
+            "id": "520613319",
+            "gender": "male"
          },
          "message": "I think that the 5 people who solved 2 problems who weren't in the top 25 should get invited to the finals anyway.  I wasn't one of them, btw.  Considering how many people failed at every stage, and how we weren't even close to 3000 in round 2, and only 150 are getting a T-Shirt.  I think solving 2 is a major major accomplishment!",
          "created_time": "2011-02-06T00:37:01+0000",

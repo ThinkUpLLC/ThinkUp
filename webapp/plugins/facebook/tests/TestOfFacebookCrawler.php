@@ -136,6 +136,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->username, 'Gina Trapani');
         $this->assertEqual($user->full_name, 'Gina Trapani');
         $this->assertEqual($user->user_id, 606837591);
+        $this->assertEqual($user->gender, "female");
         $this->assertEqual($user->location, "San Diego, California");
         $this->assertEqual($user->description,
         'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
@@ -197,6 +198,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '606837591');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'female');
         $this->assertEqual($user->location, 'San Diego, California');
         //sleep(1000);
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
@@ -204,6 +206,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '697015835');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'male');
         $this->assertEqual($user->location, 'La Mesa, California');
 
         $user = $user_dao->getUserByName('Jeffrey McManus', 'facebook');
@@ -211,6 +214,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '691270740');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'male');
         $this->assertEqual($user->location, '');
     }
 
@@ -226,10 +230,9 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
         $this->assertEqual(sizeof($post->links), 1);
-        $this->assertEqual($post->links[0]->url,
+        $this->assertEqual($post->links[0]->url, 
         'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
-        $this->assertEqual($post->links[0]->expanded_url,
-        '');
+        $this->assertEqual($post->links[0]->expanded_url,'');
         $this->assertEqual($post->links[0]->caption, 'Liked on www.youtube.com');
         $this->assertEqual($post->links[0]->description,
         'A fan made trailer for the Warner Bros. production of Superman Returns. Fan trailer produced and edited by '.
@@ -289,8 +292,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($post->links), 1);
         $this->assertEqual($post->links[0]->url,
         'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
-        $this->assertEqual($post->links[0]->expanded_url,
-        '');
+        $this->assertEqual($post->links[0]->expanded_url, '');
         $this->assertEqual($post->links[0]->image_src,
         'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f66'.
         'f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak-'.
@@ -305,7 +307,6 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->full_name, 'Matthew Fleisher');
         $this->assertEqual($user->network, 'facebook');
         $this->assertTrue($user->is_protected);
-
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
         $this->assertEqual($user, null);
 

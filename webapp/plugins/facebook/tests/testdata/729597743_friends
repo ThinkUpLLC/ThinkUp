@@ -2,7 +2,8 @@
   "data": [
     {
       "name": "Poppy Linford", 
-      "id": "682523675"
+      "id": "682523675",
+      "gender": "female"
     }
   ]
 }

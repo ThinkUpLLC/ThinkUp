@@ -91,7 +91,8 @@
                   "id": "606837591_153956564638648_1546020",
                   "from": {
                      "name": "Mitch Wagner",
-                     "id": "697015835"
+                     "id": "697015835",
+                     "gender": "male"
                   },
                   "message": "I'm not the target demographic for this. I don't like Britney Spears music. I barely know it.\n\nThe episode still had its moments, though. \"Is this real life\" was awesome. She had the facial expression right too. And Sue Sylvester and the principal were, of course, fantastic. Couple of great lines there.",
                   "created_time": "2010-09-29T16:51:27+0000"
@@ -100,7 +101,8 @@
                   "id": "606837591_153956564638648_1552762",
                   "from": {
                      "name": "Yael Kropsky",
-                     "id": "500941232"
+                     "id": "500941232",
+                     "gender": "male"
                   },
                   "message": "I think Sue stole the episode (again) with Gloria Allred being her lawyer and, \"you wear more vests than the cast of Blossom.\" My main issue with Glee is the voice correction/overproduction of the songs. And not enough leotards and legwarmers. \n\nCheck out http://www.youtube.com/watch?v=W3aCAMRjuBM to see how it's done.",
                   "created_time": "2010-09-30T14:27:39+0000"
@@ -215,7 +217,8 @@
                   "id": "606837591_435724732591_13699089",
                   "from": {
                      "name": "Marcy Bailey Carrico",
-                     "id": "1034402187"
+                     "id": "1034402187",
+                     "gender": "female"
                   },
                   "message": "seriously?  Can we see it online? (okay, and 6 hours after the fact...)  When are you going to be on national news where we can see you?  I'll even turn my tv channel off of Fox News to see you ;)",
                   "created_time": "2010-09-21T19:34:51+0000"
@@ -224,7 +227,8 @@
                   "id": "606837591_435724732591_13699456",
                   "from": {
                      "name": "Gina Trapani",
-                     "id": "606837591"
+                     "id": "606837591",
+                     "gender": "female"
                   },
                   "message": "Oh I wasn't on! I was there to see a friend of mine do her last segment before she leaves for SF. Just kind of checking things out. Photo in the (very small, TV looks are deceiving) studio:\nhttp://www.flickr.com/photos/ginatrapani/5011175441/",
                   "created_time": "2010-09-21T20:38:25+0000"
@@ -349,7 +353,8 @@
                   "id": "606837591_128550830526770_817240",
                   "from": {
                      "name": "Dan Tentler",
-                     "id": "501805642"
+                     "id": "501805642",
+                     "gender": "male"
                   },
                   "message": "depends on what channel and what the context is. \n\nI'd go on G4 probably, penn and tellers bullshit, absolutely.",
                   "created_time": "2010-09-17T02:51:52+0000"
@@ -358,7 +363,8 @@
                   "id": "606837591_128550830526770_817252",
                   "from": {
                      "name": "Zack Murtha",
-                     "id": "1316858804"
+                     "id": "1316858804",
+                     "gender": "male"
                   },
                   "message": "I'm always hoping for the call to Max after Dark.  Never seems to come though.",
                   "created_time": "2010-09-17T02:54:11+0000"
@@ -367,7 +373,8 @@
                   "id": "606837591_128550830526770_818549",
                   "from": {
                      "name": "Marcy Bailey Carrico",
-                     "id": "1034402187"
+                     "id": "1034402187",
+                     "gender": "female"
                   },
                   "message": "I want to see you on tv.  When and what channel?",
                   "created_time": "2010-09-17T08:19:42+0000"
@@ -406,7 +413,8 @@
                   "id": "606837591_151660894852759_1414665",
                   "from": {
                      "name": "Kevin Purdy",
-                     "id": "677588391"
+                     "id": "677588391",
+                     "gender": "male"
                   },
                   "message": "But, Gina! He/she has something that they \"know your readers will find interesting\"!",
                   "created_time": "2010-09-04T18:53:23+0000"
@@ -454,7 +462,8 @@
                   "id": "606837591_427489887591_13559353",
                   "from": {
                      "name": "Mitch Wagner",
-                     "id": "697015835"
+                     "id": "697015835",
+                     "gender": "male"
                   },
                   "message": "Getting a fit bit? Let us know what you think please.",
                   "created_time": "2010-08-29T17:03:42+0000"
@@ -463,7 +472,8 @@
                   "id": "606837591_427489887591_13687827",
                   "from": {
                      "name": "Elizabeth Lawley",
-                     "id": "24404996"
+                     "id": "24404996",
+                     "gender": "female"
                   },
                   "message": "/want",
                   "created_time": "2010-09-20T03:15:39+0000"
@@ -595,7 +605,8 @@
                   "id": "606837591_141642905870455_1143876",
                   "from": {
                      "name": "Mitch Wagner",
-                     "id": "697015835"
+                     "id": "697015835",
+                     "gender": "male"
                   },
                   "message": "Delicious, delicious culinary terrorism. ",
                   "created_time": "2010-08-11T22:35:51+0000"
@@ -604,7 +615,8 @@
                   "id": "606837591_141642905870455_1144238",
                   "from": {
                      "name": "Marcy Bailey Carrico",
-                     "id": "1034402187"
+                     "id": "1034402187",
+                     "gender": "female"
                   },
                   "message": "I have only one thing for you: www.thisiswhyyourefat.com  <3",
                   "created_time": "2010-08-11T23:49:45+0000"
@@ -643,7 +655,8 @@
                   "id": "606837591_148686895142561_1335723",
                   "from": {
                      "name": "Kevin Purdy",
-                     "id": "677588391"
+                     "id": "677588391",
+                     "gender": "male"
                   },
                   "message": "Happens all the time. Now just don't go too deep into their Facebook profiles.",
                   "created_time": "2010-08-07T11:21:17+0000"

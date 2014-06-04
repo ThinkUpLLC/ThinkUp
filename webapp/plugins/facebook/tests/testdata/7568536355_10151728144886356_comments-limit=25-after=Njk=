@@ -4,7 +4,8 @@
       "id": "437900891355_28175606", 
       "from": {
         "name": "Justin Wall", 
-        "id": "333500103"
+        "id": "333500103",
+        "gender": "male"
       }, 
       "message": "RAM is free these days: http://downloadmoreram.com", 
       "can_remove": false, 
@@ -16,7 +17,8 @@
       "id": "437900891355_28175601", 
       "from": {
         "name": "Jessica A Thomas", 
-        "id": "604622899"
+        "id": "604622899",
+        "gender": "female"
       }, 
       "message": "ram is like cowbell, you always need more", 
       "can_remove": false, 
@@ -28,7 +30,8 @@
       "id": "437900891355_28175679", 
       "from": {
         "name": "Howard Davies", 
-        "id": "100000073694609"
+        "id": "100000073694609",
+        "gender": "male"
       }, 
       "message": "If a person is still using Windows 32bit they are wasting their money on more RAM, anyways.  It will only use 3+gigs of RAM only.", 
       "can_remove": false, 
@@ -40,7 +43,8 @@
       "id": "437900891355_28177015", 
       "from": {
         "name": "Swapnil Reloaded", 
-        "id": "100002389208464"
+        "id": "100002389208464",
+        "gender": "male"
       }, 
       "message": "Wait for DDR4 to come out ;)", 
       "can_remove": false, 
@@ -52,7 +56,8 @@
       "id": "437900891355_28176730", 
       "from": {
         "name": "Wade Stubblefield", 
-        "id": "668312109"
+        "id": "668312109",
+        "gender": "female"
       }, 
       "message": "I run StarCraft II and Diablo III just fine on 4 GB DDR3. If I upgraded that, I would replace it all with 4 GB DDR3 with a higher frequency.\n\nThat's important but most people have no idea about it. Higher megahertz RAM, people.", 
       "can_remove": false, 
@@ -64,7 +69,8 @@
       "id": "437900891355_28176684", 
       "from": {
         "name": "Robert Williams", 
-        "id": "100002380802361"
+        "id": "100002380802361",
+        "gender": "male"
       }, 
       "message": "or you know if youre still running a dual core intel pentium, it might be time to swap that out", 
       "can_remove": false, 
@@ -76,7 +82,8 @@
       "id": "437900891355_28176537", 
       "from": {
         "name": "Mart Marandi", 
-        "id": "100001110528726"
+        "id": "100001110528726",
+        "gender": "female"
       }, 
       "message": "Ram or Lamb?", 
       "can_remove": false, 
@@ -88,7 +95,8 @@
       "id": "437900891355_28176335", 
       "from": {
         "name": "Maximilian Bocchine", 
-        "id": "1198561283"
+        "id": "1198561283",
+        "gender": "male"
       }, 
       "message": "This article was clearly not meant for me.\n/installed 16 gigs & doing fine now", 
       "can_remove": false, 
@@ -100,7 +108,8 @@
       "id": "437900891355_28176303", 
       "from": {
         "name": "Jean-Français Carmer", 
-        "id": "796205273"
+        "id": "796205273",
+        "gender": "male"
       }, 
       "message": "Pier-Olivier Leclair :)", 
       "message_tags": [
@@ -121,7 +130,8 @@
       "id": "437900891355_28176127", 
       "from": {
         "name": "Bro PanDa", 
-        "id": "100000173096804"
+        "id": "100000173096804",
+        "gender": "male"
       }, 
       "message": "Well if anyone wants to add more to RAM, go to \"Computer\" and add more RAM... O_O", 
       "can_remove": false, 
@@ -133,7 +143,8 @@
       "id": "437900891355_28175987", 
       "from": {
         "name": "Jan Andrew Bloxham", 
-        "id": "555279771"
+        "id": "555279771",
+        "gender": "male"
       }, 
       "message": "It hasn't been the case for many years.", 
       "can_remove": false, 
@@ -145,7 +156,8 @@
       "id": "437900891355_28175901", 
       "from": {
         "name": "Roman Nahal", 
-        "id": "1023357430"
+        "id": "1023357430",
+        "gender": "male"
       }, 
       "message": "Not unless you harness the power through software via a USB. www.dramdisk.com", 
       "can_remove": false, 
@@ -157,7 +169,8 @@
       "id": "437900891355_28175841", 
       "from": {
         "name": "Sylwen Cabose", 
-        "id": "100000618350257"
+        "id": "100000618350257",
+        "gender": "female"
       }, 
       "message": "The price of ram has doubled in the pass year, why is that?", 
       "can_remove": false, 
@@ -169,7 +182,8 @@
       "id": "437900891355_28175832", 
       "from": {
         "name": "Sif Lord", 
-        "id": "100000600778454"
+        "id": "100000600778454",
+        "gender": "male"
       }, 
       "message": "Pushing the Limits of Windows: Physical Memory\nhttp://blogs.technet.com/b/markrussinovich/archive/2008/07/21/3092070.aspx", 
       "can_remove": false, 
@@ -181,7 +195,8 @@
       "id": "437900891355_28175613", 
       "from": {
         "name": "Alexander Hoke", 
-        "id": "100000656926595"
+        "id": "100000656926595",
+        "gender": "male"
       }, 
       "message": "Linus! :D", 
       "can_remove": false, 
@@ -193,7 +208,8 @@
       "id": "437900891355_28176685", 
       "from": {
         "name": "Mat Babyak", 
-        "id": "100002389438263"
+        "id": "100002389438263",
+        "gender": "male"
       }, 
       "message": "6gb is more than enough for even a gaming rig, more is overkill", 
       "can_remove": false, 
@@ -205,7 +221,8 @@
       "id": "437900891355_28175934", 
       "from": {
         "name": "Dapper Dab", 
-        "id": "100003025575055"
+        "id": "100003025575055",
+        "gender": "male"
       }, 
       "message": "While he has some good points...  he's leaving out some good things as well...", 
       "can_remove": false, 
@@ -217,7 +234,8 @@
       "id": "437900891355_28175645", 
       "from": {
         "name": "Jonathon Wisnoski", 
-        "id": "576534241"
+        "id": "576534241",
+        "gender": "male"
       }, 
       "message": "Well now with computers coming with 8+ gigs, I cannot think that you are likely to even used all the ram you have 99% of the time.", 
       "can_remove": false, 
@@ -229,7 +247,8 @@
       "id": "437900891355_28176037", 
       "from": {
         "name": "Mark Quitoriano", 
-        "id": "734732932"
+        "id": "734732932",
+        "gender": "male"
       }, 
       "message": "if only i can put 32GB of ram", 
       "can_remove": false, 
@@ -241,7 +260,8 @@
       "id": "437900891355_28176149", 
       "from": {
         "name": "Ian Graves", 
-        "id": "1549913136"
+        "id": "1549913136",
+        "gender": "male"
       }, 
       "message": "I had 32gb in my machine and most of it wasn't even used", 
       "can_remove": false, 

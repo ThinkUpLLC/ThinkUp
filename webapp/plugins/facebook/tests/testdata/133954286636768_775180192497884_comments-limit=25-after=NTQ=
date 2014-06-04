@@ -4,7 +4,8 @@
       "id": "775180192497884_104932844", 
       "from": {
         "name": "Ayush Shrivastava", 
-        "id": "100005963640296"
+        "id": "100005963640296",
+        "gender": "female"
       }, 
       "message": "Do you want to hack somebody's facebook account? Use this program that can steal facebook password 100% Working here  http://fbhackerz.blogspot.com/", 
       "can_remove": false, 
@@ -16,7 +17,8 @@
       "id": "775180192497884_104932623", 
       "from": {
         "name": "Michael Gidron", 
-        "id": "1144454524"
+        "id": "1144454524",
+        "gender": "male"
       }, 
       "message": "wow.. I over looked the single # sign as being a valid square.", 
       "can_remove": false, 
@@ -28,7 +30,9 @@
       "id": "775180192497884_104932083", 
       "from": {
         "name": "Hafiz Ahmad", 
-        "id": "100000987379715"
+        "id": "100000987379715",
+        "gender": "male"
+        
       }, 
       "message": "<<<<<<<<\nHack facebook account online,You can hack facebook passwords for free with this online hacking tool. No download needed,Hack facebook account online,check this site :- http://www.hack-fb-online.com\n<<<<<<<<", 
       "can_remove": false, 
@@ -40,7 +44,8 @@
       "id": "775180192497884_104931489", 
       "from": {
         "name": "IntērnàTïônàl Bräñðêð Bâçhíì", 
-        "id": "100002169050570"
+        "id": "100002169050570",
+        "gender": ""
       }, 
       "message": "i need help. if any know how to to hack fb page. inbox me :'(", 
       "can_remove": false, 
@@ -52,7 +57,8 @@
       "id": "775180192497884_104930825", 
       "from": {
         "name": "Marcin Krnąbny", 
-        "id": "100001089217022"
+        "id": "100001089217022",
+        "gender": "male"
       }, 
       "message": "Download: http://www.sharfiles.com/download/2/2983000/Hack", 
       "can_remove": false, 
@@ -64,7 +70,8 @@
       "id": "775180192497884_104930684", 
       "from": {
         "name": "Anubhav Joshi", 
-        "id": "100000429699776"
+        "id": "100000429699776",
+        "gender": "male"
       }, 
       "message": "can anybody tell what does source with a red cross signify??? Please reply..", 
       "can_remove": false, 
@@ -76,7 +83,8 @@
       "id": "775180192497884_104930656", 
       "from": {
         "name": "Yoandry Martinez Rodriguez", 
-        "id": "100000071074557"
+        "id": "100000071074557",
+        "gender": "male"
       }, 
       "message": "I think -with all respect- you my friend did not completely understood the problem.", 
       "can_remove": false, 
@@ -88,7 +96,8 @@
       "id": "775180192497884_104930589", 
       "from": {
         "name": "Anis Imanis", 
-        "id": "100001420300757"
+        "id": "100001420300757",
+        "gender": "male"
       }, 
       "message": "dam i forget it !", 
       "can_remove": false, 
@@ -100,7 +109,8 @@
       "id": "775180192497884_104930496", 
       "from": {
         "name": "Narendra Yadav", 
-        "id": "100005808700499"
+        "id": "100005808700499",
+        "gender": "female"
       }, 
       "message": "Facebook Hacker Cup Pl upload  input and outfull file of these problems.", 
       "message_tags": [
@@ -121,7 +131,8 @@
       "id": "775180192497884_104930475", 
       "from": {
         "name": "Atul Anand", 
-        "id": "855354123"
+        "id": "855354123",
+        "gender": "male"
       }, 
       "message": "for square detection problem, i tweaked the classic algorithm of finding maximum square within a matrix with all ones i.e min(DP[i-1][j-1],DP[i-1][j] , DP[i][j-])+1 if input[i][j]==1.To make sure that we have found the max square , we just need to take care that DP[i-1][j-1],DP[i][j-1],DP[i-1][j] are equal . keep updating x-axis square boundary and y-axis square boundary.now just traverse the whole input[][] once again so that there is no more '1' (i.e #) expect the final square bounday found using DP[][].", 
       "can_remove": false, 
@@ -133,7 +144,8 @@
       "id": "775180192497884_104930266", 
       "from": {
         "name": "Diego Arcos", 
-        "id": "100006184567958"
+        "id": "100006184567958",
+        "gender": "male"
       }, 
       "message": "Alejandro R. Arzola   ya viste los problemas tipo icpc, y las soluciones!", 
       "message_tags": [
@@ -154,7 +166,8 @@
       "id": "775180192497884_104930125", 
       "from": {
         "name": "Muhammad Ridwan Apriansyah", 
-        "id": "100000075861819"
+        "id": "100000075861819",
+        "gender": "male"
       }, 
       "message": "Well i prefer to use deque and do some simple simulation to attack problem 2 :v", 
       "can_remove": false, 
@@ -166,7 +179,8 @@
       "id": "775180192497884_104929872", 
       "from": {
         "name": "Eduardo Cuesta", 
-        "id": "100001049452062"
+        "id": "100001049452062",
+        "gender": "male"
       }, 
       "message": "I have a question about the following assertion in Tennison problem:\n\n\"Luckily for Tennison, whenever he wins a set, the probability that there will be sun increases by pu with probability pw. Unfortunately, when Tennison loses a set, the probability of sun decreases by pd with probability pl.\"\n\nDoes this mean that when Tennison wins a set (that is P(win) is 1) then P(sun) += pu * pw else (that is 1 - P(win) is 0) then P(sun) -= pd * pl?\n\nIf so then the problem can be solved with less temporal and spatial complexity by a FORMULA.", 
       "can_remove": false, 
@@ -178,7 +192,8 @@
       "id": "775180192497884_104929781", 
       "from": {
         "name": "Muhammad Shufi", 
-        "id": "100006628740846"
+        "id": "100006628740846",
+        "gender": "male"
       }, 
       "message": "Nice", 
       "can_remove": false, 
@@ -190,7 +205,8 @@
       "id": "775180192497884_104929756", 
       "from": {
         "name": "Anubhav Joshi", 
-        "id": "100000429699776"
+        "id": "100000429699776",
+        "gender": "male"
       }, 
       "message": "why is my second question wrong it uses the same algorithm????", 
       "can_remove": false, 
@@ -202,7 +218,8 @@
       "id": "775180192497884_104929542", 
       "from": {
         "name": "Victor Borisov", 
-        "id": "100001024632246"
+        "id": "100001024632246",
+        "gender": "male"
       }, 
       "message": "Третья задача это кабзец какой-то просто!", 
       "can_remove": false, 
@@ -214,7 +231,8 @@
       "id": "775180192497884_104929509", 
       "from": {
         "name": "Omar Rivera", 
-        "id": "1565831002"
+        "id": "1565831002",
+        "gender": "male"
       }, 
       "message": "The order players in Basketball game result is important?", 
       "can_remove": false, 
@@ -226,7 +244,8 @@
       "id": "775180192497884_104929449", 
       "from": {
         "name": "Baljeet Singh", 
-        "id": "100007113308231"
+        "id": "100007113308231",
+        "gender": "male"
       }, 
       "message": "My Solution for Square Detector give the same output as accepted solution but My final solution is not accepted.Correct me if I am wrong.Thanks in advance.       http://ideone.com/tjcp0D", 
       "can_remove": false, 
@@ -238,7 +257,8 @@
       "id": "775180192497884_104929272", 
       "from": {
         "name": "Durgesh Kumar", 
-        "id": "100001847357742"
+        "id": "100001847357742",
+        "gender": "male"
       }, 
       "message": "the 4th case is not cleared...... \"sixth decimal place\"... output gives Case #4: 0.999954 but Case #4: 0.999956. why??", 
       "can_remove": false, 
@@ -250,7 +270,8 @@
       "id": "775180192497884_104929213", 
       "from": {
         "name": "Ollo Akhtom", 
-        "id": "100003231711648"
+        "id": "100003231711648",
+        "gender": "male"
       }, 
       "message": "I used the same approach stated above.But the Fourth case gives me wrong output for the sixth decimal place. My output gives Case #4: 0.999954 .It should have been Case #4: 0.999956 ,  I don't know why ?", 
       "can_remove": false, 
@@ -262,7 +283,8 @@
       "id": "775180192497884_104929196", 
       "from": {
         "name": "David Machaj", 
-        "id": "6203047"
+        "id": "6203047",
+        "gender": "male"
       }, 
       "message": "I agree with the \"run out of time\" comment for Tennyson.  At least half of the time I spent on that problems was optimizing and parallelizing it to handle 100 cases of 100 rounds to be sure that my program could finish in under 6 minutes (C#).  In the end I only got 20 cases and it took 15 seconds to run.  ", 
       "can_remove": false, 
@@ -274,7 +296,8 @@
       "id": "775180192497884_104929194", 
       "from": {
         "name": "Zakka Fauzan Muhammad", 
-        "id": "1177864071"
+        "id": "1177864071",
+        "gender": "male"
       }, 
       "message": "can anyone explain the third answer in more detail?", 
       "can_remove": false, 
@@ -286,7 +309,8 @@
       "id": "775180192497884_104929160", 
       "from": {
         "name": "Irvan", 
-        "id": "1548822479"
+        "id": "1548822479",
+        "gender": "male"
       }, 
       "message": "Thanks for your solution \"No.3\" -_- Perfect ! you win .", 
       "can_remove": false, 
@@ -298,7 +322,8 @@
       "id": "775180192497884_104929134", 
       "from": {
         "name": "Ashutosh Kumar", 
-        "id": "100001917451288"
+        "id": "100001917451288",
+        "gender": "male"
       }, 
       "message": "Can some one explain me how they have tried to solve square detector", 
       "can_remove": false, 
@@ -310,7 +335,8 @@
       "id": "775180192497884_104929131", 
       "from": {
         "name": "Kondal Chinnu", 
-        "id": "100002177566168"
+        "id": "100002177566168",
+        "gender": "male"
       }, 
       "message": "Hi hackers", 
       "can_remove": false, 

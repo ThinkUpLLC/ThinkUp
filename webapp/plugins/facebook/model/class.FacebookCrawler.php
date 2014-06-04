@@ -81,6 +81,7 @@ class FacebookCrawler {
         	// Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,gender,about,location,website':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields );
+            
             if (isset($user_details)) {
                 $user_details->network = $network;
             }
@@ -316,6 +317,7 @@ class FacebookCrawler {
 
                     if (isset($p->source) || isset($p->link)) { // there's a link to store
                         $link_url = (isset($p->source))?$p->source:$p->link;
+                        
                         $link = new Link(array(
                           "url"=>$link_url,
                           "expanded_url"=>'',
@@ -478,6 +480,7 @@ class FacebookCrawler {
                                         "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
                                         "network"=>'facebook'); //Users are always set to network=facebook
                                         array_push($thinkup_users, $user_to_add);
+                                        
 
                                         $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
                                         "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
@@ -520,7 +523,6 @@ class FacebookCrawler {
                                     foreach ($likes_stream->data as $l) {
                                         if (isset($l->name) && isset($l->id)) {
                                             //Get users
-                                        	
                                             $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
                                             "user_id"=>$l->id, "gender"=>$l->gender, "avatar"=>'https://graph.facebook.com/'.$l->id.
                                             '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,

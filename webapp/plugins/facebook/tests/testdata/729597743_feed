@@ -11,7 +11,8 @@
       "type": "video",
       "from": {
         "id": "729597743",
-        "name": "Mark Linford"
+        "name": "Mark Linford",
+        "gender": "male"
       },
       "source": "http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1",
       "caption": "Liked on www.youtube.com",

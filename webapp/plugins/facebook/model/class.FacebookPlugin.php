@@ -81,7 +81,6 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
 
             $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
-			echo $access_token;
             $instance_dao->updateLastRun($instance->id);
             $facebook_crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
             $dashboard_module_cacher = new DashboardModuleCacher($instance);
