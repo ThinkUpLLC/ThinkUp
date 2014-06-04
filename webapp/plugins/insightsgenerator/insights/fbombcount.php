@@ -42,7 +42,7 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             $day_of_month = 6;
         }
         return $this->shouldGenerateMonthlyInsight($this->getSlug(), $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_month=$day_of_month, count($last_week_of_posts),
+            $regenerate_existing_insight=true, $day_of_month=$day_of_month, count($last_week_of_posts),
             $excluded_networks=null);
     }
 
@@ -92,7 +92,7 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             if ($this_period_count != $last_period_count && $last_period_count > 0) {
                 $f_diff = $this_period_count-$last_period_count;
                 $diff = $f_diff < 0 ? 'fewer' : 'more';
-                $insight->text .= ' That\'s '.number_format($f_diff).' '.$diff.' than the prior month. '
+                $insight->text .= ' That\'s '.number_format(abs($f_diff)).' '.$diff.' than the prior month. '
                     .'Fucking Awesome.';
             }
 

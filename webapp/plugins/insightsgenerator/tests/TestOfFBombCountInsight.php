@@ -332,6 +332,42 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testForNegatives() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'Fuck', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'fuck', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'fucker', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new FBombCountInsight();
+        $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
+        $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $last_month = date('Y-m-d', strtotime('-1 month'));
+        $insight_baseline_dao->insertInsightBaseline($baseline_name, $this->instance->id, 8, $last_month);
+
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; 3 times in the past month. "
+            ."That's 5 fewer than the prior month. Fucking Awesome.");
+
+        $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
+        $baseline = $insight_baseline_dao->getInsightBaseline($baseline_name, $this->instance->id, date('Y-m-d'));
+        $this->assertEqual(3, $baseline->value);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testPostMatcher() {
         $insight_plugin = new FBombCountInsight();
         $post = new Post();
