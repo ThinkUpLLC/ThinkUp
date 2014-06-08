@@ -128,4 +128,8 @@ interface FavoritePostDAO extends PostDAO {
      * @return array User objects
      */
     public function getUsersWhoFavoritedMostOfYourPosts($author_user_id, $network, $last_x_days);
+    
+    public function getGenderOfFavoriters($post_id);
+    
+    public function getGenderOfCommenters($post_id);
 }
