@@ -1,0 +1,1 @@
+ALTER TABLE tu_users ADD gender VARCHAR ( 255 ) DEFAULT NULL;

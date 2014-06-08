@@ -1,4 +1,4 @@
-<?php
+ <?php
 /*
  Plugin Name: Biggest Fans
  Description: Who has liked your posts the most over the last 7 and 30 days.
