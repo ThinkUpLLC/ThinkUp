@@ -31,6 +31,8 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstance.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstanceMySQLDAO.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.facebook.php';
 
@@ -269,4 +271,36 @@ message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon F
         $this->debug($actual_reg_email);
         $this->assertEqual($actual_reg_email, '');
     }
+
+    public function testForProfileUpdated() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
+            'auth_error'=>'', 'oauth_access_token'=>'zL11BPY2fZPPyYY', 'oauth_access_token_secret'=>''));
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'Gina Trapani',
+            'network_user_id'=>'606837591', 'network_viewer_id'=>'606837591', 'last_post_id'=>'0',
+            'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+            'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+            'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+            'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
+            'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+            'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+            'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0','is_active'=>1
+        ));
+
+        $instance_dao = DAOFactory::getDAO('FacebookInstanceDAO');
+        $instance = $instance_dao->getByUsername('Gina Trapani', 'facebook');
+        $this->assertNull($instance->profile_updated);
+
+        $this->simulateLogin('admin@example.com');
+
+        $fb_plugin = new FacebookPlugin();
+        $fb_plugin->crawl();
+
+        $instance = $instance_dao->getByUsername('Gina Trapani', 'facebook');
+        $this->assertNotNull($instance->profile_updated);
+        $this->assertEqual($instance->profile_updated, '2014-01-30 17:28:18');
+    }
+
 }

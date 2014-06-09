@@ -54,7 +54,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
     public function crawl() {
         $logger = Logger::getInstance();
         $config = Config::getInstance();
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $instance_dao = DAOFactory::getDAO('FacebookInstanceDAO');
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
@@ -69,9 +69,9 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin {
 
         //crawl Facebook user profiles and pages
         $profiles = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
-        'facebook');
+            'facebook');
         $pages = $instance_dao->getActiveInstancesStalestFirstForOwnerByNetworkNoAuthError($current_owner,
-        'facebook page');
+            'facebook page');
         $instances = array_merge($profiles, $pages);
 
         foreach ($instances as $instance) {
