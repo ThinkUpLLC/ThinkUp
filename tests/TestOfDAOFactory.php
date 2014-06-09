@@ -33,6 +33,7 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstanceMySQLDAO.php';
 
 class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
@@ -338,6 +339,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'TwitterInstanceMySQLDAO');
     }
     /**
+     * Test get FacebookInstanceDAO
+     */
+    public function testGetFacebookInstanceDAO() {
+        $dao = DAOFactory::getDAO('FacebookInstanceDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'FacebookInstanceMySQLDAO');
+    }
+    /**
      * Test get PostExportDAO
      */
     public function testGetPostExportDAO() {
@@ -422,7 +431,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 35);
+        $this->assertEqual(sizeof($result), 36);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'cookies');
         $this->assertEqual($result[1], $cfg_values["table_prefix"].'count_history');
         $this->restoreConfigFile();
