@@ -88,7 +88,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                         : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     $tachy_markup = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; "
-                        ."color: #ddd;\"></i>";
+                        ."color: #ddd;\"></i> That's ";
 
 
                     // Only show a comparison string if the rates are substantially different
@@ -108,7 +108,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                         $options[] = "For comparison, the average smartphone owner unlocks their phone"
                            . " 7 times each waking hour.";
                     }
-                    if ($instance->network == 'twitter') {
+                    if ($instance->network == 'twitter' && $response_factor['key'] != 'like') {
                         $options[] = "That's a healthy share of the 21 million tweets each hour.";
                     }
                     if (strstr($time_str, 'day') !== false) {
