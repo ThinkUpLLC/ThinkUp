@@ -50,7 +50,8 @@
                 "from": {
                   "name": "Paul Cassidy", 
                   "id": "100000028811048",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Maybe you should have added a 6th box labelled \"Safe from spying by your own government\". That one would go unticked for all of them, I'd say.", 
                 "can_remove": false, 
@@ -63,7 +64,8 @@
                 "from": {
                   "name": "Dave Myers", 
                   "id": "44100633",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Protect from everyone but the government, of course.", 
                 "can_remove": false, 
@@ -76,7 +78,8 @@
                 "from": {
                   "name": "Dave F. Samuel", 
                   "id": "18417420",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "This is missing a 6th box... \"Hands data over to the NSA\"", 
                 "can_remove": false, 
@@ -89,7 +92,8 @@
                 "from": {
                   "name": "Alex Wright", 
                   "id": "518042907",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Well good thing the NSA doesn't give a crap and vacuums up all the data anyway.\n\nDon't think for a SECOND that large scale corporate and government forces don't use your data against you and have been since the early 1960's. \n\nEven implying that NSA doesn't already hold all of the crypto keys to unlock ALL of the encryption standards.\n\nWhat the HELL do you think they're building this for:\n\nhttp://en.wikipedia.org/wiki/Utah_Data_Center", 
                 "can_remove": false, 
@@ -102,7 +106,8 @@
                 "from": {
                   "name": "Ben Stanley", 
                   "id": "1046979495",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Doesn't really matter if they keep 'improving' my privacy settings, though.", 
                 "can_remove": false, 
@@ -115,7 +120,8 @@
                 "from": {
                   "name": "Christina Rockwood", 
                   "id": "1064132204",
-                  "gender": "female"
+                  "gender": "female",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "\"Protecting\" my data? LOL!....interesting that i browse products on other websites only to find those exact same products appearing in the ads on my FB page later.... i wonder how FB could POSSIBLY have known the exact products i was browsing for on completely different websites.... coincidence? Doubtful... ", 
                 "can_remove": false, 
@@ -128,7 +134,8 @@
                 "from": {
                   "name": "Sean Lancaster", 
                   "id": "22419216",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "\"everyone else, not so much\" as you proceed to show a chart showing Google and a few others with green nearly all across or all across. Are they not part of \"everyone else\"?", 
                 "can_remove": false, 
@@ -141,7 +148,8 @@
                 "from": {
                   "name": "Jan Gvdp", 
                   "id": "61309586",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "of course you protect it, when you can sell it", 
                 "can_remove": false, 
@@ -154,7 +162,8 @@
                 "from": {
                   "name": "Leonardo Dutra", 
                   "id": "100000047561578",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Why is Facebook on the title if Google, and others, are one step ahead?", 
                 "can_remove": false, 
@@ -167,7 +176,8 @@
                 "from": {
                   "name": "Leo Gharapetian", 
                   "id": "1280168112",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "In progress and pending should not have a green box!", 
                 "can_remove": false, 
@@ -180,7 +190,8 @@
                 "from": {
                   "name": "Damon Freinik", 
                   "id": "1655356726",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "If you put it on the internets kiss it goodbye...", 
                 "can_remove": false, 
@@ -193,7 +204,8 @@
                 "from": {
                   "name": "Joe McLaughlin", 
                   "id": "100001277313216",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "The difference is, Amazon dont catalog every bit of your being for evil. They just keep a log of what you bought so you can see it later..", 
                 "can_remove": false, 
@@ -206,7 +218,8 @@
                 "from": {
                   "name": "Joe Pepersack", 
                   "id": "556987515",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Of course they protect it.  Your data is their product.   If they let someone steal it, they can't sell it.", 
                 "can_remove": false, 
@@ -219,7 +232,8 @@
                 "from": {
                   "name": "Eric Tiberius Blue", 
                   "id": "560992307",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Of course they protect it.  They want to make as much money off of it as possible.... and keep it safe for the NSA to review.", 
                 "can_remove": false, 
@@ -232,7 +246,8 @@
                 "from": {
                   "name": "Matt Stratton", 
                   "id": "500557137",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "As mentioned, by some others, the whole \"I was looking at honda.com and then Facebook showed me ads for Hondas\" is not because Facebook is spying out you. \n\nIt's because Facebook and Honda participate in a data exchange where Honda sets a cookie that Facebook (or anyone else who is part of that exchange) can read/use. \n\nIs it morally right? Dunno. Is Facebook \"tracking you without your knowledge\"? Sorta. But not the way you think it is.", 
                 "can_remove": false, 
@@ -245,7 +260,8 @@
                 "from": {
                   "name": "Jarek Niskiewicz", 
                   "id": "100000641653272",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Sure they do, makes it so much more valuable to their clients :D", 
                 "can_remove": false, 
@@ -258,7 +274,8 @@
                 "from": {
                   "name": "Banlu Anumart", 
                   "id": "100003784651128",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Good guy Dropbox.", 
                 "can_remove": false, 
@@ -271,7 +288,8 @@
                 "from": {
                   "name": "Daniel Fugisawa", 
                   "id": "564295957",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Yeah, right. Just to sell it to the highest bidder for a higher price. And to give it away to all P5 + Israel intelligence services.", 
                 "can_remove": false, 
@@ -284,7 +302,8 @@
                 "from": {
                   "name": "Meghan Carnowski", 
                   "id": "100000290596817",
-                  "gender": "female"
+                  "gender": "female",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Richard?", 
                 "message_tags": [
@@ -306,7 +325,8 @@
                 "from": {
                   "name": "Chris Whitman", 
                   "id": "100000891619230",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "It doesn't really matter how secure their databases are if hackers just get all of the data from all of them for hacking the nsa", 
                 "can_remove": false, 
@@ -319,7 +339,8 @@
                 "from": {
                   "name": "Michelle Genée", 
                   "id": "888230692",
-                  "gender": "female"
+                  "gender": "female",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Jonathan FYI", 
                 "message_tags": [
@@ -341,7 +362,8 @@
                 "from": {
                   "name": "Ma Sheila A Magboo", 
                   "id": "1291663317",
-                  "gender": "female"
+                  "gender": "female",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Really?", 
                 "can_remove": false, 
@@ -354,7 +376,8 @@
                 "from": {
                   "name": "Diane Thomas", 
                   "id": "1302225487",
-                  "gender": "female"
+                  "gender": "female",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Thank you, Brian Thomas, and Facebook crew!!! :)", 
                 "message_tags": [
@@ -376,7 +399,8 @@
                 "from": {
                   "name": "Marcus Randall", 
                   "id": "1049255840",
-                  "gender": "male"
+                  "gender": "male",
+                  "birthday": "01/02/03"
                 }, 
                 "message": "Similar to comparing amored trucks vs pizza delivery drivers. Regardless, individuals are independant varriables when it comes to their privacy", 
                 "can_remove": false, 
@@ -441,7 +465,8 @@
                   "from": {
                      "name": "Harald Chuchlik",
                      "id": "1479111505",
-                     "gender": "male"
+                     "gender": "male",
+                  "birthday": "01/02/03"
                   },
                   "message": "Troll somewhere else",
                   "created_time": "2010-10-02T16:44:28+0000"
@@ -451,7 +476,8 @@
                   "from": {
                      "name": "Chad Settlemier",
                      "id": "535362181",
-                     "gender": "male"
+                     "gender": "male",
+                  "birthday": "01/02/03"
                   },
                   "message": "What about iPhone 4 top ten Jailbroken apps?",
                   "created_time": "2010-10-02T18:10:52+0000"

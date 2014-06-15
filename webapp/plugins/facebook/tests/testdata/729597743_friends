@@ -3,7 +3,8 @@
     {
       "name": "Poppy Linford", 
       "id": "682523675",
-      "gender": "female"
+      "gender": "female",
+      "birthday": "01/02/03"
     }
   ]
 }

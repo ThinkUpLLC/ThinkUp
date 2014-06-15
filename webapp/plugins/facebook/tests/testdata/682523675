@@ -5,7 +5,8 @@
   "last_name": "Linford", 
   "link": "https://www.facebook.com/poppynicole", 
   "username": "poppynicole", 
-  "gender": "female", 
+  "gender": "female",
+  "birthday": "01/02/03", 
   "locale": "en_US", 
   "updated_time": "2011-03-28T17:48:49+0000", 
   "type": "user"

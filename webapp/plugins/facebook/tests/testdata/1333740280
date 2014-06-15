@@ -5,7 +5,8 @@
   "last_name": "Sablok", 
   "link": "https://www.facebook.com/ankit.sablok", 
   "username": "ankit.sablok", 
-  "gender": "male", 
+  "gender": "male",
+  "birthday": "01/02/03", 
   "locale": "en_US", 
   "updated_time": "2011-08-21T09:36:51+0000", 
   "type": "user"

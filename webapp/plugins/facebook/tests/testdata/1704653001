@@ -6,6 +6,7 @@
   "last_name": "Battistin", 
   "link": "https://www.facebook.com/profile.php?id=1704653001", 
   "gender": "male", 
+  "birthday": "01/02/03",
   "locale": "en_GB", 
   "updated_time": "2011-07-17T20:36:51+0000", 
   "type": "user"

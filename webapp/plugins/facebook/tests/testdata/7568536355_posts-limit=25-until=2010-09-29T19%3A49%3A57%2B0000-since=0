@@ -38,7 +38,8 @@
                   "from": {
                      "name": "Christene Snively",
                      "id": "100001078428730",
-                     "gender": "female"
+                     "gender": "female",
+                     "birthday": "01/02/03"
                   },
                   "message": "Five things every girl does before she meets her boyfriend - LOL!\n\nhttp://www.facebook.com/profile.php?id=164464470231080",
                   "created_time": "2010-10-01T19:54:26+0000"
@@ -48,7 +49,8 @@
                   "from": {
                      "name": "Bill Goodman",
                      "id": "1184584231",
-                     "gender": "male"
+                     "gender": "male",
+                     "birthday": "01/02/03"
                   },
                   "message": "^^^^^^^^^^^^^^^^\nspammer",
                   "created_time": "2010-10-01T20:35:35+0000"
@@ -58,7 +60,8 @@
                   "from": {
                      "name": "Kenneth Lam",
                      "id": "533302090",
-                     "gender": "male"
+                     "gender": "male",
+                     "birthday": "01/02/03"
                   },
                   "message": "I use SUPER (freeware)\nhttp://www.erightsoft.com/SUPER.html",
                   "created_time": "2010-10-02T08:19:38+0000"

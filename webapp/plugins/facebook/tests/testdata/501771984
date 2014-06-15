@@ -7,6 +7,7 @@
   "name": "Chris Moyer",
   "id": "501771984",
   "gender": "male",
+  "birthday": "01/02/03",
   "location": {
     "name": "Clarence, New York",
     "id": "108077575886746"

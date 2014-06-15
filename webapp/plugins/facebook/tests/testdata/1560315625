@@ -6,6 +6,7 @@
   "link": "https://www.facebook.com/ananya.mallik", 
   "username": "ananya.mallik", 
   "gender": "male", 
+  "birthday": "01/02/03",
   "locale": "en_US", 
   "updated_time": "2011-08-06T13:46:50+0000", 
   "type": "user"
