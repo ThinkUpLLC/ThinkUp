@@ -1,9 +1,10 @@
 <?php
 /*
- Plugin Name: Gender Analysis
- Description: This plugin does amazing things
+ * Plugin Name: Gender Analysis
+ * Description: Gender of people who have made your post the most popular today.
  */
 /**
+ *
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/genderanalysis.php
  *
@@ -16,10 +17,10 @@
  * later version.
  *
  * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * You should have received a copy of the GNU General Public License along with ThinkUp. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  *
@@ -33,68 +34,57 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014 Anna Shkerina
  */
-
 class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin {
+	public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+		parent::generateInsight ( $instance, $last_week_of_posts, $number_days );
+		$this->logger->logInfo ( "Begin generating insight", __METHOD__ . ',' . __LINE__ );
+		
+		$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
+		$filename = basename ( __FILE__, ".php" );
+		
+ 		$post_dao = DAOFactory::getDAO ( 'PostDAO' );
+ 		$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
+ 		$posts = $post_dao->getMostFavCommentPostsByUserId ( $instance->network_user_id, $instance->network );
+ 		foreach ( $posts as $post ) {				
+ 				$gender_fav = $fpost_dao->getGenderOfFavoriters ( $post->post_id );
+				$gender_comm = $fpost_dao->getGenderOfCommenters ( $post->post_id );
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
-		$this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        
-        $filename = basename(__FILE__, ".php");
-        
-        $post_dao = DAOFactory::getDAO('PostDAO');
-        echo "post";
-        $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
-        echo "fav";
-        $posts = $post_dao->getMostFavCommentPostsByUserId($instance->network_user_id, $instance->network);
-        echo "posts=" . Utils::varDumpToString($posts) . "<br />";
-        echo "for_before";
-        foreach ($posts as $post) {
-        	$gender_fav = $fpost_dao->getGenderOfFavoriters($post->post_id);
-        	$gender_comm = $fpost_dao->getGenderOfCommenters($post->post_id);
-        	echo "post_id=".$post->post_id."<br />";
-        	echo "f_f=".$gender_fav['female_likes_count']."<br />";
-        	echo "m_f=".$gender_fav['male_likes_count']."<br />";
-        	echo "f_c=".$gender_comm['female_comm_count']."<br />";
-        	echo "m_c=".$gender_comm['male_comm_count']."<br />";
-        	$my_insight = new Insight();
-        	$my_insight->instance_id = $instance->id;
-        	$my_insight->slug = 'insight_name_goes_here'.$post->post_id;
-        	$my_insight->date = date('Y-m-d', strtotime($post->pub_date));
-        	$my_insight->headline = 'Gender Analysis';
-        	$my_insight->text = "<strong>".number_format($gender_fav['female_likes_count']).
-                        " women</strong> who liked ". $instance->network_username."'s post";
-        	$my_insight->emphasis = Insight::EMPHASIS_HIGH;
-        	$my_insight->filename = $filename;
-        	$this->insight_dao->insertInsight($my_insight);
-        	$my_insight = null;
-        } 
-        
+ 				$female = $gender_fav ['female_likes_count'] + $gender_comm ['female_comm_count'];
+ 				$male = $gender_fav ['male_likes_count'] + $gender_comm ['male_comm_count'];
 
-//         foreach ($last_week_of_posts as $post) {
-//             $my_insight = new Insight();
-//             $my_insight->instance_id = $instance->id;
-//             $my_insight->slug = 'insight_name_goes_here'.$post->id;
-//             $my_insight->date = date('Y-m-d', strtotime($post->pub_date));
-//             $my_insight->headline = 'Snappy headline';
-//             $my_insight->text = 'Body of the insight';
-//             $my_insight->emphasis = Insight::EMPHASIS_MED;
-//             $my_insight->filename = $filename;
-
-//             //OPTIONAL: Attach related data of various types using Insight setter functions
-//             //$my_insight->setPosts($my_insight_posts);
-//             //$my_insight->setLinks($my_insight_links);
-//             //$my_insight->setPeople($my_insight_people);
-//             //etc
-
-//             $this->insight_dao->insertInsight($my_insight);
-//             $my_insight = null;
-//         }
-        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
-        echo "Gender done\n";
-    }
+ 				$gender_data = array (
+ 				'gender' => 'value',
+				'female' => $female,
+				'male' => $male 
+		);
+ 				$simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+ 				echo "time= ".$simplified_post_date;
+			
+				if ($female > $male) {
+					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis' . $post->post_id, $instance->id, 
+							$simplified_post_date, "Women favorite!", "<strong>" . number_format ( $female ) . 
+							" times women</strong> interested in ". $instance->network_username . "'s post", $filename, 
+							Insight::EMPHASIS_HIGH, serialize ( array ($post, $gender_data) ) );
+				 } elseif ($male > $female) {
+					$this->insight_dao->insertInsightDeprecated ( 'Gender Analysis' . $post->post_id, $instance->id, 
+							$simplified_post_date, "Men favorite!", "<strong>" . number_format ( $male ) . 
+							" times men</strong> interested in  " . $instance->network_username . "'s post", $filename, 
+							Insight::EMPHASIS_HIGH, serialize ( array ($post, $gender_data) ) );
+				} else {
+					$this->insight_dao->insertInsightDeprecated ( 'Gender Analysis' . $post->post_id, $instance->id, 
+							$simplified_post_date, "Loved by all!", "<strong>" . number_format ( $female+$male). 
+							" times women and men </strong> interested in  " 
+							. $instance->network_username . "'s post", $filename, 
+							Insight::EMPHASIS_HIGH, serialize (array ($post, $gender_data) ) );
+				} 
+			}
+			
+			$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
+			echo "Gender done\n";
+	}
 }
+$insights_plugin_registrar = PluginRegistrarInsights::getInstance ();
+$insights_plugin_registrar->registerInsightPlugin ( 'GenderAnalysisInsight' );
 
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('GenderAnalysisInsight');
+		
 

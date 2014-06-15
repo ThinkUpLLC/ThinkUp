@@ -2846,7 +2846,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 	}
 	
 	public function getMostFavCommentPostsByUserId($author_id, $network) {
-		$q = "SELECT * FROM #prefix#posts ";
+		$q = "SELECT *, pub_date + interval #gmt_offset# hour AS adj_pub_date FROM #prefix#posts ";
 		$q .= "WHERE author_user_id = :author_user_id AND network = :network ";
 		$q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE() ";
 		$q .= "AND reply_count_cache + favlike_count_cache = ";
