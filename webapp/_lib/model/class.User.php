@@ -61,6 +61,11 @@ class User {
     var $gender;
     /**
      *
+     * @var str
+     */
+    var $birthday;
+    /**
+     *
      * @var location
      */
     var $location;
@@ -165,7 +170,7 @@ class User {
             	$this->gender = $val['gender'];
             }
             if (isset($val['birthday'])) {
-            	$this->gender = $val['birthday'];
+            	$this->birthday = $val['birthday'];
             }
             $this->location = $val['location'];
             $this->description = $val['description'];

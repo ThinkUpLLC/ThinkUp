@@ -2413,3 +2413,5 @@
 127.0.0.1 - - [15/Jun/2014:12:29:48 +0300] "GET /assets/js/linkify.js HTTP/1.1" 304 209 "http://thinkup.my/" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.132 Safari/537.36"
 127.0.0.1 - - [15/Jun/2014:12:29:48 +0300] "GET /install/checkversion.php HTTP/1.1" 200 1533 "http://thinkup.my/" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.132 Safari/537.36"
 127.0.0.1 - - [15/Jun/2014:12:29:48 +0300] "GET /plugins/facebook/assets/img/favicon.png HTTP/1.1" 304 185 "http://thinkup.my/" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.132 Safari/537.36"
+127.0.0.1 - - [15/Jun/2014:21:41:50 +0300] "GET /crawler/updatenow.php HTTP/1.1" 200 1906 "http://thinkup.my/" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.132 Safari/537.36"
+127.0.0.1 - - [15/Jun/2014:21:42:18 +0300] "GET /crawler/updatenow.php HTTP/1.1" 200 1906 "http://thinkup.my/" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.132 Safari/537.36"
