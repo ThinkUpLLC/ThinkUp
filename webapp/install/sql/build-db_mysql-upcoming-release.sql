@@ -550,6 +550,7 @@ CREATE TABLE tu_users (
   full_name varchar(255) NOT NULL COMMENT 'Full name on a given network.',
   avatar varchar(255) NOT NULL COMMENT 'URL to user''s avatar on a given network.',
   gender varchar(255) DEFAULT NULL COMMENT 'Gender of user',
+  birthday datetime DEFAULT NULL COMMENT 'Birthday of user',
   location varchar(255) DEFAULT NULL COMMENT 'Service user location.',
   description text COMMENT 'Service user description, like a Twitter user''s profile description.',
   url varchar(255) DEFAULT NULL COMMENT 'Service user''s URL.',

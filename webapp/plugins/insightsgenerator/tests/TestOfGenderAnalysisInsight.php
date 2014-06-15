@@ -47,9 +47,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
     }
     
     public function testGenderAnalysisForFaceBook() {
-    	//$this->debug(Utils::varDumpToString($result));
-    	echo "start\n";
-/*     	$posts = array();
+    	$posts = array();
     	$posts[] = new Post(array(
     			'post_id' => 5,
     			'author_user_id' => 1,
@@ -70,7 +68,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
     			'reply_count_cache' => 0,
     			'favlike_count_cache' => 0
     	));
-    	 $fpost_dao = DAOFactory::getDAO('PostDAO'); */
+    	 $fpost_dao = DAOFactory::getDAO('PostDAO');
     	 
     	$builders = self::buildData();
     	$instance = new Instance();
@@ -80,8 +78,6 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
     	$instance->network = 'facebook';
     	$insight_plugin = new GenderAnalysisInsight();
     	$insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
-    	echo "end\n";
-    	$this->assertFalse(true,"sss");
     }
     private function buildData() {
     	$builders = array();

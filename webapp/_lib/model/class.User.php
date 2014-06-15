@@ -164,6 +164,9 @@ class User {
             if (isset($val['gender'])) {
             	$this->gender = $val['gender'];
             }
+            if (isset($val['birthday'])) {
+            	$this->gender = $val['birthday'];
+            }
             $this->location = $val['location'];
             $this->description = $val['description'];
             $this->url = $val['url'];

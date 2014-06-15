@@ -59,8 +59,7 @@ class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin
 				'male' => $male 
 		);
  				$simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
- 				echo "time= ".$simplified_post_date;
-			
+ 							
 				if ($female > $male) {
 					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis', $instance->id, 
 							$simplified_post_date, "Women favorite!", "<strong>" . number_format ( $female ) . 
