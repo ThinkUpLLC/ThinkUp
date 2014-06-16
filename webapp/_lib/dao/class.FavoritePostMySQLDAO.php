@@ -442,6 +442,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		}
 		return $gender;
 	}
+	
 	public function getGenderOfCommenters($post_id) {
 		$q = "SELECT #prefix#users.gender, COUNT(*) as count_gender FROM #prefix#posts, #prefix#users ";
 		$q .= "WHERE #prefix#posts.in_reply_to_post_id = :post_id ";
@@ -466,5 +467,59 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 				$gender ['male_comm_count'] = $row ['count_gender'];
 		}
 		return $gender;
+	}
+	
+	public function getAgeOfFavoriters($post_id) {
+		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#favorites, #prefix#users ";
+		$q .= "WHERE #prefix#favorites.post_id = :post_id ";
+		$q .= "AND #prefix#favorites.fav_of_user_id = #prefix#users.user_id ";
+		$q .= "GROUP BY #prefix#users.birthday";
+		
+		$vars = array (
+				':post_id' => $post_id
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+		
+		$ps = $this->execute ( $q, $vars );
+		$rows = $this->getDataRowsAsArrays ( $ps );
+		echo "res=" . Utils::varDumpToString($rows) . "\n";
+		$age = array ();
+		foreach ( $rows as $row ) {
+			$age ['fav_birthday'] = $row ['birthday'];
+			/* if ($row ['gender'] == "female")
+				$gender ['female_likes_count'] = $row ['count_gender'];
+			if ($row ['gender'] == "male")
+				$gender ['male_likes_count'] = $row ['count_gender']; */
+		}
+		return $age;
+	}
+	
+	public function getAgeOfCommenters($post_id) {
+		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#posts, #prefix#users ";
+		$q .= "WHERE #prefix#posts.in_reply_to_post_id = :post_id ";
+		$q .= "AND #prefix#posts.author_user_id = #prefix#users.user_id ";
+		$q .= "GROUP BY #prefix#users.birthday";
+		
+		$vars = array (
+				':post_id' => $post_id
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+		
+		$ps = $this->execute ( $q, $vars );
+		$rows = $this->getDataRowsAsArrays ( $ps );
+		// echo "res=" . Utils::varDumpToString($rows) . "\n";
+		$age = array ();
+		foreach ( $rows as $row ) {
+			$age ['comm_birthday'] = $row ['birthday'];
+			/* if ($row ['gender'] == "female")
+				$gender ['female_comm_count'] = $row ['count_gender'];
+			if ($row ['gender'] == "male")
+				$gender ['male_comm_count'] = $row ['count_gender']; */
+		}
+		return $age;
 	}
 }
