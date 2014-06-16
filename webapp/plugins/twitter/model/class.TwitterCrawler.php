@@ -1113,8 +1113,8 @@ class TwitterCrawler {
                             // fav was already stored, so take no action. This could happen both because some
                             // of the favs on the given page were processed last time, or because a separate process,
                             // such as a UserStream process, is also watching for and storing favs.
-                            $status_message = "Have already stored fav ". $tweet['post_id'];
-                            $this->logger->logDebug($status_message, __METHOD__.','.__LINE__);
+                            //$status_message = "Have already stored fav ". $tweet['post_id'];
+                            //$this->logger->logDebug($status_message, __METHOD__.','.__LINE__);
                         }
 
                         // keep track of the highest fav id we've encountered

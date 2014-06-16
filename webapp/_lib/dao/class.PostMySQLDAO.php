@@ -702,7 +702,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 $vals['in_reply_to_post_id'] = (string) $vals['in_reply_to_post_id'];
                 $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
                 if (isset($replied_to_post)) {
-                    $this->logger->logInfo("Found reply.", __METHOD__.','.__LINE__);
                     //check if reply author is followed by the original post author
                     $follow_dao = DAOFactory::getDAO('FollowDAO');
                     if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
