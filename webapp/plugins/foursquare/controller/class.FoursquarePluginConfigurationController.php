@@ -131,7 +131,7 @@ class FoursquarePluginConfigurationController extends PluginConfigurationControl
 
         // Create the OAuth link based on foursquares instructions here: https://developer.foursquare.com/overview/auth
         $oauth_link = "https://foursquare.com/oauth2/authenticate?client_id=".$client_id."&response_type=code";
-        $oauth_link .= "&redirect_uri=".$redirect_uri;
+        $oauth_link .= "&v=20120829&redirect_uri=".$redirect_uri;
         // Add the link for the user to click to the page
         $this->addToView('oauth_link', $oauth_link);
 
