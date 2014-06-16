@@ -70,25 +70,26 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
                 $time_per_response = floor((60 * 60 * 24 * 7) / $response_factor['value']);
                 $time_str = strncmp(InsightTerms::getSyntacticTimeDifference($time_per_response), "1 ", 2) == 0 ?
-                substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
-                : InsightTerms::getSyntacticTimeDifference($time_per_response);
+                    substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
+                    : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
                 $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                ."</strong> every <strong>".$time_str."</strong> this week.";
+                    ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
+                    ."</strong> every <strong>".$time_str."</strong> this week.";
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
-                'response_count_'.$response_factor['key'], $instance->id, $last_fri);
+                    'response_count_'.$response_factor['key'], $instance->id, $last_fri);
                 if (isset($last_fri_insight_baseline) && $last_fri_insight_baseline->value > 0) {
                     $last_fri_time_per_response = floor((60 * 60 * 24 * 7) / $last_fri_insight_baseline->value);
-                    $time_str1 = strncmp(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response),
-                    "1 ", 2) == 0 ?
+                        $time_str1 = strncmp(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response),
+                        "1 ", 2) == 0 ?
                     substr(InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response), 2)
-                    : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
+                        : InsightTerms::getSyntacticTimeDifference($last_fri_time_per_response);
 
                     $tachy_markup = "<i class=\"fa fa-tachometer fa-3x text-muted\" style=\"float: right; "
-                    ."color: #ddd;\"></i> That's ";
+                        ."color: #ddd;\"></i> That's ";
+
 
                     // Only show a comparison string if the rates are substantially different
                     if ($last_fri_time_per_response < $time_per_response && $time_str1 != $time_str) {
@@ -101,8 +102,19 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 if (!isset($insight_text)) {
-                    $insight_text = 'If you ' . $this->terms->getVerb('posted') .
-                        ' once every waking hour, that would be roughly 120 times a week.';
+                    $options = array();
+                    $options[] = 'If you %posted once every waking hour, that would be roughly 120 times a week.';
+                    if (strstr($time_str, 'hour') !== false) {
+                        $options[] = "For comparison, the average smartphone owner unlocks their phone"
+                           . " 7 times each waking hour.";
+                    }
+                    if ($instance->network == 'twitter' && $response_factor['key'] != 'like') {
+                        $options[] = "That's a healthy share of the 21 million tweets each hour.";
+                    }
+                    if (strstr($time_str, 'day') !== false) {
+                        $options[] = "The average person sneezes 4 times or less each day, just for reference.";
+                    }
+                    $insight_text = $this->getVariableCopy($options);
                 }
 
                 //Instantiate the Insight object

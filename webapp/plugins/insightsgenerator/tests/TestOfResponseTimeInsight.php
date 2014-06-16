@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfResponseTimeInsight.php
  *
- * Copyright (c) 2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the ResponseTimeInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2014 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
@@ -148,7 +148,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s status updates averaged <strong>1 new like/', $result->headline);
         $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->headline);
-        $this->assertPattern('/slower than the previous week\'s average/', $result->text);
+        $this->assertPattern('/That\'s slower than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 like every '.$last_week_time_per_response.'./', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -199,7 +199,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/testeriffic\'s checkins averaged <strong>1 new comment/', $result->headline);
         $this->assertPattern('/every <strong>'.$time_per_response.'<\/strong>/', $result->headline);
-        $this->assertPattern('/faster than the previous week\'s average/', $result->text);
+        $this->assertPattern('/That\'s faster than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 comment every '.$last_week_time_per_response.'./', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -236,7 +236,7 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new favorite/', $result->headline);
         $this->assertPattern('/every <strong>hour<\/strong>/', $result->headline);
-        $this->assertPattern('/faster than the previous week\'s average/', $result->text);
+        $this->assertPattern('/That\'s faster than the previous week\'s average/', $result->text);
         $this->assertPattern('/of 1 favorite every day./', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -311,5 +311,108 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/<strong>day<\/strong>/', $result->headline);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testAlternateNoComparisonText() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array( 'reply_count_cache' => 5, 'retweet_count_cache' => 15, 'favlike_count_cache' => 3));
+        $posts[] = new Post(array( 'reply_count_cache' => 0, 'retweet_count_cache' => 5, 'favlike_count_cache' => 15));
+        $posts[] = new Post(array( 'reply_count_cache' => 2, 'retweet_count_cache' => 5, 'favlike_count_cache' => 1));
+
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin = new ResponseTimeInsight();
+
+        TimeHelper::setTime(1);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("For comparison, the average smartphone owner unlocks their phone 7 times each waking hour.",
+            $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("That's a healthy share of the 21 million tweets each hour.", $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        TimeHelper::setTime(3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("If you tweeted once every waking hour, that would be roughly 120 times a week.",
+            $result->text);
+
+        $posts = array();
+        $posts[] = new Post(array( 'reply_count_cache' => 1, 'retweet_count_cache' => 1, 'favlike_count_cache' => 1));
+        $posts[] = new Post(array( 'reply_count_cache' => 0, 'retweet_count_cache' => 2, 'favlike_count_cache' => 1));
+        $posts[] = new Post(array( 'reply_count_cache' => 0, 'retweet_count_cache' => 0, 'favlike_count_cache' => 1));
+
+        $instance->network = 'facebook';
+        TimeHelper::setTime(1);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("The average person sneezes 4 times or less each day, just for reference.", $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("If you posted once every waking hour, that would be roughly 120 times a week.",
+            $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        // do we loop around and skip twitter specific text?
+        TimeHelper::setTime(3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("The average person sneezes 4 times or less each day, just for reference.", $result->text);
+
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testNoHealthyShareLikes() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $posts = array();
+        $posts[] = new Post(array( 'reply_count_cache' => 5, 'retweet_count_cache' => 15, 'favlike_count_cache' => 3));
+        $posts[] = new Post(array( 'reply_count_cache' => 0, 'retweet_count_cache' => 5, 'favlike_count_cache' => 15));
+        $posts[] = new Post(array( 'reply_count_cache' => 2, 'retweet_count_cache' => 5, 'favlike_count_cache' => 1));
+
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin = new ResponseTimeInsight();
+
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertEqual("That's a healthy share of the 21 million tweets each hour.", $result->text);
+
+        $posts = array();
+        $posts[] = new Post(array( 'reply_count_cache' => 5, 'retweet_count_cache' => 15, 'favlike_count_cache' => 13));
+        $posts[] = new Post(array( 'reply_count_cache' => 0, 'retweet_count_cache' => 5, 'favlike_count_cache' => 15));
+        $posts[] = new Post(array( 'reply_count_cache' => 2, 'retweet_count_cache' => 5, 'favlike_count_cache' => 15));
+
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('response_time', 10, date('Y-m-d'));
+        $this->assertNotEqual("That's a healthy share of the 21 million tweets each hour.", $result->text);
     }
 }
