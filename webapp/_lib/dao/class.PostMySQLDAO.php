@@ -2684,4 +2684,43 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
+
+    public function getOldDistancePosts($author_id, $network, $from, $until) {
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "WHERE p.author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
+        $q .= "AND (p.post_text RLIKE :format1 OR p.post_text RLIKE :format2 OR p.post_text RLIKE :format3 ";  
+        $q .= "OR p.post_text RLIKE :format4 OR p.post_text RLIKE :format5 OR p.post_text RLIKE :format6) ";
+        $q .= "AND (p.post_text RLIKE :format7 OR p.post_text RLIKE :format8 OR p.post_text RLIKE :format9 ";
+        $q .=  "OR p.post_text RLIKE :format10)) AS p"; 
+
+
+        $vars = array(
+            ':author_id'=>(string)$author_id,
+            ':network'=>$network,
+            ':format1'=>"#nikeplus",
+            ':format2'=>"#runkeeper",
+            ':format3'=>"#endomondo",
+            ':format4'=>"#zombiesrun",
+            ':format5'=>"#mapmy",
+            ':format6'=>"#runtastic",
+            ':format7'=>" mi ",
+            ':format8'=>" km ",
+            ':format9'=>" mile ",
+            ':format10'=>" miles ",
+            ':from' => $from,
+            ':until' => $until
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        foreach ($post_rows as $row) {
+            $post = new Post($row);
+            $posts[] = $post;
+        }
+
+        return $posts;
+    }
 }

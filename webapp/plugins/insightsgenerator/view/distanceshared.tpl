@@ -1,0 +1,1 @@
+{include file=$tpl_path|cat:'_distancegraph.tpl'}

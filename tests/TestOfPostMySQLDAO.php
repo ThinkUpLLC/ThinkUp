@@ -4548,4 +4548,31 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res->cols[1]->type, 'number');
         $this->assertEqual($res->cols[1]->label, 'Number of Checkins to this place type');
     }
+
+    public function testGetOldDistancePosts() {
+        $dao = new PostMySQLDAO();
+
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>254,
+            'author_username'=> 'janesmith', 'author_user_id' => 42, 'network' => 'twitter',
+            'post_text' => ' I just ran 1.00 mi with Nike+. http://go.nike.com/  #nikeplus',
+             'pub_date' => date('Y-m-d', strtotime('-1 day'))));
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>255,
+            'author_username'=> 'janesmith', 'author_user_id' => 42, 'network' => 'twitter',
+            'post_text' => 'I just ran 2.00 km with Nike+. http://go.nike.com/  #nikeplus',
+             'pub_date' => date('Y-m-d', strtotime('-8 day'))));
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>256,
+            'author_username'=> 'janesmith', 'author_user_id' => 42, 'network' => 'twitter',
+            'post_text' => 'Was out running 3.00 km with #Endomondo.',
+            'pub_date' => date('Y-m-d', strtotime('-9 days'))));
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>257,
+            'author_username'=> 'janesmith', 'author_user_id' => 42, 'network' => 'twitter',
+            'post_text' => 'I love exercise.', 'pub_date' => date('Y-m-d', strtotime('-8 days'))));
+
+        $result = $dao->getOldDistancePosts(42, 'twitter',date('Y-m-d', strtotime('-2 week')),
+            date('Y-m-d', strtotime('-1 week')));
+
+        $this->assertEqual(count($result), 2);
+        $this->assertEqual($result[0]->post_text, 'I just ran 2.00 km with Nike+. http://go.nike.com/  #nikeplus');
+        $this->assertEqual($result[1]->post_text, 'Was out running 3.00 km with #Endomondo.');
+    }
 }
