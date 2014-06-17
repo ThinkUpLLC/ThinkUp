@@ -41,7 +41,8 @@ class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin
 		
 		$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
 		$filename = basename ( __FILE__, ".php" );
-		
+
+		if (self::shouldGenerateInsight('gender_analysis', $instance)) {
  		$post_dao = DAOFactory::getDAO ( 'PostDAO' );
  		$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
  		$posts = $post_dao->getMostFavCommentPostsByUserId ( $instance->network_user_id, $instance->network );
@@ -61,26 +62,26 @@ class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin
  				echo "time= ".$simplified_post_date;
 			
 				if ($female > $male) {
-					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis' . $post->post_id, $instance->id, 
+					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis', $instance->id, 
 							$simplified_post_date, "Women favorite!", "<strong>" . number_format ( $female ) . 
 							" times women</strong> interested in ". $instance->network_username . "'s post", $filename, 
 							Insight::EMPHASIS_HIGH, serialize ( array ($post, $gender_data) ) );
 				 } elseif ($male > $female) {
-					$this->insight_dao->insertInsightDeprecated ( 'Gender Analysis' . $post->post_id, $instance->id, 
+					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis', $instance->id, 
 							$simplified_post_date, "Men favorite!", "<strong>" . number_format ( $male ) . 
 							" times men</strong> interested in  " . $instance->network_username . "'s post", $filename, 
 							Insight::EMPHASIS_HIGH, serialize ( array ($post, $gender_data) ) );
 				} else {
-					$this->insight_dao->insertInsightDeprecated ( 'Gender Analysis' . $post->post_id, $instance->id, 
+					$this->insight_dao->insertInsightDeprecated ( 'gender_analysis', $instance->id, 
 							$simplified_post_date, "Loved by all!", "<strong>" . number_format ( $female+$male). 
 							" times women and men </strong> interested in  " 
 							. $instance->network_username . "'s post", $filename, 
 							Insight::EMPHASIS_HIGH, serialize (array ($post, $gender_data) ) );
 				} 
 			}
-			
 			$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
-			echo "Gender done\n";
+		}
+
 	}
 }
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance ();

@@ -98,7 +98,7 @@ class InsightPluginParent {
 
             $existing_insight = $this->insight_dao->getInsight($slug, $instance->id,
             date('Y-m-d', strtotime($insight_date)));
-
+			
             if (isset($existing_insight)) {
                 $run = $run && false;
             } else {
