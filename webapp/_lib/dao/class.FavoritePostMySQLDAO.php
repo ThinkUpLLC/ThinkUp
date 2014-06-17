@@ -84,6 +84,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
     public function getAllFavoritePostsByUsername($username, $network, $count) {
         return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network, $count, "pub_date");
     }
+    public function getAllFavoritePostsByUsernameWithinRange($username, $network, $count, $last_x_days) {
+        return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network, $count, "pub_date", $last_x_days);
+    }
 
     /**
      * Get all favorited posts by a given user id, with configurable order by field and direction.
