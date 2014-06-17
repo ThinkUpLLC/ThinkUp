@@ -78,7 +78,7 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
 
         // one stale
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1234567890',
-        'group_id'=>'19994710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-3d'));
+        'group_id'=>'19994710', 'is_active' => 1, 'first_seen' => '-6d', 'network'=>'twitter', 'last_seen' => '-3d'));
 
         // Private Poster is active in one group
         $builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'1623457890',
@@ -168,5 +168,24 @@ class TestOfGroupMemberMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($new_groups[0]->group_id, '19554710');
         $this->assertEqual($new_groups[0]->group_name, '@userx/anotherlist');
         $this->assertEqual($new_groups[0]->is_active, 1);
+    }
+
+    public function testGetNewMembershipsSince() {
+        $new_groups = $this->DAO->getNewMembershipsSince('twitter', '1234567890', date('Y-m-d', strtotime('-3 days')));
+        $this->assertEqual(count($new_groups), 2);
+        $this->assertEqual($new_groups[0]->id, 3);
+        $this->assertEqual($new_groups[0]->group_id, '19554710');
+        $this->assertEqual($new_groups[0]->group_name, '@userx/anotherlist');
+        $this->assertEqual($new_groups[0]->is_active, 1);
+        $this->assertEqual($new_groups[1]->id, 1);
+        $this->assertEqual($new_groups[1]->group_id, '18864710');
+        $this->assertEqual($new_groups[1]->group_name, '@someguy/a-list');
+        $this->assertEqual($new_groups[1]->is_active, 1);
+
+        $new_groups = $this->DAO->getNewMembershipsSince('twitter', '999', date('Y-m-d', strtotime('-3 days')));
+        $this->assertEqual(count($new_groups), 0);
+
+        $new_groups = $this->DAO->getNewMembershipsSince('facebook', '1234567890', date('Y-m-d', strtotime('-3 days')));
+        $this->assertEqual(count($new_groups), 0);
     }
 }
