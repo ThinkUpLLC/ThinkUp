@@ -122,13 +122,16 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
         $url_free_text = preg_replace('!https?://[\S]+!', ' ', $text);
         $depunctuated_text = " ". preg_replace('/[^a-z0-9]+/i', ' ', $url_free_text) ." ";
 
-        foreach (array("/\bI\b/i","/\bme\b/i","/\bmyself\b/i","/\bmy\b/i","/\bmine\b/i") as $pattern) {
-            if (preg_match($pattern, $depunctuated_text, $matches)) {
-                return true;
-            }
+        preg_match_all('/\b(?:I|myself|my|mine)\b/i', $depunctuated_text, $matches);
+        $notmes = count($matches[0]);
+        preg_match_all('/\b\.me\b/i', $text, $me_matches);
+        $dotmes = count($me_matches[0]);
+        preg_match_all('/\bme\b/i', $text, $me_matches);
+        $mes = count($me_matches[0]);
+
+        if ($notmes || $mes > $dotmes) {
+            return true;
         }
-
-
         return false;
     }
 }

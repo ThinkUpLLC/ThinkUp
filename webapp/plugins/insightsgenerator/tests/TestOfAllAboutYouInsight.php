@@ -73,6 +73,21 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $has = AllAboutYouInsight::hasFirstPersonReferences("When @anildash told me he was writing this I was ".
             "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ");
         $this->assertTrue($has);
+
+        $has = AllAboutYouInsight::hasFirstPersonReferences("I like http://about.me/");
+        $this->assertTrue($has);
+
+        $has = AllAboutYouInsight::hasFirstPersonReferences("Me like http://about.me/");
+        $this->assertTrue($has);
+
+        $has = AllAboutYouInsight::hasFirstPersonReferences("People like http://about.me/");
+        $this->assertFalse($has);
+
+        $has = AllAboutYouInsight::hasFirstPersonReferences("The new site is cdmoyer.me");
+        $this->assertFalse($has);
+
+        $has = AllAboutYouInsight::hasFirstPersonReferences("My new site is cdmoyer.me");
+        $this->assertTrue($has);
     }
 
 
