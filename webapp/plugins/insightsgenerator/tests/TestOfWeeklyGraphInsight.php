@@ -500,6 +500,29 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
     }
 
+    public function testSingularLike() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $insight_plugin = new WeeklyGraphInsight();
+        $posts = array(new Post(array(
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => 1,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-'.$days.' day'))
+        )));
+        TimeHelper::setTime(1); //set headline to expect
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        $this->assertEqual("What's up with @testeriffic's tweets.", $result->headline);
+        $this->assertEqual("Whatever @testeriffic said in the past week must have been memorable &mdash; there was 1 favorite.",
+            $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+    }
+
     public function testInsightTextsFacebook() {
         $instance = new Instance();
         $instance->id = 10;
