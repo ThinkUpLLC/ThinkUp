@@ -54,7 +54,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $this->assertEqual($count, 2);
 
         $count = AllAboutYouInsight::countFirstPersonReferences(
-        "New YearÕs Eve! Feeling very gay today, but not very homosexual.");
+        "New Yearï¿½s Eve! Feeling very gay today, but not very homosexual.");
         $this->assertEqual($count, 0);
 
         $count = AllAboutYouInsight::countFirstPersonReferences("Tis the season for adorable cards w/ photos of my ".
@@ -85,6 +85,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('all_about_you', 10, $today);
         $this->debug(Utils::varDumpToString($result));
+        
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s tweets contained the words/', $result->text);
@@ -237,7 +238,7 @@ class TestOfAllAboutYouInsight extends ThinkUpUnitTestCase {
         $post_text_arr[] = "I don't know, really? I thought so.";
         $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
         "I want it everywhere.";
-        $post_text_arr[] = "New YearÕs Eve! Feeling very gay today, but not very homosexual.";
+        $post_text_arr[] = "New Yearï¿½s Eve! Feeling very gay today, but not very homosexual.";
         $post_text_arr[] = "Took 1 firearms safety class to realize my ".
         "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde";
         $post_text_arr[] = "When @anildash told me he was writing this I was ".

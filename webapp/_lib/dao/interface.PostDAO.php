@@ -790,6 +790,11 @@ interface PostDAO {
      */
     public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
     
+    /**
+     * Get today's post with the biggest sum of likes and comments.
+     * @param int $author_id
+     * @param str $network
+     * @return Post object
+     */
     public function getMostFavCommentPostsByUserId($author_id, $network);
-    	 
 }

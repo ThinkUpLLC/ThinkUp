@@ -81,7 +81,6 @@ class FacebookCrawler {
         	// Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,gender,birthday,about,location,website':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields );
-            
             if (isset($user_details)) {
                 $user_details->network = $network;
             }
@@ -318,7 +317,6 @@ class FacebookCrawler {
 
                     if (isset($p->source) || isset($p->link)) { // there's a link to store
                         $link_url = (isset($p->source))?$p->source:$p->link;
-                        
                         $link = new Link(array(
                           "url"=>$link_url,
                           "expanded_url"=>'',
@@ -521,7 +519,7 @@ class FacebookCrawler {
                             $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
                             $this->access_token.$offset_str;
                             do {
-                                $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($ap_call);
+                                $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
                                 if (isset($likes_stream) && is_array($likes_stream->data)) {
                                     foreach ($likes_stream->data as $l) {
                                         if (isset($l->name) && isset($l->id)) {
