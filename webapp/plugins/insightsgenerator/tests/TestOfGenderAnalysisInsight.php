@@ -46,46 +46,17 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
     
-<<<<<<< HEAD
-    public function testGenderAnalysisForFaceBook() {
-    	$posts = array();
-    	$posts[] = new Post(array(
-    			'post_id' => 5,
-    			'author_user_id' => 1,
-    			'favlike_count_cache' => 3,
-    			'post_text' => "post1",
-    			'pub_date' => "2014-06-06 10:38:20",
-    			'in_reply_to_post_id' => "NULL",
-    			'reply_count_cache' => 1,
-    			'favlike_count_cache' => 1
-    	));
-    	$posts[] = new Post(array(
-    			'post_id' => 6,
-    			'author_user_id' => 1,
-    			'favlike_count_cache' => 0,
-    			'post_text' => "comm",
-    			'pub_date' => "2014-06-06 10:38:20",
-    			'in_reply_to_post_id' => "5",
-    			'reply_count_cache' => 0,
-    			'favlike_count_cache' => 0
-    	));
-    	 $fpost_dao = DAOFactory::getDAO('PostDAO');
-    	 
-    	$builders = self::buildData();
-=======
+
     public function testGenderAnalysisForFaceBookWomenFavotire() {
     	// Get data ready that insight requires
     	$builders = self::buildDataForFemale();
->>>>>>> 1943-gender-analisis
+
     	$instance = new Instance();
     	$instance->id = 100;
     	$instance->network_user_id = 9654321;
     	$instance->network_username = 'user';
     	$instance->network = 'facebook';
     	$insight_plugin = new GenderAnalysisInsight();
-<<<<<<< HEAD
-    	$insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
-=======
     	$insight_plugin->generateInsight($instance, $last_week_of_posts, 1);
 
     	// Assert that insight got inserted
@@ -102,7 +73,6 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
         $this->assertEqual(count($gender_data), 2);
         $this->assertEqual($gender_data[1]['female'], 3);
         $this->assertEqual($gender_data[1]['male'], 2);
->>>>>>> 1943-gender-analisis
     }
     
     public function testGenderAnalysisForFaceBookMenFavotire() {
