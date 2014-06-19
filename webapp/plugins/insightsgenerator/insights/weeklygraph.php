@@ -100,8 +100,9 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 } else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
                     $insight_text = "Whatever ".$this->username." said in the past week must have been memorable";
-                    $insight_text .= ' &mdash; there were '.number_format($total_likes).' '.
-                        $this->terms->getNoun('like', InsightTerms::PLURAL);
+                    $were = $total_likes == 1 ? 'was' : 'were';
+                    $insight_text .= ' &mdash; there '.$were.' '.number_format($total_likes).' '.
+                        $this->terms->getNoun('like', $total_likes==1?InsightTerms::SINGULAR : InsightTerms::PLURAL);
                     $lower = array();
                     if ($total_likes > $total_replies && $total_replies > 0) {
                         $plural = $total_replies==1?InsightTerms::SINGULAR : InsightTerms::PLURAL;
