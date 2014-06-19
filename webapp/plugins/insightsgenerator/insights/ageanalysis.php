@@ -1,6 +1,7 @@
 <?php
 /*
- * Plugin Name: Age Analysis Description: Age of people who have made your post the most popular today.
+ * Plugin Name: Age Analysis
+ * Description: Age of people who have made your post the most popular today.
  */
 /**
  *
@@ -42,7 +43,7 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 		$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
 		$filename = basename ( __FILE__, ".php" );
 		
-		if (self::shouldGenerateInsight ( 'gender_analysis', $instance, $regenerate_existing_insight = true )) {
+		if (self::shouldGenerateInsight ( 'age_analysis', $instance, $regenerate_existing_insight = true )) {
 			$post_dao = DAOFactory::getDAO ( 'PostDAO' );
 			$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
 			$posts = $post_dao->getMostFavCommentPostsByUserId ( $instance->network_user_id, $instance->network );
