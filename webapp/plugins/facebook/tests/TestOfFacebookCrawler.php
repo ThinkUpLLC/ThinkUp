@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/tests/TestOfFacebookCrawler.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,12 +25,14 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2014 Gina Trapani
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstance.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstanceMySQLDAO.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.facebook.php';
 

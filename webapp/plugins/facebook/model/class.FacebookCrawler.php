@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/model/class.FacebookCrawler.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -29,7 +29,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2014 Gina Trapani
  */
 class FacebookCrawler {
     /**
@@ -79,7 +79,7 @@ class FacebookCrawler {
         $user_object = null;
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website,is_verified,subscribers':'';
+            $fields= $network!='facebook page'?'id,name,about,location,website,is_verified,subscribers,updated_time':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
             if (isset($user_details)) {
                 $user_details->network = $network;
@@ -89,6 +89,10 @@ class FacebookCrawler {
             if (isset($user)) {
                 $user_object = new User($user, $found_in);
                 $user_dao->updateUser($user_object);
+            }
+
+            if ($this->instance->network_user_id == $user_id && $user['updated_time']) {
+                $this->instance->profile_updated = $user['updated_time'];
             }
 
             // Record the current number of page likes in follower count table
