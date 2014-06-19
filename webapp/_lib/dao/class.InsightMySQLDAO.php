@@ -363,4 +363,21 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         }
         return $insights;
     }
+
+    public function getMostRecentInsight($slug, $instance_id) {
+        $q = "SELECT * FROM #prefix#insights WHERE instance_id=:instance_id ";
+        $q .= " AND slug=:slug ";
+        $q .= "ORDER BY time_updated DESC LIMIT 1";
+        $vars = array(
+            ':instance_id'=>$instance_id,
+            ":slug"=>$slug
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $insight = $this->getDataRowAsObject($ps, "Insight");
+        if ($insight->related_data !== null) {
+            $insight->related_data = Serializer::unserializeString($insight->related_data);
+        }
+        return $insight;
+    }
 }

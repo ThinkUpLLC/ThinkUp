@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInsightMySQLDAO.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -682,5 +682,24 @@ class TestOfInsightMySQLDAO extends ThinkUpInsightUnitTestCase {
         $this->assertFalse($result);
         $result = $dao->doesInsightExist("yo_yo_yooo", 1);
         $this->assertFalse($result);
+    }
+
+    public function testGetMostRecentInsight() {
+        $dao = new InsightMySQLDAO();
+        $insight = $dao->getMostRecentInsight('not_a_real_slug', 10);
+        $this->assertNull($insight);
+
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-15', 'slug'=>'slug',
+        'instance_id'=>'1', 'headline'=>'Hooray!', 'text'=>'Newest', 'related_data'=>serialize($owners),
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_updated'=>'-1 day'));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-15', 'slug'=>'slug',
+        'instance_id'=>'1', 'headline'=>'Boo', 'text'=>'Older', 'related_data'=>serialize($owners),
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_updated'=>'-5 day'));
+
+        $insight = $dao->getMostRecentInsight('slug', 1);
+        $this->assertNotNull($insight);
+        $this->assertEqual($insight->text, 'Newest');
+        $this->assertEqual($insight->headline, 'Hooray!');
+
     }
 }

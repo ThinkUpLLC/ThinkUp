@@ -37,12 +37,16 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         $filename = basename(__FILE__, ".php");
 
-        if (self::shouldGenerateInsight('new_group_memberships', $instance, $insight_date='today',
-            $regenerate_existing_insight=true)) {
+        $last_insight = $this->insight_dao->getMostRecentInsight('new_group_memberships', $instance->id);
+        $last_insight_ts = 0;
+        if ($last_insight) {
+            $last_insight_ts = strtotime($last_insight->time_generated);
+        }
+        if ($last_insight_ts < (time() - (60*60*24*7))) {
             //get new group memberships per day
             $group_membership_dao = DAOFactory::getDAO('GroupMemberDAO');
-            $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
-                $this->insight_date);
+            $new_groups = $group_membership_dao->getNewMembershipsSince($instance->network, $instance->network_user_id,
+                date('Y-m-d h:i', $last_insight_ts));
 
             if (sizeof($new_groups) > 0 ) {
                 // Clean up non-unique names, which just looks weird/bad
@@ -60,49 +64,44 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                 $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
                     $instance->network, 'DAY', 15, null, 'group_memberships');
                 if (sizeof($new_groups) > 1) {
-                    $group_name_list = '';
-                    $group_number = 0;
-                    $headline = "Do ";
+                    $group_names = array();
+                    $group_urls = array();
                     foreach ($new_groups as $group) {
-                        if (sizeof($new_groups) > 4) { //If more than 4 lists, just display first 4
-                            if ($group_number >= 4) {
-                                if ($group_number == 4) {
-                                    $group_name_list .= ", and ". (sizeof($new_groups) - 4)." more";
-                                }
-                            } else {
-                                if ($group_name_list != '') {
-                                    $headline .=", ";
-                                    $group_name_list .= ", ";
-                                }
+                        $group_names[] = '&ldquo;'.str_replace('-', ' ', $group->keyword).'&rdquo;';
+                        $group_urls[] = '<a href="'.$group->url.'">'.$group->keyword.'</a>';
+                    }
+
+                    $headline_groups = array_slice($group_names, 0, 4);
+                    $number = count($headline_groups);
+                    foreach ($headline_groups as $i=>&$name) {
+                        if ($number == 2) {
+                            if ($i==1) {
+                                $name = 'and '.$name;
                             }
-                            if ($group_number == 3) {
-                                $headline .= "and ";
-                            }
-                            if ($group_number < 4 ) {
-                                $headline .= "&ldquo;" . str_replace('-', ' ', $group->keyword) . "&rdquo;";
-                                $group_name_list .= '<a href="'.$group->url.'">'.$group->keyword.'</a>';
-                            }
-                            $group_number++;
-                        } else  { //Display all lists
-                            if ($group == end($new_groups)) {
-                                $group_name_list .= " and";
-                                $headline .= " and ";
-                            } else {
-                                if ($group_name_list != '') {
-                                    $headline .= ", ";
-                                    $group_name_list .= ",";
-                                }
-                            }
-                            $group->setMetadata();
-                            if ($group_number == sizeof($new_groups)){
-                                    $headline .= "and ";
-                            }
-                            $headline .= "&ldquo;" . str_replace('-', ' ', $group->keyword). "&rdquo;";
-                            $group_name_list .= ' <a href="'.$group->url.'">'.$group->keyword.'</a>';
+                        } else {
+                            $name = ($i == ($number - 1)) ? 'and '.$name : $name.',';
                         }
                     }
-                    $headline .= ' sound like good descriptions of ' . $this->username . '?';
+                    if (TimeHelper::getTime() % 2 == 1) {
+                        $headline = $this->username .' got added to lists called ' .join(' ', $headline_groups).'.';
+                    } else {
+                        $headline = "Do " . join(' ', $headline_groups);
+                        $headline .= ' sound like good descriptions of ' . $this->username . '?';
+                    }
+
+                    if (count($group_urls) > 4) {
+                        $group_name_list = join(', ', array_slice($group_urls, 0, 4)).', and '
+                            . (count($group_urls)-4).' more';
+                    }
+                    else if (count($group_urls) > 2) {
+                        $group_urls[count($group_urls)-1] = 'and '.$group_urls[count($group_urls)-1];
+                        $group_name_list = join(', ', $group_urls);
+                    }
+                    else {
+                        $group_name_list = join(' and ', $group_urls);
+                    }
                     $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
+
                     if (is_array($list_membership_count_history_by_day['history'])
                         && end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
                         $total_lists = end($list_membership_count_history_by_day['history']) + sizeof($new_groups);
@@ -113,9 +112,16 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     }
 
                 } else {
-                    $new_groups[0]->setMetadata();
-                    $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
-                        "&rdquo; seem like a good description of " . $this->username . "?";
+                    if (TimeHelper::getTime() % 2 == 1 && $instance->network == 'twitter') {
+                        $list_name_parts = explode('/', $new_groups[0]->group_name);
+                        $maker = $list_name_parts[0];
+                        $headline = $maker .' added '.$this->username.' to a list that\'s called &ldquo;'
+                            . $new_groups[0]->keyword . '&rdquo;.';
+                    }
+                    else {
+                        $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
+                            "&rdquo; seem like a good description of " . $this->username . "?";
+                    }
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                         $new_groups[0]->keyword."</a>";
                     if (end($list_membership_count_history_by_day['history']) > sizeof($new_groups)) {
