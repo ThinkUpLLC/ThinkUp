@@ -473,7 +473,6 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#favorites, #prefix#users ";
 		$q .= "WHERE #prefix#favorites.post_id = :post_id ";
 		$q .= "AND #prefix#favorites.fav_of_user_id = #prefix#users.user_id ";
-		$q .= "GROUP BY #prefix#users.birthday";
 		
 		$vars = array (
 				':post_id' => $post_id
@@ -484,10 +483,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		
 		$ps = $this->execute ( $q, $vars );
 		$rows = $this->getDataRowsAsArrays ( $ps );
-		echo "res=" . Utils::varDumpToString($rows) . "\n";
 		$age = array ();
 		foreach ( $rows as $row ) {
-			$age ['fav_birthday'] = $row ['birthday'];
+			$age[] = $row ['birthday'];
 		}
 		return $age;
 	}
@@ -496,7 +494,6 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#posts, #prefix#users ";
 		$q .= "WHERE #prefix#posts.in_reply_to_post_id = :post_id ";
 		$q .= "AND #prefix#posts.author_user_id = #prefix#users.user_id ";
-		$q .= "GROUP BY #prefix#users.birthday";
 		
 		$vars = array (
 				':post_id' => $post_id
@@ -507,10 +504,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		
 		$ps = $this->execute ( $q, $vars );
 		$rows = $this->getDataRowsAsArrays ( $ps );
-		// echo "res=" . Utils::varDumpToString($rows) . "\n";
 		$age = array ();
 		foreach ( $rows as $row ) {
-			$age ['comm_birthday'] = $row ['birthday'];
+			$age[] = $row ['birthday'];
 		}
 		return $age;
 	}

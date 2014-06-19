@@ -29,7 +29,7 @@
         {/literal}
             var age_analysis_data_{$i->id} = new google.visualization.arrayToDataTable([
             	['Ages','<18', '18-25', '25-35', '35-45', '>45'],
-            	['Number', {$i->related_data[1].18+5}, {$i->related_data[1].18_25}, {$i->related_data[1].25_35+7}, {$i->related_data[1].35_45+10}, {$i->related_data[1].45+1}]
+            	['Number', {$i->related_data[1].18}, {$i->related_data[1].18_25}, {$i->related_data[1].25_35}, {$i->related_data[1].35_45}, {$i->related_data[1].45}]
          	]);
             {literal}
             var age_analysis_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({

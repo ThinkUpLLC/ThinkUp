@@ -47,8 +47,8 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
  		$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
  		$posts = $post_dao->getMostFavCommentPostsByUserId ( $instance->network_user_id, $instance->network );
  		foreach ( $posts as $post ) {				
- 				$birthdays_fav = $fpost_dao->getBirthdayOfFavoriters ( $post->post_id );
-				$birthdays_comm = $fpost_dao->getBirthdayOfCommenters ( $post->post_id );
+ 				$birthdays_fav = $fpost_dao->getBirthdayOfFavoriters( $post->post_id );
+				$birthdays_comm = $fpost_dao->getBirthdayOfCommenters( $post->post_id );
 				$age_data = array(
 					'18'=>0,
 					'18_25'=>0,
@@ -68,7 +68,7 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 						$age--;
 					}
 					
-					if ($age<18){
+					if ($age>0 & $age<18){
 						$age_data['18']++;
 					} elseif ($age>=18 & $age<25){
 						$age_data['18_25']++;
@@ -76,7 +76,9 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 						$age_data['25_35']++;
 					} elseif ($age>=35 & $age<45){
 						$age_data['35_45']++;				   
-					} else $age_data['45']++;
+					} elseif ($age>=45){
+						$age_data['45']++;
+					}
 				}
 				
 				foreach ($birthdays_fav as $birthday_fav){
@@ -89,7 +91,7 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 						$age--;
 					}
 					
-					if ($age<18){
+					if ($age>0 & $age<18){
 						$age_data['18']++;
 					} elseif ($age>=18 & $age<25){
 						$age_data['18_25']++;
@@ -97,12 +99,11 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 						$age_data['25_35']++;
 					} elseif ($age>=35 & $age<45){
 						$age_data['35_45']++;
-					} else $age_data['45']++;
-					
+					} elseif ($age>=45){
+						$age_data['45']++;
+					}
 				}
 				
-				echo "age_data=".Utils::varDumpToString($age_data)."<br />";
-				 
  				$simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
  							
 				$this->insight_dao->insertInsightDeprecated ( 'age_analysis', $instance->id, 
