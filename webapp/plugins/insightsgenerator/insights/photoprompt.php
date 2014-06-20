@@ -1,8 +1,8 @@
 <?php
 /*
  Plugin Name: Photo Prompt
- Description: Reminds you to post a new photo if you normally post photos but haven't in the last 7 days.
- When: First Crawl and Weekly
+ Description: Reminds you to post a new photo if you posted a photo in the last 14 days, but not the last 7 days.
+ When: Weekly, Fridays for Twitter, Monday for Facebook
  */
 /**
  *
@@ -39,16 +39,10 @@ class PhotoPromptInsight extends InsightPluginParent implements InsightPlugin {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
         if ($instance->network == 'twitter' || $instance->network == 'facebook') {
-            $firstrun = !$this->insight_dao->doesInsightExist($this->slug, $instance->id);
-            $run = false;
-            if ($firstrun) {
-                $run = true;
-            }
-            else if ($instance->network == 'facebook' &&
+            if ($instance->network == 'facebook' &&
                 self::shouldGenerateWeeklyInsight($this->slug, $instance, 'today', false, 1)) {
                 $run = true;
-            }
-            else if ($instance->network == 'twitter' &&
+            } else if ($instance->network == 'twitter' &&
                 self::shouldGenerateWeeklyInsight($this->slug, $instance, 'today', false, 5)) {
                 $run = true;
             }
@@ -81,9 +75,7 @@ class PhotoPromptInsight extends InsightPluginParent implements InsightPlugin {
                         $this->insight_dao->insertInsight($insight);
                     }
                 }
-
             }
-
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
