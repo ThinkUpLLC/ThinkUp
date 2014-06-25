@@ -36,7 +36,7 @@ class TestOfInsightMySQLDAO extends ThinkUpInsightUnitTestCase {
 
     protected function buildData() {
         $builders = array();
-        $time_now = date("Y-m-d H:i:s");
+        $this->time_now = $time_now = date("Y-m-d H:i:s", time()-10);
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Your post got retweeted 110 times',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'header_image'=>'headerme.jpg',
@@ -103,6 +103,7 @@ class TestOfInsightMySQLDAO extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
         $this->assertEqual($result->header_image, 'headerme.jpg');
+        $this->assertEqual($result->time_generated, $this->time_now);
 
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-02');
         $this->assertNull($result);
