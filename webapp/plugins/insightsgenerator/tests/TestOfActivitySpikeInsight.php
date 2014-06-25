@@ -424,6 +424,37 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testTimeGeneratedDoesntUpdate() {
+        $today = date('Y-m-d');
+        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        foreach (array('fave','reply','retweet') as $act) {
+            $baseline_dao->insertInsightBaseline("avg_{$act}_count_last_7_days", $this->instance->id, 2, $today);
+            $baseline_dao->insertInsightBaseline("high_{$act}_count_last_7_days", $this->instance->id, 2, $today);
+        }
+
+        $posts = array($this->makePost($replies=1, $retweets=10, $faves=50));
+        $insight_plugin = new ActivitySpikeInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('This one really got some favorites.', $result->headline);
+        $generated = $result->time_generated;
+        $date = $result->date;
+
+        sleep(1); // force timestamp to change
+        $posts = array($this->makePost($replies=1, $retweets=10, $faves=100));
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual('This one really got some favorites.', $result->headline);
+        $this->assertEqual($result->time_generated, $generated);
+        $this->assertEqual($result->date, $date);
+
+    }
+
     private function makePost($replies, $retweets, $faves) {
         return new Post(array(
             'reply_count_cache' => $replies, 'retweet_count_cache' => $retweets, 'favlike_count_cache' => $faves,
