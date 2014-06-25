@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/biggestfans.php';
 
-class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
+class TestOfBiggestFansInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -45,7 +45,7 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testBiggestFansInsight() {
+    public function testBiggestFansInsightTwitter() {
         // Get data ready that insight requires
         $builders = array();
         // Instance
@@ -61,13 +61,15 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
 
         // Users
         $builders[] = FixtureBuilder::build('users', array('user_id'=>101, 'network'=>'twitter',
-            'network_username'=>'angel'));
+            'user_name'=>'angel'));
         $builders[] = FixtureBuilder::build('users', array('user_id'=>102, 'network'=>'twitter',
-            'network_username'=>'cordelia'));
+            'user_name'=>'cordelia', 'avatar' => 'http://www.virginmedia.com/images/cordelia-buffy-then.jpg',
+            'full_name' => 'Cordelia Chase'));
         $builders[] = FixtureBuilder::build('users', array('user_id'=>103, 'network'=>'twitter',
-            'network_username'=>'wesley'));
+            'user_name'=>'wesley'));
         $builders[] = FixtureBuilder::build('users', array('user_id'=>104, 'network'=>'twitter',
-            'network_username'=>'fred'));
+            'user_name'=>'fred', 'avatar' => 'http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg',
+            'full_name' => 'Winifred "Fred" Burkle'));
 
         // Posts by instance
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
@@ -78,16 +80,17 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         // Favorites
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
             'fav_of_user_id'=>104, 'network'=>'twitter'));
-        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
-            'fav_of_user_id'=>105, 'network'=>'twitter'));
-        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
-            'fav_of_user_id'=>106, 'network'=>'twitter'));
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcd', 'author_user_id'=>101,
             'fav_of_user_id'=>104, 'network'=>'twitter'));
 
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'fav_of_user_id'=>105, 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'fav_of_user_id'=>102, 'network'=>'twitter'));
+
         $insight_plugin = new BiggestFansInsight();
         $insight_plugin->generateInsight($instance, null, $posts, 3);
-        //sleep(1000);
 
         // Assert that 30 days insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -95,9 +98,12 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('biggest_fans_last_30_days', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('They favorited @angel\'s tweets the most over the last 30 days.', $result->text);
-        $this->assertPattern('/These were @angel\'s biggest fans last month./', $result->headline);
+        $this->assertEqual('@fred favorited @angel\'s tweets the most over the last 30 days.', $result->text);
+        $this->assertEqual('@fred was @angel\'s biggest fan last month.', $result->headline);
+        $this->assertEqual('http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg', $result->header_image);
 
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
 
         // Assert that 7 days insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -106,6 +112,128 @@ class TestOfBiggestFansInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual('Here\'s who favorited @angel\'s tweets most over the last week.', $result->text);
-        $this->assertPattern('/Last week, these were/', $result->headline);
+        $this->assertEqual('Last week, @fred was @angel\'s biggest admirer.', $result->headline);
+        $this->assertEqual('http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg', $result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcd', 'author_user_id'=>101,
+            'fav_of_user_id'=>102, 'network'=>'twitter'));
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $result = $insight_dao->getInsight('biggest_fans_last_30_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('They favorited @angel\'s tweets the most over the last 30 days.', $result->text);
+        $this->assertPattern('/These were @angel\'s biggest fans last month./', $result->headline);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $result = $insight_dao->getInsight('biggest_fans_last_7_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Here\'s who favorited @angel\'s tweets most over the last week.', $result->text);
+        $this->assertEqual('Last week, these were @angel\'s biggest admirers.', $result->headline);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testBiggestFansInsightFacebook() {
+        // Get data ready that insight requires
+        $builders = array();
+        // Instance
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network = 'facebook';
+        $instance->network_username = 'Angel';
+        $instance->network_user_id = 101;
+        $instance->total_posts_in_system = 1500;
+        $builders[] = FixtureBuilder::build('instances', array('id'=>10, 'network'=>'facebook',
+            'network_username'=>'Angel', 'network_user_id'=>101)) ;
+
+        // Users
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>101, 'network'=>'facebook',
+            'user_name'=>'angel'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>102, 'network'=>'facebook',
+            'user_name'=>'cordelia', 'avatar' => 'http://www.virginmedia.com/images/cordelia-buffy-then.jpg',
+            'full_name' => 'Cordelia Chase'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>103, 'network'=>'facebook',
+            'user_name'=>'wesley'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>104, 'network'=>'facebook',
+            'user_name'=>'Winifred', 'avatar' => 'http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg',
+            'full_name' => 'Winifred "Fred" Burkle'));
+
+        // Posts by instance
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'network'=>'facebook', 'post_text'=>'You gonna like this', 'author_username'=>'angel', 'pub_date'=>"-1d" ));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abcd', 'author_user_id'=>101,
+            'network'=>'facebook', 'post_text'=>"I'm a champion", 'author_username'=>'angel', 'pub_date'=>"-2d" ));
+
+        // Favorites
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'fav_of_user_id'=>104, 'network'=>'facebook'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcd', 'author_user_id'=>101,
+            'fav_of_user_id'=>104, 'network'=>'facebook'));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'fav_of_user_id'=>105, 'network'=>'facebook'));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>101,
+            'fav_of_user_id'=>102, 'network'=>'facebook'));
+
+        $insight_plugin = new BiggestFansInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        // Assert that 30 days insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('biggest_fans_last_30_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Winifred liked Angel\'s status updates the most over the last 30 days.', $result->text);
+        $this->assertEqual('Winifred was Angel\'s biggest fan last month.', $result->headline);
+        $this->assertEqual('http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg', $result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        // Assert that 7 days insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('biggest_fans_last_7_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Here\'s who liked Angel\'s status updates most over the last week.', $result->text);
+        $this->assertEqual('Last week, Winifred was Angel\'s biggest admirer.', $result->headline);
+        $this->assertEqual('http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg', $result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcd', 'author_user_id'=>101,
+            'fav_of_user_id'=>102, 'network'=>'facebook'));
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $result = $insight_dao->getInsight('biggest_fans_last_30_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('They liked Angel\'s status updates the most over the last 30 days.', $result->text);
+        $this->assertPattern('/These were Angel\'s biggest fans last month./', $result->headline);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $result = $insight_dao->getInsight('biggest_fans_last_7_days', 10, $today);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('Here\'s who liked Angel\'s status updates most over the last week.', $result->text);
+        $this->assertEqual('Last week, these were Angel\'s biggest admirers.', $result->headline);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 }
