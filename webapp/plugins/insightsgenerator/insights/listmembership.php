@@ -44,6 +44,9 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
             $new_groups = $group_membership_dao->getNewMembershipsByDate($instance->network, $instance->network_user_id,
             $this->insight_date);
             if (sizeof($new_groups) > 0 ) { //if not null, store insight
+                $sorted_list_words = $this->getWordFrequency($new_groups);
+                $top_list_words = $this->createWordString($sorted_list_words);
+                $common_insight_text = "These are the most popular words in the list names: " . $top_list_words . ".";
                 $count_history_dao = DAOFactory::getDAO('CountHistoryDAO');
                 $list_membership_count_history_by_day = $count_history_dao->getHistory($instance->network_user_id,
                 $instance->network, 'DAY', 15, null, 'group_memberships');
@@ -87,6 +90,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                     } else {
                         $insight_text .= ".";
                     }
+                    $insight_text .= $common_insight_text;
                     $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
                     $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
@@ -100,7 +104,6 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         . " lists</strong>";
                     }
                     $insight_text .= ".";
-
                     $this->insight_dao->insertInsightDeprecated('new_group_memberships', $instance->id,
                     $this->insight_date, "Made the list:", $insight_text, $filename, Insight::EMPHASIS_LOW,
                     serialize($list_membership_count_history_by_day));
@@ -109,6 +112,37 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+    private function getWordFrequency($groups) {
+        $word_frequency  = array();
+        foreach ($groups as $group) {
+            $returned_string = strstr($group->group_name, '/');
+            $list_name = substr($returned_string, 1,strlen($returned_string));
+            $words = explode("-", $list_name);
+            foreach($words as $word) {
+                if($word_frequency[$word] == null) {
+                    $word_frequency[$word] = 1;
+                }
+                else {
+                    $word_frequency[$word] = $word_frequency[$word] + 1;
+                }
+            }
+        }
+        asort($word_frequency);
+        return $word_frequency;
+    }
+    private function createWordString($sorted_words) {
+        $count = 0;
+        $top_words = "";
+        foreach ($sorted_words as $word => $frequency) {
+            $top_words .= $word . ", ";
+            $count++;
+            if($count  == 4) {
+                break;
+            }
+        }
+        $top_words = substr($top_words, 0 , strlen($top_words) - 2);
+        return $top_words;
     }
 }
 
