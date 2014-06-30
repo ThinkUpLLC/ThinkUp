@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Generate HTML from insight tests and push to remote server
+#
+# Run with no arguments or part of an insight name to match:
+# insight-html-to-staging [part-of-insight-name] 
+#
+# Copy insight-html-to-server-conf.sample to insight-html-to-server-conf
+# and edit that file, to configure
+
+cd `dirname $0`
+
+if [ ! -f insight-html-to-server-conf ]
+then
+    REALFILE=`readlink $0`
+    REALPATH=`dirname $REALFILE`
+    cd $REALPATH
+fi
+
+if [ ! -f insight-html-to-server-conf ]
+then
+    echo "Please copy insight-html-to-server-conf.sample to insight-html-to-server-conf"
+    echo " and edit the configuration variables for your environment."
+    exit
+fi
+
+source insight-html-to-server-conf
+
+if [ ! -z $1 ]
+then
+    MATCH="*$1*"
+else
+    MATCH="*"
+fi
+
+mkdir -p "$LOCAL_TMP_PATH"
+cd "$LOCAL_THINKUP_PATH"
+cd webapp/plugins/insightsgenerator
+
+echo "<html><head><title>Unit-Test Generated Insight Output</title></head><body><ul>" > "$LOCAL_TMP_PATH/index.html"
+for I in insights/$MATCH
+do
+    INAME=`echo $I | sed 's/.*\///' | sed 's/\..*//' | sed 's/s$//'`
+    TEST=`ls tests/* | grep -i $INAME`
+    echo "Generating HTML for $INAME"
+    if [ "$TEST" == "" ]
+    then
+        echo "ERROR: Couldn't find test for $INAME"
+    else
+        TEST_DEBUG=1 php $TEST | sed 's/TestOf.*</</' | tail -n +2 > "$LOCAL_TMP_PATH/$INAME.html"
+        echo "<li><a href='$INAME.html'>$INAME</a></li>" >>  "$LOCAL_TMP_PATH/index.html"
+    fi
+done
+
+echo "</ul></body></html>" >> "$LOCAL_TMP_PATH/index.html"
+
+scp "$LOCAL_TMP_PATH"/$MATCH "$STAGING_USER@$STAGING_SERVER:$STAGING_PATH/"
