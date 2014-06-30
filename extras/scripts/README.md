@@ -22,6 +22,20 @@ Example: `./extras/scripts/autdeploy-scp`
 Generates a user distribution of the web application called thinkup.zip, and drops it into a thinkup/build directory.
 
 Run this from ThinkUp's parent directory, and make sure a directory named build exists there.
+
+## insight-html-to-server (for developers to share and preview insight test HTML output)
+
+Automates the generation of HTML files for each insight test, and pushing to a webserver via scp.
+
+* `insight-html-to-server-conf` - configuration
+
+### Set up insight-html-to-server
+
+* Copy `insight-html-to-server-conf.sample` to `insight-html-to-server-conf`
+* Edit `insight-html-to-server-conf` to match your settings
+* (optionally) Symlink insight-html-to-server in to your path
+    `ln -s ./insight-html-to-server ~/bin/`
+* Run `insight-html-to-server`
   
 ## migratedb (for developers changing the database)
 
