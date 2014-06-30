@@ -94,9 +94,6 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_high_7_day_1', 10, $today);
         $this->assertNull($result);
-
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
 
