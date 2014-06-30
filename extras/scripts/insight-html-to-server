@@ -5,22 +5,26 @@
 # Run with no arguments or part of an insight name to match:
 # insight-html-to-staging [part-of-insight-name] 
 #
-# You should probably copy this in your path and change the settings below.
+# Copy insight-html-to-server-conf.sample to insight-html-to-server-conf
+# and edit that file, to configure
 
-# Server where we push the rendered HTML
-STAGING_SERVER=linode.x.thinkup.com
+cd `dirname $0`
 
-# User on that server
-STAGING_USER=cdmoyer
+if [ ! -f insight-html-to-server-conf ]
+then
+    REALFILE=`readlink $0`
+    REALPATH=`dirname $REALFILE`
+    cd $REALPATH
+fi
 
-# Path on the remote server
-STAGING_PATH=/local/www/thinkup.com/www/doc/demo/insights/
+if [ ! -f insight-html-to-server-conf ]
+then
+    echo "Please copy insight-html-to-server-conf.sample to insight-html-to-server-conf"
+    echo " and edit the configuration variables for your environment."
+    exit
+fi
 
-# Where to generate HTML locally
-LOCAL_TMP_PATH=/tmp/insights/
-
-# Where is your ThinkUp install
-LOCAL_THINKUP_PATH=/var/www/html/thinkup/ThinkUp/
+source insight-html-to-server-conf
 
 if [ ! -z $1 ]
 then
