@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Generate HTML from insight tests and push to remote server
+#
+# Run with no arguments or part of an insight name to match:
+# insight-html-to-staging [part-of-insight-name] 
+#
+# You should probably copy this in your path and change the settings below.
+
+# Server where we push the rendered HTML
+STAGING_SERVER=linode.x.thinkup.com
+
+# User on that server
+STAGING_USER=cdmoyer
+
+# Path on the remote server
+STAGING_PATH=/local/www/thinkup.com/www/doc/demo/insights/
+
+# Where to generate HTML locally
+LOCAL_TMP_PATH=/tmp/insights/
+
+# Where is your ThinkUp install
+LOCAL_THINKUP_PATH=/var/www/html/thinkup/ThinkUp/
+
+if [ ! -z $1 ]
+then
+    MATCH="*$1*"
+else
+    MATCH="*"
+fi
+
+mkdir -p "$LOCAL_TMP_PATH"
+cd "$LOCAL_THINKUP_PATH"
+cd webapp/plugins/insightsgenerator
+
+echo "<html><head><title>Unit-Test Generated Insight Output</title></head><body><ul>" > "$LOCAL_TMP_PATH/index.html"
+for I in insights/$MATCH
+do
+    INAME=`echo $I | sed 's/.*\///' | sed 's/\..*//' | sed 's/s$//'`
+    TEST=`ls tests/* | grep -i $INAME`
+    echo "Generating HTML for $INAME"
+    if [ "$TEST" == "" ]
+    then
+        echo "ERROR: Couldn't find test for $INAME"
+    else
+        TEST_DEBUG=1 php $TEST | sed 's/TestOf.*</</' | tail -n +2 > "$LOCAL_TMP_PATH/$INAME.html"
+        echo "<li><a href='$INAME.html'>$INAME</a></li>" >>  "$LOCAL_TMP_PATH/index.html"
+    fi
+done
+
+echo "</ul></body></html>" >> "$LOCAL_TMP_PATH/index.html"
+
+scp "$LOCAL_TMP_PATH"/$MATCH "$STAGING_USER@$STAGING_SERVER:$STAGING_PATH/"
