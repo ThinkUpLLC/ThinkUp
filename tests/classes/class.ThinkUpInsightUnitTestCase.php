@@ -100,6 +100,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         $view->assign('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         $view->assign('enable_bootstrap', true);
         $view->assign('thinkup_application_url', Utils::getApplicationURL());
+        $view->assign('site_root_path', 'https://thinkup.thinkup.com/');
         $html_insight = $view->fetch(THINKUP_WEBAPP_PATH.'_lib/view/insights.tpl');
         return $html_insight;
     }

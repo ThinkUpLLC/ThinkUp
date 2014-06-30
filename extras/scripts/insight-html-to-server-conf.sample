@@ -1,0 +1,14 @@
+# Server where we push the rendered HTML
+STAGING_SERVER=staging.myhost.com
+
+# User on that server
+STAGING_USER=myuser
+
+# Path on the remote server
+STAGING_PATH=/var/www/vhosts/staging/htdocs/staging/
+
+# Where to generate HTML locally
+LOCAL_TMP_PATH=/tmp/insights/
+
+# Where is your ThinkUp install
+LOCAL_THINKUP_PATH=/var/www/html/thinkup/ThinkUp/

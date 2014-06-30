@@ -8,6 +8,7 @@ tests/config.tests.inc.php
 extras/cron/config
 extras/scripts/autodeploy-conf
 extras/scripts/migratedb-conf
+extras/scripts/insight-html-to-server-conf
 extras/scripts/test-pull-postback-conf
 extras/dev/ramdisk/osx_make_ramdisk_db.conf
 extras/scripts/lic_header.py
