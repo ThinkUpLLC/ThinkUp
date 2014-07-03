@@ -68,9 +68,8 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 } else {
                     $my_insight->headline = "These were $this->username's biggest fans last month.";
                 }
-                $my_insight->text = "They ".$this->terms->getVerb('liked').
-                " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
-                " the most over the last 30 days."; // or just set a string like 'Ohai';
+                $my_insight->text = "Here's who " .$this->terms->getVerb('liked')." $this->username's ".
+                    $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the last 30 days.";
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($fans);
