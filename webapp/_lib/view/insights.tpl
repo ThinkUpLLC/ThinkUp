@@ -3,10 +3,14 @@
 
 <div class="container">
   {if $message_header}
+    {if !isset($thinkupllc_endpoint)}
     <div class="no-insights">
     {$message_header}
     {$message_body}
     </div>
+    {else}
+      {include file="_firstrun.tpl"}
+    {/if}
   {/if}
   <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
 
