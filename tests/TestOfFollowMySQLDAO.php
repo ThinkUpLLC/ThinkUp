@@ -521,4 +521,46 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->countTotalFriendsJoinedAfterDate(1234567890, 'facebook', '1812-02-01');
         $this->assertEqual(0, $result);
     }
+
+    public function testGetVerifiedFollowers() {
+        $result = $this->DAO->getVerifiedFollowers(1234567890, 'twitter');
+        $this->assertEqual(count($result), 0);
+
+        $result = $this->DAO->getVerifiedFollowers(1324567890, 'twitter');
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]->username, 'jack');
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'999', 'user_name'=>'v2',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>999999, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'999',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getVerifiedFollowers(1324567890, 'twitter');
+        $this->assertEqual(count($result), 2);
+        $this->assertEqual($result[0]->username, 'v2');
+        $this->assertEqual($result[1]->username, 'jack');
+
+        $result = $this->DAO->getVerifiedFollowers(1324567890, 'twitter', 1);
+        $this->assertEqual(count($result), 1);
+        $this->assertEqual($result[0]->username, 'v2');
+
+    }
+
+    public function testGetVerifiedFollowerCount() {
+        $result = $this->DAO->getVerifiedFollowerCount(1234567890, 'twitter');
+        $this->assertEqual($result, 0);
+
+        $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
+        $this->assertEqual($result, 1);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'999', 'user_name'=>'v2',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>999999, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'999',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
+        $this->assertEqual($result, 2);
+    }
 }
