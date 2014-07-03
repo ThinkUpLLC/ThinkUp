@@ -333,7 +333,10 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                         'retweet_high_365','retweet_high_30','retweet_high_7', 'retweet_spike_30','retweet_spike_7',
                     );
                     foreach ($to_delete as $base_slug) {
-                        $this->insight_dao->deleteInsight($base_slug.'_day_'.$post->id, $instance->id, $post_date);
+                        $delete_slug = $base_slug.'_day_'.$post->id;
+                        if ($slug != $delete_slug) {
+                            $this->insight_dao->deleteInsight($delete_slug, $instance->id, $post_date);
+                        }
                     }
 
                     $my_insight = new Insight();

@@ -40,8 +40,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     }
 
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image ";
-        $q .= "FROM #prefix#insights WHERE ";
+        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image, ";
+        $q .= "time_generated FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
