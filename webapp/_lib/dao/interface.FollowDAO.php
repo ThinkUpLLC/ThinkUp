@@ -278,4 +278,20 @@ interface FollowDAO {
      * @return array Array of User objects
      **/
     public function getFriendsJoinedInTimeFrame($user_id, $network, $earliest_date, $latest_date);
+    /**
+     * Gets the followers who are verified by the network, order by follower count descending
+     * @param str $user_id
+     * @param str $network
+     * @param int $limit
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getVerifiedFollowers($user_id, $network, $limit=20);
+    /**
+     * Gets the count of followers who are verified by the network
+     * @param str $user_id
+     * @param str $network
+     * @return int number of verified followers
+     */
+    public function getVerifiedFollowerCount($user_id, $network);
+
 }
