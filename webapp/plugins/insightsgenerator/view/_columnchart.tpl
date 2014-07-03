@@ -17,23 +17,24 @@
             var c = window.tu.constants.colors;
             var view_duration_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'exclamation_count_{/literal}{$i->id}{literal}',
-              chartType: 'BarChart',
+              chartType: 'ColumnChart',
               dataTable: table,
               options: {
-                  width: 300,
+                  width: 400,
                   height: 250,
                   colors: {/literal}[c.{$color}, c.{$color}_dark, c.{$color}_darker],{literal}
-                  chartArea:{left:100,height:"80%"},
+                  chartArea:{left:20,height:"80%"},
+                  legend: 'none',
                   hAxis: {
-                    textStyle: { color: '#999', fontSize: 10 },
-                    format: '0',
-                    minValue: 0,
-                    gridlines: {count: maxvalue+1}
+                    textStyle: { color: '#999', fontSize: 10 }
                   },
                   vAxis: {
                     baselineColor: '#ccc',
                     textStyle: { color: '#999' },
-                    gridlines: { color: '#eee' }
+                    gridlines: { color: '#eee' },
+                    format: '0',
+                    minValue: 0,
+                    gridlines: {count: maxvalue+1}
                   }
                 }
             });

@@ -96,15 +96,18 @@ class ExclamationCountInsight extends CriteriaMatchInsightPluginParent implement
                     'Get out!',
                     'No way!',
                 ));
+                $showchart = count($this->point_chart) > 2;
                 $insight->text = $this->getVariableCopy(array(
                     "%username used exclamation points in %total %post".($this_period_count==1?'':'s').
-                    " during the last 30 days! That's %percent% of %username's %posts!"
+                    " this past month! ".($showchart ? "" : "That's %percent% of %username's %posts!")
                 ), array(
                     'total' => $this_period_count,
                     'percent' => floor($this_period_count / $this->total_posts * 100)
                 ));
 
-                if (count($this->point_chart) > 2) {
+                if ($showchart) {
+                    $insight->text .= " Some things are simply one-exclamation-point exciting! "
+                        . "Other times, they're really exciting!!!! Here's ".$this->username."'s breakdown this month.";
                     asort($this->point_chart);
                     $rows = array();
                     foreach ($this->point_chart as $label => $number) {

@@ -85,7 +85,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Say it like you mean it!');
-        $this->assertEqual($result->text, "@screamy used exclamation points in 1 tweet during the last 30 days! "
+        $this->assertEqual($result->text, "@screamy used exclamation points in 1 tweet this past month! "
             ."That's 100% of @screamy's tweets!");
 
         $this->assertNull($result->related_data);
@@ -117,7 +117,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Say it like you mean it!');
-        $this->assertEqual($result->text, "@screamy used exclamation points in 2 tweets during the last 30 days! "
+        $this->assertEqual($result->text, "@screamy used exclamation points in 2 tweets this past month! "
             ."That's 50% of @screamy's tweets!");
 
         $this->assertNull($result->related_data);
@@ -149,8 +149,9 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Say it like you mean it!');
-        $this->assertEqual($result->text, "@screamy used exclamation points in 3 tweets during the last 30 days! "
-            ."That's 75% of @screamy's tweets!");
+        $this->assertEqual($result->text, "@screamy used exclamation points in 3 tweets this past month!  "
+            . "Some things are simply one-exclamation-point exciting! Other times, they're really exciting!!!! "
+            . "Here's @screamy's breakdown this month.");
 
         $this->assertNotNull($result->related_data);
         $data = unserialize($result->related_data);
