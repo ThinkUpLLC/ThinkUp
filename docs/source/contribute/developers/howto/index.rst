@@ -10,4 +10,4 @@ Contents:
    addcsrfprotection
    filterxss
    displayusermessages
-   inlineemailstyles
+   grunt
