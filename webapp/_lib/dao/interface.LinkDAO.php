@@ -135,4 +135,13 @@ interface LinkDAO {
      * @return int Total number of affected rows
      */
     public function deleteLinksByHashtagId($hashtag_id);
+    /**
+     * Get links by user given a user_id.
+     * @param int $user_id
+     * @param str name of network
+     * @param int max number of results returned.
+     * @param int number of days of results needed.
+     * @return All links posted by user within last X days or within limit.
+     */
+    public function getLastXLinksPostedByUser($user_id, $network, $limit= 0, $days_ago = 0);
 }
