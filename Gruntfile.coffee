@@ -1,15 +1,20 @@
 module.exports = (grunt) ->
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json')
-    # banner: '/*! <%= pkg.title || pkg.name %> - ' +
-    #   '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-    #   '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %> */\n'
-    # # Task configuration.
-    # project:
-    #   app: 'webapp'
-    #   assets: '<%= project.app %>/assets'
-    #   css: ['<%= project.assets %>/css/*.less']
-    #   js: ['<%= project.assets %>/js/src/*.coffee']
+    project:
+      app: 'webapp'
+      asset_path: '<%= project.app %>/assets'
+      css_path:   '<%= project.asset_path %>/css'
+      js_path:    '<%= project.asset_path %>/js'
+    less:
+      app:
+        files:
+          '<%= project.css_path %>/thinkup.css': '<%= project.css_path %>/src/thinkup.less'
+    coffee:
+      app:
+        files: [
+          '<%= project.js_path %>/thinkup.js':'<%= project.js_path %>/src/thinkup.coffee'
+        ]
     premailer:
       simple:
         files: 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl': ['extras/dev/precompiledtemplates/email/_email.insights_html.tpl']
@@ -24,12 +29,10 @@ module.exports = (grunt) ->
         files: '<%= project.coffee_path %>/*'
         tasks: ['coffee']
   )
-  # These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-less')
+  grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-premailer')
-  # grunt.loadNpmTasks('grunt-contrib-concat');
-  # grunt.loadNpmTasks('grunt-contrib-jshint');
-  # grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('fixstyles', 'This fixes the stuff premailer breaks', ->
     html = grunt.file.read 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl'
