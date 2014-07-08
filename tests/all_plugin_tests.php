@@ -117,6 +117,7 @@ $plugin_tests->add(new TestOfTimeSpentInsight());
 $plugin_tests->add(new TestOfTwitterAgeInsight());
 $plugin_tests->add(new TestOfTwitterBirthdayInsight());
 $plugin_tests->add(new TestOfPhotoPromptInsight());
+$plugin_tests->add(new TestOfExclamationCountInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
