@@ -9,15 +9,12 @@
 <i class="icon-{$i->instance->network}{if $i->instance->network eq 'google+'} icon-google-plus{/if} icon-muted"></i>
 {$i->text|link_usernames_to_twitter}
 
-<div class="insight-attachment-detail post">
-    {include file=$tpl_path|cat:"_post.tpl" post=$i->related_data[0] hide_insight_header=true}
-</div>
-
 {if !$expand}
 <div class="collapse in" id="chart-{$i->id}">
 {/if}
    
-    <div id="geo_analysis_{$i->id}">&nbsp;</div>
+ <div id="geo_analysis_{$i->id}" style="width: 650px; height: 250px">&nbsp;</div>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -28,34 +25,23 @@
         function drawChart{/literal}{$i->id}{literal}() {
         {/literal}
             var geo_analysis_data_{$i->id} = new google.visualization.arrayToDataTable([
-            	['Ages','<18', '18-25', '25-35', '35-45', '>45'],
-            	['Number', {$i->related_data[1].18}, {$i->related_data[1].18_25}, {$i->related_data[1].25_35}, {$i->related_data[1].35_45}, {$i->related_data[1].45}]
-         	]);
+             	 ['City', 'User']
+             	 ]);
+             	 {foreach from=$i->related_data[0] item=geo}
+             	 geo_analysis_data_{$i->id}.addRows([
+             	 ['{$geo.city}','{$geo.name}']
+             	 ]);
+             	 {/foreach}
             {literal}
             var geo_analysis_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'geo_analysis_{/literal}{$i->id}{literal}',
-              chartType: 'ColumnChart',
+              chartType: 'Map',
               dataTable: geo_analysis_data_{/literal}{$i->id}{literal},
               'options': {
-              		colors: ['#3EA5CF', '#E4BF28', '#5FAC1C', '#DA6070', '#24B98F'],
-            		isStacked: false,
-                    width: 650,
-                    height: 250,
-                    chartArea:{left: 100, height:"80%"},
-                    legend: { position: 'bottom'},
-          		
-          		hAxis: {
-                    textStyle: { color: '#fff', fontSize: 1 }
-                  },
-                  
-          		vAxis: {
-                    minValue: 0,
-                    baselineColor: '#ccc',
-                    textStyle: { color: '#999' },
-                    gridlines: { color: '#eee' }
-                  },
-               }
-                
+            	showTip: true,
+            	useMapTypeControl: true
+          	}
+          	              
             });
             geo_analysis_chart_{/literal}{$i->id}{literal}.draw();
         }
@@ -67,4 +53,3 @@
 {/if}
 
 {include file=$tpl_path|cat:'_footer.tpl'}
-

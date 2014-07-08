@@ -512,8 +512,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 	}
 	
 	public function getLocationOfFavoriters($post_id) {
-		$q = "SELECT #prefix#users.user_name as name, #prefix#users.avatar, #prefix#users.location as location, ";
-		$q .= "COUNT(*) as count_location FROM #prefix#favorites, #prefix#users ";
+		$q = "SELECT #prefix#users.user_id as id, #prefix#users.user_name as name, ";
+		$q .= "#prefix#users.location FROM #prefix#favorites, #prefix#users ";
 		$q .= "WHERE #prefix#favorites.post_id = :post_id ";
 		$q .= "AND #prefix#favorites.fav_of_user_id = #prefix#users.user_id ";
 		$q .= "GROUP BY #prefix#users.location ";
@@ -531,8 +531,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 	}
 	
 	public function getLocationOfCommenters($post_id) {
-		$q = "SELECT #prefix#users.user_name as name, #prefix#users.avatar, #prefix#users.location as location, ";
-		$q .= "COUNT(*) as count_location FROM #prefix#posts, #prefix#users ";
+		$q = "SELECT #prefix#users.user_id as id,  #prefix#users.user_name as name, ";
+		$q .= "#prefix#users.location FROM #prefix#posts, #prefix#users ";
 		$q .= "WHERE #prefix#posts.in_reply_to_post_id = :post_id ";
 		$q .= "AND #prefix#posts.author_user_id = #prefix#users.user_id ";
 		$q .= "GROUP BY #prefix#users.location ";

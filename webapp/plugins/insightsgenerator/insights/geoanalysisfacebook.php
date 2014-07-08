@@ -1,9 +1,10 @@
 <?php
 /*
- * Plugin Name: Geografical Analysis Description: Location of people who have made your post the most popular today.
+ * Plugin Name: Geografical Analysis 
+ * Description: Location of people who have made your post the most popular today. 
+ * When: Saturdays
  */
 /**
- *
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/geoanalysisfacebook.php
  *
@@ -41,28 +42,37 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 		$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
 		$filename = basename ( __FILE__, ".php" );
 		
-		$post_dao = DAOFactory::getDAO ( 'PostDAO' );
-		$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
-		$posts = $post_dao->getMostFavCommentPostsByUserId ( $instance->network_user_id, $instance->network );
-		foreach ( $posts as $post ) {
-			$locations_fav = $fpost_dao->getLocationOfFavoriters ( $post->post_id );
-			$locations_comm = $fpost_dao->getLocationOfCommenters ( $post->post_id );
-			$geo_data = array ();
-			$geo_data[] = $locations_comm;
-			$geo_data[] = $locations_fav;
-			
-			echo "geo=".Utils::varDumpToString($geo_data)."<\n>";
-			$simplified_post_date = date ( 'Y-m-d', strtotime ( $post->pub_date ) );
-			
-			$this->insight_dao->insertInsightDeprecated ( 'geo_analysis_facebook', $instance->id, $simplified_post_date,
-					"All over the world", "<strong>" . number_format ( count($geo_data) ) . " people</strong> 
-					from different places interested in " . $instance->network_username . "'s post", 
-					$filename, Insight::EMPHASIS_HIGH, serialize ( array ( $post, $geo_data ) ) );
+		if (self::shouldGenerateInsight ( 'geo_analysis_facebook', $instance, $regenerate_existing_insight=true)) {
+			//$post_dao = DAOFactory::getDAO ( 'PostDAO' );
+			$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
+			//$posts = $post_dao->getLastWeekPostsByUserId ( $instance->network_user_id, $instance->network );
+			$geo_data = array();
+			foreach ( $last_week_of_posts as $post ) {
+				$locations_fav = $fpost_dao->getLocationOfFavoriters ( $post->post_id );
+				$locations_comm = $fpost_dao->getLocationOfCommenters ( $post->post_id );
+				//$geo = array_merge ( $locations_comm, $locations_fav );
+				$geo = array_map("unserialize", array_unique(array_map("serialize", array_merge ( $locations_comm,
+						 $locations_fav ))));
+				foreach ( $geo as $g ) {
+					$pos = strpos ( $g ['location'], "," );
+					if ($pos == 0) {
+						$city = $g ['location'];
+					} else {
+						$city = substr ( $g ['location'], 0, $pos );
+					}
+					array_push($geo_data, array ("name" => $g ['name'],"city" => $city));
+				}
+			}
+			$geo_data = array_map("unserialize", array_unique(array_map("serialize", $geo_data)));
+									
+			$this->insight_dao->insertInsightDeprecated ( 'geo_analysis_facebook', $instance->id,
+					$this->insight_date, "All over the world", "<strong>" . number_format ( count ( $geo_data ) )
+					. " people</strong> interested in " . $instance->network_username . "'s posts last week",
+					$filename, Insight::EMPHASIS_HIGH, serialize ( array ($geo_data ) ) );
+			$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
 		}
-		$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
 	}
 }
-
-$insights_plugin_registrar = PluginRegistrarInsights::getInstance ();
+$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
 $insights_plugin_registrar->registerInsightPlugin ( 'GeoAnalysisFacebookInsight' );
 
