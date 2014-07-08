@@ -213,13 +213,11 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
 
         $controller = new InsightStreamController();
         $results = $controller->go();
-        $this->assertPattern('/Welcome to ThinkUp/', $results);
-        $this->assertPattern('/Set up a/', $results);
-        $this->assertPattern('/Twitter/', $results);
-        $this->assertNoPattern('/Foursquare/', $results);
-        $this->assertPattern('/Facebook/', $results);
-        $this->assertNoPattern('/Google/', $results);
-        $this->assertPattern('/account/', $results);
+        $this->assertNoPattern('/Welcome to ThinkUp/', $results);
+        $this->assertPattern('/Watch your inbox./', $results);
+        $this->assertPattern('/ThinkUp is analyzing your very first insights/', $results);
+        $this->assertPattern('/On the daily./', $results);
+        $this->assertNoPattern('/Set up a/', $results);
     }
 
     public function testOfLoggedInServiceUsersNoInsights() {
