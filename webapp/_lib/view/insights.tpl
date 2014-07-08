@@ -9,7 +9,7 @@
     {$message_body}
     </div>
     {else}
-      {include file="_firstrun.tpl"}
+      {include file="_insights.firstrun.tpl"}
     {/if}
   {/if}
   <div class="stream{if count($insights) eq 1} stream-permalink{/if}">

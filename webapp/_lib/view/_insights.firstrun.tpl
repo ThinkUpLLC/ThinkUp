@@ -23,12 +23,12 @@
 
           <div class="panel panel-default insight insight-default insight-bubblegum">
             <div class="panel-heading">
-              <h2 class="panel-title insight-color-text">For Your Eyes Only?</h2>
+              <h2 class="panel-title insight-color-text">For your eyes only?</h2>
             </div>
             <div class="panel-desktop-right">
               <div class="panel-body">
                 <div class="panel-body-inner">
-                  <p>By default your insights are public but you can make them private at anytime. For each <a href="http://username.thinkup.com/account/?p=twitter">Twitter</a> or <a href="http://username.thinkup.com/account/?p=facebook">Facebook</a> account you've connected to ThinkUp choose "Everyone" or "Just You" to determine who can see.</p>
+                  <p>By default your insights are public but you can make them private at anytime. For each <a href="{$site_root_path}account/?p=twitter">Twitter</a> or <a href="{$site_root_path}account/?p=facebook">Facebook</a> account you've connected to ThinkUp choose "Everyone" or "Just You" to determine who can see.</p>
                 </div>
               </div>
             </div>
