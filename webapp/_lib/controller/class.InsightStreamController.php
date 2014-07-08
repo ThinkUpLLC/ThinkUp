@@ -186,9 +186,6 @@ class InsightStreamController extends ThinkUpController {
                     if (!Utils::isThinkUpLLC()) {
                         $this->addToView('message_body', "Check back later, ".
                         "or <a href=\"".$site_root_path."crawler/updatenow.php\">update your ThinkUp data now</a>.");
-                    } else {
-                        $this->addToView('message_body', "Check back later, or add another ".$plugin_link.
-                        "twitter\">Twitter</a> or "."".$plugin_link."facebook\">Facebook</a> account.");
                     }
                 } else {
                     $this->addToView('message_header', "Welcome to ThinkUp. Let's get started.");
