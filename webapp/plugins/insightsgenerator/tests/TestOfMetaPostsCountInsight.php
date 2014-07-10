@@ -83,9 +83,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter");
-        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter 1 time this week. "
-            . "That's roughly 100% of @reflection's tweets for the week.");
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
+        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter once this week. "
+            . "That's 100% of @reflection's tweets for the week.");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -113,9 +113,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter");
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
         $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter 3 times this week. "
-            . "That's roughly 42% of @reflection's tweets for the week.");
+            . "That's 42% of @reflection's tweets for the week.");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -142,9 +142,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter");
-        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter 1 time this week. "
-            . "That's roughly 50% of @reflection's tweets for the week, up 30% from last week.");
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
+        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter once this week. "
+            . "That's 50% of @reflection's tweets for the week, up 30% from last week.");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -175,9 +175,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter");
-        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter 1 time this week. "
-            . "That's roughly 16% of @reflection's tweets for the week, down 64% from last week.");
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
+        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter once this week. "
+            . "That's 16% of @reflection's tweets for the week, down 64% from last week.");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -208,9 +208,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter");
-        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter 1 time this week. "
-            . "That's roughly 16% of @reflection's tweets for the week.");
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
+        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter once this week. "
+            . "That's 16% of @reflection's tweets for the week.");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -230,7 +230,7 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 7);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, "Tweets on tweets on tweets");
+        $this->assertEqual($result->headline, "Tweets on tweets on tweets.");
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
 
@@ -238,7 +238,7 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 7);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, "It's Twitter all the way down");
+        $this->assertEqual($result->headline, "It's Twitter all the way down.");
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
@@ -253,9 +253,9 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 7);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, "Feelings for Facebook");
-        $this->assertEqual($result->text, "reflection used Facebook to talk about Facebook 1 time this "
-            ."week. That's roughly 100% of reflection's status updates for the week.");
+        $this->assertEqual($result->headline, "Feelings for Facebook.");
+        $this->assertEqual($result->text, "reflection used Facebook to talk about Facebook once this "
+            ."week. That's 100% of reflection's status updates for the week.");
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
 
@@ -263,7 +263,7 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 7);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, "Feeding the news feed");
+        $this->assertEqual($result->headline, "Feeding the news feed.");
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
 
@@ -271,7 +271,7 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 7);
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, "It's Facebook all the way down");
+        $this->assertEqual($result->headline, "It's Facebook all the way down.");
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
