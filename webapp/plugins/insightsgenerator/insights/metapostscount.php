@@ -2,7 +2,7 @@
 /*
  Plugin Name: Meta-Posts Count
  Description: How often you post about the service you are using
- When: Weekly on Thursday
+ When: Weekly (Tuesday for Facebook, Thursday for Twitter)
  */
 /**
  *
@@ -40,8 +40,9 @@ class MetaPostsCountInsight extends CriteriaMatchInsightPluginParent implements 
             return false;
         }
 
+        $day_of_week = $instance->network == 'twitter' ? 4 : 2;
         return $this->shouldGenerateWeeklyInsight($this->getSlug(), $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_week=4, count($last_week_of_posts),
+            $regenerate_existing_insight=false, $day_of_week, count($last_week_of_posts),
             $excluded_networks=null);
     }
 
@@ -80,23 +81,23 @@ class MetaPostsCountInsight extends CriteriaMatchInsightPluginParent implements 
             $baseline_dao->updateInsightBaseline($this->getSlug().'_count', $instance->id, $percent);
 
             $network = ucfirst($instance->network);
-            $potential_headlines = array( "It's $network all the way down",);
+            $potential_headlines = array( "It's $network all the way down.",);
             if ($instance->network == 'facebook') {
-                $potential_headlines[] = "Feelings for Facebook";
-                $potential_headlines[] = "Feeding the news feed";
+                $potential_headlines[] = "Feelings for Facebook.";
+                $potential_headlines[] = "Feeding the news feed.";
             }
             else if ($instance->network == 'twitter') {
-                $potential_headlines[] = "Tweets on tweets on tweets";
-                $potential_headlines[] = "Tweetin' 'bout Twitter";
+                $potential_headlines[] = "Tweets on tweets on tweets.";
+                $potential_headlines[] = "Tweetin' 'bout Twitter.";
             }
             $insight->headline = $this->getVariableCopy($potential_headlines);
 
+            $times = $this->terms->getOccurrencesAdverb($this_period_count);
             $insight->text = $this->getVariableCopy(array(
-                "%username used %service to talk about %service %total time".($this_period_count>1?'s':'')." this week. "
-                . "That's roughly %percent of %username's %posts for the week"
+                "%username used %service to talk about %service ".$times." this week. "
+                . "That's %percent of %username's %posts for the week"
             ), array(
                 'service' => $network,
-                'total' => $this_period_count,
                 'percent' => sprintf('%d%%', $percent)
             ));
 
