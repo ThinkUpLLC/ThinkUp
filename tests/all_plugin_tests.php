@@ -116,6 +116,7 @@ $plugin_tests->add(new TestOfCongratsCountInsight());
 $plugin_tests->add(new TestOfTimeSpentInsight());
 $plugin_tests->add(new TestOfTwitterAgeInsight());
 $plugin_tests->add(new TestOfTwitterBirthdayInsight());
+$plugin_tests->add(new TestOfTwitterRatiosInsight());
 $plugin_tests->add(new TestOfPhotoPromptInsight());
 $plugin_tests->add(new TestOfExclamationCountInsight());
 $plugin_tests->add(new TestOfMetaPostsCountInsight());

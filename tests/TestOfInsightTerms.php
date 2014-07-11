@@ -81,11 +81,13 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($terms->getMultiplierAdverb(3), 'triple');
         $this->assertEqual($terms->getMultiplierAdverb(4), 'quadruple');
         $this->assertEqual($terms->getMultiplierAdverb(5), '5x');
-        $this->assertEqual($terms->getMultiplierAdverb(1), '1x');
         $this->assertEqual($terms->getMultiplierAdverb(0.5), 'half');
         $this->assertEqual($terms->getMultiplierAdverb(0.3), 'a third of');
         $this->assertEqual($terms->getMultiplierAdverb(0.25), 'a quarter of');
-        $this->assertEqual($terms->getMultiplierAdverb(0.1), '0.1x');
+        $this->assertEqual($terms->getMultiplierAdverb(0.75), 'three quarters of');
+        $this->assertEqual($terms->getMultiplierAdverb(0.66), 'two thirds of');
+        $this->assertEqual($terms->getMultiplierAdverb(0.20), 'a fifth of');
+        $this->assertEqual($terms->getMultiplierAdverb(0.10), 'a tenth of');
     }
 
     public function testGetOccurrencesAdverb() {
