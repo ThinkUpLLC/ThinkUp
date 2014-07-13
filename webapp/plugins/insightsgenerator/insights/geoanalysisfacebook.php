@@ -41,34 +41,41 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 		
 		$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
 		$filename = basename ( __FILE__, ".php" );
-		
-		if (self::shouldGenerateInsight ( 'geo_analysis_facebook', $instance, $regenerate_existing_insight=true)) {
-			//$post_dao = DAOFactory::getDAO ( 'PostDAO' );
+			
+
+		if (self::shouldGenerateInsight ( 'geo_analysis_facebook', $instance, $insight_date='today', 
+				$regenerate_existing_insight=true, $day_of_week = 3, count($last_week_of_posts))) {
 			$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
-			//$posts = $post_dao->getLastWeekPostsByUserId ( $instance->network_user_id, $instance->network );
 			$geo_data = array();
 			foreach ( $last_week_of_posts as $post ) {
 				$locations_fav = $fpost_dao->getLocationOfFavoriters ( $post->post_id );
 				$locations_comm = $fpost_dao->getLocationOfCommenters ( $post->post_id );
-				//$geo = array_merge ( $locations_comm, $locations_fav );
-				$geo = array_map("unserialize", array_unique(array_map("serialize", array_merge ( $locations_comm,
-						 $locations_fav ))));
-				foreach ( $geo as $g ) {
-					$pos = strpos ( $g ['location'], "," );
+				$geos = array_merge ( $locations_comm, $locations_fav );
+				foreach ( $geos as $geo ) {
+					$pos = strpos ( $geo ['location'], "," );
 					if ($pos == 0) {
-						$city = $g ['location'];
+						$city = $geo ['location'];
 					} else {
-						$city = substr ( $g ['location'], 0, $pos );
+						$city = substr ( $geo ['location'], 0, $pos );
 					}
-					array_push($geo_data, array ("name" => $g ['name'],"city" => $city));
+					array_push($geo_data, array ("name" => $geo ['name'],"city" => $city));
 				}
 			}
-			$geo_data = array_map("unserialize", array_unique(array_map("serialize", $geo_data)));
-									
+			$geo_data = array_map("unserialize", array_unique(array_map("serialize", $geo_data)));	
+			$count = count($geo_data);
+
+			for ($i = 0; $i <= count($geo_data)-1; $i++) {
+				for ($j = $i+1; $j <= count($geo_data)-1; $j++) {
+					if ($geo_data[$i]['city'] == $geo_data[$j]['city']) {
+						$geo_data[$i]['name'] = $geo_data[$i]['name'].", ".$geo_data[$j]['name'];
+						unset($geo_data[$j]);
+					}
+				}
+			}
 			$this->insight_dao->insertInsightDeprecated ( 'geo_analysis_facebook', $instance->id,
-					$this->insight_date, "All over the world", "<strong>" . number_format ( count ( $geo_data ) )
+					$this->insight_date, "All over the world", "<strong>" . number_format( $count )
 					. " people</strong> interested in " . $instance->network_username . "'s posts last week",
-					$filename, Insight::EMPHASIS_HIGH, serialize ( array ($geo_data ) ) );
+					$filename, Insight::EMPHASIS_HIGH, serialize ( array($geo_data) ) );
 			$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
 		}
 	}
