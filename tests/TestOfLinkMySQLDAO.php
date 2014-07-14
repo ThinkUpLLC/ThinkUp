@@ -851,9 +851,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test of getLastXLinksPostedByUser Method
+     * Test of getLinksByUserSinceDaysAgo Method
      */
-    public function testgetLastXLinksPostedByUser() {
+    public function testgetLinksByUserSinceDaysAgo() {
         $builders = array();
         $user_id = 12345;
         $counter = 120;
@@ -878,13 +878,13 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
             'post_text'=>'Link post http://example.com/'.$counter, 'pub_date'=>$post_date));
 
-            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'post_key'=>767, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+        'title'=>'Link '.$counter, 'post_key'=>767, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
 
-        $result = $this->DAO->getLastXLinksPostedByUser($user_id, 'twitter', $limit= 100, $days_ago = 0);
+        $result = $this->DAO->getLinksByUserSinceDaysAgo($user_id, 'twitter', $limit= 100, $days_ago = 0);
         $this->assertEqual(count($result), 100);
 
-        $result = $this->DAO->getLastXLinksPostedByUser($user_id, 'twitter', $limit= 0, $days_ago = 9);
+        $result = $this->DAO->getLinksByUserSinceDaysAgo($user_id, 'twitter', $limit= 0, $days_ago = 9);
         $this->assertEqual(count($result), 121);
     }
 }

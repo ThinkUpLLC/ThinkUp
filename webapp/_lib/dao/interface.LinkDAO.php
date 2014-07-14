@@ -141,7 +141,7 @@ interface LinkDAO {
      * @param str name of network
      * @param int max number of results returned.
      * @param int number of days of results needed.
-     * @return All links posted by user within last X days or within limit.
+     * @return All links posted by user within last X days or within limit ordered by pub date. Most recent links first.
      */
-    public function getLastXLinksPostedByUser($user_id, $network, $limit= 0, $days_ago = 0);
+    public function getLinksByUserSinceDaysAgo($user_id, $network, $limit= 0, $days_ago = 0);
 }

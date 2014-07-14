@@ -327,7 +327,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getDeleteCount($ps);
     }
 
-    public function getLastXLinksPostedByUser($user_id, $network, $limit= 0, $days_ago = 0) {
+    public function getLinksByUserSinceDaysAgo($user_id, $network, $limit= 0, $days_ago = 0) {
 
         $vars = array(
         ':user_id'=>$user_id,
