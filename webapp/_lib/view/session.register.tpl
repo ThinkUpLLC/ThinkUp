@@ -65,8 +65,8 @@
 {/if}
 
       <p class="form-note">
-        <a href="login.php">Back to login</a>
-        <a href="forgot.php">Forgot your password?</a>
+        <a href="{$site_root_path}session/login.php">Back to login</a>
+        <a href="{$site_root_path}session/forgot.php">Forgot your password?</a>
       </p>
     </form>
   </div>
