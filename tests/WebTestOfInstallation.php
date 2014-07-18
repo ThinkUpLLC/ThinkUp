@@ -118,8 +118,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('db_prefix', $THINKUP_CFG['table_prefix']);
         $this->clickSubmitByName('Submit');
 
-        $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
-        'message has been sent.');
+        $this->assertText('ThinkUp has been successfully installed. Check your email account for an activation message.');
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
@@ -226,8 +225,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         '/webapp/test_installer/thinkup/config.inc.php'));
 
         //$this->showSource();
-        $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
-        'message has been sent.');
+        $this->assertText('ThinkUp has been successfully installed. Check your email account for an activation message.');
     }
 
     public function testSuccessfulInstallationInCustomFolder() {
@@ -265,7 +263,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //$this->showSource();
         //sleep(1000);
-        $this->assertText('ThinkUp has been installed successfully. Check your email account;');
+        $this->assertText('ThinkUp has been successfully installed. Check your email account for an activation message.');
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
