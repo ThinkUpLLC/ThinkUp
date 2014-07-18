@@ -504,6 +504,7 @@ textarea.form-control {
         color: @red-warning;
       }
     }
+
     .account-action-privacy {
       .privacy-toggle {
 
@@ -584,6 +585,36 @@ textarea.form-control {
         }
       }
 
+    }
+
+    &.has-crawl-button {
+      .crawl-button {
+        clear: both;
+        text-align: right;
+        padding-right: 4px;
+      }
+
+      .btnPlay {
+        color: @green-success;
+        border: 1px solid @green-success;
+        background-color: fade(@green-success, 10%);
+
+        &:hover {
+          color: #fff;
+          background-color: fade(@green-success, 75%);
+        }
+      }
+
+      .btnPause {
+        color: @red-warning;
+        border: 1px solid @red-warning;
+        background-color: fade(@red-warning, 10%);
+
+        &:hover {
+          color: #fff;
+          background-color: fade(@red-warning, 50%);
+        }
+      }
     }
 
     &.list-accounts-item-add {

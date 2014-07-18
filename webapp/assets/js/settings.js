@@ -6,7 +6,7 @@ $(function() {
     var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
     $.ajax({
       type: "GET",
-      url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+      url: site_root_path + "account/toggle-public.php",
       data: dataString,
       success: function() {
         $('#div' + u).html("<span class='btn btn-success' id='messagepub" + u + "'></span>");
@@ -24,7 +24,7 @@ $(function() {
     var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
     $.ajax({
       type: "GET",
-      url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
+      url: site_root_path + "account/toggle-public.php",
       data: dataString,
       success: function() {
         $('#div' + u).html("<span class='btn btn-default' id='messagepriv" + u + "'></span>");
@@ -44,7 +44,7 @@ $(function() {
     var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle active on
     $.ajax({
       type: "GET",
-      url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
+      url: site_root_path + "account/toggle-active.php",
       data: dataString,
       success: function() {
         $('#divactivate' + u).html("<span class='btn btn-success' id='messageplay" + u + "'></span>");
@@ -62,7 +62,7 @@ $(function() {
     var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle active off
     $.ajax({
       type: "GET",
-      url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
+      url: site_root_path + "account/toggle-active.php",
       data: dataString,
       success: function() {
         $('#divactivate' + u).html("<span class='btn btn-warning' id='messagepause" + u + "'></span>");
@@ -82,7 +82,7 @@ var activateOwner = function(u) {
   var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
   $.ajax({
     type: "GET",
-    url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
+    url: site_root_path + "account/toggle-owneractive.php",
     data: dataString,
     success: function() {
       $('#spanowneractivation' + u).css('display', 'none');
@@ -111,7 +111,7 @@ var deactivateOwner = function(u) {
   var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
   $.ajax({
     type: "GET",
-    url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
+    url: site_root_path + "account/toggle-owneractive.php",
     data: dataString,
     success: function() {
       $('#spanowneractivation' + u).css('display', 'none');
@@ -140,7 +140,7 @@ var promoteOwner = function(u) {
   var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
   $.ajax({
     type: "GET",
-    url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
+    url: site_root_path + "account/toggle-owneradmin.php",
     data: dataString,
     success: function() {
       $('#spanowneradmin' + u).css('display', 'none');
@@ -168,7 +168,7 @@ var demoteOwner = function(u) {
   var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
   $.ajax({
     type: "GET",
-    url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
+    url: site_root_path + "account/toggle-owneradmin.php",
     data: dataString,
     success: function() {
       $('#spanowneradmin' + u).css('display', 'none');
@@ -222,3 +222,46 @@ if ((show_plugin && (!window.location.hash || window.location.hash == '' || wind
 }
 
 });
+
+
+function show_settings() {
+    if (settings_visible) {
+        $(".plugin-settings").hide();
+        $('#settings-flip-prompt').html('Show');
+        settings_visible = false;
+        $("#settings-icon").removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    } else {
+        $(".plugin-settings").show();
+        $('#settings-flip-prompt').html('Hide');
+        settings_visible = true;
+        $("#settings-icon").removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    }
+}
+
+$(document).ready(function() {
+  show_settings();
+});
+
+function show_advanced() {
+  if(advanced_visible) {
+    $(".advanced-option-label").hide();
+    $(".advanced-option-input").hide();
+    $('#adv-flip-prompt').html('Show');
+    advanced_visible = false;
+    $("#advanced-icon").removeClass('fa-chevron-up').addClass('fa-chevron-down');
+  } else {
+    $(".advanced-option-label").show();
+    $(".advanced-option-input").show();
+    $('#adv-flip-prompt').html('Hide');
+    advanced_visible = true;
+    $("#advanced-icon").removeClass('fa-chevron-down').addClass('fa-chevron-up');
+  }
+}
+
+if( required_values_set ) {
+  $('#add-account-div').show();
+} else {
+  if(! is_admin) {
+    $('#contact-admin-div').show();
+  }
+}

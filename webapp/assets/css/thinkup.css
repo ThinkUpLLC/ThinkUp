@@ -520,6 +520,29 @@ textarea.form-control {
 .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
   right: 87px;
 }
+.list-accounts .list-group-item.has-crawl-button .crawl-button {
+  clear: both;
+  text-align: right;
+  padding-right: 4px;
+}
+.list-accounts .list-group-item.has-crawl-button .btnPlay {
+  color: #4cd764;
+  border: 1px solid #4cd764;
+  background-color: rgba(76, 215, 100, 0.1);
+}
+.list-accounts .list-group-item.has-crawl-button .btnPlay:hover {
+  color: #fff;
+  background-color: rgba(76, 215, 100, 0.75);
+}
+.list-accounts .list-group-item.has-crawl-button .btnPause {
+  color: #d0021b;
+  border: 1px solid #d0021b;
+  background-color: rgba(208, 2, 27, 0.1);
+}
+.list-accounts .list-group-item.has-crawl-button .btnPause:hover {
+  color: #fff;
+  background-color: rgba(208, 2, 27, 0.5);
+}
 .list-accounts .list-group-item.list-accounts-item-add {
   padding: 0;
 }

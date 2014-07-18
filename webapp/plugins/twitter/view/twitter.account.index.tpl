@@ -2,7 +2,7 @@
 {if isset($thinkupllc_endpoint)}
 
       <div class="container">
-        <header>
+        <header class="container-header">
           <h1>Twitter</h1>
           <h2>Manage accounts and choose which insights everyone (or just you) can see.</h2>
         </header>
