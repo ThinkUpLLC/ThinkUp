@@ -1,22 +1,16 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
+{include file="_header.tpl" body_classes="settings account menu-off"}
+{include file="_navigation.tpl"}
 
 <div id="main" class="container">
 
-    <div class="row">
-        <div class="col-md-3">
-            
-        </div>
-        <div class="col-md-9">
+    <div class="">
+        <div class="">
             {include file="_usermessage.tpl"}
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-3">
-            
-        </div>
-        <div class="col-md-9">
+    <div class="">
+        <div class="">
 
             <div class="panel panel-warning">
                 <div class="panel-heading">

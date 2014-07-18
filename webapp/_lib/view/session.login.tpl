@@ -27,7 +27,7 @@
       <input type="Submit" name="Submit" value="Log In" class="btn btn-submit-single">
 
       <p class="form-note">
-        <a href="forgot.php">Forgot your password?</a>
+        <a href="{$site_root_path}session/forgot.php">Forgot your password?</a>
         {if $is_registration_open}&nbsp; <a href="{$site_root_path}session/register.php">Register</a>{else}{/if}
       </p>
     </form>

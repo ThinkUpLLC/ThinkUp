@@ -27,8 +27,8 @@
       <input type="submit" name="Submit" value="Send" class="btn btn-submit-single">
 
       <p class="form-note">
-        <a href="login.php">Back to login</a>
-        {if $is_registration_open}&nbsp; <a href="register.php">Register</a>{else}{/if}
+        <a href="{$site_root_path}session/login.php">Back to login</a>
+        {if $is_registration_open}&nbsp; <a href="{$site_root_path}session/register.php">Register</a>{else}{/if}
       </p>
 
     </form>
