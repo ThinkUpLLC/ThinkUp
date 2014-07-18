@@ -10,10 +10,15 @@ body.settings .container {
   padding: 45px 10px 0;
   margin: 0 auto;
 }
-body.settings .container header {
-  margin-top: 20px;
+@media (min-width: 400px) {
+  body.settings .container {
+    width: 400px;
+  }
 }
-body.settings .container header h1 {
+body.settings .container .container-header {
+  margin: 20px 0;
+}
+body.settings .container .container-header h1 {
   text-align: center;
   font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
   font-weight: 600;
@@ -21,124 +26,347 @@ body.settings .container header h1 {
   line-height: 1.23;
   margin: 0;
 }
-body.settings .container header h2 {
+body.settings .container .container-header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
-  margin-top: 4px;
-  line-height: 1.28571429;
+  line-height: 1.57142857;
   font-weight: 300;
   text-align: center;
   margin: 0;
 }
-body.settings .container .standard-element {
+.standard-form-element {
   font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
+  line-height: 1;
+  padding: 25px 10px 10px;
 }
-body.settings .container .form-horizontal {
+form {
   font-family: "tablet-gothic", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   margin-bottom: 25px;
 }
-body.settings .container fieldset,
-body.settings .container .settings-set {
+form.big-bottom-margin {
+  margin-bottom: 50px;
+}
+@media (min-width: 400px) {
+  form {
+    font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  }
+}
+fieldset {
   margin-bottom: 25px;
 }
-body.settings .container fieldset.fieldset-no-header,
-body.settings .container .settings-set.fieldset-no-header {
+fieldset.big-bottom-margin {
+  margin-bottom: 50px;
+}
+fieldset.fieldset-no-header {
   border-top: 1px solid #b9c7ce;
 }
-body.settings .container fieldset header,
-body.settings .container .settings-set header {
+fieldset header {
+  text-align: center;
   margin: 0;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
   border-bottom: 1px solid #b9c7ce;
+  padding: 25px 5px 15px;
 }
-body.settings .container fieldset header h2,
-body.settings .container .settings-set header h2 {
+fieldset header h2,
+.settings-set-simple header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
   line-height: 1;
   font-weight: 600;
   color: #666666;
   margin: 0;
+  text-align: center;
 }
-body.settings .container fieldset header .help-text,
-body.settings .container .settings-set header .help-text {
+fieldset header .help-text {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 400;
   color: #999999;
 }
-body.settings .container .settings-set-simple header {
+@media (min-width: 400px) {
+  fieldset header {
+    width: 380px;
+  }
+}
+.settings-set-simple {
+  margin-bottom: 50px;
+}
+.settings-set-simple header {
   border: 0;
   margin-bottom: 10px;
 }
-body.settings .container .settings-set-simple .btn {
+.settings-set-simple .btn {
   margin-bottom: 20px;
 }
-body.settings .container .settings-set-simple code {
-  width: 100%;
+.settings-set-simple pre {
+  font-size: 12px;
 }
-body.settings .container .form-group {
+.form-group {
   margin: 0;
   border-bottom: 1px solid #b9c7ce;
+  overflow: hidden;
 }
-body.settings .container .form-group.form-group-warning,
-body.settings .container .form-group.form-group-ok {
+@media (min-width: 400px) {
+  .form-group {
+    width: 380px;
+  }
+}
+.form-group.form-group-warning,
+.form-group.form-group-ok {
   position: relative;
 }
-body.settings .container .form-group.form-group-warning:before,
-body.settings .container .form-group.form-group-ok:before {
+.form-group.form-group-warning:before,
+.form-group.form-group-ok:before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
   display: inline-block;
   text-decoration: inherit;
 }
-body.settings .container .form-group.form-group-warning:before,
-body.settings .container .form-group.form-group-ok:before {
+.form-group.form-group-warning:before,
+.form-group.form-group-ok:before {
   position: absolute;
-  right: 10px;
-  top: 17px;
-  font-size: 16px;
+  right: 9px;
+  top: 5px;
+  font-size: 12px;
+  opacity: .75;
 }
-body.settings .container .form-group.form-group-warning .form-control[type=text],
-body.settings .container .form-group.form-group-ok .form-control[type=text] {
-  padding-right: 35px;
-}
-body.settings .container .form-group.form-group-warning:before {
+.form-group.form-group-warning:before {
   content: "\f071";
   color: #d0021b;
+  right: 7px;
 }
-body.settings .container .form-group.form-group-warning .control-label,
-body.settings .container .form-group.form-group-warning .help-block {
-  color: #d0021b;
-}
-body.settings .container .form-group.form-group-ok:before {
+.form-group.form-group-ok:before {
   content: "\f058";
   color: #239a37;
 }
-body.settings .container .form-group .help-block {
+.form-group.form-group-radio:before,
+.form-group.form-group-radio:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+.form-group.form-group-radio:after {
+  clear: both;
+}
+.form-group.form-group-radio .control-label {
+  float: right;
+  padding-left: 0;
+}
+.form-group.form-group-radio .form-control {
+  float: left;
+  width: 30px;
+  min-width: 0;
+  margin: 10px 0 0 10px;
+  height: auto;
+  padding: 0;
+}
+.form-group .help-block {
   margin: 0;
   text-align: left;
+  padding: 4px 10px 0;
+  position: relative;
+  top: -5px;
+  clear: both;
 }
-body.settings .container .btn-default {
+.control-label {
+  width: 100%;
+  color: #999999;
+  text-align: left;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 3px 5px 2px;
+  line-height: 1.25;
+}
+.form-group-warning .control-label {
+  position: relative;
+  top: -2em;
+  display: none;
+}
+.form-control {
+  width: 100%;
+  color: #000;
+  height: 29px;
+  padding-left: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: 0 0 0;
+  transition: 0;
+  outline: 0;
+  border-radius: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0 5px 5px;
+}
+.form-control:focus {
+  box-shadow: 0 0 0;
+}
+textarea.form-control {
+  width: 190px;
+  height: 112px;
+  padding: 0;
+  margin: 11px 10px 10px 0;
+}
+@media (min-width: 400px) {
+  textarea.form-control {
+    width: 210px;
+  }
+}
+.input-with-domain {
+  position: relative;
+}
+.input-with-domain .form-control {
+  padding-right: 110px;
+}
+.input-with-domain .domain {
+  display: none;
+  position: absolute;
+  left: 6.95em;
+  top: 0;
+  width: 110px;
+  color: #999999;
+  vertical-align: bottom;
+  padding: 0 5px;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+.input-with-domain #username-length {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  font-size: 16px;
+}
+.help-block,
+.warning-block {
+  padding: 4px 5px;
+  margin: 0 0 5px;
+  color: #b3b3b3;
+  font-size: 12px;
+  line-height: 1.25;
+}
+.warning-block {
+  color: #d0021b;
+  position: relative;
+  padding: 3px 15px 2px 5px;
+}
+.form-group-toggle .control-label {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 80px 10px 10px;
+  font-size: 14px;
+  line-height: 2;
+  float: none;
+  position: relative;
+  color: #000;
+  margin: 0;
+}
+.form-group-toggle .control-label:before,
+.form-group-toggle .control-label:after {
+  -webkit-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  position: absolute;
+  content: " ";
+}
+.form-group-toggle .control-label:before {
+  width: 40px;
+  height: 24px;
+  top: 12px;
+  right: 10px;
+  background: #d0021b;
+  border-radius: 12px;
+}
+.form-group-toggle .control-label:after {
+  width: 22px;
+  height: 22px;
+  top: 13px;
+  right: 27px;
+  border-radius: 11px;
+  background: #fff;
+}
+.form-group-toggle input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+}
+.form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
+  background: #4cd764;
+}
+.form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
+  right: 11px;
+}
+.form-group-checkbox {
+  position: relative;
+}
+.form-group-checkbox .control-label {
+  width: 100%;
+  padding-right: 40px;
+}
+.form-group-checkbox .form-control {
+  position: absolute;
+  right: 0;
+  width: 25px;
+}
+.picker {
+  overflow: hidden;
+  position: relative;
+}
+.picker .icon {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  padding: 0 8px;
+  background: #f0f0f0;
+  z-index: -1;
+}
+.picker select {
+  width: 135%;
+  border: 0;
+  background: transparent;
+  box-shadow: 0 0 0;
+  transition: 0;
+  outline: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  padding-right: 95px;
+  padding-left: 0;
+}
+.picker select:focus {
+  color: #3ea5cf;
+}
+.btn-submit {
+  z-index: 101;
+  width: auto;
+  height: 34px;
+  padding: 10px;
+  border-radius: 4px;
   background: #125c9c;
   color: #fff;
   margin: 15px auto 0;
-}
-body.settings .container .btn-circle {
-  width: 74px;
-  height: 74px;
-  padding: 30px 0;
-  border-radius: 37px;
-}
-body.settings .container .btn-submit {
-  width: 140px;
   display: block;
+  border: 0;
+  line-height: 1;
+  font-weight: 600;
 }
-body.settings .container .btn-submit-single {
+.btn-submit:hover,
+.btn-submit:focus {
+  background: #0d416e;
+  color: #fff;
+}
+@media (min-width: 540px) {
+  .btn-circle {
+    width: 74px;
+    height: 74px;
+    padding: 30px 0;
+    border-radius: 50%;
+  }
+}
+@media (min-width: 540px) {
+  .btn-pill {
+    width: 150px;
+    border-radius: 4px;
+  }
+}
+.btn-submit-single {
   position: fixed;
   top: 5px;
   right: 0;
@@ -154,141 +382,28 @@ body.settings .container .btn-submit-single {
   padding: 10px 0;
 }
 @media (min-width: 540px) {
-  body.settings .container .btn-submit-single {
+  .btn-submit-single {
     position: static;
+  }
+}
+@media (min-width: 540px) and (min-width: 540px) {
+  .btn-submit-single {
     width: 74px;
     height: 74px;
     padding: 30px 0;
-    border-radius: 37px;
+    border-radius: 50%;
   }
 }
-body.settings .container .control-label {
-  float: left;
-  width: 100px;
-  color: #999999;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
-  text-align: left;
-  font-weight: 400;
+.list-group {
+  border-top: 1px solid #b9c7ce;
+  margin-top: 20px;
 }
-body.settings .container .form-control {
-  width: auto;
-  min-width: 180px;
-  max-width: 300px;
-  margin-left: 100px;
-  color: #000;
-  height: 49px;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
-  padding: 11px 10px 10px 0;
-  border: 0;
-  background: transparent;
-  box-shadow: 0 0 0;
-  transition: 0;
-  outline: 0;
-  border-radius: 0;
-}
-body.settings .container textarea.form-control {
-  width: 190px;
-  height: 112px;
-  padding: 0;
-  margin: 11px 10px 10px 0;
-}
-body.settings .container .help-block {
-  padding: 4px 10px;
-  margin: 4px 0 0;
-  text-align: center;
-  color: #b3b3b3;
-  font-size: 12px;
-  line-height: 1.33;
-}
-body.settings .container .form-group-toggle .control-label {
-  width: 100%;
-  min-width: 0;
-  padding: 11px 80px 10px 10px;
-  float: none;
-  position: relative;
-  color: #000;
-}
-body.settings .container .form-group-toggle .control-label:before,
-body.settings .container .form-group-toggle .control-label:after {
-  -webkit-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  position: absolute;
-  content: " ";
-}
-body.settings .container .form-group-toggle .control-label:before {
-  width: 40px;
-  height: 24px;
-  top: 12px;
-  right: 10px;
-  background: #d0021b;
-  border-radius: 12px;
-}
-body.settings .container .form-group-toggle .control-label:after {
-  width: 22px;
-  height: 22px;
-  top: 13px;
-  right: 27px;
-  border-radius: 11px;
-  background: #fff;
-}
-body.settings .container .form-group-toggle input[type=checkbox] {
-  position: absolute;
-  opacity: 0;
-}
-body.settings .container .form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
-  background: #4cd764;
-}
-body.settings .container .form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
-  right: 11px;
-}
-body.settings .container .form-group-checkbox {
-  position: relative;
-}
-body.settings .container .form-group-checkbox .control-label {
-  width: 100%;
-  padding-right: 40px;
-}
-body.settings .container .form-group-checkbox .form-control {
-  position: absolute;
-  right: 0;
-  width: 25px;
-}
-body.settings .container .picker {
-  overflow: hidden;
-  position: relative;
-}
-body.settings .container .picker .icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 18px 10px 17px;
-  background: #f0f0f0;
-  z-index: -1;
-}
-body.settings .container .picker select {
-  width: 135%;
-  border: 0;
-  background: transparent;
-  box-shadow: 0 0 0;
-  transition: 0;
-  outline: 0;
-  border-radius: 0;
-  -webkit-appearance: none;
-  padding-right: 95px;
-}
-body.settings .container .picker select:focus {
-  color: #3ea5cf;
-}
-body.settings .container .list-group {
+.list-group {
   border-top: 1px solid #b9c7ce;
   margin-top: 20px;
   margin-bottom: 14px;
 }
-body.settings .container .list-group .list-group-item {
+.list-group .list-group-item {
   border-radius: 0;
   background: 0;
   border: 0;
@@ -299,48 +414,48 @@ body.settings .container .list-group .list-group-item {
   border-bottom: 1px solid #b9c7ce;
   position: relative;
 }
-body.settings .container .list-group .list-group-item .list-group-item-label {
+.list-group .list-group-item .list-group-item-label {
   float: left;
   max-width: 130px;
 }
-body.settings .container .list-group .list-group-item .list-group-item-value {
+.list-group .list-group-item .list-group-item-value {
   margin-left: 130px;
   font-weight: 600;
 }
-body.settings .container .list-group-plugins .list-group-item .icon {
+.list-group-plugins .list-group-item .account-label .icon {
   float: left;
   margin-right: 20px;
 }
-body.settings .container .list-accounts .list-group-item {
+.list-accounts .list-group-item {
   overflow: hidden;
 }
-body.settings .container .list-accounts .list-group-item .account-label {
+.list-accounts .list-group-item .account-label {
   font-weight: 400;
   margin-left: 0;
 }
-body.settings .container .list-accounts .list-group-item .account-label .account-photo {
+.list-accounts .list-group-item .account-label .account-photo {
   float: left;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
-body.settings .container .list-accounts .list-group-item .account-action {
+.list-accounts .list-group-item .account-action {
   position: absolute;
   top: 0;
   right: 0;
   font-size: 20px;
   line-height: 1;
 }
-body.settings .container .list-accounts .list-group-item .account-action-delete {
+.list-accounts .list-group-item .account-action-delete {
   left: -50px;
   right: auto;
 }
-body.settings .container .list-accounts .list-group-item .account-action-delete a {
+.list-accounts .list-group-item .account-action-delete a {
   display: block;
   padding: 15px 10px 14px;
   color: #d0021b;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label {
   position: relative;
   width: 110px;
   height: 24px;
@@ -349,7 +464,7 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   border-radius: 12px;
   display: none;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
   color: #fff;
   font-size: 12px;
   line-height: 1;
@@ -359,7 +474,7 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   font-weight: 600;
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .icon {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .icon {
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
   color: #b4eebe;
@@ -369,7 +484,7 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   top: 2px;
   left: 5px;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label:after {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label:after {
   position: absolute;
   content: " ";
   width: 22px;
@@ -379,81 +494,123 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   border-radius: 11px;
   background: #fff;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio]:checked + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio]:checked + .toggle-label {
   display: block;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio] {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio] {
   position: absolute;
   opacity: 0;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-public + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-public + .toggle-label {
   background: #4cd764;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label {
   background: #d0021b;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .text {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .text {
   padding-left: 32px;
   color: #6b010e;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .icon {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .icon {
   color: #6b010e;
   top: 4px;
   left: 89px;
   font-size: 18px;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
   right: 87px;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add {
+.list-accounts .list-group-item.list-accounts-item-add {
   padding: 0;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a {
+.list-accounts .list-group-item.list-accounts-item-add a {
   font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
+  line-height: 1;
+  padding: 25px 10px 10px;
   display: block;
-  color: #333333;
+  color: #222222;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a .account-action {
+.list-accounts .list-group-item.list-accounts-item-add a .account-action {
   padding: 15px 10px 14px;
   color: #666666;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover {
+.list-accounts .list-group-item.list-accounts-item-add a:hover {
   text-decoration: none;
   background: #e8e8e8;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
+.list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
   color: #595959;
 }
-body.settings .container .account-buttons {
+.account-buttons {
   text-align: center;
 }
-body.settings .container .account-buttons .btn-account-remove,
-body.settings .container .account-buttons .btn-account-add {
+.account-buttons .btn-account-remove,
+.account-buttons .btn-account-add {
   margin: 0 0 14px;
 }
-body.settings .container .account-buttons .btn-account-add .icon {
+.account-buttons .btn-account-add .icon {
   margin-right: 10px;
 }
-body.settings .container .form-note,
-body.settings .container .form-notes {
+.form-note,
+.form-notes {
   text-align: center;
   padding: 0 5% 14px;
   color: #999999;
 }
-body.settings .container .form-notes {
+.form-notes {
   border-top: 1px solid #b9c7ce;
   padding-top: 14px;
 }
-body.settings .container .form-notes .alert,
-body.settings .container .form-notes .alert-info {
+.form-notes .alert,
+.form-notes .alert-info {
   padding: 0;
   margin: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   color: #999999;
+}
+.form-message {
+  color: #222;
+  border: 1px solid #ffee25;
+  border-left: 0;
+  border-right: 0;
+  background: #fffabe;
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.form-message .btn {
+  background: #27af3f;
+}
+.form-message .btn:hover {
+  background: #2cc446;
+}
+.form-warning {
+  color: #9d0214;
+  border-color: #ec9aa4;
+  background: #f6ccd1;
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.form-warning .btn {
+  background: #9d0214;
+}
+.form-warning .btn:hover {
+  background: #b70218;
+}
+.btn-close-account {
+  display: block;
+  margin: 0 auto 15px;
+  width: 12em;
+}
+.btn-close-account:hover {
+  background: #fd0826;
+  border-color: #fd0826;
+}
+.accounts-privacy {
+  color: #417505;
 }
 body#settings-subscription .form-note .show-section {
   margin-top: 10px;
@@ -462,29 +619,27 @@ body#settings-subscription #form-membership-contact {
   margin-top: 40px;
   display: none;
 }
-@media (min-width: 400px) {
-  body.settings .container {
-    width: 400px;
-  }
-  body.settings .form-horizontal {
-    font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  }
-  body.settings .form-horizontal fieldset header {
-    width: 380px;
-  }
-  body.settings .form-horizontal .form-group {
-    width: 380px;
-  }
-  body.settings .form-horizontal .control-label {
-    width: 150px;
-  }
-  body.settings .form-horizontal .form-control {
-    margin-left: 160px;
-    width: 220px;
-  }
-  body.settings .form-horizontal textarea.form-control {
-    width: 210px;
-  }
+body#settings-registration header h1 {
+  font-size: 24px;
+}
+body#settings-registration .container .form-group-radio {
+  border-bottom: 0;
+  margin: 0 auto;
+  width: 255px;
+}
+body#settings-registration .container .form-group-radio .control-label {
+  min-width: 0;
+  max-width: none;
+  width: 215px;
+  font-size: 14px;
+  padding: 16px 10px 11px;
+}
+body#settings-registration .container .form-group-radio.form-group-warning .control-label {
+  top: 0;
+  display: block;
+}
+body#settings-registration .container .form-group-radio.form-group-warning .warning-block {
+  clear: both;
 }
 body.account {
   background: #46bcff;
@@ -1132,7 +1287,7 @@ body.app-message-visible.account .container {
   margin: 0;
 }
 .insight .panel-heading .panel-subtitle a {
-  color: #333333;
+  color: #222222;
   text-decoration: underline;
 }
 .insight .panel-heading .userpic-featured {
@@ -1911,7 +2066,7 @@ body.app-message-visible.account .container {
 }
 .user .user-about {
   margin-left: 70px;
-  color: #333333;
+  color: #222222;
 }
 .user .user-about .user-name {
   font-weight: 600;
@@ -1923,7 +2078,7 @@ body.app-message-visible.account .container {
   font-weight: bold;
 }
 .link .link-title a {
-  color: #333333;
+  color: #222222;
 }
 .link .link-title a:hover {
   text-decoration: none;

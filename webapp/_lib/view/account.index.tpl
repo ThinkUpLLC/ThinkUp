@@ -13,15 +13,13 @@
   {else}
 
     {include file="_usermessage.tpl" field="preferences"}
-    <form name="setPreferences" id="setPreferences" class="form-horizontal" action="index.php?m=manage"
-      method="POST">
+    <form name="setPreferences" id="setPreferences" class="big-bottom-margin" action="index.php?m=manage" method="POST">
 
-      <header>
+      <header class="container-header">
         <h1>Settings</h1>
       </header>
 
-      <fieldset class="fieldset-personal">
-        <header></header>
+      <fieldset class="fieldset-personal fieldset-no-header">
         <div class="form-group">
           <label class="control-label" for="notificationfrequency">Insights email</label>
           <div class="form-control picker">
@@ -69,7 +67,7 @@
       <input type="submit" value="Update" name="updatepreferences" class="btn btn-default btn-submit">
     </form>
 
-    <form name="changepass" id="changepass" class="form-horizontal" method="post"
+    <form name="changepass" id="changepass" class="big-bottom-margin" method="post"
       action="index.php?m=manage#changepass">
 
       <fieldset class="fieldset-password">
@@ -146,10 +144,10 @@
       <a href="{$site_root_path}install/exportuserdata.php" class="show-section btn btn-default">Export a ThinkUp account</a>
     </div>
 
-    <form id="app-settings-form" class="form-horizontal" name="app_settings" method="post"
+    <form id="app-settings-form" name="app_settings" method="post"
       action="{$site_root_path}session/app_settings.php" onsubmit="return false">
 
-      <header>
+      <header class="container-header">
         <h1>Application Settings</h1>
       </header>
 
@@ -168,15 +166,15 @@
           <h2>Test Stuff Out</h2>
         </header>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_subscribed_to_beta">Enable beta upgrades</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_subscribed_to_beta" id="is_subscribed_to_beta" checked value="true">
+          <label class="control-label" for="is_subscribed_to_beta">Enable beta upgrades</label>
           <span class="help-block">Test bleeding edge, beta upgrades. May require command line server access. Proceed at your own risk.</span>
         </div>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_log_verbose">Enable developer log</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_log_verbose" id="is_log_verbose" value="true">
+          <label class="control-label" for="is_log_verbose">Enable developer log</label>
           <span class="help-block">See the verbose, unformatted developer log on the Capture Data screen.</span>
         </div>
       </fieldset>
@@ -186,15 +184,15 @@
           <h2>Let People In</h2>
         </header>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_registration_open">Open registration to new ThinkUp users</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_registration_open" id="is_registration_open" value="true">
+          <label class="control-label" for="is_registration_open">Open registration to new ThinkUp users</label>
           <span class="help-block">Set whether or not your site's registration page is available and accepts new user registrations.</span>
         </div>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="recaptcha_enable">Enable reCAPTCHA</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="recaptcha_enable" id="recaptcha_enable" value="true">
+          <label class="control-label" for="recaptcha_enable">Enable reCAPTCHA</label>
           <span class="help-block">Add reCAPTCHA to ThinkUp's registration form. <a href="https://www.google.com/recaptcha">Get your reCAPTCHA keys here</a>.</span>
         </div>
 
@@ -229,21 +227,21 @@
           <h2>Don't Share Data</h2>
         </header>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_api_disabled">Disable the JSON API</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_api_disabled" id="is_api_disabled" value="true">
+          <label class="control-label" for="is_api_disabled">Disable the JSON API</label>
           <span class="help-block">Set whether or not your site's data is available via ThinkUp's JSON API. <a href="http://thinkup.com/docs/userguide/api/posts/index.html">Learn more...</a></span>
         </div>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_embed_disabled">Disable thread embeds</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_embed_disabled" id="is_embed_disabled" value="true">
+          <label class="control-label" for="is_embed_disabled">Disable thread embeds</label>
           <span class="help-block">Set whether or not a user can embed a ThinkUp thread onto another web site.</span>
         </div>
 
-        <div class="form-group form-group-checkbox">
-          <label class="control-label" for="is_opted_out_usage_stats">Disable usage reporting</label>
+        <div class="form-group form-group-toggle">
           <input type="checkbox" class="form-control" name="is_opted_out_usage_stats" id="is_opted_out_usage_stats" value="true">
+          <label class="control-label" for="is_opted_out_usage_stats">Disable usage reporting</label>
           <span class="help-block">Usage reporting helps us improve ThinkUp. <a href="http://thinkup.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a></span>
         </div>
       </fieldset>
@@ -257,13 +255,11 @@
     </form>
 
     <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
-    <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
-
     {/if}{* end admin stuff *}
 
-    <header>
-      <span class="pull-right">{insert name="help_link" id='rss'}</span>
+    <header class="container-header">
       <h1>Automate ThinkUp Data Capture</h1>
+      <div class="text-center">{insert name="help_link" id='rss'}</div>
     </header>
 
     <div class="settings-set settings-set-simple">
@@ -272,7 +268,7 @@
       </header>
 
       <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
-      <p><a href="{$rss_crawl_url}" class="btn"><i class="fa fa-rss"></i> Secret ThinkUp Update Feed</a></p>
+      <p class="text-center"><a href="{$rss_crawl_url}" class="btn"><i class="fa fa-rss"></i> Secret ThinkUp Update Feed</a></p>
     </div>
 
     <div class="settings-set settings-set-simple">
@@ -282,7 +278,7 @@
 
       <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
 
-      <code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code>
+      <pre class="pre-scrollable" id="clippy_2988">{$cli_crawl_command}</pre>
 
       <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
@@ -318,20 +314,22 @@
 
       {include file="_usermessage.tpl" field='api_key'}
 
-      <p><strong>Your Current ThinkUp API Key:</strong> <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
-        <span id="show_api_key" class="btn btn-default">
-        <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
+      <p class="text-center">Your current ThinkUp API key:</p>
+      <p class="text-center">
+        <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
+        <a id="show_api_key" href="#" class="btn btn-default linkbutton"
+        onclick="$('#show_api_key').hide(); $('#hidden_api_key').show(); return false;">
         Click to view</a>
         </span>
       </p>
-      <p>Accidentally share your secret RSS URL?</p>
+      <p class="text-center">Accidentally share your secret RSS URL?</p>
       <form method="post" action="index.php?m=manage#instances" id="api-key-form">
         <input type="hidden" name="reset_api_key" value="Reset API Key" />
         <span id="apikey_conf" style="display: none;">
         Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
         </span>
         <input type="button" value="Reset Your API Key"
-        class="btn btn-warning"
+        class="btn btn-warning center-block"
         {literal}
         onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
         {/literal}
@@ -411,233 +409,7 @@
 
 
 <script type="text/javascript">
-  var show_plugin = {if $force_plugin}true{else}false{/if};
-  {literal}
-$(function() {
-    $(".btnPub").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $('#div' + u).html("<span class='btn btn-success' id='messagepub" + u + "'></span>");
-          $('#messagepub' + u).html("Set to public!").hide().fadeIn(1500, function() {
-            $('#messagepub' + u);
-          });
-        }
-      });
-      return false;
-    });
-
-    $(".btnPriv").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $('#div' + u).html("<span class='btn btn-default' id='messagepriv" + u + "'></span>");
-          $('#messagepriv' + u).html("Set to private!").hide().fadeIn(1500, function() {
-            $('#messagepriv' + u);
-          });
-        }
-      });
-      return false;
-    });
-  });
-
-  $(function() {
-    $(".btnPlay").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
-        data: dataString,
-        success: function() {
-          $('#divactivate' + u).html("<span class='btn btn-success' id='messageplay" + u + "'></span>");
-          $('#messageplay' + u).html("Started!").hide().fadeIn(1500, function() {
-            $('#messageplay' + u);
-          });
-        }
-      });
-      return false;
-    });
-
-    $(".btnPause").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
-        data: dataString,
-        success: function() {
-          $('#divactivate' + u).html("<span class='btn btn-warning' id='messagepause" + u + "'></span>");
-          $('#messagepause' + u).html("Paused!").hide().fadeIn(1500, function() {
-            $('#messagepause' + u);
-          });
-        }
-      });
-      return false;
-    });
-  });
-
-    $(function() {
-    var activateOwner = function(u) {
-      //removing the "user" from id here to stop conflict with plugin
-      u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageowneractive' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#messageowneractive' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'inline');
-          $('#user' + u).val('Deactivate');
-          $('#spanownernametext' + u).css('display', 'none');
-          $('#user' + u).removeClass('btn-success').addClass('btn-danger');
-          $('#userAdmin' + u).show();
-          setTimeout(function() {
-              $('#messageowneractive' + u).css('display', 'none');
-              $('#spanowneractivation' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var deactivateOwner = function(u) {
-      //removing the "user" from id here to stop conflict with plugin
-      u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageowneractive' + u).html("Deactivated!").hide().fadeIn(150, function() {
-            $('#messageowneractive' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'none');
-          $('#spanownernametext' + u).css('display', 'inline');
-          $('#user' + u).val('Activate');
-          $('#user' + u).removeClass('btn-danger').addClass('btn-success');
-          $('#userAdmin' + u).hide();
-          setTimeout(function() {
-              $('#messageowneractive' + u).css('display', 'none');
-              $('#spanowneractivation' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var promoteOwner = function(u) {
-      //removing the "userAdmin" from id here to stop conflict with plugin
-      u = u.substr(9);
-      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneradmin' + u).css('display', 'none');
-          $('#messageadmin' + u).html("Promoted!").hide().fadeIn(1500, function() {
-            $('#messageadmin' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'inline');
-          $('#userAdmin' + u).val('Demote');
-          $('#spanownernametext' + u).css('display', 'none');
-          $('#userAdmin' + u).removeClass('btn-success').addClass('btn-danger');
-          setTimeout(function() {
-              $('#messageadmin' + u).css('display', 'none');
-              $('#spanowneradmin' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var demoteOwner = function(u) {
-      //removing the "userAdmin" from id here to stop conflict with plugin
-      u = u.substr(9);
-      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneradmin' + u).css('display', 'none');
-          $('#messageadmin' + u).html("Demoted!").hide().fadeIn(1500, function() {
-            $('#messageadmin' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'none');
-          $('#spanownernametext' + u).css('display', 'inline');
-          $('#userAdmin' + u).val('Promote');
-          $('#userAdmin' + u).removeClass('btn-danger').addClass('btn-success');
-          setTimeout(function() {
-              $('#messageadmin' + u).css('display', 'none');
-              $('#spanowneradmin' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    $(".toggleOwnerActivationButton").click(function() {
-      if($(this).val() == 'Activate') {
-        activateOwner($(this).attr("id"));
-      } else {
-        deactivateOwner($(this).attr("id"));
-      }
-    });
-
-    $(".toggleOwnerAdminButton").click(function() {
-      if($(this).val() == 'Promote') {
-        promoteOwner($(this).attr("id"));
-      } else {
-        demoteOwner($(this).attr("id"));
-      }
-    });
-
-    $('.manage_plugin').click(function (e) {
-      var url = $(this).attr('href');
-      var p = url.replace(/.*p=/, '').replace(/#.*/, '');;
-      if (window.location.href.indexOf("="+p) >= 0) {
-        $('.section').hide();
-        $('#manage_plugin').show();
-        e.preventDefault();
-      }
-    });
-    if ((show_plugin && (!window.location.hash || window.location.hash == '' || window.location.hash == '#_=_' ))
-    || (window.location.hash && window.location.hash == '#manage_plugin')) {
-      $('.section').hide();
-      $('#manage_plugin').show();
-    }
-
-  });
-
-  {/literal}
+var show_plugin = {if $force_plugin}true{else}false{/if};
 </script>
 
 {include file="_footer.tpl" linkify=0}
