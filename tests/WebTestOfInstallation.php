@@ -99,7 +99,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
+        $this->assertPattern('/Create your ThinkUp account/');
         $this->clickLinkById('nextstep');
 
         //sleep(1000);
@@ -187,7 +187,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
+        $this->assertPattern('/Create your ThinkUp account/');
         $this->clickLinkById('nextstep');
 
         //sleep(1000);
@@ -244,7 +244,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist!');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Your system has everything it needs to run ThinkUp.');
+        $this->assertPattern('/Create your ThinkUp account/');
         $this->clickLinkById('nextstep');
 
         //sleep(1000);
@@ -285,7 +285,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
+        $this->assertPattern('/Create your ThinkUp account/');
         $this->clickLinkById('nextstep');
 
         $this->assertText('Create your ThinkUp account');

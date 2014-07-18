@@ -150,7 +150,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
         $error_msg = 'Inactive account. ';
-        $error_msg .= '<a href="http://thinkup.com/docs/install/install.html#activate-your-account">';
+        $error_msg .= '<a href=\"http://thinkup.com/docs/install/install.html#activate-your-account\">';
         $error_msg .= 'You must activate your account.</a>';
         $this->assertEqual($error_msg, $v_mgr->getTemplateDataItem('error_msg'));
     }
@@ -249,7 +249,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
                 $this->assertEqual($owner->failed_logins, $i);
             } else {
                 $this->assertEqual("Inactive account. Account deactivated due to too many failed logins. ".
-                '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('error_msg'));
+                '<a href=\"forgot.php\">Reset your password.</a>', $v_mgr->getTemplateDataItem('error_msg'));
                 $this->assertEqual($owner->account_status, "Account deactivated due to too many failed logins");
             }
             $i = $i + 1;

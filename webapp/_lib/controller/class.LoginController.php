@@ -88,11 +88,11 @@ class LoginController extends ThinkUpController {
                         $error_msg = 'Inactive account. ';
                         if ($owner->failed_logins == 0) {
                             $error_msg .=
-                            '<a href="http://thinkup.com/docs/install/install.html#activate-your-account">' .
+                            '<a href=\"http://thinkup.com/docs/install/install.html#activate-your-account\">' .
                             'You must activate your account.</a>';
                         } elseif ($owner->failed_logins == 10) {
                             $error_msg .= $owner->account_status .
-                            '. <a href="forgot.php">Reset your password.</a>';
+                            '. <a href=\"forgot.php\">Reset your password.</a>';
                         }
                         $disable_xss = true;
                         $this->addErrorMessage($error_msg, null, $disable_xss);
@@ -105,7 +105,7 @@ class LoginController extends ThinkUpController {
                             $status = 'Account deactivated due to too many failed logins';
                             $owner_dao->setAccountStatus($user_email, $status);
                             $error_msg = 'Inactive account. ' . $status .
-                            '. <a href="forgot.php">Reset your password.</a>';
+                            '. <a href=\"forgot.php\">Reset your password.</a>';
                         }
                         $owner_dao->incrementFailedLogins($user_email);
                         $disable_xss = true;
