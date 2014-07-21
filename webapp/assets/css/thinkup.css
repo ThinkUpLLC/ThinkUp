@@ -463,6 +463,7 @@ textarea.form-control {
   right: 10px;
   border-radius: 12px;
   display: none;
+  cursor: pointer;
 }
 .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
   color: #fff;
@@ -520,26 +521,29 @@ textarea.form-control {
 .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
   right: 87px;
 }
-.list-accounts .list-group-item.has-crawl-button .crawl-button {
+.list-accounts .list-group-item.has-extra-buttons .extra-buttons {
   clear: both;
   text-align: right;
   padding-right: 4px;
 }
-.list-accounts .list-group-item.has-crawl-button .btnPlay {
+.list-accounts .list-group-item.has-extra-buttons .extra-buttons .btn {
+  margin-bottom: 5px;
+}
+.list-accounts .list-group-item.has-extra-buttons .btnPlay {
   color: #4cd764;
   border: 1px solid #4cd764;
   background-color: rgba(76, 215, 100, 0.1);
 }
-.list-accounts .list-group-item.has-crawl-button .btnPlay:hover {
+.list-accounts .list-group-item.has-extra-buttons .btnPlay:hover {
   color: #fff;
   background-color: rgba(76, 215, 100, 0.75);
 }
-.list-accounts .list-group-item.has-crawl-button .btnPause {
+.list-accounts .list-group-item.has-extra-buttons .btnPause {
   color: #d0021b;
   border: 1px solid #d0021b;
   background-color: rgba(208, 2, 27, 0.1);
 }
-.list-accounts .list-group-item.has-crawl-button .btnPause:hover {
+.list-accounts .list-group-item.has-extra-buttons .btnPause:hover {
   color: #fff;
   background-color: rgba(208, 2, 27, 0.5);
 }

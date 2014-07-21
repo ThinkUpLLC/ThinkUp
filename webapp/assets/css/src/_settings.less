@@ -516,6 +516,7 @@ textarea.form-control {
           right: 10px;
           border-radius: 12px;
           display: none;
+          cursor: pointer;
 
           .text {
             color: #fff;
@@ -587,11 +588,15 @@ textarea.form-control {
 
     }
 
-    &.has-crawl-button {
-      .crawl-button {
+    &.has-extra-buttons {
+      .extra-buttons {
         clear: both;
         text-align: right;
         padding-right: 4px;
+
+        .btn {
+          margin-bottom: 5px;
+        }
       }
 
       .btnPlay {

@@ -8,7 +8,7 @@
     <ul class="list-group list-accounts">
     {if count($instances) > 0 }
       {foreach from=$instances key=iid item=i name=foo}
-      <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-crawl-button{/if}">
+      <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-extra-buttons{/if}">
         <div class="account-label">
           {if $i->auth_error}<span class="fa fa-warning text-warning" id="facebook-auth-error"></span>{/if}
           <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
@@ -29,7 +29,7 @@
         </div>
 
         {if $user_is_admin and !isset($thinkupllc_endpoint)}
-        <div class="crawl-button">
+        <div class="extra-buttons">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn btn-default {if $i->is_active}btnPause{else}btnPlay{/if} btn-sm btn-info" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
         {/if}
@@ -51,7 +51,7 @@
 
       {if !isset($thinkupllc_endpoint) and isset($owner_instance_pages) and count($owner_instance_pages) > 0 }
       {foreach from=$owner_instance_pages key=iid item=i name=foo}
-      <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-crawl-button{/if}">
+      <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-extra-buttons{/if}">
         <div class="account-label">
           {if $i->auth_error}<span class="fa fa-warning text-warning" id="facebook-auth-error"></span>{/if}
           <img src="http://avatars.io/facebook/{$i->network_user_id}" class="account-photo img-circle">
@@ -72,7 +72,7 @@
         </div>
 
         {if $user_is_admin and !isset($thinkupllc_endpoint)}
-        <div class="crawl-button">
+        <div class="extra-buttons">
             <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="btn btn-default {if $i->is_active}btnPause{else}btnPlay{/if} btn-sm" value="{if $i->is_active}Pause{else}Start{/if} crawling" /></span>
         </div>
         {/if}
