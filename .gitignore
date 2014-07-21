@@ -7,6 +7,7 @@ webapp/config.inc.bak.php
 tests/config.tests.inc.php
 extras/cron/config
 extras/scripts/autodeploy-conf
+extras/scripts/insight-html-to-server-conf
 extras/scripts/migratedb-conf
 extras/scripts/test-pull-postback-conf
 extras/dev/ramdisk/osx_make_ramdisk_db.conf
@@ -38,3 +39,6 @@ webapp/plugins/*
 
 # ThinkUpLLC-specific extensions
 thinkupllc*
+
+# Grunt and NPM files
+node_modules
