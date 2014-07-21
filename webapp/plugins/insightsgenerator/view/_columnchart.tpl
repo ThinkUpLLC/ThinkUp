@@ -14,16 +14,17 @@
             for (var i=0; i<raw.rows.length; i++) {
                 maxvalue = Math.max(maxvalue, raw.rows[i].c[1].v);
             }
+            var num_ticks = Math.min(10, maxvalue+1);
             var c = window.tu.constants.colors;
             var view_duration_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'exclamation_count_{/literal}{$i->id}{literal}',
               chartType: 'ColumnChart',
               dataTable: table,
               options: {
-                  width: 400,
+                  width: 380,
                   height: 250,
                   colors: {/literal}[c.{$color}, c.{$color}_dark, c.{$color}_darker],{literal}
-                  chartArea:{left:20,height:"80%"},
+                  chartArea:{left:40,height:"80%"},
                   legend: 'none',
                   hAxis: {
                     textStyle: { color: '#999', fontSize: 10 }
@@ -34,7 +35,7 @@
                     gridlines: { color: '#eee' },
                     format: '0',
                     minValue: 0,
-                    gridlines: {count: maxvalue+1}
+                    gridlines: {count: num_ticks}
                   }
                 }
             });

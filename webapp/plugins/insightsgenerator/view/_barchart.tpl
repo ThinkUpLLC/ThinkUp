@@ -14,6 +14,7 @@
             for (var i=0; i<raw.rows.length; i++) {
                 maxvalue = Math.max(maxvalue, raw.rows[i].c[1].v);
             }
+            var num_ticks = Math.min(10, maxvalue+1);
             var c = window.tu.constants.colors;
             var view_duration_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
               containerId: 'exclamation_count_{/literal}{$i->id}{literal}',
@@ -28,7 +29,7 @@
                     textStyle: { color: '#999', fontSize: 10 },
                     format: '0',
                     minValue: 0,
-                    gridlines: {count: maxvalue+1}
+                    gridlines: {count: num_ticks}
                   },
                   vAxis: {
                     baselineColor: '#ccc',
