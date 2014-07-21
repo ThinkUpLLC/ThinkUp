@@ -276,6 +276,32 @@ class TestOfMetaPostsCountInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testZeroPercent() {
+        $insight_plugin = new MetaPostsCountInsight();
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $posts = array(
+            new Post(array('post_text' => 'I am tweeting tweets on twitter.')),
+        );
+        for ($i=0; $i<300; $i++) {
+            $posts[] =  new Post(array('post_text' => 'I am eating pizza'));
+        }
+        $insight_plugin->generateInsight($this->instance, null, $posts, 7);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, "Tweetin' 'bout Twitter.");
+        $this->assertEqual($result->text, "@reflection used Twitter to talk about Twitter once this week.");
+
+        $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
+        $baseline = $insight_baseline_dao->getInsightBaseline($baseline_name, $this->instance->id, date('Y-m-d'));
+        $this->assertEqual(0, $baseline->value);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testPostMatcher() {
         $insight_plugin = new MetaPostsCountInsight();
         $post = new Post();
