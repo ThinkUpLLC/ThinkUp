@@ -201,6 +201,50 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testWithLotsOfData() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        for ($i=0; $i<250; $i++) {
+            $post_builders[] = FixtureBuilder::build('posts', array( 'author_username'=> 'screamy',
+                'post_id' => $i + 100,
+                'network' => 'twitter', 'post_text' => 'Woo!! '.$i, 'pub_date' => date('Y-m-d')));
+        }
+        $post_builders[] = FixtureBuilder::build('posts', array( 'author_username'=> 'screamy', 'network' => 'twitter',
+            'post_text' => 'Woo! Yeah!!!!!', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array( 'author_username'=> 'screamy', 'network' => 'twitter',
+            'post_text' => 'Blah!!', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array( 'author_username'=> 'screamy', 'network' => 'twitter',
+            'post_text' => 'Boo.', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new ExclamationCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, 'Say it like you mean it!');
+        $this->assertEqual($result->text, "@screamy used exclamation points in 252 tweets this past month!  "
+            . "Some things are just one-exclamation-point exciting! Others are really exciting!!!! "
+            . "Here's @screamy's breakdown.");
+
+        $this->assertNotNull($result->related_data);
+        $data = unserialize($result->related_data);
+        $this->assertNotNull($data['bar_chart']);
+        $this->assertNotNull($data['bar_chart']['rows']);
+        $this->assertNotNull($data['bar_chart']['cols']);
+        $this->assertEqual(count($data['bar_chart']['cols']), 2);
+        $this->assertEqual($data['bar_chart']['rows'][0]['c'], array(array('v'=>'!!!!!'), array('v'=>1)));
+        $this->assertEqual($data['bar_chart']['rows'][1]['c'], array(array('v'=>'!'), array('v'=>1)));
+        $this->assertEqual($data['bar_chart']['rows'][2]['c'], array(array('v'=>'!!'), array('v'=>251)));
+
+        $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
+        $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
+        $baseline = $insight_baseline_dao->getInsightBaseline($baseline_name, $this->instance->id, date('Y-m-d'));
+        $this->assertEqual(252, $baseline->value);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
 
     public function testPostMatcher() {
         $insight_plugin = new ExclamationCountInsight();
