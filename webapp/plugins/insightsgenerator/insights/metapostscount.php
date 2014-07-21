@@ -94,19 +94,19 @@ class MetaPostsCountInsight extends CriteriaMatchInsightPluginParent implements 
 
             $times = $this->terms->getOccurrencesAdverb($this_period_count);
             $insight->text = $this->getVariableCopy(array(
-                "%username used %service to talk about %service ".$times." this week. "
-                . "That's %percent of %username's %posts for the week"
+                "%username used %service to talk about %service ".$times." this week."
+                . ($percent > 0 ? " That's %percent of %username's %posts for the week" : "")
             ), array(
                 'service' => $network,
                 'percent' => sprintf('%d%%', $percent)
             ));
 
             $diff = $percent-$last_period_count;
-            if ($last_period_count > 0 && abs($diff) > 10) {
+            if ($last_period_count > 0 && abs($diff) > 10 && $percent > 0) {
                 $diffword = $diff < 0 ? 'down' : 'up';
                 $insight->text .= ", $diffword ".abs($diff)."% from last week.";
             }
-            else {
+            else if ($percent > 0) {
                 $insight->text .= '.';
             }
 
