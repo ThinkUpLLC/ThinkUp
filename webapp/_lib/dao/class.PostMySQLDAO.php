@@ -2887,4 +2887,27 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 		$ps = $this->execute ( $q, $vars );
 		return $this->getUpdateCount ( $ps );
 	}
+	
+	public function getMostSharedPostsOfTheLastDays($author_id, $network, $days) {
+		$q = "SELECT *, pub_date + interval #gmt_offset# hour AS adj_pub_date FROM #prefix#posts ";
+		$q .= "WHERE author_user_id = :author_user_id AND network = :network ";
+		$q .= "AND (pub_date + interval #gmt_offset# hour) >= DATE_SUB(CURRENT_DATE(), INTERVAL :days DAY)";
+		$q .= "ORDER BY shares_count_cache DESC LIMIT 3";		
+		$vars = array (
+				':author_user_id' => $author_id,
+				':network' => $network,
+				':days' => $days
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+		$ps = $this->execute ( $q, $vars );
+		$post_rows = $this->getDataRowsAsArrays ( $ps );
+		$posts = array ();
+		foreach ( $post_rows as $row ) {
+			$post = new Post ( $row );
+			$posts [] = $post;
+		}	
+		return $posts;
+	}
 }

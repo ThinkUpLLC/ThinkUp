@@ -806,4 +806,13 @@ interface PostDAO {
      * @return int Number of updated rows
      */
     public function updateSharesCount($post_id, $network, $shares_count);
+    
+    /**
+     * Get the top 3 posts with the most shares of last days.
+     * @param int $author_id
+     * @param str $network
+     * @param int $days
+     * @return Post object
+     */
+public function getMostSharedPostsOfTheLastDays($author_id, $network, $days);
 }
