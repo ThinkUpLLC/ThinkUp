@@ -227,6 +227,7 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     $headline = $style_analysis;
                     $insight_text = $style_analysis_neg;
                 } else {
+                    $headline = '';
                     $insight_text = '';
                 }
 
@@ -252,20 +253,23 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 //         }
                 // }
 
-                $my_insight = new Insight();
+                if ($insight_text != '' && $headline != '') {
+                    $my_insight = new Insight();
 
-                //REQUIRED: Set the insight's required attributes
-                $my_insight->slug = 'style_stats'; //slug to label this insight's content
-                $my_insight->instance_id = $instance->id;
-                $my_insight->date = date('Y-m-d'); //date is often this or $simplified_post_date
-                $my_insight->headline = $headline; // or just set a string like 'Ohai';
-                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                $my_insight->header_image = '';
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->slug = 'style_stats'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = date('Y-m-d'); //date is often this or $simplified_post_date
+                    $my_insight->headline = $headline;
+                    $my_insight->text = $insight_text;
+                    $my_insight->header_image = '';
+                    $my_insight->filename = basename(__FILE__, ".php");
+                    $my_insight->emphasis = Insight::EMPHASIS_MED;
 
-                $this->insight_dao->insertInsight($my_insight);
-
+                    $this->insight_dao->insertInsight($my_insight);
+                } else {
+                    $this->logger->logSuccess("No headline or body for style stats ", __METHOD__.','.__LINE__);
+                }
             } else {
                 $this->logger->logSuccess("Only ".sizeof( $last_week_of_posts).
                 " posts last week, not enough to calculate style stats ", __METHOD__.','.__LINE__);
