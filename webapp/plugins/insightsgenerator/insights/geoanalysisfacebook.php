@@ -44,13 +44,14 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 			
 
 		if (self::shouldGenerateInsight ( 'geo_analysis_facebook', $instance, $insight_date='today', 
-				$regenerate_existing_insight=true, $day_of_week = 3, count($last_week_of_posts))) {
+				$regenerate_existing_insight=true, $day_of_week = 5, count($last_week_of_posts))) {
 			$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
 			$geo_data = array();
 			foreach ( $last_week_of_posts as $post ) {
 				$locations_fav = $fpost_dao->getLocationOfFavoriters ( $post->post_id );
 				$locations_comm = $fpost_dao->getLocationOfCommenters ( $post->post_id );
 				$geos = array_merge ( $locations_comm, $locations_fav );
+				//extracting name of city from location
 				foreach ( $geos as $geo ) {
 					$pos = strpos ( $geo ['location'], "," );
 					if ($pos == 0) {
@@ -61,9 +62,10 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 					array_push($geo_data, array ("name" => $geo ['name'],"city" => $city));
 				}
 			}
+			//getting unique users
 			$geo_data = array_map("unserialize", array_unique(array_map("serialize", $geo_data)));	
 			$count = count($geo_data);
-
+			//grouping of users with the same locations
 			for ($i = 0; $i <= count($geo_data)-1; $i++) {
 				for ($j = $i+1; $j <= count($geo_data)-1; $j++) {
 					if ($geo_data[$i]['city'] == $geo_data[$j]['city']) {

@@ -49,7 +49,7 @@ class TestOfGeoAnalysisFacebookInsight extends ThinkUpUnitTestCase {
     public function testGeoAnalysisFacebook() {
     	// Get data ready that insight requires
     	$builders = self::buildData();
-    
+   
     	$instance = new Instance();
     	$instance->id = 220;
     	$instance->network_user_id = 19654321;
@@ -84,7 +84,7 @@ class TestOfGeoAnalysisFacebookInsight extends ThinkUpUnitTestCase {
     			'favlike_count_cache' => 1
     	));
     	$insight_plugin = new GeoAnalysisFacebookInsight();
-    	$insight_plugin->generateInsight($instance, $posts, 3);
+    	$insight_plugin->generateInsight($instance, $posts, 5);
     
     	// Assert that insight got inserted
     	$insight_dao = new InsightMySQLDAO();
