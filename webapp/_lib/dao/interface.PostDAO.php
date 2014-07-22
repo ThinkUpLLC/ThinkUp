@@ -797,4 +797,13 @@ interface PostDAO {
      * @return Post object
      */
     public function getMostFavCommentPostsByUserId($author_id, $network);
+    
+    /**
+     * Update the shares count cache for a post.
+     * @param str $post_id
+     * @param str $network
+     * @param str $shares_count
+     * @return int Number of updated rows
+     */
+    public function updateSharesCount($post_id, $network, $shares_count);
 }

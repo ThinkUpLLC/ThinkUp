@@ -74,6 +74,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 			'retweet_count_api',
 			'old_retweet_count_cache',
 			'favlike_count_cache',
+			'shares_count_cache',
 			'reply_count_cache',
 			'is_reply_by_friend',
 			'is_retweet_by_friend',
@@ -2870,5 +2871,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 			$posts [] = $post;
 		}
 		return $posts;
+	}
+	
+	public function updateSharesCount($post_id, $network, $shares_count) {
+		$q = "UPDATE #prefix#posts SET shares_count_cache=:shares_count WHERE post_id=:post_id ";
+		$q .= "AND network=:network;";
+		$vars = array (
+				':shares_count' => $shares_count,
+				':post_id' => ( string ) $post_id,
+				':network' => $network
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+		$ps = $this->execute ( $q, $vars );
+		return $this->getUpdateCount ( $ps );
 	}
 }
