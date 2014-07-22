@@ -58,7 +58,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNull($result);
     }
 
@@ -69,7 +69,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "@joetwitter has 1 verified follower.");
@@ -80,7 +80,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline = $baseline_dao->getMostRecentInsightBaseline('verifiedlistcount', $this->instance->id);
+        $baseline = $baseline_dao->getMostRecentInsightBaseline('verified_list_count', $this->instance->id);
         $this->assertNotNull($baseline);
         $this->assertEqual(1, $baseline->value);
         $this->assertEqual($today, $baseline->date);
@@ -93,7 +93,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "@joetwitter has 2 verified followers.");
@@ -106,7 +106,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline = $baseline_dao->getMostRecentInsightBaseline('verifiedlistcount', $this->instance->id);
+        $baseline = $baseline_dao->getMostRecentInsightBaseline('verified_list_count', $this->instance->id);
         $this->assertNotNull($baseline);
         $this->assertEqual(2, $baseline->value);
         $this->assertEqual($today, $baseline->date);
@@ -114,7 +114,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
     public function testSecondRunAMonthLater() {
         $builders = $this->buildData(2);
-        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verifiedlist',
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verified_list',
             'instance_id' => $this->instance->id, 'time_generated' => '-30d', 'related_data'=>serialize("")));
 
         $insight_plugin = new VerifiedListInsight();
@@ -122,16 +122,16 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNull($result);
     }
 
     public function testSecondRunAYearLaterNoChange() {
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline_dao->insertInsightBaseline("verifiedlistcount", $this->instance->id, 2,
+        $baseline_dao->insertInsightBaseline("verified_list_count", $this->instance->id, 2,
             date('Y-m-d', strtotime('-368 days')));
         $builders = $this->buildData(2);
-        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verifiedlist',
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verified_list',
             'instance_id' => $this->instance->id, 'time_generated' => '-368d', 'related_data'=>serialize("")));
 
         $insight_plugin = new VerifiedListInsight();
@@ -139,16 +139,16 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNull($result);
     }
 
     public function testSecondRunAYearLaterMoreVerified() {
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline_dao->insertInsightBaseline("verifiedlistcount", $this->instance->id, 1,
+        $baseline_dao->insertInsightBaseline("verified_list_count", $this->instance->id, 1,
             date('Y-m-d', strtotime('-368 days')));
         $builders = $this->buildData(2);
-        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verifiedlist',
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verified_list',
             'instance_id' => $this->instance->id, 'time_generated' => '-368d', 'related_data'=>serialize("")));
 
         $insight_plugin = new VerifiedListInsight();
@@ -156,7 +156,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "With 2 verified followers, @joetwitter must be doing something right. "
@@ -170,7 +170,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline = $baseline_dao->getMostRecentInsightBaseline('verifiedlistcount', $this->instance->id);
+        $baseline = $baseline_dao->getMostRecentInsightBaseline('verified_list_count', $this->instance->id);
         $this->assertNotNull($baseline);
         $this->assertEqual(2, $baseline->value);
         $this->assertEqual($today, $baseline->date);
@@ -178,10 +178,10 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
     public function testSecondRunAYearLaterLessVerified() {
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline_dao->insertInsightBaseline("verifiedlistcount", $this->instance->id, 5,
+        $baseline_dao->insertInsightBaseline("verified_list_count", $this->instance->id, 5,
             date('Y-m-d', strtotime('-368 days')));
         $builders = $this->buildData(3);
-        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verifiedlist',
+        $builders[] = FixtureBuilder::build('insights', array('slug'=>'verified_list',
             'instance_id' => $this->instance->id, 'time_generated' => '-368d', 'related_data'=>serialize("")));
 
         $insight_plugin = new VerifiedListInsight();
@@ -189,7 +189,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "@joetwitter has 3 verified followers. That's down from 5 last year.");
@@ -203,7 +203,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $baseline = $baseline_dao->getMostRecentInsightBaseline('verifiedlistcount', $this->instance->id);
+        $baseline = $baseline_dao->getMostRecentInsightBaseline('verified_list_count', $this->instance->id);
         $this->assertNotNull($baseline);
         $this->assertEqual(3, $baseline->value);
         $this->assertEqual($today, $baseline->date);
@@ -217,7 +217,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "2 of @joetwitter's followers sport the coveted blue verified badge.");
@@ -234,7 +234,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "@joetwitter is basking in the reflected Twitter-legitimacy of 1 verified follower.");
@@ -251,7 +251,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "@joetwitter is basking in the reflected Twitter-legitimacy of 2 verified followers.");
@@ -268,7 +268,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Verified!");
         $this->assertEqual($result->text, "2 of @joetwitter's followers sport the coveted blue verified badge.");
@@ -286,7 +286,7 @@ class TestOfVerifiedListInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
-        $result = $insight_dao->getInsight('verifiedlist', 10, $today);
+        $result = $insight_dao->getInsight('verified_list', 10, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Did you know Facebook has verified users?");
         $this->assertEqual($result->text, "joetwitter is basking in the reflected Facebook-legitimacy of "

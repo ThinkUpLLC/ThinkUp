@@ -2,7 +2,7 @@
 /*
  Plugin Name: Verified Follower List
  Description: List of all verified followers
- When: Once
+ When: First run, and then annually from there
  */
 
 /**
@@ -37,19 +37,19 @@ class VerifiedListInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         if ($instance->network == 'twitter' || $instance->network == 'facebook') {
-            $insight = $this->insight_dao->getMostRecentInsight('verifiedlist', $instance->id);
+            $insight = $this->insight_dao->getMostRecentInsight('verified_list', $instance->id);
             if (!$insight || strtotime($insight->time_generated) <= (time()-(60*60*24*365))) {
                 $follow_dao = DAOFactory::getDAO('FollowDAO');
                 $count = $follow_dao->getVerifiedFollowerCount($instance->network_user_id, $instance->network);
                 $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-                $baseline = $baseline_dao->getMostRecentInsightBaseline('verifiedlistcount', $instance->id);
+                $baseline = $baseline_dao->getMostRecentInsightBaseline('verified_list_count', $instance->id);
 
-                $baseline_dao->insertInsightBaseline("verifiedlistcount", $instance->id, $count, $this->insight_date);
+                $baseline_dao->insertInsightBaseline("verified_list_count", $instance->id, $count, $this->insight_date);
                 $baseline_count = isset($baseline->value) ? $baseline->value : 0;
 
                 if ($count > 0 && (!$insight || $count != $baseline_count)) {
                     $insight = new Insight();
-                    $insight->slug = 'verifiedlist';
+                    $insight->slug = 'verified_list';
                     $insight->instance_id = $instance->id;
                     $insight->date = $this->insight_date;
                     $insight->filename = basename(__FILE__, ".php");
