@@ -1,0 +1,1 @@
+{include file=$tpl_path|cat:"_users_with_url.tpl" users=$i->related_data.people}

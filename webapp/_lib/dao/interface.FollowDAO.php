@@ -294,4 +294,21 @@ interface FollowDAO {
      */
     public function getVerifiedFollowerCount($user_id, $network);
 
+    /**
+     * Gets the followees in last X days.
+     * @param str $user_id
+     * @param str $network
+     * @param int $x_days
+     * @return array Array of User objects
+     **/
+    public function getNewFolloweesWithinLastXDays($user_id, $network, $x_days = 7);
+    /**
+     * Gets the followers in last X days.
+     * @param str $user_id
+     * @param str $network
+     * @param int $x_days
+     * @return array Array of User objects
+     **/
+    public function getNewFollowersWithinLastXDays($user_id, $network, $x_days = 7);
+
 }

@@ -744,4 +744,38 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataCountResult($ps);
     }
+
+    public function getNewFollowersWithinLastXDays($user_id, $network, $x_days = 7) {
+        $q = "select u.* FROM #prefix#users u inner join #prefix#follows f";
+        $q .= " on f.follower_id = u.user_id WHERE f.user_id = :user_id AND f.network=:network";
+        $q .= " AND f.network=u.network";
+        $q .= " AND f.first_seen >= DATE_SUB(CURDATE(),INTERVAL :x_days DAY)";
+        $q .= " ORDER BY f.first_seen DESC";
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network,
+            ':x_days'=>$x_days
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
+
+    public function getNewFolloweesWithinLastXDays($user_id, $network, $x_days = 7) {
+        $q = "select u.* FROM #prefix#users u inner join #prefix#follows f";
+        $q .= " on f.user_id = u.user_id WHERE f.follower_id = :user_id AND f.network=:network AND active = 1";
+        $q .= " AND f.network=u.network";
+        $q .= " AND f.first_seen >= DATE_SUB(CURDATE(),INTERVAL :x_days DAY)";
+        $q .= " ORDER BY f.first_seen DESC";
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network,
+            ':x_days'=>$x_days
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
 }
