@@ -699,6 +699,35 @@
         }
     }
 
+    ol& {
+        list-style-type: decimal;
+
+        .list-item {
+            list-style: decimal;
+        }
+    }
+
+    &.url-list {
+        .link-title {
+            line-height: 16px;
+
+            img {
+                margin-top: 1px;
+                float: left;
+            }
+
+            a {
+                margin-left: 8px;
+                display: inline-block;
+            }
+        }
+
+        .link-metadata {
+            margin-left: 24px;
+        }
+
+    }
+
     &.all-items-visible, &.body-list-show-all {
         padding: 0;
         margin: 0 0 17px;

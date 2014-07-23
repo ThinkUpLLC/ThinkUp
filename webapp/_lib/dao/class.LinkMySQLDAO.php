@@ -326,4 +326,32 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
+
+    public function getLinksByUserSinceDaysAgo($user_id, $network, $limit= 0, $days_ago = 0) {
+
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network,
+        );
+        $q = "SELECT l.*, p.in_retweet_of_post_id FROM #prefix#links AS l ";
+        $q .= "INNER JOIN #prefix#posts AS p ON p.id = l.post_key ";
+        $q .= "WHERE p.author_user_id=:user_id AND p.network=:network ";
+        $q .= "AND p.in_reply_to_user_id IS NULL ";
+
+       if($days_ago != 0) {
+            $q .= "AND p.pub_date>=DATE_SUB(CURDATE(), INTERVAL :days_ago DAY) ";
+            $q .= "ORDER BY p.pub_date DESC ";
+            $vars[':days_ago'] = $days_ago;
+        }
+        if($limit != 0){
+            $q .= "ORDER BY p.pub_date DESC ";
+            $q .= "LIMIT :limit ";
+            $vars[':limit'] = $limit;
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        return $all_rows;
+   }
+
 }
