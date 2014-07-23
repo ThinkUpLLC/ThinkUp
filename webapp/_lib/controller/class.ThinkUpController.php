@@ -120,6 +120,17 @@ abstract class ThinkUpController {
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
+
+            if (Utils::isThinkUpLLC()) {
+                $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                $this->addToView('thinkupllc_endpoint', $thinkupllc_endpoint);
+            }
+
+            if (SessionCache::isKeySet('selected_instance_network') &&
+            SessionCache::isKeySet('selected_instance_username')) {
+                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
+                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
+            }
         } catch (Exception $e) {
             Loader::definePathConstants();
             //echo 'sending this to Smarty:'.THINKUP_WEBAPP_PATH.'data/';
@@ -632,11 +643,11 @@ abstract class ThinkUpController {
      * @param  str $page Optional filename at endpoint
      * @return void
      */
-    public function redirectToThinkUpLLCEndpoint($page=null) {
+    public function redirectToThinkUpLLCEndpoint($page=null, $redirect=null) {
         $config = Config::getInstance();
         $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
         if (isset($thinkupllc_endpoint)) {
-            $this->redirect($thinkupllc_endpoint.(isset($page)?$page:''));
+            $this->redirect($thinkupllc_endpoint.(isset($page)?$page:'').((isset($redirect))?'?redirect='.$redirect:''));
             return true;
         } else {
             return false;

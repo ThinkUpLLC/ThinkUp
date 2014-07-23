@@ -73,32 +73,140 @@ class TestOfInsightPluginParent extends ThinkUpUnitTestCase {
         $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('some_slug', $instance));
 
         // Test regeneration on a given date
-        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date=$today));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance,
+            $insight_date=$today));
         $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('some_other_slug', $instance,
-        $insight_date=$yesterday));
+            $insight_date=$yesterday));
         $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('some_other_slug', $instance,
-        $insight_date=$yesterday, $regenerate_existing_insight=true));
+            $insight_date=$yesterday, $regenerate_existing_insight=true));
+
+        // Test with last week of posts
+        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false,  $count_related_posts=13));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $count_related_posts=0));
+
+        // Test excluded networks
+        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $count_related_posts=null,
+            $excluded_networks=array('facebook')));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false,  $count_related_posts=null,
+            $excluded_networks=array('twitter', 'facebook')));
+    }
+
+    public function testShouldGenerateWeeklyInsight() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $time_now = date("Y-m-d H:i:s");
+        $today = date('Y-m-d', strtotime('today'));
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>76, 'instance_id'=>10, 'slug'=>'some_slug',
+        'date'=>$today, 'time_generated'=>$time_now));
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>77, 'instance_id'=>10, 'slug'=>'some_other_slug',
+        'date'=>$yesterday, 'time_generated'=>$time_now));
+
+        $insight_plugin_parent = new InsightPluginParent();
+        $insight_plugin_parent->insight_dao = DAOFactory::getDAO('InsightDAO');
+
+        // Test default values
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateWeeklyInsight('some_slug', $instance));
+
+        // Test regeneration on a given date
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date=$today));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateWeeklyInsight('some_other_slug', $instance,
+            $insight_date=$yesterday));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('some_other_slug', $instance,
+            $insight_date=$yesterday, $regenerate_existing_insight=true));
 
         // Test for day of week
         $dow1 = date('w');
         $dow2 = date('w', strtotime('-1 day'));
-        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=$dow1));
-        $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=$dow2));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=$dow1));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=$dow2));
 
         // Test with last week of posts
-        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=13));
-        $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=0));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=null,
+            $count_last_week_of_posts=13));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=0));
 
         // Test excluded networks
-        $this->assertTrue($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-        $excluded_networks=array('facebook')));
-        $this->assertFalse($insight_plugin_parent->shouldGenerateInsight('a_slug', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-        $excluded_networks=array('twitter', 'facebook')));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('facebook')));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateWeeklyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('twitter', 'facebook')));
     }
+
+    public function testShouldGenerateMonthlyInsight() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $time_now = date("Y-m-d H:i:s");
+        $today = date('Y-m-d', strtotime('today'));
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>76, 'instance_id'=>10, 'slug'=>'some_slug',
+        'date'=>$today, 'time_generated'=>$time_now));
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>77, 'instance_id'=>10, 'slug'=>'some_other_slug',
+        'date'=>$yesterday, 'time_generated'=>$time_now));
+
+        $insight_plugin_parent = new InsightPluginParent();
+        $insight_plugin_parent->insight_dao = DAOFactory::getDAO('InsightDAO');
+
+        // Test default values
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('some_slug', $instance));
+
+        // Test regeneration on a given date
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date=$today));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('some_other_slug', $instance,
+            $insight_date=$yesterday));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('some_other_slug', $instance,
+            $insight_date=$yesterday, $regenerate_existing_insight=true));
+
+        // Test for day of month
+        $day_of_month1 = date('j');
+        $day_of_month2 = date('j', strtotime('-1 day'));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=$day_of_month1));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=$day_of_month2));
+
+        // Test with last week of posts
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_related_posts=13));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=0));
+
+        // Test excluded networks
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('facebook')));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('twitter', 'facebook')));
+    }
+
 }

@@ -88,4 +88,13 @@ interface GroupMemberDAO {
      * @return arr Group objects
      */
     public function getNewMembershipsByDate($network, $user_id, $from_date=null);
+
+    /**
+     * Get a list of group memberships first since a give datetime
+     * @param str $network
+     * @param str $user_id
+     * @param str $from_datetime
+     * @return arr Group objects
+     */
+    public function getNewMembershipsSince($network, $user_id, $from_datetime);
 }

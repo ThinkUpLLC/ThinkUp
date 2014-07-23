@@ -54,7 +54,7 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'twitteruser';
         $instance->network = 'twitter';
         $insight_plugin = new LongLostContactsInsight();
-        $insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -64,13 +64,13 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->text);
-        $this->assertPattern('/<strong>2 contacts<\/strong> /', $result->text);
-        $this->assertPattern('/in over a year: /', $result->text);
-        $this->assertNoPattern('/a contact/', $result->text);
+        $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->headline);
+        $this->assertPattern('/<strong>2 contacts<\/strong> /', $result->headline);
+        $this->assertPattern('/in over a year: /', $result->headline);
+        $this->assertNoPattern('/a contact/', $result->headline);
         $this->assertIsA($contacts, "array");
-        $this->assertIsA($contacts[0], "User");
-        $this->assertEqual(count($contacts), 2);
+        $this->assertIsA($contacts["people"][0], "User");
+        $this->assertEqual(count($contacts["people"]), 2);
     }
 
     private function buildData() {

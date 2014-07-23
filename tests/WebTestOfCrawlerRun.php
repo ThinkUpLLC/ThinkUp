@@ -59,12 +59,15 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
         $this->clickLinkById('refresh-data');
         //$this->showHeaders();
         $this->assertHeader('Content-Type', 'text/html; charset=UTF-8; charset=UTF-8');
-        $this->assertText('Updating...');
+        //@TODO Assert that this Hint text appears in its new Javascripty format
+        //$this->assertText('Hint:');
     }
 
     public function testNotLoggedIn() {
         $this->get($this->url.'/crawler/run.php');
-        $this->assertText('You must log in to do this.');
+        //should redirect to Log in page
+        $cfg = Config::getInstance();
+        $app_title_prefix = $cfg->getValue('app_title_prefix');
+        $this->assertTitle('Log in | '.$app_title_prefix.'ThinkUp');
     }
-
 }

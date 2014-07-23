@@ -10,3 +10,4 @@ Contents:
    addcsrfprotection
    filterxss
    displayusermessages
+   inlineemailstyles

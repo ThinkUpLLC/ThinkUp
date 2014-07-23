@@ -1,0 +1,131 @@
+@blue-border: #3187D1;
+
+body.account {
+  background: @blue;
+
+  ::-webkit-input-placeholder {
+     color: @blue-darker;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+     color: @blue-darker;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+     color: @blue-darker;
+  }
+
+  :-ms-input-placeholder {
+     color: @blue-darker;
+  }
+
+  .navbar-default {
+    border-bottom: 0;
+    box-shadow: 0 0 0;
+    position: absolute;
+    margin: 0;
+
+    .navbar-brand {
+      margin: 66px auto 0;
+      background-image: url(../img/thinkup-logo-account@2x.png);
+      width: 161px;
+      height: 44px;
+      background-size: 161px 44px;
+    }
+  }
+
+  .container {
+    padding-top: 160px;
+
+    header {
+      margin-bottom: 45px;
+
+      h2 {
+        a {
+          color: #fff;
+        }
+      }
+    }
+
+    .form-horizontal {
+      fieldset.fieldset-no-header, .form-group {
+        border-color: @blue-border;
+      }
+
+      .control-label {
+        color: #000;
+      }
+
+      .help-block {
+        border-color: fade(@blue-border, 30%);
+        color: @blue-border;
+
+        a {
+          color: #fff;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .btn-submit {
+        position: static;
+        width: 74px;
+        height: 74px;
+        padding: 30px 0;
+        border-radius: 37px;
+        margin: 15px auto 0;
+        display: block;
+      }
+
+    }
+
+    .form-note {
+      margin-top: 40px;
+
+      a {
+        color: #fff;
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .footer {
+    border-top-color: @blue-darker;
+
+    .footer-container {
+      color: @blue-darker;
+
+      a {
+        color: #fff;
+      }
+
+      .follow-wrapper .follow-links li a {
+        color: @blue-darker;
+      }
+    }
+  }
+
+}
+
+body.error-page {
+  .container {
+    header {
+      h1 {
+        font-size: 180px;
+        line-height: 1;
+        font-weight: 400;
+        margin-bottom: 20px;
+      }
+
+      h1,h2 {
+        color: @blue-darker;
+      }
+    }
+  }
+}

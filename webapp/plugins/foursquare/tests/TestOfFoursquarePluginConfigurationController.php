@@ -121,13 +121,8 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new FoursquarePluginConfigurationController(null);
         // Run the plugin configuration controller
         $output = $controller->go();
-        // Get a view manager
-        $v_mgr = $controller->getViewManager();
-        // Get an instance
-        $config = Config::getInstance();
         // Check the user sees a message telling them they need to login
-        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
 
         // Logged in
 
@@ -143,8 +138,7 @@ class TestOfFoursquarePluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new FoursquarePluginConfigurationController($owner);
         // Run the plugin configuration controller
         $output = $controller->go();
-        // Get a view manager
-        $v_mgr = $controller->getViewManager();
+        $this->assertPattern('/Foursquare/', $output);
     }
 
     public function testConfigOptionsNotAdmin() {

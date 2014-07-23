@@ -1,78 +1,37 @@
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl" body_classes="settings account menu-off"}
+{include file="_navigation.tpl"}
 
+  <div class="container">
+    <header>
+      <h1>Reset your password</h1>
+      <h2></h2>
+    </header>
 
-<div class="container">
+    <form name="forgot-form" action="" method="POST" role="form" class="form-horizontal" id="form-forgot-password">
+      <fieldset class="fieldset-no-header">
 
-<div class="row">
-    <div class="span3">
-          <div class="embossed-block">
-            <ul>
-              <li>Reset Your Password</li>
-            </ul>
-          </div>
-    </div><!--/span3-->
-    <div class="span6">
+        <div class="form-group">
+          <label class="control-label" for="password">New Password</label>
+          <input type="password" class="form-control" id="password" name="password" value=""
+          placeholder="********">
+        </div>
 
-    {if isset($error_msg)}
-        <div class="alert alert-error"><p>{$error_msg}</p></div>
-    {/if}
-    {if isset($success_msg)}
-        <div class="alert alert-success"><p>{$success_msg}</p></div>
-    {/if}
+        <div class="form-group">
+          <label class="control-label" for="confirm_password">Confirms</label>
+          <input type="password" class="form-control" id="confirm_password" name="confirm_password" value=""
+          placeholder="********">
+        </div>
 
-            {if !isset($error_msg) && !isset($success_msg)}
-            <form name="form1" method="post" action="" class="login form-horizontal">
+      </fieldset>
 
-                <fieldset style="background-color : white; padding-top : 30px;">
-                    <div class="control-group">
-                    <label class="control-label" for="password">New Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="password" id="password" 
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
-                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
-                        </span>
-                        <span class="help-inline"></span>
+      <input type="submit" name="Submit" value="Send" class="btn btn-circle btn-submit">
 
-                        </div>
-	                </div>
-	                <div class="control-group">
-	                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
-	                    <div class="controls">
-	                        <span class="input-prepend">
-	                            <span class="add-on"><i class="icon-key"></i></span>            
-	                            <input type="password" name="password_confirm" id="confirm_password" required 
-	                             class="password" 
-	                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
-	                            data-validation-match-match="password" 
-	                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
-	                        </span>
-	                        <span class="help-block"></span>
-	                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
-	                    </div>
-	                </div>
-                    
-                    <div class="form-actions">
-                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Submit">
-                            <span class="pull-right">
-                                <div class="btn-group">
-                                    <a href="login.php" class="btn btn-mini">Log In</a>
-                                    {if $is_registration_open}<a href="register.php" class="btn btn-mini hidden-phone">Register</a>{else}{/if}
-                                    {insert name="help_link" id='reset'}
-                                </div>
-                            </span>
-                    </div>
+      <p class="form-note">
+        <a href="login.php">Back to login</a>
+        {if $is_registration_open}&nbsp; <a href="register.php">Register</a>{else}{/if}
+      </p>
 
-                </fieldset>
+    </form>
+  </div>
 
-            </form>
-            {/if}
-
-    </div><!-- end span9 -->
-
-</div><!-- end row -->
-
-{include file="_footer.tpl" enable_bootstrap=1}
+{include file="_footer.tpl"}

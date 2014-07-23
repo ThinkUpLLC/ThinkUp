@@ -27,9 +27,21 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InsightMySQLDAO  extends PDODAO implements InsightDAO {
+    /**
+    * Insights stream global conditional and order by for logged-in and logged-out users
+    * @var str
+    */
+    var $stream_conditionals_order;
+
+    public function __construct() {
+        parent::__construct();
+        $this->stream_conditionals_order =  "AND i.filename != 'dashboard' ORDER BY date DESC, time_updated DESC, ".
+            "emphasis DESC, filename, i.id DESC LIMIT :start_on_record, :limit;";
+    }
+
     public function getInsight($slug, $instance_id, $date) {
-        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image ";
-        $q .= "FROM #prefix#insights WHERE ";
+        $q = "SELECT date, instance_id, slug, headline, text, related_data, filename, emphasis, header_image, ";
+        $q .= "time_generated FROM #prefix#insights WHERE ";
         $q .= "slug=:slug AND date=:date AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
@@ -58,7 +70,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $row = $this->getDataRowAsArray($ps);
         if (isset($row)) {
             $insight = new Insight($row);
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
             $insight->instance = new Instance($row);
@@ -70,8 +84,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     }
 
     public function doesInsightExist($slug, $instance_id) {
-        $q = "SELECT date, instance_id, slug, headline, text, related_data, emphasis FROM #prefix#insights WHERE ";
-        $q .= "slug=:slug AND instance_id=:instance_id";
+        $q = "SELECT count(*) as c FROM #prefix#insights WHERE slug=:slug AND instance_id=:instance_id";
         $vars = array(
             ':slug'=>$slug,
             ':instance_id'=>$instance_id
@@ -79,13 +92,13 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowsAsArrays($ps);
-        return (sizeof($result) > 0);
+        return $result[0]['c'] > 0;
     }
 
     public function getPreCachedInsightData($slug, $instance_id, $date) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if (isset($insight->related_data) && $insight->related_data != '') {
-            return unserialize($insight->related_data);
+            return Serializer::unserializeString($insight->related_data);
         } else {
             return null;
         }
@@ -174,7 +187,9 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $ps = $this->execute($q, $vars);
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($insight->related_data !== null) {
+                $insight->related_data = Serializer::unserializeString($insight->related_data);
+            }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
         }
@@ -263,7 +278,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
         $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id ";
-        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, i.id DESC LIMIT :start_on_record, :limit;";
+        $q .= $this->stream_conditionals_order;
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count,
@@ -277,12 +292,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
-            $insights[] = $insight;
-        }
-        foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
-            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->date = $row['date']. " ".date('H').":".date('i');
+            $insights[] = $insight;
         }
         return $insights;
     }
@@ -297,8 +312,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if ($public_only) {
             $q .= "AND su.is_public = 1 ";
         }
-        $q .= "AND i.text != '' ORDER BY date DESC, emphasis DESC, filename, i.id DESC ";
-        $q .= "LIMIT :start_on_record, :limit;";
+        $q .= $this->stream_conditionals_order;
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count
@@ -311,12 +325,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
-            $insights[] = $insight;
-        }
-        foreach ($insights as $insight) {
-            $insight->related_data = unserialize($insight->related_data);
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
             //assume insight came at same time of day as now for relative day notation
-            $insight->date = $insight->date. " ".date('H').":".date('i');
+            $insight->date = $row['date']. " ".date('H').":".date('i');
+            $insights[] = $insight;
         }
         return $insights;
     }
@@ -340,8 +354,30 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight = new Insight($row);
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
+            if ($row['related_data'] !== null) {
+                $insight->related_data = Serializer::unserializeString($row['related_data']);
+            }
+            //assume insight came at same time of day as now for relative day notation
+            $insight->date = $row['date']. " ".date('H').":".date('i');
             $insights[] = $insight;
         }
         return $insights;
+    }
+
+    public function getMostRecentInsight($slug, $instance_id) {
+        $q = "SELECT * FROM #prefix#insights WHERE instance_id=:instance_id ";
+        $q .= " AND slug=:slug ";
+        $q .= "ORDER BY time_updated DESC LIMIT 1";
+        $vars = array(
+            ':instance_id'=>$instance_id,
+            ":slug"=>$slug
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $insight = $this->getDataRowAsObject($ps, "Insight");
+        if ($insight->related_data !== null) {
+            $insight->related_data = Serializer::unserializeString($insight->related_data);
+        }
+        return $insight;
     }
 }

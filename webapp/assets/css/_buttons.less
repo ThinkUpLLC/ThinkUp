@@ -1,0 +1,72 @@
+.btn-default {
+    background: @blue-action;
+    border: 0;
+    color: #fff;
+    font-weight: 300;
+
+    &:hover, &:focus {
+        background: lighten(@blue-action, 10%);
+        color: #fff;
+    }
+}
+
+.btn-transparent {
+    background: transparent;
+    color: @link-color;
+
+    &:hover, &:focus {
+        background: transparent;
+        color: @link-hover-color;
+    }
+}
+
+.btn-see-all {
+    width: 102%;
+    padding: 5px 5px 0;
+    margin: 0 -1%;
+    border: 0;
+    border-radius: 0;
+    border-top: 1px solid darken(@gray-lighter, 15%);
+    background-color: transparent;
+    color: @gray-light;
+
+    .icon {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+
+    &:hover, &:active, &:focus, &.active {
+        background: transparent;
+        border-color: darken(@gray-lighter, 15%);
+        color: @gray;
+        .box-shadow(0 0 0);
+    }
+
+    &.active {
+        .icon {
+            transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+        }
+    }
+
+    &:focus {
+        outline: 0;
+        color: @gray-light;
+    }
+
+    @media (max-width: 420px) {
+        width: 104%;
+        margin: 0 -2%;
+    }
+
+    @media (min-width: 540px) {
+        width: 104%;
+        margin: 0 -2%;
+    }
+
+}
+
+.btn-signup {
+    .btn-default;
+    background-color: #4A90E2;
+}

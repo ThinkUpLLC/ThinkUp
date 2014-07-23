@@ -27,7 +27,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2013 Dimosthenis Nikoudis
  */
-class InstagramPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class InstagramPlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         parent::__construct($vals);

@@ -1,0 +1,330 @@
+// This is the page header, slidable menu, and app messages
+
+.navbar-default {
+    // Undo Bootstrap defaults
+    border-radius: 0;
+    border: 0;
+    background-color: @blue;
+    min-height: 40px;
+    z-index: 100;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-top: 5px solid @blue-darker;
+    border-bottom: 1px solid @blue-darker;
+    box-shadow: 0px 3px 0px fade(#1787BD, 40%);
+    color: white;
+    margin-bottom: 5px;
+
+    .navbar-header {
+        float: none;
+
+        .navbar-brand {
+            float: none;
+            padding: 0;
+            text-indent: 100%;
+            display: block;
+            background: url(../img/thinkup-logo-header@2x.png);
+            background-size: 70px 19px;
+            width: 70px;
+            height: 19px;
+            margin: 9px auto 6px;
+            overflow: hidden;
+            font-size: 0;
+            line-height: 0;
+
+        }
+
+        .menu-trigger {
+            position: absolute;
+            padding: 0;
+            font-size: 22px;
+            line-height: 20px;
+            color: @blue-darker;
+            top: 7px;
+            left: 10px;
+            background: transparent;
+            border: 0;
+
+            &:focus {
+                outline: 0;
+                color: @blue-darker;
+            }
+        }
+
+        .navbar-search {
+            position: absolute;
+            padding: 0;
+            color: #2785d3;
+            top: 4px;
+            right: 10px;
+            margin: 0;
+            background: transparent;
+            border: 0;
+        }
+
+    }
+}
+
+#search-refine {
+  right: 0;
+  left: auto;
+}
+
+body.menu-off {
+    .navbar-default {
+        .navbar-header {
+            .menu-trigger {
+                display: none;
+            }
+        }
+    }
+}
+
+#menu {
+    display: none; // Or else it'll show on page load
+}
+
+#jPanelMenu-menu, #menu {
+    background: @blue-light;
+    border-right: 1px solid @blue-pale;
+    overflow-y: auto !important;
+
+    .menu-options {
+        li {
+            height: 50px;
+            border-bottom: 1px solid @blue-pale;
+            font: 16px/3.0625 "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
+            position: relative;
+
+            a {
+                display: block;
+                color: black;
+                padding: 0 10px;
+
+                &:hover, &.active {
+                    background: #DDE7ED;
+                    text-decoration: none;
+                }
+            }
+
+            &.service {
+                .icon {
+                    position: absolute;
+                    right: 10px;
+                    top: 14px;
+                    font-size: 20px;
+                    width: 20px;
+                    text-align: center;
+                    line-height: 1;
+                    color: @gray;
+
+                    &:after {
+                        float: left;
+                        margin-right: 4px;
+                        font: 13px/1.538 "tablet-gothic-wide", helvetica, arial, sans-serif;
+                    }
+                }
+
+                &.inactive .icon {
+                    width: auto;
+                    text-align: right;
+                    margin-right: 1px;
+                    color: @blue-dark;
+
+                    &:after {
+                        color: @blue-dark;
+                        content: "Add your account!";
+                    }
+                }
+
+                &.error .icon {
+                    color: @red-warning;
+                    width: auto;
+                    text-align: right;
+                    margin-right: 1px;
+
+                    &:after {
+                        color: @red-warning;
+                        content: "Account error";
+                    }
+                }
+            }
+
+            &.user-info {
+                height: 62px;
+                color: @blue-dark;
+                font: 14px/1.143 "tablet-gothic-wide", helvetica, arial, sans-serif;
+                padding: 14px 0 0 10px;
+                z-index: 3;
+
+                .label {
+                    color: @blue-dark;
+                    font-size: 12px;
+                    line-height: 1.34;
+                    padding: 0;
+                    display: block;
+                    text-align: left;
+                    border-radius: 0;
+                    font-weight: 400;
+                }
+
+                .user-photo {
+                    width: 50px;
+                    height: 50px;
+                    position: absolute;
+                    bottom: -25px;
+                    right: 10px;
+                }
+
+                a {
+                    color: @blue-dark;
+                    padding: 0;
+                    display: inline;
+
+                    &:hover {
+                        background: inherit;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.app-message {
+    position: fixed;
+    width: 100%;
+    top: 40px;
+    left: 0;
+    background: #FFFABE;
+    border-bottom: 1px solid #BBC7CE;
+
+    font-size: 13px;
+    line-height: 1.23;
+    padding: 7px 0;
+    font-weight: 400;
+    text-align: center;
+    z-index: 100;
+
+    &.app-message-warning {
+        color: darken(@red-warning, 10%);
+        border-color: @red-warning;
+        background: mix(@red-warning, #fff, 40%);
+
+        .content:before {
+            padding-right: 5px;
+        }
+
+        .app-message-close {
+            display: none;
+        }
+    }
+
+    &.app-message-success {
+        color: darken(@green-success-darker, 10%);
+        border-color: @green-success-darker;
+        background: mix(@green-success-darker, #fff, 30%);
+
+        .content:before {
+            padding-right: 5px;
+        }
+
+        .app-message-close {
+            color: darken(@green-success-darker, 10%);
+        }
+    }
+
+    .content {
+        padding: 0 40px;
+    }
+
+    .app-message-close {
+        position: absolute;
+        font-size: 20px;
+        line-height: 1;
+        top: 5px;
+        right: 5px;
+        color: @blue;
+
+        .icon {
+            vertical-align: top;
+        }
+    }
+}
+
+body.account {
+    .app-message {
+        top: 5px;
+    }
+}
+
+.app-message-hidden {
+    display: none;
+}
+
+body.app-message-visible {
+    @nav-height: 71px;
+
+    .container {
+        padding-top: @nav-height;
+    }
+
+    &.account {
+        .container {
+            padding-top: 160px;
+        }
+    }
+
+    @media (min-width: 780px) {
+        @nav-height: 71px;
+
+        .stream {
+            .date-marker.fixed {
+                top: 14px + @nav-height;
+            }
+        }
+    }
+}
+
+
+body.menu-open {
+    // Menu (280) + min-width content column (540)
+    @media (min-width: 820px) {
+        #menu {
+            display: block;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .navbar-default {
+            left: 280px;
+            right: 0;
+            width: auto;
+            z-index: 1;
+
+            .menu-trigger {
+                display: none;
+            }
+        }
+
+        .app-message {
+            left: 280px;
+            right: 0;
+            width: auto;
+        }
+
+        #page-content {
+            margin-left: 280px;
+            min-height: 100%;
+        }
+    }
+}

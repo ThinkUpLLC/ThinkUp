@@ -127,13 +127,13 @@ class TestOfSessionAPILoginController extends ThinkUpUnitTestCase {
         $_GET = array('success_redir'=>'success', 'failure_redir'=>'failure', 'u'=>'me2@example.com',
         'k'=>'yayaya');
         $results = $controller->go();
-        $this->assertEqual($controller->redirect_destination, 'success?msg=Logged+in+successfully.');
+        $this->assertEqual($controller->redirect_destination, 'success');
 
         //User logs in successfully with success redirect that has a ? in it
         $_GET = array('success_redir'=>'https://thinkup.com/admin/user/success.php?answer=yes&comment=indeed',
         'failure_redir'=>'failure', 'u'=>'me2@example.com', 'k'=>'yayaya');
         $results = $controller->go();
         $this->assertEqual($controller->redirect_destination,
-        'https://thinkup.com/admin/user/success.php?answer=yes&comment=indeed&msg=Logged+in+successfully.');
+        'https://thinkup.com/admin/user/success.php?answer=yes&comment=indeed');
     }
 }

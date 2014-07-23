@@ -130,13 +130,19 @@ class FacebookCrawler {
             $user_vals["user_id"] = $details->id;
             $user_vals["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
             $user_vals['url'] = isset($details->website)?$details->website:'';
-            $user_vals["follower_count"] = 0;
+
+            if (isset($details->subscribers->summary->total_count)) {
+                $follower_count = $details->subscribers->summary->total_count;
+            } else {
+                $follower_count = 0;
+            }
+            $user_vals["follower_count"] = $follower_count;
             $user_vals["location"] = isset($details->location->name)?$details->location->name:'';
             $user_vals["description"] = isset($details->about)?$details->about:'';
-            $user_vals["is_verifed"] = 0; //is_verified is for legitimate high quality sources
+            $user_vals["is_verified"] = $details->is_verified;
             $user_vals["is_protected"] = 1; //for now, assume a Facebook user is private
             $user_vals["post_count"] = 0;
-            $user_vals["joined"] = null;
+            $user_vals["joined"] = ''; //Column 'joined' cannot be null
             $user_vals["network"] = $details->network;
             //this will help us in getting correct range of posts
             $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
@@ -154,7 +160,7 @@ class FacebookCrawler {
         $network = $this->instance->network;
 
         // fetch user's friends
-        $this->fetchAndStoreFriends();
+        $this->fetchAndStoreSubscribers();
 
         $fetch_next_page = true;
         $current_page_number = 1;
@@ -692,7 +698,7 @@ class FacebookCrawler {
      * @return void
      * @throws APIOAuthException
      */
-    private function fetchAndStoreFriends() {
+    private function fetchAndStoreSubscribers() {
         if ($this->instance->network != 'facebook') {
             return;
         }
@@ -700,16 +706,16 @@ class FacebookCrawler {
         $user_id = $this->instance->network_user_id;
         $access_token = $this->access_token;
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
-        $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
+        $subscribers = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/subscribers', $access_token);
 
-        if (isset($friends->data)) {
+        if (isset($subscribers->data)) {
             //store relationships in follows table
             $follows_dao = DAOFactory::getDAO('FollowDAO');
             $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $user_dao = DAOFactory::getDAO('UserDAO');
 
-            foreach ($friends->data as $friend) {
-                $follower_id = $friend->id;
+            foreach ($subscribers->data as $subscriber) {
+                $follower_id = $subscriber->id;
                 if ($follows_dao->followExists($user_id, $follower_id, $network)) {
                     // follow relationship already exists
                     $follows_dao->update($user_id, $follower_id, $network);
@@ -731,7 +737,7 @@ class FacebookCrawler {
                 }
             }
             //totals in follower_count table
-            $count_dao->insert($user_id, $network, count($friends->data), null, 'followers');
+            $count_dao->insert($user_id, $network, $subscribers->summary->total_count, null, 'followers');
         } elseif (isset($stream->error->type) && ($stream->error->type == 'OAuthException')) {
             throw new APIOAuthException($stream->error->message);
         }

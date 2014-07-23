@@ -170,7 +170,6 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
                         " on Twitter is already set up in ThinkUp! To add a different Twitter account, ".
                         "log out of Twitter.com in your browser and authorize ThinkUp again.", 'user_add');
                     } else {
-                        print_r($this->owner);
                         if ($owner_instance_dao->insert($this->owner->id, $instance->id,
                         $token_array['oauth_token'], $token_array['oauth_token_secret'])) {
                             $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].

@@ -123,12 +123,12 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
-          '/webapp/test_installer/thinkup/config.inc.php'));
+          'webapp/test_installer/thinkup/config.inc.php'));
 
         //sleep(1000);
         //Test bad activation code
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
-        $this->assertText('Houston, we have a problem: Account activation failed.');
+        $this->assertPattern("/Houston, we have a problem: Account activation failed\./");
 
         //Get activation code for user from database
         Utils::setDefaultTimezonePHPini();
@@ -140,14 +140,14 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
         $activation_code);
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
-        $this->assertText('Success! Your account has been activated. Please log in.');
+        $this->assertPattern("/Your account has been activated\./");
 
         //Try to activate again
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code='.
         $activation_code);
         $this->assertNoText('Houston, we have a problem: Account activation failed.');
         $this->assertNoText('Success! Your account has been activated. Please log in.');
-        $this->assertText('You have already activated your account. Please log in.');
+        $this->assertPattern("/You have already activated your account\./");
 
         //Log into ThinkUp
         $this->clickLink('Log in');
@@ -161,7 +161,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //Visit Settings page and assert content there
         $this->click("Settings");
         $this->assertTitle('Configure Your Account | ThinkUp');
-        $this->assertText('admin');
+        $this->assertText('Settings');
     }
 
     public function testSuccessfulInstallationInNonWritableFolder() {
@@ -176,7 +176,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //Start installation process
         @exec('chmod -R 555 webapp/test_installer/thinkup/data;');
         $this->get($this->url.'/test_installer/thinkup/');
-        $this->assertTitle("ThinkUp");
+        $this->assertTitle("ThinkUp Permissions Error");
 
         //data_dir isn't writable
         $this->assertText('Oops! ThinkUp is unable to run because of incorrect folder permissions. '.

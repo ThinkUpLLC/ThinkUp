@@ -55,10 +55,7 @@ class TestOfTwitterPluginHashtagConfigurationController extends ThinkUpUnitTestC
         //not logged in
         $controller = new TwitterPluginHashtagConfigurationController(null, 'twitter', 'ginatrapani');
         $output = $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
-        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
 
         //logged in, no user set up
         $this->simulateLogin('me@example.com');

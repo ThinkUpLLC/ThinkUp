@@ -59,17 +59,19 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
         $this->assertEqual($result->emphasis, 1);
-        $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";
-        $text .= "at Video</a> really touched a nerve! 60% of people liked it and 40% disliked it.";
-        $this->assertEqual($result->text, $text);
+        $this->assertEqual($result->headline, "My Great Video really touched a nerve!");
+        $text = "/60% of people liked ";
+        $text .= "<a href=\"http:\/\/plus\.google\.com\/1\/about\"\>ev\<\/a\>'s";
+        $text .= " video \<a href=\"http:\/\/www\.youtube\.com\/watch\?v=1\">My Gre";
+        $text .= "at Video\<\/a\> and 40% disliked it\./";
+        $this->assertPattern($text, $result->text);
     }
 
     public function testSplitOpinionsDislikes() {
@@ -86,16 +88,18 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
-        $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";
-        $text .= "at Video</a> really touched a nerve! 40% of people liked it and 60% disliked it.";
-        $this->assertEqual($result->text, $text);
+        $this->assertEqual($result->headline, "My Great Video really touched a nerve!");
+        $text = "/40% of people liked ";
+        $text .= "<a href=\"http:\/\/plus\.google\.com\/1\/about\"\>ev\<\/a\>'s";
+        $text .= " video \<a href=\"http:\/\/www\.youtube\.com\/watch\?v=1\">My Gre";
+        $text .= "at Video\<\/a\> and 60% disliked it\./";
+        $this->assertPattern($text, $result->text);
     }
 
     public function testSplitOpinionsEqualSplit() {
@@ -112,17 +116,19 @@ class TestOfSplitOpinionsInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $split_opinions_insight = new SplitOpinionsInsight();
-        $split_opinions_insight->generateInsight($instance, $posts, 7);
+        $split_opinions_insight->generateInsight($instance, null, $posts, 7);
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('split_opinions1', 1, date ('Y-m-d',strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'split_opinions1');
-        $this->assertEqual($result->headline, 'Split opinion:');
         $this->assertEqual($result->filename, 'splitopinions');
+        $this->assertEqual($result->headline, "My Great Video really touched a nerve!");
         $this->assertEqual($result->emphasis, 1);
-        $text = "<a href=http://plus.google.com/1/about>ev</a>'s video <a href=http://www.youtube.com/watch?v=1>My Gre";
-        $text .= "at Video</a> really touched a nerve! 50% of people liked it and 50% disliked it.";
-        $this->assertEqual($result->text, $text);
+        $text = "/50% of people liked ";
+        $text .= "<a href=\"http:\/\/plus\.google\.com\/1\/about\"\>ev\<\/a\>'s";
+        $text .= " video \<a href=\"http:\/\/www\.youtube\.com\/watch\?v=1\">My Gre";
+        $text .= "at Video\<\/a\> and 50% disliked it\./";
+        $this->assertPattern($text, $result->text);
     }
 
 }

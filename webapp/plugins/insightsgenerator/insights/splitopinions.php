@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name:  Split Opinions
- Description: Hightlights videos that split the audience with a like or dislike percentage of 40 - 60 percent
+ Description: Hightlights videos that split the audience with a like or dislike percentage of 40 - 60 percent.
  */
 /**
  *
@@ -30,8 +30,8 @@
 
 class SplitOpinionsInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $video_dao = DAOFactory::getDAO('VideoDAO');
@@ -53,14 +53,14 @@ class SplitOpinionsInsight extends InsightPluginParent implements InsightPlugin 
 
             // If the video splits opinion in the range of 60/40 likes / dislikes or 40/60 likes / dislikes
             if($percent_likes >= 40 && $percent_likes <= 60) {
-                $prefix = 'Split opinion:';
-                $text = "<a href=http://plus.google.com/$instance->network_user_id/about>".$instance->network_username;
-                $text .= '</a>\'s video ';
-                $text .= "<a href=http://www.youtube.com/watch?v=$post->post_id>".$video->post_text."</a> really ";
-                $text .= "touched a nerve! $percent_likes"."% of people liked it and ".$percent_dislikes."% disliked ";
-                $text .= "it.";
+                $headline = $video->post_text. " really touched a nerve!";
+                $insight_text = "$percent_likes"."% of people liked ";
+                $insight_text .= "<a href=\"http://plus.google.com/$instance->network_user_id/about\">".$instance->network_username;
+                $insight_text .= '</a>\'s video ';
+                $insight_text .= "<a href=\"http://www.youtube.com/watch?v=$post->post_id\">".$video->post_text."</a> ";
+                $insight_text .= "and ".$percent_dislikes."% disliked it.";
                 $this->insight_dao->insertInsightDeprecated("split_opinions".$video->id, $instance->id, $simplified_post_date,
-                $prefix, $text, $filename, 1, serialize($video));
+                $headline, $insight_text, $filename, 1, serialize($video));
             }
         }
     }

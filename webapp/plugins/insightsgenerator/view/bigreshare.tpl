@@ -1,7 +1,14 @@
-{include file=$tpl_path|cat:'_header.tpl'}
 
-        <div class="insight-attachment-detail users">
-                {include file=$tpl_path|cat:"_users.tpl" icon="bullhorn"}
-        </div>
+{include file=$tpl_path|cat:"_users.tpl" users=$i->related_data.people }
 
-{include file=$tpl_path|cat:'_footer.tpl'}
+{*
+  We didn't store the posts in an array, so this is a hack until we regenerate.
+  -- MBJ 2014-01-15
+*}
+{if isset($i->related_data.posts->id)}
+{assign var="the_post" value=$i->related_data.posts}
+{else}
+{assign var="the_post" value=$i->related_data.posts[0]}
+{/if}
+
+{include file=$tpl_path|cat:"_post.tpl" post=$the_post hide_avatar=true}

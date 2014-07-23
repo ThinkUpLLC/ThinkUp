@@ -1,6 +1,5 @@
-{if !$expand }
-<div class="collapse in" id="chart-{$i->id}">
-{/if}
+{if $i->related_data.vis_data}
+
 <div id="count_history_{$i->id}" class="chart"></div>
 
 <script type="text/javascript">
@@ -16,6 +15,8 @@ function drawChart{/literal}{$i->id}() {literal}{
   {/literal}
   var count_history_data_{$i->id} = new google.visualization.DataTable(
   {$i->related_data.vis_data});
+  var c = window.tu.constants.colors;
+  var color = c.{$color};
   formatter.format(count_history_data_{$i->id}, 1);
   formatter_date.format(count_history_data_{$i->id}, 0);
 {literal}
@@ -27,10 +28,11 @@ function drawChart{/literal}{$i->id}() {literal}{
       dataTable: count_history_data_{/literal}{$i->id}{literal},
       options: {
           height: 200,
+          width: 290,
           legend: "none",
           interpolateNulls: true,
           pointSize: 4,
-          colors : ['#31C22D'],
+          colors : [color],
           hAxis: {
               baselineColor: '#eee',
               format: 'MMM d',
@@ -48,9 +50,4 @@ function drawChart{/literal}{$i->id}() {literal}{
   }
   {/literal}
 </script>
-{if $i->related_data.milestone.units_of_time && $i->related_data.trend && $i->related_data.trend != 0}
-    Current growth rate: {if $i->related_data.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$i->related_data.trend|number_format}</span>/{$i->related_data.milestone.units_of_time|lower}
-{/if}
-{if !$expand}
-</div>
 {/if}

@@ -28,7 +28,7 @@
  * @copyright 2013 Aaron Kalair
  */
 
-class YouTubePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class YouTubePlugin extends Plugin implements CrawlerPlugin {
 
     public function __construct($vals=null) {
         parent::__construct($vals);
@@ -107,13 +107,6 @@ class YouTubePlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
     }
 
-    public function getDashboardMenuItems($instance) {
-
-    }
-
-    public function getPostDetailMenuItems($post) {
-
-    }
     public function renderInstanceConfiguration($owner, $instance_username, $instance_network) {
         return "";
     }

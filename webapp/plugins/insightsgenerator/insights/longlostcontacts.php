@@ -2,7 +2,7 @@
 /*
  Plugin Name: Long-lost Contacts
  Description: People you follow and haven't replied to in over a year.
- When: Thursdays
+ When: Thursdays for Twitter, Mondays otherwise
  */
 
 /**
@@ -32,17 +32,25 @@
  */
 
 class LongLostContactsInsight extends InsightPluginParent implements InsightPlugin {
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('long_lost_contacts', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=4)) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 4;
+        } else {
+            $day_of_week = 1;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('long_lost_contacts', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week = $day_of_week);
+
+        if ($should_generate_insight) {
             $follow_dao = DAOFactory::getDAO('FollowDAO');
 
             $contacts = $follow_dao->getFolloweesRepliedToThisWeekLastYear(
             $instance->network_user_id, $instance->network);
             $long_lost_contacts = array();
+            $insight_text = '';
 
             if (count($contacts)) {
                 $post_dao = DAOFactory::getDAO('PostDAO');
@@ -56,14 +64,28 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
             }
 
             if (count($long_lost_contacts)) {
-                $insight_text = $this->username." hasn't replied to "
+                $headline = $this->username." hasn't replied to "
                 .((count($long_lost_contacts) > 1) ?
                 "<strong>".count($long_lost_contacts)." contacts</strong> " : "a contact ")
                 ."in over a year: ";
 
-                $this->insight_dao->insertInsightDeprecated("long_lost_contacts", $instance->id, $this->insight_date,
-                "Keep in touch:", $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($long_lost_contacts));
+                $insight_text = "Sometimes it's good to reflect after a little bit of time has passed.";
+
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'long_lost_contacts'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $long_lost_contacts["people"][0]->avatar;
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->setPeople($long_lost_contacts);
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 

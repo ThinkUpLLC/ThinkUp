@@ -64,7 +64,7 @@ class DashboardModuleCacher {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 10);
         if (sizeof($hot_posts) > 3) {
-            $hot_posts_data = self::getHotPostVisualizationData($hot_posts, $this->instance->network);
+            $hot_posts_data = ChartHelper::getPostActivityVisualizationData($hot_posts, $this->instance->network);
             //delete existing
             //TODO Go back to deleting this existing data once insights stream doesn't reference it
             //$insight_dao->deleteInsightsBySlug("PostMySQLDAO::getHotPosts", $this->instance->id);
@@ -183,73 +183,6 @@ class DashboardModuleCacher {
             $this->instance->id, $simplified_date, '', '', 'dashboard', Insight::EMPHASIS_LOW,
             serialize($checkins_map));
         }
-    }
-
-    /**
-     * Convert Hot Posts data to JSON for use with Google Charts
-     * @param arr $hot_posts Array returned from PostDAO::getHotPosts
-     * @return str JSON
-     */
-    public static function getHotPostVisualizationData($hot_posts, $network) {
-        switch ($network) {
-            case 'twitter':
-                $post_label = 'Tweet';
-                $approval_label = 'Favorites';
-                $share_label = 'Retweets';
-                $reply_label = 'Replies';
-                break;
-            case 'facebook':
-            case 'facebook page':
-                $post_label = 'Post';
-                $approval_label = 'Likes';
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-            case 'google+':
-                $post_label = 'Post';
-                $approval_label = "+1s";
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-            default:
-                $post_label = 'Post';
-                $approval_label = 'Favorites';
-                $share_label = 'Shares';
-                $reply_label = 'Comments';
-                break;
-        }
-        $metadata = array(
-        array('type' => 'string', 'label' => $post_label),
-        array('type' => 'number', 'label' => $reply_label),
-        array('type' => 'number', 'label' => $share_label),
-        array('type' => 'number', 'label' => $approval_label),
-        );
-        $result_set = array();
-        foreach ($hot_posts as $post) {
-            if (isset($post->post_text) && $post->post_text != '') {
-                $post_text_label = htmlspecialchars_decode(strip_tags($post->post_text), ENT_QUOTES);
-            } elseif (isset($post->link->title) && $post->link->title != '') {
-                $post_text_label = str_replace('|','', $post->link->title);
-            } elseif (isset($post->link->url) && $post->link->url != "") {
-                $post_text_label = str_replace('|','', $post->link->url);
-            } else {
-                $post_text_label = date("M j",  date_format (date_create($post->pub_date), 'U' ));
-            }
-
-            // Concat text and clean up any encoding snags
-            $text_shortened = substr($post_text_label, 0, 100) . '...';
-            // Doesn't work as expected on PHP 5.4
-            //$text_clean = iconv("UTF-8", "ISO-8859-1//IGNORE", $text_shortened);
-            $text_clean= mb_convert_encoding($text_shortened, 'UTF-8', 'UTF-8');
-
-            $result_set[] = array('c' => array(
-            array('v' => $text_clean),
-            array('v' => intval($post->reply_count_cache)),
-            array('v' => intval($post->all_retweets)),
-            array('v' => intval($post->favlike_count_cache)),
-            ));
-        }
-        return json_encode(array('rows' => $result_set, 'cols' => $metadata));
     }
 
     /**

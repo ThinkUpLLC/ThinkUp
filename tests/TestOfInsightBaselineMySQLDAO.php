@@ -46,6 +46,18 @@ class TestOfInsightBaselineMySQLDAO extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testDoesInsightBaselineExistBefore() {
+        $dao = new InsightBaselineMySQLDAO();
+        $result = $dao->doesInsightBaselineExistBefore("avg_replies_per_week", 1, '2013-06-01');
+        $this->assertTrue($result);
+
+        $result = $dao->doesInsightBaselineExistBefore("avg_replies_per_week", 1, '2011-06-01');
+        $this->assertFalse($result);
+
+        $result = $dao->doesInsightBaselineExistBefore("some_fake_thing", 1, '2014-06-01');
+        $this->assertFalse($result);
+    }
+
     public function testDoesInsightBaselineExist() {
         $dao = new InsightBaselineMySQLDAO();
         $result = $dao->doesInsightBaselineExist("avg_replies_per_week", 1);
@@ -91,6 +103,49 @@ class TestOfInsightBaselineMySQLDAO extends ThinkUpUnitTestCase {
 
         $result = $dao->getInsightBaseline('avg_replies_per_week', 1, '2012-05-02');
         $this->assertNull($result);
+    }
+
+    public function testGetMostRecentInsightBaseline() {
+        $dao = new InsightBaselineMySQLDAO();
+        $result = $dao->getMostRecentInsightBaseline('avg_replies_per_week', 1);
+        $this->assertIsA($result, 'InsightBaseline');
+        $this->assertEqual($result->slug, 'avg_replies_per_week');
+        $this->assertEqual($result->date, '2012-05-01');
+        $this->assertEqual($result->instance_id, 1);
+        $this->assertEqual($result->value, 51);
+
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>'2012-04-30',
+        'slug'=>'avg_replies_per_week', 'instance_id'=>1, 'value'=>99));
+        $result = $dao->getMostRecentInsightBaseline('avg_replies_per_week', 1);
+        $this->assertEqual($result->date, '2012-05-01');
+        $this->assertEqual($result->value, 51);
+
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>'2014-04-01',
+        'slug'=>'avg_replies_per_week', 'instance_id'=>1, 'value'=>12));
+        $result = $dao->getMostRecentInsightBaseline('avg_replies_per_week', 1);
+        $this->assertEqual($result->date, '2014-04-01');
+        $this->assertEqual($result->value, 12);
+
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>'2014-04-02',
+        'slug'=>'avg_replies_per_week', 'instance_id'=>11, 'value'=>12));
+        $result = $dao->getMostRecentInsightBaseline('avg_replies_per_week', 1);
+        $this->assertEqual($result->date, '2014-04-01');
+        $this->assertEqual($result->value, 12);
+        $this->assertNotEqual($result->instance_id, 11);
+
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>'2014-04-02',
+        'slug'=>'nope', 'instance_id'=>1, 'value'=>22));
+        $result = $dao->getMostRecentInsightBaseline('avg_replies_per_week', 1);
+        $this->assertEqual($result->date, '2014-04-01');
+        $this->assertEqual($result->value, 12);
+        $this->assertNotEqual($result->slug, 'nope');
+
+        $result = $dao->getMostRecentInsightBaseline('new_baseline', 1);
+        $this->assertNull($result);
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>'2014-04-02',
+        'slug'=>'new_baseline', 'instance_id'=>1, 'value'=>22));
+        $result = $dao->getMostRecentInsightBaseline('new_baseline', 1);
+        $this->assertNotNull($result);
     }
 
     public function testUpdateInsightBaseline() {

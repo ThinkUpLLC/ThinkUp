@@ -33,12 +33,11 @@
 require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
 
 class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if (self::shouldGenerateInsight('link_prompt', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
+        if (self::shouldGenerateLinkPromptInsight('link_prompt', $instance, $insight_date='today',
         $excluded_networks=array('foursquare', 'youtube'), $alternate_day=(((int)date('j')) % 2))) {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $link_dao = DAOFactory::getDAO('LinkDAO');
@@ -67,12 +66,14 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
             $instance->network, 30);
 
             if ($num_posts && (($num_links / $num_posts) > 0.2) && count($recent_posts) && !count($posts_with_links)) {
-                $insight_text = $this->username." hasn't ".$this->terms->getVerb('posted')
-                ." a link in the last 2 days. It may be time to share an interesting link with "
+                $headline = $this->username." hasn't ".$this->terms->getVerb('posted')
+                ." a link in the last 2 days on " . $instance->network . ".";
+
+                $insight_text = "It may be time to share an interesting link with "
                 .$this->terms->getNoun('friend', InsightTerms::PLURAL).".";
 
                 $this->insight_dao->insertInsightDeprecated('link_prompt', $instance->id, $this->insight_date,
-                "Nudge:", $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+                $headline, $insight_text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
             }
         }
 
@@ -80,28 +81,25 @@ class LinkPromptInsight extends InsightPluginParent implements InsightPlugin {
     }
 
     /**
-     * Determine whether an insight should be generated or not.
+     * Determine whether the link prompt insight should be generated or not.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
-     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
-     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
-     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
      * @param bool $alternate_day whether today is an alternate day or not
      * @return bool $run whether the insight should be generated or not
      */
-    public function shouldGenerateInsight($slug, Instance $instance, $insight_date=null,
-    $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-    $excluded_networks=null, $alternate_day=true) {
+    public function shouldGenerateLinkPromptInsight($slug, Instance $instance, $insight_date=null, $excluded_networks,
+    $alternate_day=true) {
         if (Utils::isTest()) {
             return true;
         } else {
             return $alternate_day && parent::shouldGenerateInsight($slug, $instance, $insight_date,
-            $regenerate_existing_insight, $day_of_week, $count_last_week_of_posts, $excluded_networks);
+            $regenerate_existing_insight=false, $count_last_week_of_posts=null, $excluded_networks);
         }
     }
 }
 
+// This insight is annoying and repetitive and we need to do better. Uncomment out once it's fixed.
 //$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
 //$insights_plugin_registrar->registerInsightPlugin('LinkPromptInsight');

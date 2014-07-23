@@ -1,72 +1,100 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html lang="en" itemscope itemtype="http://schema.org/Article">
 <head>
-<meta charset="utf-8">
-<title>ThinkUp</title>
-<link rel="shortcut icon" type="image/x-icon"
-	href="/assets/img/favicon.ico">
-<!-- jquery -->
-<link type="text/css" rel="stylesheet"
-	href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
-<script type="text/javascript"
-	src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script type="text/javascript"
-	src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<!-- custom css -->
-<link type="text/css" rel="stylesheet"
-	href="#THINKUP_BASE_URL#assets/css/base.css">
-<link type="text/css" rel="stylesheet"
-	href="#THINKUP_BASE_URL#assets/css/positioning.css">
-<link type="text/css" rel="stylesheet"
-	href="#THINKUP_BASE_URL#assets/css/style.css">
-<link type="text/css" rel="stylesheet"
-	href="#THINKUP_BASE_URL#assets/css/installer.css">
-</head>
+    <meta charset="utf-8">
+    <title>ThinkUp Permissions Error</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- styles -->
+    <link href="#THINKUP_BASE_URL#assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="#THINKUP_BASE_URL#assets/css/vendor/font-awesome.min.css" rel="stylesheet">
+    <link href="#THINKUP_BASE_URL#assets/css/insights.css" rel="stylesheet">
+
+    <!-- IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</head>
 <body>
 
-<div id="status-bar" class="clearfix">
+<div id="sticky-footer-fix-wrapper">
 
-<div class="status-bar-left"><!-- the user has not selected an instance -->
+    <div class="navbar navbar-static-top">
+
+        <div class="container">
+
+            <div class="navbar-header">
+
+                <a href="#THINKUP_BASE_URL#" class="navbar-brand col-md-3"><span style="color : #00AEEF; font-weight : 800;">Think</span><span style="color : black; font-weight : 200;">Up</span></a>
+            
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+<div id="main" class="container">
+
+    <div class="row">
+        <div class="col-md-3">
+            
+        </div>
+        <div class="col-md-9">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Uh oh! ThinkUp can't write some necessary files.</h3>
+                </div>
+                <div class="panel-body">
+                    <p><span class="fa fa-alert" style=""></span> 
+                    <b>Oops!</b> ThinkUp is unable to run because of incorrect folder permissions.<br /><br />
+                    To fix this problem, run<br />
+                    <code>sudo chown -R #WHOAMI# #COMPILE_DIR#</code><br />
+                    on your server, using root (or sudo), and then reload this page to continue.<br /><br />
+                    If you don't have root access, use the following command instead:<br />
+                    <code>chmod -R 777 #COMPILE_DIR#</code><br />
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+        
 </div>
-<!-- end .status-bar-left -->
+  
 
-<div class="status-bar-right">
-<ul>
-	<li>&nbsp;</li>
-</ul>
-</div>
-<!-- end .status-bar-right --></div>
-<!-- end #status-bar -->
+  
 
-<div class="container clearfix">
+    </div><!-- end container -->
 
-<div id="app-title"><a href="#THINKUP_BASE_URL#index.php">
-<h1><span id="headerthink">Think</span><span id="headerup">Up</span></h1>
-</a></div>
-<!-- end #app-title -->
+    <div id="sticky-footer-fix-clear"></div>
+</div><!-- #sticky-footer-fix-wrapper -->
 
-<!-- end .container -->
-<div class="container_24 thinkup-canvas clearfix">
-<div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
-<div class="alert urgent"
-	style="margin: 20px 0px; padding: 0.5em 0.7em;">
-<p><span class="ui-icon ui-icon-alert"
-	style="float: left; margin: .3em 0.3em 0 0;"></span> <b>Oops!</b> ThinkUp is unable
-to run because of incorrect folder permissions.<br /><br />
-To fix this problem, run<br />
-<code>sudo chown -R #WHOAMI# #COMPILE_DIR#</code><br />
-on your server, using root (or sudo), and then reload this page to continue.<br /><br />
-If you don't have root access, use the following command instead:<br />
-<code>chmod -R 777 #COMPILE_DIR#</code><br />
-</p>
-</div>
-</div>
-</div>
+      <footer>
+        <div class="container footer">
+          <p class="pull-right"><a href="#">Back to top <i class="fa fa-chevron-up icon-white"></i></a></p>
+          <p><a href="http://thinkup.com">ThinkUp</a> <span class="hidden-sm hidden-md">&#8226; 
+          <a href="http://thinkup.com/docs/">Documentation</a>  &#8226; 
+          <a href="https://groups.google.com/forum/?fromgroups#!forum/thinkupapp">Mailing List</a> &#8226;
+          <a href="/thinkup/webapp/dashboard.php">Old-School Dashboard</a>
+          </span>
+          
+          </p>  
+          <p class="hidden-sm hidden-md">
+          <a href="http://twitter.com/thinkup"><i class="fa fa-twitter icon-white"></i></a>
+          <a href="http://facebook.com/thinkupapp"><i class="fa fa-facebook icon-white"></i></a>
+          <a href="http://gplus.to/thinkup"><i class="fa fa-google-plus icon-white"></i></a>
+          &copy; ThinkUp LLC 2012-2013. It is nice to be nice.
+          </p>
+        </div>
+      </footer>
 
-<!-- .content -->
+ <!-- end bootstrap loop -->
 
 </body>
 

@@ -70,7 +70,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         'short_url'=>'http://bit.ly/blah'.$counter, 'click_count'=>7609 ));
 
         $builders[] = FixtureBuilder::build('insights', array('slug'=>'ShortLinkMySQLDAO::getRecentClickStats',
-        'date'=>$yesterday, 'instance_id'=>1));
+        'date'=>$yesterday, 'instance_id'=>1, 'related_data'=>serialize('sample click spike data')));
 
         // Get data ready that insight requires
         $post1_object = new Post($post1_builder->columns);
@@ -85,7 +85,7 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $clickspike_insight_plugin = new ClickSpikeInsight();
-        $clickspike_insight_plugin->generateInsight($instance, $posts, 3);
+        $clickspike_insight_plugin->generateInsight($instance, null, $posts, 3);
         //sleep(1000);
 
         // Assert that insight got generated
@@ -93,9 +93,8 @@ class TestOfClickSpikeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('click_high_7_day_28', 1, $yesterday);
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'click_high_7_day_28');
-        $this->assertEqual($result->headline, 'New 7-day record!');
         $this->assertEqual($result->filename, 'clickspike');
-        $this->assertPattern('/Viewers clicked \@ev\'s link \<strong\>7,609 times\<\/strong\>/', $result->text);
+        $this->assertPattern('/Viewers clicked \@ev\'s link \<strong\>7,609 times\<\/strong\>/', $result->headline);
     }
 
     private function buildData() {

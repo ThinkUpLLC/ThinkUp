@@ -105,8 +105,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertPattern( '/session\/login.php\?redirect\=/', $controller->redirect_destination);
 
         //logged in
         $this->simulateLogin('me@example.com');
@@ -395,6 +394,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         // Assert that the Add User button isn't there
         $this->assertNoPattern('/Add a Twitter Account/', $output);
         // Assert that the message about the membership cap is there
-        $this->assertPattern('/You&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
+        $this->assertPattern('/you&#39;ve connected 10 of 10 accounts to ThinkUp./', $output);
     }
 }

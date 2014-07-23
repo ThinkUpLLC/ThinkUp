@@ -3088,6 +3088,170 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             return array($post, $entities, $user_array);
     }
 
+    private function buildStreamPostArray4() {
+        $post = json_decode('{
+           "post_id":"462955667167662080",
+           "author_user_id":"12145232",
+           "user_id":"12145232",
+           "pub_date":"2014-05-04 14:03:27",
+           "post_text":"RT @pourmecoffee: Twenty-eight men answered Shackleton\'s Antarctic expedition ad http:\/\/t.co\/uGLsKU8Qkc http:\/\/t.co\/wpdAD4iQzB",
+           "author_username":"CDMoyer",
+           "user_name":"CDMoyer",
+           "in_reply_to_user_id":"",
+           "author_avatar":"http:\/\/pbs.twimg.com\/profile_images\/421641487051272192\/IfEg0PgG_normal.jpeg",
+           "avatar":"http:\/\/pbs.twimg.com\/profile_images\/421641487051272192\/IfEg0PgG_normal.jpeg",
+           "in_reply_to_post_id":"",
+           "author_fullname":"Chris Moyer",
+           "full_name":"Chris Moyer",
+           "source":"<a href=\"http:\/\/twitter.com\/download\/iphone\" rel=\"nofollow\">Twitter for iPhone<\/a>",
+           "location":"Buffalo, NY",
+           "url":"http:\/\/t.co\/8NCBQ5WBQU",
+           "description":"I love building things on the internet. \nFan of books, video games, music. \nI might tweet puppy or kid pics.",
+           "is_verified":0,
+           "is_protected":0,
+           "follower_count":443,
+           "post_count":937,
+           "geo":"",
+           "place":"",
+           "friend_count":245,
+           "joined":"2008-01-12 05:50:44",
+           "favorites_count":169,
+           "favlike_count_cache":0,
+           "network":"twitter",
+           "retweeted_post":{
+              "content":{
+                 "post_id":"462748167357091840",
+                 "author_user_id":"16906137",
+                 "user_id":"16906137",
+                 "pub_date":"2014-05-04 00:18:55",
+                 "post_text":"Twenty-eight men answered Shackleton\'s Antarctic expedition ad http:\/\/t.co\/uGLsKU8Qkc http:\/\/t.co\/wpdAD4iQzB",
+                 "author_username":"pourmecoffee",
+                 "user_name":"pourmecoffee",
+                 "in_reply_to_user_id":"",
+                 "author_avatar":"http:\/\/pbs.twimg.com\/profile_images\/421566216\/coffee1242220886_normal.jpg",
+                 "avatar":"http:\/\/pbs.twimg.com\/profile_images\/421566216\/coffee1242220886_normal.jpg",
+                 "in_reply_to_post_id":"",
+                 "author_fullname":"pourmecoffee",
+                 "full_name":"pourmecoffee",
+                 "source":"<a href=\"https:\/\/about.twitter.com\/products\/tweetdeck\" rel=\"nofollow\">TweetDeck<\/a>",
+                 "location":"USA",
+                 "url":"http:\/\/t.co\/FzcppA8OBt",
+                 "description":"Muttering sarcasm to power http:\/\/t.co\/CD3GxwBQD8",
+                 "is_verified":1,
+                 "is_protected":0,
+                 "follower_count":161508,
+                 "post_count":32683,
+                 "geo":"",
+                 "place":"",
+                 "friend_count":1176,
+                 "joined":"2008-10-22 14:33:38",
+                 "favorites_count":0,
+                 "favlike_count_cache":431,
+                 "network":"twitter",
+                 "retweet_count_api":556,
+                 "photos":[
+                    {
+                       "id":462748165783822340,
+                       "id_str":"462748165783822336",
+                       "indices":[
+                          86,
+                          108
+                       ],
+                       "media_url":"http:\/\/pbs.twimg.com\/media\/BmwDAUoCIAAM_H4.jpg",
+                       "media_url_https":"https:\/\/pbs.twimg.com\/media\/BmwDAUoCIAAM_H4.jpg",
+                       "url":"http:\/\/t.co\/wpdAD4iQzB",
+                       "display_url":"pic.twitter.com\/wpdAD4iQzB",
+                       "expanded_url":"http:\/\/twitter.com\/pourmecoffee\/status\/462748167357091840\/photo\/1",
+                       "type":"photo",
+                       "sizes":{
+                          "large":{
+                             "w":464,
+                             "h":269,
+                             "resize":"fit"
+                          },
+                          "thumb":{
+                             "w":150,
+                             "h":150,
+                             "resize":"crop"
+                          },
+                          "medium":{
+                             "w":464,
+                             "h":269,
+                             "resize":"fit"
+                          },
+                          "small":{
+                             "w":340,
+                             "h":197,
+                             "resize":"fit"
+                          }
+                       }
+                    }
+                 ]
+              }
+           },
+           "in_retweet_of_post_id":"462748167357091840",
+           "in_rt_of_user_id":"16906137",
+           "photos":[
+              {
+                 "id":462748165783822340,
+                 "id_str":"462748165783822336",
+                 "indices":[
+                    104,
+                    126
+                 ],
+                 "media_url":"http:\/\/pbs.twimg.com\/media\/BmwDAUoCIAAM_H4.jpg",
+                 "media_url_https":"https:\/\/pbs.twimg.com\/media\/BmwDAUoCIAAM_H4.jpg",
+                 "url":"http:\/\/t.co\/wpdAD4iQzB",
+                 "display_url":"pic.twitter.com\/wpdAD4iQzB",
+                 "expanded_url":"http:\/\/twitter.com\/pourmecoffee\/status\/462748167357091840\/photo\/1",
+                 "type":"photo",
+                 "sizes":{
+                    "large":{
+                       "w":464,
+                       "h":269,
+                       "resize":"fit"
+                    },
+                    "thumb":{
+                       "w":150,
+                       "h":150,
+                       "resize":"crop"
+                    },
+                    "medium":{
+                       "w":464,
+                       "h":269,
+                       "resize":"fit"
+                    },
+                    "small":{
+                       "w":340,
+                       "h":197,
+                       "resize":"fit"
+                    }
+                 },
+                 "source_status_id":462748167357091840,
+                 "source_status_id_str":"462748167357091840"
+              }
+           ]
+        }', true);
+        return $post;
+    }
+
+    public function testOfLinksInRetweet() {
+        $post = self::buildStreamPostArray4();
+        $dao = DAOFactory::getDAO('PostDAO');
+        $id = $dao->addPost($post);
+
+        $result = $dao->getPost($post['post_id'], 'twitter');
+        $this->assertEqual(0, count($result->links));
+        $this->assertEqual('462748167357091840', $result->in_retweet_of_post_id);
+
+        $result = $dao->getPost('462748167357091840', 'twitter');
+        $this->assertEqual(2, count($result->links));
+        $this->assertEqual('http://t.co/uGLsKU8Qkc', $result->links[0]->url);
+        $this->assertEqual('', $result->links[0]->image_src);
+        $this->assertEqual('http://t.co/wpdAD4iQzB', $result->links[1]->url);
+        $this->assertEqual('http://pbs.twimg.com/media/BmwDAUoCIAAM_H4.jpg', $result->links[1]->image_src);
+    }
+
     public function testUpdateFavLikeCount() {
         $dao = new PostMySQLDAO();
         $post = $dao->getPost(10, 'twitter');

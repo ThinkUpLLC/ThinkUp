@@ -32,7 +32,11 @@
 class LoginController extends ThinkUpController {
 
     public function control() {
-        $this->redirectToThinkUpLLCEndpoint();
+        if (isset($_GET['redirect'])) {
+            $this->redirectToThinkUpLLCEndpoint($page=null, $redirect=$_GET['redirect']);
+        } else {
+            $this->redirectToThinkUpLLCEndpoint();
+        }
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->view_mgr->addHelp('login', 'userguide/accounts/index');
@@ -42,6 +46,15 @@ class LoginController extends ThinkUpController {
         $config = Config::getInstance();
         $is_registration_open = $config->getValue('is_registration_open');
         $this->addToView('is_registration_open', $is_registration_open);
+
+        // Set successful login redirect destination
+        if (isset($_GET['redirect'])) {
+            $this->addToView('redirect', $_GET['redirect']);
+        }
+        // If form has been submitted
+        if (isset($_POST['redirect'])) {
+            $this->addToView('redirect', $_POST['redirect']);
+        }
 
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
@@ -69,7 +82,7 @@ class LoginController extends ThinkUpController {
                     $this->addToView('email', $user_email);
                     $owner = $owner_dao->getByEmail($user_email);
                     if (!$owner) {
-                        $this->addErrorMessage("Incorrect email");
+                        $this->addErrorMessage("Hmm, that email seems wrong.");
                         return $this->generateView();
                     } elseif (!$owner->is_activated) {
                         $error_msg = 'Inactive account. ';
@@ -86,7 +99,7 @@ class LoginController extends ThinkUpController {
                         return $this->generateView();
                         // If the credentials supplied by the user are incorrect
                     } elseif (!$owner_dao->isOwnerAuthorized($user_email, $_POST['pwd']) ) {
-                        $error_msg = 'Incorrect password';
+                        $error_msg = "Hmm, that password seems wrong.";
                         if ($owner->failed_logins == 9) { // where 9 represents the 10th attempt!
                             $owner_dao->deactivateOwner($user_email);
                             $status = 'Account deactivated due to too many failed logins';
@@ -104,7 +117,14 @@ class LoginController extends ThinkUpController {
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);
                         $owner_dao->clearAccountStatus($user_email);
-                        if (!$this->redirect()) {
+
+                        if (isset($_POST['redirect']) && $_POST['redirect'] != '') {
+                            $success_redir = $_POST['redirect'];
+                        } else {
+                            $success_redir = $config->getValue('site_root_path');
+                        }
+
+                        if (!$this->redirect($success_redir)) {
                             $controller = new InsightStreamController(true);
                             return $controller->go();
                         }

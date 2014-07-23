@@ -3,7 +3,7 @@
  Plugin Name: Twitter
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/twitter/
  Description: Capture and display tweets.
- Icon: assets/img/twitter_icon.png
+ Icon: twitter
  Class: TwitterPlugin
  Version: 0.01
  Author: Gina Trapani

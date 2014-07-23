@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.InsightDAO.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Insight Data Access Object
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 interface InsightDAO {
@@ -146,4 +146,12 @@ interface InsightDAO {
      * @return bool
      */
     public function doesInsightExist($slug, $instance_id);
+
+    /**
+     * Return the most recent insight for a given instance and slug
+     * @param $slug
+     * @param $instance_id
+     * @return Insight
+     */
+    public function getMostRecentInsight($slug, $instance_id);
 }

@@ -2,14 +2,14 @@
 /*
  Plugin Name: All About You
  Description: How often you referred to yourself ("I", "me", "myself", "my") in the past week.
- When: Sundays
+ When: Sundays for Twitter, Wednesdays otherwise
  */
 
 /**
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/allaboutyou.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -27,52 +27,84 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  */
 
 class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
-        if (self::shouldGenerateInsight('all_about_you', $instance, $insight_date='today',
-        $regenerate_existing_insight=false, $day_of_week=0, count($last_week_of_posts))) {
+        if ($instance->network == 'twitter') {
+            $day_of_week = 0;
+        } else {
+            $day_of_week = 3;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
+            $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));
+        if ($should_generate_insight) {
             $text = '';
             $count = 0;
             foreach ($last_week_of_posts as $post) {
-                $count += self::countFirstPersonReferences($post->post_text);
+                $count += self::hasFirstPersonReferences($post->post_text) ? 1 : 0;
             }
+
             if ($count > 1) {
-                $text = "$this->username's ".$this->terms->getNoun('post', (count($last_week_of_posts) > 1))
-                ." contained the words \"I\", \"me\", \"my\", \"mine\", or \"myself\" "
-                ."<strong>".$count." times</strong> in the last week";
+                $headline = $this->getVariableCopy(array(
+                    '%username is getting personal.',
+                    'It\'s getting personal.',
+                    'But enough about me&hellip;',
+                    'Self-reflection is powerful stuff.',
+                    'Speaking from experience&hellip;',
+                    'Sometimes %network is a first-person story.',
+                    'It\'s just me, myself and I.',
+                ), array('network' => ucfirst($instance->network)));
+                $percent = round($count / count($last_week_of_posts) * 100);
+                $plural = count($last_week_of_posts) > 1;
+                $insight_text = "<strong>$percent%</strong> of $this->username's ".$this->terms->getNoun('post', $plural)
+                    ." contained the words &ldquo;I&rdquo;, &ldquo;me&rdquo;, &ldquo;my&rdquo;, &ldquo;mine&rdquo;,"
+                    ." or &ldquo;myself&rdquo; in the last week.";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-                $insight_baseline_dao->insertInsightBaseline("all_about_you", $instance->id, $count,
-                $this->insight_date);
+                $insight_baseline_dao->insertInsightBaseline("all_about_you_percent", $instance->id, $percent,
+                    $this->insight_date);
 
                 //Week over week comparison
                 //Get insight baseline from last Sunday
                 $last_sunday = date('Y-m-d', strtotime('-7 day'));
-                $last_sunday_insight_baseline = $insight_baseline_dao->getInsightBaseline("all_about_you",
-                $instance->id, $last_sunday);
+                $last_sunday_insight_baseline = $insight_baseline_dao->getInsightBaseline("all_about_you_percent",
+                    $instance->id, $last_sunday);
                 if (isset($last_sunday_insight_baseline) ) {
                     //compare it to this Sunday's number, and add a sentence comparing it.
-                    if ($last_sunday_insight_baseline->value > $count ) {
-                        $difference = $last_sunday_insight_baseline->value - $count;
-                        $text .= ", $difference fewer time".($difference>1?"s":"")." than the prior week.";
-                    } elseif ($last_sunday_insight_baseline->value < $count ) {
-                        $difference = $count - $last_sunday_insight_baseline->value;
-                        $text .= ", $difference more time".($difference>1?"s":"")." than the prior week.";
-                    } else {
-                        $text .= ".";
+                    $difference = abs($last_sunday_insight_baseline->value - $percent);
+                    if ($last_sunday_insight_baseline->value == $percent ) {
+                        $insight_text .= " So consistent: that's the same amount as the previous week.";
                     }
-                } else {
-                    $text .= ".";
+                    else {
+                        if ($last_sunday_insight_baseline->value > $percent ) {
+                            $comparison = 'down';
+                        } else {
+                            $comparison = 'up';
+                        }
+                        $insight_text .= " That's $comparison $difference percentage point".($difference>1?"s":"")
+                            ." from the previous week.";
+                    }
                 }
-                $this->insight_dao->insertInsightDeprecated("all_about_you", $instance->id, $this->insight_date,
-                "All about you:", $text, basename(__FILE__, ".php"), Insight::EMPHASIS_LOW);
+
+                $my_insight = new Insight();
+
+                $my_insight->slug = 'all_about_you'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $header_image;
+                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 
@@ -80,38 +112,27 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
     }
 
     /**
-     * Count the number of times "I", "me", "my", "myself" or "mine" appears in text.
+     * Determine if "I", "me", "my", "myself" or "mine" appear in text.
      * @param str $text
-     * @return int Total occurences of "I", "me", "my", "myself" or "mine" in $text
+     * @return bool Does "I", "me", "my", "myself" or "mine" appear in $text
      */
-    public static function countFirstPersonReferences($text) {
+    public static function hasFirstPersonReferences($text) {
         $count = 0;
         $matches = array();
         $url_free_text = preg_replace('!https?://[\S]+!', ' ', $text);
         $depunctuated_text = " ". preg_replace('/[^a-z0-9]+/i', ' ', $url_free_text) ." ";
 
-        //echo $depunctuated_text;
-        preg_match_all("/\bI\b/i", $depunctuated_text, $matches);
-        //print_r($matches[0]);
-        $count += sizeof($matches[0]);
+        preg_match_all('/\b(?:I|myself|my|mine)\b/i', $depunctuated_text, $matches);
+        $notmes = count($matches[0]);
+        preg_match_all('/\b\.me\b/i', $text, $me_matches);
+        $dotmes = count($me_matches[0]);
+        preg_match_all('/\bme\b/i', $text, $me_matches);
+        $mes = count($me_matches[0]);
 
-        preg_match_all("/\bme\b/i", $depunctuated_text, $matches);
-        //print_r($matches[0]);
-        $count += sizeof($matches[0]);
-
-        preg_match_all("/\bmyself\b/i", $depunctuated_text, $matches);
-        //print_r($matches[0]);
-        $count += sizeof($matches[0]);
-
-        preg_match_all("/\bmy\b/i", $depunctuated_text, $matches);
-        //print_r($matches[0]);
-        $count += sizeof($matches[0]);
-
-        preg_match_all("/\bmine\b/i", $depunctuated_text, $matches);
-        //print_r($matches[0]);
-        $count += sizeof($matches[0]);
-
-        return $count;
+        if ($notmes || $mes > $dotmes) {
+            return true;
+        }
+        return false;
     }
 }
 

@@ -31,40 +31,58 @@
 
 class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $filename = basename(__FILE__, ".php");
+        $insight_text = '';
 
         foreach ($last_week_of_posts as $post) {
-            if($post->network == 'instagram') {
-                $photo_dao = DAOFactory::getDAO('PhotoDAO');
-                $post =$photo_dao->getPhoto($post->post_id, 'instagram');
-            }
             //if post was a retweet, check if insight exists
             if ($post->in_retweet_of_post_id != null && $post->in_rt_of_user_id != null) {
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //if insight doesn't exist fetch user details of original author and instance
-                if (self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
-                $insight_date=$simplified_post_date)) {
+                $should_generate_insight = self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
+                    $insight_date=$simplified_post_date);
+
+                if ($should_generate_insight) {
                     if (!isset($user_dao)) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                     }
-                    if (!isset($instance_user)) {
-                        $instance_user = $user_dao->getDetails($post->author_user_id, $post->network);
-                    }
                     $retweeted_user = $user_dao->getDetails($post->in_rt_of_user_id, $post->network);
                     //if user exists and has fewer followers than instance user, build and insert insight
-                    if (isset($retweeted_user) && $retweeted_user->follower_count < $instance_user->follower_count) {
-                        $add_audience = number_format($instance_user->follower_count - $retweeted_user->follower_count);
-                        $insight_text = "$this->username broadcast this post to <strong>$add_audience</strong> ".
-                        "more people than its author originally reached.";
+                    if (isset($retweeted_user) && $retweeted_user->follower_count < $user->follower_count) {
+                        $add_audience = number_format($user->follower_count - $retweeted_user->follower_count);
+                        $multiplier = floor($user->follower_count / $retweeted_user->follower_count);
+                        if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
+                            $add_audience = number_format($multiplier).'x';
+                        }
 
-                        $this->insight_dao->insertInsightDeprecated('amplifier_'.$post->id, $instance->id,
-                        $simplified_post_date, "Amplifier:", $insight_text, $filename, Insight::EMPHASIS_LOW,
-                        serialize($post));
+                        $retweeted_username = $retweeted_user->username;
+                        if ($instance->network == 'twitter') {
+                            $retweeted_username = '@'.$retweeted_username;
+                        }
+                        $headline = $this->getVariableCopy(array(
+                            $retweeted_user->full_name." can thank %username for %added more people seeing this %post.",
+                            "%added more people saw %repostedee's %post thanks to %username.",
+                            '%username boosted '.$retweeted_user->full_name.'\'s %post to %added more people.'
+                        ), array('repostedee' => $retweeted_username, 'added' => $add_audience));
+
+                        $my_insight = new Insight();
+
+                        $my_insight->instance_id = $instance->id;
+                        $my_insight->slug = 'amplifier_'.$post->id; //slug to label this insight's content
+                        $my_insight->date = $simplified_post_date; //date of the data this insight applies to
+                        $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                        $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                        $my_insight->header_image = $retweeted_user->avatar;
+                        $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                        $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                        $my_insight->setPosts(array($post));
+                        $my_insight->setPeople(array($retweeted_user));
+                        $this->insight_dao->insertInsight($my_insight);
                     }
                 }
             }
