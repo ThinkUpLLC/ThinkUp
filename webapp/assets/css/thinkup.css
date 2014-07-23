@@ -2249,6 +2249,22 @@ body.app-message-visible.account .container {
   display: block;
   margin-top: 0;
 }
+ol.body-list {
+  list-style-type: decimal;
+}
+ol.body-list .list-item {
+  list-style: decimal;
+}
+.body-list.url-list .link-title img {
+  float: left;
+}
+.body-list.url-list .link-title a {
+  margin-left: 8px;
+  line-height: 16px;
+}
+.body-list.url-list .link-metadata {
+  margin-left: 24px;
+}
 .body-list.all-items-visible,
 .body-list.body-list-show-all {
   padding: 0;

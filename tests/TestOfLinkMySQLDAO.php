@@ -849,4 +849,66 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
 
         return $builders;
     }
+
+    /**
+     * Test of getLinksByUserSinceDaysAgo Method
+     */
+    public function testGetLinksByUserSinceDaysAgo() {
+        $builders = array();
+        $user_id = 12345;
+        $counter = 120;
+        $days = 0;
+        while ($counter != 0) {
+            $post_key = $counter + 1760;
+            $today = date('Y-m-d H:i',strtotime("-$days minutes"));
+            $days++;
+
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_key, 'post_id'=>$post_key,
+            'network'=>'twitter', 'author_user_id'=>$user_id, 'author_username'=>'user','in_reply_to_user_id' => NULL,
+            'in_retweet_of_post_id' => NULL,
+            'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
+            'post_text'=>'Link post http://example.com/'.$counter, 'pub_date'=>$today));
+
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+            $counter--;
+        }
+        $post_date = date('Y-m-d H:i:s', strtotime('-8 days'));
+        $builders[] = FixtureBuilder::build('posts', array('id'=>767, 'post_id'=>767,
+            'network'=>'twitter', 'author_user_id'=>$user_id, 'author_username'=>'user','in_reply_to_user_id' => NULL,
+            'in_retweet_of_post_id' => NULL,
+            'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
+            'post_text'=>'Link post http://example.com/'.$counter, 'pub_date'=>$post_date));
+
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+        'title'=>'Link '.$counter, 'post_key'=>767, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+
+
+        $result = $this->DAO->getLinksByUserSinceDaysAgo($user_id, 'twitter', $limit= 100, $days_ago = 0);
+        $this->assertEqual(count($result), 100);
+        $this->assertEqual($result[0]['id'], 56);
+        $this->assertEqual($result[99]['id'], 155);
+        $result = $this->DAO->getLinksByUserSinceDaysAgo($user_id, 'twitter', $limit= 0, $days_ago = 9);
+        $this->assertEqual($result[0]['id'], 56);
+        $this->assertEqual($result[120]['id'], 176);
+        $this->assertEqual(count($result), 121);
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>768, 'post_id'=>768,
+            'network'=>'twitter', 'author_user_id'=>$user_id, 'author_username'=>'user','in_reply_to_user_id' => NULL,
+            'in_retweet_of_post_id' => 1234,
+            'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
+            'post_text'=>'Link post http://example.com/'.$counter, 'pub_date'=>$post_date));
+
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+        'title'=>'Link '.$counter, 'post_key'=>768, 'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
+
+        $result = $this->DAO->getLinksByUserSinceDaysAgo($user_id, 'twitter', $limit= 0, $days_ago = 0);
+        $this->assertEqual($result[0]['id'], 56);
+        $this->assertEqual($result[0]['in_retweet_of_post_id'], null);
+        $this->assertEqual($result[121]['post_key'], 768);
+        $this->assertEqual($result[121]['in_retweet_of_post_id'], 1234);
+        $this->assertEqual(count($result), 122);
+
+
+    }
 }
