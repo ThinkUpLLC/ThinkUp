@@ -116,11 +116,8 @@ $plugin_tests->add(new TestOfCongratsCountInsight());
 $plugin_tests->add(new TestOfTimeSpentInsight());
 $plugin_tests->add(new TestOfTwitterAgeInsight());
 $plugin_tests->add(new TestOfTwitterBirthdayInsight());
+$plugin_tests->add(new TestOfTwitterRatiosInsight());
 $plugin_tests->add(new TestOfPhotoPromptInsight());
-$plugin_tests->add(new TestOfExclamationCountInsight());
-$plugin_tests->add(new TestOfMetaPostsCountInsight());
-$plugin_tests->add(new TestOfFacebookProfilePromptInsight());
-$plugin_tests->add(new TestOfVerifiedListInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());

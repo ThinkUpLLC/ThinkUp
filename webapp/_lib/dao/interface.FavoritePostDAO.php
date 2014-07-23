@@ -128,4 +128,13 @@ interface FavoritePostDAO extends PostDAO {
      * @return array User objects
      */
     public function getUsersWhoFavoritedMostOfYourPosts($author_user_id, $network, $last_x_days);
+    /**
+     * Wrapper function for getAllFavoritePostsByUsernameOrderedBy
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @param int $last_x_days
+     * @return array Posts with link object set
+     */
+    public function getAllFavoritePostsByUsernameWithinRange($username, $network, $count, $last_x_days);
 }

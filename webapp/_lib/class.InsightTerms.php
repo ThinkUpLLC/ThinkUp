@@ -363,28 +363,36 @@ class InsightTerms {
      * @return str A string expressing the multiplier in conversational terms
      */
     public function getMultiplierAdverb($number) {
-        if ($number >= 1) {
-            if ($number >= 5) {
-                return round($number,2).'x';
-            } elseif ($number >= 4) {
-                return 'quadruple';
-            } elseif ($number >= 3) {
-                return 'triple';
-            } elseif ($number >= 2) {
-                return 'double';
-            } else {
-                return round($number,2).'x';
+                if ($number >= 1) {
+                    if ($number >= 5) {
+                        return round($number,2).'x';
+                    } elseif ($number >= 4) {
+                        return 'quadruple';
+                    } elseif ($number >= 3) {
+                        return 'triple';
+                    } elseif ($number >= 2) {
+                        return 'double';
+                    } else {
+                        return round($number,2).'x';
+                    }
+                } elseif ($number >= 0.75) {
+                    return 'three quarters of';
+                } elseif ($number >= 0.66) {
+                    return 'two thirds of';
+                } elseif ($number >= 0.5) {
+                    return 'half';
+                } elseif ($number >= 0.3) {
+                    return 'a third of';
+                } elseif ($number >= 0.25) {
+                    return 'a quarter of';
+                } elseif ($number >= 0.20) {
+                    return 'a fifth of';
+                } elseif ($number >= 0.10) {
+                    return 'a tenth of';
+                } else {
+                    return round($number,2).'x';
+                }
             }
-        } elseif ($number >= 0.5) {
-            return 'half';
-        } elseif ($number >= 0.3) {
-            return 'a third of';
-        } elseif ($number >= 0.25) {
-            return 'a quarter of';
-        } else {
-            return round($number,2).'x';
-        }
-    }
 
     /**
      * Take a string with various term-based tokens, replaced those and return it.
