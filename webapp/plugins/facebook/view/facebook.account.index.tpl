@@ -5,8 +5,8 @@
       <h2>Manage accounts and choose which insights everyone (or just you) can see.</h2>
     </header>
 
-    <ul class="list-group list-accounts">
     {if count($instances) > 0 }
+    <ul class="list-group list-accounts">
       {foreach from=$instances key=iid item=i name=foo}
       <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-extra-buttons{/if}">
         <div class="account-label">
@@ -39,7 +39,7 @@
             name="{$i->network_username}-delete">
           <input type="hidden" name="instance_id" value="{$i->id}">
           <input type="hidden" name="action" value="Delete">
-          {insert name="csrf_token"}
+          {insert name="csrf_token"}<!-- delete account csrf token -->
           <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
             onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
             <i class="fa fa-minus-circle icon"></i>
@@ -82,7 +82,7 @@
             name="{$i->network_username}-delete">
           <input type="hidden" name="instance_id" value="{$i->id}">
           <input type="hidden" name="action" value="Delete">
-          {insert name="csrf_token"}
+          {insert name="csrf_token"}<!-- delete page csrf token -->
           <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
             onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
             <i class="fa fa-minus-circle icon"></i>
@@ -92,8 +92,8 @@
       </li>
       {/foreach}
       {/if}
-    {/if}
     </ul>
+    {/if}
 
     <div class="account-buttons">
       {if $fbconnect_link}
@@ -107,10 +107,10 @@
     </div>
 
     <div class="form-notes">
-      <p class="accounts-privacy">ThinkUp will never post on your behalf.</p>
+      {if $fbconnect_link}<p class="accounts-privacy">ThinkUp will never post on your behalf.</p>{/if}
 
       {if isset($thinkupllc_endpoint)}
-      {include file="_usermessage.tpl" field="membership_cap"}
+      {include file="_usermessage-v2.tpl" field="membership_cap"}
       {/if}
     </div>
 

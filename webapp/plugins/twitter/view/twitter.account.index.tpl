@@ -4,8 +4,8 @@
       <h2>Manage accounts and choose which insights everyone (or just you) can see.</h2>
     </header>
 
-    <ul class="list-group list-accounts form-horizontal">
     {if count($owner_instances) > 0 }
+    <ul class="list-group list-accounts form-horizontal">
       {foreach from=$owner_instances key=iid item=i name=foo}
       <li class="list-group-item list-accounts-item{if !isset($thinkupllc_endpoint)} has-extra-buttons{/if}">
         <div class="account-label">
@@ -47,8 +47,8 @@
         </div>
       </li>
       {/foreach}
-    {/if}
     </ul>
+    {/if}
 
     <div class="account-buttons">
       {if $oauthorize_link}
@@ -62,7 +62,7 @@
     </div>
 
     <div class="form-notes">
-      <p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>
+      {if $oauthorize_link}<p class="accounts-privacy">ThinkUp will never tweet on your behalf.</p>{/if}
 
       {if isset($thinkupllc_endpoint)}
       {include file="_usermessage.tpl" field="membership_cap"}
