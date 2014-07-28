@@ -63,14 +63,13 @@ class TopOfPostsFacebookInsight extends InsightPluginParent implements InsightPl
                     $filename, Insight::EMPHASIS_LOW, serialize($posts));
                 }
             }
-        } else if ($insight_day_of_week == 2) { //it's Sunday
+        } else if ($insight_day_of_week == 0) { //it's Sunday
             // Past 7 days
             if (self::shouldGenerateInsight('top_of_posts_7_days', $instance, $insight_date=$since_date, 
             		$regenerate_existing_insight=true)) {
             	$post_dao = DAOFactory::getDAO('PostDAO');
                 $posts = $post_dao->getMostSharedPostsOfTheLastDays($instance->network_user_id,
                 $instance->network, 7);
-                echo "posts=".Utils::varDumpToString($posts);
                 if (isset($posts) && sizeof($posts) > 0 ) {
                     $this->insight_dao->insertInsightDeprecated("top_of_posts_7_days", $instance->id,
                     $since_date, "Top posts:", "Most shared $this->username's "

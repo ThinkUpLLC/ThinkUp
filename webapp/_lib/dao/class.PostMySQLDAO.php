@@ -2892,7 +2892,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 		$q = "SELECT *, pub_date + interval #gmt_offset# hour AS adj_pub_date FROM #prefix#posts ";
 		$q .= "WHERE author_user_id = :author_user_id AND network = :network ";
 		$q .= "AND (pub_date + interval #gmt_offset# hour) >= DATE_SUB(CURRENT_DATE(), INTERVAL :days DAY)";
-		$q .= "ORDER BY shares_count_cache DESC LIMIT 3";		
+		$q .= "AND shares_count_cache > 0 ORDER BY shares_count_cache DESC LIMIT 3";		
 		$vars = array (
 				':author_user_id' => $author_id,
 				':network' => $network,
