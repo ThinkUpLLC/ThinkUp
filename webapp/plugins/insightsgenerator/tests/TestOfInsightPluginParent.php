@@ -207,6 +207,27 @@ class TestOfInsightPluginParent extends ThinkUpUnitTestCase {
         $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
             $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
             $count_last_week_of_posts=null, $excluded_networks=array('twitter', 'facebook')));
+
+
+        // test bonus magic day
+        $today = date('j');
+        for ($i=1; $i<=31; $i++) {
+            if ($today == (($i+15)%date('t'))+1) {
+                $bonus_day = $i;
+                break;
+            }
+        }
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>$instance->id));
+        $builders[] = FixtureBuilder::build('owners', array('id'=> 1, 'joined' => date('Y-m-d',strtotime('-20 day')),
+            'email' =>'a@b.com'));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=true, $day_of_month=$bonus_day));
+
+        $instance->id++;
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>$instance->id));
+        $builders[] = FixtureBuilder::build('owners', array('id'=> 2, 'joined' => date('Y-m-d'), 'email' =>'b@b.com'));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=true, $day_of_month=$bonus_day));
     }
 
 }
