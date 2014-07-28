@@ -55,7 +55,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1,
         'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888',
-        'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c',
+        'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c','joined'=>'1978-03-22',
         'email_notification_frequency'=>'both', 'timezone'=>'UTC', 'membership_level'=>'Member'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
@@ -113,6 +113,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($existing_owner->api_key, 'c9089f3c9adaf0186f6ffb1ee8d6501c');
         $this->assertEqual($existing_owner->email_notification_frequency, 'both');
         $this->assertEqual($existing_owner->timezone, 'UTC');
+        $this->assertEqual($existing_owner->joined, '1978-03-22');
     }
 
     /**
