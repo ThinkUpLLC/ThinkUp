@@ -290,7 +290,6 @@ class FacebookCrawler {
                 $this->logger->logError("No profile set", __METHOD__.','.__LINE__);
             } else {
                 if (!isset($post_in_storage)) {
-                	echo "Post=".$p->shares->count;
                     $post_to_process = array(
                       "post_id"=>$post_id,
                       "author_username"=>$profile->username,

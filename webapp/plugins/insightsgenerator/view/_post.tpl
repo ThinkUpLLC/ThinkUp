@@ -56,6 +56,7 @@
                 <h3><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.png" class="service-icon2"/> {$post->author_fullname}
                     {if $post->network == 'foursquare'}<a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->place}</a>{/if}
                     {if $post->other.total_likes}<small style="color:gray">{$post->other.total_likes|number_format} likes</small>{/if}
+                    {if $post->shares_count_cache}<small style="color:gray">{$post->shares_count_cache|number_format} shares</small>{/if}
                 </h3>
                 <div class="post">
                     {$post->post_text}

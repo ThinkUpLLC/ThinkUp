@@ -63,7 +63,7 @@ class TopOfPostsFacebookInsight extends InsightPluginParent implements InsightPl
                     $filename, Insight::EMPHASIS_LOW, serialize($posts));
                 }
             }
-        } else if ($insight_day_of_week == 0) { //it's Sunday
+        } else if ($insight_day_of_week == 1) { //it's Sunday
             // Past 7 days
             if (self::shouldGenerateInsight('top_of_posts_7_days', $instance, $insight_date=$since_date, 
             		$regenerate_existing_insight=true)) {
