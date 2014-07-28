@@ -161,13 +161,28 @@ class InsightPluginParent {
                 $count_related_posts, $excluded_networks);
 
             // Check the day of the month
+            $right_day = true;
             if (isset($day_of_month)) {
-                if (date('j') == $day_of_month) {
-                    $run = $run && true;
-                } else {
-                    $run = $run && false;
+                if (date('j') != $day_of_month) {
+                    $right_day = false;
                 }
             }
+
+            // Now we check for the bonus first time alternate day of the month
+            if ($run && !$right_day) {
+                $alternate_day_of_month = (($day_of_month+15)%date('t'))+1;
+                if (date('j') == $alternate_day_of_month) {
+                    $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                    $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                    $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+                    $owner = $owner_dao->getById($owner_instance[0]->owner_id);
+                    if ((time() - strtotime($owner->joined)) < (60*60*24*15)) {
+                        $right_day = true;
+                    }
+                }
+            }
+
+            $run = $run && $right_day;
         }
         return $run;
     }
