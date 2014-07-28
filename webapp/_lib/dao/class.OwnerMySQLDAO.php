@@ -64,7 +64,7 @@ SQL;
 
     public function getById($id) {
         $q = 'SELECT id,full_name,email,is_admin,last_login,is_activated,password_token,' .
-            'account_status,failed_logins,api_key,email_notification_frequency,timezone ' .
+            'account_status,failed_logins,api_key,email_notification_frequency,timezone,joined ' .
             'FROM #prefix#owners AS o WHERE id = :id';
         $vars = array(
             ':id'=>$id
