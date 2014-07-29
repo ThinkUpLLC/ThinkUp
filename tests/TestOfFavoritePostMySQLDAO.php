@@ -470,4 +470,37 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $vals["post_id"]="345840895515801";
         return $vals;
     }
+
+    public function testGetAllFavsForUsernameWithinRange() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>42, 'user_name'=>'janesmith',
+        'full_name'=>'Jane Smith', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>80,
+        'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>43, 'user_name'=>'joesmith',
+        'full_name'=>'Joe Smith', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>80,
+        'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>105968, 'post_id'=>'28676767',
+        'author_user_id'=>'43', 'author_username'=>'joesmith', 'author_fullname'=>'Joe Smith',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 42',
+        'source'=>'web', 'pub_date'=>'-10d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null,'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>50459556, 'post_id'=>'29676767',
+        'author_user_id'=>'43', 'author_username'=>'joesmith', 'author_fullname'=>'Joe Smith',
+        'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post 42',
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'is_protected'=>0,
+        'retweet_count_cache'=>0, 'network'=>'twitter', 'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null,'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'28676767', 'author_user_id'=>'43',
+               'fav_of_user_id'=>'42', 'network'=>'twitter','fav_timestamp'=>'-10d'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'29676767', 'author_user_id'=>'43',
+                'fav_of_user_id'=>'42', 'network'=>'twitter','fav_timestamp'=>'-1d'));
+
+        $dao = new FavoritePostMySQLDAO();
+        $res = $this->dao->getAllFavoritePostsByUsernameWithinRange('janesmith','twitter', 100, 7);
+        $this->assertEqual($res[0]->post_id, 29676767);
+    }
 }
