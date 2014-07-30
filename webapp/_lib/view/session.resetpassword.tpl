@@ -2,12 +2,12 @@
 {include file="_navigation.tpl"}
 
   <div class="container">
-    <header>
+    <header class="container-header">
       <h1>Reset your password</h1>
       <h2></h2>
     </header>
 
-    <form name="forgot-form" action="" method="POST" role="form" class="form-horizontal" id="form-forgot-password">
+    <form name="forgot-form" action="" method="POST" role="form" class="form" id="form-forgot-password">
       <fieldset class="fieldset-no-header">
 
         <div class="form-group">
@@ -24,7 +24,7 @@
 
       </fieldset>
 
-      <input type="submit" name="Submit" value="Send" class="btn btn-submit-single">
+      <input type="submit" name="Submit" value="Send" class="btn btn-submit">
 
       <p class="form-note">
         <a href="{$site_root_path}session/login.php">Back to login</a>

@@ -37,7 +37,7 @@ body.account {
   .container {
     padding-top: 160px;
 
-    header {
+    .container-header {
       margin-bottom: 45px;
 
       h2 {
@@ -47,18 +47,20 @@ body.account {
       }
     }
 
-    .form-horizontal {
+    form {
       fieldset.fieldset-no-header, .form-group {
         border-color: @blue-border;
       }
 
       .control-label {
-        color: #000;
+        &:extend(.control-label.with-focus);
+        color: mix(#000, @blue-darker, 50%);
       }
 
       .help-block {
         border-color: fade(@blue-border, 30%);
         color: @blue-border;
+        font-style: italic;
 
         a {
           color: #fff;
@@ -74,11 +76,33 @@ body.account {
         width: 74px;
         height: 74px;
         padding: 30px 0;
-        border-radius: 37px;
+        border-radius: 50%;
         margin: 15px auto 0;
         display: block;
       }
 
+      .picker {
+        .icon {
+          background: @blue;
+        }
+      }
+    }
+
+    fieldset header {
+      border-bottom: 0;
+
+      h2 {
+        color: mix(#000, @blue-darker, 50%);
+      }
+
+      .help-text {
+        color: @blue-darker;
+      }
+    }
+
+    .warning .help-block {
+      color: mix(@red-warning, @blue-darker, 75%);
+      font-style: normal;
     }
 
     .form-note {
@@ -105,12 +129,15 @@ body.account {
         color: #fff;
       }
 
-      .follow-wrapper .follow-links li a {
+      .follow-wrapper .follow-links li a, .copyright-privacy .privacy {
         color: @blue-darker;
+
+        a {
+          color: darken(@blue-darker, 20%)
+        }
       }
     }
   }
-
 }
 
 body.error-page {
