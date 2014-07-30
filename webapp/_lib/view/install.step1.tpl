@@ -4,26 +4,26 @@
 <div id="main" class="container">
 
     {if $requirements_met}
-    
-    
+
+
     <div class="">
         <div class="">
 
         <div class="alert alert-success">
             <i class="fa fa-check"></i>
             <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
-        </div>        
+        </div>
 
         <a href="index.php?step=2" class="btn btn-large btn-success" id="nextstep">Let's Go <i class="fa fa-arrow-right"></i></a>
-        
+
         </div>
     </div>
-    
+
     {else}
-    
+
     <div class="">
         <div class="">
-    
+
             <header>
                 <h1>ThinkUp System Requirements</h1>
             </header>
@@ -82,7 +82,7 @@
     </div>
 
     {/if}
-        
+
 </div>
-  
+
 {include file="_footer.tpl"}

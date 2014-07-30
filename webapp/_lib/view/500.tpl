@@ -3,7 +3,7 @@
 
 <div class="container">
 
-    <header>
+    <header class="container-header">
         <h1>Sorry, there was a problem.</h1>
     </header>
 
