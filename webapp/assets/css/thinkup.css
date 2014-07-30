@@ -163,7 +163,7 @@ fieldset header .help-text {
 .form-group .help-block {
   margin: 0;
   text-align: left;
-  padding: 4px 10px 0;
+  padding: 4px 5px 0;
   position: relative;
   top: -5px;
   clear: both;
@@ -701,37 +701,54 @@ body.account .navbar-default .navbar-brand {
 body.account .container {
   padding-top: 160px;
 }
-body.account .container header {
+body.account .container .container-header {
   margin-bottom: 45px;
 }
-body.account .container header h2 a {
+body.account .container .container-header h2 a {
   color: #fff;
 }
-body.account .container .form-horizontal fieldset.fieldset-no-header,
-body.account .container .form-horizontal .form-group {
+body.account .container form fieldset.fieldset-no-header,
+body.account .container form .form-group {
   border-color: #3187d1;
 }
-body.account .container .form-horizontal .control-label {
-  color: #000;
+body.account .container form .control-label {
+  color: #14436a;
 }
-body.account .container .form-horizontal .help-block {
+body.account .container form .help-block {
   border-color: rgba(49, 135, 209, 0.3);
   color: #3187d1;
+  font-style: italic;
 }
-body.account .container .form-horizontal .help-block a {
+body.account .container form .help-block a {
   color: #fff;
 }
-body.account .container .form-horizontal .help-block a:hover {
+body.account .container form .help-block a:hover {
   text-decoration: underline;
 }
-body.account .container .form-horizontal .btn-submit {
+body.account .container form .btn-submit {
   position: static;
   width: 74px;
   height: 74px;
   padding: 30px 0;
-  border-radius: 37px;
+  border-radius: 50%;
   margin: 15px auto 0;
   display: block;
+}
+body.account .container form .picker .icon {
+  background: #46bcff;
+}
+body.account .container fieldset header {
+  border-bottom: 0;
+}
+body.account .container fieldset header h2 {
+  color: #14436a;
+}
+body.account .container fieldset header .help-text {
+  color: #2785d3;
+}
+body.account .container .warning .help-block {
+  color: #a62349;
+  font-style: normal;
 }
 body.account .container .form-note {
   margin-top: 40px;
@@ -752,8 +769,13 @@ body.account .footer .footer-container {
 body.account .footer .footer-container a {
   color: #fff;
 }
-body.account .footer .footer-container .follow-wrapper .follow-links li a {
+body.account .footer .footer-container .follow-wrapper .follow-links li a,
+body.account .footer .footer-container .copyright-privacy .privacy {
   color: #2785d3;
+}
+body.account .footer .footer-container .follow-wrapper .follow-links li a a,
+body.account .footer .footer-container .copyright-privacy .privacy a {
+  color: #174f7d;
 }
 body.error-page .container header h1 {
   font-size: 180px;
@@ -1018,6 +1040,7 @@ body.menu-off .navbar-default .navbar-header .menu-trigger {
 }
 body.account .app-message {
   top: 5px;
+  position: absolute;
 }
 .app-message-hidden {
   display: none;
