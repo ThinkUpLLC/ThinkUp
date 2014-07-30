@@ -31,6 +31,13 @@
  */
 
 class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin {
+
+    /**
+     * Maximum number of posts we display in this insight
+     * This limit prevents a InsightFieldExceedsMaxLengthException
+     */
+    const MAX_POSTS = 15;
+
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
@@ -38,8 +45,9 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
 
         if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
             $regenerate_existing_insight=true)) {
-            $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
-            $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
+            $fav_post_dao = DAOFactory::getDAO('FavoritePostDAO');
+            $favorited_posts = $fav_post_dao->getAllFavoritePosts($instance->network_user_id, $instance->network,
+                self::MAX_POSTS);
             $todays_favorited_posts_with_links = array();
 
             $num_good_links = 0;
@@ -72,9 +80,16 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                             ." <strong>1 ".$this->terms->getNoun('post')."</strong> with $num_good_links links in it.";
                     }
                 } else {
-                    $headline = $this->username." ".$this->terms->getVerb('liked')
-                        ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                        ."</strong> with $num_good_links links in them.";
+                    if (count($favorited_posts) == self::MAX_POSTS) {
+                        //Since number of posts is at max limit, some may have been cut off
+                        //So let's not cite specific totals
+                        $headline = "Here are the latest links from ".$this->terms->getNoun('post',
+                            InsightTerms::PLURAL). " ".$this->username." ".$this->terms->getVerb('liked').".";
+                    } else {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                            ."</strong> with $num_good_links links in them.";
+                    }
                 }
 
                 //Instantiate the Insight object
@@ -87,8 +102,8 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = '';
-                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->setPosts($todays_favorited_posts_with_links);
 
                 $this->insight_dao->insertInsight($my_insight);
