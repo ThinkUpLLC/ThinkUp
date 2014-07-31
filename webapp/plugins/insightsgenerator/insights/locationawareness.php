@@ -2,7 +2,7 @@
 /*
  Plugin Name: Location Sharing Awareness
  Description: How often you shared your location.
- When: Weeklyn, Fridays for Twitter, Wednesday for Facebook and Monthly, 26th for Facebook, 28th for Twitter
+ When: Weekly, Fridays for Twitter, Wednesday for Facebook and Monthly, 26th for Facebook, 28th for Twitter
  */
 /**
  *
