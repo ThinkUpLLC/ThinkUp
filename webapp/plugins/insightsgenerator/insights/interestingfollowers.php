@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/interestingfollowers.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright 2012-2014 Gina Trapani, Nilaksh Das, Chris Moyer
  *
  * LICENSE:
  *
@@ -26,9 +26,10 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani, Nilaksh Das
+ * @copyright 2012-2014 Gina Trapani, Nilaksh Das, Chris Moyer
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  * @author Nilaksh Das <nilakshdas@gmail.com>
+ * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 
 class InterestingFollowersInsight extends InsightPluginParent implements InsightPlugin {
@@ -63,7 +64,6 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $follower = $least_likely_followers[0];
                 $name = $this->getFollowerName($follower);
                 $my_insight->headline = "Hey, did you see that " .$name . " followed $this->username?";
-                $my_insight->header_image = $verified_followers[0]->avatar;
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
@@ -90,6 +90,12 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
             }
+
+            $total_verified = $follow_dao->getVerifiedFollowerCount($instance->network_user_id, $instance->network);
+            if ($total_verified > sizeof($verified_followers)) {
+                $my_insight->text = "That makes a total of $total_verified verified followers.";
+            }
+            $my_insight->header_image = 'https://www.thinkup.com/assets/images/insights/2014-07/verified.png';
         }
         if ($my_insight->headline) {
             $this->insight_dao->insertInsight($my_insight);
