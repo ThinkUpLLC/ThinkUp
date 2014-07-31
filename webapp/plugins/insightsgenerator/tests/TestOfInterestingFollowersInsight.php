@@ -55,13 +55,14 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
-        'post_count' => 101,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         // Follows
@@ -82,6 +83,10 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $related = unserialize($result->related_data);
         $this->assertIsA($related['people'], 'Array');
         $this->assertEqual($related['people'][0]->username,'popular1');
+        $this->assertEqual('', $result->text);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testLeastLikelyNoName() {
@@ -90,13 +95,14 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
-        'post_count' => 101,
-        'full_name'=>null,'avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'full_name'=>null,'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         // Follows
@@ -119,6 +125,11 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($related['people'][0]->username,'popular1');
         $rendered = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/<div class="user">.*popular1/ms', $rendered);
+        $this->assertEqual('', $result->text);
+        $this->assertEqual('', $result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testLeastLikelyAllBadCriteria() {
@@ -127,23 +138,26 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'notenoughposts',
-        'post_count' => 88,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 88, 'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'nourl',
-        'post_count' => 102, 'url'=>null,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 102, 'url'=>null, 'full_name'=>'Popular Gal',
+        'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'nodescription',
         'post_count' => 102, 'description'=>null,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000772', 'user_name'=>'defaultavatar',
@@ -178,23 +192,26 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+         'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+         'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'notenoughposts',
-        'post_count' => 88,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 88, 'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'nourl',
         'post_count' => 102, 'url'=>null,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'nodescription',
         'post_count' => 102, 'description'=>null,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000772', 'user_name'=>'defaultavatar',
@@ -203,8 +220,9 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000773', 'user_name'=>'gooduser',
-        'post_count'=>102,'avatar'=>'avatar.jpg', 'url' =>'http://google.com',
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'post_count'=>102, 'url' =>'http://google.com', 'full_name'=>'Popular Gal',
+        'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
 
@@ -232,6 +250,11 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['people']));
         $this->assertEqual('gooduser', $data['people'][0]->username);
+        $this->assertEqual('', $result->text);
+        $this->assertEqual('', $result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testNewVerifiedFollower() {
@@ -240,12 +263,14 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>1,
+        'full_name'=>'Twitter User', 'follower_count'=>36000, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'testfollower1',
-        'full_name'=>'Verified Dude', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'full_name'=>'Verified Dude', 'follower_count'=>36000, 'is_protected'=>0,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>1));
 
         // Follows
@@ -260,15 +285,19 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('verified_followers', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/Wow: <strong>Verified Dude<\/strong>, a verified user, followed \@testuser\./',
             $result->headline);
-        $this->assertPattern('/avatar.jpg/', $result->header_image);
         $rendered = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/Twitter Folower/', $rendered);
-        $this->assertEqual(1, substr_count($rendered, 'avatar.jpg'));
+        $this->assertEqual('', $result->text);
+        $this->assertEqual(1,
+            substr_count($rendered, 'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg'));
+        $this->assertEqual('https://www.thinkup.com/assets/images/insights/2014-07/verified.png',$result->header_image);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     public function testLeastLikelyMutltiple() {
@@ -277,23 +306,25 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         // User
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
-        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>1, 'is_protected'=>1,
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
 
         // Followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
-        'post_count' => 101,
-        'full_name'=>'Popular Gal','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 101, 'full_name'=>'Popular Gal', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'popular2',
-        'post_count' => 101,
-        'full_name'=>'Popular Gal 2','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'post_count' => 101, 'full_name'=>'Popular Gal 2', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'popular3',
         'post_count' => 101,
-        'full_name'=>'Popular Gal 3','avatar'=>'avatar.jpg','follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'full_name'=>'Popular Gal 3', 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
         'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         // Follows
@@ -314,12 +345,71 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('least_likely_followers', 10, $today);
-        $rendered = $this->getRenderedInsightInHTML($result);
-        $this->debug($rendered);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
 
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
+        $this->assertEqual('', $result->text);
         $this->assertEqual('<strong>3 interesting people</strong> followed @testuser.', $result->headline);
+        $this->assertIsA($result->related_data['people'], 'Array');
+        $this->assertEqual($result->related_data['people'][0]->username,'popular1');
+    }
+
+    public function testNewVerifiedNoTotal() {
+        // Get data ready that insight requires
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'testuser',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Followers
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'popular1',
+        'post_count' => 101, 'full_name'=>'Popular Gal', 'follower_count'=>10,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>1));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'popular2',
+        'post_count' => 101, 'full_name'=>'Popular Gal 2', 'follower_count'=>10,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>1));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'popular3',
+        'post_count' => 101, 'full_name'=>'Popular Gal 3', 'follower_count'=>10,'is_protected'=>0,'friend_count'=>1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'Twitter Folower', 'location'=>'San Francisco, CA','is_verified'=>1));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000769',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000770',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000771',
+        'last_seen'=>'-0d', 'first_seen'=>'-300d', 'network'=>'twitter','active'=>1));
+
+        // Initialize and run the insight
+        $insight_plugin = new InterestingFollowersInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts=array(), 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('verified_followers', 10, $today);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('<strong>2 verified users</strong> followed @testuser!', $result->headline);
+        $this->assertEqual('That makes a total of 3 verified followers.', $result->text);
+        $this->assertEqual('https://www.thinkup.com/assets/images/insights/2014-07/verified.png',$result->header_image);
         $this->assertIsA($result->related_data['people'], 'Array');
         $this->assertEqual($result->related_data['people'][0]->username,'popular1');
     }
