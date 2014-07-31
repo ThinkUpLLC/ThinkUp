@@ -3,17 +3,19 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     project:
       app: 'webapp'
-      asset_path: '<%= project.app %>/assets'
-      css_path:   '<%= project.asset_path %>/css'
-      js_path:    '<%= project.asset_path %>/js'
+      asset_path:  '<%= project.app %>/assets'
+      css_path:    '<%= project.asset_path %>/css'
+      less_path:   'extras/dev/assets/less'
+      js_path:     '<%= project.asset_path %>/js'
+      coffee_path: 'extras/dev/assets/coffee'
     less:
       app:
         files:
-          '<%= project.css_path %>/thinkup.css': '<%= project.css_path %>/src/thinkup.less'
+          '<%= project.css_path %>/thinkup.css': '<%= project.less_path %>/thinkup.less'
     coffee:
       app:
         files: [
-          '<%= project.js_path %>/thinkup.js':'<%= project.js_path %>/src/thinkup.coffee'
+          '<%= project.js_path %>/thinkup.js':'<%= project.coffee_path %>/thinkup.coffee'
         ]
     premailer:
       simple:

@@ -78,6 +78,7 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
         '<input type="submit" id="login-save" name="invite"/');
 
         // look for settings js
+        $this->assertPattern('/var csrf_token/');
         $this->assertPattern('/settings.js/');
     }
 }
