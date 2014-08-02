@@ -38,14 +38,21 @@
 
     <div id="page-content">
 
-      <nav class="navbar navbar-default" role="navigation">
+      <nav class="navbar navbar-default{if !isset($logged_in_user) and isset($thinkupllc_endpoint)} is-logged-out{/if}" role="navigation">
 
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
 
+          {if isset($logged_in_user) or !isset($thinkupllc_endpoint)}
           <button class="btn menu-trigger">
             <i class="fa fa-bars"></i>
           </button>
+          {else}
+          <div class="navbar-actions">
+            <a href="{$thinkupllc_endpoint}" class="btn btn-sm btn-default btn-login btn-transparent">Login</a>
+            <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Try ThinkUp!</a>
+          </div>
+          {/if}
           <a class="navbar-brand" href="{$site_root_path}"><strong>Think</strong>Up</span></a>
 
             {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances && !isset($thinkupllc_endpoint)}
