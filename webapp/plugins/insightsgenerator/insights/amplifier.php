@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Amplifier
- Description: How many more users a message has reached due to your reshare or retweet.
+ Description: How many more users a message reached due to your reshare or retweet; the top total from yesterday.
  */
 
 /**
@@ -38,53 +38,72 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
         $filename = basename(__FILE__, ".php");
         $insight_text = '';
 
-        foreach ($last_week_of_posts as $post) {
-            //if post was a retweet, check if insight exists
-            if ($post->in_retweet_of_post_id != null && $post->in_rt_of_user_id != null) {
-                $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+        //Find out if insight already exists
+        $should_generate_insight = self::shouldGenerateInsight('top_amplifier', $instance, date('Y-m-d'));
 
-                //if insight doesn't exist fetch user details of original author and instance
-                $should_generate_insight = self::shouldGenerateInsight('amplifier_'.$post->id, $instance,
-                    $insight_date=$simplified_post_date);
-
-                if ($should_generate_insight) {
-                    if (!isset($user_dao)) {
-                        $user_dao = DAOFactory::getDAO('UserDAO');
-                    }
-                    $retweeted_user = $user_dao->getDetails($post->in_rt_of_user_id, $post->network);
-                    //if user exists and has fewer followers than instance user, build and insert insight
-                    if (isset($retweeted_user) && $retweeted_user->follower_count < $user->follower_count) {
-                        $add_audience = number_format($user->follower_count - $retweeted_user->follower_count);
-                        $multiplier = floor($user->follower_count / $retweeted_user->follower_count);
-                        if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
-                            $add_audience = number_format($multiplier).'x';
-                        }
-
-                        $retweeted_username = $retweeted_user->username;
-                        if ($instance->network == 'twitter') {
-                            $retweeted_username = '@'.$retweeted_username;
-                        }
-                        $headline = $this->getVariableCopy(array(
-                            $retweeted_user->full_name." can thank %username for %added more people seeing this %post.",
-                            "%added more people saw %repostedee's %post thanks to %username.",
-                            '%username boosted '.$retweeted_user->full_name.'\'s %post to %added more people.'
-                        ), array('repostedee' => $retweeted_username, 'added' => $add_audience));
-
-                        $my_insight = new Insight();
-
-                        $my_insight->instance_id = $instance->id;
-                        $my_insight->slug = 'amplifier_'.$post->id; //slug to label this insight's content
-                        $my_insight->date = $simplified_post_date; //date of the data this insight applies to
-                        $my_insight->headline = $headline; // or just set a string like 'Ohai';
-                        $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                        $my_insight->header_image = $retweeted_user->avatar;
-                        $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                        $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
-                        $my_insight->setPosts(array($post));
-                        $my_insight->setPeople(array($retweeted_user));
-                        $this->insight_dao->insertInsight($my_insight);
+        if ($should_generate_insight) { //insight does not exist
+            //Get yesterday's retweets
+            $yesterdays_retweets = array();
+            $simplified_date_yesterday = date('Y-m-d', strtotime('-1 day'));
+            foreach ($last_week_of_posts as $post) {
+                if ($post->in_retweet_of_post_id != null && $post->in_rt_of_user_id != null) {
+                    $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
+                    if ( $simplified_date_yesterday == $simplified_post_date) {
+                        $yesterdays_retweets[] = $post;
                     }
                 }
+            }
+
+            $largest_added_audience = 0;
+            $insight_retweeted_user = null;
+            $insight_retweet = null;
+
+            //Get top amplifier from yesterday
+            foreach ($yesterdays_retweets as $post) {
+                if (!isset($user_dao)) {
+                    $user_dao = DAOFactory::getDAO('UserDAO');
+                }
+                $retweeted_user = $user_dao->getDetails($post->in_rt_of_user_id, $post->network);
+                //if user exists and has fewer followers than instance user compare to current top
+                if (isset($retweeted_user) && $retweeted_user->follower_count < $user->follower_count) {
+                    $added_audience = ($user->follower_count - $retweeted_user->follower_count);
+                    if ($added_audience > $largest_added_audience) {
+                        $largest_added_audience = $added_audience;
+                        $insight_retweeted_user = $retweeted_user;
+                        $insight_retweet = $post;
+                    }
+                }
+            }
+            //If there's a top amplifier from yesterday, insert the insight
+            if ( $largest_added_audience > 0 && isset($insight_retweeted_user) && isset($insight_retweet) ) {
+                $multiplier = floor($user->follower_count / $insight_retweeted_user->follower_count);
+                if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
+                    $largest_added_audience = number_format($multiplier).'x';
+                }
+
+                $retweeted_username = $insight_retweeted_user->username;
+                if ($instance->network == 'twitter') {
+                    $retweeted_username = '@'.$retweeted_username;
+                }
+                $headline = $this->getVariableCopy(array(
+                    $insight_retweeted_user->full_name." can thank %username for %added more people seeing this %post.",
+                    "%added more people saw %repostedee's %post thanks to %username.",
+                    '%username boosted '.$insight_retweeted_user->full_name.'\'s %post to %added more people.'
+                ), array('repostedee' => $retweeted_username, 'added' => $largest_added_audience));
+
+                $my_insight = new Insight();
+
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'top_amplifier'; //slug to label this insight's content
+                $my_insight->date = date('Y-m-d'); //date of the data this insight applies to
+                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
+                $my_insight->header_image = $insight_retweeted_user->avatar;
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->setPosts(array($insight_retweet));
+                $my_insight->setPeople(array($insight_retweeted_user));
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
