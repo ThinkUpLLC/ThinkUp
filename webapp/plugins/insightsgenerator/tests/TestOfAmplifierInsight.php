@@ -79,22 +79,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($insight_plugin, 'AmplifierInsight' );
     }
 
-    public function testNoInsight() {
-        $today = date('Y-m-d');
-        $posts = array();
-        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
-            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$today));
-
-        $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
-        $this->assertNull($result);
-    }
-
-    public function testInsightV1() {
-        TimeHelper::setTime(1);
+    public function testNoInsightNoRetweetsYesterday() {
         $today = date('Y-m-d');
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
@@ -102,9 +87,45 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
             'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(20), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, $today);
+        $this->assertNull($result);
+    }
+
+    public function testNoInsightRetweetYesterdayOfHighFollowers() {
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $posts = array();
+        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+
+        $insight_plugin = new AmplifierInsight();
+        $insight_plugin->generateInsight($this->instance, self::makeUser(20), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, $today);
+        $this->assertNull($result);
+    }
+
+    public function testInsightV1() {
+        TimeHelper::setTime(1);
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $posts = array();
+        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
+
+        $insight_plugin = new AmplifierInsight();
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '90 more people saw @lowfollowers\'s tweet thanks to @tester.');
         $data = unserialize($result->related_data);
@@ -119,16 +140,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV2() {
         TimeHelper::setTime(2);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 90 more people.');
         $data = unserialize($result->related_data);
@@ -143,16 +170,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV3() {
         TimeHelper::setTime(3);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 90 more people seeing this tweet.');
         $data = unserialize($result->related_data);
@@ -167,16 +200,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV4() {
         TimeHelper::setTime(35);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 10x more people.');
         $data = unserialize($result->related_data);
@@ -191,16 +230,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV4TwoX() {
         TimeHelper::setTime(35);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>46, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>46, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '@tester boosted Some Followers\'s tweet to 2x more people.');
         $data = unserialize($result->related_data);
@@ -215,16 +260,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV5() {
         TimeHelper::setTime(33);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 10x more people seeing this tweet.');
         $data = unserialize($result->related_data);
@@ -239,16 +290,19 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV5b() {
         TimeHelper::setTime(33);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
-        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
-            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$today));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'Some Followers can thank @tester for 49 more people seeing this tweet.');
         $data = unserialize($result->related_data);
@@ -263,16 +317,25 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV6() {
         TimeHelper::setTime(34);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>46, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(100), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '10x more people saw @lowfollowers\'s tweet thanks to @tester.');
         $data = unserialize($result->related_data);
@@ -287,17 +350,17 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
 
     public function testInsightV6WithFormattedNumber() {
         TimeHelper::setTime(34);
-        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
         $this->instance->network_user_id = 48;
         $posts = array();
         $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
             'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
-            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>47, 'network' => 'twitter','pub_date'=>$today));
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>47, 'network' => 'twitter','pub_date'=>$yesterday));
 
         $insight_plugin = new AmplifierInsight();
-        $insight_plugin->generateInsight($this->instance, $posts, 3);
-        $insight_dao = DAOFactory::GetDAO('InsightDAO');
-        $result = $insight_dao->getInsight('amplifier_1', $this->instance->id, $today);
+        $insight_plugin->generateInsight($this->instance, self::makeUser(1000000), $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, '100,000x more people saw @tester\'s tweet thanks to @tester.');
         $data = unserialize($result->related_data);
@@ -308,5 +371,22 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['posts'][0]->post_text, 'A Post');
         $this->debug($this->getRenderedInsightInEmail($result));
         $this->debug($this->getRenderedInsightInHTML($result));
+    }
+
+    /**
+     * Create a test user.
+     * @param  int $num_followers
+     * @return User
+     */
+    private function makeUser($num_followers) {
+        $user = new User();
+        $user->username = $this->insight->network_username;
+        $user->full_name = "Mario Nintendo";
+        $user->user_id = 999;
+        $user->network = $this->insight->network;
+        $user->description = "It's me, Mario!";
+        $user->verified = 1;
+        $user->follower_count = $num_followers;
+        return $user;
     }
 }
