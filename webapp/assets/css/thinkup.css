@@ -628,6 +628,23 @@ a:hover {
   background: transparent;
   border: 0;
 }
+.navbar-default .navbar-actions {
+  position: absolute;
+  right: 5px;
+  top: 3px;
+}
+.navbar-default .navbar-actions .btn {
+  font-weight: 400;
+}
+.navbar-default .navbar-actions .btn-login:hover {
+  color: #2785d3;
+  text-decoration: underline;
+}
+@media (max-width: 540px) {
+  .navbar-default.is-logged-out .navbar-header .navbar-brand {
+    margin: 9px 5px 6px;
+  }
+}
 #search-refine {
   right: 0;
   left: auto;
