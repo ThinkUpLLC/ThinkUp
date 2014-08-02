@@ -563,4 +563,40 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
         $this->assertEqual($result, 2);
     }
+
+    public function testGetNewFollowersWithLocationWithinLastXDays() {
+        
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000768', 'user_name'=>'twitteruser',
+        'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter User'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000769', 'user_name'=>'twitterfollower1',
+        'full_name'=>'Twitter Follower One', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Francisco, CA'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000770', 'user_name'=>'twitterfollower2',
+        'full_name'=>'Twitter Follower Two', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Francisco, CA'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'9654000771', 'user_name'=>'twitterfollower3',
+        'full_name'=>'Twitter Follower Three', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'twitter', 'description'=>'A test Twitter Folower', 'location'=>'San Diego, CA'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000769',
+        'last_seen'=>'-0d', 'first_seen'=>'-8d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000770',
+        'last_seen'=>'-0d', 'first_seen'=>'-1d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'9654000768', 'follower_id'=>'9654000771',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        $builders[] = FixtureBuilder::build('encoded_locations',array('id'=>'96','short_name'=>'San Diego, CA',
+        'full_name'=>'San Diego, CA', 'latlng'=>'53.3498053,-6.2603097'));
+        $builders[] = FixtureBuilder::build('encoded_locations',array('id'=>'97','short_name'=>'San Francisco, CA',
+        'full_name'=>'San Francisco, CA', 'latlng'=>'53.3498053,-6.2603097'));
+
+        $result = $this->DAO->getNewFollowersWithLocationWithinLastXDays(9654000768, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $this->assertEqual($result[0]['full_name'],'San Francisco, CA');
+        $this->assertEqual($result[0]['user_name'],'twitterfollower2');
+        $this->assertEqual($result[1]['full_name'],'San Diego, CA');
+        $this->assertEqual($result[1]['user_name'],'twitterfollower3');
+    }
 }
