@@ -64,8 +64,33 @@
             background: transparent;
             border: 0;
         }
-
     }
+
+    .navbar-actions {
+        position: absolute;
+        right: 5px;
+        top: 3px;
+
+        .btn {
+            font-weight: 400;
+        }
+
+        .btn-login:hover {
+            color: @blue-darker;
+            text-decoration: underline;
+        }
+    }
+
+    &.is-logged-out {
+        @media (max-width: 540px) {
+            .navbar-header {
+                .navbar-brand {
+                    margin: 9px 5px 6px;
+                }
+            }
+        }
+    }
+
 }
 
 #search-refine {
