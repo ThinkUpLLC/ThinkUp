@@ -25,10 +25,10 @@ module.exports = (grunt) ->
         files: 'extras/dev/precompiledtemplates/email/*'
         tasks: ['html_email']
       css:
-        files: '<%= project.css_path %>/src/*'
+        files: '<%= project.less_path %>/*'
         tasks: ['less']
       js:
-        files: '<%= project.js_path %>/src/*'
+        files: '<%= project.coffee_path %>/*'
         tasks: ['coffee']
   )
   grunt.loadNpmTasks('grunt-contrib-watch')
