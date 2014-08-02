@@ -14,8 +14,15 @@ module.exports = (grunt) ->
       simple:
         files: 'webapp/plugins/insightsgenerator/view/_email.insights_html.tpl': ['extras/dev/precompiledtemplates/email/_email.insights_html.tpl']
     watch:
-      files: 'extras/dev/precompiledtemplates/email/*'
-      tasks: ['html_email']
+      email:
+        files: 'extras/dev/precompiledtemplates/email/*'
+        tasks: ['html_email']
+      css:
+        files: '<%= project.less_path %>/*'
+        tasks: ['less']
+      js:
+        files: '<%= project.coffee_path %>/*'
+        tasks: ['coffee']
   )
   # These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-watch')
