@@ -408,7 +408,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual('<strong>2 verified users</strong> followed @testuser!', $result->headline);
-        $this->assertEqual('That makes a total of 3 verified followers.', $result->text);
+        $this->assertEqual('That makes a total of <strong>3 verified followers</strong>.', $result->text);
         $this->assertEqual('https://www.thinkup.com/assets/images/insights/2014-07/verified.png',$result->header_image);
         $this->assertIsA($result->related_data['people'], 'Array');
         $this->assertEqual($result->related_data['people'][0]->username,'popular1');
