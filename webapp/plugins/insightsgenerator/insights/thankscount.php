@@ -105,7 +105,7 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                 if ($this_period_count > $last_period_count && $last_period_count > 0) {
                     $two_months_ago_name = date('F', strtotime('-2 month'));
                     $one_month_ago_name = date('F', strtotime('-1 month'));
-                    $insight->text .= ' Sounds like there was even more to be thankful about in '.$one_month_ago_name.
+                    $insight->text .= ' That means there was even more to be thankful about in '.$one_month_ago_name.
                     ' than in '.$two_months_ago_name.'.';
                 }
                 $insight->filename = basename(__FILE__, ".php");
