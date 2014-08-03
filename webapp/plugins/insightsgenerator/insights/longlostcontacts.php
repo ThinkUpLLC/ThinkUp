@@ -65,11 +65,11 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
 
             if (count($long_lost_contacts)) {
                 $headline = $this->username." hasn't replied to "
-                .((count($long_lost_contacts) > 1) ?
-                "<strong>".count($long_lost_contacts)." contacts</strong> " : "a contact ")
-                ."in over a year: ";
+                    .((count($long_lost_contacts) > 1) ?
+                    "<strong>".count($long_lost_contacts)." people</strong> " : $long_lost_contacts[0]->full_name." ")
+                    ."in over a year.";
 
-                $insight_text = "Sometimes it's good to reflect after a little bit of time has passed.";
+                $insight_text = "It's good to reflect after some time has passed.";
 
                 //Instantiate the Insight object
                 $my_insight = new Insight();
@@ -80,7 +80,9 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
                 $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
                 $my_insight->headline = $headline; // or just set a string like 'Ohai';
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
-                $my_insight->header_image = $long_lost_contacts["people"][0]->avatar;
+                if (count($long_lost_contacts) == 1) {
+                    $my_insight->header_image = $long_lost_contacts[0]->avatar;
+                }
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_LOW;
                 $my_insight->setPeople($long_lost_contacts);
