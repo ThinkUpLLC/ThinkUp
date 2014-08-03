@@ -35,7 +35,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/longlostcontacts.php';
 
-class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
+class TestOfLongLostContactsInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -45,7 +45,7 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testLongLostContactsInsight() {
+    public function testMultipleLongLostContacts() {
         // Get data ready that insight requires
         $builders = self::buildData();
         $instance = new Instance();
@@ -65,15 +65,50 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->headline);
-        $this->assertPattern('/<strong>2 contacts<\/strong> /', $result->headline);
-        $this->assertPattern('/in over a year: /', $result->headline);
-        $this->assertNoPattern('/a contact/', $result->headline);
+        $this->assertPattern('/<strong>2 people<\/strong> /', $result->headline);
+        $this->assertPattern('/in over a year./', $result->headline);
+        $this->assertNoPattern('/someone/', $result->headline);
         $this->assertIsA($contacts, "array");
         $this->assertIsA($contacts["people"][0], "User");
         $this->assertEqual(count($contacts["people"]), 2);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    private function buildData() {
+    public function testSingleLongLostContact() {
+        // Get data ready that insight requires
+        $builders = self::buildData($multiple=false);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'twitteruser';
+        $instance->network = 'twitter';
+        $insight_plugin = new LongLostContactsInsight();
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('long_lost_contacts', 10, $today);
+        $contacts = unserialize($result->related_data);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->headline);
+        $this->assertPattern('/Twitter Follower One /', $result->headline);
+        $this->assertPattern('/in over a year./', $result->headline);
+        $this->assertPattern('/avatar.jpg/', $result->header_image);
+        $this->assertNoPattern('/people/', $result->headline);
+        $this->assertIsA($contacts, "array");
+        $this->assertIsA($contacts["people"][0], "User");
+        $this->assertEqual(count($contacts["people"]), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    private function buildData($multiple=true) {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'7612345', 'user_name'=>'twitteruser',
@@ -126,16 +161,17 @@ class TestOfLongLostContactsInsight extends ThinkUpUnitTestCase {
         'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
         'pub_date'=>$time_ago_1, 'in_reply_to_user_id'=>7612346, 'reply_count_cache'=>0, 'is_protected'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7612345,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
-        'pub_date'=>$time_ago_2, 'in_reply_to_user_id'=>7612347, 'reply_count_cache'=>0, 'is_protected'=>0));
+        if ($multiple) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7612345,
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+            'pub_date'=>$time_ago_2, 'in_reply_to_user_id'=>7612347, 'reply_count_cache'=>0, 'is_protected'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7612345,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
-        'pub_date'=>$time_ago_3, 'in_reply_to_user_id'=>7612348, 'reply_count_cache'=>0, 'is_protected'=>0));
-
+            $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7612345,
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
+            'pub_date'=>$time_ago_3, 'in_reply_to_user_id'=>7612348, 'reply_count_cache'=>0, 'is_protected'=>0));
+        }
         $builders[] = FixtureBuilder::build('posts', array('id'=>141, 'post_id'=>141, 'author_user_id'=>7612345,
         'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
         'network'=>'twitter', 'post_text'=>'This is a reply to a twitter post', 'source'=>'web',
