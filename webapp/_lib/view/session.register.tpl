@@ -7,14 +7,14 @@
 
 {if !$closed and !$has_been_registered}
 
-    <header>
+    <header class="container-header">
       <h1>Register</h1>
       <h2>Create your ThinkUp account.</h2>
     </header>
 
     <form name="form1" method="POST" id="registerform"
         action="register.php"
-         class="login form-horizontal" >
+         class="login form" >
       <fieldset class="fieldset-no-header">
         <div class="form-group">
           <label class="control-label" for="full_name">Name</label>
@@ -53,7 +53,7 @@
 
       </fieldset>
 
-      <input type="submit" name="Submit" id="login-save" value="Register" class="btn btn-circle btn-submit">
+      <input type="submit" name="Submit" id="login-save" value="Register" class="btn btn-submit">
 {else}
 
     <header>
@@ -65,8 +65,8 @@
 {/if}
 
       <p class="form-note">
-        <a href="login.php">Back to login</a>
-        <a href="forgot.php">Forgot your password?</a>
+        <a href="{$site_root_path}session/login.php">Back to login</a>
+        <a href="{$site_root_path}session/forgot.php">Forgot your password?</a>
       </p>
     </form>
   </div>

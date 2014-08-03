@@ -3,7 +3,9 @@
         <div class="footer-container">
             <div class="copyright-privacy">
                 <div class="copyright">&copy;2014 ThinkUp, LLC</div>
-                <a class="privacy" href="https://github.com/ThinkUpLLC/policy">Privacy and stuff</a>
+                {if isset($thinkupllc_endpoint)}
+                <div class="privacy"><a href="https://www.thinkup.com/join/about/privacy.php">Privacy</a> and <a href="https://www.thinkup.com/join/about/terms.php">Terms</a></div>
+                {/if}
             </div>
             <div class="motto">It is nice to be nice.</div>
             <div class="follow-wrapper">
@@ -20,13 +22,27 @@
 </div><!-- end page-content -->
 
 
-    {if ($smarty.get.m neq 'manage') and (!isset($smarty.get.p))}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
     {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
     {/foreach}
-    {/if}
 
+
+    {if isset($include_jstz) and $include_jstz}
+    <script type="text/javascript">
+    {literal}
+    var tz_info = jstz.determine();
+    var regionname = tz_info.name().split('/');
+    var tz_option_id = '#tz-' + regionname[1];
+    if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
+        if( $(tz_option_id) ) {
+            $('#timezone').val( tz_info.name());
+        }
+    }
+    {/literal}
+    </script>
+    {/if}
     {literal}
       <script type="text/javascript">
 
@@ -76,6 +92,7 @@
     <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
     {/if}
 
+{if isset($thinkupllc_endpoint)}
     {literal}<script>
       var _gaq=[['_setAccount','UA-76614-5'],['_trackPageview']];
       (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
@@ -102,6 +119,7 @@
     })();
 
     </script>{/literal}
+{/if}
 
 </body>
 

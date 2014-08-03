@@ -10,10 +10,15 @@ body.settings .container {
   padding: 45px 10px 0;
   margin: 0 auto;
 }
-body.settings .container header {
-  margin-top: 20px;
+@media (min-width: 400px) {
+  body.settings .container {
+    width: 400px;
+  }
 }
-body.settings .container header h1 {
+body.settings .container .container-header {
+  margin: 20px 0;
+}
+body.settings .container .container-header h1 {
   text-align: center;
   font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
   font-weight: 600;
@@ -21,179 +26,249 @@ body.settings .container header h1 {
   line-height: 1.23;
   margin: 0;
 }
-body.settings .container header h2 {
+body.settings .container .container-header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
-  margin-top: 4px;
-  line-height: 1.28571429;
+  line-height: 1.57142857;
   font-weight: 300;
   text-align: center;
   margin: 0;
 }
-body.settings .container .standard-element {
+.standard-form-element {
   font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
+  line-height: 1;
+  padding: 25px 10px 10px;
 }
-body.settings .container .form-horizontal {
+form {
   font-family: "tablet-gothic", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   margin-bottom: 25px;
 }
-body.settings .container .form-horizontal fieldset {
+form.big-bottom-margin {
+  margin-bottom: 50px;
+}
+@media (min-width: 400px) {
+  form {
+    font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  }
+}
+fieldset {
   margin-bottom: 25px;
 }
-body.settings .container .form-horizontal fieldset.fieldset-no-header {
+fieldset.big-bottom-margin {
+  margin-bottom: 50px;
+}
+fieldset.fieldset-no-header {
   border-top: 1px solid #b9c7ce;
 }
-body.settings .container .form-horizontal fieldset header {
+fieldset header {
+  text-align: center;
   margin: 0;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
   border-bottom: 1px solid #b9c7ce;
+  padding: 25px 5px 15px;
 }
-body.settings .container .form-horizontal fieldset header h2 {
+fieldset header h2,
+.settings-set-simple header h2 {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
   line-height: 1;
   font-weight: 600;
   color: #666666;
   margin: 0;
+  text-align: center;
 }
-body.settings .container .form-horizontal fieldset header .help-text {
+fieldset header .help-text {
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 400;
   color: #999999;
 }
-body.settings .container .form-horizontal .form-group {
+@media (min-width: 400px) {
+  fieldset header {
+    width: 380px;
+  }
+}
+.settings-set-simple {
+  margin-bottom: 50px;
+}
+.settings-set-simple header {
+  border: 0;
+  margin-bottom: 10px;
+}
+.settings-set-simple .btn {
+  margin-bottom: 20px;
+}
+.settings-set-simple pre {
+  font-size: 12px;
+}
+.form-group {
   margin: 0;
   border-bottom: 1px solid #b9c7ce;
+  overflow: hidden;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning,
-body.settings .container .form-horizontal .form-group.form-group-ok {
+@media (min-width: 400px) {
+  .form-group {
+    width: 380px;
+  }
+}
+.form-group.form-group-warning,
+.form-group.form-group-ok {
   position: relative;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning:before,
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+.form-group.form-group-warning:before,
+.form-group.form-group-ok:before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
   display: inline-block;
   text-decoration: inherit;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning:before,
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+.form-group.form-group-warning:before,
+.form-group.form-group-ok:before {
   position: absolute;
-  right: 10px;
-  top: 17px;
-  font-size: 16px;
+  right: 9px;
+  top: 5px;
+  font-size: 12px;
+  opacity: .75;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning .form-control[type=text],
-body.settings .container .form-horizontal .form-group.form-group-ok .form-control[type=text] {
-  padding-right: 35px;
-}
-body.settings .container .form-horizontal .form-group.form-group-warning:before {
+.form-group.form-group-warning:before {
   content: "\f071";
   color: #d0021b;
+  right: 7px;
 }
-body.settings .container .form-horizontal .form-group.form-group-warning .control-label,
-body.settings .container .form-horizontal .form-group.form-group-warning .help-block {
-  color: #d0021b;
-}
-body.settings .container .form-horizontal .form-group.form-group-ok:before {
+.form-group.form-group-ok:before {
   content: "\f058";
   color: #239a37;
 }
-body.settings .container .form-horizontal .form-group .help-block {
+.form-group.form-group-radio:before,
+.form-group.form-group-radio:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+.form-group.form-group-radio:after {
+  clear: both;
+}
+.form-group.form-group-radio .control-label {
+  float: right;
+  padding-left: 0;
+}
+.form-group.form-group-radio .form-control {
+  float: left;
+  width: 30px;
+  min-width: 0;
+  margin: 10px 0 0 10px;
+  height: auto;
+  padding: 0;
+}
+.form-group .help-block {
   margin: 0;
   text-align: left;
-  border-bottom: 1px solid #dbdbdb;
+  padding: 4px 5px 0;
+  position: relative;
+  top: -5px;
+  clear: both;
 }
-body.settings .container .form-horizontal .btn-submit {
-  position: fixed;
-  top: 5px;
-  right: 0;
-  z-index: 101;
-  width: 64px;
-  height: 34px;
-  padding: 10px 0;
-  border-radius: 0;
-  background: #125c9c;
-  color: #fff;
-  margin: 0;
-  border: 0;
-  line-height: 1;
-  font-weight: 600;
-}
-@media (min-width: 540px) {
-  body.settings .container .form-horizontal .btn-submit {
-    position: static;
-    width: 74px;
-    height: 74px;
-    padding: 30px 0;
-    border-radius: 37px;
-    margin: 15px auto 0;
-    display: block;
-  }
-}
-body.settings .container .form-horizontal .control-label {
-  float: left;
-  width: 100px;
+.control-label {
+  width: 100%;
   color: #999999;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
   text-align: left;
   font-weight: 400;
+  font-size: 12px;
+  padding: 3px 5px 2px;
+  line-height: 1.25;
 }
-body.settings .container .form-horizontal .form-control {
-  width: auto;
-  min-width: 180px;
-  max-width: 300px;
-  margin-left: 100px;
+.form-group-warning .control-label {
+  position: relative;
+  top: -2em;
+  display: none;
+}
+.form-control {
+  width: 100%;
   color: #000;
-  height: 49px;
-  font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
-  padding: 11px 10px 10px 0;
+  height: 29px;
+  padding-left: 0;
   border: 0;
   background: transparent;
   box-shadow: 0 0 0;
   transition: 0;
   outline: 0;
   border-radius: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0 5px 5px;
 }
-body.settings .container .form-horizontal textarea.form-control {
+.form-control:focus {
+  box-shadow: 0 0 0;
+}
+textarea.form-control {
   width: 190px;
   height: 112px;
   padding: 0;
   margin: 11px 10px 10px 0;
 }
-body.settings .container .form-horizontal .help-block {
-  padding: 4px 10px;
-  margin: 4px 0 0;
-  text-align: center;
+@media (min-width: 400px) {
+  textarea.form-control {
+    width: 210px;
+  }
+}
+.input-with-domain {
+  position: relative;
+}
+.input-with-domain .form-control {
+  padding-right: 110px;
+}
+.input-with-domain .domain {
+  display: none;
+  position: absolute;
+  left: 6.95em;
+  top: 0;
+  width: 110px;
+  color: #999999;
+  vertical-align: bottom;
+  padding: 0 5px;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+.input-with-domain #username-length {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  font-size: 16px;
+}
+.help-block,
+.warning-block {
+  padding: 4px 5px;
+  margin: 0 0 5px;
   color: #b3b3b3;
   font-size: 12px;
-  line-height: 1.33;
+  line-height: 1.25;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label {
+.warning-block {
+  color: #d0021b;
+  position: relative;
+  padding: 3px 15px 2px 5px;
+}
+.form-group-toggle .control-label {
   width: 100%;
   min-width: 0;
   padding: 11px 80px 10px 10px;
+  font-size: 14px;
+  line-height: 2;
   float: none;
   position: relative;
   color: #000;
+  margin: 0;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:before,
-body.settings .container .form-horizontal .form-group-toggle .control-label:after {
+.form-group-toggle .control-label:before,
+.form-group-toggle .control-label:after {
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
   position: absolute;
   content: " ";
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:before {
+.form-group-toggle .control-label:before {
   width: 40px;
   height: 24px;
   top: 12px;
@@ -201,7 +276,7 @@ body.settings .container .form-horizontal .form-group-toggle .control-label:befo
   background: #d0021b;
   border-radius: 12px;
 }
-body.settings .container .form-horizontal .form-group-toggle .control-label:after {
+.form-group-toggle .control-label:after {
   width: 22px;
   height: 22px;
   top: 13px;
@@ -209,29 +284,41 @@ body.settings .container .form-horizontal .form-group-toggle .control-label:afte
   border-radius: 11px;
   background: #fff;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox] {
+.form-group-toggle input[type=checkbox] {
   position: absolute;
   opacity: 0;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
+.form-group-toggle input[type=checkbox]:checked ~ .control-label:before {
   background: #4cd764;
 }
-body.settings .container .form-horizontal .form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
+.form-group-toggle input[type=checkbox]:checked ~ .control-label:after {
   right: 11px;
 }
-body.settings .container .form-horizontal .picker {
+.form-group-checkbox {
+  position: relative;
+}
+.form-group-checkbox .control-label {
+  width: 100%;
+  padding-right: 40px;
+}
+.form-group-checkbox .form-control {
+  position: absolute;
+  right: 0;
+  width: 25px;
+}
+.picker {
   overflow: hidden;
   position: relative;
 }
-body.settings .container .form-horizontal .picker .icon {
+.picker .icon {
   position: absolute;
-  top: 0;
+  top: 6px;
   right: 0;
-  padding: 18px 10px 17px;
+  padding: 0 8px;
   background: #f0f0f0;
   z-index: -1;
 }
-body.settings .container .form-horizontal .picker select {
+.picker select {
   width: 135%;
   border: 0;
   background: transparent;
@@ -241,16 +328,82 @@ body.settings .container .form-horizontal .picker select {
   border-radius: 0;
   -webkit-appearance: none;
   padding-right: 95px;
+  padding-left: 0;
 }
-body.settings .container .form-horizontal .picker select:focus {
+.picker select:focus {
   color: #3ea5cf;
 }
-body.settings .container .list-group {
+.btn-submit {
+  z-index: 101;
+  width: auto;
+  height: 34px;
+  padding: 10px;
+  border-radius: 4px;
+  background: #125c9c;
+  color: #fff;
+  margin: 15px auto 0;
+  display: block;
+  border: 0;
+  line-height: 1;
+  font-weight: 600;
+}
+.btn-submit:hover,
+.btn-submit:focus {
+  background: #0d416e;
+  color: #fff;
+}
+@media (min-width: 540px) {
+  .btn-circle {
+    width: 74px;
+    height: 74px;
+    padding: 30px 0;
+    border-radius: 50%;
+  }
+}
+@media (min-width: 540px) {
+  .btn-pill {
+    width: 150px;
+    border-radius: 4px;
+  }
+}
+.btn-submit-single {
+  position: fixed;
+  top: 5px;
+  right: 0;
+  z-index: 101;
+  border-radius: 0;
+  margin: 0;
+  border: 0;
+  line-height: 1;
+  display: block;
+  font-weight: 600;
+  width: 64px;
+  height: 34px;
+  padding: 10px 0;
+}
+@media (min-width: 540px) {
+  .btn-submit-single {
+    position: static;
+  }
+}
+@media (min-width: 540px) and (min-width: 540px) {
+  .btn-submit-single {
+    width: 74px;
+    height: 74px;
+    padding: 30px 0;
+    border-radius: 50%;
+  }
+}
+.list-group {
+  border-top: 1px solid #b9c7ce;
+  margin-top: 20px;
+}
+.list-group {
   border-top: 1px solid #b9c7ce;
   margin-top: 20px;
   margin-bottom: 14px;
 }
-body.settings .container .list-group .list-group-item {
+.list-group .list-group-item {
   border-radius: 0;
   background: 0;
   border: 0;
@@ -261,44 +414,48 @@ body.settings .container .list-group .list-group-item {
   border-bottom: 1px solid #b9c7ce;
   position: relative;
 }
-body.settings .container .list-group .list-group-item .list-group-item-label {
+.list-group .list-group-item .list-group-item-label {
   float: left;
   max-width: 130px;
 }
-body.settings .container .list-group .list-group-item .list-group-item-value {
+.list-group .list-group-item .list-group-item-value {
   margin-left: 130px;
   font-weight: 600;
 }
-body.settings .container .list-accounts .list-group-item {
+.list-group-plugins .list-group-item .account-label .icon {
+  float: left;
+  margin-right: 20px;
+}
+.list-accounts .list-group-item {
   overflow: hidden;
 }
-body.settings .container .list-accounts .list-group-item .account-label {
+.list-accounts .list-group-item .account-label {
   font-weight: 400;
   margin-left: 0;
 }
-body.settings .container .list-accounts .list-group-item .account-label .account-photo {
+.list-accounts .list-group-item .account-label .account-photo {
   float: left;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
-body.settings .container .list-accounts .list-group-item .account-action {
+.list-accounts .list-group-item .account-action {
   position: absolute;
   top: 0;
   right: 0;
   font-size: 20px;
   line-height: 1;
 }
-body.settings .container .list-accounts .list-group-item .account-action-delete {
+.list-accounts .list-group-item .account-action-delete {
   left: -50px;
   right: auto;
 }
-body.settings .container .list-accounts .list-group-item .account-action-delete a {
+.list-accounts .list-group-item .account-action-delete a {
   display: block;
   padding: 15px 10px 14px;
   color: #d0021b;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label {
   position: relative;
   width: 110px;
   height: 24px;
@@ -306,8 +463,9 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   right: 10px;
   border-radius: 12px;
   display: none;
+  cursor: pointer;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .text {
   color: #fff;
   font-size: 12px;
   line-height: 1;
@@ -317,7 +475,7 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   font-weight: 600;
   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .icon {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label .icon {
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
   color: #b4eebe;
@@ -327,7 +485,7 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   top: 2px;
   left: 5px;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label:after {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .toggle-label:after {
   position: absolute;
   content: " ";
   width: 22px;
@@ -337,81 +495,149 @@ body.settings .container .list-accounts .list-group-item .account-action-privacy
   border-radius: 11px;
   background: #fff;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio]:checked + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio]:checked + .toggle-label {
   display: block;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio] {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle input[type=radio] {
   position: absolute;
   opacity: 0;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-public + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-public + .toggle-label {
   background: #4cd764;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label {
   background: #d0021b;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .text {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .text {
   padding-left: 32px;
   color: #6b010e;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .icon {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label .icon {
   color: #6b010e;
   top: 4px;
   left: 89px;
   font-size: 18px;
 }
-body.settings .container .list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
+.list-accounts .list-group-item .account-action-privacy .privacy-toggle .field-privacy-private + .toggle-label:after {
   right: 87px;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add {
+.list-accounts .list-group-item.has-extra-buttons .extra-buttons {
+  clear: both;
+  text-align: right;
+  padding-right: 4px;
+}
+.list-accounts .list-group-item.has-extra-buttons .extra-buttons .btn {
+  margin-bottom: 5px;
+}
+.list-accounts .list-group-item.has-extra-buttons .btnPlay {
+  color: #4cd764;
+  border: 1px solid #4cd764;
+  background-color: rgba(76, 215, 100, 0.1);
+}
+.list-accounts .list-group-item.has-extra-buttons .btnPlay:hover {
+  color: #fff;
+  background-color: rgba(76, 215, 100, 0.75);
+}
+.list-accounts .list-group-item.has-extra-buttons .btnPause {
+  color: #d0021b;
+  border: 1px solid #d0021b;
+  background-color: rgba(208, 2, 27, 0.1);
+}
+.list-accounts .list-group-item.has-extra-buttons .btnPause:hover {
+  color: #fff;
+  background-color: rgba(208, 2, 27, 0.5);
+}
+.list-accounts .list-group-item.list-accounts-item-add {
   padding: 0;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a {
+.list-accounts .list-group-item.list-accounts-item-add a {
   font-size: 14px;
-  line-height: 2;
-  padding: 11px 10px 10px;
+  line-height: 1;
+  padding: 25px 10px 10px;
   display: block;
-  color: #333333;
+  color: #222222;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a .account-action {
+.list-accounts .list-group-item.list-accounts-item-add a .account-action {
   padding: 15px 10px 14px;
   color: #666666;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover {
+.list-accounts .list-group-item.list-accounts-item-add a:hover {
   text-decoration: none;
   background: #e8e8e8;
 }
-body.settings .container .list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
+.list-accounts .list-group-item.list-accounts-item-add a:hover .account-action-add {
   color: #595959;
 }
-body.settings .container .account-buttons {
+.account-buttons {
   text-align: center;
 }
-body.settings .container .account-buttons .btn-account-remove,
-body.settings .container .account-buttons .btn-account-add {
+.account-buttons .btn-account-remove,
+.account-buttons .btn-account-add {
   margin: 0 0 14px;
 }
-body.settings .container .account-buttons .btn-account-add .icon {
+.account-buttons .btn-account-add .icon {
   margin-right: 10px;
 }
-body.settings .container .form-note,
-body.settings .container .form-notes {
+.form-note,
+.form-notes {
   text-align: center;
   padding: 0 5% 14px;
   color: #999999;
 }
-body.settings .container .form-notes {
+.form-notes {
   border-top: 1px solid #b9c7ce;
   padding-top: 14px;
 }
-body.settings .container .form-notes .alert,
-body.settings .container .form-notes .alert-info {
+.form-notes .alert,
+.form-notes .alert-info {
   padding: 0;
   margin: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   color: #999999;
+}
+.form-message {
+  color: #222;
+  border: 1px solid #ffee25;
+  border-left: 0;
+  border-right: 0;
+  background: #fffabe;
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.form-message .btn {
+  background: #27af3f;
+}
+.form-message .btn:hover {
+  background: #2cc446;
+}
+.form-warning {
+  color: #9d0214;
+  border-color: #ec9aa4;
+  background: #f6ccd1;
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.form-warning .btn {
+  background: #9d0214;
+}
+.form-warning .btn:hover {
+  background: #b70218;
+}
+.btn-close-account {
+  display: block;
+  margin: 0 auto 15px;
+  width: 12em;
+}
+.btn-close-account:hover {
+  background: #fd0826;
+  border-color: #fd0826;
+}
+.accounts-privacy {
+  color: #417505;
 }
 body#settings-subscription .form-note .show-section {
   margin-top: 10px;
@@ -420,29 +646,27 @@ body#settings-subscription #form-membership-contact {
   margin-top: 40px;
   display: none;
 }
-@media (min-width: 400px) {
-  body.settings .container {
-    width: 400px;
-  }
-  body.settings .container .form-horizontal {
-    font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  }
-  body.settings .container .form-horizontal fieldset header {
-    width: 380px;
-  }
-  body.settings .container .form-horizontal .form-group {
-    width: 380px;
-  }
-  body.settings .container .form-horizontal .control-label {
-    width: 150px;
-  }
-  body.settings .container .form-horizontal .form-control {
-    margin-left: 160px;
-    width: 220px;
-  }
-  body.settings .container .form-horizontal textarea.form-control {
-    width: 210px;
-  }
+body#settings-registration header h1 {
+  font-size: 24px;
+}
+body#settings-registration .container .form-group-radio {
+  border-bottom: 0;
+  margin: 0 auto;
+  width: 255px;
+}
+body#settings-registration .container .form-group-radio .control-label {
+  min-width: 0;
+  max-width: none;
+  width: 215px;
+  font-size: 14px;
+  padding: 16px 10px 11px;
+}
+body#settings-registration .container .form-group-radio.form-group-warning .control-label {
+  top: 0;
+  display: block;
+}
+body#settings-registration .container .form-group-radio.form-group-warning .warning-block {
+  clear: both;
 }
 body.account {
   background: #46bcff;
@@ -477,37 +701,54 @@ body.account .navbar-default .navbar-brand {
 body.account .container {
   padding-top: 160px;
 }
-body.account .container header {
+body.account .container .container-header {
   margin-bottom: 45px;
 }
-body.account .container header h2 a {
+body.account .container .container-header h2 a {
   color: #fff;
 }
-body.account .container .form-horizontal fieldset.fieldset-no-header,
-body.account .container .form-horizontal .form-group {
+body.account .container form fieldset.fieldset-no-header,
+body.account .container form .form-group {
   border-color: #3187d1;
 }
-body.account .container .form-horizontal .control-label {
-  color: #000;
+body.account .container form .control-label {
+  color: #14436a;
 }
-body.account .container .form-horizontal .help-block {
+body.account .container form .help-block {
   border-color: rgba(49, 135, 209, 0.3);
   color: #3187d1;
+  font-style: italic;
 }
-body.account .container .form-horizontal .help-block a {
+body.account .container form .help-block a {
   color: #fff;
 }
-body.account .container .form-horizontal .help-block a:hover {
+body.account .container form .help-block a:hover {
   text-decoration: underline;
 }
-body.account .container .form-horizontal .btn-submit {
+body.account .container form .btn-submit {
   position: static;
   width: 74px;
   height: 74px;
   padding: 30px 0;
-  border-radius: 37px;
+  border-radius: 50%;
   margin: 15px auto 0;
   display: block;
+}
+body.account .container form .picker .icon {
+  background: #46bcff;
+}
+body.account .container fieldset header {
+  border-bottom: 0;
+}
+body.account .container fieldset header h2 {
+  color: #14436a;
+}
+body.account .container fieldset header .help-text {
+  color: #2785d3;
+}
+body.account .container .warning .help-block {
+  color: #a62349;
+  font-style: normal;
 }
 body.account .container .form-note {
   margin-top: 40px;
@@ -528,8 +769,13 @@ body.account .footer .footer-container {
 body.account .footer .footer-container a {
   color: #fff;
 }
-body.account .footer .footer-container .follow-wrapper .follow-links li a {
+body.account .footer .footer-container .follow-wrapper .follow-links li a,
+body.account .footer .footer-container .copyright-privacy .privacy {
   color: #2785d3;
+}
+body.account .footer .footer-container .follow-wrapper .follow-links li a a,
+body.account .footer .footer-container .copyright-privacy .privacy a {
+  color: #174f7d;
 }
 body.error-page .container header h1 {
   font-size: 180px;
@@ -634,20 +880,6 @@ a:hover {
 }
 body.menu-off .navbar-default .navbar-header .menu-trigger {
   display: none;
-}
-.navbar-default .navbar-header .navbar-search {
-  position: absolute;
-  padding: 0;
-  color: #2785d3;
-  top: 4px;
-  right: 10px;
-  margin: 0;
-  background: transparent;
-  border: 0;
-}
-#search-refine {
-  right: 0;
-  left: auto;
 }
 #menu {
   display: none;
@@ -808,6 +1040,7 @@ body.menu-off .navbar-default .navbar-header .menu-trigger {
 }
 body.account .app-message {
   top: 5px;
+  position: absolute;
 }
 .app-message-hidden {
   display: none;
@@ -1104,7 +1337,7 @@ body.app-message-visible.account .container {
   margin: 0;
 }
 .insight .panel-heading .panel-subtitle a {
-  color: #333333;
+  color: #222222;
   text-decoration: underline;
 }
 .insight .panel-heading .userpic-featured {
@@ -1883,7 +2116,7 @@ body.app-message-visible.account .container {
 }
 .user .user-about {
   margin-left: 70px;
-  color: #333333;
+  color: #222222;
 }
 .user .user-about .user-name {
   font-weight: 600;
@@ -1895,7 +2128,7 @@ body.app-message-visible.account .container {
   font-weight: bold;
 }
 .link .link-title a {
-  color: #333333;
+  color: #222222;
 }
 .link .link-title a:hover {
   text-decoration: none;
