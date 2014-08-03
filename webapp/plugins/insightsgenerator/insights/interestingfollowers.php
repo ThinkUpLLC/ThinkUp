@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Interesting Followers
- Description: New least likely and verified followers.
+ Description: New least likely, verified, and local followers.
  */
 
 /**
@@ -102,6 +102,69 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
             $this->insight_dao->insertInsight($my_insight);
         }
 
+        //Local followers that are neither verified or least likely
+        if (isset($user->location) && $user->location != "") {
+            $local_followers_to_check = $follow_dao->getFollowersFromLocationByDay($instance->network_user_id,
+                $instance->network, $user->location, 0);
+
+            if (count($local_followers_to_check)) {
+                //Clear out insight vars
+                $my_insight = null;
+                $my_insight = new Insight();
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+
+                $my_insight->text = '';
+                $my_insight->filename = basename(__FILE__, ".php");
+
+                //Create list of user IDs that have already appeared in an insight
+                $follower_ids_already_reported_on = array();
+                foreach ($least_likely_followers as $follower) {
+                    $follower_ids_already_reported_on[] = $follower->id;
+                }
+                foreach ($verified_followers as $follower) {
+                    $follower_ids_already_reported_on[] = $follower->id;
+                }
+
+                //Make sure none of the local followers have already been reported on
+                //debug
+                //print_r($follower_ids_already_reported_on);
+                $local_followers = array();
+                foreach ($local_followers_to_check as $follower) {
+                    if (!in_array($follower->id, $follower_ids_already_reported_on) ) {
+                        $local_followers[] = $follower;
+                    }
+                }
+
+                //debug
+                //print_r($local_followers);
+                if (count($local_followers)) {
+                    $headline = "<strong>"
+                    .(count($local_followers) > 1 ? count($local_followers)." people" : "1 person")
+                    ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
+
+                    if (count($local_followers) == 1) {
+                        $header_image = $local_followers[0]->avatar;
+                    } else {
+                        $header_image = '';
+                    }
+
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->slug = 'local_followers'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                    $my_insight->text = ''; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php");
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                    $my_insight->setPeople($local_followers);
+                    $this->insight_dao->insertInsight($my_insight);
+                }
+            }
+        }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 
