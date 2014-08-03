@@ -94,7 +94,6 @@ $plugin_tests->add(new TestOfResponseTimeInsight());
 $plugin_tests->add(new TestOfFavoritedLinksInsight());
 $plugin_tests->add(new TestOfLongLostContactsInsight());
 $plugin_tests->add(new TestOfLinkPromptInsight());
-$plugin_tests->add(new TestOfLocalFollowersInsight());
 $plugin_tests->add(new TestOfOutreachPunchcardInsight());
 $plugin_tests->add(new TestOfSplitOpinionsInsight());
 $plugin_tests->add(new TestOfViewDurationInsight());
