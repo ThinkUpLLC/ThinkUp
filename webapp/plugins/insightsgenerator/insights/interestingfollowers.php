@@ -46,7 +46,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         $my_insight->filename = basename(__FILE__, ".php");
         $follow_dao = DAOFactory::getDAO('FollowDAO');
 
-        // Least likely followers based on follower-to-followee ratio
+        // Least likely followers who are not verified, based on follower-to-followee ratio
         // We grab up to 10 possibilities, then filter for some spam account criteria and take the top 3 that remain
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
             $instance->network, 0, 10);
@@ -67,12 +67,13 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
+                $my_insight->header_image = $follower->avatar;
             }
         }
 
         // Verified followers
         $verified_followers = $follow_dao->getVerifiedFollowersByDay($instance->network_user_id, $instance->network, 0,
-        3);
+            3);
 
         if (sizeof($verified_followers) > 0 ) { //if not null, store insight
             if (sizeof($verified_followers) > 1) {
