@@ -124,9 +124,10 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($related['people'], 'Array');
         $this->assertEqual($related['people'][0]->username,'popular1');
         $rendered = $this->getRenderedInsightInHTML($result);
-        $this->assertPattern('/<div class="user">.*popular1/ms', $rendered);
+        $this->assertPattern('/<div class="user-name">.*popular1/', $rendered);
         $this->assertEqual('', $result->text);
-        $this->assertEqual('', $result->header_image);
+        $this->assertEqual('https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+            $result->header_image);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -251,7 +252,8 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual(1, count($data['people']));
         $this->assertEqual('gooduser', $data['people'][0]->username);
         $this->assertEqual('', $result->text);
-        $this->assertEqual('', $result->header_image);
+        $this->assertEqual('https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+            $result->header_image);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
