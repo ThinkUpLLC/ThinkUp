@@ -50,7 +50,7 @@
           {else}
           <div class="navbar-actions">
             <a href="{$thinkupllc_endpoint}" class="btn btn-sm btn-default btn-login btn-transparent">Login</a>
-            <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Try ThinkUp!</a>
+            <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Sign Up</a>
           </div>
           {/if}
           <a class="navbar-brand" href="{$site_root_path}"><strong>Think</strong>Up</span></a>
