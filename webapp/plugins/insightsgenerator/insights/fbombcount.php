@@ -99,12 +99,12 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_LOW;
             if (count($this->posts_to_include) > 0) {
-                $insight->setPosts($this->posts_to_include);
+                $insight->setPosts(array_slice($this->posts_to_include, 0, 10));
                 if ( count($this->posts_to_include) > 1 )  {
                     //plural
                     $insight->text .= $this->getVariableCopy(array(
-                        " Here are the %posts that elicited a \"fuck.\"",
-                        " These are the %posts that inspired %username to say \"fuck\"."
+                        " Here are some of the %posts that elicited a \"fuck.\"",
+                        " These are some of the %posts that inspired %username to say \"fuck\"."
                         )
                     );
                 } else {
