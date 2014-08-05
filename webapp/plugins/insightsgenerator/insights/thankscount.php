@@ -96,9 +96,10 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                     ));
                     $times = $this->terms->getOccurrencesAdverb($this_period_count);
                     $insight->text = $this->getVariableCopy(array(
-                        '%username thanked someone '.$times. ' on '.  ucfirst($instance->network).' last month.',
-                        '%username %posted '.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').
-                        ' last month.'
+                        '%username thanked someone <strong>'.$times. '</strong> on '.  ucfirst($instance->network).
+                        ' last month.',
+                        '%username %posted <strong>'.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').
+                        '</strong> last month.'
                     ));
                 }
 
