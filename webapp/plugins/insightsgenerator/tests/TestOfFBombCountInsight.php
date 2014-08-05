@@ -314,8 +314,8 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'F yeah!');
-        $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; 3 times in the past month. Here are the '.
-            'tweets that elicited a "fuck."');
+        $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; 3 times in the past month. Here are some of'.
+            ' the tweets that elicited a "fuck."');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
