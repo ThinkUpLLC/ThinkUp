@@ -79,6 +79,8 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                 $multiplier = floor($user->follower_count / $insight_retweeted_user->follower_count);
                 if ($multiplier > 1 && (TimeHelper::getTime() / 10) % 2 == 1) {
                     $largest_added_audience = number_format($multiplier).'x';
+                } else {
+                    $largest_added_audience = number_format($largest_added_audience);
                 }
 
                 $retweeted_username = $insight_retweeted_user->username;

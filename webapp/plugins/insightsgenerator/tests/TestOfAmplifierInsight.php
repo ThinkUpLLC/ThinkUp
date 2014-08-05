@@ -138,6 +138,37 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
     }
 
+    public function testInsightV1NumberFormatted() {
+        TimeHelper::setTime(1);
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $posts = array();
+        $posts[] = new Post(array('id'=>1, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'lowfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>43, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>2, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'highfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>44, 'network' => 'twitter','pub_date'=>$yesterday));
+        $posts[] = new Post(array('id'=>3, 'post_text'=>'A Post', 'author_user_id'=>$this->instance->network_user_id,
+            'author_username' => 'midfollowers', 'author_full_name' => 'The Retweetee',
+            'in_retweet_of_post_id'=>1, 'in_rt_of_user_id'=>45, 'network' => 'twitter','pub_date'=>$yesterday));
+
+        $insight_plugin = new AmplifierInsight();
+        $insight_plugin->generateInsight($this->instance, self::makeUser(10000), $posts, 3);
+
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, '9,990 more people saw @lowfollowers\'s tweet thanks to @tester.');
+        $data = unserialize($result->related_data);
+        $this->assertEqual(count($data['people']), 1);
+        $this->assertEqual($data['people'][0]->username,'lowfollowers');
+        $this->assertEqual($data['people'][0]->user_id, 43);
+        $this->assertEqual(count($data['posts']), 1);
+        $this->assertEqual($data['posts'][0]->post_text, 'A Post');
+        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->debug($this->getRenderedInsightInHTML($result));
+    }
+
     public function testInsightV2() {
         TimeHelper::setTime(2);
         $yesterday = date('Y-m-d', strtotime('-1 day'));
