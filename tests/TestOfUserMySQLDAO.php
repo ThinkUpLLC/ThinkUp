@@ -243,6 +243,46 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($user);
     }
 
+    public function testUserUpdateWithVersions() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', $data = array('id'=>9, 'user_id'=>'99', 'user_name'=>'changey',
+            'description' => 'I am static.', 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter'));
+        $user = new User($data);
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(0, count($changes));
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(0, count($changes));
+
+        $user->description = 'I am dynamic!';
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(1, count($changes));
+
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(1, count($changes));
+
+        $user->description = 'I am un-dynamic!';
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(2, count($changes));
+
+        $user->url = 'http://newurl.com/';
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(2, count($changes));
+
+        $user->user_name = 'dynamichuman';
+        $user_dao->updateUser($user);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $this->assertEqual(2, count($changes));
+    }
+
     private function buildSearchData() {
         $builders = array();
 
