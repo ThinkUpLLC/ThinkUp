@@ -98,6 +98,7 @@ $model_tests->add(new TestOfInstanceHashtagMySQLDAO());
 $model_tests->add(new TestOfVideoMySQLDAO());
 $model_tests->add(new TestOfPhotoMySQLDAO());
 $model_tests->add(new TestOfCookieMySQLDAO());
+$model_tests->add(new TestOfUserVersionsMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
