@@ -293,5 +293,11 @@ interface FollowDAO {
      * @return int number of verified followers
      */
     public function getVerifiedFollowerCount($user_id, $network);
-
+    /**
+     * Gets user id of people you have replied to and don't follow. Returns most replied to user with count.
+     * @param str $user_id
+     * @param str $network
+     * @return arr Contains user id and count of replies.
+     */
+    public function getMostRepliedToNonFollowersId($user_id, $network);
 }

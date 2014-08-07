@@ -744,4 +744,19 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataCountResult($ps);
     }
+
+    public function getMostRepliedToNonFollowersId($user_id, $network) {
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+        );
+        $q  = "SELECT in_reply_to_user_id, Count(*) AS Cnt FROM #prefix#posts ";
+        $q .= "WHERE in_reply_to_user_id NOT IN (SELECT user_id FROM #prefix#follows ";
+        $q .= "WHERE follower_id = :user_id AND network = :network AND active = 1) ";
+        $q .= "AND network = :network AND author_user_id =:user_id AND pub_date >= DATE_SUB(CURDATE(),INTERVAL 7 DAY) ";
+        $q .= "GROUP BY in_reply_to_user_id Order By Cnt DESC LIMIT 1";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
 }

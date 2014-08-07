@@ -563,4 +563,39 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
         $this->assertEqual($result, 2);
     }
+
+    public function testGetMostRepliedToNonFollowersId() {
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'999', 'user_name'=>'v2',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>999999, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1000', 'user_name'=>'v3',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>999999, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'999',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1000', 'follower_id'=>'1324567890',
+        'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>138, 'author_user_id'=>1324567890,
+        'author_username'=>'TT', 'author_fullname'=>'Test Tweeter', 'network'=>'twitter',
+        'post_text'=>'@v2 Thanks!', 'source'=>'web', 'pub_date'=>'-1d',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>999, 'in_reply_to_post_id'=>132));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>139, 'author_user_id'=>1324567890,
+        'author_username'=>'TT', 'author_fullname'=>'Test Tweeter', 'network'=>'twitter',
+        'post_text'=>'@v3 Thanks!', 'source'=>'web', 'pub_date'=>'-1d',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>1000, 'in_reply_to_post_id'=>132));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>140, 'author_user_id'=>1324567890,
+        'author_username'=>'TT', 'author_fullname'=>'Test Tweeter', 'network'=>'twitter',
+        'post_text'=>'@v3 Thanks!', 'source'=>'web', 'pub_date'=>'-1d',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>1000, 'in_reply_to_post_id'=>132));
+
+        $result = $this->DAO->getMostRepliedToNonFollowersId(1324567890, 'twitter');
+        $this->assertEqual($result[0]["in_reply_to_user_id"], 999);
+        $this->assertEqual($result[0]["Cnt"], 1);
+        $this->assertEqual(count($result), 1);
+    }
 }
