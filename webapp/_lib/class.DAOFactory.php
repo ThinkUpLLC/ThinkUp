@@ -208,7 +208,10 @@ class DAOFactory {
             'mysql' => 'SessionMySQLDAO' ),
         'CookieDAO' => array(
     //MySQL Version
-            'mysql' => 'CookieMySQLDAO' )
+            'mysql' => 'CookieMySQLDAO' ),
+        'UserVersionsDAO' => array(
+    //MySQL Version
+            'mysql' => 'UserVersionsMySQLDAO' )
 
     );
 

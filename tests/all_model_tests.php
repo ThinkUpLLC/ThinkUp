@@ -100,6 +100,7 @@ $model_tests->add(new TestOfPhotoMySQLDAO());
 $model_tests->add(new TestOfCookieMySQLDAO());
 $model_tests->add(new TestOfSerializer());
 $model_tests->add(new TestOfChartHelper());
+$model_tests->add(new TestOfUserVersionsMySQLDAO());
 
 $tr = new TextReporter();
 list($usec, $sec) = explode(" ", microtime());
