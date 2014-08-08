@@ -232,7 +232,7 @@ class FacebookCrawler {
             $post_id = $post_id[1];
             $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
             " on page ".$page_number, __METHOD__.','.__LINE__);
-
+			
             // stream can contain posts from multiple users.  get profile for this post
             $profile = null;
             if (!empty($profiles[$p->from->id])) {
@@ -251,7 +251,6 @@ class FacebookCrawler {
                 $p->likes = $this->normalizeLikes($p->likes);
                 $likes_count = $p->likes->count;
             }
-
             // Normalize comments to be one array
             if (isset($p->comments)) {
                 $p->comments = $this->normalizeComments($p->comments);
@@ -300,6 +299,7 @@ class FacebookCrawler {
                       "post_text"=>isset($p->message)?$p->message:'',
                       "pub_date"=>$p->created_time,
                       "favlike_count_cache"=>$likes_count,
+                      "shares_count_cache"=>$p->shares->count,
                        // assume only one recipient
                       "in_reply_to_user_id"=> isset($p->to->data[0]->id) ? $p->to->data[0]->id : '',
                       "in_reply_to_post_id"=>'',
@@ -336,6 +336,7 @@ class FacebookCrawler {
                     //free up memory
                     $thinkup_links  = array();
                 } else { // post already exists in storage
+                	$post_dao->updateSharesCount($post_id, $network, $p->shares->count);
                     if ($must_process_likes) { //update its like count only
                         $post_dao->updateFavLikeCount($post_id, $network, $likes_count);
                         $this->logger->logInfo("Updated Like count for post ".$post_id . " to ". $likes_count,

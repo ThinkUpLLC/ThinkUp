@@ -1,6 +1,7 @@
 <?php
 /*
- * Plugin Name: Geografical Analysis Description: Location of people who have made your post the most popular today. When: Saturdays
+ * Plugin Name: Geografical Analysis 
+ * Description: Location of people who have made your post the most popular today. When: Saturdays
  */
 /**
  *
@@ -80,6 +81,7 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 						$this->insight_date, "All over the world", "<strong>" . number_format ( $count ) . 
 						" people</strong> interested in " . $instance->network_username . "'s posts last week", 
 						$filename, Insight::EMPHASIS_HIGH, serialize ( array ($geo_data) ) );
+				
 				$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
 			}
 		}

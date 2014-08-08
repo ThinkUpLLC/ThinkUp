@@ -462,6 +462,7 @@ CREATE TABLE tu_posts (
   retweet_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'Manual count of native retweets as determined by ThinkUp. [Twitter-specific]',
   retweet_count_api int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of native retweets as reported by Twitter API. [Twitter-specific]',
   favlike_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of favorites or likes this post received.',
+  shares_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of shares this post received.',
   permalink text COMMENT 'Link to this post on the respective service.',
   PRIMARY KEY (id),
   UNIQUE KEY post_network (post_id,network),

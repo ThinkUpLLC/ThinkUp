@@ -1,0 +1,1 @@
+ALTER TABLE tu_posts ADD shares_count_cache int(11) NOT NULL DEFAULT '0';
