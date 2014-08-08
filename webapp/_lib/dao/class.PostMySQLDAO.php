@@ -2850,9 +2850,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO {
 		$q .= "WHERE author_user_id = :author_user_id AND network = :network ";
 		$q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE() ";
 		$q .= "AND reply_count_cache + favlike_count_cache = ";
-		$q .= "(SELECT MAX(reply_count_cache + favlike_count_cache) FROM #prefix#posts ";
-		$q .= "WHERE author_user_id = :author_user_id AND network = :network ";
-		$q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE()) ";
+		$q .= "(SELECT MAX(reply_count_cache + favlike_count_cache) ";
+		$q .= "FROM #prefix#posts  WHERE author_user_id = :author_user_id AND network = :network ";
+		$q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE() ";
+		$q .= "AND reply_count_cache + favlike_count_cache <> 0) ";
 
 		$vars = array (
 				':author_user_id' => $author_id,
