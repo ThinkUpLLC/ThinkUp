@@ -432,7 +432,6 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		
 		$ps = $this->execute ( $q, $vars );
 		$rows = $this->getDataRowsAsArrays ( $ps );
-		// echo "res=" . Utils::varDumpToString($rows) . "\n";
 		$gender = array ();
 		foreach ( $rows as $row ) {
 			if ($row ['gender'] == "female")
@@ -458,7 +457,6 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		
 		$ps = $this->execute ( $q, $vars );
 		$rows = $this->getDataRowsAsArrays ( $ps );
-		// echo "res=" . Utils::varDumpToString($rows) . "\n";
 		$gender = array ();
 		foreach ( $rows as $row ) {
 			if ($row ['gender'] == "female")
