@@ -124,8 +124,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         if ($this->do_show_add_button) {
-            $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
-            'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
+            $params = array('scope'=>'read_stream,user_birthday,user_likes,user_location,user_website,'.
+            'read_friendlists,friends_birthday,friends_location,manage_pages,read_insights,manage_pages',
             'state'=>SessionCache::get('facebook_auth_csrf'),
             'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
             );

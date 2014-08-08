@@ -5,6 +5,7 @@
    "last_name": "Chuchlik",
    "link": "http://www.facebook.com/harald.chuchlik",
    "gender": "male",
+   "birthday": "01/02/03",
    "locale": "de_DE",
    "updated_time": "2009-10-14T21:25:52+0000"
 }

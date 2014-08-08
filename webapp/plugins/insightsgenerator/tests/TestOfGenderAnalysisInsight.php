@@ -46,9 +46,11 @@ class TestOfGenderAnalysisInsight extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
     
+
     public function testGenderAnalysisForFaceBookWomenFavotire() {
     	// Get data ready that insight requires
     	$builders = self::buildDataForFemale();
+
     	$instance = new Instance();
     	$instance->id = 100;
     	$instance->network_user_id = 9654321;
