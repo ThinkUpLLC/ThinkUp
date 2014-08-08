@@ -1,6 +1,7 @@
 <?php
 /*
- * Plugin Name: Gender Analysis Description: Gender of people who have made your post the most popular today.
+ * Plugin Name: Gender Analysis 
+ * Description: Gender of people who have made your post the most popular today.
  */
 /**
  *
