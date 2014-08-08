@@ -37,8 +37,8 @@
  */
 class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin {
 	public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-		parent::generateInsight ( $instance, $last_week_of_posts, $number_days );
 		if ($instance->network == 'facebook') {
+			parent::generateInsight ( $instance, $last_week_of_posts, $number_days );
 			$this->logger->logInfo ( "Begin generating insight", __METHOD__ . ',' . __LINE__ );
 			
 			$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
