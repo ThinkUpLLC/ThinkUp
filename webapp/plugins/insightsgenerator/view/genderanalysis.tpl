@@ -39,9 +39,9 @@
               dataTable: gender_analysis_data_{/literal}{$i->id}{literal},
               'options': {
               colors: ['#00aeef', '#F576B5'],
-            	'width': 650,
-            	'height': 250,
-            	'legend': 'right'
+            	width: 650,
+            	height: 250,
+            	legend: 'right'
           	}
                 
             });
