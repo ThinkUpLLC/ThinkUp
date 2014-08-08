@@ -36,6 +36,7 @@
  */
 class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightPlugin {
 	public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+		if ($instance->network == 'facebook') {
 		parent::generateInsight ( $instance, $last_week_of_posts, $number_days );
 		$this->logger->logInfo ( "Begin generating insight", __METHOD__ . ',' . __LINE__ );
 		
@@ -80,6 +81,7 @@ class GeoAnalysisFacebookInsight extends InsightPluginParent implements InsightP
 					$filename, Insight::EMPHASIS_HIGH, serialize ( array($geo_data) ) );
 			$this->logger->logInfo ( "Done generating insight", __METHOD__ . ',' . __LINE__ );
 		}
+	}
 	}
 }
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
