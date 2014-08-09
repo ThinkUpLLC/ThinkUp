@@ -124,6 +124,12 @@ interface InsightDAO {
      */
     public function getAllInstanceInsights($page_count=10, $page_number=1);
     /**
+     * Get a insights for all users, public and private, created since a specified timestamp.
+     * @param int $since Timestamp
+     * @return array Insights
+     */
+    public function getAllInstanceInsightsSince($since);
+    /**
      * Get an owner's insights created since a specified timestamp.
      * @param int $owner_id
      * @param int $since Timestamp
