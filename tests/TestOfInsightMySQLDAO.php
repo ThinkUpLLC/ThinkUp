@@ -503,6 +503,77 @@ class TestOfInsightMySQLDAO extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($results[9]->text, 'Insight 20');
     }
 
+    public function testGetAllInstanceInsightsSince() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        //insert a non-active instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'jane', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>0, 'is_public'=>1));
+
+        //insert instance owner
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'Owner 1',
+        'email'=>'owner@example.com'));
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'Owner 2',
+        'email'=>'owner2@example.com'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+
+        //insert 2 insights for a private instance and 3 for a public instance
+        $time_now = date("Y-m-d H:i:s");
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+            'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>date("Y-m-d H:i:s", strtotime('-3 day')),
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        //insight with filename set to 'dashboard' shouldn't be returned
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+            'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+
+        //assert that page of insights includes from both private and public
+        $dao = new InsightMySQLDAO();
+        $from = date("Y-m-d H:i:s", strtotime('-1 day'));
+        $this->debug($from);
+        $results = $dao->getAllInstanceInsightsSince($from);
+        $this->assertEqual(count($results), 6);
+        $this->debug(Utils::varDumpToString($results));
+        //$this->debug(Utils::varDumpToString($results[0]->related_data));
+        foreach ($results as $result) {
+            $this->assertIsA($result, 'Insight');
+            //$this->debug(Utils::varDumpToString($result->related_data["posts"]));
+            if (isset($result->related_data['posts'])) {
+                $this->assertEqual(count($result->related_data['posts']), 3);
+                $this->assertIsA($result->related_data['posts'][0], 'Post');
+            }
+        }
+    }
+
     public function testGetAllOwnerInstanceInsightsSince() {
         $builders = array();
         //insert a public instance
