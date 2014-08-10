@@ -119,8 +119,12 @@ $plugin_tests->add(new TestOfPhotoPromptInsight());
 $plugin_tests->add(new TestOfExclamationCountInsight());
 $plugin_tests->add(new TestOfMetaPostsCountInsight());
 $plugin_tests->add(new TestOfFacebookProfilePromptInsight());
+<<<<<<< HEAD
 $plugin_tests->add(new TestOfLocationAwarenessInsight());
-$plugin_tests->add(new TestOfMostFollowedFolloweesInsight());
+=======
+$plugin_tests->add(new TestOfVerifiedListInsight());
+$plugin_tests->add(new TestOfFollowerMapInsight());
+>>>>>>> Follower Map Insight. Shows user new followers on a map.
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());

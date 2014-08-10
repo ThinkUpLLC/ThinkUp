@@ -293,5 +293,15 @@ interface FollowDAO {
      * @return int number of verified followers
      */
     public function getVerifiedFollowerCount($user_id, $network);
+    /**
+     * Gets the followers ordered by the number of followers they have.
+     * @param str $user_id
+     * @param str $network
+     * @param bool $order_desc
+     * @param bool $include_user
+     * @param int $limit
+     * @return array - Ordered user objects.
+     */
+    public function getFolloweesOrderedByFollowCount($user_id, $network,$order_desc, $limit = 5);
 
 }
