@@ -389,7 +389,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     if ($average_reply_count != null ) {
                         $insight_baseline_dao->insertInsightBaseline('avg_reply_count_last_'.$days.'_days',
                             $instance->id, $average_reply_count, $since_date);
-                        $this->logger->logSuccess("Averaged $average_reply_count Replies in the $days days before ".
+                        $this->logger->logSuccess("Averaged $average_reply_count replies in the $days days before ".
                             $since_date, __METHOD__.','.__LINE__);
                     }
                 }
@@ -399,7 +399,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     if ($average_retweet_count != null ) {
                         $insight_baseline_dao->insertInsightBaseline('avg_retweet_count_last_'.$days.'_days',
                             $instance->id, $average_retweet_count, $since_date);
-                        $this->logger->logSuccess("Averaged $average_retweet_count retweets in the '.$days.' days before ".
+                        $this->logger->logSuccess("Averaged $average_retweet_count retweets in the $days days before ".
                             $since_date, __METHOD__.','.__LINE__);
                     }
                 }
