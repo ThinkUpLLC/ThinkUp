@@ -563,4 +563,43 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
         $this->assertEqual($result, 2);
     }
+
+    public function testGetFolloweesOrderedByFollowCount() {
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'993', 'user_name'=>'v5',
+        'full_name'=>'Ron Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>400, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'994', 'user_name'=>'v6',
+        'full_name'=>'Jim Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>500, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'995', 'user_name'=>'v7',
+        'full_name'=>'Steve Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>600, 'friend_count'=>12,
+        'is_verified'=>1, 'is_protected'=>0, 'network'=>'twitter', 'description'=>'Test'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>993, 'follower_id'=>1324567890,
+        'last_seen'=>'-1d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>994, 'follower_id'=>1324567890,
+        'last_seen'=>'-1d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>995, 'follower_id'=>1324567890,
+        'last_seen'=>'-1d', 'network'=>'twitter','active'=>1));
+
+        $result = $this->DAO->getFolloweesOrderedByFollowCount(1324567890, 'twitter',true,true);
+        $this->assertEqual($result[0]->username, 'ev');
+        $this->assertEqual($result[1]->username, 'private');
+        $this->assertEqual($result[2]->username, 'v7');
+        $this->assertEqual($result[3]->username, 'v6');
+        $this->assertEqual($result[4]->username, 'v5');
+
+        $result = $this->DAO->getFolloweesOrderedByFollowCount(1324567890, 'twitter',false,true);
+        $this->assertEqual($result[0]->username, 'v5');
+        $this->assertEqual($result[1]->username, 'v6');
+        $this->assertEqual($result[2]->username, 'v7');
+        $this->assertEqual($result[3]->username, 'private');
+        $this->assertEqual($result[4]->username, 'ev');
+
+        $result = $this->DAO->getFolloweesOrderedByFollowCount(1324567890, 'twitter',false);
+        $this->assertEqual($result[0]->username, 'v5');
+        $this->assertEqual($result[1]->username, 'v6');
+        $this->assertEqual($result[2]->username, 'v7');
+        $this->assertEqual($result[3]->username, 'private');
+    }
 }

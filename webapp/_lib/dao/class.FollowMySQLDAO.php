@@ -744,4 +744,26 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataCountResult($ps);
     }
+
+    public function getFolloweesOrderedByFollowCount($user_id, $network,$order_desc, $include_user =false, $limit = 5) {
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':limit' =>$limit
+        );
+        $q  = "SELECT * FROM #prefix#users AS u ";
+        $q .= "WHERE user_id IN (SELECT user_id FROM #prefix#follows WHERE follower_id = :user_id ";
+        $q .= "AND network = :network AND active = 1) ";
+        if($include_user == true) {
+            $q .= "OR user_id IN (SELECT user_id FROM #prefix#users WHERE user_id = :user_id AND network = :network) ";
+        }
+        if($order_desc == true) {
+            $q .= "ORDER BY follower_count DESC LIMIT :limit";
+        } else {
+            $q .= "ORDER BY follower_count LIMIT :limit";
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, 'User');
+    }
 }
