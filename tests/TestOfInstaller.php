@@ -185,6 +185,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
@@ -267,6 +268,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
@@ -339,6 +341,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
@@ -387,6 +390,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
         $config->getValue('table_prefix')."users;";
@@ -475,6 +479,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
@@ -525,6 +530,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
@@ -575,6 +581,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."stream_data, " .
         $config->getValue('table_prefix')."stream_procs, ".
         $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."user_versions, ".
         $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."photos, ".
         $config->getValue('table_prefix')."sessions, ".
@@ -633,7 +640,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         'insight_baselines', 'insights', 'instances', 'instances_facebook', 'instances_hashtags', 'instances_twitter',
         'invites', 'links', 'links_short', 'mentions', 'mentions_posts', 'options',
         'owner_instances', 'owners', 'photos', 'places','places_posts',
-        'plugins', 'post_errors', 'posts', 'sessions', 'stream_data', 'stream_procs', 'user_errors', 'users', 'videos');
+        'plugins', 'post_errors', 'posts', 'sessions', 'stream_data', 'stream_procs', 'user_errors', 'user_versions', 'users', 'videos');
         $this->assertIdentical($tables, $expected_tables);
     }
 
