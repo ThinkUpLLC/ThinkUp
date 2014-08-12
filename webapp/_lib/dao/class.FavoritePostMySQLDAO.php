@@ -546,4 +546,23 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO {
 		$rows = $this->getDataRowsAsArrays ( $ps );
 		return $rows;
 	}
+	
+	public function getGeoOfPostsFromOneWeekAgo($author_user_id, $network='twitter') {
+		$q = "SELECT #prefix#posts.geo, #prefix#posts.place, #prefix#posts.pub_date + interval #gmt_offset# hour ";
+		$q .= "AS adj_pub_date FROM #prefix#posts WHERE #prefix#posts.author_user_id = :author_user_id ";
+		$q .= "AND #prefix#posts.network = :network AND geo<> 'NULL' ";
+		$q .= "AND (#prefix#posts.pub_date + interval #gmt_offset# hour) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) ";
+		
+		$vars = array (
+				':author_user_id' => $author_user_id,
+				':network' => $network
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+		
+		$ps = $this->execute ( $q, $vars );
+		$rows = $this->getDataRowsAsArrays ( $ps );
+		return $rows;
+	}
 }

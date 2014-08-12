@@ -1,7 +1,8 @@
 <?php
 /*
  * Plugin Name: Geografical Analysis 
- * Description: Location of people who have made your post the most popular today. When: Saturdays
+ * Description: Location of people who have made your post the most popular today. 
+ * When: Saturdays
  */
 /**
  *
