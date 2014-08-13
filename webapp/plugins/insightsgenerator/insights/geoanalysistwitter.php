@@ -1,6 +1,8 @@
 <?php
 /*
- * Plugin Name: Geografical Analysis Description: Most favourite places to make tweets When: Wednesdays
+ * Plugin Name: Geografical Analysis 
+ * Description: Most favourite places to make tweets 
+ * When: Wednesdays
  */
 /**
  *
@@ -41,14 +43,14 @@ class GeoAnalysisTwitterInsight extends InsightPluginParent implements InsightPl
 			parent::generateInsight ( $instance, $last_week_of_posts, $number_days );
 			$this->logger->logInfo ( "Begin generating insight", __METHOD__ . ',' . __LINE__ );
 			
-			$insight_baseline_dao = DAOFactory::getDAO ( 'InsightBaselineDAO' );
 			$filename = basename ( __FILE__, ".php" );
 			
 			if (self::shouldGenerateInsight ( 'geo_analysis_twitter', $instance, $insight_date = 'today', 
-					$regenerate_existing_insight = true, $day_of_week = 2, count ( $last_week_of_posts ) )) {
-				$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );
+					$regenerate_existing_insight = true, $day_of_week = 4, count ( $last_week_of_posts ) )) {
+				$fpost_dao = DAOFactory::getDAO ( 'FavoritePostDAO' );		
 				$geo_data = array ();
 				$geos = $fpost_dao->getGeoOfPostsFromOneWeekAgo ( $instance->network_user_id );
+				
 				foreach ( $geos as $geo ) {
 					$geo_str = trim ( $geo ['geo'] );
 					$pos = strpos ( $geo_str, "," );
@@ -61,7 +63,8 @@ class GeoAnalysisTwitterInsight extends InsightPluginParent implements InsightPl
 					)
 					 );
 				}
-				echo "geo_q" . Utils::varDumpToString ( $geo_data );
+				
+				$geo_data = array_map ( "unserialize", array_unique ( array_map ( "serialize", $geo_data ) ) );
 				
 				$this->insight_dao->insertInsightDeprecated ( 'geo_analysis_twitter', $instance->id, 
 						$this->insight_date, "Here am I!", "<strong>" . number_format ( count ( $geo_data ) ) . 
