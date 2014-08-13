@@ -293,5 +293,13 @@ interface FollowDAO {
      * @return int number of verified followers
      */
     public function getVerifiedFollowerCount($user_id, $network);
+    /**
+     * Gets new followers with location set.
+     * @param str $user_id
+     * @param str $network
+     * @param int $number of days.
+     * @param array username, full name of location.
+     */
+    public function getNewFollowersWithLocationWithinLastXDays($user_id, $network,$x_days = 7);
 
 }
