@@ -120,6 +120,7 @@ $plugin_tests->add(new TestOfExclamationCountInsight());
 $plugin_tests->add(new TestOfMetaPostsCountInsight());
 $plugin_tests->add(new TestOfFacebookProfilePromptInsight());
 $plugin_tests->add(new TestOfLocationAwarenessInsight());
+$plugin_tests->add(new TestOfTwooshCountInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
