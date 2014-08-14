@@ -150,6 +150,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Hey these are some local followers!/', $results);
         //don't show private insights
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
+        // Logo should not link to homepage for OSP users
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+
     }
 
     public function testOfLoggedInInsightsOwnsPrivateInstance() {
@@ -166,6 +169,8 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Hey these are some local followers!/', $results);
         //do show private insights that owner owns
         $this->assertPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
+        // Logo should not link to homepage
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
     }
 
     public function testOfLoggedInInsightsDoesntOwnPrivateInstance() {
@@ -182,6 +187,31 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Hey these are some local followers!/', $results);
         //don't show private insights owner doesn't own
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
+    }
+
+    public function testOfLoggedInInsightsOnThinkupCom() {
+        $builders = self::buildPublicAndPrivateInsights();
+        $this->simulateLogin('tuuser1@example.com', false);
+
+        $cfg = Config::getInstance();
+        $cfg->setValue('thinkupllc_endpoint', 'set to something');
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        // Logo should not link to homepage
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+    }
+
+    public function testOfLoggedOutInsightsOnThinkupCom() {
+        $builders = self::buildPublicAndPrivateInsights();
+
+        $cfg = Config::getInstance();
+        $cfg->setValue('thinkupllc_endpoint', 'set to something');
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        // Logo should not link to homepage
+        $this->assertPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
     }
 
     public function testOfLoggedInNoServiceUsersNoInsights() {
@@ -263,6 +293,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
 
         //do show owned private insight
         $this->assertPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
+
+        // Logo link should not go to the homepage.
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
     }
 
     public function testOfLoggedInIndividualInsightWithoutAccess() {
@@ -282,6 +315,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Log in/', $results);
         $this->assertPattern('/to see this insight/', $results);
         $this->debug($results);
+
+        // Logo link should not go to the homepage.
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
     }
 
     public function testOfNotLoggedInIndividualInsightWithoutAccess() {
@@ -300,6 +336,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Log in/', $results);
         $this->assertPattern('/to see this insight/', $results);
         $this->debug($results);
+
+        // Logo link should not go to the homepage.
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
     }
 
     public function testOfNotLoggedInIndividualInsightWithAccess() {
@@ -316,6 +355,8 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Hey these are some local followers!/', $results);
         //don't show no access message
         $this->assertNoPattern('/to see this insight/', $results);
+        // Logo link should not go to the homepage.
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
         $this->debug($results);
     }
 
