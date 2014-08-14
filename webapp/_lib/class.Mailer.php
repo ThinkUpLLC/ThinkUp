@@ -98,7 +98,7 @@ class Mailer {
             throw $unknown_template_error;
         } catch (Mandrill_Error $e) {
             throw new Exception('An error occurred while sending email to '.$to.' from '.$from.' via Mandrill. '
-            . get_class($e) . ': ' . $e->getMessage());
+            . get_class($e) . ': ' . $e->getMessage().'  Message contents: '.Utils::varDumpToString($message));
         }
     }
     /**
