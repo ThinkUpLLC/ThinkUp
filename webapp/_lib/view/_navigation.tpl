@@ -53,7 +53,12 @@
             <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Sign Up</a>
           </div>
           {/if}
-          <a class="navbar-brand" href="{$site_root_path}"><strong>Think</strong>Up</span></a>
+          {if isset($logged_in_user) or !isset($thinkupllc_endpoint) or count($insights) eq 1}
+            {assign var='logo_link' value=$site_root_path}
+          {else}
+            {assign var='logo_link' value='https://thinkup.com/'}
+          {/if}
+          <a class="navbar-brand" href="{$logo_link}"><strong>Think</strong>Up</span></a>
 
             {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances && !isset($thinkupllc_endpoint)}
 
