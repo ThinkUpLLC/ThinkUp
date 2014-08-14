@@ -53,10 +53,14 @@
             <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Sign Up</a>
           </div>
           {/if}
+          {*
+            If any visitor is logged in or on a permalink page, link to the stream.
+            If the user is on logged out, on thinkup.com, and visiting the stream, link to the homepage.
+          *}
           {if isset($logged_in_user) or !isset($thinkupllc_endpoint) or count($insights) eq 1}
             {assign var='logo_link' value=$site_root_path}
           {else}
-            {assign var='logo_link' value='https://thinkup.com/'}
+            {assign var='logo_link' value='https://thinkup.com'}
           {/if}
           <a class="navbar-brand" href="{$logo_link}"><strong>Think</strong>Up</span></a>
 
