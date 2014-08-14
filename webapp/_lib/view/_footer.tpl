@@ -4,7 +4,7 @@
             <div class="copyright-privacy">
                 <div class="copyright">&copy;2014 ThinkUp, LLC</div>
                 {if isset($thinkupllc_endpoint)}
-                <div class="privacy"><a href="{$thinkupllc_endpoint}about/privacy.php">Privacy</a> and <a href="{$thinkupllc_endpoint}about/terms.php">Terms</a></div>
+                <div class="privacy"><a href="https://www.thinkup.com/join/about/privacy.php">Privacy</a> and <a href="https://www.thinkup.com/join/about/terms.php">Terms</a></div>
                 {/if}
             </div>
             <div class="motto">It is nice to be nice.</div>
