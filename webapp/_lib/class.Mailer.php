@@ -76,7 +76,10 @@ class Mailer {
             'global_merge_vars' => array());
 
             foreach ($template_params as $key=>$val) {
-                $message['global_merge_vars'][] = array('name'=>$key, 'content'=>$val);
+                $message['global_merge_vars'][] = array('name'=>$key,
+                    'content'=>
+                    // utf8_encode to avoid Mandrill Error triggered by special characters
+                    utf8_encode($val));
             }
 
             //don't send email when running tests, just write it to the filesystem for assertions
