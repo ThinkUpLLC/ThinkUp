@@ -107,7 +107,6 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetRecentFriendsVersions() {
-        error_reporting(E_ALL);
         $builders = array();
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'bio',
             'field_value' => 'I work at CompanyCo!', 'crawl_time' => '-1d'));
@@ -116,7 +115,7 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 3, 'field_name' => 'bio',
             'field_value' => 'My bio.', 'crawl_time' => '-0d'));
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 4, 'field_name' => 'url',
-            'field_value' => 'http://foo.bar', 'crawl_time' => '-1d'));
+            'field_value' => 'http://foo.bar', 'crawl_time' => '-28h'));
         $builders[] = FixtureBuilder::build('follows', array('active' => 1, 'user_id' => 22,
             'follower_id' => 11, 'network' => 'twitter'));
         $builders[] = FixtureBuilder::build('follows', array('active' => 0, 'user_id' => 33,
