@@ -45,7 +45,7 @@ public function generateInsight(Instance $instance, $last_week_of_posts, $number
 			$filename = basename ( __FILE__, ".php" );
 			
 			if (self::shouldGenerateInsight ( 'unfollowers_analysis', $instance, $insight_date='today',
-        $regenerate_existing_insight=true, $day_of_week=0)) {
+        $regenerate_existing_insight=true, $day_of_week=4)) {
 				$follow_dao = DAOFactory::getDAO('FollowDAO');
 				$unfollowers = $follow_dao->getUnfollowersFromOneWeekAgo($instance->network_user_id);
 				
