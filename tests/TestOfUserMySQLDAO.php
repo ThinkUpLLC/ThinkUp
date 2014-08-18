@@ -43,12 +43,12 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
     protected function buildData() {
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
-        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'San Francisco',
         'is_verified'=>1, 'network'=>'twitter'));
 
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'zuck',
-        'full_name'=>'Mark Zuckerberg', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco',
+        'full_name'=>'Mark Zuckerberg', 'avatar'=>'avatar.jpg', 'gender'=>'Male', 'location'=>'San Francisco',
         'network'=>'facebook'));
 
         $this->logger = Logger::getInstance();
@@ -102,11 +102,13 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user->id, 1);
         $this->assertEqual($user->user_id, 12);
         $this->assertEqual($user->username, 'jack');
+        $this->assertEqual($user->gender, '');
         $this->assertEqual($user->network, 'twitter');
         $user = $user_dao->getDetails(13, 'facebook');
         $this->assertEqual($user->id, 2);
         $this->assertEqual($user->user_id, 13);
         $this->assertEqual($user->username, 'zuck');
+        $this->assertEqual($user->gender, 'Male');
         $this->assertEqual($user->network, 'facebook');
 
         $user = $user_dao->getDetails(13, 'twitter');
@@ -129,7 +131,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_dao = DAOFactory::getDAO('UserDAO');
 
         $user_array = array('user_id'=>'13', 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
-        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
+        'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
         'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
         'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc102');
         $user = new User($user_array, 'Test Insert');
@@ -138,11 +140,12 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user_from_db->user_id, '13');
         $this->assertEqual($user_from_db->username, 'ginatrapani');
         $this->assertEqual($user_from_db->avatar, 'avatar.jpg');
+        $this->assertEqual($user_from_db->gender, '');
         $this->assertEqual($user_from_db->location, 'NYC');
         $this->assertTrue($user_from_db->is_verified);
 
         $user_array = array('user_id'=>13, 'user_name'=>'ginatrapanichanged', 'full_name'=>'Gina Trapani ',
-        'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
+        'avatar'=>'avatara.jpg', 'gender'=>'', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
         'is_verified'=>0, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
         'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
@@ -151,12 +154,13 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user_from_db->user_id, 13);
         $this->assertEqual($user_from_db->username, 'ginatrapanichanged');
         $this->assertEqual($user_from_db->avatar, 'avatara.jpg');
+        $this->assertEqual($user_from_db->gender, '');
         $this->assertEqual($user_from_db->location, 'San Diego');
         $this->assertFalse($user_from_db->is_verified);
 
         //Test no username set
         $user_array = array('user_id'=>13, 'user_name'=>null, 'full_name'=>'Gina Trapani ',
-        'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
+        'avatar'=>'avatara.jpg', 'gender'=>'', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
         'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05',
         'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
@@ -170,12 +174,12 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_dao = DAOFactory::getDAO('UserDAO');
 
         $user_array1 = array('id'=>2, 'user_id'=>'13', 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
-        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
+        'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
         'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
         'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc123');
         $user1 = new User($user_array1, 'Test');
         $user_array2 = array('id'=>3, 'user_id'=>'14', 'user_name'=>'anildash', 'full_name'=>'Anil Dash',
-        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
+        'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org',
         'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000,
         'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc456');
         $user2 = new User($user_array2, 'Test');
@@ -196,6 +200,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, 12);
         $this->assertEqual($user->username, 'jack');
         $this->assertEqual($user->full_name, 'Jack Dorsey');
+        $this->assertEqual($user->gender, '');
         $this->assertEqual($user->location, 'San Francisco');
     }
 
@@ -296,6 +301,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id' => '100',
             'author_username' => 'ecucurella',
             'author_fullname' => 'Eduard Cucurella',
+        	'author_gender' => '',
             'author_avatar' => 'http://aa.com',
             'author_follower_count' => 0,
             'post_text' => '#Messi is the best http://flic.kr/p/ http://flic.kr/a/',
@@ -326,6 +332,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id' => '101',
             'author_username' => 'vetcastellnou',
             'author_fullname' => 'Veterans Castellnou',
+        	'author_gender' => '',
             'author_avatar' => 'http://aa.com',
             'author_follower_count' => 0,
             'post_text' => 'Post without any hashtag http://flic.kr/p/',
@@ -356,6 +363,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id' => '102',
             'author_username' => 'efectivament',
             'author_fullname' => 'efectivament',
+        	'author_gender' => '',
             'author_avatar' => 'http://aa.com',
             'author_follower_count' => 0,
             'post_text' => 'Post with #Messi hashtag http://flic.kr/p/',
@@ -386,6 +394,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id' => '102',
             'author_username' => 'efectivament',
             'author_fullname' => 'efectivament',
+        	'author_gender' => '',
             'author_avatar' => 'http://aa.com',
             'author_follower_count' => 0,
             'post_text' => 'Post without any hashtag 2',
