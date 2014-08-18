@@ -2,11 +2,13 @@
   "data": [
     {
       "id": "100002586603826", 
-      "name": "Sade Tolgahan"
+      "name": "Sade Tolgahan",
+      "gender": "male"
     }, 
     {
       "id": "100000931059876", 
-      "name": "Kosso Thierry"
+      "name": "Kosso Thierry",
+      "gender": "male"
     }, 
  ], 
   "paging": {

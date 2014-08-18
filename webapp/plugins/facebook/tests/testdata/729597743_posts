@@ -14,7 +14,8 @@
       "id": "729597743_10150328374252744",
       "from": {
         "id": "729597743",
-        "name": "Mark Linford"
+        "name": "Mark Linford",
+        "gender": "male"
       },
       "privacy": {
         "description": "Friends Only",

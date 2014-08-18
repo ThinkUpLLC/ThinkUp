@@ -4,7 +4,8 @@
          "id": "144568048938151_1232411",
          "from": {
             "name": "Rafael Telles Muller",
-            "id": "536776067"
+            "id": "536776067",
+            "gender": "male"
          },
          "message": "I guess Facebook will have to keep 150 shirts..LMAO. This first Hacker cup was a complete failure.",
          "created_time": "2011-02-06T04:17:38+0000"
@@ -13,7 +14,8 @@
          "id": "144568048938151_1232582",
          "from": {
             "name": "Akhil Kunnath",
-            "id": "800223221"
+            "id": "800223221",
+            "gender": "male"
          },
          "message": "Can anybody pls share all the 3 qns here ?? I'm not able to see the problem statements............",
          "created_time": "2011-02-06T04:47:37+0000"
@@ -22,7 +24,8 @@
          "id": "144568048938151_1232840",
          "from": {
             "name": "Aditya Permana",
-            "id": "1302210867"
+            "id": "1302210867",
+            "gender": "female"
          },
          "message": "Little Scott recently learned how to perform arithmetic operations modulo some prime number P. As a training set he picked two sequences a of length N and b of length M, generated in the following way:\na1=A1\na2=A2\nai=(ai-2 * A3 + ai-1*A4 + A5) mod P, for i=3...N\nb1=B1\nb2=B2\nbj=(bj-2 * B3 + bj-1 * B4 + B5) mod P, for j=3...M\n\nNow he wants to find the number of pairs (i, j), where 1 \u2264 i \u2264 N and 1 \u2264 j \u2264 M, such that (ai * bj) mod P \u003c L, for given number L. He asked you to do the same to help him check his answers.\nInput\n\nThe first line of input file consists of a single number T, the number of test cases. Each test consists of three lines. The first line of a test case contains two integers: prime number P and positive integer L. The second line consists of six non-negative integers N, A1, A2, A3, A4, A5. Likewise, the third line contains six non-negative integers M, B1, B2, B3, B4, B5.\nOutput\n\nOutput T lines, with the answer to each test case on a single line.\nConstraints\n\nT = 20\n2 \u2264 P \u003c 250,000\nP is prime\n1 \u2264 L \u2264 P\n2 \u2264 N, M \u2264 10,000,000\n0 \u2264 A1, A2, A3, A4, A5, B1, B2, B3, B4, B5 \u003c P \n\nExample inputExample output\n\n5\n3 1\n4 0 2 2 2 2\n2 1 2 1 0 0\n3 1\n5 2 0 0 1 1\n5 1 1 2 0 0\n3 3\n5 0 0 1 2 2\n3 2 1 1 1 1\n5 1\n5 2 0 4 0 4\n3 2 1 2 4 4\n5 4\n2 2 1 3 1 4\n5 1 0 2 3 3\n\n6\n10\n15\n3\n9",
          "created_time": "2011-02-06T05:53:29+0000"
@@ -31,7 +34,8 @@
          "id": "144568048938151_1232842",
          "from": {
             "name": "Aditya Permana",
-            "id": "1302210867"
+            "id": "1302210867",
+            "gender": "female"
          },
          "message": "Studious Student II\n\nYou've decided to make up another string manipulation game instead of paying attention in class. Starting with a string composed entirely of 'a' and 'b' characters, you will iteratively apply the following operation:\n\nFor a string s of length len, choose indices i and j, where i \u003c j \u003c len. Choose a character c that occurs in the substring which begins at zero-based index i of string s and extends to the index j (inclusive). Replace all characters in s with zero-based index in [i, j] with a single instance of c to generate s'. Set s to be s'.\n\nAs an example of sequence of operations consider the string 'abba'. Some of the possible transformations are shown below. The substring being replaced is enclosed in square brackets.\n\n   1. [abb]a \u2192 [aa] \u2192 a\n   2. a[bba] \u2192 [aa] \u2192 a\n   3. ab[ba] \u2192 [abb] \u2192 a\n   4. a[bb]a \u2192 aba\n\nThe goal of your game is simple: calculate how many different sequences of operations you can perform. As this number can be very large, you decide to calculate it modulo 1,000,000,007. Two sequences of operations are considered different if they differ in length, or if they differ in at least one position. Note that the order of operations is a factor. The empty sequence of operations should be counted as well. Operations can be considered triples of (i, j, c) as described above, and these are the only values used when computing whether two operations are the same.\nInput\n\nThe first line of the input file contains a single number N, the number of test cases. Each test case is written on a separate line, and contains a string consisting of letters 'a' and 'b'.\nOutput\n\nOutput N lines, with the answer to each test case on a single line.\nConstraints\n\nN = 20\n1 \u2264 len \u2264 60\ns only contains the lowercase characters 'a' and 'b'.\n\nExample input\n\n5\nab\naba\naabb\nababa\nbbbbb\nExample output\n3\n13\n57\n642\n120",
          "created_time": "2011-02-06T05:54:21+0000"
@@ -40,7 +44,8 @@
          "id": "144568048938151_1232846",
          "from": {
             "name": "Aditya Permana",
-            "id": "1302210867"
+            "id": "1302210867",
+            "gender": "female"
          },
          "message": "Bonus Assignments\n\nYou are in charge of a group of N workers, and you want to pay a one-time bonus to each of them. The bonus for each worker is an integer number of dollars. According to state law the bonus of the worker who gets the least should be no less than A, but no more than B. To motivate your staff, the bonus of the worker who gets the most should be no less than C and no more than D.\n\nWorkers tend to spend their entire bonuses on HackerCola. Each of them buys bottles of HackerCola until he runs out of money, i.e., until amount of money left is less than the price of one bottle. Workers are very individualistic and each of them uses his own money only, so they never pool to buy HackerCola. Unfortunately you don't remember the price of one bottle of HackerCola, but you are pretty sure that it is an integer number of dollars greater than 1.\n\nSince you care about the working class you want to assign bonuses to workers in such a way that there would be at least one worker who would have some money left after buying as much HackerCola as possible regardless of the price of the bottle. Calculate the number of possible bonus assignments that fit this constraint. Two bonus assignments are different if at least one worker gets different bonus in each assignment. Since the answer can be large, calculate it modulo 1,000,000,007.\nInput\n\nThe first line of the input contains one integer T, the number of test cases. Each of the next T lines consists of 5 integers separated by spaces: N, A, B, C and D.\nOutput\n\nFor each of the test cases print a line containing number of possible bonus assignments modulo 1,000,000,007.\nConstraints\n\nT = 20\n1 \u2264 N \u2264 10^6\n1 \u2264 A \u2264 B \u2264 10^6\n1 \u2264 C \u2264 D \u2264 10^6\n\nExample input\n5\n2 1 2 4 5\n2 2 4 3 5\n1 5 10 5 10\n5 5 7 2 3\n5 2 7 5 12\nExample output\n6\n10\n0\n0\n149190",
          "created_time": "2011-02-06T05:55:29+0000"
@@ -49,7 +54,8 @@
          "id": "144568048938151_1232881",
          "from": {
             "name": "Abhiraj Pande",
-            "id": "100000492868617"
+            "id": "100000492868617",
+            "gender": "male"
          },
          "message": "hey does anyone think studios student is wrong? I think its wrong. Its mentioned that c is a character from substring. Now consider the example of bbbbb. 'a' is not present in this string still 120 solution comes when we replace it with 'a' or 'b'",
          "created_time": "2011-02-06T06:04:40+0000"
@@ -58,7 +64,8 @@
          "id": "144568048938151_1232906",
          "from": {
             "name": "Vladimir Basunkov",
-            "id": "100002004060331"
+            "id": "100002004060331",
+            "gender": "male"
          },
          "message": "WOW! Great solutions with FFT for first problem!Really cool=) I feel so stupid...=/",
          "created_time": "2011-02-06T06:09:12+0000",
@@ -68,7 +75,8 @@
          "id": "144568048938151_1233264",
          "from": {
             "name": "Pradeep Balakrishna",
-            "id": "1081351919"
+            "id": "1081351919",
+            "gender": "male"
          },
          "message": "can anyone pls share the idea behind scott's new trick",
          "created_time": "2011-02-06T07:58:13+0000"
@@ -77,7 +85,8 @@
          "id": "144568048938151_1233290",
          "from": {
             "name": "Ananya Mallik",
-            "id": "1560315625"
+            "id": "1560315625",
+            "gender": "male"
          },
          "message": "O(M*N) passed xD",
          "created_time": "2011-02-06T08:08:23+0000"
@@ -86,7 +95,8 @@
          "id": "144568048938151_1234137",
          "from": {
             "name": "Parth Shah",
-            "id": "100001898527166"
+            "id": "100001898527166",
+            "gender": "male"
          },
          "message": "d hell wid these solutions who bloody cares..........",
          "created_time": "2011-02-06T11:57:22+0000"
@@ -95,7 +105,8 @@
          "id": "144568048938151_1234324",
          "from": {
             "name": "Robert Burke",
-            "id": "23917679"
+            "id": "23917679",
+            "gender": "male"
          },
          "message": "\u0040Abhiraj: For input 'bbbbb'...\nThere is 1 sequence in which you do nothing.\nThere is 1 sequence in which your first move is [bbbbb].\nThere are 4 sequences in which your first move is [bbbb]b or b[bbbb].\nThere are 18 sequences in which your first move is [bbb]bb, b[bbb]b, or bb[bbb].\nThere are 96 sequences in which your first move is [bb]bbb, b[bb]bb, bb[bb]b, or bbb[bb]\n1+1+4+18+96 = 120",
          "created_time": "2011-02-06T12:39:03+0000",
@@ -105,7 +116,8 @@
          "id": "144568048938151_1234441",
          "from": {
             "name": "Adam Folwarczny",
-            "id": "1273118667"
+            "id": "1273118667",
+            "gender": "male"
          },
          "message": "University of Warsaw ... Gz xd",
          "created_time": "2011-02-06T13:09:37+0000"
@@ -114,7 +126,8 @@
          "id": "144568048938151_1234621",
          "from": {
             "name": "Thomas Dybdahl Ahle",
-            "id": "755563278"
+            "id": "755563278",
+            "gender": "male"
          },
          "message": "A few people passed with O(P*P) or O(P*L) by using massive parallelization. Kind of cheating perhaps, but then I suppose the problem authors wanted it to be solvable with slightly simpler algorithms than FFT, like Karatsuba.",
          "created_time": "2011-02-06T13:57:18+0000"
@@ -123,7 +136,8 @@
          "id": "144568048938151_1234649",
          "from": {
             "name": "Thomas Dybdahl Ahle",
-            "id": "755563278"
+            "id": "755563278",
+            "gender": "male"
          },
          "message": "\u0040Robert Burke I wish they had put explanations under the examples.",
          "created_time": "2011-02-06T14:03:55+0000"
@@ -132,7 +146,8 @@
          "id": "144568048938151_1235860",
          "from": {
             "name": "Akhil Kunnath",
-            "id": "800223221"
+            "id": "800223221",
+            "gender": "male"
          },
          "message": "thnx Aditya.. thnx very much..........",
          "created_time": "2011-02-06T16:42:23+0000"
@@ -141,7 +156,8 @@
          "id": "144568048938151_1237947",
          "from": {
             "name": "Jos\u00e9 Ram\u00f3n Garc\u00eda Alvarado",
-            "id": "654687405"
+            "id": "654687405",
+            "gender": "male"
          },
          "message": "Looks like HE made it ...\nCan't wait to see Petr on action again!\nIs ACRush competing with a different name BTW?",
          "created_time": "2011-02-06T21:31:32+0000"
@@ -150,7 +166,8 @@
          "id": "144568048938151_1238690",
          "from": {
             "name": "Sreesasanka Gunturi",
-            "id": "1581787658"
+            "id": "1581787658",
+            "gender": "male"
          },
          "message": "Guys, Is it happening to me or everyone. I cant see the problem set. Just that I did not qualify for round 2 does not mean I can never the problems(but download solutions!!!) for this round. Plzz post the problems if possible thanks...",
          "created_time": "2011-02-06T23:49:33+0000"
@@ -159,7 +176,8 @@
          "id": "144568048938151_1238852",
          "from": {
             "name": "Dario Lepre Battistin",
-            "id": "1704653001"
+            "id": "1704653001",
+            "gender": "male"
          },
          "message": "Se solo qualcuno mi insegnasse quest'arte ci proverei anch'io.",
          "created_time": "2011-02-07T00:14:19+0000"
@@ -168,7 +186,8 @@
          "id": "144568048938151_1239654",
          "from": {
             "name": "Ananya Mallik",
-            "id": "1560315625"
+            "id": "1560315625",
+            "gender": "male"
          },
          "message": "yeah acrush is rank 8 i suppose .\nhttp://forums.topcoder.com/;jsessionid=A066C5A0E84294BEB6ADA6FEC3D836E9?module=Thread&threadID=695777&start=800&mc=830#1320829",
          "created_time": "2011-02-07T02:16:57+0000"
@@ -177,7 +196,8 @@
          "id": "144568048938151_1241789",
          "from": {
             "name": "Mehmet Ali Karata\u015f",
-            "id": "100001241452656"
+            "id": "100001241452656",
+            "gender": "male"
          },
          "message": "hacked bay facebook xd !!! zaaaaaaaaaaaaa",
          "created_time": "2011-02-07T10:39:20+0000"
@@ -186,7 +206,8 @@
          "id": "144568048938151_1245190",
          "from": {
             "name": "Ankit Sablok",
-            "id": "1333740280"
+            "id": "1333740280",
+            "gender": "male"
          },
          "message": "who all r u giving t shirts",
          "created_time": "2011-02-07T21:08:37+0000"
