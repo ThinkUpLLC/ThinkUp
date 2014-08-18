@@ -425,6 +425,117 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]->username, 'ev');
     }
 
+	public function testGetGenderOfFavoriters() {
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'post_id',
+            'author_user_id' => 'blahblahblah',
+            'network' => 'facebook'
+        ) );
+		$builders [] = FixtureBuilder::build ( 'favorites', array (
+			'post_id' => 111,
+			'fav_of_user_id' => 133,
+			'network' => 'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'favorites', array (
+			'post_id' => 111,
+			'fav_of_user_id' => 193,
+			'network' => 'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'favorites', array (
+			'post_id' => 111,
+			'fav_of_user_id' => 203,
+			'network' => 'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'favorites', array (
+			'post_id' => 222,
+			'fav_of_user_id' => 203,
+			'network' => 'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => 133,
+			'gender'=>'male',
+            'network'=>'facebook'
+		) );
+
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => 193,
+			'gender'=>'male',
+            'network'=>'facebook'
+		) );
+
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => 203,
+			'gender'=>'female',
+            'network'=>'facebook'
+		) );
+		$result = $this->dao->getGenderOfFavoriters ( '111', 'facebook');
+		$this->debug ( Utils::varDumpToString ( $result ) );
+		$this->assertEqual ( $result ['female_likes_count'] , '1' );
+		$this->assertEqual ( $result ['male_likes_count'], '2' );
+	}
+
+	public function testGetGenderOfCommenters() {
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => '111',
+            'author_user_id' => 'blahblahblah',
+            'network' => 'facebook'
+        ) );
+		$builders [] = FixtureBuilder::build ( 'posts', array (
+			'post_id' => 'abadadfd12123',
+			'author_user_id' => '203',
+			'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'posts', array (
+			'post_id' => 'abadad',
+			'author_user_id' => '193',
+			'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'posts', array (
+			'post_id' => 'd12123',
+			'author_user_id' => '133',
+			'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'posts', array (
+			'post_id' => 'abawertyfd12123',
+			'author_user_id' => '203',
+			'in_reply_to_post_id' => '222',
+            'network'=>'facebook'
+		) );
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => '133',
+			'gender'=>'male',
+            'network'=>'facebook'
+		) );
+
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => '193',
+			'gender'=>'male',
+            'network'=>'facebook'
+		) );
+
+		$builders [] = FixtureBuilder::build ( 'users', array (
+			'user_id' => '203',
+			'gender'=>'female',
+            'network'=>'facebook'
+		) );
+		$result = $this->dao->getGenderOfCommenters ( '111', 'facebook' );
+		$this->debug ( Utils::varDumpToString ( $result ) );
+		$this->assertEqual ( $result ['female_comment_count'] , '1' );
+		$this->assertEqual ( $result ['male_comment_count'], '2' );
+	}
+
+	private function buildFavoriteArray() {
+		$vals = array ();
+		$vals ["favoriter_id"] = "1075560752";
+		$vals ["network"] = "facebook page";
+		$vals ["author_user_id"] = "340319429401281";
+		$vals ["post_id"] = "345840895515801";
+		return $vals;
+	}
+
     /**
      * helper method to build a post
      */
@@ -459,15 +570,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['source']='web';
         $vals['network']= 'twitter';
         $vals['is_protected'] = 0;
-        return $vals;
-    }
-
-    private function buildFavoriteArray() {
-        $vals = array();
-        $vals["favoriter_id"]= "1075560752";
-        $vals["network"] = "facebook page";
-        $vals["author_user_id"] = "340319429401281";
-        $vals["post_id"]="345840895515801";
         return $vals;
     }
 }
