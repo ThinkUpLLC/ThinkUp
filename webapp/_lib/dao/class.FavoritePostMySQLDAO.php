@@ -409,4 +409,57 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         return $users;
     }
+
+    public function getGenderOfFavoriters($post_id, $network) {
+        $q = "SELECT u.gender, COUNT(*) as count_gender FROM #prefix#users u ";
+        $q .= "INNER JOIN #prefix#favorites f ON f.fav_of_user_id = u.user_id ";
+        $q .= "WHERE f.post_id = :post_id AND f.network = :network ";
+        $q .= "GROUP BY gender";
+
+        $vars = array (
+            ':post_id' => $post_id,
+            ':network' => $network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod ( __METHOD__ ); }
+
+        $ps = $this->execute ( $q, $vars );
+        $rows = $this->getDataRowsAsArrays ( $ps );
+        $gender = array ();
+        foreach ( $rows as $row ) {
+            if ($row ['gender'] == "female") {
+                $gender ['female_likes_count'] = $row ['count_gender'];
+            }
+            if ($row ['gender'] == "male") {
+                $gender ['male_likes_count'] = $row ['count_gender'];
+            }
+        }
+        return $gender;
+    }
+
+    public function getGenderOfCommenters($post_id, $network) {
+        //Only count distinct commentors, don't count a commentor twice if she's commented twice
+        $q = "SELECT u.gender, COUNT(DISTINCT u.id) as count_gender FROM #prefix#users u ";
+        $q .= "INNER JOIN #prefix#posts p ON p.author_user_id = u.user_id AND p.network = u.network ";
+        $q .= "WHERE p.in_reply_to_post_id = :post_id AND p.network = :network AND u.user_id != p.in_reply_to_user_id ";
+        $q .= "GROUP BY gender";
+
+        $vars = array (
+            ':post_id' => $post_id,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod ( __METHOD__ ); }
+
+        $ps = $this->execute ( $q, $vars );
+        $rows = $this->getDataRowsAsArrays ( $ps );
+        $gender = array ();
+        foreach ( $rows as $row ) {
+            if ($row ['gender'] == "female") {
+                $gender ['female_comment_count'] = $row ['count_gender'];
+            }
+            if ($row ['gender'] == "male") {
+                $gender ['male_comment_count'] = $row ['count_gender'];
+            }
+        }
+        return $gender;
+    }
 }
