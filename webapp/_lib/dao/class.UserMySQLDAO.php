@@ -98,6 +98,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':username'=>$user->username,
             ':full_name'=>$user->full_name,
             ':avatar'=>$user->avatar,
+        	':gender'=>$user->gender,
             ':location'=>$user->location,
             ':description'=>$user->description,
             ':url'=>$user->url,
@@ -113,17 +114,18 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $is_user_in_storage = false;
         $is_user_in_storage = $this->isUserInDB($user->user_id, $user->network);
         if (!$is_user_in_storage) {
-            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
-            $q .= "is_verified, is_protected, follower_count, post_count, ".
+            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, ";
+            $q .= "location, description, url, is_verified, is_protected, follower_count, post_count, ".
             ($has_friend_count ? "friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count, " : "")." ".
             ($has_last_post ? "last_post, " : "")." found_in, joined, network  ".
             ($has_last_post_id ? ", last_post_id" : "").") ";
-            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :location, :description, :url, :is_verified, ";
-            $q .= ":is_protected, :follower_count, :post_count, ".($has_friend_count ? ":friend_count, " : "")." ".
-            ($has_favorites_count ? ":favorites_count, " : "")." ".
-            ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
-            ($has_last_post_id ? ", :last_post_id " : "")." )";
+            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :gender, :location, :description, ";
+            $q .= ":url, :is_verified, :is_protected, :follower_count, :post_count, ".
+                ($has_friend_count ? ":friend_count, " : "")." ".
+                ($has_favorites_count ? ":favorites_count, " : "")." ".
+                ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
+                ($has_last_post_id ? ", :last_post_id " : "")." )";
         } else {
             $bioq = "SELECT id, description FROM #prefix#users WHERE user_id=:user_id AND network=:network";
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }

@@ -1,11 +1,12 @@
 {
    "id": "729597743",
    "name": "Mark Linford",
+   "gender": "male",
    "about": "Old school proto-geek winding his way through this life",
-  "is_verified": true, 
-  "subscribers": {
+   "is_verified": true,
+   "subscribers": {
     "data": [
-    ], 
+    ],
     "summary": {
       "total_count": 2
     }
