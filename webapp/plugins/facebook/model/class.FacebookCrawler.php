@@ -729,13 +729,7 @@ class FacebookCrawler {
                 }
 
                 //and users in users table.
-                $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
-                if (isset($follower_details)) {
-                    $follower_details->network = $network;
-                }
-
-                $follower = $this->parseUserDetails($follower_details);
-                $follower_object = new User($follower);
+                $follower_object = $this->fetchUser($follower_id, 'Followers', true );
                 if (isset($follower_object)) {
                     $user_dao->updateUser($follower_object);
                 }

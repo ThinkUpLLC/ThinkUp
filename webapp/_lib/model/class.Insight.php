@@ -152,6 +152,14 @@ class Insight {
         $this->related_data["bar_chart"] = $bar_chart;
     }
     /**
+     * Add pie chart to insight's related data.
+     * @param arr $pie_chart Pie chart data.
+     * @return void
+     */
+    public function setPieChart($pie_chart) {
+        $this->related_data["pie_chart"] = $pie_chart;
+    }
+    /**
      * Add people/users to insight's related data.
      * @param arr Array of User objects
      * @return void
