@@ -81,4 +81,5 @@ interface UserDAO {
      * @return int Total number of affected rows
      */
     public function deleteUsersByHashtagId($hashtag_id);
+    
 }

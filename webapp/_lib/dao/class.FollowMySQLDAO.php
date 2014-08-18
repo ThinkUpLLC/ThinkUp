@@ -677,4 +677,50 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
 
         return $this->getDataRowsAsObjects($ps, 'User');
     }
+    
+    public function getFollowersIds($user_id, $network){
+    	$q = "SELECT  #prefix#follows.follower_id AS id FROM #prefix#follows ";
+    	$q .= "WHERE user_id=:user_id AND network = :network AND unfollowed = 0";
+    	$vars = array(
+    			':user_id' => (string)$user_id,
+    			':network' => $network
+    	);
+    	
+    	if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+    	$ps = $this->execute($q, $vars);
+    	
+    	return $this->getDataRowsAsArrays($ps);    	    	
+    }  
+      
+    public function setUnfollowed($user_id, $follower_id, $network) {
+    	echo "set_start";
+    	$q = "UPDATE #prefix#follows ";
+    	$q .= "SET last_seen=NOW(), unfollowed = 1 ";
+    	$q .= "WHERE user_id = :user_id AND follower_id = :follower_id AND network = :network;";
+    	$vars = array(
+    			':user_id'=>(string)$user_id,
+    			':follower_id'=>(string)$follower_id,
+    			':network'=>$network
+    	);
+    	if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+    	$ps = $this->execute($q, $vars);
+        echo "set_end";
+    	return $this->getUpdateCount($ps);
+    }
+    
+    public function getUnfollowersFromOneWeekAgo($user_id, $network='twitter') {
+    	$q  = "SELECT #prefix#users.*  FROM #prefix#follows, #prefix#users ";
+    	$q .= "WHERE #prefix#follows.user_id = :user_id AND #prefix#follows.network=:network ";
+    	$q .= "AND #prefix#follows.unfollowed = 1 AND #prefix#follows.follower_id = #prefix#users.user_id ";
+    	$q .= "AND (#prefix#follows.last_seen + interval #gmt_offset# hour)>=DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY);";
+    	
+    	$vars = array(
+    			':user_id'=>(string)$user_id,
+    			':network'=>$network
+    	);
+    	if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+    	$ps = $this->execute($q, $vars);
+    
+    	return $this->getDataRowsAsObjects($ps, 'User');
+    }
 }

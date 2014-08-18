@@ -97,6 +97,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
                     $twitter_crawler->fetchInstanceUserMentions();
                     $twitter_crawler->fetchInstanceUserFriends();
                     $twitter_crawler->fetchInstanceUserFollowers();
+                    $twitter_crawler->fetchInstanceUserUnfollowers();
                     $twitter_crawler->fetchInstanceUserGroups();
                     $twitter_crawler->fetchRetweetsOfInstanceUser();
                     $twitter_crawler->fetchInstanceUserFavorites();

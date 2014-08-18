@@ -1,0 +1,1 @@
+ALTER TABLE tu_follows ADD unfollowed  int(11) NOT NULL DEFAULT '0';

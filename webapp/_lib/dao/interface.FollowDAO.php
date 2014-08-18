@@ -261,4 +261,29 @@ interface FollowDAO {
      * @param int $page_count
      */
     public function searchFollowers(array $keywords, $network, $user_id, $page_number=1, $page_count=20);
+
+    /**
+     * Gets ids of the people who follows you.
+     * @param int $user_id
+     * @param str $network
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getFollowersIds($user_id, $network);
+    
+    /**
+     * Updates 'unfollowed' field in database.
+     * @param int $user_id
+     * @param int $follower_id
+     * @param str $network
+     * @return int update count
+     */
+    public function setUnfollowed($user_id, $follower_id, $network);
+    
+    /**
+     * Gets people who unfollowed you last week.
+     * @param int $user_id
+     * @param str $network
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getUnfollowersFromOneWeekAgo($user_id, $network);
 }

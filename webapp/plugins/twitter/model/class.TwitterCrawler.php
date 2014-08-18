@@ -529,6 +529,7 @@ class TwitterCrawler {
                             if ($follow_dao->insert($this->instance->network_user_id, $id['id'], 'twitter'))
                             $inserted_follow_count = $inserted_follow_count + 1;
                         }
+                        
                     }
                     $this->logger->logSuccess("Cursor at ".strval($next_cursor), __METHOD__.','.__LINE__);
                 }
@@ -576,7 +577,7 @@ class TwitterCrawler {
             $updated_follow_count = 0;
             $inserted_follow_count = 0;
 
-            $follow_dao = DAOFactory::getDAO('FollowDAO');;
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
 
             while ($continue_fetching && !$this->instance->is_archive_loaded_follows) {
                 $endpoint = $this->api->endpoints['followers'];
@@ -640,6 +641,68 @@ class TwitterCrawler {
         }
     }
 
+    /**
+     * Fetch instance users's unfollowers
+     */
+    public function fetchInstanceUserUnfollowers() {
+    	$continue_fetching = true;
+    	$follow_dao = DAOFactory::getDAO('FollowDAO');
+
+    	if (isset($this->user) ) {
+    		$followers=$follow_dao->getFollowersIds($this->instance->network_user_id,$this->instance->network);
+    		$followers_count=count($followers);
+    		if($followers_count>$this->user->follower_count){
+    			while ( $continue_fetching) {
+    				$args = array();
+    				$endpoint = $this->api->endpoints['followers'];
+    				if (!isset($next_cursor)) {
+    					$next_cursor = -1;
+    				}
+    				$args['cursor'] = strval($next_cursor);
+    				$args['stringify_ids'] = 'true';
+    			
+    				try {
+                		list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
+                		if ($http_status > 200) {
+                    		$continue_fetching = false;
+               			} else {
+                    		$users = $this->api->parseJSONUsers($payload);
+                    		$next_cursor = $this->api->getNextCursor();
+
+                    		if (count($users) == 0) {
+                        		$continue_fetching = false;
+                    		} else { 						
+    							foreach ($followers as $f) {
+    								if(!$this->isFollowerInList($users, $f['id'])){
+    									$follow_dao->setUnfollowed($this->instance->network_user_id, $f['id'], 
+    										$this->instance->network);    	
+    								}							
+    							}
+                    		}	    								
+						}
+
+    				} catch (APICallLimitExceededException $e) {
+    					$this->logger->logUserInfo($e->getMessage(), __METHOD__.','.__LINE__);
+    					break;
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    /**
+     * Checking whether or not follower is in list of users 
+     * @param array $users
+     * @param int $id
+     */
+    private function isFollowerInList($users, $id) {
+    	foreach ($users as $u) {
+    		$user = new User($u);
+    		if($user->user_id==$id) return true;
+    	}
+    	return false;
+    }
+    
     /** Find group memberships that are probably no longer active, verify, and
      * deactivate or update
      */

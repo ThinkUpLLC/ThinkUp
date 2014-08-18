@@ -196,4 +196,6 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDeleteCount($ps);
     }
+    
+
 }
