@@ -83,7 +83,7 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
-        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("Begin generating insight (".get_class($this).")", __METHOD__.','.__LINE__);
 
         if ($this->shouldGenerate($instance, $last_week_of_posts)) {
 
@@ -129,6 +129,6 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
             }
         }
 
-        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("Done generating insight (".get_class($this).")", __METHOD__.','.__LINE__);
     }
 }
