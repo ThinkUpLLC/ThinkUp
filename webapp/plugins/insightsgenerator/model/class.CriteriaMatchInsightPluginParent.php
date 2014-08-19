@@ -119,7 +119,13 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
 
             $insight = $this->getInsightForCounts($count, $last_count, $instance, $matching_posts);
             if ($insight) {
-                $this->insight_dao->insertInsight($insight);
+                try {
+                    $this->insight_dao->insertInsight($insight);
+                } catch (InsightFieldExceedsMaxLengthException $e) {
+                    $this->logger->logError("Caught InsightFieldExceedsMaxLengthException: ".$e->getMessage(),
+                        __METHOD__.','.__LINE__);
+                    $this->logger->logInfo("Insight : ". Utils::varDumpToString($insight), __METHOD__.','.__LINE__);
+                }
             }
         }
 
