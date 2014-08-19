@@ -74,7 +74,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
-                $insight->emphasis = Insight::EMPHASIS_LOW;
+                $insight->emphasis = Insight::EMPHASIS_HIGH;
                 if (isset($follower_count_history_by_month["trend"])
                 && $follower_count_history_by_month["trend"] !== false) {
                     $insight->text = $this->username." is gaining ".
@@ -128,7 +128,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
-                $insight->emphasis = Insight::EMPHASIS_LOW;
+                $insight->emphasis = Insight::EMPHASIS_MED;
                 if (isset($follower_count_history_by_week["trend"])
                 && $follower_count_history_by_week["trend"] !== false) {
                     $insight->text = $this->username." is gaining ".

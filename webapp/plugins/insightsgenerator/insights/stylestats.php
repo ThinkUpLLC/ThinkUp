@@ -264,7 +264,7 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->text = $insight_text;
                     $my_insight->header_image = '';
                     $my_insight->filename = basename(__FILE__, ".php");
-                    $my_insight->emphasis = Insight::EMPHASIS_MED;
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW;
 
                     $this->insight_dao->insertInsight($my_insight);
                 } else {

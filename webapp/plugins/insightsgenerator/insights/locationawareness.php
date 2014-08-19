@@ -90,6 +90,7 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
         $insight->related_data = array('map_points' => array_unique($geo_data));
         $insight->headline = $this->getHeadline($located_posts, 'week');
         $insight->text = $this->getText('week', $located_posts);
+        $insight->emphasis = Insight::EMPHASIS_LOW;
         $insight->filename = basename(__FILE__, ".php");
         $insight->setHeroImage($this->getHeroImage());
         $button = $this->getButton($instance);
@@ -120,6 +121,7 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
         $insight->related_data = array('map_points' => array_unique($geo_data));
         $insight->headline = $this->getHeadline($located_posts, 'month');
         $insight->text = $this->getText('month', $located_posts);
+        $insight->emphasis = Insight::EMPHASIS_HIGH;
         $insight->setHeroImage($this->getHeroImage());
         $button = $this->getButton($instance);
         if ($button) {

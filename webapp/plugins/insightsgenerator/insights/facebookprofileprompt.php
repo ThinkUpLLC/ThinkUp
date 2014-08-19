@@ -70,6 +70,7 @@ class FacebookProfilePromptInsight extends InsightPluginParent implements Insigh
                 $insight = new Insight();
                 $insight->slug = 'facebook_profile_prompt';
                 $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_LOW;
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
 
