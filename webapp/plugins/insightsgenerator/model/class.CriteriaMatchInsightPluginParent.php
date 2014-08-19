@@ -117,10 +117,6 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
 
             $insight_baseline_dao->insertInsightBaseline($baseline_name, $instance->id, $count, $this->insight_date);
 
-            // Only include up to 10 posts to avoid InsightFieldExceedsMaxLengthException
-            if (count($matching_posts) > 10 ) {
-                $matching_posts = array_slice($matching_posts, 0, 10);
-            }
             $insight = $this->getInsightForCounts($count, $last_count, $instance, $matching_posts);
             if ($insight) {
                 $this->insight_dao->insertInsight($insight);
