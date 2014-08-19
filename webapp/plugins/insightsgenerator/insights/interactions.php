@@ -113,7 +113,7 @@ class InteractionsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = $header_image;
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->setPeople($users_mentioned);
                 $my_insight->setMilestones($milestones);

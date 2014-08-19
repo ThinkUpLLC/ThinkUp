@@ -73,6 +73,7 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
                 $insight->slug = $this->getSlug();
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
+                $insight->emphasis = Insight::EMPHASIS_MED;
                 $insight->headline = $this->getVariableCopy(array(
                     "%username's friend".(count($unique_friends)==1?'':'s')." had some great news!",
                     'Congratulations on the congrats, %username!',

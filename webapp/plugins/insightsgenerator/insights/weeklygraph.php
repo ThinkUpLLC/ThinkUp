@@ -151,7 +151,7 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = $header_image;
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 if (count($posts) > 3) {
                     $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
                     $my_insight->setPosts($formatted_posts);

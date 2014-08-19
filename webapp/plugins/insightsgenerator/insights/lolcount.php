@@ -95,7 +95,7 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
 
             $insight->headline = $this->getVariableCopy($potential_headlines);
             $insight->filename = basename(__FILE__, ".php");
-            $insight->emphasis = Insight::EMPHASIS_LOW;
+            $insight->emphasis = Insight::EMPHASIS_MED;
             if (count($this->posts_to_include) > 0) {
                 $insight->setPosts($this->posts_to_include);
             }

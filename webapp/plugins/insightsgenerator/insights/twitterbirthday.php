@@ -42,6 +42,7 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
             $insight->slug = "twitterbirthday";
             $insight->instance_id = $instance->id;
             $insight->date = $this->insight_date;
+            $insight->emphasis = Insight::EMPHASIS_HIGH;
             $insight->filename = basename(__FILE__, ".php");
             $insight->headline = "Happy Twitter birthday!";
 

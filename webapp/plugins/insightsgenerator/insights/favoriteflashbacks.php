@@ -56,7 +56,7 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                         .$this->terms->getVerb('liked')." on this day in years past.";
                     $my_insight->text = "Can you believe how fast time flies?"; // or just set a strong like "Greetings humans";
                     // $my_insight->header_image = $header_image;
-                    $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
+                    $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
                     $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
                     $my_insight->setPosts($flashback_favs);
 

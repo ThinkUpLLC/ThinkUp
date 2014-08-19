@@ -101,7 +101,7 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->headline = $headline; // or just set a string like 'Ohai';
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $insight_retweeted_user->avatar;
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->setPosts(array($insight_retweet));
                 $my_insight->setPeople(array($insight_retweeted_user));

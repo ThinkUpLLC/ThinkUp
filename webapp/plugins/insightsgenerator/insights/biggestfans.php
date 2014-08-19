@@ -75,7 +75,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                         " the most over the last 30 days.";
                 }
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($fans);
                 $this->insight_dao->insertInsight($my_insight);
             }
@@ -111,6 +111,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = "Here's who " .$this->terms->getVerb('liked')." $this->username's ".
                     $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the last week.";
                 $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
                 $my_insight->setPeople($fans);
                 $this->insight_dao->insertInsight($my_insight);
             }

@@ -193,7 +193,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if ($winning_activity) {
                         $slug = $winning_activity.'_high_7_day_'.$post->id;
-                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $emphasis = Insight::EMPHASIS_MED;
                         $my_insight_posts = array($post);
                         switch ($winning_activity) {
                             case 'fave':
@@ -215,7 +215,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                                     . " people</strong> $share_verb $this->username's "
                                     . $this->terms->getNoun('post') . ".";
                                 $insight_text = "That's a new 7-day record.";
-                                $emphasis = Insight::EMPHASIS_LOW;
+                                $emphasis = Insight::EMPHASIS_MED;
                                 break;
 
                         }
@@ -240,7 +240,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if ($winning_activity) {
                         $slug = $winning_activity.'_spike_30_day_'.$post->id;
-                        $emphasis = Insight::EMPHASIS_LOW;
+                        $emphasis = Insight::EMPHASIS_HIGH;
                         $my_insight_posts = array($post);
                         switch ($winning_activity) {
                             case 'fave':
