@@ -84,7 +84,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
                     $my_insight->header_image = $long_lost_contacts[0]->avatar;
                 }
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($long_lost_contacts);
 
                 $this->insight_dao->insertInsight($my_insight);

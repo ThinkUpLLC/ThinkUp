@@ -182,7 +182,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual('This one really got some favorites.', $result->headline);
         $this->assertEqual("<strong>50 people</strong> favorited @buffy's tweet.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         $posts = array($this->makePost($replies=1, $retweets=10, $faves=5));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
@@ -194,7 +194,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual("<strong>10 people</strong> retweeted @buffy's tweet.", $result->headline);
         $this->assertEqual("That's a new 7-day record.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         $posts = array($this->makePost($replies=10, $retweets=10, $faves=5));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
@@ -206,7 +206,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual("@buffy's tweet got <strong>10 replies</strong>.", $result->headline);
         $this->assertEqual("That's a new 7-day record.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         $posts = array($this->makePost($replies=10, $retweets=10, $faves=50));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
@@ -218,7 +218,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual("This one really got some favorites.", $result->headline);
         $this->assertEqual("<strong>50 people</strong> favorited @buffy's tweet.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -259,7 +259,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual('This tweet got 5x the favorites for @buffy.', $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet, which is more than "
             . "<strong>5x</strong> @buffy's 30-day average.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
         $posts = array($this->makePost($replies=1, $retweets=10, $faves=1));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);

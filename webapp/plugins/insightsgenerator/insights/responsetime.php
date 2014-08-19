@@ -127,7 +127,7 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = '';
-                $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally
+                $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally
                 $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight
 
                 $this->insight_dao->insertInsight($my_insight);

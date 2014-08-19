@@ -135,6 +135,7 @@ class TwitterAgeInsight extends InsightPluginParent implements InsightPlugin {
                 $insight->date = $this->insight_date;
                 $insight->headline = $headline;
                 $insight->text = $text;
+                $insight->emphasis = Insight::EMPHASIS_HIGH;
                 $insight->filename = basename(__FILE__, ".php");
                 $this->insight_dao->insertInsight($insight);
             }

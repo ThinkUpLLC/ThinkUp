@@ -99,7 +99,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPosts(array($most_popular_post));
 
                 $this->insight_dao->insertInsight($my_insight);
@@ -170,7 +170,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $header_image;
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPosts(array($most_popular_post));
 
                 $this->insight_dao->insertInsight($my_insight);
