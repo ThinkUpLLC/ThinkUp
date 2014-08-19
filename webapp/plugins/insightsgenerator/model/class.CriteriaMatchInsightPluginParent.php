@@ -92,8 +92,7 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
                 $posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username, $instance->network,
                     $count=0, $order_by="pub_date", $in_last_x_days = $this->getNumberOfDaysNeeded(),
                     $iterator = false, $is_public = false);
-            }
-            else {
+            } else {
                 $posts = $last_week_of_posts;
             }
 
@@ -112,12 +111,16 @@ abstract class CriteriaMatchInsightPluginParent extends InsightPluginParent {
             $last_baseline = $insight_baseline_dao->getMostRecentInsightBaseline($baseline_name, $instance->id);
             if ($last_baseline) {
                 $last_count = $last_baseline->value;
-            }
-            else {
+            } else {
                 $last_count = 0;
             }
+
             $insight_baseline_dao->insertInsightBaseline($baseline_name, $instance->id, $count, $this->insight_date);
 
+            // Only include up to 10 posts to avoid InsightFieldExceedsMaxLengthException
+            if (count($matching_posts) > 10 ) {
+                $matching_posts = array_slice($matching_posts, 0, 10);
+            }
             $insight = $this->getInsightForCounts($count, $last_count, $instance, $matching_posts);
             if ($insight) {
                 $this->insight_dao->insertInsight($insight);
