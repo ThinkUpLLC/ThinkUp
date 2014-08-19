@@ -97,7 +97,7 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             }
 
             $insight->filename = basename(__FILE__, ".php");
-            $insight->emphasis = Insight::EMPHASIS_LOW;
+            $insight->emphasis = Insight::EMPHASIS_HIGH;
             if (count($this->posts_to_include) > 0) {
                 $insight->setPosts(array_slice($this->posts_to_include, 0, 10));
                 if ( count($this->posts_to_include) > 1 )  {

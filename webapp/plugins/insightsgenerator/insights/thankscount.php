@@ -110,7 +110,7 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                     ' than in '.$two_months_ago_name.'.';
                 }
                 $insight->filename = basename(__FILE__, ".php");
-                $insight->emphasis = Insight::EMPHASIS_LOW;
+                $insight->emphasis = Insight::EMPHASIS_MED;
         }
         return $insight;
     }

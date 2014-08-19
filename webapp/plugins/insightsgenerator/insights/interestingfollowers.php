@@ -159,7 +159,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                     $my_insight->text = ''; // or just set a strong like "Greetings humans";
                     $my_insight->header_image = $header_image;
                     $my_insight->filename = basename(__FILE__, ".php");
-                    $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                    $my_insight->emphasis = Insight::EMPHASIS_MED;
                     $my_insight->setPeople($local_followers);
                     $this->insight_dao->insertInsight($my_insight);
                 }

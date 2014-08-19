@@ -72,7 +72,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $header_image;
                 $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($big_reshares);
                 $my_insight->setPosts(array($post));
 

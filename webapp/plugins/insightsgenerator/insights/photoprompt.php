@@ -72,6 +72,7 @@ class PhotoPromptInsight extends InsightPluginParent implements InsightPlugin {
                         $insight->text = $this->username." hasn't posted a photo in $days day".($days==1?"":"s").". "
                             . "It might be worth finding something to share.";
                         $insight->filename = basename(__FILE__, ".php");
+                        $insight->emphasis = Insight::EMPHASIS_LOW;
                         $this->insight_dao->insertInsight($insight);
                     }
                 }
