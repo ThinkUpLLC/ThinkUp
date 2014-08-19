@@ -2,7 +2,7 @@
 /*
  Plugin Name: Biggest Fans
  Description: Who has liked your posts the most over the last 7 and 30 days.
- When: Sundays and 1st of the month
+ When: Sundays for Twitter, Wednesdays otherwise, and 1st of the month for Twitter, 2nd otherwise
  */
 
 /**
@@ -32,43 +32,88 @@
 
 class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $since_date = date("Y-m-d");
-
-        $insight_date = new DateTime();
-        $insight_day_of_week = (int) $insight_date->format('w');
-        $insight_day_of_month = (int) $insight_date->format('j');
-
         $filename = basename(__FILE__, ".php");
 
-        if ($insight_day_of_month == 1) { //it's the first day of the month
+        if ($instance->network == 'twitter') {
+            $day_of_month = 1;
+        } else {
+            $day_of_month = 2;
+        }
+        $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance,
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month);
+
+        $prefix = $instance->network == 'twitter' ? '@' : '';
+        if ($should_generate_insight) { //it's the right day of the month
             // Past 30 days
-            if (self::shouldGenerateInsight('biggest_fans_last_30_days', $instance, $insight_date=$since_date)) {
-                $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
-                $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
+            $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
+            $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 30);
-                if (isset($fans) && sizeof($fans) > 0 ) {
-                    $this->insight_dao->insertInsightDeprecated("biggest_fans_last_30_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
-                    .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 30 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+            if (isset($fans) && sizeof($fans) > 0 ) {
+                $my_insight = new Insight();
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'biggest_fans_last_30_days'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $since_date; //date is often this or $simplified_post_date
+                if (count($fans) == 1) {
+                    $my_insight->headline = $prefix.$fans[0]->username
+                        . " was $this->username's biggest fan last month.";
+                    if ($fans[0]->avatar) {
+                        $my_insight->header_image = $fans[0]->avatar;
+                    }
+                    $my_insight->text = $prefix.$fans[0]->username." ".$this->terms->getVerb('liked').
+                        " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
+                        " the most over the last 30 days.";
+                } else {
+                    $my_insight->headline = "These were $this->username's biggest fans last month.";
+                    $my_insight->text = "They ".$this->terms->getVerb('liked').
+                        " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
+                        " the most over the last 30 days.";
                 }
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->setPeople($fans);
+                $this->insight_dao->insertInsight($my_insight);
             }
-        } else if ($insight_day_of_week == 0) { //it's Sunday
+        }
+
+        if ($instance->network == 'twitter') {
+            $day_of_week = 0;
+        } else {
+            $day_of_week = 3;
+        }
+        $should_generate_insight = self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance,
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_week = $day_of_week );
+        if ($should_generate_insight) { //it's Sunday
             // Past 7 days
-            if (self::shouldGenerateInsight('biggest_fans_last_7_days', $instance, $insight_date=$since_date)) {
-                $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
-                $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
+            $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
+            $fans = $fav_dao->getUsersWhoFavoritedMostOfYourPosts($instance->network_user_id,
                 $instance->network, 7);
-                if (isset($fans) && sizeof($fans) > 0 ) {
-                    $this->insight_dao->insertInsightDeprecated("biggest_fans_last_7_days", $instance->id,
-                    $since_date, "Biggest fans:", "People who ".$this->terms->getVerb('liked')." $this->username's "
-                    .$this->terms->getNoun('post', InsightTerms::PLURAL)." the most over the last 7 days: ",
-                    $filename, Insight::EMPHASIS_LOW, serialize($fans));
+            if (isset($fans) && sizeof($fans) > 0 ) {
+                $my_insight = new Insight();
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->slug = 'biggest_fans_last_7_days'; //slug to label this insight's content
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $since_date; //date is often this or $simplified_post_date
+                if (count($fans) == 1) {
+                    $my_insight->headline = 'Last week, '.$prefix.$fans[0]->username
+                        . " was $this->username's biggest admirer.";
+                    if ($fans[0]->avatar) {
+                        $my_insight->header_image = $fans[0]->avatar;
+                    }
+                } else {
+                    $my_insight->headline = "Last week, these were $this->username's biggest admirers.";
                 }
+                $my_insight->text = "Here's who " .$this->terms->getVerb('liked')." $this->username's ".
+                    $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the last week.";
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->setPeople($fans);
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

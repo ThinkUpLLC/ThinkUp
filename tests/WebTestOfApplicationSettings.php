@@ -44,7 +44,7 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
     public function testOpenRegistration() {
         //Assert registration is closed by default
         $this->get($this->url.'/session/register.php');
-        $this->assertText('Sorry, registration is closed on this installation of ');
+        $this->assertText('Registration is closed for ');
 
         //Log in as admin
         $this->get($this->url.'/session/login.php');
@@ -71,8 +71,8 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
 
         //Assert registration is open
         $this->get($this->url.'/session/register.php');
-        $this->assertText('Name:');
-        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+        $this->assertText('Name');
+        $this->assertNoText('Registration is closed for ');
     }
 
     public function testCSRFToken() {
@@ -106,6 +106,19 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->assertEqual($response_object->saved, 1);
     }
 
+    public function testAuthControlLoggedInChangeNotificationFrequency() {
+        //Log in as admin
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        $this->click("Log In");
+
+        $this->click("Settings");
+        $this->assertText('Insights email');
+        $this->click("Weekly");
+        $this->click("Save");
+    }
+
     public function testBackupAndExport() {
         //Log in as admin
         $this->get($this->url.'/session/login.php');
@@ -118,14 +131,13 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->assertText('me@example.com');
 
         //Test export link
-        $this->click("Export a single user account's data");
+        $this->click("Export a ThinkUp account");
         $this->assertText("Export a single user account's data");
-        $this->assertText("Choose a user's data to export. (You'll find a README.txt file in the zip archive with ".
-        "instructions on how to import the data into another ThinkUp database.)");
+        $this->assertPattern("/Choose a user to export\./");
 
         //Test backup link
         $this->click("Settings");
-        $this->click("Back up ThinkUp's entire database");
+        $this->click("Back up ThinkUp");
         $this->assertText("Back up ThinkUp's entire database");
         $this->assertText("If you have any issues using this backup feature, you can use mysqldump to manually back ".
         "up your ThinkUp data if you have access to your server.");

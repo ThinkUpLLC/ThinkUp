@@ -74,7 +74,7 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the average for 30 days is correct
         $avg_30 = $insight_baseline_dao->getInsightBaseline('avg_view_count_last_30_days', 1);
@@ -113,16 +113,15 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('view_high_365_day_1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'view_high_365_day_1');
-        $this->assertEqual($check->headline, 'New 365-day record!');
-        $text = "<strong>50 people</strong> viewed <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.";
-        $text .= "youtube.com/watch?v=1>My Great Video 1</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertPattern('/365-day record/', $check->text);
+        $headline = '/<strong>50 people<\/strong> viewed ev\'s video My Great Video 1\./';
+        $this->assertPattern($headline, $check->headline);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'viewspike');
     }
@@ -150,16 +149,15 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('view_high_90_day_2', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'view_high_90_day_2');
-        $this->assertEqual($check->headline, 'New 90-day record!');
-        $text = "<strong>40 people</strong> viewed <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.";
-        $text .= "youtube.com/watch?v=2>My Great Video 2</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertPattern('/90-day record/', $check->text);
+        $headline = "<strong>40 people</strong> viewed ev's video My Great Video 2.";
+        $this->assertEqual($check->headline, $headline);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'viewspike');
     }
@@ -192,16 +190,15 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('view_high_30_day_3', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'view_high_30_day_3');
-        $this->assertEqual($check->headline, 'New 30-day record!');
-        $text = "<strong>30 people</strong> viewed <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.";
-        $text .= "youtube.com/watch?v=3>My Great Video 3</a>.";
-        $this->assertEqual($check->text, $text);
+        $this->assertPattern('/30-day record/', $check->text);
+        $headline = "<strong>30 people</strong> viewed ev's video My Great Video 3.";
+        $this->assertEqual($check->headline, $headline);
         $this->assertEqual($check->emphasis, 2);
         $this->assertEqual($check->filename, 'viewspike');
     }
@@ -235,16 +232,15 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('view_spike_90_day_1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'view_spike_90_day_1');
-        $this->assertEqual($check->headline, 'Viral video:');
-        $text = "<strong>500 people</strong> viewed <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www";
-        $text .= ".youtube.com/watch?v=1>My Great Video 1</a>, more than <strong>double</strong> the 90-day average.";
-        $this->assertEqual($check->text, $text);
+        $headline = "<strong>500 people</strong> viewed My Great Video 1";
+        $headline .= " &mdash; looks like it's going viral.";
+        $this->assertEqual($check->headline, $headline);
         $this->assertEqual($check->emphasis, 0);
         $this->assertEqual($check->filename, 'viewspike');
     }
@@ -283,16 +279,15 @@ class TestOfViewSpikeInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $view_spike_insight = new ViewSpikeInsight();
-        $view_spike_insight->generateInsight($instance, $posts, 7);
+        $view_spike_insight->generateInsight($instance, null, $posts, 7);
 
         // Check the insight was created
         $check = $insight_dao->getInsight('view_spike_30_day_4', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($check);
         $this->assertEqual($check->slug, 'view_spike_30_day_4');
-        $this->assertEqual($check->headline, 'Viral video:');
-        $text = "<strong>400 people</strong> viewed <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www";
-        $text .= ".youtube.com/watch?v=4>My Great Video 4</a>, more than <strong>double</strong> the 30-day average.";
-        $this->assertEqual($check->text, $text);
+        $headline = "<strong>400 people</strong> viewed My Great Video 4";
+        $headline .= " &mdash; looks like it's doing pretty well.";
+        $this->assertEqual($check->headline, $headline);
         $this->assertEqual($check->emphasis, 0);
         $this->assertEqual($check->filename, 'viewspike');
     }

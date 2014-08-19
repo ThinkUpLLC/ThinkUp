@@ -2,8 +2,8 @@
 
     <span class="pull-right">{insert name="help_link" id='hellothinkup'}</span>
     <h1>
-        <img src="{$site_root_path}plugins/hellothinkup/assets/img/plugin_icon.png" class="plugin-image">
-        Hello ThinkUp Plugin
+        <i class="fa fa-puzzle-piece text-muted"></i>
+        Hello ThinkUp
     </h1>
     
     <p>{$message}</p>

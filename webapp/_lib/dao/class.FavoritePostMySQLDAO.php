@@ -385,6 +385,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $q .= "INNER JOIN #prefix#users u ON u.user_id = f.fav_of_user_id ";
         $q .= "INNER JOIN #prefix#posts p ON f.post_id = p.post_id ";
         $q .= "WHERE f.author_user_id = :author_user_id and f.network=:network ";
+        $q .= "AND f.author_user_id != f.fav_of_user_id ";
         $q .= "AND p.pub_date >= date_sub(current_date, INTERVAL :last_x_days day) ";
         $q .= "GROUP BY f.fav_of_user_id ORDER BY total_likes DESC";
         $q .= ") favs WHERE favs.total_likes > 1 LIMIT 3";

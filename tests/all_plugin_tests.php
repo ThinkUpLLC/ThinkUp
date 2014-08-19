@@ -79,9 +79,9 @@ $plugin_tests->add(new TestOfInsightPluginParent());
 $plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
 //Insights
-$plugin_tests->add(new TestOfArchivedPostsInsight());
 $plugin_tests->add(new TestOfAllAboutYouInsight());
 $plugin_tests->add(new TestOfBigReshareInsight());
+$plugin_tests->add(new TestOfBiggestFansInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfFrequencyInsight());
 $plugin_tests->add(new TestOfListMembershipInsight());
@@ -90,12 +90,10 @@ $plugin_tests->add(new TestOfStyleStatsInsight());
 $plugin_tests->add(new TestOfMetweetInsight());
 $plugin_tests->add(new TestOfInteractionsInsight());
 $plugin_tests->add(new TestOfWeeklyBestsInsight());
-$plugin_tests->add(new TestOfReplySpikeInsight());
 $plugin_tests->add(new TestOfResponseTimeInsight());
 $plugin_tests->add(new TestOfFavoritedLinksInsight());
 $plugin_tests->add(new TestOfLongLostContactsInsight());
 $plugin_tests->add(new TestOfLinkPromptInsight());
-$plugin_tests->add(new TestOfLocalFollowersInsight());
 $plugin_tests->add(new TestOfOutreachPunchcardInsight());
 $plugin_tests->add(new TestOfSplitOpinionsInsight());
 $plugin_tests->add(new TestOfViewDurationInsight());
@@ -103,6 +101,30 @@ $plugin_tests->add(new TestOfLikeSpikeInsight());
 $plugin_tests->add(new TestOfViewSpikeInsight());
 $plugin_tests->add(new TestOfSubscriberChangeInsight());
 $plugin_tests->add(new TestOfMinutesViewedInsight());
+$plugin_tests->add(new TestOfBiggestFansInsight());
+$plugin_tests->add(new TestOfFlashbackInsight());
+$plugin_tests->add(new TestOfFollowerCountHistoryInsight());
+$plugin_tests->add(new TestOfWeeklyGraphInsight());
+$plugin_tests->add(new TestOfInterestingFollowersInsight());
+$plugin_tests->add(new TestOfThanksCountInsight());
+$plugin_tests->add(new TestOfLOLCountInsight());
+$plugin_tests->add(new TestOfFBombCountInsight());
+$plugin_tests->add(new TestOfActivitySpikeInsight());
+$plugin_tests->add(new TestOfFollowCountVisualizerInsight());
+$plugin_tests->add(new TestOfCongratsCountInsight());
+$plugin_tests->add(new TestOfTimeSpentInsight());
+$plugin_tests->add(new TestOfTwitterAgeInsight());
+$plugin_tests->add(new TestOfTwitterBirthdayInsight());
+$plugin_tests->add(new TestOfPhotoPromptInsight());
+$plugin_tests->add(new TestOfExclamationCountInsight());
+$plugin_tests->add(new TestOfMetaPostsCountInsight());
+$plugin_tests->add(new TestOfFacebookProfilePromptInsight());
+$plugin_tests->add(new TestOfLocationAwarenessInsight());
+// One-time or developer insight tests that don't have to run every time
+// $plugin_tests->add(new TestOfHelloThinkUpInsight());
+// $plugin_tests->add(new TestOfOlympics2014Insight());
+// $plugin_tests->add(new TestOfOscars2014Insight());
+
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
     $plugin_tests->add(new TestOfStreamMessageQueueRedis());

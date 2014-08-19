@@ -183,4 +183,18 @@ class Insight {
     public function setButton($button) {
         $this->related_data["button"] = $button;
     }
+    /**
+     * Add a hero image with alt text, credit, and a source link to insight's related data.
+     * @param arr Array of hero image data. Sample values:
+     *  array(
+     *     'url' => 'https://www.thinkup.com/assets/images/insights/2014-02/olympics2014.jpg',
+     *     'alt_text' => 'The Olympic rings in Sochi',
+     *     'credit' => 'Photo: Atos International',
+     *     'img_link' => 'http://www.flickr.com/photos/atosorigin/12568057033/'
+     *   );
+     * @return void
+     */
+    public function setHeroImage($hero_image) {
+        $this->related_data["hero_image"] = $hero_image;
+    }
 }

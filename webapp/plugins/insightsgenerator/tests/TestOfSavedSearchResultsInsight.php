@@ -59,17 +59,15 @@ class TestOfSavedSearchResultsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'facebook';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new SavedSearchResultsInsight();
-        $stylestats_insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('saved_search_results_102', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'saved_search_results_102');
-        $this->assertEqual($result->headline, 'New search results:');
         $this->assertEqual($result->filename, 'savedsearchresults');
-        $this->assertEqual('7 new posts contain <b><a href="search.php?u=ev&n=facebook&c=searches&k=%23'.
-        'thinkupsavedsearch&q=%23thinkupsavedsearch">#thinkupsavedsearch</a></b>.', $result->text);
+        $this->assertEqual('7 new posts contain "<strong>#thinkupsavedsearch</strong>".', $result->headline);
     }
 
     private function buildData() {

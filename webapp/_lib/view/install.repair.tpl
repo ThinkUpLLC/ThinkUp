@@ -11,7 +11,7 @@
           
            <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
                  <p>
-                   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                   <span class="fa fa-check"></span>
                     <strong>Success!</strong>. ThinkUp's table repairs are complete. Please remove <code>$THINKUP_CFG['repair'] = true;</code>
                       from config.inc.php to prevent this page from being used by unauthorized users.
                     </p>

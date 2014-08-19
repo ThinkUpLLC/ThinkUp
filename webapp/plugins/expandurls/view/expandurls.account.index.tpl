@@ -3,7 +3,8 @@
     <span class="pull-right">{insert name="help_link" id='expandurls'}</span>
     <h1>
         <img src="{$site_root_path}plugins/expandurls/assets/img/plugin_icon.png" class="plugin-image">
-        Expand URLs Plugin
+        <i class="fa fa-link text-muted"></i>
+        Expand URLs
     </h1>
 
     <p>Expands shortened links, gathers link image thumbnails, and captures link clickthrough rates.</p>

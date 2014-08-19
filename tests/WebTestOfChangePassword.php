@@ -56,8 +56,8 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
-        $this->assertText('Your password has been updated.');
+        $this->click('Change');
+        $this->assertPattern('/Your password has been updated\./');
 
         $this->click("Log Out");
         $this->get($this->url.'/session/login.php');
@@ -83,7 +83,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('oldpass', 'secretpassworddd');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
+        $this->click('Change');
         $this->assertText('Password is incorrect.');
     }
 
@@ -100,7 +100,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Account');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
+        $this->click('Change');
         $this->assertText('Password is incorrect.');
     }
 
@@ -118,7 +118,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword2');
-        $this->click('Change password');
+        $this->click('Change');
         $this->assertText('New passwords did not match. Your password has not been changed.');
     }
 
@@ -136,7 +136,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'dd');
         $this->setField('pass2', 'dd');
-        $this->click('Change password');
+        $this->click('Change');
         $this->assertText('Your new password must be at least 8 characters and contain both numbers and letters. '.
         'Your password has not been changed.');
     }

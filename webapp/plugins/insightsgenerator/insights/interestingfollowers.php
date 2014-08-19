@@ -1,14 +1,14 @@
 <?php
 /*
  Plugin Name: Interesting Followers
- Description: New least likely and verified followers.
+ Description: New least likely, verified, and local followers.
  */
 
 /**
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/interestingfollowers.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright 2012-2014 Gina Trapani, Nilaksh Das, Chris Moyer
  *
  * LICENSE:
  *
@@ -26,52 +26,189 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani, Nilaksh Das
+ * @copyright 2012-2014 Gina Trapani, Nilaksh Das, Chris Moyer
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  * @author Nilaksh Das <nilakshdas@gmail.com>
+ * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 
 class InterestingFollowersInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $filename = basename(__FILE__, ".php");
+
+        $my_insight = new Insight();
+        $my_insight->instance_id = $instance->id;
+        $my_insight->date = $this->insight_date; //date of the data this insight applies to
+
+        $my_insight->text = '';
+        $my_insight->filename = basename(__FILE__, ".php");
         $follow_dao = DAOFactory::getDAO('FollowDAO');
 
-        // Least likely followers based on follower-to-followee ratio
+        // Least likely followers who are not verified, based on follower-to-followee ratio
+        // We grab up to 10 possibilities, then filter for some spam account criteria and take the top 3 that remain
         $least_likely_followers = $follow_dao->getLeastLikelyFollowersByDay($instance->network_user_id,
-        $instance->network, 0, 3);
+            $instance->network, 0, 10);
+        $least_likely_followers = array_filter($least_likely_followers, array($this, 'filterFollowers'));
+        $least_likely_followers = array_slice($least_likely_followers, 0, 3);
 
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
-                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
-                $this->insight_date, "Standouts:", '<strong>'.sizeof($least_likely_followers).
-                " interesting users</strong> ". "followed $this->username.", $filename, Insight::EMPHASIS_LOW,
-                serialize($least_likely_followers));
+                $my_insight->headline = '<strong>'.sizeof($least_likely_followers).
+                    " interesting people</strong> ". "followed $this->username.";
+                $my_insight->slug = 'least_likely_followers';
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->setPeople($least_likely_followers);
             } else {
-                $this->insight_dao->insertInsightDeprecated('least_likely_followers', $instance->id,
-                $this->insight_date, "Standout:", "An interesting user followed $this->username.", $filename,
-                Insight::EMPHASIS_LOW, serialize($least_likely_followers));
+                $follower = $least_likely_followers[0];
+                $name = $this->getFollowerName($follower);
+                $my_insight->headline = "Hey, did you see that " .$name . " followed $this->username?";
+                $my_insight->slug = 'least_likely_followers';
+                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->setPeople($least_likely_followers);
+                $my_insight->header_image = $follower->avatar;
             }
         }
 
         // Verified followers
         $verified_followers = $follow_dao->getVerifiedFollowersByDay($instance->network_user_id, $instance->network, 0,
-        3);
+            3);
 
         if (sizeof($verified_followers) > 0 ) { //if not null, store insight
             if (sizeof($verified_followers) > 1) {
-                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
-                "Verified followers!", '<strong>'.sizeof($verified_followers)." verified users</strong> ".
-                "followed $this->username.", $filename, Insight::EMPHASIS_LOW, serialize($verified_followers));
+                $my_insight->slug = 'verified_followers';
+                $my_insight->headline = '<strong>'.sizeof($verified_followers)." verified users</strong> ".
+                    "followed $this->username!";
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->setPeople($verified_followers);
             } else {
-                $this->insight_dao->insertInsightDeprecated('verified_followers', $instance->id, $this->insight_date,
-                "Verified follower!", "A verified user followed $this->username.", $filename, Insight::EMPHASIS_LOW,
-                serialize($verified_followers));
+                $follower = $verified_followers[0];
+                $name = $this->getFollowerName($follower);
+                $my_insight->slug = 'verified_followers';
+                $my_insight->headline = 'Wow: <strong>'.$name."</strong>, a verified user, followed $this->username.";
+                $my_insight->header_image = $verified_followers[0]->avatar;
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
+                $my_insight->setPeople($verified_followers);
+            }
+
+            $total_verified = $follow_dao->getVerifiedFollowerCount($instance->network_user_id, $instance->network);
+            if ($total_verified > sizeof($verified_followers)) {
+                $my_insight->text = "That makes a total of <strong>$total_verified verified followers</strong>.";
+            }
+            $my_insight->header_image = 'https://www.thinkup.com/assets/images/insights/2014-07/verified.png';
+        }
+        if ($my_insight->headline) {
+            $this->insight_dao->insertInsight($my_insight);
+        }
+
+        //Local followers that are neither verified or least likely
+        if (isset($user->location) && $user->location != "") {
+            $local_followers_to_check = $follow_dao->getFollowersFromLocationByDay($instance->network_user_id,
+                $instance->network, $user->location, 0);
+
+            if (count($local_followers_to_check)) {
+                //Clear out insight vars
+                $my_insight = null;
+                $my_insight = new Insight();
+                $my_insight->instance_id = $instance->id;
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+
+                $my_insight->text = '';
+                $my_insight->filename = basename(__FILE__, ".php");
+
+                //Create list of user IDs that have already appeared in an insight
+                $follower_ids_already_reported_on = array();
+                foreach ($least_likely_followers as $follower) {
+                    $follower_ids_already_reported_on[] = $follower->id;
+                }
+                foreach ($verified_followers as $follower) {
+                    $follower_ids_already_reported_on[] = $follower->id;
+                }
+
+                //Make sure none of the local followers have already been reported on
+                //debug
+                //print_r($follower_ids_already_reported_on);
+                $local_followers = array();
+                foreach ($local_followers_to_check as $follower) {
+                    if (!in_array($follower->id, $follower_ids_already_reported_on) ) {
+                        $local_followers[] = $follower;
+                    }
+                }
+
+                //debug
+                //print_r($local_followers);
+                if (count($local_followers)) {
+                    $headline = "<strong>"
+                    .(count($local_followers) > 1 ? count($local_followers)." people" : "1 person")
+                    ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
+
+                    if (count($local_followers) == 1) {
+                        $header_image = $local_followers[0]->avatar;
+                    } else {
+                        $header_image = '';
+                    }
+
+                    $my_insight = new Insight();
+
+                    //REQUIRED: Set the insight's required attributes
+                    $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                    $my_insight->slug = 'local_followers'; //slug to label this insight's content
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
+                    $my_insight->text = ''; // or just set a strong like "Greetings humans";
+                    $my_insight->header_image = $header_image;
+                    $my_insight->filename = basename(__FILE__, ".php");
+                    $my_insight->emphasis = Insight::EMPHASIS_MED;
+                    $my_insight->setPeople($local_followers);
+                    $this->insight_dao->insertInsight($my_insight);
+                }
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+    }
+
+    /**
+     * Check new followers for various spammy criteria
+     *
+     * @param Follower $follower The follower to examine
+     * @return bool True for OK users, False for Questionable/Spam users
+     */
+    public function filterFollowers($follower) {
+        // Show users that post
+        if ($follower->post_count < 100) {
+            return false;
+        }
+
+        // Show users that take the time to set a profile
+        if (strstr($follower->avatar, 'default_profile') !== false) {
+            return false;
+        }
+
+        // Show users that have info for us to display
+        if (empty($follower->description) || empty($follower->url)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return a string representing a follower's name.
+     * @param User $follower Follower to process
+     * @return str Name
+     */
+    public function getFollowerName($follower) {
+        if (!empty($follower->full_name)) {
+            return $follower->full_name;
+        }
+
+        $name = $follower->username;
+        if ($follower->network == 'twitter') {
+            $name = '@'. $name;
+        }
+
+        return $name;
     }
 }
 

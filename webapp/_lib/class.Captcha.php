@@ -72,8 +72,12 @@ class Captcha {
                 break;
             default:
                 $config = Config::getInstance();
-                return "<input name=\"user_code\" id=\"user_code\" type=\"text\" class=\"span1\"><img src=\"".
-                $config->getValue('site_root_path'). "session/captcha-img.php\" style=\"padding-left : 20px;\">&nbsp;";
+                return
+                "<label class=\"control-label\" for=\"user_code\">".
+                "<img src=\"".$config->getValue('site_root_path'). "session/captcha-img.php\" class=\"img-responsive\" style=\"\">".
+                "</label>".
+                "<input name=\"user_code\" id=\"user_code\" type=\"text\" class=\"form-control\" required ".
+                "placeholder=\"Please enter the code.\">";
                 break;
         }
     }

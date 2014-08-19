@@ -1,224 +1,284 @@
-{include file="_header.tpl" enable_tabs=1 enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{if isset($thinkupllc_endpoint)}
+  {include file="account.tucom.tpl"}
+{else}
+{include file="_header.tpl" body_classes="settings menu-open" body_id="settings-main"}
+{include file="_navigation.tpl"}
 
-<div class="container">
 
-<div class="row">
-    <div class="span3">
-      <div id="tabs" class="embossed-block">
-        <ul class="nav nav-tabs nav-stacked">
+  <div class="container">
 
-          <li><a href="#plugins"><i class="icon icon-list-alt"></i> Plugins <i class="icon-chevron-right"></i></a>
+  {if $body}
+    {include file="_usermessage-v2.tpl" field="account"}
+    {$body}
+  {else}
 
-          </li>
-          {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings"><i class="icon icon-cogs"></i> Application <i class="icon-chevron-right"></i></a></li>{/if}
-          <li><a href="#instances"><i class="icon icon-lock"></i> Account <i class="icon-chevron-right"></i></a></li>
-          {if $user_is_admin}<li><a href="#ttusers"><i class="icon icon-group"></i> Users <i class="icon-chevron-right"></i></a></li>{/if}
-        </ul>
-      </div>
-    </div><!--/span3-->
-    <div class="span9">
-        <div class="white-card">
+    {include file="_usermessage.tpl" field="preferences"}
+    <form name="setPreferences" id="setPreferences" class="big-bottom-margin" action="index.php?m=manage" method="POST">
 
-        <div class="section" id="plugins">
+      <header class="container-header">
+        <h1>Settings</h1>
+      </header>
 
-            {include file="_usermessage.tpl" field="account"}
-              {if $installed_plugins}
-                {foreach from=$installed_plugins key=ipindex item=ip name=foo}
-                  {if $smarty.foreach.foo.first}
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>&nbsp;</th>
-                          <th><i class="icon icon-list-alt icon-2x icon-muted pull-left"></i></th>
-                          {if $user_is_admin}<th class="action-button"><i class="icon-cog icon-2x icon-muted"></i></th>{/if}
-                        </tr>
-                      </thead>
-                  {/if}
-                  {if $user_is_admin || $ip->is_active}
-                        <tr>
-                            <td>
-                                <img src="{$site_root_path}plugins/{$ip->folder_name|get_plugin_path}/{$ip->icon}" class="pull-right">
-                            </td>
-                            <td>
-                                <p class="lead" style="padding-left: 0px; margin : 0px;">
-                                <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin"><span id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                                </p>
-                                <span class="muted">{$ip->description}</span>
-                            </td>
-                    {if $user_is_admin}
-                      <td class="action-button">
-                      <span id="spanpluginactivation{$ip->id}" style="margin-top : 4px;">
-                          <a href="{$site_root_path}account/?p={$ip->folder_name|get_plugin_path}#manage_plugin" class="manage_plugin btn {if !$ip->isConfigured()}btn-primary{/if}">{if $ip->isConfigured()} <i class="icon-cog "></i> Configure{else}<i class="icon-warning-sign"></i> Set Up{/if}</a>
-                      </span>
-                      <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
-                      </td>
-                    {/if}
-                      </tr>
-                  {/if}
+      <fieldset class="fieldset-personal fieldset-no-header">
+        <div class="form-group">
+          <label class="control-label" for="notificationfrequency">Insights email</label>
+          <div class="form-control picker">
+          <i class="fa fa-chevron-down icon"></i>
+          <select name="notificationfrequency">
+         {foreach from=$notification_options item=description key=key}
+             <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
+         {/foreach}
+         </select>
+         </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="control-timezone">Time zone</label>
+          <div class="form-control picker">
+            <i class="fa fa-chevron-down icon"></i>
+            <select id="control-timezone" name="timezone">
+              <option value=""{if $current_tz eq ''} selected{/if}>Select a time zone:</option>
+              {foreach from=$tz_list key=group_name item=group}
+                <optgroup label="{$group_name}">
+                {foreach from=$group item=tz}
+                  <option id="tz-{$tz.display}" value='{$tz.val}'{if $owner->timezone eq $tz.val} selected{/if}>{$tz.display}</option>
                 {/foreach}
-                    </table>
-              {/if}
-        </div> <!-- end #plugins -->
-
-        <div class="section" id="manage_plugin" {if $body}style="display: block"{/if}>
-            <a href="?m=manage" class="btn btn-mini"><i class="icon-chevron-left icon-muted"></i> Back to plugins</a>
-            {if $body}
-              {$body}
+                </optgroup>
+              {/foreach}
+            </select>
+            {if $owner->timezone eq 'UTC'}
+            <script type="text/javascript">
+            {literal}
+            var tz_info = jstz.determine();
+            var regionname = tz_info.name().split('/');
+            var tz_option_id = '#tz-' + regionname[1];
+            if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
+                if( $(tz_option_id) ) {
+                    $('#timezone').val( tz_info.name());
+                }
+            }
+            {/literal}
+            </script>
             {/if}
-        </div>
-
-        {if $user_is_admin}
-        <div class="section thinkup-canvas clearfix" id="app_settings">
-
-                
-          <span class="pull-right">{insert name="help_link" id='backup'}</span>
-          <h3><i class="icon-download icon-muted"></i> Back Up and Export Data</h3>
-          <p style="padding-left : 20px;">
-            <a href="{$site_root_path}install/backup.php" class="btn"><i class="icon icon-download-alt"></i> Back up ThinkUp's entire database</a>
-            Recommended before upgrading ThinkUp.
-          </p>
-
-          <p style="padding-left : 20px; padding-bottom : 30px;">
-            <a href="{$site_root_path}install/exportuserdata.php" class="btn"><i class="icon icon-user"></i> Export a single user account's data</a>
-                For transfer into another existing ThinkUp database.
-          </p>
-
-
-          <div class="alert" id="app_setting_loading_div">
-            <i class="icon-spinner icon-spin icon-2x"></i> Loading application settings...<br /><br />
-          </div>
-          <div id="app_settings_div" style="display: none;">
-            {include file="account.appconfig.tpl"}
-          </div>
-          <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
-          <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
-                
-        </div> <!-- end #app_setting -->
-        {/if}
-
-        <div class="section" id="instances">
-          {include file="_usermessage.tpl" field='password'}
-          <span class="pull-right">{insert name="help_link" id='account'}</span>
-          <h3><i class="icon-key icon-muted"></i> Password</h3>
-          <form name="changepass" id="changepass" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-            <div class="control-group input-prepend">
-              <label for="oldpass" class="control-label">Current password</label>
-              <div class="controls">
-                <span class="add-on"><i class="icon-key"></i></span>
-                <input name="oldpass" type="password" id="oldpass">{insert name="csrf_token"}<!-- reset password -->
-              </div>
-            </div>
-            <div class="control-group">
-                    <label class="control-label" for="password">New Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="pass1" id="password"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
-                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
-                        </span>
-                        <span class="help-inline"></span>
-
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="confirm_password">Confirm&nbsp;new Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>            
-                            <input type="password" name="pass2" id="confirm_password" required 
-                             class="password" 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
-                            data-validation-match-match="pass1" 
-                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
-                        </span>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-            <div class="control-group">
-              <div class="controls">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="btn btn-primary">
-              </div>
-            </div>
-          </form>
-    <br><br>
-    {include file="_usermessage.tpl" field='notifications'}
-    <h3><i class="icon-calendar icon-muted"></i> Notification Frequency</h3><br />
-    <form name="setEmailNotificationFrequency" id="setEmailNotificationFrequency" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-        <div class="control-group">
-           <label class="control-label" for="update_notification_frequency">Get insights via email:</label>
-           <div class="controls">
-             <select name="notificationfrequency">
-             {foreach from=$notification_options item=description key=key}
-                 <option value="{$key}" {if $key eq $owner->email_notification_frequency}selected="selected"{/if}>{$description}</option>
-             {/foreach}
-             </select>
           </div>
         </div>
-        <div class="control-group">
-          <div class="controls">
-            {insert name="csrf_token"}
-            <input type="submit" name="updatefrequency" value="Save" class="btn btn-primary">
-          </div>
-         </div>
+
+           {insert name="csrf_token"}
+      </fieldset>
+      <input type="submit" value="Update" name="updatepreferences" class="btn btn-default btn-submit">
     </form>
-    <br><br>
 
+    <form name="changepass" id="changepass" class="big-bottom-margin" method="post"
+      action="index.php?m=manage#changepass">
 
-    {include file="_usermessage.tpl" field='timezone'}
-     <form name="setTimezone" id="setTimezone" class="form-horizontal" method="post" action="index.php?m=manage#instances">
-         <div class="control-group">
-            <label class="control-label" for="update_timezone">Your Time Zone:</label>
-            <div class="controls">
-              <select name="timezone" id="timezone">
-              <option value=""{if $owner->timezone eq 'UTC'} selected{/if}>Select a time zone:</option>
-                {foreach from=$tz_list key=group_name item=group}
-                  <optgroup label='{$group_name}'>
-                    {foreach from=$group item=tz}
-                      <option id="tz-{$tz.display}" value='{$tz.val}'{if $owner->timezone eq $tz.val} selected{/if}>{$tz.display}</option>
-                    {/foreach}
-                  </optgroup>
-                {/foreach}
-              </select>
-              {if $owner->timezone eq 'UTC'}
-              <script type="text/javascript">
-              {literal}
-              var tz_info = jstz.determine();
-              var regionname = tz_info.name().split('/');
-              var tz_option_id = '#tz-' + regionname[1];
-              if( $('#timezone option[value="' + tz_info.name() + '"]').length > 0) {
-                  if( $(tz_option_id) ) {
-                      $('#timezone').val( tz_info.name());
-                  }
-              }
-              {/literal}
-              </script>
-              {/if}
-           </div>
-         </div>
-         <div class="control-group">
-           <div class="controls">
-             {insert name="csrf_token"}
-             <input type="submit" name="updatetimezone" value="Save" class="btn btn-primary">
-           </div>
+      <fieldset class="fieldset-password">
+        <header>
+          <h2>Change Password</h2>
+        </header>
+        {include file="_usermessage.tpl" field='password'}
+        <div class="form-group">
+          <label class="control-label" for="control-password-current">Current</label>
+          <input type="password" class="form-control" id="control-password-current" name="oldpass" required>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="control-password-new">New</label>
+          <input type="password" class="form-control" id="control-password-new" name="pass1" required
+            data-validation-required-message="You'll need
+              a enter a password of at least 8 characters."
+            data-validation-pattern-message="Must be at
+              least 8 characters, with both numbers &amp; letters.">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="control-password-verify">Verify New</label>
+          <input type="password" class="form-control" id="control-password-verify" name="pass2" required
+            data-validation-required-message="Password confirmation is required."
+            data-validation-match-match="pass1"
+            data-validation-match-message="Make sure this
+              matches the password you entered above." >
+        </div>
+      </fieldset>
+      {insert name="csrf_token"}
+      <input type="submit" value="Change" name="changepass" class="btn btn-default btn-submit">
+    </form>
+
+    <div class="settings-set settings-set-simple">
+      <header>
+        <h2>Plugins</h2>
+      </header>
+
+      {if $installed_plugins}
+      <ul class="list-group list-group-plugins">
+
+        {foreach from=$installed_plugins key=ipindex item=ip name=foo}
+        <li class="list-group-item">
+          <div class="account-label">
+            {if !$ip->isConfigured()}
+              <i class="icon fa fa-{$ip->icon} fa-fw fa-2x text-danger"></i>
+            {else}
+              <i class="icon fa fa-{$ip->icon} fa-fw fa-2x text-primary"></i>
+            {/if}
+
+            <a href="?p={$ip->folder_name|get_plugin_path}#manage_plugin"
+              class="manage_plugin {if !$ip->isConfigured()}text-danger{/if}">
+              <span class="plugin-name" id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+
+            <span style="display: none;" class='linkbutton' id="messageactive{$ip->id}"></span>
+
           </div>
-     </form>
-     <br><br>
 
-    <span class="pull-right">{insert name="help_link" id='rss'}</span>
-    <h3><i class="icon-refresh icon-muted"></i> Automate ThinkUp Data Capture</h3><br />
-    
-    <legend>RSS</legend>
-    <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
-    
-    <p><a href="{$rss_crawl_url}" class="btn"><i class="icon icon-rss"></i> Secret ThinkUp Update Feed</a></p>
-    
-    <legend>Scheduling</legend>
-    <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
-    <p>
-      <code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code>
+        </li>
+        {/foreach}
+
+      </ul>
+      {/if}
+    </div>
+
+    {if $user_is_admin}
+    <div class="settings-set settings-set-simple text-center">
+      <header>
+        <h2>Backup &amp; Export</h2>
+      </header>
+
+      <p>Download a copy of your entire database</p>
+      <a href="{$site_root_path}install/backup.php" class="show-section btn btn-default">Back up ThinkUp</a>
+      <p>Transfer a single account</p>
+      <a href="{$site_root_path}install/exportuserdata.php" class="show-section btn btn-default">Export a ThinkUp account</a>
+    </div>
+
+    <form id="app-settings-form" name="app_settings" method="post"
+      action="{$site_root_path}session/app_settings.php" onsubmit="return false">
+
+      <header class="container-header">
+        <h1>Application Settings</h1>
+      </header>
+
+      <div class="alert alert-error" id="settings_error_message_error" style="display: none;">
+        <span class="fa fa-alert"></span>
+        <span id="settings_error_message"></span>
+      </div>
+
+      <div class="alert alert-success"  id="settings_success" style="display: none;">
+        <span class="fa fa-check"></span>
+        Settings saved!
+      </div>
+
+      <fieldset id="fieldset-test-stuff">
+        <header>
+          <h2>Test Stuff Out</h2>
+        </header>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_subscribed_to_beta" id="is_subscribed_to_beta" checked value="true">
+          <label class="control-label" for="is_subscribed_to_beta">Enable beta upgrades</label>
+          <span class="help-block">Test bleeding edge, beta upgrades. May require command line server access. Proceed at your own risk.</span>
+        </div>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_log_verbose" id="is_log_verbose" value="true">
+          <label class="control-label" for="is_log_verbose">Enable developer log</label>
+          <span class="help-block">See the verbose, unformatted developer log on the Capture Data screen.</span>
+        </div>
+      </fieldset>
+
+      <fieldset id="fieldset-people">
+        <header>
+          <h2>Let People In</h2>
+        </header>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_registration_open" id="is_registration_open" value="true">
+          <label class="control-label" for="is_registration_open">Open registration to new ThinkUp users</label>
+          <span class="help-block">Set whether or not your site's registration page is available and accepts new user registrations.</span>
+        </div>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="recaptcha_enable" id="recaptcha_enable" value="true">
+          <label class="control-label" for="recaptcha_enable">Enable reCAPTCHA</label>
+          <span class="help-block">Add reCAPTCHA to ThinkUp's registration form. <a href="https://www.google.com/recaptcha">Get your reCAPTCHA keys here</a>.</span>
+        </div>
+
+        <div id="recaptcha_enable_deps" style="display: none;">
+          <div class="form-group">
+            <label class="control-label" for="recaptcha_public_key">Public Key</label>
+            <input name="recaptcha_public_key" type="text" id="recaptcha_public_key" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="recaptcha_private_key">Private Key</label>
+            <input name="recaptcha_private_key" type="text" id="recaptcha_private_key" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="default_instance">Default service user</label>
+          <div class="form-control picker">
+            <i class="fa fa-chevron-down icon"></i>
+            <select name="default_instance" id="default_instance">
+              <option value="0">Last updated</option>
+              {foreach from=$public_instances item=pi}
+                <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
+              {/foreach}
+            </select>
+          </div>
+          <span class="help-block">Set the service user to display by default. {insert name="help_link" id="default_service_user"}</span>
+        </div>
+      </fieldset>
+
+      <fieldset id="fieldset-privacy">
+        <header>
+          <h2>Don't Share Data</h2>
+        </header>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_api_disabled" id="is_api_disabled" value="true">
+          <label class="control-label" for="is_api_disabled">Disable the JSON API</label>
+          <span class="help-block">Set whether or not your site's data is available via ThinkUp's JSON API. <a href="http://thinkup.com/docs/userguide/api/posts/index.html">Learn more...</a></span>
+        </div>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_embed_disabled" id="is_embed_disabled" value="true">
+          <label class="control-label" for="is_embed_disabled">Disable thread embeds</label>
+          <span class="help-block">Set whether or not a user can embed a ThinkUp thread onto another web site.</span>
+        </div>
+
+        <div class="form-group form-group-toggle">
+          <input type="checkbox" class="form-control" name="is_opted_out_usage_stats" id="is_opted_out_usage_stats" value="true">
+          <label class="control-label" for="is_opted_out_usage_stats">Disable usage reporting</label>
+          <span class="help-block">Usage reporting helps us improve ThinkUp. <a href="http://thinkup.com/docs/userguide/settings/application.html#disable-usage-reporting">Learn more...</a></span>
+        </div>
+      </fieldset>
+
+      <div style="text-align: center" id="save_setting_image">
+          <img id="save_setting_image" src="{$site_root_path}assets/img/loading.gif" width="50" height="50"
+          style="display: none; margin: 10px;"/>
+      </div>
+
+      <input type="submit" id="app-settings-save" name="Submit" value="Save Settings" class="btn btn-default btn-submit">
+    </form>
+
+    <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
+    {/if}{* end admin stuff *}
+
+    <header class="container-header">
+      <h1>Automate ThinkUp Data Capture</h1>
+      <div class="text-center">{insert name="help_link" id='rss'}</div>
+    </header>
+
+    <div class="settings-set settings-set-simple">
+      <header>
+        <h2>RSS</h2>
+      </header>
+
+      <p>ThinkUp can capture data automatically if you subscribe to this secret RSS feed URL in your favorite newsreader.</p>
+      <p class="text-center"><a href="{$rss_crawl_url}" class="btn"><i class="fa fa-rss"></i> Secret ThinkUp Update Feed</a></p>
+    </div>
+
+    <div class="settings-set settings-set-simple">
+      <header>
+        <h2>Scheduling</h2>
+      </header>
+
+      <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)</p>
+
+      <pre class="pre-scrollable" id="clippy_2988">{$cli_crawl_command}</pre>
 
       <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="100"
@@ -245,336 +305,112 @@
              wmode="opaque"
       />
       </object>
-    </p>
-    
-
-        <legend>Your API Key</legend>
-              {include file="_usermessage.tpl" field='api_key'}
-              <strong>Your Current ThinkUp API Key:</strong>
-              <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
-              <span id="show_api_key">
-              <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
-              Click to view</a>
-              </span>
-    
-              <p>Accidentally share your secret RSS URL?</p>
-    
-              <form method="post" action="index.php?m=manage#instances" id="api-key-form">
-                <input type="hidden" name="reset_api_key" value="Reset API Key" />
-                <span id="apikey_conf" style="display: none;">
-                Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
-                </span>
-                <input type="button" value="Reset Your API Key" 
-                class="btn btn-warning"
-                {literal}
-                onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
-                {/literal}
-                {insert name="csrf_token"}<!-- reset api_key -->
-              </form>
-        </div> <!-- end #instances -->
-
-    {if $user_is_admin}
-      <div class="section" id="ttusers">
-
-     <div class="thinkup-canvas clearfix">
-         <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-        <h3><i class="icon-user icon-muted"></i> Invite New User</h3>
-        {include file="_usermessage.tpl" field='invite'}
-          <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
-                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="btn btn-primary">
-          </form>
-        </div>
-
-      <h3><i class="icon-group icon-muted"></i> Registered Users</h3>
-
-    <table class="table">
-{foreach from=$owners key=oid item=o name=oloop}
-  {if $smarty.foreach.oloop.first}
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Activate</th>
-          <th>Admin</th>
-        </tr>
-      </thead>
-  {/if}
-  
-      <tr>
-        <td>
-          <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
-          <small>{$o->email|filter_xss}</small>
-          <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
-           {if $o->instances neq null}
-           <br><br>Service users:
-           <span style="color:#666"><br><small>
-            {foreach from=$o->instances key=iid item=i}
-                {$i->network_username|filter_xss} | {$i->network|capitalize}
-                {if !$i->is_active} (paused){/if}<br>
-            {/foreach}
-          {else}
-             &nbsp;
-          {/if}
-          </small></span>
-        </td>
-        <td>
-          {if $o->id neq $owner->id}
-          <span id="spanowneractivation{$o->id}">
-          <input type="submit" name="submit" class="btn {if $o->is_activated}btn-danger{else}btn-success{/if} toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
-          </span>
-          <span style="display: none;" class="linkbutton" id="messageowneractive{$o->id}"></span>
-          {/if}
-        </td>
-        <td>
-          {if $o->id neq $owner->id && $o->is_activated}
-          <span id="spanowneradmin{$o->id}">
-          <input type="submit" name="submit" class="btn {if $o->is_admin}btn-danger{else}btn-success{/if} toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
-          </span>
-          <span style="display: none;" class="linkbutton" id="messageadmin{$o->id}"></span>
-          {/if}
-        </td>
-      </tr>
-{/foreach}
-    </table>
-
-      </div> <!-- end #ttusers -->
-
-        </div>
-    {/if} <!-- end is_admin -->
     </div>
-</div>
 
-</div>
+    <div class="settings-set settings-set-simple">
+      <header>
+        <h2>Your API Key</h2>
+      </header>
+
+      {include file="_usermessage.tpl" field='api_key'}
+
+      <p class="text-center">Your current ThinkUp API key:</p>
+      <p class="text-center">
+        <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
+        <a id="show_api_key" href="#" class="btn btn-default linkbutton"
+        onclick="$('#show_api_key').hide(); $('#hidden_api_key').show(); return false;">
+        Click to view</a>
+        </span>
+      </p>
+      <p class="text-center">Accidentally share your secret RSS URL?</p>
+      <form method="post" action="index.php?m=manage#instances" id="api-key-form">
+        <input type="hidden" name="reset_api_key" value="Reset API Key" />
+        <span id="apikey_conf" style="display: none;">
+        Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
+        </span>
+        <input type="button" value="Reset Your API Key"
+        class="btn btn-warning center-block"
+        {literal}
+        onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
+        {/literal}
+        {insert name="csrf_token"}<!-- reset api_key -->
+      </form>
+    </div>
+
+      {if $user_is_admin}
+        <div class="section" id="ttusers">
+          <div class="thinkup-canvas clearfix">
+            <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
+              <h3><i class="fa fa-user icon-muted"></i> Invite New User</h3>
+              {include file="_usermessage.tpl" field='invite'}
+              <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
+                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation"
+                class="btn btn-primary">
+              </form>
+            </div>
+          </div>
+
+          <h3><i class="fa fa-group icon-muted"></i> Registered Users</h3>
+
+          <table class="table">
+          {foreach from=$owners key=oid item=o name=oloop}
+            {if $smarty.foreach.oloop.first}
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Activate</th>
+                <th>Admin</th>
+              </tr>
+            </thead>
+            {/if}
+
+            <tr>
+              <td>
+                <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name|filter_xss}</span><br>
+                <small>{$o->email|filter_xss}</small>
+                <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
+                 {if $o->instances neq null}
+                 <br><br>Service users:
+                 <span style="color:#666"><br><small>
+                  {foreach from=$o->instances key=iid item=i}
+                      {$i->network_username|filter_xss} | {$i->network|capitalize}
+                      {if !$i->is_active} (paused){/if}<br>
+                  {/foreach}
+                {else}
+                   &nbsp;
+                {/if}
+                </small></span>
+              </td>
+              <td>
+                {if $o->id neq $owner->id}
+                <span id="spanowneractivation{$o->id}">
+                <input type="submit" name="submit" class="btn {if $o->is_activated}btn-danger{else}btn-success{/if} toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+                </span>
+                <span style="display: none;" class="linkbutton" id="messageowneractive{$o->id}"></span>
+                {/if}
+              </td>
+              <td>
+                {if $o->id neq $owner->id && $o->is_activated}
+                <span id="spanowneradmin{$o->id}">
+                <input type="submit" name="submit" class="btn {if $o->is_admin}btn-danger{else}btn-success{/if} toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
+                </span>
+                <span style="display: none;" class="linkbutton" id="messageadmin{$o->id}"></span>
+                {/if}
+              </td>
+            </tr>
+          {/foreach}
+          </table>
+        </div> <!-- end #ttusers -->
+
+        {/if} <!-- end is_admin -->
+  {/if}<!-- /if no $body -->
+
+  </div><!-- end container -->
+
 
 <script type="text/javascript">
-  var show_plugin = {if $force_plugin}true{else}false{/if};
-  {literal}
-$(function() {
-    $(".btnPub").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $('#div' + u).html("<span class='alert alert-success' id='messagepub" + u + "'></span>");
-          $('#messagepub' + u).html("Set to public!").hide().fadeIn(1500, function() {
-            $('#messagepub' + u);
-          });
-        }
-      });
-      return false;
-    });
-
-    $(".btnPriv").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
-        data: dataString,
-        success: function() {
-          $('#div' + u).html("<span class='alert alert-success' id='messagepriv" + u + "'></span>");
-          $('#messagepriv' + u).html("Set to private!").hide().fadeIn(1500, function() {
-            $('#messagepriv' + u);
-          });
-        }
-      });
-      return false;
-    });
-  });
-
-  $(function() {
-    $(".btnPlay").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
-        data: dataString,
-        success: function() {
-          $('#divactivate' + u).html("<span class='alert alert-success' id='messageplay" + u + "'></span>");
-          $('#messageplay' + u).html("Started!").hide().fadeIn(1500, function() {
-            $('#messageplay' + u);
-          });
-        }
-      });
-      return false;
-    });
-
-    $(".btnPause").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
-        data: dataString,
-        success: function() {
-          $('#divactivate' + u).html("<span class='alert alert-success' id='messagepause" + u + "'></span>");
-          $('#messagepause' + u).html("Paused!").hide().fadeIn(1500, function() {
-            $('#messagepause' + u);
-          });
-        }
-      });
-      return false;
-    });
-  });
-
-
-    $(function() {
-    var activateOwner = function(u) {
-      //removing the "user" from id here to stop conflict with plugin    
-      u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageowneractive' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#messageowneractive' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'inline');
-          $('#user' + u).val('Deactivate');
-          $('#spanownernametext' + u).css('display', 'none');
-          $('#user' + u).removeClass('btn-success').addClass('btn-danger');
-          $('#userAdmin' + u).show();
-          setTimeout(function() {
-              $('#messageowneractive' + u).css('display', 'none');
-              $('#spanowneractivation' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var deactivateOwner = function(u) {
-      //removing the "user" from id here to stop conflict with plugin
-      u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageowneractive' + u).html("Deactivated!").hide().fadeIn(150, function() {
-            $('#messageowneractive' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'none');
-          $('#spanownernametext' + u).css('display', 'inline');
-          $('#user' + u).val('Activate');
-          $('#user' + u).removeClass('btn-danger').addClass('btn-success');
-          $('#userAdmin' + u).hide();
-          setTimeout(function() {
-              $('#messageowneractive' + u).css('display', 'none');
-              $('#spanowneractivation' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var promoteOwner = function(u) {
-      //removing the "userAdmin" from id here to stop conflict with plugin    
-      u = u.substr(9);
-      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneradmin' + u).css('display', 'none');
-          $('#messageadmin' + u).html("Promoted!").hide().fadeIn(1500, function() {
-            $('#messageadmin' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'inline');
-          $('#userAdmin' + u).val('Demote');
-          $('#spanownernametext' + u).css('display', 'none');
-          $('#userAdmin' + u).removeClass('btn-success').addClass('btn-danger');
-          setTimeout(function() {
-              $('#messageadmin' + u).css('display', 'none');
-              $('#spanowneradmin' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    var demoteOwner = function(u) {
-      //removing the "userAdmin" from id here to stop conflict with plugin
-      u = u.substr(9);
-      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
-        data: dataString,
-        success: function() {
-          $('#spanowneradmin' + u).css('display', 'none');
-          $('#messageadmin' + u).html("Demoted!").hide().fadeIn(1500, function() {
-            $('#messageadmin' + u);
-          });
-          $('#spanownernamelink' + u).css('display', 'none');
-          $('#spanownernametext' + u).css('display', 'inline');
-          $('#userAdmin' + u).val('Promote');
-          $('#userAdmin' + u).removeClass('btn-danger').addClass('btn-success');
-          setTimeout(function() {
-              $('#messageadmin' + u).css('display', 'none');
-              $('#spanowneradmin' + u).hide().fadeIn(1500);
-            },
-            2000
-          );
-        }
-      });
-      return false;
-    };
-
-    $(".toggleOwnerActivationButton").click(function() {
-      if($(this).val() == 'Activate') {
-        activateOwner($(this).attr("id"));
-      } else {
-        deactivateOwner($(this).attr("id"));
-      }
-    });
-
-    $(".toggleOwnerAdminButton").click(function() {
-      if($(this).val() == 'Promote') {
-        promoteOwner($(this).attr("id"));
-      } else {
-        demoteOwner($(this).attr("id"));
-      }
-    });
-
-    $('.manage_plugin').click(function (e) {
-      var url = $(this).attr('href');
-      var p = url.replace(/.*p=/, '').replace(/#.*/, '');;
-      if (window.location.href.indexOf("="+p) >= 0) {
-        $('.section').hide();
-        $('#manage_plugin').show();
-        e.preventDefault();
-      }
-    });
-    if ((show_plugin && (!window.location.hash || window.location.hash == '' || window.location.hash == '#_=_' ))
-    || (window.location.hash && window.location.hash == '#manage_plugin')) {
-      $('.section').hide();
-      $('#manage_plugin').show();
-    }
-
-  });
-
-  {/literal}
+var show_plugin = {if $force_plugin}true{else}false{/if};
 </script>
 
-{include file="_footer.tpl" linkify=0 enable_bootstrap=1}
+{include file="_footer.tpl" linkify=0}
+{/if}

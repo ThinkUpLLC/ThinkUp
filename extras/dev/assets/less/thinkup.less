@@ -1,0 +1,51 @@
+// Bootstrap helpers
+
+@import "bootstrap_variables.less";
+@import "bootstrap_mixins.less";
+@import "_variables.less";
+@import "_settings.less";
+@import "_account.less";
+
+body {
+   background-color: @gray-lightest;
+   font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 300;
+   font-size: 14px;
+   line-height: 1.286;
+   color: #222;
+   text-rendering: optimizeLegibility;
+}
+
+strong {
+    font-weight: 600;
+}
+
+a {
+    color: @link-color;
+
+    &:hover {
+        color: @link-hover-color;
+    }
+}
+
+
+.container {
+    // Undo Bootstrap defaults
+    padding: @nav-height 0 0;
+    width: 100%;
+}
+
+// Special styles when there are no insights visible in the stream
+.no-insights {
+    min-width: 310px;
+    max-width: 450px;
+    width: 100%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+@import "_navbar.less";
+@import "_footer.less";
+@import "_stream.less";
+@import "_insights.less";
+@import "_buttons.less";

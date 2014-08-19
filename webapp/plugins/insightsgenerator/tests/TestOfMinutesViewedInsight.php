@@ -64,7 +64,7 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightBaselineMySQLDAO();
         $result = $insight_dao->getInsightBaseline('avg_minutes_viewed_all_time', 1, date ('Y-m-d'));
@@ -137,16 +137,14 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
 
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=3>My Great Video 3</a> for a total of <strong>6 minutes, double</strong> the 30-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 6 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -192,15 +190,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed5', 1, date ('Y-m-d', strtotime('-41 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=5>My Great Video 5</a> for a total of <strong>12 minutes, double</strong> the all-time average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 5 for a total of 12 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -244,15 +240,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=3>My Great Video 3</a> for a total of <strong>10 minutes, double</strong> the 90-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 10 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -310,15 +304,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/wat";
-        $text .= "ch?v=3>My Great Video 3</a> for a total of <strong>35 minutes, 5x</strong> the 30-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 35 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -370,15 +362,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=3>My Great Video 3</a> for a total of <strong>20 minutes, 5x</strong> the all-time average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 20 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -430,15 +420,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=3>My Great Video 3</a> for a total of <strong>35 minutes, 5x</strong> the 90-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 35 minutes.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -517,15 +505,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/wat";
-        $text .= "ch?v=3>My Great Video 3</a> for a total of <strong>6 hours, 10x</strong> the 30-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 6 hours.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -598,15 +584,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch";
-        $text .= "?v=3>My Great Video 3</a> for a total of <strong>6 hours, 10x</strong> the all-time average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 6 hours.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -684,15 +668,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Making an impression:');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watch";
-        $text .= "?v=3>My Great Video 3</a> for a total of <strong>1 hour, 10x</strong> the 90-day average.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 1 hour.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -719,15 +701,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high2', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'New all-time high!');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=2>My Great Video 2</a> for a total of <strong>2 hours</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 2 for a total of 2 hours.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -753,15 +733,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high2', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'New 365-day high!');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=2>My Great Video 2</a> for a total of <strong>2 hours</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 2 for a total of 2 hours.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
         $this->assertEqual($result->filename, 'minutesviewed');
     }
@@ -793,15 +771,13 @@ class TestOfMinutesViewedInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'ev';
 
         $insight = new MinutesViewedInsight();
-        $insight->generateInsight($instance, $posts, 1);
+        $insight->generateInsight($instance, null, $posts, 1);
 
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('minutes_viewed_high3', 1, date ('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'New 90-day high!');
-        $text = "Viewers watched <a href=http://plus.google.com/1>ev</a>'s video <a href=http://www.youtube.com/watc";
-        $text .= "h?v=3>My Great Video 3</a> for a total of <strong>2 hours</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "Viewers watched My Great Video 3 for a total of 2 hours.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
         $this->assertEqual($result->filename, 'minutesviewed');
     }

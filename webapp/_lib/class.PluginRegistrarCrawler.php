@@ -90,7 +90,7 @@ class PluginRegistrarCrawler extends PluginRegistrar {
         $global_mutex_name = self::GLOBAL_MUTEX;
 
         // Everyone needs to check the global mutex
-        $lock_successful = $mutex_dao->getMutex($global_mutex_name);
+        $lock_successful = 1; $mutex_dao->getMutex($global_mutex_name); // 1
 
         if ($lock_successful) {
             // Global mutex was free, which means no admin crawls are under way

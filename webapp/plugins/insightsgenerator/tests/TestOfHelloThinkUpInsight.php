@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani, Chris Moyer
  *
  * LICENSE:
  *
@@ -25,8 +25,9 @@
  * Test for the example Hello ThinkUp insight class (and others).
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani, Chris Moyer
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
@@ -36,7 +37,7 @@ require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.In
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/hellothinkupinsight.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/flashbacks.php';
 
-class TestOfHelloThinkUpInsight extends ThinkUpUnitTestCase {
+class TestOfHelloThinkUpInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -49,15 +50,63 @@ class TestOfHelloThinkUpInsight extends ThinkUpUnitTestCase {
     public function testHelloThinkUpInsight() {
         $posts = array();
         $instance = new Instance();
-        $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
-        $hello_thinkup_insight_plugin->generateInsight($instance, $posts, 3);
+        $instance->id = 1;
+        $instance->network_username = 'Katniss Everdeen';
+        $instance->network = 'facebook';
+        $builders = self::setUpPublicInsight($instance);
 
-        $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, '2013-12-21');
+        // We have three random options, so we'll check each one here.
+        TimeHelper::setTime(3);
+        $hello_thinkup_insight_plugin = new HelloThinkUpInsight();
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
         $this->assertEqual($result->headline, 'Ohai');
-        $this->assertEqual($result->text, 'Greetings humans');
+        $this->assertEqual($result->text, 'Greetings, humans');
         $this->assertEqual($result->filename, 'hellothinkupinsight');
         $this->assertNull($result->related_data);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
+
+        TimeHelper::setTime(4);
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
+        $this->assertEqual($result->headline, 'Hello');
+        $this->assertEqual($result->text, 'Greetings, earthlings');
+
+        TimeHelper::setTime(5);
+        $hello_thinkup_insight_plugin->generateInsight($instance, null, $posts, 3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $result = $insight_dao->getInsight('my_test_insight_hello_thinkup', 1, date ('Y-m-d'));
+        $this->assertEqual($result->headline, 'Yo');
+        $this->assertEqual($result->text, 'Greetings, peeps');
+
+        /**
+         * Use this code to output the individual insight's fully-rendered HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight.html
+         */
+        $controller = new InsightStreamController();
+        $_GET['u'] = 'Katniss Everdeen';
+        $_GET['n'] = 'facebook';
+        $_GET['d'] = date ('Y-m-d');
+        $_GET['s'] = 'my_test_insight_hello_thinkup';
+        $results = $controller->go();
+        //Uncomment this out to see web view of insight
+        //$this->debug($results);
+
+        /**
+         * Use this code to output the individual insight's fully-rendered email HTML to file.
+         * Then, open the file in your browser to view.
+         *
+         * $ TEST_DEBUG=1 php webapp/plugins/insightsgenerator/tests/TestOfHelloThinkUpInsight.php
+         * -t testHelloThinkUpInsight > webapp/insight_email.html
+         */
+        $email_insight = $this->getRenderedInsightInEmail($result);
+        //Uncomment this out to see the email view of insight
+        //$this->debug($email_insight);
     }
 }

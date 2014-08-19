@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" itemscope itemtype="http://schema.org/Article">
-<head>
+<head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
     <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
@@ -9,107 +9,78 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$site_root_path}assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{$site_root_path}assets/ico/apple-touch-icon-57-precomposed.png">
 
-{if $enable_bootstrap eq 1}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="{if isset($logged_in_user)}{$logged_in_user}{/if}">
+
+    {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
+    isset($smarty.get.oauth_token) and isset($smarty.get.oauth_verifier)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=twitter">
+    {/if}
+    {if isset($smarty.get.p) and $smarty.get.p eq 'facebook' and
+    isset($smarty.get.code) and isset($smarty.get.state)}
+    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=facebook">
+    {/if}
+
+    {if count($insights) eq 1}
+    <meta property="og:site_name" content="ThinkUp" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@thinkup">
+    <meta name="twitter:domain" content="thinkup.com">
+
+    <meta property="og:url" content="{$thinkup_application_url}?u={$insights[0]->instance->network_username|urlencode_network_username}&n={$insights[0]->instance->network}&d={$insights[0]->date|date_format:'%Y-%m-%d'}&s={$insights[0]->slug}" />
+
+    <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+    <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+    <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
+
+    {capture name=desc_default}Check out {$insights[0]->instance->network_username}'s insight{/capture}
+    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+
+    <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+    <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+    <meta property="og:image:secure" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
+    <meta name="twitter:image:src" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+
+    <meta name="og:image:type" content="image/png">
+    <meta name="twitter:image:width" content="144">
+    <meta name="twitter:image:height" content="144">
+    <meta name="og:image:width" content="144">
+    <meta name="og:image:height" content="144">
+
+    {if ($insights[0]->instance->network eq 'twitter')}
+    <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
+    {/if}
+    {else}
+    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
+    {/if}
+
+
+
+
 
     <!-- styles -->
-    <link href="{$site_root_path}assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{$site_root_path}assets/css/insights.css" rel="stylesheet">
-
-    <!-- IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <script src="{$site_root_path}assets/js/jquery.js"></script>
-    <script src="{$site_root_path}assets/js/bootstrap.js"></script>
-
-    {literal}
-      <script type="text/javascript">
-
-        $(document).ready(function() {
-
-            $(".collapse").collapse();
-            $(function () {
-                $('#settingsTabs a:first').tab('show');
-            })
-
-    {/literal}
-        {if $logged_in_user}
-    {literal}
-            $('#search-keywords').focus(function() {
-                $('#search-refine').dropdown();
-                if ($('#search-keywords').val()) {
-                    $('#search-refine a span.searchterm').text($('#search-keywords').val());
-                }
-            }).blur(function() {
-                $('#search-refine').dropdown();
-            });
-
-            $('#search-keywords').keyup(function() {
-                $('#search-refine a span.searchterm').text($('#search-keywords').val());
-            });
-        });
-
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + encodeURIComponent(_mu);
-        }
-      }
-    {/literal}
-    {else}
-    {literal}
-        });
-    {/literal}
+    <link href="{$site_root_path}assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="{$site_root_path}assets/css/vendor/font-awesome.min.css" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|' rel='stylesheet' type='text/css'>
+    {if isset($thinkupllc_endpoint)}
+    {literal}<script type="text/javascript" src="//use.typekit.net/xzh8ady.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>{/literal}
     {/if}
-    </script>
+    <link href="{$site_root_path}assets/css/thinkup.css" rel="stylesheet">
 
-{else} <!-- not bootstrap -->
-
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-    <!-- jquery -->
-    <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.13.css">
-
-    <script type="text/javascript" src="{$site_root_path}assets/js/jquery.min-1.4.js"></script>
-    <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
-
-    {literal}
-      <script type="text/javascript">
-      $(document).ready(function() {
-          $(".post").hover(
-            function() { $(this).children(".small").children(".metaroll").show(); },
-            function() { $(this).children(".small").children(".metaroll").hide(); }
-          );
-          $(".metaroll").hide();
-        });
-      </script>
-    {/literal}
-
-    <!-- custom css -->
-    {literal}
-    <style>
-        .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
-            margin: 8px auto;
-            height: 1px;
-        }
-        
-    </style>
-    {/literal}
-{/if}
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 
 {foreach from=$header_css item=css}
     <link type="text/css" rel="stylesheet" href="{$site_root_path}{$css}" />
 {/foreach}
-
-{foreach from=$header_scripts item=script}
-    <script type="text/javascript" src="{$site_root_path}{$script}"></script>
-{/foreach}
+{include file="_usermessage-v2.tpl"}
 
 <script type="text/javascript">
     var site_root_path = '{$site_root_path}';
@@ -120,7 +91,6 @@
     var thinkup_api_key = '{$thinkup_api_key}';
     {/if}
 </script>
-
 
 {if $enable_tabs eq 1}
 <script type="text/javascript">
@@ -154,19 +124,8 @@
   <!-- google chart tools -->
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
-  
+
   {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
 
-{if $post->post_text} 
-    <meta itemprop="name" content="{$post->network|ucwords} post by {$post->author_username} on ThinkUp">
-    <meta itemprop="description" content="{$post->post_text|strip_tags}">
-    <meta itemprop="image" content="http://thinkup.com/assets/img/thinkup-logo_sq.png">
-{/if}
-
 </head>
-<body>
-
-{if $enable_bootstrap eq 1}
-<div id="sticky-footer-fix-wrapper">
-{/if}
+<body {if isset($body_classes)} class="{$body_classes}"{else}class="{if $body_type}{$body_type}{else}insight-stream{/if}"{/if}{if isset($body_id)} id="{$body_id}"{/if}>

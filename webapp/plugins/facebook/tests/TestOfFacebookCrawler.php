@@ -138,11 +138,13 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->username, 'Gina Trapani');
         $this->assertEqual($user->full_name, 'Gina Trapani');
         $this->assertEqual($user->user_id, 606837591);
+        $this->assertEqual($user->gender, "female");
         $this->assertEqual($user->location, "San Diego, California");
         $this->assertEqual($user->description,
         'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
         $this->assertEqual($user->url, '');
         $this->assertTrue($user->is_protected);
+        $this->assertNotNull($user->joined);
     }
 
     public function testFetchPostsAndRepliesForProfile1() {
@@ -199,6 +201,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '606837591');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'female');
         $this->assertEqual($user->location, 'San Diego, California');
         //sleep(1000);
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
@@ -206,6 +209,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '697015835');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'male');
         $this->assertEqual($user->location, 'La Mesa, California');
 
         $user = $user_dao->getUserByName('Jeffrey McManus', 'facebook');
@@ -213,6 +217,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '691270740');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->gender, 'male');
         $this->assertEqual($user->location, '');
     }
 
@@ -244,10 +249,11 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '729597743');
 
-        // Test Facebook friends and followers. This user only exists in testing as a "friend."
+        // Test Facebook subscribers. This user only exists in testing as a subscriber
         $user = $user_dao->getUserByName('Poppy Linford', 'facebook');
         $this->assertTrue(isset($user));
         $this->assertEqual($user->user_id, '682523675');
+        $this->assertTrue($user->is_verified);
         // Test follow is set
         $follow_dao = new FollowMySQLDAO();
         $this->assertTrue($follow_dao->followExists('729597743', '682523675', 'facebook'));
@@ -263,7 +269,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         }
         $stmt->closeCursor();
 
-        $this->assertEqual($data[0]['count'], 1);
+        $this->assertEqual($data[0]['count'], 2);
     }
 
     public function testFetchPostsAndRepliesForProfile3Error() {

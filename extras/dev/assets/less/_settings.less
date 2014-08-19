@@ -1,0 +1,784 @@
+body.settings {
+  .container {
+    width: 100%;
+    padding: 45px 10px 0;
+    margin: 0 auto;
+
+    @media (min-width: 400px) {
+      width: 400px;
+    }
+
+    .container-header {
+      margin: 20px 0;
+
+      h1 {
+        text-align: center;
+        font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 1.23;
+        margin: 0;
+      }
+
+      h2 {
+        font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-size: 14px;
+        line-height: (22/14);
+        font-weight: 300;
+        text-align: center;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.standard-form-element {
+  // Total height is 50px and all items have a 1px border on the bottom
+  // 50 - (14 * 2) = 11
+  font-size: 14px;
+  line-height: 1;
+  padding: 25px 10px 10px;
+}
+
+form {
+  font-family: "tablet-gothic", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  margin-bottom: 25px;
+
+  &.big-bottom-margin {
+    margin-bottom: 50px;
+  }
+
+  @media (min-width: 400px) {
+    font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  }
+}
+
+fieldset {
+  margin-bottom: 25px;
+
+  &.big-bottom-margin {
+    margin-bottom: 50px;
+  }
+
+  &.fieldset-no-header {
+    border-top: 1px solid @blue-pale;
+  }
+
+  header {
+    text-align: center;
+    margin: 0;
+    border-bottom: 1px solid @blue-pale;
+    padding: 25px 5px 15px;
+
+    h2 {
+      font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 600;
+      color: @gray;
+      margin: 0;
+      text-align: center;
+    }
+
+    .help-text {
+      font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 400;
+      color: @gray-light;
+    }
+
+    @media (min-width: 400px) {
+      width: 380px;
+    }
+  }
+}
+
+.settings-set-simple {
+  margin-bottom: 50px;
+
+  header {
+    border: 0;
+    margin-bottom: 10px;
+
+    h2 {
+      &:extend(fieldset header h2);
+    }
+  }
+
+  .btn {
+    margin-bottom: 20px;
+  }
+
+  pre {
+    font-size: 12px;
+  }
+}
+
+.form-group {
+  margin: 0;
+  border-bottom: 1px solid @blue-pale;
+  overflow: hidden;
+
+  @media (min-width: 400px) {
+    width: 380px;
+  }
+
+  &.form-group-warning, &.form-group-ok {
+    position: relative;
+    .fa-override-before;
+
+    &:before {
+      position: absolute;
+      right: 9px;
+      top: 5px;
+      font-size: 12px;
+      opacity: .75;
+    }
+  }
+
+
+  &.form-group-warning {
+    &:before {
+      content: "\f071";
+      color: @red-warning;
+      right: 7px;
+    }
+  }
+
+  &.form-group-ok {
+    &:before {
+      content: "\f058";
+      color: darken(@green-success, 20%);
+    }
+  }
+
+  &.form-group-radio {
+    .clearfix;
+    .control-label {
+      float: right;
+      padding-left: 0;
+    }
+
+    .form-control {
+      float: left;
+      width: 30px;
+      min-width: 0;
+      margin: 10px 0 0 10px;
+      height: auto;
+      padding: 0;
+    }
+  }
+
+  .help-block {
+    margin: 0;
+    text-align: left;
+    padding: 4px 5px 0;
+    position: relative;
+    top: -5px;
+    clear: both;
+  }
+}
+
+.control-label {
+  width: 100%;
+  color: @gray-light;
+  text-align: left;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 3px 5px 2px;
+  line-height: 1.25;
+
+  .form-group-warning & {
+    position: relative;
+    top: -2em;
+    display: none;
+  }
+}
+
+.form-control {
+  width: 100%;
+  color: #000;
+  height: 29px;
+  padding-left: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: 0 0 0;
+  transition: 0;
+  outline: 0;
+  border-radius: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0 5px 5px;
+
+  &:focus {
+    box-shadow: 0 0 0;
+  }
+}
+
+textarea.form-control {
+  width: 190px;
+  height: (28*4px);
+  padding: 0;
+  margin: 11px 10px 10px 0;
+
+  @media (min-width: 400px) {
+    width: 210px;
+  }
+}
+
+.input-with-domain {
+  position: relative;
+
+  .form-control {
+    padding-right: 110px;
+  }
+
+  .domain {
+    display: none;
+    position: absolute;
+    left: 6.95em;
+    top: 0;
+    width: 110px;
+    color: @gray-light;
+    vertical-align: bottom;
+    padding: 0 5px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  #username-length {
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    font-size: 16px;
+  }
+}
+
+.help-block {
+  padding: 4px 5px;
+  margin: 0 0 5px;
+  color: lighten(@gray-light,10%);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.warning-block {
+  &:extend(.help-block);
+  color: @red-warning;
+  position: relative;
+  padding: 3px 15px 2px 5px;
+}
+
+.form-group-toggle {
+
+  .control-label {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 80px 10px 10px;
+    font-size: 14px;
+    line-height: 2;
+    float: none;
+    position: relative;
+    color: #000;
+    margin: 0;
+
+    &:before, &:after {
+      -webkit-transition: all 100ms ease-in;
+      transition: all 100ms ease-in;
+      position: absolute;
+      content: " ";
+    }
+
+    &:before {
+      width: 40px;
+      height: 24px;
+      top: 12px;
+      right: 10px;
+      background: @red-warning;
+      border-radius: 12px;
+    }
+
+    &:after {
+      width: 22px;
+      height: 22px;
+      top: 13px;
+      right: 27px;
+      border-radius: 11px;
+      background: #fff;
+    }
+  }
+
+  input[type=checkbox] {
+    position: absolute;
+    opacity: 0;
+  }
+
+  input[type=checkbox]:checked ~ .control-label:before {
+    background: @green-success;
+  }
+
+  input[type=checkbox]:checked ~ .control-label:after {
+    right: 11px;
+  }
+}
+
+.form-group-checkbox {
+  position: relative;
+
+  .control-label {
+    width: 100%;
+    padding-right: 40px;
+  }
+
+  .form-control {
+    position: absolute;
+    right: 0;
+    width: 25px;
+  }
+}
+
+.picker {
+  overflow: hidden;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    padding: 0 8px;
+    background: @gray-lightest;
+    z-index: -1;
+  }
+
+  select {
+    width: 135%;
+    border: 0;
+    background: transparent;
+    box-shadow: 0 0 0;
+    transition: 0;
+    outline: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+    padding-right: 95px;
+    padding-left: 0;
+
+    &:focus {
+      color: @blue-dark;
+    }
+  }
+}
+
+.btn-submit {
+  z-index: 101;
+  width: auto;
+  height: 34px;
+  padding: 10px;
+  border-radius: 4px;
+  background: @blue-action;
+  color: #fff;
+  margin: 15px auto 0;
+  display: block;
+  border: 0;
+  line-height: 1;
+  font-weight: 600;
+
+  &:hover, &:focus {
+    background: darken(@blue-action, 10%);
+    color: #fff;
+  }
+}
+
+.btn-circle {
+  @media (min-width: 540px) {
+    width: 74px;
+    height: 74px;
+    padding: 30px 0;
+    border-radius: 50%;
+  }
+}
+
+.btn-pill {
+  @media (min-width: 540px) {
+    width: 150px;
+    border-radius: 4px;
+  }
+}
+
+.btn-submit-single {
+  position: fixed;
+  top: 5px;
+  right: 0;
+  z-index: 101;
+  border-radius: 0;
+  margin: 0;
+  border: 0;
+  line-height: 1;
+  display: block;
+  font-weight: 600;
+  width: 64px;
+  height: 34px;
+  padding: 10px 0;
+
+  @media (min-width: 540px) {
+    position: static;
+    .btn-circle;
+  }
+}
+
+.list-group {
+  border-top: 1px solid @blue-pale;
+  margin-top: 20px;
+}
+
+.list-group {
+  border-top: 1px solid @blue-pale;
+  margin-top: 20px;
+  margin-bottom: 14px;
+
+  .list-group-item {
+    border-radius: 0;
+    background: 0;
+    border: 0;
+    margin: 0;
+    font-size: 14px;
+    line-height: 2;
+    padding: 11px 10px 10px;
+    border-bottom: 1px solid @blue-pale;
+    position: relative;
+
+    .list-group-item-label {
+      float: left;
+      max-width: 130px;
+    }
+
+    .list-group-item-value {
+      margin-left: 130px;
+      font-weight: 600;
+    }
+  }
+}
+
+.list-group-plugins {
+  .list-group-item {
+    .account-label {
+      .icon {
+        float: left;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.list-accounts {
+  .list-group-item {
+    overflow: hidden;
+
+    .account-label {
+      font-weight: 400;
+      margin-left: 0;
+
+      .account-photo {
+        float: left;
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+      }
+    }
+
+    .account-action {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .account-action-delete {
+      left: -50px;
+      right: auto;
+
+      a {
+        display: block;
+        padding: 15px 10px 14px;
+        color: @red-warning;
+      }
+    }
+
+    .account-action-privacy {
+      .privacy-toggle {
+
+        .toggle-label {
+          position: relative;
+          width: 110px;
+          height: 24px;
+          top: 12px;
+          right: 10px;
+          border-radius: 12px;
+          display: none;
+          cursor: pointer;
+
+          .text {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1;
+            padding-left: 28px;
+            position: relative;
+            top: -1px;
+            font-weight: 600;
+            font-family: "tablet-gothic-wide", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          }
+
+          .icon {
+            -webkit-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+            color: lighten(@green-success, 25%);
+            position: absolute;
+            font-size: 20px;
+            line-height: 1;
+            top: 2px;
+            left: 5px;
+          }
+
+          &:after {
+            position: absolute;
+            content: " ";
+            width: 22px;
+            height: 22px;
+            top: 1px;
+            right: 1px;
+            border-radius: 11px;
+            background: #fff;
+          }
+        }
+
+        input[type=radio]:checked + .toggle-label {
+            display: block;
+        }
+
+        input[type=radio] {
+          position: absolute;
+          opacity: 0;
+        }
+
+        .field-privacy-public + .toggle-label {
+           background: @green-success;
+        }
+
+        .field-privacy-private + .toggle-label {
+           background: @red-warning;
+
+           .text {
+            padding-left: 32px;
+            color: darken(@red-warning, 20%);
+           }
+
+           .icon {
+            color: darken(@red-warning, 20%);
+            top: 4px;
+            left: 89px;
+            font-size: 18px;
+           }
+
+           &:after {
+            right: 87px;
+           }
+        }
+      }
+
+    }
+
+    &.has-extra-buttons {
+      .extra-buttons {
+        clear: both;
+        text-align: right;
+        padding-right: 4px;
+
+        .btn {
+          margin-bottom: 5px;
+        }
+      }
+
+      .btnPlay {
+        color: @green-success;
+        border: 1px solid @green-success;
+        background-color: fade(@green-success, 10%);
+
+        &:hover {
+          color: #fff;
+          background-color: fade(@green-success, 75%);
+        }
+      }
+
+      .btnPause {
+        color: @red-warning;
+        border: 1px solid @red-warning;
+        background-color: fade(@red-warning, 10%);
+
+        &:hover {
+          color: #fff;
+          background-color: fade(@red-warning, 50%);
+        }
+      }
+    }
+
+    &.list-accounts-item-add {
+      padding: 0;
+
+      a {
+        .standard-form-element;
+        display: block;
+        color: @text-color;
+
+        .account-action {
+          padding: 15px 10px 14px;
+          color: @gray;
+        }
+
+        &:hover {
+          text-decoration: none;
+          background: darken(@gray-lightest, 3%);
+
+          .account-action-add {
+            color: darken(@gray, 5%);
+          }
+        }
+      }
+    }
+  }
+}
+
+.account-buttons {
+  text-align: center;
+
+  .btn-account-remove, .btn-account-add {
+    margin: 0 0 14px;
+  }
+
+  .btn-account-add {
+    .icon {
+      margin-right: 10px;
+    }
+  }
+}
+
+.form-note, .form-notes {
+  text-align: center;
+  padding: 0 5% 14px;
+  color: @gray-light;
+}
+
+.form-notes {
+  border-top: 1px solid @blue-pale;
+  padding-top: 14px;
+
+  .alert, .alert-info {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: @gray-light;
+  }
+}
+
+.form-message {
+  color: #222;
+  border: 1px solid darken(@yellow-info, 30%);
+  border-left: 0;
+  border-right: 0;
+  background: @yellow-info;
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+
+  .btn {
+    background: darken(@green-success, 15%);
+
+    &:hover {
+      background: darken(@green-success, 10%);
+    }
+  }
+}
+
+.form-warning {
+  color: darken(@red-warning, 10%);
+  border-color: mix(@red-warning, #fff, 40%);
+  background: mix(@red-warning, #fff, 20%);
+  padding: 7px;
+  margin-bottom: 14px;
+  text-align: center;
+
+  .btn {
+    background: darken(@red-warning, 10%);
+
+    &:hover {
+      background: darken(@red-warning, 5%);
+    }
+  }
+}
+
+.btn-close-account {
+  display: block;
+  margin: 0 auto 15px;
+  width: 12em;
+
+  &:hover {
+    background: lighten(@red-warning, 10%);
+    border-color: lighten(@red-warning, 10%);
+  }
+}
+
+.accounts-privacy {
+  color: @green-success-darker;
+}
+
+body#settings-subscription {
+  .form-note {
+    .show-section {
+      margin-top: 10px;
+    }
+  }
+
+// This is only shown when the user taps the contact link.
+  #form-membership-contact {
+    margin-top: 40px;
+    display: none;
+  }
+}
+
+body#settings-registration {
+  header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .container {
+    .form-group-radio {
+      border-bottom: 0;
+      margin: 0 auto;
+      width: 255px;
+
+      .control-label {
+        min-width: 0;
+        max-width: none;
+        width: 215px;
+        font-size: 14px;
+        padding: 16px 10px 11px;
+      }
+
+      &.form-group-warning {
+        .control-label {
+          top: 0;
+          display: block;
+        }
+
+        .warning-block {
+          clear: both;
+        }
+      }
+    }
+
+  }
+}
