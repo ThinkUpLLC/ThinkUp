@@ -100,4 +100,25 @@ class UserVersionsMySQLDAO extends PDODAO implements UserVersionsDAO {
 
         return $this->getDataRowsAsArrays($ps);
     }
+
+    public function getVersionBeforeDay($user_key, $before_day, $field) {
+        $vars = array(
+            ':user_key' =>$user_key,
+            ':before_day' =>$before_day,
+            ':field_name' =>$field
+        );
+
+        $q  = "SELECT user_key, field_name, field_value, crawl_time FROM #prefix#user_versions as uv ";
+        $q .= "WHERE uv.user_key = :user_key AND date(crawl_time) < :before_day ";
+        $q .= " AND field_name = :field_name ";
+        $q .= " ORDER BY crawl_time DESC LIMIT 1";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $rows =  $this->getDataRowsAsArrays($ps);
+        if (count($rows)) {
+            return $rows[0];
+        } else  {
+            return null;
+        }
+    }
 }
