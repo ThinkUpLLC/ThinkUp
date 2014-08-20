@@ -53,4 +53,13 @@ interface UserVersionsDAO {
      * @return arr An array of field versions.
      */
     public function getRecentVersions($user_key, $past_x_days, $fields = array());
+
+    /**
+     * Fetch the most recent version of a field for a given user before a certain date
+     * @param int $user_key The id from the users table
+     * @param int $before_day Fetch only changes before this date.
+     * @param arr $field What field do we care about
+     * @return arr Information about the field version
+     */
+    public function getVersionBeforeDay($user_key, $before_day, $field);
 }
