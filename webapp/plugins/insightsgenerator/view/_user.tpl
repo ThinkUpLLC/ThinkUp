@@ -2,8 +2,9 @@
 Renders an insight with an array of user objects in related_data.
 
 Parameters:
-$user (required) A single user objects
-$user_text Determines what to show below the user's name
+$user (required) A single user object
+$bio_before (optional) If this is a bio change, the old bio
+$bio_after (optional) If this is a bio change, the current bio
 *}
 
 {if isset($user)}
@@ -23,7 +24,21 @@ $user_text Determines what to show below the user's name
                     {$user->other.total_likes|number_format} likes
                     {/if}
                 {/if}</p>
-                {if $user->description neq ''}
+                {if isset($bio_before) and isset($bio_after)}
+                <div class="text-diff">
+                    <div class="bio-diff">
+                        <p>{insert name="string_diff" from_text=$bio_before to_text=$bio_after}</p>
+                    </div>
+
+                    <div class="bio-before-after">
+                        <p class="bio-before"><strong>Before:</strong><br>
+                        {$bio_before|link_usernames_to_twitter}</p>
+                        <p class="bio-after"><strong>After:</strong><br>
+                        {$bio_after|link_usernames_to_twitter}</p>
+                    </div>
+                    <p><a class="diff-toggle" href="#" data-alt-text="Show diff">Show before/after</a></p>
+                </div>
+                {else if $user->description neq ''}
                     <p>{$user->description}</p>
                 {/if}
             </div>

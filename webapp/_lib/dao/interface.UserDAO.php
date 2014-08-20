@@ -61,6 +61,13 @@ interface UserDAO {
     public function getDetails($user_id, $network);
 
     /**
+     * Get user given a user key (id from the tu_users table)
+     * @param int $user_key
+     * @return User User
+     */
+    public function getDetailsByUserKey($user_key);
+
+    /**
      * Update an array of users
      * @param array $users_to_update Array of User objects
      * @return int Total users affected
