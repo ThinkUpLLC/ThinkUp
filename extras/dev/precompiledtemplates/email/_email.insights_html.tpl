@@ -1131,7 +1131,8 @@ body.outlook p {
         </table>
 {/if}
 
-{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)}
+{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)
+or isset($insight->related_data.changes)}
     <table class="twelve columns insight-body">
         {if $insight->text ne ''}
         <tr>
@@ -1163,6 +1164,41 @@ body.outlook p {
                                 {/if}</p>
                                 {if $user->description neq ''}
                                     <p>{$user->description}</p>
+                                {/if}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="expander"></td>
+        </tr>
+        {/if}
+        {/foreach}
+        {/if}
+        {if isset($insight->related_data.changes)}
+        {foreach from=$insight->related_data.changes item=change name=changed }
+        {assign var='user' value=$change.user}
+        {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+        {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
+        <tr>
+            <td class="sub-grid object user text-pad">
+                <table>
+                    <tr>
+                        <td class="two sub-columns center">
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}"><img src="{$user->avatar|use_https}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
+                        </td>
+                        <td class="ten sub-columns">
+                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
+                            <div class="user-text">
+                                <p>{if $user->network eq 'twitter'}
+                                    {$user->follower_count|number_format} followers
+                                {else}
+                                    {if isset($user->other.total_likes)}
+                                    {$user->other.total_likes|number_format} likes
+                                    {/if}
+                                {/if}</p>
+                                {if $bio_diff neq ''}
+                                    <p class="text-diff">{$bio_diff}</p>
                                 {/if}
                             </div>
                         </td>

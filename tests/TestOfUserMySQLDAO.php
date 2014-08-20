@@ -44,12 +44,12 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'San Francisco',
-        'is_verified'=>1, 'network'=>'twitter'));
+        'is_verified'=>1, 'network'=>'twitter', 'id' => 1));
 
         //Insert test data into test table
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'zuck',
         'full_name'=>'Mark Zuckerberg', 'avatar'=>'avatar.jpg', 'gender'=>'Male', 'location'=>'San Francisco',
-        'network'=>'facebook'));
+        'network'=>'facebook', 'id' => 2));
 
         $this->logger = Logger::getInstance();
         return $builders;
@@ -114,7 +114,6 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user = $user_dao->getDetails(13, 'twitter');
         $this->assertTrue(!isset($user));
     }
-
     /**
      * Test getDetails when user does not exist
      */
@@ -123,6 +122,35 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user = $user_dao->getDetails(13, 'twitter');
         $this->assertTrue(!isset($user));
     }
+
+    /*
+     * Test getDetailsByUserKey when the user exists
+     */
+    public function testGetDetailsByUserKeyUserExists() {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+        $this->assertEqual($user->id, 1);
+        $this->assertEqual($user->user_id, 12);
+        $this->assertEqual($user->username, 'jack');
+        $this->assertEqual($user->gender, '');
+        $this->assertEqual($user->network, 'twitter');
+        $user = $user_dao->getDetailsByUserKey(2);
+        $this->assertEqual($user->id, 2);
+        $this->assertEqual($user->user_id, 13);
+        $this->assertEqual($user->username, 'zuck');
+        $this->assertEqual($user->gender, 'Male');
+        $this->assertEqual($user->network, 'facebook');
+    }
+
+    /**
+     * Test getDetailsByUserKey when user does not exist
+     */
+    public function testGetDetailsByUserKeyDoesNotExist() {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(12312412421);
+        $this->assertNull($user);
+    }
+
 
     /**
      * Test update individual user

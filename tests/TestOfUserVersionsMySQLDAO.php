@@ -196,4 +196,31 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $res = $this->DAO->getRecentFriendsVersions(2, 2);
         $this->assertEqual(count($res), 0);
     }
+
+    public function testGetVersionBeforeDay() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
+            'field_value' => 'yesterday', 'crawl_time' => '-1d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
+            'field_value' => 'today', 'crawl_time' => '-0d'));
+
+        $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d', time() - (60*60*24)), 'a');
+        $this->assertNull($res);
+
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
+            'field_value' => 'two days ago', 'crawl_time' => '-2d'));
+
+        $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d', time() - (60*60*24)), 'a');
+        $this->assertEqual($res['user_key'], 1);
+        $this->assertEqual($res['field_name'], 'a');
+        $this->assertEqual($res['field_value'], 'two days ago');
+
+        $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d', time() - (60*60*24)), 'b');
+        $this->assertNull($res);
+
+        $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d'), 'a');
+        $this->assertEqual($res['user_key'], 1);
+        $this->assertEqual($res['field_name'], 'a');
+        $this->assertEqual($res['field_value'], 'yesterday');
+    }
 }
