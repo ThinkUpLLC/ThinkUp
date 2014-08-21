@@ -104,6 +104,11 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $baseline_dao->insertInsightBaseline('avg_fave_count_last_7_days', $this->instance->id, $avg=2, $today);
         $baseline_dao->insertInsightBaseline('avg_retweet_count_last_7_days', $this->instance->id, $avg=2, $today);
         $baseline_dao->insertInsightBaseline('avg_reply_count_last_7_days', $this->instance->id, $avg=2, $today);
+
+        // We add an old baseline so that 7 day checks
+        $baseline_dao->insertInsightBaseline('high_fave_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (8*24*60*60)));
+
         $insight_dao = new InsightMySQLDAO();
 
         $posts = array($this->makePost($replies=5, $retweets=1, $faves=10));
@@ -162,6 +167,10 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
             $baseline_dao->insertInsightBaseline("avg_{$act}_count_last_7_days", $this->instance->id, 2, $today);
             $baseline_dao->insertInsightBaseline("high_{$act}_count_last_7_days", $this->instance->id, 2, $today);
         }
+
+        // We add an old baseline so that 7 day checks
+        $baseline_dao->insertInsightBaseline('high_fave_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (8*24*60*60)));
 
         $posts = array($this->makePost($replies=1, $retweets=10, $faves=50));
         $insight_plugin = new ActivitySpikeInsight();
@@ -239,10 +248,10 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ActivitySpikeInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
-        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        // At this point, we should not have the 7 or 30, because we don't have 30 day old baselines
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
-        $this->assertNotNull($result);
+        $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
         $this->assertNull($result);
 
@@ -289,10 +298,10 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ActivitySpikeInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
-        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        // At this point, we should not have the 7 or 30, because we don't have 30 day old baselines
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
-        $this->assertNotNull($result);
+        $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_30_day_1', 10, $today);
@@ -361,10 +370,10 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ActivitySpikeInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
-        // At this point, we should have the 7, not 30, because we don't have 30 day old baselines
+        // At this point, we should not have the 7 or 30, because we don't have 30 day old baselines
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
-        $this->assertNotNull($result);
+        $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_30_day_1', 10, $today);
@@ -428,6 +437,11 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
             $baseline_dao->insertInsightBaseline("avg_{$act}_count_last_7_days", $this->instance->id, 2, $today);
             $baseline_dao->insertInsightBaseline("high_{$act}_count_last_7_days", $this->instance->id, 2, $today);
         }
+
+        // We add an old baseline so that 7 day checks
+        $baseline_dao->insertInsightBaseline('high_fave_count_last_365_days', $this->instance->id, $avg=2,
+            date('Y-m-d', time() - (8*24*60*60)));
+
 
         $posts = array($this->makePost($replies=1, $retweets=10, $faves=50));
         $insight_plugin = new ActivitySpikeInsight();
