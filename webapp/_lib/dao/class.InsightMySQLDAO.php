@@ -35,8 +35,8 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
 
     public function __construct() {
         parent::__construct();
-        $this->stream_conditionals_order =  "AND i.filename != 'dashboard' ORDER BY date DESC, time_updated DESC, ".
-            "emphasis DESC, filename, i.id DESC LIMIT :start_on_record, :limit;";
+        $this->stream_conditionals_order =  "AND i.filename != 'dashboard' ORDER BY date DESC, emphasis DESC, ".
+            "filename, time_updated DESC, i.id DESC LIMIT :start_on_record, :limit;";
     }
 
     public function getInsight($slug, $instance_id, $date) {
@@ -350,7 +350,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
         $q .= "WHERE su.is_active = 1 AND oi.owner_id = :owner_id AND time_generated > :since ";
-        $q .= "AND i.filename != 'dashboard' ORDER BY date DESC, emphasis DESC, i.id;";
+        $q .= "AND i.filename != 'dashboard' ORDER BY date DESC, emphasis DESC, filename, i.id;";
         $vars = array(
             ":owner_id"=>(int)$owner_id,
             ':since'=>$since
