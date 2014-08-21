@@ -40,9 +40,13 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
         $do365 = $insight_baseline_dao->doesInsightBaselineExistBefore('high_fave_count_last_365_days', $instance->id,
             date('Y-m-d', time() - (365*24*60*60)));
 
-        // We can skip this query if d0365 is already true.
+        // We can skip this query if do365 is already true.
         $do30 = $do365 || $insight_baseline_dao->doesInsightBaselineExistBefore( 'high_fave_count_last_365_days',
            $instance->id,  date('Y-m-d', time() - (30*24*60*60)));
+
+        // We can skip this query if do30 is already true.
+        $do7 = $do30 || $insight_baseline_dao->doesInsightBaselineExistBefore( 'high_fave_count_last_365_days',
+           $instance->id,  date('Y-m-d', time() - (7*24*60*60)));
 
         $post_date = '';
         $share_verb = ($instance->network == 'twitter')?'retweeted':'reshared';
@@ -176,7 +180,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
                 }
 
-                if (!$headline) {
+                if ($do7 && !$headline) {
                     $winning_percent = 0;
                     $winning_activity = null;
                     foreach ($activities as $activity=>$object_key) {
@@ -275,7 +279,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
                     }
                 }
 
-                if (!$headline) {
+                if ($do7 && !$headline) {
                     $winning_percent = 0;
                     $winning_activity = null;
                     foreach ($activities as $activity=>$object_key) {
