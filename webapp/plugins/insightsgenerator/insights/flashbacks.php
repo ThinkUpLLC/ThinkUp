@@ -82,7 +82,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->date = $this->insight_date; //date of the data this insight applies to
                     $my_insight->headline = $headline;
                     $my_insight->text = $insight_text;
-                    $my_insight->emphasis = Insight::EMPHASIS_MED;
+                    $my_insight->emphasis = Insight::EMPHASIS_LOW;
                     $my_insight->filename = basename(__FILE__, ".php");
                     $my_insight->setPosts($posts);
 
