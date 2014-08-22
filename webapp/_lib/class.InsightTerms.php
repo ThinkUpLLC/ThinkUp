@@ -431,4 +431,43 @@ class InsightTerms {
         $text = str_replace($search, $replace, $text);
         return $text;
     }
+
+    /**
+     * Get text written in the second person using "you" or "your" in place of a username.
+     * @param  str $username
+     * @param  str $text
+     * @return str
+     */
+    public function swapInSecondPerson($username, $text) {
+        $username = (($this->network == 'twitter')?'@':'') . $username;
+
+        //your/Your
+        if (strpos($text, $username."'s") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username."'s", 'Your', $text);
+        }
+        $text = str_replace($username."'s", 'your', $text);
+
+        //you are/You are
+        $text = str_replace($username." is", 'you are', $text);
+        if (strpos($text, $username." is") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username." is", 'You are', $text);
+        }
+
+        //you reach/You reach
+        $text = str_replace($username." reaches", 'you reach', $text);
+        if (strpos($text, $username." reaches") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username." reaches", 'You reaches', $text);
+        }
+
+        //you/You
+        $text = str_replace($username, 'you', $text);
+        if (strpos($text, $username) === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username, 'You', $text);
+        }
+        return $text;
+    }
 }
