@@ -151,4 +151,33 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $result = $twitter_terms->getProcessedText('%animal %posted %thing');
         $this->assertEqual('%animal tweeted %thing', $result);
     }
+
+    public function testSwapInSecondPerson() {
+        $terms = new InsightTerms('twitter');
+
+        $username = 'buffysummers';
+        $text = "2 interesting people followed @buffysummers.";
+        $new_text = "2 interesting people followed you.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $terms = new InsightTerms('facebook');
+        $username = 'Buffy Summers';
+        $text = "Buffy Summers's status update got 17 comments.";
+        $new_text = "Your status update got 17 comments.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Looks like it will be 8 weeks before Willow Rosenberg reaches 100,000 followers.";
+        $new_text = "Looks like it will be 8 weeks before you reach 100,000 followers.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Hey, did you see that Xander Harris followed Willow Rosenberg?";
+        $new_text = "Hey, did you see that Xander Harris followed you?";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+    }
 }
