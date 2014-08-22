@@ -18,9 +18,11 @@ various attributes such as follower counts on Twitter and Facebook and video sta
 
 Each insight will need to have:
 
-1) Headline - A short string describing the generic idea about your insight. E.g.  "Nudge, Nudge"
+1) Headline - A short string describing the generic idea about your insight. 
 
 2) Text - A string describing what interesting insight you have noticed. E.g. "You tweeted 30 times less this week."
+
+Read the the :doc:`Insight Style Guide </contribute/developers/styleguide>` for a more detailed explanation of how insights should be written. Additionally, when thinking through your insight, refer to the `new Insight template <https://gist.github.com/ginatrapani/11303222>`_ to get a sense of everything your insight will need. (Best practice is to submit a `new ThinkUp issue <https://github.com/ginatrapani/ThinkUp/issues/new>`_ with that template completed before developing your insight.)
 
 With your insight generated you will need to insert it into the database using the insertInsight() method of the
 insight data access object.
