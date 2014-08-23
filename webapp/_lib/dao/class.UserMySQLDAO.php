@@ -111,9 +111,9 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':network'=>$user->network
         );
 
-        $is_user_in_storage = false;
-        $is_user_in_storage = $this->isUserInDB($user->user_id, $user->network);
-        if (!$is_user_in_storage) {
+        $user_in_storage = $this->getUser($user->user_id, $user->network);
+        if (!isset($user_in_storage)) {
+            //Insert new user
             $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, ";
             $q .= "location, description, url, is_verified, is_protected, follower_count, post_count, ".
             ($has_friend_count ? "friend_count, " : "")." ".
@@ -127,17 +127,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
                 ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
                 ($has_last_post_id ? ", :last_post_id " : "")." )";
         } else {
-            $bioq = "SELECT id, description FROM #prefix#users WHERE user_id=:user_id AND network=:network";
-            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
-            $ps = $this->execute($bioq, array(':user_id' => $user->user_id, ':network' => $user->network));
-            $user_rows = $this->getDataRowsAsArrays($ps);
-            if (count($user_rows)) {
-                if ($user_rows[0]['description'] != $user->description) {
-                    $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
-                    $user_versions_dao->addVersionOfField($user_rows[0]['id'], 'description', $user->description);
-                }
-            }
-
+            //Update existing user
             $q = "UPDATE #prefix#users SET full_name = :full_name, avatar = :avatar,  location = :location, ";
             $q .= "user_name = :username, description = :description, url = :url, is_verified = :is_verified, ";
             $q .= "is_protected = :is_protected, follower_count = :follower_count, post_count = :post_count,  ".
@@ -147,6 +137,13 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             $q .= "joined = :joined,  network = :network ".
             ($has_last_post_id ? ", last_post_id = :last_post_id" : "")." ";
             $q .= "WHERE user_id = :user_id AND network = :network;";
+
+            //Capture description version
+            //If stored description doesn't match the current one, store the new version
+            if ($user_in_storage->description != $user->description) {
+                $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+                $user_versions_dao->addVersionOfField($user_in_storage->id, 'description', $user->description);
+            }
         }
 
         if ($has_friend_count) {
@@ -164,6 +161,13 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         }
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
+
+        //If a new user got inserted, add the base bio into user_versions
+        if (!isset($user_in_storage)) {
+            $new_user_id = $this->getInsertId($ps);
+            $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+            $user_versions_dao->addVersionOfField($new_user_id, 'description', $user->description);
+        }
         $results = $this->getUpdateCount($ps);
         return $results;
     }
