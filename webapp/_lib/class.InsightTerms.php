@@ -449,25 +449,32 @@ class InsightTerms {
         $text = str_replace($username."'s", 'your', $text);
 
         //you are/You are
-        $text = str_replace($username." is", 'you are', $text);
         if (strpos($text, $username." is") === 0) {
             //Captitalize if username starts the sentence
             $text = str_replace($username." is", 'You are', $text);
         }
+        $text = str_replace($username." is", 'you are', $text);
 
         //you reach/You reach
-        $text = str_replace($username." reaches", 'you reach', $text);
         if (strpos($text, $username." reaches") === 0) {
             //Captitalize if username starts the sentence
-            $text = str_replace($username." reaches", 'You reaches', $text);
+            $text = str_replace($username." reaches", 'You reach', $text);
         }
+        $text = str_replace($username." reaches", 'you reach', $text);
+
+        //you've/You've
+        if (strpos($text, $username." has") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username." has", "You've", $text);
+        }
+        $text = str_replace($username." has", "you've", $text);
 
         //you/You
-        $text = str_replace($username, 'you', $text);
         if (strpos($text, $username) === 0) {
             //Captitalize if username starts the sentence
             $text = str_replace($username, 'You', $text);
         }
+        $text = str_replace($username, 'you', $text);
         return $text;
     }
 }
