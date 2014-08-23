@@ -161,6 +161,12 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $result = $terms->swapInSecondPerson($username, $text);
         $this->assertEqual($result, $new_text);
 
+        $username = 'buffysummers';
+        $text = "@buffysummers has passed 1 million viewers!";
+        $new_text = "You've passed 1 million viewers!";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
         $terms = new InsightTerms('facebook');
         $username = 'Buffy Summers';
         $text = "Buffy Summers's status update got 17 comments.";
@@ -171,6 +177,12 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $username = 'Willow Rosenberg';
         $text = "Looks like it will be 8 weeks before Willow Rosenberg reaches 100,000 followers.";
         $new_text = "Looks like it will be 8 weeks before you reach 100,000 followers.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Willow Rosenberg reaches 100,000 followers in 8 weeks.";
+        $new_text = "You reach 100,000 followers in 8 weeks.";
         $result = $terms->swapInSecondPerson($username, $text);
         $this->assertEqual($result, $new_text);
 
