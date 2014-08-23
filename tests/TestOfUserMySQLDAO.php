@@ -211,7 +211,26 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_dao = DAOFactory::getDAO('UserDAO');
 
         $user = $user_dao->getUserByName('gina', 'twitter');
-        $this->assertEqual($user, null);
+        $this->assertNull($user);
+    }
+
+    public function testGetUserExists() {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+
+        $user = $user_dao->getUser('12', 'twitter');
+        $this->assertEqual($user->id, 1);
+        $this->assertEqual($user->user_id, 12);
+        $this->assertEqual($user->username, 'jack');
+        $this->assertEqual($user->full_name, 'Jack Dorsey');
+        $this->assertEqual($user->gender, '');
+        $this->assertEqual($user->location, 'San Francisco');
+    }
+
+    public function testGetUserDoesNotExist() {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+
+        $user = $user_dao->getUser('144', 'twitter');
+        $this->assertNull($user);
     }
 
     public function testDeleteUsersByHashtagId() {
