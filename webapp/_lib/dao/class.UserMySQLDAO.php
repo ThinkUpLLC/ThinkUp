@@ -194,6 +194,19 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         return $this->getDataRowAsObject($ps, "User");
     }
 
+    public function getUser($user_id, $network) {
+        $q = "SELECT * , ".$this->getAverageTweetCount()." ";
+        $q .= "FROM #prefix#users u ";
+        $q .= "WHERE u.user_id = :user_id AND u.network = :network";
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowAsObject($ps, "User");
+    }
+
     public function deleteUsersByHashtagId($hashtag_id){
         $q = "DELETE u.* ";
         $q .= "FROM #prefix#users u INNER JOIN #prefix#posts t ON u.user_id=t.author_user_id ";
