@@ -68,6 +68,14 @@ interface UserDAO {
     public function updateUsers($users_to_update);
 
     /**
+     * Get user given a network user ID and network
+     * @param str $user_id
+     * @param str $network
+     * @return User User object
+     */
+    public function getUser($user_id, $network);
+
+    /**
      * Get user given a username
      * @param str $user_name
      * @param str $network
