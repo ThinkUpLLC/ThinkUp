@@ -111,7 +111,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':network'=>$user->network
         );
 
-        $user_in_storage = $this->getUser($user->user_id, $user->network);
+        $user_in_storage = $this->getDetails($user->user_id, $user->network);
         if (!isset($user_in_storage)) {
             //Insert new user
             $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, ";
@@ -191,19 +191,6 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $q .= "WHERE u.user_name = :user_name AND u.network = :network";
         $vars = array(
             ':user_name'=>$user_name,
-            ':network'=>$network
-        );
-        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
-        $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsObject($ps, "User");
-    }
-
-    public function getUser($user_id, $network) {
-        $q = "SELECT * , ".$this->getAverageTweetCount()." ";
-        $q .= "FROM #prefix#users u ";
-        $q .= "WHERE u.user_id = :user_id AND u.network = :network";
-        $vars = array(
-            ':user_id'=>$user_id,
             ':network'=>$network
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
