@@ -200,12 +200,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($total_friends_protected, 1);
     }
 
-    public function testGetStalestFriend() {
-        $stalest_friend = $this->DAO->getStalestFriend(1234567890, 'twitter');
+    public function testGetStalestFriends() {
+        $stalest_friends = $this->DAO->getStalestFriends('1234567890', 'twitter');
 
-        $this->assertNotNull($stalest_friend);
-        $this->assertEqual($stalest_friend->user_id, 1324567890);
-        $this->assertEqual($stalest_friend->username, 'ev');
+        $this->assertNotNull($stalest_friends);
+        $this->assertEqual(count($stalest_friends), 2);
+        $this->assertEqual($stalest_friends[0]->user_id, '1324567890');
+        $this->assertEqual($stalest_friends[0]->username, 'ev');
     }
 
     public function testGetOldestFollow() {
