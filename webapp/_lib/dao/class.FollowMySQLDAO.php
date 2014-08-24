@@ -232,22 +232,24 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataCountResult($ps);
     }
 
-    public function getStalestFriend($user_id, $network) {
+    public function getStalestFriends($user_id, $network, $number_days_old=2, $limit=10) {
         $q  = "SELECT u.* FROM #prefix#users AS u ";
         $q .= "INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
         $q .= "WHERE f.follower_id= :user_id AND f.network=:network ";
         $q .= "AND u.user_id NOT IN ";
         $q .= "   (SELECT user_id FROM #prefix#user_errors WHERE network=:network) ";
-        $q .= "AND u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY) ";
-        $q .= "ORDER BY u.last_updated ASC LIMIT 1;";
+        $q .= "AND u.last_updated < DATE_SUB(NOW(), INTERVAL :number_days_old DAY) ";
+        $q .= "ORDER BY u.last_updated ASC LIMIT :limit;";
         $vars = array(
             ':user_id'=>(string)$user_id,
-            ':network'=>$network
+            ':network'=>$network,
+            ':number_days_old'=>$number_days_old,
+            ':limit'=>$limit
         );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
-        return $this->getDataRowAsObject($ps, "User");
+        return $this->getDataRowsAsObjects($ps, "User");
     }
 
     public function getOldestFollow($network) {

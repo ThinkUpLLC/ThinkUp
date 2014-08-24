@@ -466,6 +466,22 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         "Digital Director, Obama for America // Teddy dot goff at gmail dot com");
     }
 
+    public function testUpdateFriendsProfiles() {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserAnilDash();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/anildash/');
+
+        $twitter_crawler->updateFriendsProfiles();
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $updated_user = $user_dao->getUserByName('ginatrapani', 'twitter');
+        $this->debug(Utils::varDumpToString($updated_user));
+        $this->assertEqual($updated_user->full_name, 'Gina Trapani');
+        $this->assertEqual($updated_user->description,
+            "I make @ThinkUp & @todotxt. Back in the day I started @Lifehacker.");
+    }
+
     public function testFetchInstanceUserFollowersByIds() {
         $this->debug(__METHOD__);
         self::setUpInstanceUserAnilDash();

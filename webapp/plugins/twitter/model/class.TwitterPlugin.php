@@ -104,6 +104,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin {
                     $twitter_crawler->fetchStrayRepliedToTweets();
                     $twitter_crawler->fetchUnloadedFollowerDetails();
                     $twitter_crawler->cleanUpFollows();
+                    $twitter_crawler->updateFriendsProfiles();
 
                     //Retrieve search results for saved keyword/hashtags
                     $instances_hashtags = $instance_hashtag_dao->getByInstance($instance->id);
