@@ -42,17 +42,18 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug, $instance)) {
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
             $versions = $user_versions_dao->getRecentFriendsVersions($user->id, 7, array('description'));
+            //$this->logger->logInfo(Utils::varDumpToString($versions), __METHOD__.','.__LINE__);
             $changes = array();
             $examined_users = array();
             foreach ($versions as $change) {
-                $user_key = $change['user_key'];
+                $user_key = intval($change['user_key']);
                 if (!in_array($user_key, $examined_users)) {
                     $examined_users[] = $user_key;
                     $last_description = $user_versions_dao->getVersionBeforeDay($user_key,date('Y-m-d'),'description');
                     if ($last_description) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                         $user = $user_dao->getDetailsByUserKey($user_key);
-                        if ($user) {
+                        if ($user && $user->description !== $last_description['field_value']) {
                             $changes[] = array(
                                 'user' => $user,
                                 'field_name' => 'description',
@@ -64,8 +65,9 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
             }
-
-            if (count($changes)) {
+            $this->logger->logInfo("Got ".count($changes)." changes", __METHOD__.','.__LINE__);
+            if (count($changes) > 0) {
+                $changes = array_slice($changes, 0, 10);
                 $insight = new Insight();
                 $insight->instance_id = $instance->id;
                 $insight->slug = $this->slug;
