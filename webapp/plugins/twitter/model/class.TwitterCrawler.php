@@ -1035,8 +1035,8 @@ class TwitterCrawler {
         list($http_status, $payload) = $this->api->apiRequest($endpoint, array(), $fid);
         if ($http_status == 200) {
             $user_arr = $this->api->parseJSONUser($payload);
-            if (isset($user_arr[0])) {
-                $user = new User($user_arr[0], $source);
+            if (isset($user_arr)) {
+                $user = new User($user_arr, $source);
                 $this->user_dao->updateUser($user);
                 $status_message = 'Added/updated user '.$user->username." in database";
             }
@@ -1332,6 +1332,32 @@ class TwitterCrawler {
                     $status_message = "Stop fetching tweets. cURL_status = " . $cURL_status;
                     $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
                     $continue_fetching = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * Update profiles of users who are friends of the instance user, and haven't been checked in 2 days.
+     * @return void
+     */
+    public function updateFriendsProfiles() {
+        if (!isset($this->user)) {
+            $this->fetchInstanceUserInfo();
+        }
+        if (isset($this->user)) {
+            //Get stalest friends
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
+            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 2);
+            $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
+            $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+
+            foreach ($stalest_friends as $user) {
+                try {
+                    $this->fetchAndAddUser($user->user_id, "Friends stale update");
+                } catch (APICallLimitExceededException $e) {
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+                    break;
                 }
             }
         }

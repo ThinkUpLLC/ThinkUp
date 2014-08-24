@@ -127,12 +127,14 @@ interface FollowDAO {
      */
     public function getUnloadedFollowerDetails($user_id, $network);
     /**
-     * Get the friend updated the longest time ago, if age is more than 1 day.
+     * Get the friends updated the longest time ago, if age is more than a given number of days ago.
      * @param int $user_id
      * @param str $network
-     * @return User object
+     * @param int $number_days_old Default 2
+     * @param int $limit Number to return, default 10
+     * @return arr User objects
      */
-    public function getStalestFriend($user_id, $network);
+    public function getStalestFriends($user_id, $network, $number_days_old=2, $limit=10);
     /**
      * Gets the person in storage seen the longest time ago.
      * @param str $network
