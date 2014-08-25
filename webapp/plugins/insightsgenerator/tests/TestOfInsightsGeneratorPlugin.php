@@ -674,101 +674,72 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
     }
 
-    public function testRandomizedWeeklySubjects() {
-        $config = Config::getInstance();
-        $config->setValue('mandrill_api_key','1234');
-        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+    public function testGetEmailMessageSubjectLine() {
+        // High emphasis insights
+        $insights = array();
+
+        $insight = new Insight();
+        $insight_high->headline = "This is a <strong>high emphasis</strong> insight for @joeuser&hellip;";
+        $insight_high->emphasis = Insight::EMPHASIS_HIGH;
+        $instance  = new Instance();
+        $instance->network_username = 'joeuser';
+        $instance->network = 'twitter';
+        $insight_high->instance = $instance;
+        $insights[] = $insight_high;
+
         $plugin = new InsightsGeneratorPlugin();
+        $result = $plugin->getEmailMessageSubjectLine('weekly', $insights);
+        $this->assertEqual($result, 'This is a high emphasis insight for you…');
 
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
-        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
-        $plugin_option_dao->insertOption($plugin_id, 'last_weekly_email', date('2012-01-01'));
-        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', date('2012-01-01'));
-        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
-        $long_ago = date('Y-m-d', strtotime('last year'));
 
-        $builders = array();
-        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
-        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'weekly',
-        'timezone' => 'America/New_York'));
-        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
-        'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
-        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
-        'text'=>'Joe Test is on 1234 new lists', 'related_data'=>null,
-        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
-        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
-        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
+        // Mediun and low emphasis insights
+        $insights = array();
 
-        $this->simulateLogin('admin@example.com');
+        $insight_med = new Insight();
+        $insight_med->headline = "This is a medium emphasis&mdash;insight for @joeuser";
+        $insight_med->emphasis = Insight::EMPHASIS_MED;
+        $instance  = new Instance();
+        $instance->network_username = 'joeuser';
+        $instance->network = 'twitter';
+        $insight_med->instance = $instance;
+        $insights[] = $insight_med;
+        $insight_low = new Insight();
+        $insight_low->headline = "This is a medium emphasis insight for @joeuser";
+        $insight_low->emphasis = Insight::EMPHASIS_LOW;
+        $insights[] = $insight_low;
 
-        $plugin->current_timestamp = strtotime('Sunday +'.(InsightsGeneratorPlugin::WEEKLY_DIGEST_DAY_OF_WEEK).
-            " days 5pm");
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $result = $plugin->getEmailMessageSubjectLine('weekly', $insights);
+        $this->assertEqual($result, 'This is a medium emphasis—insight for you');
 
-        $good_subjects = array(
+        //No high or medium insights
+        $insights = array();
+
+        $insight_low_1 = new Insight();
+        $insight_low_1->headline = "This is a low emphasis insight for @joeuser";
+        $insight_low_1->emphasis = Insight::EMPHASIS_LOW;
+        $insights[] = $insight_low_1;
+        $insight_low_2 = new Insight();
+        $insight_low_2->headline = "This is a low emphasis insight for @joeuser";
+        $insight_low_2->emphasis = Insight::EMPHASIS_LOW;
+        $insights[] = $insight_low_2;
+
+        //Weekly
+        $good_weekly_subjects = array(
             1 => "How did you do online this week? Here are your ThinkUp insights",
             2 => "Your ThinkUp insights this week",
             3 => "New ThinkUp insights are ready for you",
             4 => "This week's ThinkUp insights",
             5 => "This week was great! ThinkUp's got details",
+            6 => "How did you do online this week? Here are your ThinkUp insights"
         );
-
-        for ($i=1; $i<=5; $i++) {
-            unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        for ($i=1; $i<=6; $i++) {
             TimeHelper::setTime($i);
-            $plugin_option_dao->updateOption($options['last_weekly_email']->id,
-                'last_weekly_email', date('Y-m-d', strtotime('last year')));
-            $plugin->crawl();
-            $sent = Mailer::getLastMail();
-            $decoded = json_decode($sent);
-            $this->assertEqual($decoded->subject, $good_subjects[$i]);
+            $result = $plugin->getEmailMessageSubjectLine('Weekly', $insights);
+            $this->assertEqual($result, $good_weekly_subjects[$i]);
         }
-    }
 
-    public function testRandomizedDailySubjects() {
-        $config = Config::getInstance();
-        $config->setValue('mandrill_api_key','1234');
-        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
-        $plugin = new InsightsGeneratorPlugin();
-
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
-        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
-        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', date('2012-01-01'));
-        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
-        $long_ago = date('Y-m-d', strtotime('last year'));
-
-        $builders = array();
-        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
-        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
-        'timezone' => 'America/New_York'));
-        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
-            'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1, 'network_user_id'=>'11'));
-        $builders[] = FixtureBuilder::build('users', array('user_id' => '11', 'network' => 'twitter',
-            'joined' => date('Y-m-d', strtotime('-10 day'))));
-        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>2, 'instance_id'=>6,
-        'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
-        'text'=>'Joe Test is on 1234 new lists', 'related_data'=>null,
-        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
-        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
-        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
-
-        $this->simulateLogin('admin@example.com');
-
-        $plugin->current_timestamp = strtotime('5pm');
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
-
-        $good_subjects = array(
+        //Daily
+        $good_daily_subjects = array(
             1 => "You have new insights from ThinkUp",
             2 => "Your new insights from ThinkUp",
             3 => "New ThinkUp insights are ready for you",
@@ -781,53 +752,22 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
             10 => "You have 2 new insights from ThinkUp",
             11 => "ThinkUp has new insights for you! Take a look",
         );
-
         for ($i=1; $i<=11; $i++) {
-            unlink(FileDataManager::getDataPath(Mailer::EMAIL));
             TimeHelper::setTime($i);
-            $plugin_option_dao->updateOption($options['last_daily_email']->id,
-                'last_daily_email', date('Y-m-d', strtotime('last year')));
-            $plugin->crawl();
-            $sent = Mailer::getLastMail();
-            $decoded = json_decode($sent);
-            $this->assertEqual($decoded->subject, $good_subjects[$i]);
+            $result = $plugin->getEmailMessageSubjectLine('Daily', $insights);
+            $this->assertEqual($result, $good_daily_subjects[$i]);
         }
-    }
 
-    public function testRandomizedDailySubjectsOneInsight() {
-        $config = Config::getInstance();
-        $config->setValue('mandrill_api_key','1234');
-        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
-        $plugin = new InsightsGeneratorPlugin();
+        //Daily with just one insight
+        //No high or medium insights
+        $insights = array();
 
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
-        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
-        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', date('2012-01-01'));
-        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
-        $long_ago = date('Y-m-d', strtotime('last year'));
+        $insight_low_1 = new Insight();
+        $insight_low_1->headline = "This is a low emphasis insight for @joeuser";
+        $insight_low_1->emphasis = Insight::EMPHASIS_LOW;
+        $insights[] = $insight_low_1;
 
-        $builders = array();
-        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
-        'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
-        'timezone' => 'America/New_York'));
-        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
-            'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1, 'network_user_id'=>'11'));
-        $builders[] = FixtureBuilder::build('users', array('user_id' => '11', 'network' => 'twitter',
-            'joined' => date('Y-m-d', strtotime('-10 day'))));
-        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
-        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
-        'option_name'=>'server_name', 'option_value'=>'downtonabb.ey'));
-        $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6, 'slug'=>'twitter_age',
-        'time_generated'=>date('Y-m-d 03:00:00', strtotime('-1 year'))));
-
-        $this->simulateLogin('admin@example.com');
-
-        $plugin->current_timestamp = strtotime('5pm');
-        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
-
-        $good_subjects = array(
+        $good_daily_subjects = array(
             1 => "You have new insights from ThinkUp",
             2 => "Your new insights from ThinkUp",
             3 => "New ThinkUp insights are ready for you",
@@ -843,16 +783,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
 
         // Ensure we skip over the subjects involving the count to avoid pluralization issues
         for ($i=1; $i<=11; $i++) {
-            unlink(FileDataManager::getDataPath(Mailer::EMAIL));
             TimeHelper::setTime($i);
-            $plugin_option_dao->updateOption($options['last_daily_email']->id,
-                'last_daily_email', date('Y-m-d', strtotime('last year')));
-            $plugin->crawl();
-            $sent = Mailer::getLastMail();
-            $decoded = json_decode($sent);
-            $this->assertEqual($decoded->subject, $good_subjects[$i]);
+            $result = $plugin->getEmailMessageSubjectLine('Daily', $insights);
+            $this->assertEqual($result, $good_daily_subjects[$i]);
         }
     }
+
     public function testMandrillHTMLThinkUpLLCUnsubLinkWithOutWelcomeMessage() {
         unlink(FileDataManager::getDataPath(Mailer::EMAIL));
         $plugin = new InsightsGeneratorPlugin();
