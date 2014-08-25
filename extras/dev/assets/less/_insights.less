@@ -675,3 +675,17 @@
         }
     }
 }
+
+.text-diff {
+    ins, del {
+        text-decoration: none;
+    }
+
+    ins {
+        background: fade(@green-success, 50%);
+    }
+
+    del {
+        background: fade(@red-warning, 50%);
+    }
+}

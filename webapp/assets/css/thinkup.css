@@ -2228,6 +2228,16 @@ body.app-message-visible.account .container {
 .body-list.body-list-show-all .list-item {
   display: block;
 }
+.text-diff ins,
+.text-diff del {
+  text-decoration: none;
+}
+.text-diff ins {
+  background: rgba(76, 215, 100, 0.5);
+}
+.text-diff del {
+  background: rgba(208, 2, 27, 0.5);
+}
 .btn-default {
   background: #125c9c;
   border: 0;

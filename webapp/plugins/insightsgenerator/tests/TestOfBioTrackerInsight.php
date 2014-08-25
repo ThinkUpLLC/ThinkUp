@@ -124,7 +124,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
         'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
         'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
-        'network'=>'twitter', 'description'=>'I just got married!', 'location'=>'San Francisco, CA','is_verified'=>0));
+        'network'=>'twitter', 'description'=>'I am a father, woodworker, sandwich, bird, and pushover. RTs != endorsements', 'location'=>'San Francisco, CA','is_verified'=>0));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
         'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
@@ -139,7 +139,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
 
         // Change
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
-            'field_value' => "I'm getting married soon.", 'crawl_time' => '-2d'));
+            'field_value' => "I am a father, woodworker, sandwich, bird, and pushover.", 'crawl_time' => '-2d'));
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 3, 'field_name' => 'description',
             'field_value' => "I use Google+", 'crawl_time' => '-3d'));
 
@@ -162,8 +162,8 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['changes'][0]['user']->username, 'newlywed');
         $this->assertEqual($data['changes'][0]['field_name'], 'description');
         $this->assertEqual($data['changes'][0]['field_description'], 'bio');
-        $this->assertEqual($data['changes'][0]['before'], 'I\'m getting married soon.');
-        $this->assertEqual($data['changes'][0]['after'], 'I just got married!');
+        $this->assertEqual($data['changes'][0]['before'], 'I am a father, woodworker, sandwich, bird, and pushover.');
+        $this->assertEqual($data['changes'][0]['after'], 'I am a father, woodworker, sandwich, bird, and pushover. RTs != endorsements');
 
         $this->assertEqual($data['changes'][1]['user']->username, 'movingperson');
         $this->assertEqual($data['changes'][1]['field_name'], 'description');
@@ -171,7 +171,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['changes'][1]['before'], 'I use Google+');
         $this->assertEqual($data['changes'][1]['after'], 'I live in France.');
 
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInHTML($result, true, true));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 

@@ -59,7 +59,8 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                                 'field_name' => 'description',
                                 'field_description' => 'bio',
                                 'before' => $last_description['field_value'],
-                                'after' => $user->description
+                                'after' => $user->description,
+                                'diff' => $this->getDiff($last_description['field_value'], $user->description)
                             );
                         }
                     }
@@ -99,6 +100,12 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
             "Even small changes can be big news.",
             "%they might appreciate that someone noticed."
         ), array('they' => $they));
+    }
+
+    private function getDiff ($from_text, $to_text) {
+        require_once Config::getInstance()->getValue('source_root_path').'/webapp/_lib/extlib/FineDiff/finediff.php';
+        $opcodes = FineDiff::getDiffOpcodes($from_text, $to_text, $granularityStack = FineDiff::$wordGranularity);
+        return FineDiff::renderDiffToHTMLFromOpcodes($from_text, $opcodes);
     }
 
     private function getHeadline($changes, $instance) {
