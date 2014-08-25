@@ -277,10 +277,10 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             // It's a weekly digest if we're going back more than a day or two.
             $daily_or_weekly = $weekly ? 'Weekly' : 'Daily';
             $view->assign('weekly_or_daily', $daily_or_weekly);
-            $insights = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
+            $insights_markup = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
 
             $parameters = array();
-            $parameters['insights'] = $insights;
+            $parameters['insights'] = $insights_markup;
             $parameters['app_title'] = $config->getValue('app_title_prefix')."ThinkUp";
             $parameters['application_url'] = Utils::getApplicationURL();
             $parameters['weekly_or_daily'] = $daily_or_weekly;
@@ -289,7 +289,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 if (!isset($options['last_daily_email'])) {
                     $subject_line = "Welcome to ThinkUp! Here are your insights.";
                 } else {
-                    $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly, $num_insights);
+                    $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly, $insights);
                 }
                 Mailer::mailHTMLViaMandrillTemplate($owner->email, $subject_line,
                 $options['mandrill_template']->option_value, $parameters);
@@ -329,40 +329,66 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
     }
 
     /**
-     * Return random subject line text.
+     * Return email subject line based on the insight headline of a high or medium insight (converted to second person).
+     * If neither exist, use generic headline text.
      * @param str $daily_or_weekly "Daily" or "Weekly"
-     * @param int $num_insights Number of insights
+     * @param arr $insights Insight objects
      * @return str
      */
-    private function getEmailMessageSubjectLine($daily_or_weekly, $num_insights) {
-        if ($daily_or_weekly == "Daily") {
-            $subject_line_choices = array (
-            "ThinkUp has new insights for you! Take a look",
-            "You have new insights from ThinkUp",
-            "Your new insights from ThinkUp",
-            "New ThinkUp insights are ready for you",
-            "These are your latest ThinkUp insights",
-            "A few new ThinkUp insights for you",
-            "New ThinkUp insights are waiting for you",
-            "ThinkUp: Today's insights",
-            "These are your ThinkUp insights for ".date('l', $this->current_timestamp),
-            );
-            if ($num_insights > 1) {
-                $subject_line_choices[] = "ThinkUp found %total insights for you today. Here's a look.";
-                $subject_line_choices[] = "You have %total new insights from ThinkUp";
+    public function getEmailMessageSubjectLine($daily_or_weekly, $insights) {
+        $num_insights = count($insights);
+        $insight_headline_subject = null;
+        foreach ($insights as $insight) {
+            if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
+                $terms = new InsightTerms($insight->instance->network);
+                $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
+                    strip_tags(html_entity_decode($insight->headline)));
+                break;
             }
-        } else {
-            $subject_line_choices = array (
-            "This week was great! ThinkUp's got details",
-            "How did you do online this week? Here are your ThinkUp insights",
-            "Your ThinkUp insights this week",
-            "New ThinkUp insights are ready for you",
-            "This week's ThinkUp insights"
-            );
         }
-        $rand_index = TimeHelper::getTime() % count($subject_line_choices);
-        $subject = $subject_line_choices[$rand_index];
-        $subject = str_replace('%total', number_format($num_insights), $subject);
+        // If no HIGH insights existed, check medium
+        if ( !isset($insight_headline_subject) ) {
+            foreach ($insights as $insight) {
+                if ($insight->emphasis == Insight::EMPHASIS_MED) {
+                    $terms = new InsightTerms($insight->instance->network);
+                    $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
+                        strip_tags(html_entity_decode($insight->headline)) );
+                    break;
+                }
+            }
+        }
+        if ( !isset($insight_headline_subject) ) {
+            if ($daily_or_weekly == "Daily") {
+                $subject_line_choices = array (
+                "ThinkUp has new insights for you! Take a look",
+                "You have new insights from ThinkUp",
+                "Your new insights from ThinkUp",
+                "New ThinkUp insights are ready for you",
+                "These are your latest ThinkUp insights",
+                "A few new ThinkUp insights for you",
+                "New ThinkUp insights are waiting for you",
+                "ThinkUp: Today's insights",
+                "These are your ThinkUp insights for ".date('l', $this->current_timestamp),
+                );
+                if ($num_insights > 1) {
+                    $subject_line_choices[] = "ThinkUp found %total insights for you today. Here's a look.";
+                    $subject_line_choices[] = "You have %total new insights from ThinkUp";
+                }
+            } else {
+                $subject_line_choices = array (
+                "This week was great! ThinkUp's got details",
+                "How did you do online this week? Here are your ThinkUp insights",
+                "Your ThinkUp insights this week",
+                "New ThinkUp insights are ready for you",
+                "This week's ThinkUp insights"
+                );
+            }
+            $rand_index = TimeHelper::getTime() % count($subject_line_choices);
+            $subject = $subject_line_choices[$rand_index];
+            $subject = str_replace('%total', number_format($num_insights), $subject);
+        } else {
+            $subject = $insight_headline_subject;
+        }
         return $subject;
     }
 }
