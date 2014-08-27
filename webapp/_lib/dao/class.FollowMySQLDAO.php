@@ -209,7 +209,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
 
     public function countTotalFriends($user_id, $network) {
         $q = "SELECT count(f.user_id) AS count FROM #prefix#follows AS f ";
-        $q .= "WHERE f.follower_id = :user_id AND f.network=:network ";
+        $q .= "WHERE f.follower_id = :user_id AND f.network=:network AND active=1 ";
         $vars = array(
             ':user_id'=>(string)$user_id,
             ':network'=>$network
@@ -761,6 +761,43 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "INNER JOIN #prefix#follows AS f ON u.user_id = f.follower_id ";
         $q .= "WHERE f.user_id = :user_id AND f.network = :network AND u.network=f.network AND active=1 ";
         $q .= "AND u.is_verified = 1 ";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataCountResult($ps);
+    }
+
+    public function getMedianFollowerCountOfFriends($user_id, $network) {
+        $total = $this->countTotalFriends($user_id, $network);
+        $number = floor($total / 2);
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+        );
+        $q  = "SELECT follower_count FROM #prefix#users AS u ";
+        $q .= "INNER JOIN #prefix#follows AS f ON u.user_id = f.user_id ";
+        $q .= "WHERE f.follower_id = :user_id AND f.network = :network AND u.network=f.network AND active=1 ";
+        if ($number > 0) {
+            $q .= "LIMIT :number, 1";
+            $vars[':number'] = (int)$number;
+        } else {
+            $q .= "LIMIT 1";
+        }
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowsAsArrays($ps);
+        return $result && count($result) ? $result[0]['follower_count'] : 0;
+    }
+
+    public function getCountOfFriendsWithFewerFollowers($user_id, $network, $followers) {
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':followers'=>$followers
+        );
+        $q  = "SELECT count(follower_id) as count FROM #prefix#users AS u ";
+        $q .= "INNER JOIN #prefix#follows AS f ON u.user_id = f.user_id ";
+        $q .= "WHERE f.follower_id = :user_id AND f.network = :network AND u.network=f.network AND active=1 ";
+        $q .= " AND u.follower_count < :followers ";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         return $this->getDataCountResult($ps);
