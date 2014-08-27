@@ -302,5 +302,18 @@ interface FollowDAO {
      * @return int number of verified followers
      */
     public function getVerifiedFollowerCount($user_id, $network);
-
+    /**
+     * Find the median follower count of people a user follows
+     * @param str $user_id
+     * @param str $network
+     * @return float average follower count
+     */
+    public function getMedianFollowerCountOfFriends($user_id, $network);
+    /**
+     * Find out how many people a user follows have fewer followers
+     * @param str $user_id
+     * @param str $network
+     * @return float average follower count
+     */
+    public function getCountOfFriendsWithFewerFollowers($user_id, $network, $followers);
 }
