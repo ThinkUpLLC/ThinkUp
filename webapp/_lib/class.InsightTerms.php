@@ -455,12 +455,27 @@ class InsightTerms {
         }
         $text = str_replace($username." is", 'you are', $text);
 
+        //is username/are you
+        if (strpos($text, "Is ".$username) === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace("Is ".$username, 'Are you', $text);
+        }
+        $text = str_replace("is ".$username, 'are you', $text);
+
         //you reach/You reach
         if (strpos($text, $username." reaches") === 0) {
             //Captitalize if username starts the sentence
             $text = str_replace($username." reaches", 'You reach', $text);
         }
         $text = str_replace($username." reaches", 'you reach', $text);
+
+        //you haven't/You haven't
+        if (strpos($text, $username." hasn't") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username." hasn't", "You haven't", $text);
+        }
+        $text = str_replace($username." hasn't", "you haven't", $text);
+
 
         //you've/You've
         if (strpos($text, $username." has") === 0) {
