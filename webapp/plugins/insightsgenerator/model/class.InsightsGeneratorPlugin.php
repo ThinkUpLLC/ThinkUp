@@ -338,22 +338,26 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
     public function getEmailMessageSubjectLine($daily_or_weekly, $insights) {
         $num_insights = count($insights);
         $insight_headline_subject = null;
-        foreach ($insights as $insight) {
-            if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
-                $terms = new InsightTerms($insight->instance->network);
-                $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
-                    strip_tags(html_entity_decode($insight->headline)));
-                break;
-            }
-        }
-        // If no HIGH insights existed, check medium
-        if ( !isset($insight_headline_subject) ) {
+
+        //Testing: Use high/med insight headline as subject line for 10% of users
+        if ( TimeHelper::getTime() % 10 == 1) {
             foreach ($insights as $insight) {
-                if ($insight->emphasis == Insight::EMPHASIS_MED) {
+                if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
                     $terms = new InsightTerms($insight->instance->network);
                     $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
-                        strip_tags(html_entity_decode($insight->headline)) );
+                        strip_tags(html_entity_decode($insight->headline)));
                     break;
+                }
+            }
+            // If no HIGH insights existed, check medium
+            if ( !isset($insight_headline_subject) ) {
+                foreach ($insights as $insight) {
+                    if ($insight->emphasis == Insight::EMPHASIS_MED) {
+                        $terms = new InsightTerms($insight->instance->network);
+                        $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
+                            strip_tags(html_entity_decode($insight->headline)) );
+                        break;
+                    }
                 }
             }
         }
