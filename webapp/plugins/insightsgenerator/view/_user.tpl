@@ -28,6 +28,5 @@ $user_text Determines what to show below the user's name
                 {/if}
             </div>
         </div>
-    </a>
 </div>
 {/if}

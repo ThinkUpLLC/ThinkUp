@@ -2113,6 +2113,16 @@ body.app-message-visible.account .container {
 .user {
   margin-bottom: 1em;
 }
+.user:before,
+.user:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+.user:after {
+  clear: both;
+}
 .user .user-photo {
   float: left;
   width: 60px;
@@ -2227,28 +2237,17 @@ body.app-message-visible.account .container {
 .body-list.body-list-show-all .list-item {
   display: block;
 }
-.text-diff ins:before,
-.text-diff del:before {
+.text-diff ins,
+.text-diff del {
   padding: 0 3px;
-  font-weight: bold;
-  font-size: .75em;
-  vertical-align: 1px;
 }
 .text-diff ins {
   background: #e4f9e8;
   text-decoration: none;
 }
-.text-diff ins:before {
-  content: "\f055";
-  color: #2cc446;
-}
 .text-diff del {
   background: #f8d9dd;
   color: #dc4154;
-}
-.text-diff del:before {
-  content: "\f056";
-  color: #e8818d;
 }
 .btn-default {
   background: #125c9c;
