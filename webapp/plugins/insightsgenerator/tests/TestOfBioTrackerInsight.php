@@ -307,4 +307,58 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
             $this->debug($this->getRenderedInsightInEmail($result));
         }
     }
+
+    public function testDiffRenderer() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friends
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Not Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I am naïve.', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Maybe Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
+        'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'4', 'user_name'=>'anewguy',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Totally Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/430938301428547584/yOQ7fNcI_400x400.png', 'id' =>4,
+        'network'=>'twitter', 'description'=>'Testing «ταБЬ boing»: 1<2 & 4+1>3, now 20% off!', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'4', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
+            'field_value' => "I am naive.", 'crawl_time' => '-2d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 3, 'field_name' => 'description',
+            'field_value' => "I use تطبيق_قرآنى", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 4, 'field_name' => 'description',
+            'field_value' => "Testing «ταБЬ ℓσ»: 1<2 & 4+1>3, now 20% off!", 'crawl_time' => '-3d'));
+
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+
+        $this->debug($this->getRenderedInsightInHTML($result, true, true));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
 }

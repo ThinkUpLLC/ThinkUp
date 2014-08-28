@@ -42,6 +42,5 @@ $bio_diff If this is a bio change, replace the description with the bio diff
                 {/if}
             </div>
         </div>
-    </a>
 </div>
 {/if}
