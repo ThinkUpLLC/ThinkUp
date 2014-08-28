@@ -538,6 +538,7 @@
 }
 
 .user {
+    .clearfix;
     margin-bottom: 1em;
 
     .user-photo {
@@ -686,33 +687,17 @@
 }
 
 .text-diff {
-
     ins, del {
-        &:before {
-            padding: 0 3px;
-            font-weight: bold;
-            font-size: .75em;
-            vertical-align: 1px;
-        }
+        padding: 0 3px;
     }
 
     ins {
         background: mix(@green-success, #fff, 15%);
         text-decoration: none;
-
-        &:before {
-            content: "\f055";
-            color: darken(@green-success, 10%);
-        }
     }
 
     del {
         background: mix(@red-warning, #fff, 15%);
         color: mix(@red-warning, #fff, 75%);
-
-        &:before {
-            content: "\f056";
-            color: mix(@red-warning, #fff, 50%);
-        }
     }
 }
