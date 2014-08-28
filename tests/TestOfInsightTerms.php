@@ -191,5 +191,29 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $new_text = "Hey, did you see that Xander Harris followed you?";
         $result = $terms->swapInSecondPerson($username, $text);
         $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Where in the world is Willow Rosenberg?";
+        $new_text = "Where in the world are you?";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Is Willow Rosenberg the best?";
+        $new_text = "Are you the best?";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Willow Rosenberg hasn't replied to Andre Durand in over a year.";
+        $new_text = "You haven't replied to Andre Durand in over a year.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "That's why Willow Rosenberg hasn't replied to Andre Durand in over a year.";
+        $new_text = "That's why you haven't replied to Andre Durand in over a year.";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
     }
 }
