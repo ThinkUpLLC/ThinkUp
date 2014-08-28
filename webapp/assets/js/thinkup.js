@@ -399,6 +399,15 @@
       $this.text(text);
       return $this.toggleClass("visible");
     });
+    $("body").on("click", ".diff-toggle", function(e) {
+      var $link, $td, text;
+      e.preventDefault();
+      $link = $(this);
+      $td = $link.parents(".text-diff");
+      $td.find(".bio-diff, .bio-before-after").toggle();
+      text = $link.text();
+      return $link.text($link.data("alt-text")).data("alt-text", text);
+    });
     return $(window).load(function() {
       var delay, delayed;
       delayed = function() {
