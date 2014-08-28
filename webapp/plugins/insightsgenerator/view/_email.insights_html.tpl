@@ -552,7 +552,8 @@ color: #417505 !important;
         </table>
 {/if}
 
-{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)}
+{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)
+or isset($insight->related_data.changes)}
     <table class="twelve columns insight-body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
         {if $insight->text ne ''}
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
@@ -584,6 +585,41 @@ color: #417505 !important;
                                 {/if}</p>
                                 {if $user->description neq ''}
                                     <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$user->description}</p>
+                                {/if}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+        {/if}
+        {/foreach}
+        {/if}
+        {if isset($insight->related_data.changes)}
+        {foreach from=$insight->related_data.changes item=change name=changed }
+        {assign var='user' value=$change.user}
+        {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+        {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+            <td class="sub-grid object user text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 10px; padding: 10px;" align="left" valign="top">
+                <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
+                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                        <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{$user->avatar|use_https}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
+                        </td>
+                        <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
+                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
+                            <div class="user-text">
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
+                                    {$user->follower_count|number_format} followers
+                                {else}
+                                    {if isset($user->other.total_likes)}
+                                    {$user->other.total_likes|number_format} likes
+                                    {/if}
+                                {/if}</p>
+                                {if $bio_diff neq ''}
+                                    <p class="text-diff" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$bio_diff}</p>
                                 {/if}
                             </div>
                         </td>
