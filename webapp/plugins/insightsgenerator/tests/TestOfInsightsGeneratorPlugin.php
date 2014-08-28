@@ -678,10 +678,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         // High emphasis insights
         $insights = array();
 
-        $insight = new Insight();
+        $insight_high = new Insight();
         $insight_high->headline = "This is a <strong>high emphasis</strong> insight for @joeuser&hellip;";
         $insight_high->emphasis = Insight::EMPHASIS_HIGH;
-        $instance  = new Instance();
+        $instance = new Instance();
         $instance->network_username = 'joeuser';
         $instance->network = 'twitter';
         $insight_high->instance = $instance;
