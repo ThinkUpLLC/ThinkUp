@@ -455,6 +455,13 @@ class InsightTerms {
         }
         $text = str_replace($username." is", 'you are', $text);
 
+        //you were/You were
+        if (strpos($text, $username." was") === 0) {
+            //Captitalize if username starts the sentence
+            $text = str_replace($username." was", 'You were', $text);
+        }
+        $text = str_replace($username." was", 'you were', $text);
+
         //is username/are you
         if (strpos($text, "Is ".$username) === 0) {
             //Captitalize if username starts the sentence
