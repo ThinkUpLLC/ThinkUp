@@ -327,6 +327,15 @@ $ ->
     $this.text text
     $this.toggleClass "visible"
 
+  $("body").on "click", ".diff-toggle", (e) ->
+    e.preventDefault()
+    $link = $(@)
+    $td = $link.parents(".text-diff")
+    $td.find(".bio-diff, .bio-before-after").toggle()
+    text = $link.text()
+    $link.text($link.data "alt-text")
+    .data("alt-text", text)
+
   # This is a temporary fix for a font rendering issue.
   $(window).load ->
     delayed = -> $('body').hide().show()

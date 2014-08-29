@@ -2110,21 +2110,18 @@ body.app-message-visible.account .container {
 .hide-photo.tweet .user-about {
   margin-left: 0;
 }
-.user a {
-  display: block;
+.user {
+  margin-bottom: 1em;
 }
-.user a:before,
-.user a:after {
+.user:before,
+.user:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */
 }
-.user a:after {
+.user:after {
   clear: both;
-}
-.user a:hover {
-  text-decoration: none;
 }
 .user .user-photo {
   float: left;
@@ -2138,8 +2135,20 @@ body.app-message-visible.account .container {
 .user .user-about .user-name {
   font-weight: 600;
 }
+.user .user-about .user-name a {
+  color: #222222;
+}
 .user .user-about .user-name .icon {
   color: #999999;
+}
+.user .user-about .user-name a:hover .icon {
+  color: #46bcff;
+}
+.user .diff-toggle {
+  font-size: .75em;
+}
+.user .bio-before-after {
+  display: none;
 }
 .link .link-title {
   font-weight: bold;
@@ -2227,6 +2236,18 @@ body.app-message-visible.account .container {
 .body-list.all-items-visible .list-item,
 .body-list.body-list-show-all .list-item {
   display: block;
+}
+.text-diff ins,
+.text-diff del {
+  padding: 0 3px;
+}
+.text-diff ins {
+  background: #e4f9e8;
+  text-decoration: none;
+}
+.text-diff del {
+  background: #f8d9dd;
+  color: #dc4154;
 }
 .btn-default {
   background: #125c9c;

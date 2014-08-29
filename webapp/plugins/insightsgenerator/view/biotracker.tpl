@@ -1,13 +1,8 @@
 {foreach from=$i->related_data.changes item=change name=changed }
 <div class="biotracker_change">
-    <h5>{if $change.user->network eq 'twitter'}@{/if}{$change.user->username} changed their {$change.field_description}:</h5>
-    <table border="1">
-        <tr>
-            <td><b>Before</b><br />{$change.before|escape}</td>
-            <td><b>After</b><br />{$change.after|escape}</td>
-        </tr>
-    </table>
-    {* I dunno, maybe the user {include file=$tpl_path|cat:"_user.tpl" user=$change.user user_text=null} *}
+    {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio"}
+    {include file=$tpl_path|cat:"_user.tpl" user=$change.user
+      bio_diff=$bio bio_before=$change.before bio_after=$change.after}
 </div>
 {/foreach}
 

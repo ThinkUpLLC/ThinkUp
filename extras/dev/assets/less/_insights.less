@@ -538,14 +538,8 @@
 }
 
 .user {
-    a {
-        .clearfix;
-        display: block;
-
-        &:hover {
-            text-decoration: none;
-        }
-    }
+    .clearfix;
+    margin-bottom: 1em;
 
     .user-photo {
         float: left;
@@ -560,10 +554,26 @@
         .user-name {
             font-weight: 600;
 
+            a {
+                color: @text-color;
+            }
+
             .icon {
                 color: @gray-light;
             }
+
+            a:hover .icon {
+                color: @link-hover-color;
+            }
         }
+    }
+
+    .diff-toggle {
+        font-size: .75em;
+    }
+
+    .bio-before-after {
+        display: none;
     }
 }
 
@@ -673,5 +683,21 @@
         .list-item {
             display: block;
         }
+    }
+}
+
+.text-diff {
+    ins, del {
+        padding: 0 3px;
+    }
+
+    ins {
+        background: mix(@green-success, #fff, 15%);
+        text-decoration: none;
+    }
+
+    del {
+        background: mix(@red-warning, #fff, 15%);
+        color: mix(@red-warning, #fff, 75%);
     }
 }

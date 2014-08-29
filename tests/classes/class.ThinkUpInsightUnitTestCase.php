@@ -89,7 +89,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
      * @param  Insight $insight Test insight to render in HTML.
      * @return str Insight HTML with this insight
      */
-    protected function getRenderedInsightInHTML(Insight $insight) {
+    protected function getRenderedInsightInHTML(Insight $insight, $local_dev = false, $thinkupllc = false) {
         if ($insight->related_data !== null && is_string($insight->related_data)) {
             $insight->related_data = Serializer::unserializeString($insight->related_data);
         }
@@ -101,6 +101,13 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         $view->assign('enable_bootstrap', true);
         $view->assign('thinkup_application_url', Utils::getApplicationURL());
         $view->assign('site_root_path', 'https://thinkup.thinkup.com/');
+        if ($local_dev) {
+            $view->assign('site_root_path', '/');
+        }
+        if ($thinkupllc) {
+            $view->assign('thinkupllc_endpoint', 'https://thinkup.com/join/user/');
+        }
+
         $html_insight = $view->fetch(THINKUP_WEBAPP_PATH.'_lib/view/insights.tpl');
         return $html_insight;
     }
