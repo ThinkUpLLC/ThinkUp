@@ -121,7 +121,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_spike_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('This one hit a nerve this week.', $result->headline);
+        $this->assertEqual('@buffy hit a nerve this week', $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet, more than" .
             " <strong>5x</strong> @buffy's 7-day average.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
@@ -136,7 +136,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_spike_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("@buffy's tweet got <strong>10 replies</strong>.", $result->headline);
+        $this->assertEqual("@buffy got <strong>10 replies</strong>", $result->headline);
         $this->assertEqual("That's more than <strong>5x</strong> @buffy's 7-day average.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
 
@@ -150,7 +150,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_spike_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("<strong>5 people</strong> thought this tweet was worth retweeting.", $result->headline);
+        $this->assertEqual("<strong>5 people</strong> thought @buffy was worth retweeting", $result->headline);
         $this->assertEqual("That's more than <strong>double</strong> @buffy's average over the last 7 days.",
             $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_LOW);
@@ -189,7 +189,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('This one really got some favorites.', $result->headline);
+        $this->assertEqual('@buffy really got some favorites', $result->headline);
         $this->assertEqual("<strong>50 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
@@ -201,7 +201,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("<strong>10 people</strong> retweeted @buffy's tweet.", $result->headline);
+        $this->assertEqual("<strong>10 people</strong> retweeted @buffy", $result->headline);
         $this->assertEqual("That's a new 7-day record.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
@@ -213,7 +213,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("@buffy's tweet got <strong>10 replies</strong>.", $result->headline);
+        $this->assertEqual("@buffy got <strong>10 replies</strong>", $result->headline);
         $this->assertEqual("That's a new 7-day record.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
@@ -225,7 +225,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("This one really got some favorites.", $result->headline);
+        $this->assertEqual("@buffy really got some favorites", $result->headline);
         $this->assertEqual("<strong>50 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
@@ -265,7 +265,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_spike_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('This tweet got 5x the favorites for @buffy.', $result->headline);
+        $this->assertEqual('@buffy got 5x the favorites', $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet, which is more than "
             . "<strong>5x</strong> @buffy's 30-day average.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
@@ -323,7 +323,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That's the highest number of favorites @buffy's tweets have gotten in the past 30 days.",
+        $this->assertEqual("Highest number of favorites in the past 30 days",
             $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
@@ -334,10 +334,10 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_high_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("This is the most one of @buffy's tweets has been retweeted in the past month!",
-            $result->headline);
+        $this->assertEqual("That's the most one of @buffy's tweets has been retweeted in the past month!",
+            $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
-        $this->assertEqual("<strong>10 people</strong> retweeted @buffy's post.", $result->text);
+        $this->assertEqual("<strong>10 people</strong> retweeted @buffy", $result->headline);
 
         $posts = array($this->makePost($replies=10, $retweets=1, $faves=1));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
@@ -347,9 +347,9 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_high_30_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("This tweet got replies from <strong>10 people</strong>.", $result->headline);
+        $this->assertEqual("@buffy got <strong>10 replies</strong>", $result->headline);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
-        $this->assertEqual("That sets a new 30-day record for @buffy.", $result->text);
+        $this->assertEqual("That's a new 30-day record for @buffy.", $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -398,7 +398,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('fave_high_365_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That's a 365-day record for favorites!", $result->headline);
+        $this->assertEqual("A 365-day record for favorites!", $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
@@ -410,8 +410,8 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('reply_high_365_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That tweet got <strong>5 replies</strong> &mdash; your 365-day high!", $result->headline);
-        $this->assertEqual("Why do you think @buffy's tweet did so well?", $result->text);
+        $this->assertEqual("@buffy got <strong>5 replies</strong> &mdash; a 365-day high!", $result->headline);
+        $this->assertEqual("Why do you think this tweet did so well?", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
         $posts = array($this->makePost($replies=5, $retweets=100, $faves=1));
@@ -422,8 +422,8 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
         $result = $insight_dao->getInsight('retweet_high_365_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual("That's a new 365-day record!", $result->headline);
-        $this->assertEqual("<strong>100 people</strong> retweeted @buffy's post.", $result->text);
+        $this->assertEqual("A new 365-day record!", $result->headline);
+        $this->assertEqual("<strong>100 people</strong> retweeted @buffy's tweet.", $result->text);
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -450,7 +450,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('This one really got some favorites.', $result->headline);
+        $this->assertEqual('@buffy really got some favorites', $result->headline);
         $generated = $result->time_generated;
         $date = $result->date;
 
@@ -460,7 +460,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
 
         $result = $insight_dao->getInsight('fave_high_7_day_1', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('This one really got some favorites.', $result->headline);
+        $this->assertEqual('@buffy really got some favorites', $result->headline);
         $this->assertEqual($result->time_generated, $generated);
         $this->assertEqual($result->date, $date);
 
