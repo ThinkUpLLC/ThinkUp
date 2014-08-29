@@ -24,7 +24,7 @@ $bio_diff If this is a bio change, replace the description with the bio diff
                     {/if}
                 {/if}</p>
                 {if isset($bio_diff) and isset($bio_before) and isset($bio_after)}
-                <div class="text-diff fa">
+                <div class="text-diff">
                     <div class="bio-diff">
                         <p>{$bio_diff}</p>
                     </div>
