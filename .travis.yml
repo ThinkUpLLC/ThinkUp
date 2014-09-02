@@ -3,7 +3,6 @@ language: php
 php:
   - 5.5
   - 5.4
-  - 5.3
 
 env:
   - JUST_INSTALL=1
@@ -13,8 +12,6 @@ matrix:
     exclude:
         - php: 5.5
           env: JUST_INSTALL=1
-        - php: 5.3
-          env: JUST_INSTALL=1 
 
 before_script: extras/dev/travis/before.sh
 
