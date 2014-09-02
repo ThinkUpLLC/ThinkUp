@@ -38,40 +38,40 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
      * Milestones we check against.
      */
     public $milestones = array(
-        56 => "%username's followers could fill a yellow school bus!",
-        115 => "That's how many fans saw the Rolling Stones' first live performance!",
-        200 => "%username's followers could fill a New York City subway car!",
-        360 => "%username's followers outnumber singers in the Mormon Tabernacle Choir!",
-        400 => "%username's followers could fill up a 747!",
-        485 => "More people follow %username than play in the largest collegiate marching band!",
-        560 => "That's 10 school buses full of students!",
-        600 => "More people follow %username than live in Eminence, Missouri!",
+        56 => "%username's followers could fill a yellow school bus.",
+        115 => "That's how many fans saw the Rolling Stones' first live performance.",
+        200 => "%username's followers could fill a New York City subway car.",
+        360 => "%username's followers outnumber singers in the Mormon Tabernacle Choir.",
+        400 => "%username's followers could fill up a 747.",
+        485 => "More people follow %username than play in the largest collegiate marching band.",
+        560 => "That's 10 school buses full of students.",
+        600 => "More people follow %username than live in Eminence, Missouri.",
         /*TODO fill in this gap */
-        1000 => "%username's followers would fill the Hammerstein Ballroom to capacity!",
-        1510 => "%username's followers would fill the Apollo Theater!",
-        2740 => "%username's followers could fill all the seats in the concert hall at Lincoln Center!",
-        3100 => "%username has more followers than there are hot dog vendors in New York City!",
-        4815 => "%username's followers outnumber the student body at Wake Forest University!",
-        5950 => "%username's followers could fill the seats at Radio City Music Hall!",
-        6140 => "%username's followers outnumber the student body at Brown University!",
-        7550 => "More people follow %username than live in Rhinebeck, New York!",
+        1000 => "%username's followers would fill the Hammerstein Ballroom to capacity.",
+        1510 => "%username's followers would fill the Apollo Theater.",
+        2740 => "%username's followers could fill all the seats in the concert hall at Lincoln Center.",
+        3100 => "%username has more followers than there are hot dog vendors in New York City.",
+        4815 => "%username's followers outnumber the student body at Wake Forest University.",
+        5950 => "%username's followers could fill the seats at Radio City Music Hall.",
+        6140 => "%username's followers outnumber the student body at Brown University.",
+        7550 => "More people follow %username than live in Rhinebeck, New York.",
         /*TODO fill in this gap */
-        12500 => "%username's followers could fill up Wembley Arena!",
+        12500 => "%username's followers could fill up Wembley Arena.",
         /*TODO fill in this gap */
-        17400 => "%username's followers could fill all the seats in the Hollywood Bowl!",
+        17400 => "%username's followers could fill all the seats in the Hollywood Bowl.",
         /*TODO fill in this gap */
-        28700 => "%username's followers outnumber the undergraduates enrolled at UCLA!",
-        36000 => "That's how many runners were in the 2014 Boston Marathon!",
-        40700 => "That's the entire population of Manassas, Virginia!",
-        50000 => "%username's followers could fill Yankee Stadium!",
-        57000 => "More people follow %username than live in Greenland!",
+        28700 => "%username's followers outnumber the undergraduates enrolled at UCLA.",
+        36000 => "That's how many runners were in the 2014 Boston Marathon.",
+        40700 => "That's the entire population of Manassas, Virginia.",
+        50000 => "%username's followers could fill Yankee Stadium.",
+        57000 => "More people follow %username than live in Greenland.",
         /*TODO fill in this gap */
-        259000 => "That's the entire population of Buffalo, New York!",
-        334300 => "%username's follower count is the size of Belize's entire population!",
-        500000 => "That's how many people went to Woodstock!",
+        259000 => "That's the entire population of Buffalo, New York.",
+        334300 => "%username's follower count is the size of Belize's entire population.",
+        500000 => "That's how many people went to Woodstock.",
         /*TODO fill in this gap */
-        750000 => "That's the entire population of Louisville, Kentucky!",
-        917100 => "That's more than the entire population of Delaware!",
+        750000 => "That's the entire population of Louisville, Kentucky.",
+        917100 => "That's more than the entire population of Delaware.",
     );
 
     /**
@@ -276,13 +276,13 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
 
                     if ($user->follower_count == $met_milestone) {
                         $headlines = array(
-                            '%username has reached %total %followers!',
-                            '%total people follow %username.',
+                            '%username has reached %total %followers',
+                            '%total people follow %username',
                         );
                     } else {
                         $headlines = array(
-                            '%username has passed %total %followers!',
-                            'More than %total people follow %username.',
+                            '%username has passed %total %followers',
+                            'More than %total people follow %username',
                         );
                     }
 
