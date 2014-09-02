@@ -48,17 +48,17 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 }
                 if (sizeof($big_reshares) > 1) {
                     $headline = "People with lots of followers ".$this->terms->getVerb('shared')." "
-                    ."$this->username's " . $this->terms->getNoun('post') . ".";
+                    ."$this->username";
                 } else {
                     $follower_count_multiple =
                     intval(($big_reshares[0]->follower_count) / $user->follower_count);
                     if ($follower_count_multiple > 1 ) {
                         $headline = "Someone with <strong>".$follower_count_multiple.
-                        "x</strong> more followers than $this->username ".$this->terms->getVerb('shared')." "
-                        ."this " . $this->terms->getNoun('post') . ".";
+                        "x</strong> more followers ".$this->terms->getVerb('shared')." ".$this->username;
                     } else {
                         $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
-                        ."$this->username's " . $this->terms->getNoun('post') . ".";
+                        .$this->username;
+                        echo $headline;
                     }
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
