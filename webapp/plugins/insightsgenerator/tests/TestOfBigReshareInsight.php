@@ -87,7 +87,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers than \@testeriffic retweeted/',
+        $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers retweeted \@testeriffic/',
         $result->headline);
         $this->debug($this->getRenderedInsightInHTML($result));
     }
@@ -130,6 +130,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $instance = new Instance();
         $instance->id = 10;
         $instance->network_user_id = '22';
+        $instance->network_username = 'tester';
         $instance->network = 'twitter';
         $bigreshare_insight_plugin = new BigReshareInsight();
         $bigreshare_insight_plugin->generateInsight($instance, $this->getUser(), $posts, 3);
@@ -177,6 +178,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $instance = new Instance();
         $instance->id = 10;
         $instance->network_user_id = '22';
+        $instance->network_username = 'tester';
         $instance->network = 'twitter';
         $bigreshare_insight_plugin = new BigReshareInsight();
         $bigreshare_insight_plugin->generateInsight($instance, $this->getUser(), $posts, 3);
