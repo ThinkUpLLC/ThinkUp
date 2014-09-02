@@ -2,7 +2,7 @@
 /*
  Plugin Name: New Dictionary-Word Count
  Description: Did you use words just added to The Oxford English Dictionary in August 2014?
- When: September 2, 2014 until October 2, 2014
+ When: September 2, 2014 until October 2, 2014, Mondays for Twitter, Thursdays for Facebook
  */
 /**
  *
@@ -72,8 +72,16 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
             if ($now >= strtotime($data['start']) && $now <= strtotime($data['end'])) {
                 $baseline = $baseline_dao->getMostRecentInsightBaseline($baseline_slug, $instance->id);
                 if (!$baseline) {
-                    $found = $this->runInsightForConfig($data, $instance);
-                    $baseline_dao->insertInsightBaseline($baseline_slug, $instance->id, $found);
+                    if ( ($instance->network == 'facebook' && date('w') == 4 /*Thursday*/)
+                        || ($instance->network == 'twitter' && date('w') == 1 /*Monday*/)
+                        || Utils::isTest() ) {
+                        $found = $this->runInsightForConfig($data, $instance);
+                        $baseline_dao->insertInsightBaseline($baseline_slug, $instance->id, $found);
+                    } else {
+                        $this->logger->logInfo("Not today", __METHOD__.','.__LINE__);
+                    }
+                } else {
+                    $this->logger->logInfo("Already exists", __METHOD__.','.__LINE__);
                 }
             }
         }
