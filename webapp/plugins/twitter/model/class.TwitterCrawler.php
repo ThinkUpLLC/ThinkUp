@@ -1338,7 +1338,7 @@ class TwitterCrawler {
     }
 
     /**
-     * Update profiles of users who are friends of the instance user, and haven't been checked in 2 days.
+     * Update profiles of users who are friends of the instance user, and haven't been checked in 1 day.
      * @return void
      */
     public function updateFriendsProfiles() {
@@ -1348,7 +1348,7 @@ class TwitterCrawler {
         if (isset($this->user)) {
             //Get stalest friends
             $follow_dao = DAOFactory::getDAO('FollowDAO');
-            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 2);
+            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 1);
             $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
 
