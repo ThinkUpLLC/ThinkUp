@@ -266,6 +266,49 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
                 if (!isset($options['last_daily_email'])) {
                     $view->assign('show_welcome_message', true);
+                } else {
+                    if ($owner->is_free_trial) {
+                        $creation_date = new DateTime($owner->joined);
+                        $now = new DateTime();
+                        $end_of_trial = $creation_date->add(new DateInterval('P14D'));
+                        if ($end_of_trial >= $now) {
+                            $interval = $now->diff($end_of_trial);
+                            $days_left = $interval->format('%a');
+
+                            if ($days_left > 2) {
+                                $view->assign('pay_prompt_headline', $days_left.' days left in your free trial!');
+                            } elseif ($days_left == 0) {
+                                //Last day
+                                $view->assign('pay_prompt_headline', 'Last chance!');
+                            } else {
+                                //Show hours if it's 24 or 48 hours
+                                $view->assign('pay_prompt_headline', 'Only '.($days_left*24).' hours left!');
+                            }
+                            $explainer_copy_options = array(
+                                "Your free trial expires today. Don't lose any of your insights!", //Last chance!
+                                "It's time to become a member. We'd love to have you.", // 1 day left
+                                "Just ".(($owner->membership_level == 'Member')?'16':'32').
+                                    " cents a day to get smarter about your time spent online.", //2 days left
+                                "Isn't this better than boring \"analytics\"?", //3 days left
+                                "Just wait 'til you see ThinkUp next week.", //4 days left
+                                "We never sell your data and we don't show you ads.", //5 days left
+                                "Get our exclusive book on the future of social media for free.", //6 days left
+                                "ThinkUp gives you social network superpowers.", //7 days left
+                                "The longer you use ThinkUp, the smarter it gets.", //8 days left
+                                "ThinkUp helps you be more thoughtful about your time online.", //9 days left
+                                "ThinkUp works in email, on the web, and on all your devices.", //10 days left
+                                "ThinkUp members can cancel at any time—with no hassles.", //11 days left
+                                'Wait until you see what ThinkUp has in store tomorrow.', //12 days left
+                                "Your morning ThinkUp email will make your day.", //13 days left
+                            );
+                            $view->assign('pay_prompt_explainer', $explainer_copy_options[$days_left]);
+                            if ($owner->membership_level == 'Member') {
+                                $view->assign('pay_prompt_button_label', 'Just $5/month');
+                            } elseif ($owner->membership_level == 'Pro') {
+                                $view->assign('pay_prompt_button_label', 'Just $10/month');
+                            }
+                        }
+                    }
                 }
                 $thinkupllc_email_tout = $config->getValue('thinkupllc_email_tout');
                 if (isset($thinkupllc_email_tout)) {
