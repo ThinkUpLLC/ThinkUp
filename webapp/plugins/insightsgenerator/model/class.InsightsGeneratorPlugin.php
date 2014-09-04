@@ -339,8 +339,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $num_insights = count($insights);
         $insight_headline_subject = null;
 
-        //Testing: Use high/med insight headline as subject line for 20% of users
-        if ( TimeHelper::getTime() % 5 == 1) {
+        //Testing: Use high/med insight headline as subject line for 33% of users
+        if ( TimeHelper::getTime() % 3 == 1) {
             foreach ($insights as $insight) {
                 if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
                     $terms = new InsightTerms($insight->instance->network);
