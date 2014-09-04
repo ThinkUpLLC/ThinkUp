@@ -56,11 +56,12 @@ class UserVersionsMySQLDAO extends PDODAO implements UserVersionsDAO {
             ':days_ago' =>$past_x_days
         );
 
+        // TODO: Check f.active in follows sub-select when the active bug is fixed.
         $q  = "SELECT user_key, field_name, field_value, crawl_time FROM #prefix#user_versions uv ";
         $q .= "WHERE crawl_time > date_sub(NOW(), INTERVAL :days_ago day) ";
         $q .= "AND user_key IN (SELECT id FROM #prefix#users u LEFT JOIN #prefix#follows f ON ";
         $q .= "   (f.network=u.network AND u.user_id=f.user_id) ";
-        $q .= "   WHERE f.follower_id=:user_id AND f.network=:network AND  f.active=1) ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.network=:network ) ";
         if (count($fields)) {
             $q .= " AND field_name IN (";
             $tojoin = array();
