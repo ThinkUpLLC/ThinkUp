@@ -144,7 +144,10 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $headline = "This was $this->username's most popular ".$this->terms->getNoun('post') . " of last week.";
+                $headlines = array(
+                    "$this->username's biggest %post last week",
+                    "$this->username's most popular %post last week",
+                );
                 $insight_text = $this->username." earned ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
@@ -166,7 +169,7 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->slug = 'weekly_best'; //slug to label this insight's content
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
-                $my_insight->headline = $headline; // or just set a string like 'Ohai';
+                $my_insight->headline = $this->getVariableCopy($headlines);
                 $my_insight->text = $insight_text; // or just set a strong like "Greetings humans";
                 $my_insight->header_image = $header_image;
                 $my_insight->filename = basename(__FILE__, ".php");
