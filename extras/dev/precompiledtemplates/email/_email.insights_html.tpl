@@ -877,11 +877,10 @@ body.outlook p {
         padding: 10px 10px 0;
       }
 
-@media (max-width: 600px) {
-  .payment-reminder td h6, .payment-reminder td p, .payment-reminder td {
-    text-align: center !important;
-  }
-}
+
+      .payment-reminder td h6, .payment-reminder td p, .payment-reminder td {
+        text-align: center !important;
+      }
 
     table.email-settings small {
       color: #999;
@@ -1072,43 +1071,20 @@ body.outlook p {
 {if isset($pay_prompt_explainer) and isset($pay_prompt_headline) and isset($pay_prompt_button_label)}
 <table class="row insight payment-reminder" style="border-top: 1px solid #1b5c92;border-bottom: 1px solid #1b5c92;">
   <tr>
-    <td class="wrapper">
-      <table class="eight columns insight-header">
-        <tr>
-          <td class="text-pad" style="vertical-align: middle;">
-            <h6>{$pay_prompt_headline}</h6>
-            <p style="margin-bottom: 0;">{$pay_prompt_explainer}</p>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-pad hide-for-desktop">
-              <div style="text-align:center;"><!--[if mso]>
-                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$site_url}user/membership.php" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
-                  <w:anchorlock/>
-                  <center>
-                <![endif]-->
-                    <a href="{$site_url}user/membership.php" class="reminder-button"
-              style="background-color:#24b98f;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:160px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">Join ThinkUp</span><br><span class="second-line" style="font-size:12px;line-height:14px;color:#e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
-                <!--[if mso]>
-                  </center>
-                </v:roundrect>
-              <![endif]--></div>
-          </td>
-          <td class="expander"></td>
-        </tr>
-      </table>
-    </td>
-    <td class="wrapper last hide-for-small">
-      <table class="four columns insight-header">
+    <td class="wrapper last">
+      <table class="twelve columns insight-header">
         <tr>
           <td class="text-pad">
+            <h6>{$pay_prompt_headline}</h6>
+            <p style="margin-bottom: 0;">{$pay_prompt_explainer}</p>
+            <br>
             <div style="text-align:center;"><!--[if mso]>
               <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$site_url}user/membership.php" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
                 <w:anchorlock/>
                 <center>
               <![endif]-->
                   <a href="{$site_url}user/membership.php" class="reminder-button"
-            style="background-color:#24b98f;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:160px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">Join ThinkUp</span><br><span class="second-line" style="font-size:12px;line-height:14px;color:#e9f8f4; font-weight: normal;">Just ${if $thinkupllc_membership_level eq 'Member'}5{else}10{/if}/month!</span><br>&nbsp;</a>
+            style="background-color:#24b98f;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:160px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">Join ThinkUp</span><br><span class="second-line" style="font-size:12px;line-height:14px;color:#e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
               <!--[if mso]>
                 </center>
               </v:roundrect>

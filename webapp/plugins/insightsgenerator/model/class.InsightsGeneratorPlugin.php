@@ -276,7 +276,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             $days_left = $interval->format('%a');
 
                             if ($days_left > 2) {
-                                $view->assign('pay_prompt_headline', 'Only '.$days_left.' days left!');
+                                $view->assign('pay_prompt_headline', $days_left.' days left in your free trial!');
                             } elseif ($days_left == 0) {
                                 //Last day
                                 $view->assign('pay_prompt_headline', 'Last chance!');
