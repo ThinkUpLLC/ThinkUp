@@ -28,12 +28,6 @@ color: #222222; font-family: "Helvetica", "Arial", sans-serif; font-weight: norm
 body {
 font-size: 14px; line-height: 19px;
 }
-a:hover {
-color: #2795b6 !important;
-}
-a:active {
-color: #2795b6 !important;
-}
 h1 a:active {
 color: #2ba6cb !important;
 }
@@ -324,14 +318,20 @@ color: #417505 !important;
     display: inherit !important;
   }
 }
+@media (max-width: 600px) {
+  .payment-reminder td h6 {
+    text-align: center !important;
+  }
+  .payment-reminder td p {
+    text-align: center !important;
+  }
+  .payment-reminder td {
+    text-align: center !important;
+  }
+}
 {/literal}</style>
 </head>
 <body style="width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
-
-<h1>{$pay_prompt_headline}</h1>
-<h1>{$pay_prompt_explainer}</h1>
-<h1>{$pay_prompt_button_label}</h1>
-
   <table class="body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; height: 100%; width: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
       <td class="center" align="center" valign="top" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;">
@@ -365,47 +365,52 @@ color: #417505 !important;
             </tr>
           </table>
 
-            <table class="row header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-bottom-style: solid; border-bottom-color: #2785d3; border-bottom-width: 1px; background: #46bcff; padding: 0px;">
+          <table class="row header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-bottom-style: solid; border-bottom-color: #2785d3; border-bottom-width: 1px; background: #46bcff; padding: 0px;">
             <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
               <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" valign="top">
                 <center style="width: 100%; min-width: 580px;">
-
                   <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
                     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
                       <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
-
                         <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
                           <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                              <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-                                  <center style="width: 100%; min-width: 580px;"><a href="{$application_url}" style="text-decoration: none; color: #2ba6cb;"><img class="center" src="https://www.thinkup.com/join/assets/img/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a></center>
+                            <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
+                              <center style="width: 100%; min-width: 580px;"><a href="{$application_url}" style="text-decoration: none; color: #2ba6cb;"><img class="center" src="https://www.thinkup.com/join/assets/img/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a></center>
                             </td>
                             <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
                           </tr>
                         </table>
-
                       </td>
                     </tr>
                   </table>
-
                 </center>
               </td>
             </tr>
           </table>
 
 {if isset($thinkupllc_email_tout)}
-          <table class="row bottom-message" style="border-spacing: 0; border-collapse: collapse; border-bottom-style: solid; border-bottom-color: #BBC7CE; border-bottom-width: 1px; vertical-align: top; text-align: left; width: 100%; position: relative; background: #FFFABE; padding: 0px;" bgcolor="#FFFABE"><tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-             <center style="width: 100%; min-width: 580px;">
-
-               <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;"><tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 0 0;" align="left" valign="top">
-
-                     <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;"><tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 11px; margin: 0; padding: 5px 0;" align="center" valign="top">
-                               <center style="width: 100%; min-width: 580px;">{$thinkupllc_email_tout}</center>
-                         </td>
-                         <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 9px; margin: 0; padding: 0;" align="left" valign="top"></td>
-                       </tr></table></td>
-                 </tr></table></center>
-           </td>
-          </tr></table>
+          <table class="row bottom-message" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-bottom-style: solid; border-bottom-color: #BBC7CE; border-bottom-width: 1px; background: #FFFABE; padding: 0px;">
+            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+              <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
+                <center style="width: 100%; min-width: 580px;">
+                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
+                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                      <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
+                        <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                            <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 11px; margin: 0; padding: 5px 0 5px 5px;" align="left" valign="top">
+                              <center style="width: 100%; min-width: 580px;">{$thinkupllc_email_tout}</center>
+                            </td>
+                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 11px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </center>
+              </td>
+            </tr>
+          </table>
 {/if}
 
 <br>
@@ -473,6 +478,57 @@ color: #417505 !important;
   </tr>
 </table>
 {/if}
+{if isset($pay_prompt_explainer) and isset($pay_prompt_headline) and isset($pay_prompt_button_label)}
+<table class="row insight payment-reminder" style="border-top-width: 1px; border-top-color: #1b5c92; border-top-style: solid; border-bottom-width: 1px; border-bottom-color: #1b5c92; border-bottom-style: solid; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; margin-bottom: 18px; background: #2785d3; padding: 0px;">
+  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+    <td class="wrapper" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 20px 0px 0px;" align="left" valign="top">
+      <table class="eight columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 380px; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad" style="vertical-align: middle; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="middle">
+            <h6 style="color: #f4fcf9 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: left; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="left">{$pay_prompt_headline}</h6>
+            <p style="color: #e9f3fb; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left">{$pay_prompt_explainer}</p>
+          </td>
+        </tr>
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad hide-for-desktop" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; display: none; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
+              <div style="text-align: center;" align="center"><!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$site_url}user/membership.php" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
+                  <w:anchorlock/>
+                  <center>
+                <![endif]-->
+                    <a href="{$site_url}user/membership.php" class="reminder-button" style="border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-weight: bold; width: 160px; font-size: 20px; line-height: 10px; text-align: center; text-decoration: none; -webkit-text-size-adjust: none; background: #24b98f;">&nbsp;<br><span style="line-height: 26px;">Join ThinkUp</span><br><span class="second-line" style="font-size: 12px; line-height: 14px; color: #e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
+                <!--[if mso]>
+                  </center>
+                </v:roundrect>
+              <![endif]--></div>
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+    </td>
+    <td class="wrapper last hide-for-small" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+      <table class="four columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 180px; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
+            <div style="text-align: center;" align="center"><!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$site_url}user/membership.php" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
+                <w:anchorlock/>
+                <center>
+              <![endif]-->
+                  <a href="{$site_url}user/membership.php" class="reminder-button" style="border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-weight: bold; width: 160px; font-size: 20px; line-height: 10px; text-align: center; text-decoration: none; -webkit-text-size-adjust: none; background: #24b98f;">&nbsp;<br><span style="line-height: 26px;">Join ThinkUp</span><br><span class="second-line" style="font-size: 12px; line-height: 14px; color: #e9f8f4; font-weight: normal;">Just ${if $thinkupllc_membership_level eq 'Member'}5{else}10{/if}/month!</span><br>&nbsp;</a>
+              <!--[if mso]>
+                </center>
+              </v:roundrect>
+            <![endif]--></div>
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/if}
+
 {foreach from=$insights item=insight}
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
