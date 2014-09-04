@@ -151,7 +151,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'F yeah!');
         $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; twice in the past month. "
-            ."That's 1 more than the prior month. Fucking Awesome.");
+            ."That's 1 more than the prior month. WTF?");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
@@ -187,7 +187,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, 'F yeah!');
         $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; 3 times in the past month. "
-            ."That's 2 more than the prior month. Fucking Awesome.");
+            ."That's 2 more than the prior month. WTF?");
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $baseline_name = $insight_plugin->getSlug(). '_' . 'count';
