@@ -327,6 +327,11 @@ color: #417505 !important;
 {/literal}</style>
 </head>
 <body style="width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
+
+<h1>{$pay_prompt_headline}</h1>
+<h1>{$pay_prompt_explainer}</h1>
+<h1>{$pay_prompt_button_label}</h1>
+
   <table class="body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; height: 100%; width: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
       <td class="center" align="center" valign="top" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;">

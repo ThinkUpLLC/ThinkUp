@@ -266,6 +266,48 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
                 if (!isset($options['last_daily_email'])) {
                     $view->assign('show_welcome_message', true);
+                } else {
+                    if ($owner->is_free_trial) {
+                        $creation_date = new DateTime($owner->joined);
+                        $now = new DateTime();
+                        $end_of_trial = $creation_date->add(new DateInterval('P14D'));
+                        if ($end_of_trial >= $now) {
+                            $interval = $now->diff($end_of_trial);
+                            $days_left = $interval->format('%a');
+
+                            if ($days_left > 2) {
+                                $view->assign('pay_prompt_headline', 'Only '.$days_left.' days left!');
+                            } elseif ($days_left == 0) {
+                                //Last day
+                                $view->assign('pay_prompt_headline', 'Last chance!');
+                            } else {
+                                //Show hours if it's 24 or 48 hours
+                                $view->assign('pay_prompt_headline', 'Only '.($days_left*24).' hours left!');
+                            }
+                            $explainer_copy_options = array(
+                                "Let's lock this down.",
+                                "That's just ".(($owner->membership_level == 'Member')?'16':'32')." cents a day.",
+                                'ThinkUp\'s way better than boring "analytics."',
+                                "Every day, get a little bit better at Internet.",
+                                "Just wait 'til you see ThinkUp next week.",
+                                "We never sell your data and we don't show you ads.",
+                                "Get our exclusive book for free.",
+                                "ThinkUp gives you social network superpowers.",
+                                "The longer you use ThinkUp, the smarter it gets.",
+                                "ThinkUp helps you be more thoughtful about your time online.",
+                                "ThinkUp is open source & built by a diverse community.",
+                                "ThinkUp members can cancel at any time&mdash;with no hassles.",
+                                "Your morning ThinkUp email will make your day.",
+                                "Wait until you see what ThinkUp has in store tomorrow."
+                            );
+                            $view->assign('pay_prompt_explainer', $explainer_copy_options[$days_left]);
+                            if ($owner->membership_level == 'Member') {
+                                $view->assign('pay_prompt_button_label', 'Just $5/month');
+                            } elseif ($owner->membership_level == 'Pro') {
+                                $view->assign('pay_prompt_button_label', 'Just $10/month');
+                            }
+                        }
+                    }
                 }
                 $thinkupllc_email_tout = $config->getValue('thinkupllc_email_tout');
                 if (isset($thinkupllc_email_tout)) {
