@@ -61,7 +61,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->date = $since_date; //date is often this or $simplified_post_date
                 if (count($fans) == 1) {
                     $my_insight->headline = $prefix.$fans[0]->username
-                        . " was $this->username's biggest fan last month.";
+                        . " was $this->username's biggest fan last month";
                     if ($fans[0]->avatar) {
                         $my_insight->header_image = $fans[0]->avatar;
                     }
@@ -69,7 +69,7 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                         " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
                         " the most over the last 30 days.";
                 } else {
-                    $my_insight->headline = "These were $this->username's biggest fans last month.";
+                    $my_insight->headline = "$this->username's biggest fans last month";
                     $my_insight->text = "They ".$this->terms->getVerb('liked').
                         " $this->username's " .$this->terms->getNoun('post', InsightTerms::PLURAL).
                         " the most over the last 30 days.";
@@ -100,16 +100,16 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $since_date; //date is often this or $simplified_post_date
                 if (count($fans) == 1) {
-                    $my_insight->headline = 'Last week, '.$prefix.$fans[0]->username
-                        . " was $this->username's biggest admirer.";
+                    $my_insight->headline = $prefix.$fans[0]->username
+                        . " was $this->username's biggest admirer last week";
                     if ($fans[0]->avatar) {
                         $my_insight->header_image = $fans[0]->avatar;
                     }
                 } else {
-                    $my_insight->headline = "Last week, these were $this->username's biggest admirers.";
+                    $my_insight->headline = "$this->username's biggest admirers last week";
                 }
                 $my_insight->text = "Here's who " .$this->terms->getVerb('liked')." $this->username's ".
-                    $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the last week.";
+                    $this->terms->getNoun('post', InsightTerms::PLURAL)." most over the past week.";
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_LOW;
                 $my_insight->setPeople($fans);
