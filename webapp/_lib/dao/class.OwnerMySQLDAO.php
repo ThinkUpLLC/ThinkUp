@@ -75,8 +75,8 @@ SQL;
     }
 
     public function getAllOwners() {
-        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login, email_notification_frequency ";
-        $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
+        $q = "SELECT id, full_name, email, is_admin, is_activated, last_login, email_notification_frequency, ";
+        $q .= "is_free_trial, joined, membership_level FROM #prefix#owners ORDER BY last_login DESC;";
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, 'Owner');
