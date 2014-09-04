@@ -92,8 +92,12 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             if ($this_period_count != $last_period_count && $last_period_count > 0) {
                 $f_diff = $this_period_count-$last_period_count;
                 $diff = $f_diff < 0 ? 'fewer' : 'more';
-                $insight->text .= ' That\'s '.number_format(abs($f_diff)).' '.$diff.' than the prior month. '
-                    .'Fucking Awesome.';
+                $insight->text .= ' That\'s '.number_format(abs($f_diff)).' '.$diff.' than the prior month. ';
+                if ($diff == 'fewer') {
+                    $insight->text .= 'Fucking Awesome.';
+                } else {
+                    $insight->text .= 'WTF?';
+                }
             }
 
             $insight->filename = basename(__FILE__, ".php");
