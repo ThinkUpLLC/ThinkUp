@@ -30,6 +30,9 @@
                   }
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             view_duration_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

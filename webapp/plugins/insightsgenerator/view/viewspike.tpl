@@ -33,6 +33,9 @@
                   },
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             likes_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

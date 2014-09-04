@@ -59,6 +59,9 @@
                   },
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             response_rates_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

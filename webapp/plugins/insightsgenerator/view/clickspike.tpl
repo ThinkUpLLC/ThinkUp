@@ -38,6 +38,9 @@
                   },
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             click_totals_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
