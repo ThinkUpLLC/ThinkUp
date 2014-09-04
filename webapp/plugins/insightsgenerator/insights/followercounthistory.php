@@ -68,7 +68,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 $insight->headline .= "</strong> till $this->username reaches <strong>".
                     number_format($follower_count_history_by_month['milestone']['next_milestone']);
-                $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL).'.';
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL);
                 $insight->slug = 'follower_count_history_by_month_milestone';
                 $insight->related_data = $follower_count_history_by_month;
                 $insight->instance_id = $instance->id;
@@ -111,7 +111,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 if ($follower_count_history_by_week['milestone']['will_take'] == 1) {
                     $insight->headline = 'Wow! Only ';
                 } else {
-                    $insight->headline = 'Looks like it will be ';
+                    $insight->headline = '';
                 }
                 $insight->headline .= '<strong>'.
                     $follower_count_history_by_week['milestone']['will_take'].' week';
@@ -120,7 +120,7 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 $insight->headline .= "</strong> till $this->username reaches <strong>".
                     number_format($follower_count_history_by_week['milestone']['next_milestone']);
-                $insight->headline .= '</strong> '.$this->terms->getNoun('follower', InsightTerms::PLURAL) . '.';
+                $insight->headline .= '</strong> '.$this->terms->getNoun('follower', InsightTerms::PLURAL);
                 $this->logger->logInfo("Storing insight ".$headline, __METHOD__.','.__LINE__);
                 $insight->slug = 'follower_count_history_by_week_milestone';
                 $insight->related_data = $follower_count_history_by_week;
