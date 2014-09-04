@@ -85,6 +85,10 @@ class Owner {
      */
     var $membership_level;
     /**
+     * @var bool Whether or not ThinkUp.com member is on free trial.
+     */
+    var $is_free_trial;
+    /**
      * @var arr Non-persistent, used for UI, array of instances associated with owner.
      */
     var $instances = null;
@@ -110,6 +114,7 @@ class Owner {
             $this->email_notification_frequency = $row['email_notification_frequency'];
             $this->timezone = $row['timezone'];
             $this->membership_level = $row['membership_level'];
+            $this->is_free_trial = PDODAO::convertDBToBool($row['is_free_trial']);
         }
     }
     /**
