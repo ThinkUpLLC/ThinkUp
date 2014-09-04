@@ -147,8 +147,8 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s tweets from last week got/', $result->headline);
-        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies in all/', $result->headline);
+        $this->assertPattern("/\@testeriffic's best time is <strong>around 6am<\/strong>/", $result->headline);
+        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies in all/', $result->text);
         $this->assertPattern('/That\'s compared to 1 response/', $result->text);
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
 
@@ -222,8 +222,9 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Tester Person\'s status updates from last week got/', $result->headline);
-        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 1 comment in all/', $result->headline);
+        $this->assertPattern('/Tester Person\'s best time is <strong>around 6am<\/strong>/', $result->headline);
+        $this->assertPattern('/Last week, Tester Person\'s status updates got/', $result->text);
+        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 1 comment in all/', $result->text);
 
         //Test email rendering
         $email_insight = $this->getRenderedInsightInEmail($result);

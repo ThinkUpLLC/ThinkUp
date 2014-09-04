@@ -112,15 +112,12 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
                 $plural = $most_responses['value']==1 ? InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                ." from last week got"
-                ." the best response between <strong>".$time1_low." and ".$time1_high."</strong>"
-                . " - ".$most_responses['value']." "
-                // . ($most_responses['value'] > 1 ? 'responses' : 'response')."</strong> "
-                . $this->terms->getNoun('reply', $plural)
-                . " in all.";
+                $insight_text = "Last week, ". $this->username."'s "
+                    . $this->terms->getNoun('post', InsightTerms::PLURAL)
+                    ." got the biggest response between <strong>".$time1_low." and ".$time1_high."</strong> - "
+                    .$most_responses['value']." "
+                    . $this->terms->getNoun('reply', $plural) . " in all.";
 
-                $insight_comparison_text = '';
                 foreach ($responses_chron as $key => $value) {
                     if ($value > 0 && $value < $most_responses['value']) {
                         $time2_low_hotd = $key;
@@ -131,15 +128,13 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                         $time2_high = (($time2_high_hotd % 12) ? ($time2_high_hotd % 12) : 12)
                         .((floor($time2_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                        $insight_comparison_text = "That's compared to ".$value." "
+                        $insight_text .= " That's compared to ".$value." "
                         .($value > 1 ? 'responses' : 'response').""
                         ." between ".$time2_low." and ".$time2_high.". ";
                     }
                 }
 
-                $insight_text .= $insight_comparison_text
-                . "The best timing for an important " . $this->terms->getNoun('post') . "  might be <strong>around "
-                . $time1_low . "</strong>.";
+                $headline = $this->username."'s best time is <strong>around " . $time1_low . "</strong>";
 
                 $optimal_hour = substr($time1_low, 0, -2);
 
