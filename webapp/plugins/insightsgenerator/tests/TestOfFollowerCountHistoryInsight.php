@@ -71,7 +71,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
         $this->assertEqual('Wow! Only <strong>1 week</strong> till @hitchhiker reaches <strong>1,000</strong> '.
-            'followers.', $result->headline);
+            'followers', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 14);
@@ -100,8 +100,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Looks like it will be <strong>10 weeks</strong> till @hitchhiker reaches '.
-            '<strong>1,000</strong> followers.', $result->headline);
+        $this->assertEqual('<strong>10 weeks</strong> till @hitchhiker reaches '.
+            '<strong>1,000</strong> followers', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 15);
@@ -165,7 +165,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
         $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
-            'followers.', $result->headline);
+            'followers', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 15);
@@ -216,7 +216,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
         $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
-            'followers.', $result->headline);
+            'followers', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 9);
@@ -249,8 +249,8 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Looks like it will be <strong>4 weeks</strong> till @hitchhiker reaches '.
-            '<strong>1,000</strong> followers.', $result->headline);
+        $this->assertEqual('<strong>4 weeks</strong> till @hitchhiker reaches '.
+            '<strong>1,000</strong> followers', $result->headline);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['history']), 9);
