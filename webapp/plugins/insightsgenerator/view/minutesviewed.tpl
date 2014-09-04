@@ -34,6 +34,9 @@
                   },
                 }
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(likes_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             likes_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

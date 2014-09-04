@@ -27,6 +27,9 @@
                   colors: ['#7DD3F0', '#E6B8D4']
                 }
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(likes_dislikes_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             likes_dislikes_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
