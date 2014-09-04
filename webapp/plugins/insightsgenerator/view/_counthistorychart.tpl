@@ -46,6 +46,9 @@ function drawChart{/literal}{$i->id}() {literal}{
           },
       },
   });
+{/literal}
+    {include file=$tpl_path|cat:"_chartcallback.tpl"}
+{literal}
   count_history_chart_{/literal}{$i->id}{literal}.draw();
   }
   {/literal}

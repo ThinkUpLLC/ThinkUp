@@ -31,6 +31,9 @@
                   }
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             sub_change_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

@@ -27,6 +27,9 @@
                   colors: ['#7DD3F0', '#E6B8D4']
                 }
             });
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
             likes_dislikes_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
