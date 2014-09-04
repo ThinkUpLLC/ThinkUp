@@ -30,6 +30,9 @@
                   }
                 }
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(view_duration_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             view_duration_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

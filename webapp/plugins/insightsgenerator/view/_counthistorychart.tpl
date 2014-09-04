@@ -46,6 +46,9 @@ function drawChart{/literal}{$i->id}() {literal}{
           },
       },
   });
+  if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+    google.visualization.events.addListener(count_history_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+  }
   count_history_chart_{/literal}{$i->id}{literal}.draw();
   }
   {/literal}

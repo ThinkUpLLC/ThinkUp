@@ -28,6 +28,9 @@
           	}
 
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(gender_analysis_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             gender_analysis_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

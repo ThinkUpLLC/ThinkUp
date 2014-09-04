@@ -59,6 +59,9 @@
                   },
                 }
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(response_rates_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             response_rates_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}

@@ -31,6 +31,9 @@
                   }
                 }
             });
+            if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
+              google.visualization.events.addListener(sub_change_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+            }
             sub_change_chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
