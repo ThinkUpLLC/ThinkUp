@@ -74,6 +74,10 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
+    public function getRecentlyFavoritedPosts($owner_id, $network, $count, $page=1, $is_public = false) {
+        return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "fav_timestamp", "DESC", null,
+        $page, false, $is_public);
+    }
     public function getAllFavoritePosts($owner_id, $network, $count, $page=1, $is_public = false) {
         return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", null,
         $page, false, $is_public);
@@ -102,7 +106,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
     $ubound = null, $page=1, $iterator = false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         $start_on_record = ($page - 1) * $count;
-        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
+        if (!in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS)
+            && $order_by != 'fav_timestamp') { // This is added in the query as meta-data, so allowed
             $order_by="pub_date";
         }
         if ($is_public) {
@@ -110,10 +115,11 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         } else {
             $protected = '';
         }
-        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date
-        FROM (#prefix#posts p
-        INNER JOIN #prefix#favorites f on f.post_id = p.post_id)
-        WHERE f.fav_of_user_id = :owner_id AND p.network=:network ";
+        $q = "SELECT p.*, f.fav_timestamp AS favorited_timestamp,
+                     pub_date - interval #gmt_offset# hour AS adj_pub_date
+              FROM (#prefix#posts p
+                    INNER JOIN #prefix#favorites f on f.post_id = p.post_id)
+             WHERE f.fav_of_user_id = :owner_id AND p.network=:network ";
         $q .= $protected;
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
