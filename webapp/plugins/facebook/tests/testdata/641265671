@@ -5,7 +5,8 @@
   "last_name": "Pike", 
   "link": "https://www.facebook.com/tigger.pike", 
   "username": "tigger.pike", 
-  "gender": "female", 
+  "gender": "female",
+  "birthday": "01/02/03", 
   "locale": "en_US", 
   "updated_time": "2011-08-26T18:55:57+0000", 
   "type": "user"

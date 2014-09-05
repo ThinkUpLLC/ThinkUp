@@ -3,12 +3,14 @@
     {
       "id": "100002586603826", 
       "name": "Sade Tolgahan",
-      "gender": "female"
+      "gender": "female",
+      "birthday": "01/02/03"
     }, 
     {
       "id": "100000931059876", 
       "name": "Kosso Thierry",
-      "gender": "male"
+      "gender": "male",
+      "birthday": "01/02/03"
     }, 
  ], 
   "paging": {

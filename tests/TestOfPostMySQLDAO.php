@@ -4229,6 +4229,41 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result, 32);
     }
 
+    public function testGetMostFavCommentPostsByUserId() {
+    	$builders = array();
+    	$user_id=7654321;
+    	$now =  date('Y-m-d H:i:s');
+    	$yesterday = date('Y-m-d H:i:s', strtotime('yesterday'));
+    	$builders[] = FixtureBuilder::build('posts', array('id'=> 331, 'post_id'=> 1331, 'author_user_id'=>$user_id,
+    			'author_username'=>'user', 'author_fullname'=>'User', 'author_avatar'=>'avatar.jpg',
+    			'network'=>'facebook', 'post_text'=>'This is a simple post.',
+    			'pub_date'=>$now, 'reply_count_cache'=> 1,'favlike_count_cache' => 6));
+
+    	$builders[] = FixtureBuilder::build('posts', array('id'=> 341, 'post_id'=> 1341, 'author_user_id'=>$user_id,
+    			'author_username'=>'user', 'author_fullname'=>'User', 'author_avatar'=>'avatar.jpg',
+    			'network'=>'facebook', 'post_text'=>'This is a simple comment.',
+    			'pub_date'=>$now, 'reply_count_cache'=> 0,'favlike_count_cache' => 5));
+
+    	$builders[] = FixtureBuilder::build('posts', array('id'=> 351, 'post_id'=> 1351, 'author_user_id'=>$user_id,
+    			'author_username'=>'user', 'author_fullname'=>'User', 'author_avatar'=>'avatar.jpg',
+    			'network'=>'facebook', 'post_text'=>'This is a simple cooment.',
+    			'pub_date'=>$yesterday, 'reply_count_cache'=> 0,'favlike_count_cache' => 4));
+
+    	$builders[] = FixtureBuilder::build('posts', array('id'=> 361, 'post_id'=> 1361, 'author_user_id'=>$user_id,
+    			'author_username'=>'user', 'author_fullname'=>'User', 'author_avatar'=>'avatar.jpg',
+    			'network'=>'facebook', 'post_text'=>'This is a simple comment.',
+    			'pub_date'=>$now, 'reply_count_cache'=> 0,'favlike_count_cache' => 0));
+
+    	$post_dao = new PostMySQLDAO();
+    	$posts = $post_dao->getMostFavCommentPostsByUserId($user_id, 'facebook');
+    	$this-> assertNotNull($posts);
+    	foreach($posts as $post) {
+    		$this->assertTrue($post instanceof Post);
+    		$this->assertEqual($post->post_id, '1331');
+    	}
+
+    }
+
     public function testSearchPostsByUsername() {
         $post_dao = new PostMySQLDAO();
         //should be first page of 20

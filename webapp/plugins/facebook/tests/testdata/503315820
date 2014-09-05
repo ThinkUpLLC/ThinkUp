@@ -39,7 +39,8 @@
       "end_date": "2011-07"
     }
   ], 
-  "gender": "male", 
+  "gender": "male",
+  "birthday": "01/02/03", 
   "website": "http://xn.pinkhamster.net/", 
   "timezone": -7, 
   "locale": "en_US", 

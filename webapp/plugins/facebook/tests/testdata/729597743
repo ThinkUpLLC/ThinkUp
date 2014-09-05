@@ -4,6 +4,7 @@
    "gender": "male",
    "about": "Old school proto-geek winding his way through this life",
    "is_verified": true,
+   "birthday": "01/02/03",
    "subscribers": {
     "data": [
     ],

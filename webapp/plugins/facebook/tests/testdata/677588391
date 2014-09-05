@@ -91,6 +91,7 @@
       }
    ],
    "gender": "male",
+   "birthday": "01/02/03",
    "locale": "en_US",
    "updated_time": "2010-07-25T22:53:13+0000"
 }

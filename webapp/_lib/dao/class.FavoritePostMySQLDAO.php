@@ -468,4 +468,46 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         return $gender;
     }
+
+	public function getBirthdayOfFavoriters($post_id) {
+		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#favorites, #prefix#users ";
+		$q .= "WHERE #prefix#favorites.post_id = :post_id ";
+		$q .= "AND #prefix#favorites.fav_of_user_id = #prefix#users.user_id ";
+
+		$vars = array (
+				':post_id' => $post_id
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+
+		$ps = $this->execute ( $q, $vars );
+		$rows = $this->getDataRowsAsArrays ( $ps );
+		$age = array ();
+		foreach ( $rows as $row ) {
+			$age[] = $row ['birthday'];
+		}
+		return $age;
+	}
+
+	public function getBirthdayOfCommenters($post_id) {
+		$q = "SELECT #prefix#users.birthday as birthday FROM #prefix#posts, #prefix#users ";
+		$q .= "WHERE #prefix#posts.in_reply_to_post_id = :post_id ";
+		$q .= "AND #prefix#posts.author_user_id = #prefix#users.user_id ";
+
+		$vars = array (
+				':post_id' => $post_id
+		);
+		if ($this->profiler_enabled) {
+			Profiler::setDAOMethod ( __METHOD__ );
+		}
+
+		$ps = $this->execute ( $q, $vars );
+		$rows = $this->getDataRowsAsArrays ( $ps );
+		$age = array ();
+		foreach ( $rows as $row ) {
+			$age[] = $row ['birthday'];
+		}
+		return $age;
+	}
 }
