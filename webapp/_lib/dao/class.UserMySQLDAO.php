@@ -99,6 +99,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':full_name'=>$user->full_name,
             ':avatar'=>$user->avatar,
         	':gender'=>$user->gender,
+        	':birthday'=>$user->birthday,
             ':location'=>$user->location,
             ':description'=>$user->description,
             ':url'=>$user->url,
@@ -114,13 +115,13 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $user_in_storage = $this->getDetails($user->user_id, $user->network);
         if (!isset($user_in_storage)) {
             //Insert new user
-            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, ";
+            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, birthday,";
             $q .= "location, description, url, is_verified, is_protected, follower_count, post_count, ".
             ($has_friend_count ? "friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count, " : "")." ".
             ($has_last_post ? "last_post, " : "")." found_in, joined, network  ".
             ($has_last_post_id ? ", last_post_id" : "").") ";
-            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :gender, :location, :description, ";
+            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :gender, :birthday, :location, :description, ";
             $q .= ":url, :is_verified, :is_protected, :follower_count, :post_count, ".
                 ($has_friend_count ? ":friend_count, " : "")." ".
                 ($has_favorites_count ? ":favorites_count, " : "")." ".
@@ -130,6 +131,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             //Update existing user
             $q = "UPDATE #prefix#users SET full_name = :full_name, avatar = :avatar,  location = :location, ";
             $q .= "user_name = :username, description = :description, url = :url, is_verified = :is_verified, ";
+            $q .= "gender=:gender, birthday=:birthday, ";
             $q .= "is_protected = :is_protected, follower_count = :follower_count, post_count = :post_count,  ".
             ($has_friend_count ? "friend_count= :friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count= :favorites_count, " : "")." ".

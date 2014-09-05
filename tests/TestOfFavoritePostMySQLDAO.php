@@ -474,6 +474,56 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 		$this->assertEqual ( $result ['male_likes_count'], '2' );
 	}
 
+    public function testGetBirthdayOfFavoriters() {
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'post_id',
+            'author_user_id' => 'blahblahblah',
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'favorites', array (
+            'post_id' => 111,
+            'fav_of_user_id' => 133,
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'favorites', array (
+            'post_id' => 111,
+            'fav_of_user_id' => 193,
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'favorites', array (
+            'post_id' => 111,
+            'fav_of_user_id' => 203,
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'favorites', array (
+            'post_id' => 222,
+            'fav_of_user_id' => 203,
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => 133,
+            'birthday'=>'1984-01-02',
+            'network'=>'facebook'
+        ) );
+
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => 193,
+            'birthday'=>'1985-05-19',
+            'network'=>'facebook'
+        ) );
+
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => 203,
+            'birthday'=>'1949-12-11',
+            'network'=>'facebook'
+        ) );
+        $result = $this->dao->getBirthdayOfFavoriters ( '111', 'facebook');
+        $this->debug ( Utils::varDumpToString ( $result ) );
+        $this->assertEqual ( $result [0], '1984-01-02' );
+        $this->assertEqual ( $result [1], '1985-05-19' );
+        $this->assertEqual ( $result [2], '1949-12-11' );
+    }
+
 	public function testGetGenderOfCommenters() {
         $builders [] = FixtureBuilder::build ( 'posts', array (
             'post_id' => '111',
@@ -527,7 +577,61 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 		$this->assertEqual ( $result ['male_comment_count'], '2' );
 	}
 
-    public function TestgetRecentlyFavoritedPosts() {
+    public function testGetBirthdayOfCommenters() {
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => '111',
+            'author_user_id' => 'blahblahblah',
+            'network' => 'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'abadadfd12123',
+            'author_user_id' => '203',
+            'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'abadad',
+            'author_user_id' => '193',
+            'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'd12123',
+            'author_user_id' => '133',
+            'in_reply_to_post_id' => '111',
+            'network'=>'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'posts', array (
+            'post_id' => 'abawertyfd12123',
+            'author_user_id' => '203',
+            'in_reply_to_post_id' => '222',
+            'network'=>'facebook'
+        ) );
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => '133',
+            'birthday'=>'1980-02-03',
+            'network'=>'facebook'
+        ) );
+
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => '193',
+            'birthday'=>'1975-02-03',
+            'network'=>'facebook'
+        ) );
+
+        $builders [] = FixtureBuilder::build ( 'users', array (
+            'user_id' => '203',
+            'birthday'=>'1979-02-03',
+            'network'=>'facebook'
+        ) );
+        $result = $this->dao->getBirthdayOfCommenters ( '111', 'facebook' );
+        $this->debug ( Utils::varDumpToString ( $result ) );
+        $this->assertEqual ( $result [0] , '1979-02-03' );
+        $this->assertEqual ( $result [1] , '1975-02-03' );
+        $this->assertEqual ( $result [2] , '1980-02-03' );
+    }
+
+    public function testGetRecentlyFavoritedPosts() {
         $builders[] = FixtureBuilder::build('posts', array( 'post_id' => 999, 'network' => 'twitter'));
 		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 999, 'fav_of_user_id' => 133,
             'network' => 'twitter', 'fav_timestamp' => $day_ago = date('Y-m-d h:i:s', strtotime('-1 day'))));
@@ -564,7 +668,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 	}
 
     /**
-     * helper method to build a post
+     * Helper method to build a post
      */
     private function buildPostArray1() {
         $vals = array();
@@ -582,7 +686,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * helper method to build a post
+     * Helper method to build a post
      */
     private function buildPostArray2() {
         $vals = array();
