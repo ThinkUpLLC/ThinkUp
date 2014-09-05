@@ -3,7 +3,7 @@
     {$i->related_data[0]->title} {$i->related_data[0]->expanded_url}
 </div>
 
-    <div id="click_totals_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -16,8 +16,8 @@
             var click_totals_data_{$i->id} = new google.visualization.DataTable({$i->related_data[1]});
 
             {literal}
-            var click_totals_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'click_totals_{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
               dataTable: click_totals_data_{/literal}{$i->id}{literal},
               options: {
@@ -41,7 +41,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            click_totals_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

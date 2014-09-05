@@ -5,6 +5,6 @@ Add a callback to google.visualization that tells image-generation services like
 *}
 {literal}
 if (typeof window.callPhantom !== "undefined" && window.callPhantom !== null) {
-  google.visualization.events.addListener(view_duration_chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
+  google.visualization.events.addListener(chart_{/literal}{$i->id}{literal}, 'ready', window.callPhantom)
 }
 {/literal}

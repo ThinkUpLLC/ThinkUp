@@ -58,10 +58,14 @@
         };
 
         var chartdiv = document.getElementById('insight-text-{/literal}{$i->id}{literal}');
-        chartdiv.insertAdjacentHTML('afterbegin', '<span id="piechart-{/literal}{$i->id}{literal}" style="width: 100; height: 80; float: right; position: relative; top: -40px; background: transparent;"></span>')
+        chartdiv.insertAdjacentHTML('afterbegin', '<span id="chart_{/literal}{$i->id}{literal}" style="width: 100; height: 80; float: right; position: relative; top: -40px; background: transparent;"></span>')
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart-{/literal}{$i->id}{literal}'));
+        var chart = new google.visualization.PieChart(document.getElementById('chart_{/literal}{$i->id}{literal}'));
         chart.draw(data, options);
+        {/literal}
+            {include file=$tpl_path|cat:"_chartcallback.tpl"}
+        {literal}
+
       }
 {/literal}
     </script>
