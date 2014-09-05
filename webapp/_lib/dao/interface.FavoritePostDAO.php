@@ -94,6 +94,15 @@ interface FavoritePostDAO extends PostDAO {
      */
     public function getAllFavoritePostsIterator($user_id, $network, $count);
     /**
+     * Get the recently favorited posts of a user.
+     * @param int $author_user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page
+     * @returns array Post objects
+     */
+    public function getRecentlyFavoritedPosts($author_user_id, $network, $count, $page=1);
+    /**
      * Get all the favorited posts of a user.
      * @param int $author_user_id
      * @param str $network

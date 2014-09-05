@@ -527,6 +527,33 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 		$this->assertEqual ( $result ['male_comment_count'], '2' );
 	}
 
+    public function TestgetRecentlyFavoritedPosts() {
+        $builders[] = FixtureBuilder::build('posts', array( 'post_id' => 999, 'network' => 'twitter'));
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 999, 'fav_of_user_id' => 133,
+            'network' => 'twitter', 'fav_timestamp' => $day_ago = date('Y-m-d h:i:s', strtotime('-1 day'))));
+        $builders[] = FixtureBuilder::build('posts', array( 'post_id' => 1000, 'network' => 'twitter'));
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1000, 'fav_of_user_id' => 133,
+			'network' => 'twitter', 'fav_timestamp' => '-3d'));
+        $builders[] = FixtureBuilder::build('posts', array( 'post_id' => 1001, 'network' => 'twitter'));
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1001, 'fav_of_user_id' => 133,
+			'network' => 'twitter', 'fav_timestamp' => '-2d'));
+        $builders[] = FixtureBuilder::build('posts', array( 'post_id' => 1002, 'network' => 'twitter'));
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1002, 'fav_of_user_id' => 133,
+			'network' => 'twitter', 'fav_timestamp' => $four_ago = date('Y-m-d h:i', strtotime('-4 days'))));
+		$result = $this->dao->getRecentlyFavoritedPosts(133, 'twitter', 3);
+        $this->assertEqual(3, count($result), 'Ensure limit is working');
+        $this->assertEqual($result[0]->post_id, 999);
+        $this->assertEqual($result[1]->post_id, 1001);
+        $this->assertEqual($result[2]->post_id, 1000);
+        $this->assertEqual($result[1]->post_id, 1001);
+        $this->assertEqual(strtotime($result[0]->favorited_timestamp), strtotime($day_ago), 'check for timestamp');
+
+		$result = $this->dao->getRecentlyFavoritedPosts(133, 'twitter', 3, 2);
+        $this->assertEqual(1, count($result));
+        $this->assertEqual($result[0]->post_id, 1002);
+        $this->assertEqual(strtotime($result[0]->favorited_timestamp), strtotime($four_ago), 'check for timestamp');
+    }
+
 	private function buildFavoriteArray() {
 		$vals = array ();
 		$vals ["favoriter_id"] = "1075560752";

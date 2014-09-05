@@ -169,6 +169,10 @@ class Post {
      */
     var $favorited;
     /**
+     * @var str Non-persistent, When was this post favorited (only set in the context of fetching favorite posts)
+     */
+    var $favorited_timestamp;
+    /**
      * @var int Non-persistent, used for UI
      */
     var $all_retweets;
@@ -224,6 +228,10 @@ class Post {
         // favorited is non-persistent.  Will be set from xml, but not from database retrieval.
         if (isset($val["favorited"])) {
             $this->favorited = $val["favorited"];
+        }
+        // favorited_timestamp is non-persistent.  Will be set when joined to favorites table
+        if (isset($val["favorited_timestamp"])) {
+            $this->favorited_timestamp = $val["favorited_timestamp"];
         }
 
         // For the retweet count display, we will use the larger of retweet_count_cache and retweet_count_api,
