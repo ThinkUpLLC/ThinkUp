@@ -1,6 +1,7 @@
 {
   "id": "691270740", 
   "name": "Jeffrey McManus",
-  "gender": "male", 
+  "gender": "male",
+  "birthday": "01/02/03",
   "type": "user"
 }

@@ -2683,4 +2683,29 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
+
+    public function getMostFavCommentPostsByUserId($author_id, $network) {
+        $q  = "SELECT *, pub_date + interval #gmt_offset# hour AS adj_pub_date FROM #prefix#posts ";
+        $q .= "WHERE author_user_id = :author_user_id AND network = :network ";
+        $q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE() ";
+        $q .= "AND reply_count_cache + favlike_count_cache = ";
+        $q .= "(SELECT MAX(reply_count_cache + favlike_count_cache) FROM #prefix#posts ";
+        $q .= "WHERE author_user_id = :author_user_id AND network = :network ";
+        $q .= "AND DATE(pub_date + interval #gmt_offset# hour) = CURRENT_DATE()) ";
+
+        $vars = array (
+            ':author_user_id' => $author_id,
+            ':network' => $network
+        );
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod ( __METHOD__ ); }
+        $ps = $this->execute ( $q, $vars );
+        $post_rows = $this->getDataRowsAsArrays ( $ps );
+        $posts = array ();
+        foreach ( $post_rows as $row ) {
+            $post = new Post ( $row );
+            $posts [] = $post;
+        }
+        return $posts;
+    }
 }

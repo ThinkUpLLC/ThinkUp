@@ -2,7 +2,9 @@
   "data": [
     {
       "name": "Adrian Valera", 
-      "id": "833828624"
+      "id": "833828624",
+      "gender": "male",
+      "birthday": "01/02/03"
     }
   ]
 }

@@ -6,6 +6,7 @@
   "link": "https://www.facebook.com/turkishTheajan", 
   "username": "turkishTheajan", 
   "gender": "male", 
+  "birthday": "01/02/03",
   "locale": "tr_TR", 
   "updated_time": "2011-08-29T13:08:01+0000", 
   "type": "user"
