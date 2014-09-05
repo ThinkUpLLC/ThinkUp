@@ -39,6 +39,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
+        TimeHelper::setTime(2); // Force one headline
     }
 
     public function tearDown() {
@@ -64,8 +65,9 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('@testeriffic favorited <strong>1 tweet</strong> with a link in it.', $result->headline);
-        $this->assertNoPattern('/tweets/', $result->text);
+        $this->assertEqual('The latest link @testeriffic favorited', $result->headline);
+        $this->assertPattern('|^@testeriffic favorited <strong>1 tweet</strong> with a link in it.$|',
+            $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
@@ -93,7 +95,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic liked \<strong\>2 status updates\<\/strong\>/', $result->headline);
+        $this->assertEqual('The latest links testeriffic liked', $result->headline);
+        $this->assertPattern('/testeriffic liked \<strong\>2 status updates\<\/strong\>/', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts["posts"]), 2);
@@ -136,7 +139,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         'network'=>'twitter', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
         'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/mcr7QsU7Ki',
-            'expanded_url' => 'https://twitter.com/TaylorBiglerDC/status/425346150397247489/photo/1'));
+            'expanded_url' => 'https://twitter.com/TaylorBiglerDC/status/425346150397247489/photo/1',
+            'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
         'fav_of_user_id'=>7612345, 'network'=>'twitter'));
@@ -153,7 +157,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
             'expanded_url' => ''));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>135, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNull($result);
@@ -171,21 +175,21 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao  = DAOFactory::getDAO('InsightDAO');
         $insight_plugin = new FavoritedLinksInsight();
         $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/mcr7QsU7Ki',
             'expanded_url' => 'http://google.com/'));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://inarow.net',
             'expanded_url' => ''));
-
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
 
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('@testeriffic favorited <strong>1 tweet</strong> with 2 links in it.', $result->headline);
+        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
+        $this->assertPattern('|@testeriffic favorited <strong>1 tweet</strong> with 2 links in it.|', $result->text);
 
         $email = $this->getRenderedInsightInEmail($result);
         $count = substr_count($email, '2 links:');
@@ -207,30 +211,31 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new FavoritedLinksInsight();
         $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7654321,
         'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
+        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki2 and http://inarow.net', 'source'=>'web',
         'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
-        $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/mcr7QsU7Ki',
-            'expanded_url' => 'http://google.com/'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/mcr7QsU7Ki2',
+            'expanded_url' => 'http://google.com/2'));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://inarow.net',
             'expanded_url' => ''));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
+
         $builders[] = FixtureBuilder::build('posts', array('id'=>135, 'post_id'=>135, 'author_user_id'=>7654321,
         'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki and http://inarow.net', 'source'=>'web',
+        'network'=>'twitter', 'post_text'=>'2 links: http://t.co/mcr7QsU7Ki3 and http://inarow.net/fish', 'source'=>'web',
         'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
-        $builders[] = FixtureBuilder::build('links', array('post_key'=>135, 'url'=>'http://t.co/mcr7QsU7Ki',
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>135, 'url'=>'http://t.co/mcr7QsU7Ki3',
             'expanded_url' => 'http://google.com/moogley'));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>135, 'url'=>'http://inarow.net/fish',
             'expanded_url' => ''));
-
-        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>135, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
 
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('@testeriffic favorited <strong>2 tweets</strong> with 4 links in them.', $result->headline);
+        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
+        $this->assertPattern('|@testeriffic favorited <strong>2 tweets</strong> with 4 links in them.|', $result->text);
         $fav_posts = unserialize($result->related_data);
         $this->assertEqual(2, count($fav_posts['posts']));
         $this->assertEqual(2, count($fav_posts['posts'][0]->links));
@@ -254,7 +259,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Here are the latest links from tweets @testeriffic favorited.', $result->headline);
+        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
+        $this->assertPattern('|Here are the latest links from tweets @testeriffic favorited.|', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -277,10 +283,117 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Here are the latest links from status updates testeriffic liked.', $result->headline);
+        $this->assertEqual('The latest links testeriffic liked', $result->headline);
+        $this->assertPattern('|Here are the latest links from status updates testeriffic liked.|', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testForLinkDedupification() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'refavey';
+        $instance->network = 'twitter';
+
+        $now = date('Y-m-d H:i:s');
+        $abitago = date('Y-m-d H:i:s', time() - (60*21));
+        $awhileago = date('Y-m-d H:i:s', time() - (60*60*25));
+        $this->assertNull($result);
+        $today = date ('Y-m-d');
+        $insight_dao  = DAOFactory::getDAO('InsightDAO');
+        $insight_plugin = new FavoritedLinksInsight();
+        $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7654321,
+        'author_username'=>'first_link_poster', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
+        'pub_date'=>$abitago, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/B5LAotKMWY',
+            'expanded_url' => 'https://link.com/', 'title' => 'Some Link'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>136, 'post_id'=>136, 'author_user_id'=>7654321,
+        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'A different post with the same link:  http://t.co/B5LAotKMWY.', 'source'=>'web',
+        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>136, 'url'=>'http://t.co/B5LAotKMWY',
+            'expanded_url' => 'http://link.com/', 'title' => 'Some Link'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>136, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>138, 'post_id'=>138, 'author_user_id'=>7654321,
+        'author_username'=>'first_google_lover', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'http://t.co/A is a link', 'source'=>'web',
+        'pub_date'=>$abitago, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>138, 'url'=>'http://t.co/A',
+            'expanded_url' => 'http://google.com/','title'=>'Google'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>138, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7654321,
+        'author_username'=>'google lover', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'twitter', 'post_text'=>'http://t.co/B resolves to the same thing!', 'source'=>'web',
+        'pub_date'=>$awhileago, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>140, 'url'=>'http://t.co/B',
+            'expanded_url' => 'http://google.com/','title'=>'Google'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>140, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
+
+
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        $result = $insight_dao->getInsight('favorited_links', 10, $today);
+        $this->assertEqual('@refavey favorited <strong>4 tweets</strong> with 2 links in them.', $result>title);
+        $data = unserialize($result->related_data);
+        $this->assertEqual(count($data['posts']), 2);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testAlternateHeadline() {
+        TimeHelper::setTime(3);
+        // Get data ready that insight requires
+        $builders = self::buildData();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new FavoritedLinksInsight();
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('favorited_links', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        $this->assertNotNull($result);
+        $this->assertEqual('1 link @testeriffic favorited', $result->headline);
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>999, 'post_id'=>999, 'author_user_id'=>7654321,
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
+            'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>999, 'url'=>'http://t.co/aMHh5XHGfS',
+            'expanded_url' => 'http://techcrunch.com/2013/04/28/disrupt-ny-hackathon-gets-hacked-man-'.
+                              'takes-stage-and-uses-his-60-seconds-to-disrupt-capitalism/'));
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>999, 'author_user_id'=>7654321,
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $today));
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        $result = $insight_dao->getInsight('favorited_links', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        $this->assertNotNull($result);
+        $this->assertEqual('2 links @testeriffic favorited', $result->headline);
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
     }
 
     private function buildData() {
@@ -290,97 +403,97 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $yesterday = date('Y-m-d H:i:s', strtotime('yesterday'));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is a simple post.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>134, 'post_id'=>134, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>134, 'url'=>'http://t.co/B5LAotKMWY',
             'expanded_url' => 'https://pushover.net/'));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>135, 'post_id'=>135, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
-        'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'twitter', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
+            'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>135, 'url'=>'http://t.co/aMHh5XHGfS',
             'expanded_url' => 'http://techcrunch.com/2013/04/28/disrupt-ny-hackathon-gets-hacked-man-'.
                               'takes-stage-and-uses-his-60-seconds-to-disrupt-capitalism/'));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>136, 'post_id'=>136, 'author_user_id'=>7654322,
         'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'facebook', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'network'=>'facebook', 'post_text'=>'This is a simple post.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>137, 'post_id'=>137, 'author_user_id'=>7654322,
-        'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'facebook', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'facebook', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>137, 'url'=>'http://t.co/B5LAotKMW',
             'expanded_url' => ''));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>138, 'post_id'=>138, 'author_user_id'=>7654322,
-        'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'facebook', 'post_text'=>'This is another post http://t.co/thtfuoy8 with a link.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'facebook', 'post_text'=>'This is another post http://t.co/thtfuoy8 with a link.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>138, 'url'=>'http://t.co/thtfuoy8',
             'expanded_url' => ''));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7654322,
-        'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'facebook', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
-        'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'fbuser', 'author_fullname'=>'Facebook User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'facebook', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
+            'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>139, 'url'=>'http://t.co/aMHh5XHGfS',
-            'expanded_url' => 'http://techcrunch.com/2013/04/28/'));
+            'expanded_url' => 'http://techcrunch.com/2014/04/28/'));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>7654323,
-        'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'google+', 'post_text'=>'This is a simple post.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'google+', 'post_text'=>'This is a simple post.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>141, 'post_id'=>141, 'author_user_id'=>7654323,
-        'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'google+', 'post_text'=>'This is another simple post.', 'source'=>'web',
-        'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'google+', 'post_text'=>'This is another simple post.', 'source'=>'web',
+            'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>142, 'post_id'=>142, 'author_user_id'=>7654323,
-        'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'google+', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
-        'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
+            'author_username'=>'gplususer', 'author_fullname'=>'Google Plus User', 'author_avatar'=>'avatar.jpg',
+            'network'=>'google+', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
+            'pub_date'=>$yesterday, 'reply_count_cache'=>0, 'is_protected'=>0));
         $builders[] = FixtureBuilder::build('links', array('post_key'=>142, 'url'=>'http://t.co/aMHh5XHGfS',
             'expanded_url' => 'http://techcrunch.com/2013/04/28/'));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>133, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>134, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>135, 'author_user_id'=>7654321,
-        'fav_of_user_id'=>7612345, 'network'=>'twitter'));
+            'fav_of_user_id'=>7612345, 'network'=>'twitter', 'fav_timestamp' => $yesterday));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>136, 'author_user_id'=>7654322,
-        'fav_of_user_id'=>7612345, 'network'=>'facebook'));
+            'fav_of_user_id'=>7612345, 'network'=>'facebook', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>137, 'author_user_id'=>7654322,
-        'fav_of_user_id'=>7612345, 'network'=>'facebook'));
+            'fav_of_user_id'=>7612345, 'network'=>'facebook', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>138, 'author_user_id'=>7654322,
-        'fav_of_user_id'=>7612345, 'network'=>'facebook'));
+            'fav_of_user_id'=>7612345, 'network'=>'facebook', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>139, 'author_user_id'=>7654322,
-        'fav_of_user_id'=>7612345, 'network'=>'facebook'));
+            'fav_of_user_id'=>7612345, 'network'=>'facebook', 'fav_timestamp' => $yesterday));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>140, 'author_user_id'=>7654323,
-        'fav_of_user_id'=>7612345, 'network'=>'google+'));
+            'fav_of_user_id'=>7612345, 'network'=>'google+', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>141, 'author_user_id'=>7654323,
-        'fav_of_user_id'=>7612345, 'network'=>'google+'));
+            'fav_of_user_id'=>7612345, 'network'=>'google+', 'fav_timestamp' => $now));
 
         $builders[] = FixtureBuilder::build('favorites', array('post_id'=>142, 'author_user_id'=>7654323,
-        'fav_of_user_id'=>7612345, 'network'=>'google+'));
+            'fav_of_user_id'=>7612345, 'network'=>'google+', 'fav_timestamp' => $yesterday));
 
         return $builders;
     }
@@ -396,12 +509,12 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
             $builders[] = FixtureBuilder::build('posts', array('id'=>(134+$i), 'post_id'=>(134+$i),
                 'author_user_id'=>7654321, 'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User',
                 'author_avatar'=>'avatar.jpg', 'network'=>$network,
-                'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
-                'pub_date'=>$now, 'reply_count_cache'=>0, 'is_protected'=>0));
-            $builders[] = FixtureBuilder::build('links', array('post_key'=>(134+$i), 'url'=>'http://t.co/B5LAotKMWY',
-                'expanded_url' => 'https://pushover.net/'));
+                'post_text'=>'This is a post http://t.co/B5LAotKMWY'.$i.' with a link.', 'source'=>'web',
+                'pub_date'=>'-'.$i.'d', 'reply_count_cache'=>0, 'is_protected'=>0));
+            $builders[] = FixtureBuilder::build('links', array('post_key'=>(134+$i), 'url'=>'http://t.co/B5LAotKMWY'.$i,
+                'expanded_url' => 'https://pushover.net/'.$i));
             $builders[] = FixtureBuilder::build('favorites', array('post_id'=>(134+$i), 'author_user_id'=>7654321,
-                'fav_of_user_id'=>7612345, 'network'=>$network));
+                'fav_of_user_id'=>7612345, 'network'=>$network, 'fav_timestamp' => $now));
             $i--;
         }
         return $builders;
