@@ -138,7 +138,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual('The Oxford English Dictionary '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "humblebrag" and "clickbait" to their online '
-            . 'dictionary, but no one has to explain them to @testy. Since January 2013, @testy used "humblebrag" 4 '
+            . 'dictionary, but no one has to explain them to @testy. Since February 2013, @testy used "humblebrag" 4 '
             . 'times and "clickbait" once.', $result->text);
         $data = unserialize($result->related_data);
         $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
