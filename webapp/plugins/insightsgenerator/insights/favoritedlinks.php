@@ -41,26 +41,38 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $insight_text = '';
 
         if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
             $regenerate_existing_insight=true)) {
             $fav_post_dao = DAOFactory::getDAO('FavoritePostDAO');
-            $favorited_posts = $fav_post_dao->getAllFavoritePosts($instance->network_user_id, $instance->network,
-                self::MAX_POSTS);
+            $favorited_posts = $fav_post_dao->getRecentlyFavoritedPosts($instance->network_user_id, $instance->network,
+                self::MAX_POSTS * 3);
             $todays_favorited_posts_with_links = array();
 
             $num_good_links = 0;
-            foreach ($favorited_posts as $post) {
-                if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
+            $num_good_posts = 0;
+            $seen_urls = array();
+            foreach (array_reverse($favorited_posts) as $post) {
+                if (date('Y-m-d', strtotime($post->favorited_timestamp)) == date('Y-m-d')) {
                     $good_links = array();
+                    $good_post = false;
                     foreach ($post->links as $link) {
                         $url = !empty($link->expanded_url) ? $link->expanded_url : $link->url;
                         // Skipping photos that look like links
                         if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
-                            $good_links[] = $link;
-                            $num_good_links++;
+                            $seen_expanded = !empty($link->expanded_url) && in_array($link->expanded_url, $seen_urls);
+                            // Skip URLs we've seen before
+                            if (!$seen_expanded && !in_array($link->url, $seen_urls)) {
+                                $good_links[] = $link;
+                                $seen_urls[] = $link->url;
+                                $seen_urls[] = $link->expanded_url;
+                                $num_good_links++;
+                                $good_post = true;
+                            }
                         }
+                    }
+                    if ($good_post) {
+                        $num_good_posts++;
                     }
                     if (count($good_links)) {
                         $post->links = $good_links;
@@ -69,37 +81,38 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 }
             }
 
-            $favorited_links_count = count($todays_favorited_posts_with_links);
-            if ($favorited_links_count) {
-                if ($favorited_links_count == 1) {
+            $todays_favorited_posts_with_links = array_reverse($todays_favorited_posts_with_links);
+            $todays_favorited_posts_with_links = array_slice($todays_favorited_posts_with_links,0,self::MAX_POSTS);
+            if ($num_good_posts) {
+                if ($num_good_posts == 1) {
                     if ($num_good_links == 1) {
-                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                        $insight_text = $this->username." ".$this->terms->getVerb('liked')
                             ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
                     } else {
-                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                        $insight_text = $this->username." ".$this->terms->getVerb('liked')
                             ." <strong>1 ".$this->terms->getNoun('post')."</strong> with $num_good_links links in it.";
                     }
                 } else {
-                    if (count($favorited_posts) == self::MAX_POSTS) {
+                    if ($num_good_posts >= self::MAX_POSTS) {
                         //Since number of posts is at max limit, some may have been cut off
                         //So let's not cite specific totals
-                        $headline = "Here are the latest links from ".$this->terms->getNoun('post',
+                        $insight_text = "Here are the latest links from ".$this->terms->getNoun('post',
                             InsightTerms::PLURAL). " ".$this->username." ".$this->terms->getVerb('liked').".";
                     } else {
-                        $headline = $this->username." ".$this->terms->getVerb('liked')
-                            ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                        $insight_text = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>".$num_good_posts." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
                             ."</strong> with $num_good_links links in them.";
                     }
                 }
 
-                //Instantiate the Insight object
                 $my_insight = new Insight();
-
-                //REQUIRED: Set the insight's required attributes
                 $my_insight->instance_id = $instance->id;
-                $my_insight->slug = 'favorited_links'; //slug to label this insight's content
-                $my_insight->date = $this->insight_date; //date of the data this insight applies to
-                $my_insight->headline = $headline;
+                $my_insight->slug = 'favorited_links';
+                $my_insight->date = $this->insight_date;
+                $my_insight->headline = $this->getVariableCopy(array(
+                    'The latest link%s %username %liked',
+                    '%total link%s %username %liked',
+                ), array('total' => number_format($num_good_links), 's' => $num_good_links == 1 ? '' : 's'));
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = '';
                 $my_insight->emphasis = Insight::EMPHASIS_LOW;
