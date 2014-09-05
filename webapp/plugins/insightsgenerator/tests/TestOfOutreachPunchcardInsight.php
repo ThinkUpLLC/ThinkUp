@@ -125,6 +125,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         'post_text'=>'RT @testeriffic: New Year\'s Eve! Feeling very gay today, but not very homosexual.',
         'pub_date'=>$time, 'in_retweet_of_post_id'=>134, 'reply_count_cache'=>0, 'is_protected'=>0));
 
+        $around_time = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
         $time1str_low = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
         $time1str_high = date('ga', (date('U', strtotime($date_r.' 14:00:00')) + $offset));
         $time1str = $time1str_low." and ".$time1str_high;
@@ -147,7 +148,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern("/\@testeriffic's best time is <strong>around 6am<\/strong>/", $result->headline);
+        $this->assertPattern("/\@testeriffic's best time is <strong>around $around_time<\/strong>/", $result->headline);
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies in all/', $result->text);
         $this->assertPattern('/That\'s compared to 1 response/', $result->text);
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
@@ -200,6 +201,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         'pub_date'=>$time, 'in_reply_to_post_id'=>133, 'reply_count_cache'=>0, 'is_protected'=>0));
 
 
+        $around_time = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
         $time1str_low = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
         $time1str_high = date('ga', (date('U', strtotime($date_r.' 14:00:00')) + $offset));
         $time1str = $time1str_low." and ".$time1str_high;
@@ -222,7 +224,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Tester Person\'s best time is <strong>around 6am<\/strong>/', $result->headline);
+        $this->assertPattern('/Tester Person\'s best time is <strong>around '.$around_time.'<\/strong>/', $result->headline);
         $this->assertPattern('/Last week, Tester Person\'s status updates got/', $result->text);
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 1 comment in all/', $result->text);
 
