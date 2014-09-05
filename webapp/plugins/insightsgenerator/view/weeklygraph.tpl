@@ -1,5 +1,5 @@
 {if isset($i->related_data.posts[0])}
-    <div id="response_rates_{$i->id}" class="weekly_chart">&nbsp;</div>
+    <div id="chart_{$i->id}" class="weekly_chart">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -15,8 +15,8 @@
             var colors = [c.{$color}, c.{$color}_dark, c.{$color}_darker];
 
             {literal}
-            var response_rates_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'response_rates_{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
               dataTable: response_rates_data_{/literal}{$i->id}{literal},
               options: {
@@ -62,7 +62,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            response_rates_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

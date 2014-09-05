@@ -1,5 +1,5 @@
 
-    <div id="gender_analysis_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -16,8 +16,8 @@
          ]);
             {literal}
             var c = window.tu.constants.colors;
-            var gender_analysis_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'gender_analysis_{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'PieChart',
               dataTable: gender_analysis_data_{/literal}{$i->id}{literal},
               'options': {
@@ -31,7 +31,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            gender_analysis_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

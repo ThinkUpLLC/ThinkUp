@@ -1,5 +1,5 @@
 
-    <div id="sub_change_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -11,8 +11,8 @@
             {literal}
             var sub_change_data_{/literal}{$i->id} = new google.visualization.DataTable({$i->related_data[0]});
             {literal}
-            var sub_change_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'chart-{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
               dataTable: sub_change_data_{/literal}{$i->id}{literal},
               options: {
@@ -34,7 +34,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            sub_change_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

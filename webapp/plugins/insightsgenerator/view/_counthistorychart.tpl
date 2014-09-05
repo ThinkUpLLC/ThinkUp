@@ -1,6 +1,6 @@
 {if $i->related_data.vis_data}
 
-<div id="count_history_{$i->id}" class="chart"></div>
+<div id="chart_{$i->id}" class="chart"></div>
 
 <script type="text/javascript">
 // Load the Visualization API and the standard charts
@@ -20,9 +20,9 @@ function drawChart{/literal}{$i->id}() {literal}{
   formatter.format(count_history_data_{$i->id}, 1);
   formatter_date.format(count_history_data_{$i->id}, 0);
 {literal}
-  var count_history_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+  var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
   {/literal}
-      containerId: 'count_history_{$i->id}',
+      containerId: 'chart_{$i->id}',
       {literal}
       chartType: 'LineChart',
       dataTable: count_history_data_{/literal}{$i->id}{literal},
@@ -49,7 +49,7 @@ function drawChart{/literal}{$i->id}() {literal}{
 {/literal}
     {include file=$tpl_path|cat:"_chartcallback.tpl"}
 {literal}
-  count_history_chart_{/literal}{$i->id}{literal}.draw();
+  chart_{/literal}{$i->id}{literal}.draw();
   }
   {/literal}
 </script>

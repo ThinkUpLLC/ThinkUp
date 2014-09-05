@@ -1,5 +1,5 @@
 
-    <div id="likes_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -11,8 +11,8 @@
             var likes_data_{$i->id} = new google.visualization.DataTable({$i->related_data[1]});
 
             {literal}
-            var likes_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'likes_{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
               dataTable: likes_data_{/literal}{$i->id}{literal},
               options: {
@@ -36,7 +36,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            likes_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

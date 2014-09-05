@@ -1,5 +1,5 @@
 
-    <div id="view_duration_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -11,8 +11,8 @@
             {literal}
             var view_duration_data_{/literal}{$i->id} = new google.visualization.DataTable({$i->related_data[0]});
             {literal}
-            var view_duration_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'chart-{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'BarChart',
               dataTable: view_duration_data_{/literal}{$i->id}{literal},
               options: {
@@ -33,7 +33,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            view_duration_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>

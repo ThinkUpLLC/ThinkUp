@@ -1,4 +1,4 @@
-    <div id="exclamation_count_{$i->id}">&nbsp;</div>
+    <div id="chart_{$i->id}">&nbsp;</div>
     <script type="text/javascript">
         // Load the Visualization API and the standard charts
         google.load('visualization', '1');
@@ -16,8 +16,8 @@
             }
             var num_ticks = Math.min(10, maxvalue+1);
             var c = window.tu.constants.colors;
-            var view_duration_chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
-              containerId: 'exclamation_count_{/literal}{$i->id}{literal}',
+            var chart_{/literal}{$i->id}{literal} = new google.visualization.ChartWrapper({
+              containerId: 'chart_{/literal}{$i->id}{literal}',
               chartType: 'ColumnChart',
               dataTable: table,
               options: {
@@ -42,7 +42,7 @@
         {/literal}
             {include file=$tpl_path|cat:"_chartcallback.tpl"}
         {literal}
-            view_duration_chart_{/literal}{$i->id}{literal}.draw();
+            chart_{/literal}{$i->id}{literal}.draw();
         }
         {/literal}
     </script>
