@@ -58,7 +58,6 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                     } else {
                         $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
                         .$this->username;
-                        echo $headline;
                     }
                 }
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
