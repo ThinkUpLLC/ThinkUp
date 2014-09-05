@@ -124,7 +124,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $params = array('scope'=>'read_stream,user_likes,user_location,user_website,'.
-        'read_friendlists,friends_location,manage_pages,read_insights,manage_pages',
+        'read_friendlists,friends_location,manage_pages,read_insights,user_birthday,friends_birthday',
         'state'=>SessionCache::get('facebook_auth_csrf'),
         'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
         );
