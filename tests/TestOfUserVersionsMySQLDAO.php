@@ -201,15 +201,15 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetVersionBeforeDay() {
         $builders = array();
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
-            'field_value' => 'yesterday', 'crawl_time' => '-1d'));
+            'field_value' => 'yesterday', 'crawl_time' => date('Y-m-d', time() - (60*60*24))));
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
-            'field_value' => 'today', 'crawl_time' => '-0d'));
+            'field_value' => 'today', 'crawl_time' => date('Y-m-d', time())));
 
         $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d', time() - (60*60*24)), 'a');
         $this->assertNull($res);
 
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 1, 'field_name' => 'a',
-            'field_value' => 'two days ago', 'crawl_time' => '-2d'));
+            'field_value' => 'two days ago', 'crawl_time' => date('Y-m-d', time() - (60*60*24*2))));
 
         $res = $this->DAO->getVersionBeforeDay(1, date('Y-m-d', time() - (60*60*24)), 'a');
         $this->assertEqual($res['user_key'], 1);
