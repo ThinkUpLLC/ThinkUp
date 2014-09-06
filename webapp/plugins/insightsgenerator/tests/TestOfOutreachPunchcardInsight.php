@@ -224,7 +224,8 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Tester Person\'s best time is <strong>around '.$around_time.'<\/strong>/', $result->headline);
+        $this->assertPattern('/Tester Person\'s best time is <strong>around '.$around_time.'<\/strong>/', 
+            $result->headline);
         $this->assertPattern('/Last week, Tester Person\'s status updates got/', $result->text);
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 1 comment in all/', $result->text);
 
