@@ -128,12 +128,13 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                         $time2_high = (($time2_high_hotd % 12) ? ($time2_high_hotd % 12) : 12)
                         .((floor($time2_high_hotd / 12) == 1) ? 'pm' : 'am');
 
-                        $insight_text .= " That's compared to ".$value." "
+                        $comparison_text = " That's compared to ".$value." "
                         .($value > 1 ? 'responses' : 'response').""
                         ." between ".$time2_low." and ".$time2_high.". ";
                     }
                 }
 
+                $insight_text .= $comparison_text;
                 $headline = $this->username."'s best time is <strong>around " . $time1_low . "</strong>";
 
                 $optimal_hour = substr($time1_low, 0, -2);
