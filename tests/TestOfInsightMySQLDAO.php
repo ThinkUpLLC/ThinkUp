@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInsightMySQLDAO.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -21,14 +21,14 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
-class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
+class TestOfInsightMySQLDAO extends ThinkUpInsightUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
@@ -36,10 +36,11 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
 
     protected function buildData() {
         $builders = array();
-        $time_now = date("Y-m-d H:i:s");
+        $this->time_now = $time_now = date("Y-m-d H:i:s", time()-10);
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'header_image'=>'headerme.jpg'));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'header_image'=>'headerme.jpg',
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
 
         //Set up array of owner objects
         $o1["id"] = 10;
@@ -102,6 +103,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->text, 'Retweet spike! Your post got retweeted 110 times');
         $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
         $this->assertEqual($result->header_image, 'headerme.jpg');
+        $this->assertEqual($result->time_generated, $this->time_now);
 
         $result = $dao->getInsight('avg_replies_per_week', 1, '2012-05-02');
         $this->assertNull($result);
@@ -269,7 +271,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
             }
             $i++;
         }
-        //$this->debug($insight->related_data);
+        $this->debug($insight->related_data);
         $this->debug('Pre-insert length: '.strlen($insight->related_data));
         $serialized_related_data = serialize($insight->related_data);
         $this->debug('Pre-insert serialized length: '.strlen($serialized_related_data));
@@ -349,6 +351,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetPublicInsights() {
+        $this->debug(__METHOD__);
         $builders = array();
         //insert a public instance
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
@@ -363,22 +366,24 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
 
         //assert that page of insights is only 3 long for public instane
+        $this->debug("About to instantiate InsightDAO");
         $dao = new InsightMySQLDAO();
+        $this->debug("About to call getPublicInsights");
         $results = $dao->getPublicInsights($page_count=10, $page_number=1);
         $this->assertEqual(sizeof($results), 3);
         foreach ($results as $result) {
@@ -405,7 +410,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
             //insert 2 insights for a private instance and 3 for a public instance
             $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
             'instance_id'=>2, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
-            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php', 'related_data'=>null));
             $i--;
         }
 
@@ -415,7 +420,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($results), 11);
         $this->assertEqual($results[0]->text, 'Insight 1');
         $this->assertEqual($results[9]->text, 'Insight 10');
-        //$this->debug(Utils::varDumpToString($results));
+        $this->debug(Utils::varDumpToString($results));
         $results = $dao->getPublicInsights($page_count=11, $page_number=2);
         $this->assertEqual($results[0]->text, 'Insight 11');
         $this->assertEqual($results[9]->text, 'Insight 20');
@@ -440,23 +445,19 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
-        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
 
         //assert that page of insights includes from both private and public
         $dao = new InsightMySQLDAO();
@@ -486,7 +487,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
             //insert 2 insights for a private instance and 3 for a public instance
             $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
             'instance_id'=>1, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
-            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php', 'related_data'=>null));
             $i--;
         }
 
@@ -496,10 +497,81 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($results), 11);
         $this->assertEqual($results[0]->text, 'Insight 1');
         $this->assertEqual($results[9]->text, 'Insight 10');
-        //$this->debug(Utils::varDumpToString($results));
+        $this->debug(Utils::varDumpToString($results));
         $results = $dao->getAllInstanceInsights($page_count=11, $page_number=2);
         $this->assertEqual($results[0]->text, 'Insight 11');
         $this->assertEqual($results[9]->text, 'Insight 20');
+    }
+
+    public function testGetAllInstanceInsightsSince() {
+        $builders = array();
+        //insert a public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10,
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //insert a private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1));
+        //insert a non-active instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>12,
+        'network_username'=>'jane', 'network'=>'twitter', 'network_viewer_id'=>12,
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>0, 'is_public'=>1));
+
+        //insert instance owner
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'Owner 1',
+        'email'=>'owner@example.com'));
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'Owner 2',
+        'email'=>'owner2@example.com'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+
+        //insert 2 insights for a private instance and 3 for a public instance
+        $time_now = date("Y-m-d H:i:s");
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+            'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>date("Y-m-d H:i:s", strtotime('-3 day')),
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+        //insight with filename set to 'dashboard' shouldn't be returned
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
+            'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
+
+        //assert that page of insights includes from both private and public
+        $dao = new InsightMySQLDAO();
+        $from = date("Y-m-d H:i:s", strtotime('-1 day'));
+        $this->debug($from);
+        $results = $dao->getAllInstanceInsightsSince($from);
+        $this->assertEqual(count($results), 6);
+        $this->debug(Utils::varDumpToString($results));
+        //$this->debug(Utils::varDumpToString($results[0]->related_data));
+        foreach ($results as $result) {
+            $this->assertIsA($result, 'Insight');
+            //$this->debug(Utils::varDumpToString($result->related_data["posts"]));
+            if (isset($result->related_data['posts'])) {
+                $this->assertEqual(count($result->related_data['posts']), 3);
+                $this->assertIsA($result->related_data['posts'][0], 'Post');
+            }
+        }
     }
 
     public function testGetAllOwnerInstanceInsightsSince() {
@@ -531,36 +603,50 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
         'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
         //insight with filename set to 'dashboard' shouldn't be returned
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
         'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now,
+        'related_data'=>self::getRelatedDataListOfPosts('twitter',3,3)));
 
         //assert that page of insights includes from both private and public
         $dao = new InsightMySQLDAO();
         $from = 0;
         $results = $dao->getAllOwnerInstanceInsightsSince(1, $from);
         $this->assertEqual(count($results), 7);
+        $this->debug(Utils::varDumpToString($results[0]->related_data));
         foreach ($results as $result) {
             $this->assertIsA($result, 'Insight');
+            $this->debug(Utils::varDumpToString($result->related_data["posts"]));
+            if (isset($result->related_data['posts'])) {
+                $this->assertEqual(count($result->related_data['posts']), 3);
+                $this->assertIsA($result->related_data['posts'][0], 'Post');
+            }
         }
         $results = $dao->getAllOwnerInstanceInsightsSince(2, $from);
         $this->assertEqual(count($results), 3);
         foreach ($results as $result) {
             $this->assertIsA($result, 'Insight');
+            $this->assertEqual(sizeof($result->related_data['posts']), 3);
+            $this->assertIsA($result->related_data['posts'][0], 'Post');
         }
     }
 
@@ -589,24 +675,24 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         //insert 2 insights for a private instance and 3 for a public instance
         $time_now = date("Y-m-d H:i:s");
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-02', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-03', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'instance_id'=>'2', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
-        //insight with no text shouldn't be returned
+        'instance_id'=>'1', 'text'=>'Retweet spike! Your post got retweeted 110 times', 'filename'=>'notdashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
+        //insight with filename set to dashboard
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'another_slug',
-        'instance_id'=>'1', 'text'=>'',
-        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now));
+        'instance_id'=>'1', 'text'=>'', 'filename'=>'dashboard',
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_generated'=>$time_now, 'related_data'=>null));
 
         //assert that page of insights includes from both private and public
         $dao = new InsightMySQLDAO();
@@ -643,7 +729,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
             //insert 2 insights for a private instance and 3 for a public instance
             $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
             'instance_id'=>2, 'text'=>'Insight '.$i, 'emphasis'=>Insight::EMPHASIS_HIGH,
-            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php'));
+            'time_updated'=>$time_now, 'date'=>$time_now, 'filename'=>'test.php', 'related_data'=>null));
             $i--;
         }
 
@@ -654,7 +740,7 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($results), 11);
         $this->assertEqual($results[0]->text, 'Insight 1');
         $this->assertEqual($results[9]->text, 'Insight 10');
-        //$this->debug(Utils::varDumpToString($results));
+        $this->debug(Utils::varDumpToString($results));
         $results = $dao->getAllOwnerInstanceInsights(1, $page_count=11, $page_number=2);
         $this->assertEqual($results[0]->text, 'Insight 11');
         $this->assertEqual($results[9]->text, 'Insight 20');
@@ -668,5 +754,24 @@ class TestOfInsightMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result);
         $result = $dao->doesInsightExist("yo_yo_yooo", 1);
         $this->assertFalse($result);
+    }
+
+    public function testGetMostRecentInsight() {
+        $dao = new InsightMySQLDAO();
+        $insight = $dao->getMostRecentInsight('not_a_real_slug', 10);
+        $this->assertNull($insight);
+
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-15', 'slug'=>'slug',
+        'instance_id'=>'1', 'headline'=>'Hooray!', 'text'=>'Newest', 'related_data'=>serialize($owners),
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_updated'=>'-1 day'));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-15', 'slug'=>'slug',
+        'instance_id'=>'1', 'headline'=>'Boo', 'text'=>'Older', 'related_data'=>serialize($owners),
+        'emphasis'=>Insight::EMPHASIS_HIGH, 'time_updated'=>'-5 day'));
+
+        $insight = $dao->getMostRecentInsight('slug', 1);
+        $this->assertNotNull($insight);
+        $this->assertEqual($insight->text, 'Newest');
+        $this->assertEqual($insight->headline, 'Hooray!');
+
     }
 }

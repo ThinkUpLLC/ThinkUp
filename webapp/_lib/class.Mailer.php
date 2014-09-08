@@ -62,16 +62,22 @@ class Mailer {
         $host = Utils::getApplicationHostName();
         $app_title = $config->getValue('app_title_prefix'). "ThinkUp";
         $mandrill_api_key = $config->getValue('mandrill_api_key');
+        if (Utils::isThinkUpLLC()) {
+            $from_email = 'team@thinkup.com';
+        } else {
+            $from_email = "notifications@${host}";
+        }
 
         try {
             require_once THINKUP_WEBAPP_PATH.'_lib/extlib/mandrill/Mandrill.php';
             $mandrill = new Mandrill($mandrill_api_key);
-            $message = array('subject' => $subject, 'from_email' => "notifications@${host}",
+            $message = array('subject' => $subject, 'from_email' => $from_email,
             'from_name' => $app_title, 'to' => array( array( 'email' => $to, 'name' => $to ) ),
             'global_merge_vars' => array());
 
             foreach ($template_params as $key=>$val) {
-                $message['global_merge_vars'][] = array('name'=>$key, 'content'=>$val);
+                $message['global_merge_vars'][] = array('name'=>$key,
+                    'content'=>$val);
             }
 
             //don't send email when running tests, just write it to the filesystem for assertions
@@ -93,7 +99,7 @@ class Mailer {
             throw $unknown_template_error;
         } catch (Mandrill_Error $e) {
             throw new Exception('An error occurred while sending email to '.$to.' from '.$from.' via Mandrill. '
-            . get_class($e) . ': ' . $e->getMessage());
+            . get_class($e) . ': ' . $e->getMessage().'  Message contents: '.Utils::varDumpToString($message));
         }
     }
     /**
@@ -159,11 +165,16 @@ class Mailer {
         $app_title = $config->getValue('app_title_prefix') . "ThinkUp";
         $host = Utils::getApplicationHostName();
         $mandrill_api_key = $config->getValue('mandrill_api_key');
+        if (Utils::isThinkUpLLC()) {
+            $from_email = 'team@thinkup.com';
+        } else {
+            $from_email = "notifications@${host}";
+        }
 
         try {
             require_once THINKUP_WEBAPP_PATH.'_lib/extlib/mandrill/Mandrill.php';
             $mandrill = new Mandrill($mandrill_api_key);
-            $message = array( 'text' => $message, 'subject' => $subject, 'from_email' => "notifications@${host}",
+            $message = array( 'text' => $message, 'subject' => $subject, 'from_email' => $from_email,
             'from_name' => $app_title, 'to' => array( array( 'email' => $to, 'name' => $to ) ) );
 
             //don't send email when running tests, just write it to the filesystem for assertions

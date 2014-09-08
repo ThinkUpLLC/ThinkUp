@@ -4,7 +4,7 @@
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/facebook/
  Description: Capture and display Facebook posts.
  Class: FacebookPlugin
- Icon: assets/img/facebook_icon.png
+ Icon: facebook
  Version: 0.01
  Author: Gina Trapani
  */

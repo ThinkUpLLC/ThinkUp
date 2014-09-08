@@ -37,59 +37,47 @@ class InsightPluginParent {
      * @var InsightTerms
      */
     var $terms;
-    /** 
+    /**
      * Insight date
-     * @var DateTime
+     * @var str
      */
     var $insight_date;
-    /** 
+    /**
      * Username.
      * @var str
      */
     var $username;
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->insight_date = new DateTime();
-        $this->insight_date = $this->insight_date->format('Y-m-d');
+        $this->insight_date = date("Y-m-d");
         $this->insight_dao = DAOFactory::getDAO('InsightDAO');
         $this->username = ($instance->network == 'twitter')?'@'.$instance->network_username:$instance->network_username;
         $this->terms = new InsightTerms($instance->network);
     }
 
     /**
-     * Determine whether an insight should be generated or not.
+     * Determine whether an insight should be generated.
      * @param str $slug slug of the insight to be generated
      * @param Instance $instance user and network details for which the insight has to be generated
-     * @param date $insight_date date for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
-     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
-     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
+     * @param int $count_related_posts if set, wouldn't run insight if there are no posts related to insight
      * @param arr $excluded_networks array of networks for which the insight shouldn't be run
-     * @return bool $run whether the insight should be generated or not
+     * @return bool Whether the insight should be generated or not
      */
     public function shouldGenerateInsight($slug, Instance $instance, $insight_date=null,
-    $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
-    $excluded_networks=null) {
+        $regenerate_existing_insight=false, $count_related_posts=null, $excluded_networks=null) {
         $run = true;
 
-        // Check the number of posts from last week
-        if (isset($count_last_week_of_posts)) {
-            $run = $run && $count_last_week_of_posts;
-        }
-
-        // Check whether testing
+        // Always generate if testing
         if (Utils::isTest()) {
-            return ($run && Utils::isTest());
+            return true;
         }
 
-        // Check the day of the week (0 for Sunday through 6 for Saturday) on which the insight should run
-        if (isset($day_of_week)) {
-            if (date('w') == $day_of_week) {
-                $run = $run && true;
-            } else {
-                $run = $run && false;
-            }
+        // Check the number of related posts
+        if (isset($count_related_posts)) {
+            $run = $run && $count_related_posts;
         }
 
         // Check boolean whether insight should be regenerated over a day
@@ -114,8 +102,125 @@ class InsightPluginParent {
                 $run = $run && true;
             }
         }
-
         return $run;
+    }
+
+    /**
+     * Determine whether a weekly insight should be generated.
+     * @param str $slug slug of the insight to be generated
+     * @param Instance $instance user and network details for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
+     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
+     * @param int $day_of_week the day of week (0 for Sunday through 6 for Saturday) on which the insight should run
+     * @param int $count_last_week_of_posts if set, wouldn't run insight if there are no posts from last week
+     * @param arr $excluded_networks array of networks for which the insight shouldn't be run
+     * @return bool Whether the insight should be generated or not
+     */
+    public function shouldGenerateWeeklyInsight($slug, Instance $instance, $insight_date=null,
+        $regenerate_existing_insight=false, $day_of_week=null, $count_last_week_of_posts=null,
+        $excluded_networks=null) {
+        $run = true;
+
+        // Always generate if testing
+        if (Utils::isTest()) {
+            return true;
+        } else {
+            $run = self::shouldGenerateInsight( $slug, $instance, $insight_date, $regenerate_existing_insight,
+                $count_last_week_of_posts, $excluded_networks);
+
+            // Check the day of the week (0 for Sunday through 6 for Saturday) on which the insight should run
+            if (isset($day_of_week)) {
+                if (date('w') == $day_of_week) {
+                    $run = $run && true;
+                } else {
+                    $run = $run && false;
+                }
+            }
+        }
+        return $run;
+    }
+
+    /**
+     * Determine whether a monthly insight should be generated.
+     * @param str $slug slug of the insight to be generated
+     * @param Instance $instance user and network details for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
+     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
+     * @param int $day_of_month the day of the month on which the insight should run
+     * @return bool Whether the insight should be generated or not
+     */
+    public function shouldGenerateMonthlyInsight($slug, Instance $instance, $insight_date=null,
+        $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=null, $excluded_networks=null) {
+        $run = true;
+
+        // Always generate if testing
+        if (Utils::isTest()) {
+            return true;
+        } else {
+            $run = self::shouldGenerateInsight( $slug, $instance, $insight_date, $regenerate_existing_insight,
+                $count_related_posts, $excluded_networks);
+
+            // Check the day of the month
+            $right_day = true;
+            if (isset($day_of_month)) {
+                if (date('j') != $day_of_month) {
+                    $right_day = false;
+                }
+            }
+
+            // Now we check for the bonus first time alternate day of the month
+            if ($run && !$right_day) {
+                $alternate_day_of_month = (($day_of_month+15)%date('t'))+1;
+                if (date('j') == $alternate_day_of_month) {
+                    $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                    $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                    $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+                    $owner = $owner_dao->getById($owner_instance[0]->owner_id);
+                    if ((time() - strtotime($owner->joined)) < (60*60*24*15)) {
+                        $right_day = true;
+                    }
+                }
+            }
+
+            $run = $run && $right_day;
+        }
+        return $run;
+    }
+
+    /**
+     * Take an array of string arrays, pick one at random and substitute each token with a value.
+     * Text is processed with InsightTerms::getProcessedText()
+     * The normal usage would be to pass an array of Insight fields, such as text, headline, etc.
+     *
+     * @param arr $copy_assoc_array Array of arrays. Key is a field name ('headline', 'text'), array is strings
+     *                              representing possible copy choices for that field.
+     * @param arr $substitutions Text replacement token/value pairs passed to getProccessedText(), in the form of
+     *                           '%token'=>'value'. See also: InsightTerms::getProcessedText
+     * @return arr The chosen and processed array
+     */
+    public function getVariableCopyArray($copy_assoc_array, $substitutions = array()) {
+        $substitutions['username'] = $this->username;
+        $choice = $copy_assoc_array[TimeHelper::getTime() % count($copy_assoc_array)];
+        foreach ($choice as $key => $val) {
+            $choice[$key] =  $this->terms->getProcessedText($choice[$key], $substitutions);
+        }
+        return $choice;
+    }
+
+    /**
+     * Take an array of strings, pick one at random and substitute each token with a value.
+     * Text is processed with InsightTerms::getProcessedText()
+     * The normal usage would be to pass a list of string choices for an Insight field, such as text, headline, etc.
+     *
+     * @param array $copy_array Array of possible strings
+     * @param array $substitutions Text replacement token/value pairs passed to getProccessedText(), in the form of
+     *                            '%token'=>'value'. See also: InsightTerms::getProcessedText
+     * @return str The chosen and processed array
+     */
+    public function getVariableCopy($copy_array, $substitutions = array()) {
+        $substitutions['username'] = $this->username;
+        $choice = $copy_array[TimeHelper::getTime() % count($copy_array)];
+        return $this->terms->getProcessedText($choice, $substitutions);
     }
 
     public function renderConfiguration($owner) {

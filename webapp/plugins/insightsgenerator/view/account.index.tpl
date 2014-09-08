@@ -2,8 +2,8 @@
 
     <span class="pull-right">{insert name="help_link" id='insightsgenerator'}</span>
     <h1>
-        <img src="{$site_root_path}plugins/insightsgenerator/assets/img/plugin_icon.png" class="plugin-image">
-        Insights Generator Plugin
+        <i class="fa fa-list text-muted"></i>
+        Insights Generator
     </h1>
 
     <p>{$message}</p>
@@ -20,7 +20,7 @@
     {foreach from=$installed_plugins key=pid item=plugin name=foo}
         <tr>
             <td><b>{$plugin.name}</b></td>
-            <td>{$plugin.description} {if $plugin.when}<span class="label">{$plugin.when}</span>{/if}</td>
+            <td>{$plugin.description} {if $plugin.when}<span class="label label-default">{$plugin.when}</span>{/if}</td>
         </tr>
     {/foreach}
     </table>

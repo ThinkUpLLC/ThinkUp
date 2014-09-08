@@ -98,6 +98,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':username'=>$user->username,
             ':full_name'=>$user->full_name,
             ':avatar'=>$user->avatar,
+        	':gender'=>$user->gender,
             ':location'=>$user->location,
             ':description'=>$user->description,
             ':url'=>$user->url,
@@ -113,18 +114,30 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $is_user_in_storage = false;
         $is_user_in_storage = $this->isUserInDB($user->user_id, $user->network);
         if (!$is_user_in_storage) {
-            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
-            $q .= "is_verified, is_protected, follower_count, post_count, ".
+            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, gender, ";
+            $q .= "location, description, url, is_verified, is_protected, follower_count, post_count, ".
             ($has_friend_count ? "friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count, " : "")." ".
             ($has_last_post ? "last_post, " : "")." found_in, joined, network  ".
             ($has_last_post_id ? ", last_post_id" : "").") ";
-            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :location, :description, :url, :is_verified, ";
-            $q .= ":is_protected, :follower_count, :post_count, ".($has_friend_count ? ":friend_count, " : "")." ".
-            ($has_favorites_count ? ":favorites_count, " : "")." ".
-            ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
-            ($has_last_post_id ? ", :last_post_id " : "")." )";
+            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :gender, :location, :description, ";
+            $q .= ":url, :is_verified, :is_protected, :follower_count, :post_count, ".
+                ($has_friend_count ? ":friend_count, " : "")." ".
+                ($has_favorites_count ? ":favorites_count, " : "")." ".
+                ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
+                ($has_last_post_id ? ", :last_post_id " : "")." )";
         } else {
+            $bioq = "SELECT id, description FROM #prefix#users WHERE user_id=:user_id AND network=:network";
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($bioq, array(':user_id' => $user->user_id, ':network' => $user->network));
+            $user_rows = $this->getDataRowsAsArrays($ps);
+            if (count($user_rows)) {
+                if ($user_rows[0]['description'] != $user->description) {
+                    $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+                    $user_versions_dao->addVersionOfField($user_rows[0]['id'], 'description', $user->description);
+                }
+            }
+
             $q = "UPDATE #prefix#users SET full_name = :full_name, avatar = :avatar,  location = :location, ";
             $q .= "user_name = :username, description = :description, url = :url, is_verified = :is_verified, ";
             $q .= "is_protected = :is_protected, follower_count = :follower_count, post_count = :post_count,  ".

@@ -4,7 +4,8 @@
          "id": "144568048938151_1230967",
          "from": {
             "name": "Govind Chandrasekhar",
-            "id": "508111053"
+            "id": "508111053",
+            "gender": "male"
          },
          "message": "T-shits for those who submitted wrong answers? That's unfair to those who had the foresight to know that their answers were buggy, and hence didn't bother with submission.",
          "created_time": "2011-02-06T00:37:22+0000",
@@ -14,7 +15,8 @@
          "id": "144568048938151_1230990",
          "from": {
             "name": "Mark Zammata",
-            "id": "733775875"
+            "id": "733775875",
+            "gender": "male"
          },
          "message": "Cmd -> color a -> h4cker",
          "created_time": "2011-02-06T00:44:39+0000",
@@ -24,7 +26,8 @@
          "id": "144568048938151_1230996",
          "from": {
             "name": "David Berthelot",
-            "id": "100000859513781"
+            "id": "100000859513781",
+            "gender": "male"
          },
          "message": "lol a T-shirt for a wrong answer :) I love the sense of humor that some people have here. So you could just upload a bunch of random numbers and printf(\"Hello mum\");. Hehehe",
          "created_time": "2011-02-06T00:45:49+0000",
@@ -34,7 +37,8 @@
          "id": "144568048938151_1231021",
          "from": {
             "name": "Mark Karpel\u00e8s",
-            "id": "532974378"
+            "id": "532974378",
+            "gender": "male"
          },
          "message": "shouldn't have done that half alsleep, missed the 6 minutes limit ~",
          "created_time": "2011-02-06T00:52:00+0000"
@@ -43,7 +47,8 @@
          "id": "144568048938151_1231024",
          "from": {
             "name": "Hongliang Liu",
-            "id": "682021444"
+            "id": "682021444",
+            "gender": "male"
          },
          "message": "FB financial department is happy to save 150$ T-shirts.",
          "created_time": "2011-02-06T00:52:05+0000",
@@ -53,7 +58,8 @@
          "id": "144568048938151_1231071",
          "from": {
             "name": "Martin Cifko \u0160tef\u010dek",
-            "id": "791864198"
+            "id": "791864198",
+            "gender": "male"
          },
          "message": "just give 2 t-shirt to the first 150 people ;-) and no, i'm not one of them",
          "created_time": "2011-02-06T01:00:26+0000",
@@ -63,7 +69,8 @@
          "id": "144568048938151_1231075",
          "from": {
             "name": "Wayne Colvin",
-            "id": "503383185"
+            "id": "503383185",
+            "gender": "male"
          },
          "message": "\u0040Steve : Downloading the file always started the timer whether your browser showed it right or not. Those people (including me) knew full well that they were forfeiting a question they couldn't answer if they downloaded the input. :/",
          "created_time": "2011-02-06T01:01:01+0000"
@@ -72,7 +79,8 @@
          "id": "144568048938151_1231089",
          "from": {
             "name": "Jon Adams",
-            "id": "1374900264"
+            "id": "1374900264",
+            "gender": "male"
          },
          "message": "there should totally be a pity round for the remaining 150 t-shirts",
          "created_time": "2011-02-06T01:03:20+0000",
@@ -82,7 +90,8 @@
          "id": "144568048938151_1231104",
          "from": {
             "name": "Pradeep Chelani",
-            "id": "1393001281"
+            "id": "1393001281",
+            "gender": "male"
          },
          "message": "some people used sine cosine function and some people use left right bit operators to solve first problem...never thought it was so diff to solve large numbers...still unable to understand their logic...can someone explain me",
          "created_time": "2011-02-06T01:06:38+0000",
@@ -92,7 +101,8 @@
          "id": "144568048938151_1231110",
          "from": {
             "name": "Martin Cifko \u0160tef\u010dek",
-            "id": "791864198"
+            "id": "791864198",
+            "gender": "male"
          },
          "message": "I don't really get the solution for problem 1, i downloaded a few source codes\nI have the same algorithm, but it's still not fast enough on my computer ;-))",
          "created_time": "2011-02-06T01:07:37+0000"
@@ -101,7 +111,8 @@
          "id": "144568048938151_1231136",
          "from": {
             "name": "Pradeep Chelani",
-            "id": "1393001281"
+            "id": "1393001281",
+            "gender": "male"
          },
          "message": "\u0040Martin...same here..some people O(N*M) solution was accepted while mine O(P*P) is not even working on my machine",
          "created_time": "2011-02-06T01:10:31+0000"
@@ -110,7 +121,8 @@
          "id": "144568048938151_1231139",
          "from": {
             "name": "Martin Cifko \u0160tef\u010dek",
-            "id": "791864198"
+            "id": "791864198",
+            "gender": "male"
          },
          "message": "i got O(P*L) :-))",
          "created_time": "2011-02-06T01:11:14+0000"
@@ -119,7 +131,8 @@
          "id": "144568048938151_1231192",
          "from": {
             "name": "Pradeep Chelani",
-            "id": "1393001281"
+            "id": "1393001281",
+            "gender": "male"
          },
          "message": "i dont think their is much diff in O(P*L) and O(P*P)",
          "created_time": "2011-02-06T01:16:16+0000"
@@ -128,7 +141,8 @@
          "id": "144568048938151_1231243",
          "from": {
             "name": "Martin Cifko \u0160tef\u010dek",
-            "id": "791864198"
+            "id": "791864198",
+            "gender": "male"
          },
          "message": "\u0040pradeep just a little, but in O(P*L) u dont have to check if (i*j\u003cl), because it's always true... anyway that doesn't help...",
          "created_time": "2011-02-06T01:23:32+0000",
@@ -138,7 +152,8 @@
          "id": "144568048938151_1231296",
          "from": {
             "name": "Wonjohn-Wonjun Choi",
-            "id": "100000150076278"
+            "id": "100000150076278",
+            "gender": "male"
          },
          "message": "OMGOMGOMOGMOGMOGMG Can we have another subround please? I completely forgot about this T_T",
          "created_time": "2011-02-06T01:30:12+0000"
@@ -147,7 +162,8 @@
          "id": "144568048938151_1231312",
          "from": {
             "name": "Abhiraj Pande",
-            "id": "100000492868617"
+            "id": "100000492868617",
+            "gender": "male"
          },
          "message": "Studious student's output and solution was wrong.",
          "created_time": "2011-02-06T01:32:33+0000"
@@ -156,7 +172,8 @@
          "id": "144568048938151_1231369",
          "from": {
             "name": "Pradeep Chelani",
-            "id": "1393001281"
+            "id": "1393001281",
+            "gender": "male"
          },
          "message": "\u0040abhiraj which output is wrong?",
          "created_time": "2011-02-06T01:40:56+0000"
@@ -165,7 +182,8 @@
          "id": "144568048938151_1231454",
          "from": {
             "name": "Abhiraj Pande",
-            "id": "100000492868617"
+            "id": "100000492868617",
+            "gender": "male"
          },
          "message": "\u0040pradeep: they have given that c is a character from substring but they are considering it a or b.",
          "created_time": "2011-02-06T01:53:02+0000"
@@ -174,7 +192,8 @@
          "id": "144568048938151_1231734",
          "from": {
             "name": "Pradeep Chelani",
-            "id": "1393001281"
+            "id": "1393001281",
+            "gender": "male"
          },
          "message": "it means c is any character in substring not 'c' as character",
          "created_time": "2011-02-06T02:29:01+0000",
@@ -184,7 +203,8 @@
          "id": "144568048938151_1231795",
          "from": {
             "name": "Noor Ali",
-            "id": "1424405954"
+            "id": "1424405954",
+            "gender": "male"
          },
          "message": "Hmmm...sorry I don't participate about this competition. Caused I very busy yesterday. When I can paticipate round again?",
          "created_time": "2011-02-06T02:35:22+0000"
@@ -193,7 +213,8 @@
          "id": "144568048938151_1231822",
          "from": {
             "name": "Luca Ambrosi",
-            "id": "510426156"
+            "id": "510426156",
+            "gender": "male"
          },
          "message": "can anyone write here the problem statements pls?",
          "created_time": "2011-02-06T02:39:10+0000"
@@ -202,7 +223,8 @@
          "id": "144568048938151_1231841",
          "from": {
             "name": "Sam Rose",
-            "id": "544780370"
+            "id": "544780370",
+            "gender": "male"
          },
          "message": "Maaaaaan they were some difficult problems. Major kudos to anyone that managed to get any of them. I racked my brains on the Bonus Assignment one for 2 and a half hours and got no where even close to the answer ^_^\n\nI'm gonna side with the \"Give everyone from round 2 t-shirts\" party :p",
          "created_time": "2011-02-06T02:41:57+0000",
@@ -213,7 +235,8 @@
          "from": {
             "name": "Erik Ramsgaard Wognsen",
             "id": "738668796"
-         },
+         },,
+            "gender": "male"
          "message": "Maybe they don't print the t-shirts until they know the sizes of the lucky people, so I don't think any will go to waste either way ^^",
          "created_time": "2011-02-06T03:30:46+0000"
       },
@@ -221,7 +244,8 @@
          "id": "144568048938151_1232078",
          "from": {
             "name": "Anshul Goyal",
-            "id": "1406403734"
+            "id": "1406403734",
+            "gender": "male"
          },
          "message": "I can't say about T-shirts ..\nBut problems were damn good although I wasn't able to solve any one of them correctly.",
          "created_time": "2011-02-06T03:30:54+0000"
@@ -230,7 +254,8 @@
          "id": "144568048938151_1232411",
          "from": {
             "name": "Rafael Telles Muller",
-            "id": "536776067"
+            "id": "536776067",
+            "gender": "male"
          },
          "message": "I guess Facebook will have to keep 150 shirts..LMAO. This first Hacker cup was a complete failure.",
          "created_time": "2011-02-06T04:17:38+0000"

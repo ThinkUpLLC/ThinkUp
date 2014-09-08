@@ -1,6 +1,7 @@
 {
    "id": "606837591",
    "name": "Gina Trapani",
+   "gender": "female",
    "location": {
       "id": "110714572282163",
       "name": "San Diego, California"

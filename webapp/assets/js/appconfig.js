@@ -1,26 +1,26 @@
 /**
- * 
+ *
  * ThinkUp/webapp/assets/js/application_settings.js
- * 
+ *
  * Copyright (c) 2009-2010 Mark Wilkie
- * 
+ *
  * LICENSE:
- * 
+ *
  * This file is part of ThinkUp (http://thinkup.com).
- * 
+ *
  * ThinkUp is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 2 of the License, or (at your option) any later
  * version.
- * 
+ *
  * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * ThinkUp. If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Mark Wilkie
@@ -48,12 +48,10 @@ var TUApplicationSettings = function() {
 
         // register on submit event on our form
         $(document).ready(function() {
-            $("#app-settings-tab").click(function(event) {
-                if (tu_app_settings.DEBUG) {
-                    console.debug("app settings tab selected");
-                }
-                tu_app_settings.load_settings();
-            });
+            if (tu_app_settings.DEBUG) {
+                console.debug("app settings tab selected");
+            }
+            tu_app_settings.load_settings();
         });
 
         $('#recaptcha_enable')
@@ -161,6 +159,7 @@ var TUApplicationSettings = function() {
         } else {
             $('#settings_success').show();
             setTimeout(function() {
+                $(window).scrollTop($("#app-settings-form").offset().top - 46)
                 $('#settings_success').fadeOut(1500, function() {
                 });
             }, 500);

@@ -62,5 +62,13 @@ class TestOfExpandURLsPlugin extends ThinkUpBasicUnitTestCase {
 
         $details = URLExpander::getWebPageDetails('https://www.wepay.com/donations/free-barrett-brown');
         print_r($details);
+
+        $details = URLExpander::getWebPageDetails('https://www.facebook.com/photo.php?fbid=386789799914&set='.
+            'at.386779984914.169691.68330209914.606837591&type=1&relevant_count=1');
+        print_r($details);
+
+        $details = URLExpander::getWebPageDetails('https://www.facebook.com/photo.php?fbid=10152071367417592&'.
+            'set=a.10150271482787592.335919.606837591&type=1&relevant_count=1');
+        print_r($details);
     }
 }

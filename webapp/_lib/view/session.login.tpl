@@ -1,57 +1,35 @@
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl" body_classes="settings account menu-off"}
+{include file="_navigation.tpl"}
+  <div class="container">
+    <header class="container-header">
+      <h1>Welcome!</h1>
+      <h2>Please log in.</h2>
+    </header>
 
-<div class="container">
+    <form action="index.php{if isset($usr) && isset($smarty.get.code)}?usr={$usr}&code={$smarty.get.code}{/if}" method="POST" class="form" id="form-signin">
+      <fieldset class="fieldset-no-header">
+        <div class="form-group">
+          <label class="control-label" for="email">Email</label>
+          <input type="email" name="email" class="form-control" id="email" autofocus="autofocus"
+          {if isset($email)}value="{$email|filter_xss}"{/if} placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="pwd">Password</label>
+          <input type="password" class="form-control" value="" placeholder="********" id="pwd" name="pwd"
+           required>
+          <input type="hidden" name="csrf_token" value="{$csrf_token}" />
+        </div>
+        {if isset($redirect)}
+        <input type="hidden" name="redirect" value="{$redirect}">
+        {/if}
+      </fieldset>
 
-<div class="row">
-    <div class="span3">
-          <div class="embossed-block">
-            <ul>
-              <li>Log In</li>
-            </ul>
-          </div>
-    </div><!--/span3-->
-    <div class="span6">
+      <input type="Submit" name="Submit" value="Log In" class="btn btn-submit">
 
-        {include file="_usermessage.tpl" enable_bootstrap=1}
-
-            <form name="login-form" method="post" action="{$site_root_path}session/login.php" class="login form-horizontal">
-
-                <fieldset style="background-color : white; padding-top : 30px;">
-
-                    <div class="control-group input-prepend">
-                        <label class="control-label" for="email">Email</label>
-                        <div class="controls">
-                            <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input class="input-xlarge" type="email" name="email" id="email"{if isset($email)} value="{$email|filter_xss}"{/if} autofocus="autofocus">
-                        </div>
-                    </div>
-
-                    <div class="control-group input-prepend">
-                        <label class="control-label" for="pwd">Password</label>
-                        <div class="controls">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input class="input-xlarge" type="password" name="pwd" id="pwd">
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                            <input type="submit" id="login-save" name="Submit" class="btn btn-primary" value="Log In">
-                            <span class="pull-right">
-                                <div class="btn-group">
-                                    {if $is_registration_open}<a href="{$site_root_path}session/register.php" class="btn btn-mini hidden-phone">Register</a>{else}{/if}
-                                    <a href="{$site_root_path}session/forgot.php" class="btn btn-mini">Forgot password</a>
-                                    {insert name="help_link" id='login'}
-                                </div>
-                            </span>
-                    </div>
-
-                </fieldset>
-
-            </form>
-
-    </div><!-- end span9 -->
-
-</div><!-- end row -->
-
-{include file="_footer.tpl" enable_bootstrap=1}
+      <p class="form-note">
+        <a href="{$site_root_path}session/forgot.php">Forgot your password?</a>
+        {if $is_registration_open}&nbsp; <a href="{$site_root_path}session/register.php">Register</a>{else}{/if}
+      </p>
+    </form>
+  </div>
+{include file="_footer.tpl"}

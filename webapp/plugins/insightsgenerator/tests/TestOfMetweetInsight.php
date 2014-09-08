@@ -53,7 +53,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new MetweetInsight();
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -62,8 +62,9 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
+        $this->assertPattern('/It\'s cool to let people know what others are saying, but too many can get annoying./', $result->text);
     }
 
     public function testMetweetInsightPriorGreaterBaseline() {
@@ -79,7 +80,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'metweet_count',
         'instance_id'=>10, 'value'=>11));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -88,8 +89,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/6 fewer times than the prior week./', $result->text);
     }
 
@@ -106,7 +107,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'metweet_count',
         'instance_id'=>10, 'value'=>6));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -115,8 +116,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/1 fewer time than the prior week./', $result->text);
     }
 
@@ -133,7 +134,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'metweet_count',
         'instance_id'=>10, 'value'=>3));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -142,8 +143,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/2 more times than the prior week./', $result->text);
     }
 
@@ -160,7 +161,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'metweet_count',
         'instance_id'=>10, 'value'=>4));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -169,8 +170,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week, /', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         $this->assertPattern('/1 more time than the prior week./', $result->text);
     }
 
@@ -187,7 +188,7 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $last_week = date('Y-m-d', strtotime('-7 day'));
         $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'metweet_count',
         'instance_id'=>10, 'value'=>5));
-        $insight_plugin->generateInsight($instance, $posts, 3);
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
 
         // Assert that week-over-week comparison is correct
         $insight_dao = new InsightMySQLDAO();
@@ -196,8 +197,8 @@ class TestOfMetweetInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->text);
-        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->text);
+        $this->assertPattern('/\@testeriffic retweeted \@testeriffic mentions <strong>5 times/', $result->headline);
+        $this->assertPattern('/<strong>5 times<\/strong> last week./', $result->headline);
         //assert no comparison to prior week
         $this->assertNoPattern('/prior week/', $result->text);
     }

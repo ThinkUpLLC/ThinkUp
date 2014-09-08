@@ -1,113 +1,73 @@
-{include file="_header.tpl" enable_bootstrap=1}
-{include file="_statusbar.tpl" enable_bootstrap=1}
+{include file="_header.tpl" body_classes="settings account menu-off"}
+{include file="_navigation.tpl"}
+  <div class="container">
 
 
-<div class="container">
+{include file="_usermessage.tpl-v2" enable_bootstrap=1}
 
-<div class="row">
-    <div class="span3">
-          <div class="embossed-block">
-            <ul>
-              <li>Register</li>
-            </ul>
-          </div>
-    </div><!--/span3-->
-    <div class="span6">
+{if !$closed and !$has_been_registered}
 
+    <header class="container-header">
+      <h1>Register</h1>
+      <h2>Create your ThinkUp account.</h2>
+    </header>
 
-        {include file="_usermessage.tpl" enable_bootstrap=1}
-        
-        {if !$closed and !$has_been_registered}
+    <form name="form1" method="POST" id="registerform"
+        action="register.php"
+         class="login form" >
+      <fieldset class="fieldset-no-header">
+        <div class="form-group">
+          <label class="control-label" for="full_name">Name</label>
+          <input type="text" name="full_name" class="form-control" id="full_name" required
+            {if  isset($name)} value="{$name|filter_xss}"{/if}
+            data-validation-required-message="Name can't be blank.">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="email">Email</label>
+          <input type="email" name="email" class="form-control" id="email" required
+          {if isset($mail)}value="{$mail|filter_xss}"{/if} placeholder="you@example.com">
+          {include file="_usermessage-v2.tpl" field="email" inline="true"}
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="pass1">Password</label>
+          <input type="password" class="form-control" id="pass1" name="pass1" value="" required
+            placeholder="********" {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal}
+            class="form-control password"
+            data-validation-required-message="You'll need a enter a password of at least 8 characters."
+            data-validation-pattern-message="Must be at least 8 characters, with both numbers &amp; letters.">
+            {include file="_usermessage-v2.tpl" field="password" inline="true"}
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="pass2">Confirm Password</label>
+          <input type="password" class="form-control" id="pass2" name="pass2" value="" required
+            placeholder="********" {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal}
+            class="form-control password"
+            data-validation-required-message="You'll need a enter a password of at least 8 characters."
+            data-validation-match-match="pass1"
+            data-validation-pattern-message="Must be at least 8 characters, with both numbers &amp; letters.">
+        </div>
+        <div class="form-group">
+          {$captcha}
+          {include file="_usermessage-v2.tpl" field="captcha" inline="true"}
+        </div>
 
-            <form name="form1" method="post" id="registerform" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login form-horizontal">
+      </fieldset>
 
-                <fieldset style="background-color : white; padding-top : 30px;">
-                    
-                    <div class="control-group">
-                        <label for="full_name" class="control-label">Name:</label>
-                        <div class="controls">
-                            <input type="text" name="full_name" id="full_name" required {if  isset($name)} value="{$name|filter_xss}"{/if} 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Name can't be blank.">
-                        	<span class="help-inline"></span>
-                        </div>
-                    </div>
-                    
-                <div class="control-group">
-                    <label class="control-label" for="email">Email&nbsp;Address</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input type="email" name="email" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if} required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> A valid email address is required.">
-                        </span>
-                        <span class="help-inline"></span>
-                        {include file="_usermessage.tpl" field="email" enable_bootstrap=1}
-                    </div>
-                </div>
-                    <div class="control-group">
-                    <label class="control-label" for="password">Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="pass1" id="pass1"
-                            {literal}pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*).{8,}$"{/literal} class="password" required 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> You'll need a enter a password of at least 8 characters." 
-                            data-validation-pattern-message="<i class='icon-exclamation-sign'></i> Must be at least 8 characters, with both numbers & letters.">
-                        </span>
-                        <span class="help-inline"></span>
-                    </div>
-                </div>
-                    <div class="control-group">
-                    <label class="control-label" for="pass2">Confirm&nbsp;Password</label>
-                    <div class="controls">
-                        <span class="input-prepend">
-                            <span class="add-on"><i class="icon-key"></i></span>
-                            <input type="password" name="pass2" id="pass2" required 
-                            class="password" 
-                            data-validation-required-message="<i class='icon-exclamation-sign'></i> Password confirmation is required." 
-                            data-validation-match-match="pass1" 
-                            data-validation-match-message="<i class='icon-exclamation-sign'></i> Make sure this matches the password you entered above." >
-                        </span>
-                        <span class="help-block"></span>
-                        {include file="_usermessage.tpl" field="password" enable_bootstrap=1}
-                    </div>
-                </div>
-                    
-                    <div class="control-group">
-                        <label for="user_code" class="control-label">Prove you&rsquo;re human:</label>
-                        <div class="controls">
-                            {$captcha} {include file="_usermessage.tpl" field="captcha" enable_bootstrap=1 inline="true"}
-                        </div>
-                    </div>
+      <input type="submit" name="Submit" id="login-save" value="Register" class="btn btn-submit">
+{else}
 
-                    <div class="form-actions">
-                            <input type="submit" name="Submit" id="login-save" class="btn btn-primary" value="Register">
-                            <span class="pull-right">
-                                <div class="btn-group">
-                                    <a href="login.php" class="btn btn-mini">Log In</a>
-                                    <a href="forgot.php" class="btn btn-mini">Forgot password</a>
-                                    {insert name="help_link" id='register'}
-                                </div>
-                            </span>
-                        
-                    </div>
-
-                </fieldset>
+    <header>
+      <h1>Sorry!</h1>
+      <h2>Registration is closed for {$app_title}.</h2>
+    </header>
 
 
-{if !$success_msg}
-                    <div class="control-group">
-                        <div class="controls">
-                            
-                        </div>
-                    </div>
-{/if}                                           
+{/if}
 
-            </form>
-            
-        {/if}
-
-    </div>
-</div>
-
-{include file="_footer.tpl" enable_bootstrap=1}
+      <p class="form-note">
+        <a href="{$site_root_path}session/login.php">Back to login</a>
+        <a href="{$site_root_path}session/forgot.php">Forgot your password?</a>
+      </p>
+    </form>
+  </div>
+{include file="_footer.tpl"}

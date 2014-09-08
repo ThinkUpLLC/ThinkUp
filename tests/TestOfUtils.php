@@ -224,6 +224,24 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $this->assertEqual($filesystem_site_root_path, $cfg_site_root_path);
     }
 
+    public function testGetApplicationRequestURI() {
+        // function assumes $_SERVER['REQUEST_URI'] is set
+        // it only is in the web server context so we set it here to test
+        $_SERVER['REQUEST_URI'] = Config::getInstance()->getValue('site_root_path').'index.php';
+        $this->debug($_SERVER['REQUEST_URI']);
+        $request_uri = Utils::getApplicationRequestURI();
+        $this->assertEqual($request_uri, 'index.php');
+
+        $_SERVER['REQUEST_URI'] = Config::getInstance()->getValue('site_root_path').'account/?p=facebook';
+        $request_uri = Utils::getApplicationRequestURI();
+        $this->assertEqual($request_uri, 'account/?p=facebook');
+
+        //API calls
+        $_SERVER['REQUEST_URI'] = Config::getInstance()->getValue('site_root_path').'api/v1/session/login.php';
+        $request_uri = Utils::getApplicationRequestURI();
+        $this->assertEqual($request_uri, 'api/v1/session/login.php');
+    }
+
     public function testGetApplicationHostName() {
         //no $_SERVER vars set, but with application setting set
         $builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -353,5 +371,14 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $utils_url = Utils::getApplicationURL(false);
         $expected_url = 'http://localhost/Think+Up/';
         $this->assertEqual($utils_url, $expected_url);
+    }
+
+    public function testOfIsThinkUpLLC() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('thinkupllc_endpoint', null);
+        $this->assertFalse(Utils::isThinkUpLLC());
+
+        $cfg->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+        $this->assertTrue(Utils::isThinkUpLLC());
     }
 }

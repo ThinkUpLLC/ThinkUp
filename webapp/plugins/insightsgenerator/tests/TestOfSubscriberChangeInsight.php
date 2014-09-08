@@ -61,7 +61,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -69,10 +69,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "They're sticking around:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>81.82%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video increased ev's subscriber count by <strong>81.82%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
     }
 
@@ -92,7 +90,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -100,10 +98,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "They're sticking around:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>25%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video increased ev's subscriber count by <strong>25%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
     }
 
@@ -123,7 +119,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -131,10 +127,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "They're sticking around:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> increased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>17.65%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video increased ev's subscriber count by <strong>17.65%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
     }
 
@@ -154,7 +148,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -162,10 +156,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "Subscriber change:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>50%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video decreased ev's subscriber count by <strong>50%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 2);
     }
 
@@ -185,7 +177,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -193,10 +185,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "Subscriber change:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>31.03%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video decreased ev's subscriber count by <strong>31.03%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 1);
     }
 
@@ -216,7 +206,7 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
 
         $insight = new SubscriberChangeInsight();
         $posts[] = new Post($post_builder->columns);
-        $insight->generateInsight($instance, $posts, 7);
+        $insight->generateInsight($instance, $this->getUser(), $posts, 7);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -224,10 +214,8 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         $result = $insight_dao->getInsight('subscriber_change1', 1, date('Y-m-d', strtotime('-1 day')));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, "Subscriber change:");
-        $text = "<a href=http://www.youtube.com/watch?v=1>My Great Video</a> decreased <a href=http://plus.google.com";
-        $text .= "/1>ev</a>'s subscriber count by <strong>16.67%</strong>.";
-        $this->assertEqual($result->text, $text);
+        $headline = "My Great Video decreased ev's subscriber count by <strong>16.67%</strong>.";
+        $this->assertEqual($result->headline, $headline);
         $this->assertEqual($result->emphasis, 0);
     }
 
@@ -236,6 +224,11 @@ class TestOfSubscriberChangeInsight extends ThinkUpUnitTestCase {
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>20,
         'network'=>'youtube'));
         return $builders;
+    }
+
+    private function getUser($user_id=1, $network = 'youtube') {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        return $user_dao->getDetails($user_id, $network);
     }
 
 }

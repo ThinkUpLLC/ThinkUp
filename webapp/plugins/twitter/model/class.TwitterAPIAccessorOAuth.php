@@ -324,6 +324,17 @@ class TwitterAPIAccessorOAuth {
                 $result['in_retweet_of_post_id'] = $json_tweet->retweeted_status->id_str;
                 $result['in_rt_of_user_id'] = $json_tweet->retweeted_status->user->id_str;
             }
+            if (!empty($json_tweet->entities->media)) {
+                $photos = array();
+                foreach ($json_tweet->entities->media as $media) {
+                    if ($media->type == 'photo') {
+                        $photos[] = $media;
+                    }
+                }
+                if (count($photos) > 0) {
+                    $result['photos'] = $photos;
+                }
+            }
             return $result;
     }
     /**

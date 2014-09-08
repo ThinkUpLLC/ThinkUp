@@ -31,8 +31,8 @@
 
 class SavedSearchResultsInsight extends InsightPluginParent implements InsightPlugin {
 
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         //Set up DAOs
@@ -52,11 +52,12 @@ class SavedSearchResultsInsight extends InsightPluginParent implements InsightPl
                 $hashtag = $hashtag_dao->getHashtagByID($instance_hashtag->hashtag_id);
                 $link = 'search.php?u='.$instance->network_username.'&n='.$instance->network.
                 '&c=searches&k='.urlencode($hashtag->hashtag).'&q='.urlencode($hashtag->hashtag);
-                $text = number_format($total_new_posts)." new ".$post_term." contain <b><a href=\"".$link."\">".
-                $hashtag->hashtag."</a></b>.";
+                $headline = number_format($total_new_posts)." new ".$post_term." contain \"<strong>".
+                $hashtag->hashtag."</strong>\".";
+                $insight_text = "View new ".$post_term." containing <a href=\"".$link."\">". $hashtag->hashtag."</a>.";
                 // Insert insight
                 $this->insight_dao->insertInsightDeprecated("saved_search_results_".$instance_hashtag->hashtag_id,
-                $instance->id, $this->insight_date, "New search results:", $text, basename(__FILE__, ".php"),
+                $instance->id, $this->insight_date, $headline, $insight_text, basename(__FILE__, ".php"),
                 Insight::EMPHASIS_MED);
             }
         }

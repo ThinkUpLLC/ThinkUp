@@ -30,8 +30,18 @@
  *
  */
 abstract class ThinkUpAuthController extends ThinkUpController {
+    /**
+     * The web app URL this controller maps to.
+     * @var str
+     */
+    var $url_mapping = null;
+
     public function __construct($session_started=false) {
         parent::__construct($session_started);
+        $request_uri = Utils::getApplicationRequestURI();
+        if (strpos($request_uri, 'logout.php') === false ) {
+            $this->url_mapping = Utils::getApplicationURL().$request_uri;
+        }
     }
 
     public function control() {
@@ -58,14 +68,11 @@ abstract class ThinkUpAuthController extends ThinkUpController {
 
     /**
      * Bounce user to public page or to error page.
-     * @TODO bounce back to original action once signed in
+     * @throws ControllerAuthException
      */
     protected function bounce() {
-        $config = Config::getInstance();
-
-        if (get_class($this)=='InsightStreamController' || get_class($this)=='PostController') {
-            $controller = new InsightStreamController(true);
-            return $controller->go();
+        if ($this->content_type == 'text/html; charset=UTF-8' && $this->url_mapping != null) {
+            $this->redirect(Utils::getApplicationURL().'session/login.php?redirect='.$this->url_mapping);
         } else {
             throw new ControllerAuthException('You must log in to access this controller: ' . get_class($this));
         }

@@ -89,17 +89,15 @@ class TestOfStyleStatsInsight extends ThinkUpUnitTestCase {
         $instance->network = 'twitter';
         $instance->network_username = 'ev';
         $stylestats_insight_plugin = new StyleStatsInsight();
-        $stylestats_insight_plugin->generateInsight($instance, $last_week_of_posts, 3);
+        $stylestats_insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
 
         // Assert that insight got generated
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('style_stats', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'style_stats');
-        $this->assertEqual($result->headline, 'Post style:');
         $this->assertEqual($result->filename, 'stylestats');
-        $this->assertPattern('/of \@ev\'s posts this week were photos, 1 was a question, none were quotations, and '.
-        'none were links/', $result->text);
+        $this->assertPattern('/1 of \@ev\'s posts this week was a question/', $result->headline);
         //sleep(1000);
     }
 

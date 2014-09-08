@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.InsightDAO.php
  *
- * Copyright (c) 2012-2013 Gina Trapani
+ * Copyright (c) 2012-2014 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Insight Data Access Object
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2014 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 interface InsightDAO {
@@ -124,6 +124,12 @@ interface InsightDAO {
      */
     public function getAllInstanceInsights($page_count=10, $page_number=1);
     /**
+     * Get a insights for all users, public and private, created since a specified timestamp.
+     * @param int $since Timestamp
+     * @return array Insights
+     */
+    public function getAllInstanceInsightsSince($since);
+    /**
      * Get an owner's insights created since a specified timestamp.
      * @param int $owner_id
      * @param int $since Timestamp
@@ -146,4 +152,12 @@ interface InsightDAO {
      * @return bool
      */
     public function doesInsightExist($slug, $instance_id);
+
+    /**
+     * Return the most recent insight for a given instance and slug
+     * @param $slug
+     * @param $instance_id
+     * @return Insight
+     */
+    public function getMostRecentInsight($slug, $instance_id);
 }

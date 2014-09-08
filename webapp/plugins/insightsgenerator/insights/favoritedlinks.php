@@ -30,27 +30,40 @@
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 
-require_once dirname(__FILE__).'/../../twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php';
-
 class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin {
-    public function generateInsight(Instance $instance, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $last_week_of_posts, $number_days);
+
+    /**
+     * Maximum number of posts we display in this insight
+     * This limit prevents a InsightFieldExceedsMaxLengthException
+     */
+    const MAX_POSTS = 15;
+
+    public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
+        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $insight_text = '';
 
         if (self::shouldGenerateInsight('favorited_links', $instance, $insight_date='today',
-        $regenerate_existing_insight=true)) {
-            $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
-            $favorited_posts = $fpost_dao->getAllFavoritePosts($instance->network_user_id, $instance->network, 40);
+            $regenerate_existing_insight=true)) {
+            $fav_post_dao = DAOFactory::getDAO('FavoritePostDAO');
+            $favorited_posts = $fav_post_dao->getAllFavoritePosts($instance->network_user_id, $instance->network,
+                self::MAX_POSTS);
             $todays_favorited_posts_with_links = array();
 
+            $num_good_links = 0;
             foreach ($favorited_posts as $post) {
                 if (date('Y-m-d', strtotime($post->pub_date)) == date('Y-m-d')) {
-                    $post_text = $post->post_text;
-
-                    $text_parser = new Twitter_Extractor($post_text);
-                    $elements = $text_parser->extract();
-
-                    if (count($elements['urls'])) {
+                    $good_links = array();
+                    foreach ($post->links as $link) {
+                        $url = !empty($link->expanded_url) ? $link->expanded_url : $link->url;
+                        // Skipping photos that look like links
+                        if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
+                            $good_links[] = $link;
+                            $num_good_links++;
+                        }
+                    }
+                    if (count($good_links)) {
+                        $post->links = $good_links;
                         $todays_favorited_posts_with_links[] = $post;
                     }
                 }
@@ -58,21 +71,42 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
 
             $favorited_links_count = count($todays_favorited_posts_with_links);
             if ($favorited_links_count) {
-                $verb = '';
-                $post_type = '';
-
                 if ($favorited_links_count == 1) {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                    ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                    if ($num_good_links == 1) {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                    } else {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with $num_good_links links in it.";
+                    }
                 } else {
-                    $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                    ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                    ."</strong> with links in them:";
+                    if (count($favorited_posts) == self::MAX_POSTS) {
+                        //Since number of posts is at max limit, some may have been cut off
+                        //So let's not cite specific totals
+                        $headline = "Here are the latest links from ".$this->terms->getNoun('post',
+                            InsightTerms::PLURAL). " ".$this->username." ".$this->terms->getVerb('liked').".";
+                    } else {
+                        $headline = $this->username." ".$this->terms->getVerb('liked')
+                            ." <strong>".$favorited_links_count." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                            ."</strong> with $num_good_links links in them.";
+                    }
                 }
 
-                $this->insight_dao->insertInsightDeprecated("favorited_links", $instance->id,
-                $this->insight_date, "Links you liked:", $insight_text, basename(__FILE__, ".php"),
-                Insight::EMPHASIS_LOW, serialize($todays_favorited_posts_with_links));
+                //Instantiate the Insight object
+                $my_insight = new Insight();
+
+                //REQUIRED: Set the insight's required attributes
+                $my_insight->instance_id = $instance->id;
+                $my_insight->slug = 'favorited_links'; //slug to label this insight's content
+                $my_insight->date = $this->insight_date; //date of the data this insight applies to
+                $my_insight->headline = $headline;
+                $my_insight->text = $insight_text;
+                $my_insight->header_image = '';
+                $my_insight->emphasis = Insight::EMPHASIS_LOW;
+                $my_insight->filename = basename(__FILE__, ".php");
+                $my_insight->setPosts($todays_favorited_posts_with_links);
+
+                $this->insight_dao->insertInsight($my_insight);
             }
         }
 
