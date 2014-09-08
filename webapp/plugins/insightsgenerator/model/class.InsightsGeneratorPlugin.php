@@ -320,6 +320,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             // It's a weekly digest if we're going back more than a day or two.
             $daily_or_weekly = $weekly ? 'Weekly' : 'Daily';
             $view->assign('weekly_or_daily', $daily_or_weekly);
+            $view->assign('pay_prompt_url', $config->getValue('thinkupllc_endpoint').'membership.php');
             $insights_markup = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
 
             $parameters = array();

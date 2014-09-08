@@ -564,6 +564,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
                 $this->debug($html_email);
                 $days_left = 13 - $i;
                 if ($days_left <= 13 && $days_left > 2) {
+                    $this->assertPattern('/http:\/\/example.com\/thinkup\/membership.php/', $html_email);
                     $this->assertPattern('/'.$days_left.' days left in your free trial/', $html_email);
                     if ($membership_level == "Member") {
                         $this->assertPattern('/Just \$5\/month/', $html_email);
@@ -574,9 +575,9 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
                 if ($days_left == 2) {
                     $this->assertPattern('/Only 48 hours left!/', $html_email);
                     if ($membership_level == "Member") {
-                        $this->assertPattern('/Just 16 cents a day/', $html_email);
+                        $this->assertPattern('/just 16 cents a day/', $html_email);
                     } elseif ($membership_level == "Pro") {
-                        $this->assertPattern('/Just 32 cents a day/', $html_email);
+                        $this->assertPattern('/just 32 cents a day/', $html_email);
                     }
                 }
                 if ($days_left == 1) {

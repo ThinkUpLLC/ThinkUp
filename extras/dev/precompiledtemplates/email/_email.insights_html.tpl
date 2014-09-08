@@ -1079,11 +1079,11 @@ body.outlook p {
             <p style="margin-bottom: 0;">{$pay_prompt_explainer}</p>
             <br>
             <div style="text-align:center;"><!--[if mso]>
-              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$site_url}user/membership.php" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$pay_prompt_url}" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
                 <w:anchorlock/>
                 <center>
               <![endif]-->
-                  <a href="{$site_url}user/membership.php" class="reminder-button"
+                  <a href="{$pay_prompt_url}" class="reminder-button"
             style="background-color:#24b98f;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:160px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">Join ThinkUp</span><br><span class="second-line" style="font-size:12px;line-height:14px;color:#e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
               <!--[if mso]>
                 </center>
