@@ -42,7 +42,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
             $day_of_week = 2;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('outreach_punchcard', $instance,
-            $insight_date='today', $regenerate_existing_insight=true, $day_of_week=$day_of_week,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=$day_of_week,
             count($last_week_of_posts));
 
         if ($should_generate_insight) {
