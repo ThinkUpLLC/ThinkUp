@@ -287,8 +287,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             $explainer_copy_options = array(
                                 "Your free trial expires today. Don't lose any of your insights!", //Last chance!
                                 "It's time to become a member. We'd love to have you.", // 1 day left
-                                "Just ".(($owner->membership_level == 'Member')?'16':'32').
-                                    " cents a day to get smarter about your time spent online.", //2 days left
+                                "It's just ".(($owner->membership_level == 'Member')?'16':'32').
+                                    " cents a day to get smarter about the time you spend online.", //2 days left
                                 "Isn't this better than boring \"analytics\"?", //3 days left
                                 "Just wait 'til you see ThinkUp next week.", //4 days left
                                 "We never sell your data and we don't show you ads.", //5 days left
