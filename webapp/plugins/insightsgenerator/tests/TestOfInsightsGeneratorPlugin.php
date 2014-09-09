@@ -694,10 +694,10 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $result = $plugin->getEmailMessageSubjectLine('weekly', $insights);
         $this->assertEqual($result, 'This is a high emphasis insight for you…');
 
-        //Don't get headline as subject line
+        //Headlines as subject lines when med/high exist at all times now
         TimeHelper::setTime(2);
         $result = $plugin->getEmailMessageSubjectLine('weekly', $insights);
-        $this->assertNotEqual($result, 'This is a high emphasis insight for you…');
+        $this->assertEqual($result, 'This is a high emphasis insight for you…');
 
         // Mediun and low emphasis insights
         $insights = array();
