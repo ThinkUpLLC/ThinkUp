@@ -88,9 +88,9 @@ class AmplifierInsight extends InsightPluginParent implements InsightPlugin {
                     $retweeted_username = '@'.$retweeted_username;
                 }
                 $headline = $this->getVariableCopy(array(
-                    $insight_retweeted_user->full_name." can thank %username for %added more people seeing this %post.",
-                    "%added more people saw %repostedee's %post thanks to %username.",
-                    '%username boosted '.$insight_retweeted_user->full_name.'\'s %post to %added more people.'
+                    $insight_retweeted_user->full_name." can thank %username for %added more people seeing this %post",
+                    "%added more people saw %repostedee's %post thanks to %username",
+                    '%username boosted '.$insight_retweeted_user->full_name.'\'s %post to %added more people'
                 ), array('repostedee' => $retweeted_username, 'added' => $largest_added_audience));
 
                 $my_insight = new Insight();
