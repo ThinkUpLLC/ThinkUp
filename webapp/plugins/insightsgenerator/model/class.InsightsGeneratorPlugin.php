@@ -339,28 +339,27 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $num_insights = count($insights);
         $insight_headline_subject = null;
 
-        //Testing: Use high/med insight headline as subject line for 33% of users
-        if ( TimeHelper::getTime() % 3 == 1) {
+        // Use a HIGH emphasis insight headline as the email subject line
+        foreach ($insights as $insight) {
+            if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
+                $terms = new InsightTerms($insight->instance->network);
+                $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
+                    strip_tags(html_entity_decode($insight->headline, ENT_NOQUOTES, 'UTF-8')));
+                break;
+            }
+        }
+        // If no HIGH insights existed, check medium
+        if ( !isset($insight_headline_subject) ) {
             foreach ($insights as $insight) {
-                if ($insight->emphasis == Insight::EMPHASIS_HIGH) {
+                if ($insight->emphasis == Insight::EMPHASIS_MED) {
                     $terms = new InsightTerms($insight->instance->network);
                     $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
-                        strip_tags(html_entity_decode($insight->headline, ENT_NOQUOTES, 'UTF-8')));
+                        strip_tags(html_entity_decode($insight->headline, ENT_NOQUOTES, 'UTF-8')) );
                     break;
                 }
             }
-            // If no HIGH insights existed, check medium
-            if ( !isset($insight_headline_subject) ) {
-                foreach ($insights as $insight) {
-                    if ($insight->emphasis == Insight::EMPHASIS_MED) {
-                        $terms = new InsightTerms($insight->instance->network);
-                        $insight_headline_subject = $terms->swapInSecondPerson($insight->instance->network_username,
-                            strip_tags(html_entity_decode($insight->headline, ENT_NOQUOTES, 'UTF-8')) );
-                        break;
-                    }
-                }
-            }
         }
+        // If neither high nor medium are available, use a generic headline
         if ( !isset($insight_headline_subject) ) {
             if ($daily_or_weekly == "Daily") {
                 $subject_line_choices = array (
