@@ -164,7 +164,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
+        $this->assertEqual('Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
             'followers', $result->headline);
 
         $data = unserialize($result->related_data);
@@ -215,7 +215,7 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
 
-        $this->assertEqual('Nice: Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
+        $this->assertEqual('Only <strong>1 month</strong> till @hitchhiker reaches <strong>10,000</strong> '.
             'followers', $result->headline);
 
         $data = unserialize($result->related_data);

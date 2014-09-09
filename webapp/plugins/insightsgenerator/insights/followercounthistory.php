@@ -57,9 +57,9 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
                 && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
                 $insight = new Insight();
                 if ($follower_count_history_by_month['milestone']['will_take'] == 1) {
-                    $insight->headline = 'Nice: Only ';
+                    $insight->headline = 'Only ';
                 } else {
-                    $insight->headline = 'Looks like it will be ';
+                    $insight->headline = '';
                 }
                 $insight->headline .= '<strong>'.
                     $follower_count_history_by_month['milestone']['will_take'].' month';
