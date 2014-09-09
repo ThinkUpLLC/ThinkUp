@@ -89,7 +89,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before "FML" went legit', $result->headline);
+        $this->assertEqual('Before &ldquo;FML&rdquo; went legit', $result->headline);
         $this->assertEqual('@testy used the word "FML" once since August 2014, and it appears to have caught on: '.
             'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'.
             "just been added</a> to the Oxford Dictionary Online.", $result->text);
@@ -134,7 +134,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before "humblebrag" went legit', $result->headline);
+        $this->assertEqual('Before &ldquo;humblebrag&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "humblebrag" and "clickbait" to their online '
@@ -184,7 +184,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before "hot mess" went legit', $result->headline);
+        $this->assertEqual('Before &ldquo;hot mess&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "hot mess", "clickbait", "YOLO", and "humblebrag" '

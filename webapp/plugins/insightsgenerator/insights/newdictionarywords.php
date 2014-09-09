@@ -41,7 +41,7 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                 ),
                 'start' => '2014-09-02',
                 'end' => '2014-10-02',
-                'headline' => 'Before "%word" went legit',
+                'headline' => 'Before &ldquo;%word&rdquo; went legit',
                 'single_template' => '%username used the word "%word" %total_times since %first_mention, '
                     . 'and it appears to have caught on: It\'s '
                     . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
