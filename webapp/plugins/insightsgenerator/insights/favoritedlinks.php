@@ -87,10 +87,10 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 if ($num_good_posts == 1) {
                     if ($num_good_links == 1) {
                         $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with a link in it.";
+                            ." 1 ".$this->terms->getNoun('post')." with a link in it.";
                     } else {
                         $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                            ." <strong>1 ".$this->terms->getNoun('post')."</strong> with $num_good_links links in it.";
+                            ." 1 ".$this->terms->getNoun('post')." with <strong>$num_good_links links</strong> in it.";
                     }
                 } else {
                     if ($num_good_posts >= self::MAX_POSTS) {
@@ -100,8 +100,8 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                             InsightTerms::PLURAL). " ".$this->username." ".$this->terms->getVerb('liked').".";
                     } else {
                         $insight_text = $this->username." ".$this->terms->getVerb('liked')
-                            ." <strong>".$num_good_posts." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                            ."</strong> with $num_good_links links in them.";
+                            ." ".$num_good_posts." ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                            ." with <strong>$num_good_links links</strong> in them.";
                     }
                 }
 
