@@ -127,7 +127,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '90 more people saw @lowfollowers\'s tweet thanks to @tester.');
+        $this->assertEqual($result->headline, '90 more people saw @lowfollowers\'s tweet thanks to @tester');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -158,7 +158,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '9,990 more people saw @lowfollowers\'s tweet thanks to @tester.');
+        $this->assertEqual($result->headline, '9,990 more people saw @lowfollowers\'s tweet thanks to @tester');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -188,7 +188,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 90 more people.');
+        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 90 more people');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -218,7 +218,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 90 more people seeing this tweet.');
+        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 90 more people seeing this tweet');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -248,7 +248,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 10x more people.');
+        $this->assertEqual($result->headline, '@tester boosted The Retweetee\'s tweet to 10x more people');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -278,7 +278,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@tester boosted Some Followers\'s tweet to 2x more people.');
+        $this->assertEqual($result->headline, '@tester boosted Some Followers\'s tweet to 2x more people');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'49followers');
@@ -308,7 +308,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 10x more people seeing this tweet.');
+        $this->assertEqual($result->headline, 'The Retweetee can thank @tester for 10x more people seeing this tweet');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -335,7 +335,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Some Followers can thank @tester for 49 more people seeing this tweet.');
+        $this->assertEqual($result->headline, 'Some Followers can thank @tester for 49 more people seeing this tweet');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'midfollowers');
@@ -368,7 +368,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '10x more people saw @lowfollowers\'s tweet thanks to @tester.');
+        $this->assertEqual($result->headline, '10x more people saw @lowfollowers\'s tweet thanks to @tester');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'lowfollowers');
@@ -393,7 +393,7 @@ class TestOfAmplifierInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('top_amplifier', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '100,000x more people saw @tester\'s tweet thanks to @tester.');
+        $this->assertEqual($result->headline, '100,000x more people saw @tester\'s tweet thanks to @tester');
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username,'tester');
