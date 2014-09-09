@@ -90,9 +90,9 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before "FML" went legit', $result->headline);
-        $this->assertEqual('@testy used the word "FML" once since July 2014, and it appears to have caught on: '.
+        $this->assertEqual('@testy used the word "FML" once since August 2014, and it appears to have caught on: '.
             'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'.
-            "just been added</a> to the Oxford English Dictionary.", $result->text);
+            "just been added</a> to the Oxford Dictionary Online.", $result->text);
         $data = unserialize($result->related_data);
         $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
         $this->assertEqual($data['hero_image']['alt_text'], 'New dictionary words');
@@ -135,7 +135,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before "humblebrag" went legit', $result->headline);
-        $this->assertEqual('The Oxford English Dictionary '
+        $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "humblebrag" and "clickbait" to their online '
             . 'dictionary, but no one has to explain them to @testy. Since February 2013, @testy used "humblebrag" 4 '
@@ -185,7 +185,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before "hot mess" went legit', $result->headline);
-        $this->assertEqual('The Oxford English Dictionary '
+        $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "hot mess", "clickbait", "YOLO", and "humblebrag" '
             . 'to their online dictionary, but no one has to explain them to @testy. Since May 2013, @testy used '
