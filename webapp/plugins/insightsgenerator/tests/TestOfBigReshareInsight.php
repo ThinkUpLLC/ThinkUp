@@ -88,7 +88,8 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
         $this->assertPattern('/Someone with \<strong\>2x\<\/strong\> more followers retweeted \@testeriffic/',
-        $result->headline);
+            $result->headline);
+        $this->assertEqual('80 more people saw @testeriffic\'s tweet.', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
     }
 
@@ -142,6 +143,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
+        $this->assertEqual($result->text, '320 more people saw @tester\'s tweet.');
         $this->assertPattern('/People with lots of followers retweeted/', $result->headline);
         $sharers = unserialize($result->related_data.people);
         $retweet_user = $sharers["people"][0];
@@ -190,7 +192,8 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertPattern('/Someone with lots of followers retweeted/', $result->headline);
+        $this->assertEqual($result->text, '20 more people saw @tester\'s tweet.');
+        $this->assertPattern('/User 1 retweeted/', $result->headline);
         $sharers = unserialize($result->related_data.people);
         $retweet_user = $sharers["people"][0];
         $this->assertEqual($retweet_user->description, 'I am a user');
