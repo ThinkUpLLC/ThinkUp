@@ -66,7 +66,7 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
                 $insight->text = $this->postsToInsightText($number_of_posts);
                 $insight->headline = $this->username . " " . $this->terms->getVerb('posted')
                     . " " . number_format($number_of_posts)
-                    ." time".($number_of_posts==1?'':'s')." in the past $period.";
+                    ." time".($number_of_posts==1?'':'s')." in the past $period";
                 $this->insight_dao->insertInsight($insight);
             }
         }
@@ -91,7 +91,7 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
                     $insight->date = $this->insight_date;
                     $insight->text = $this->postsToInsightText($number_of_posts);
                     $insight->headline = $this->username . " has tweeted ".number_format($number_of_posts)
-                        ." time".($number_of_posts==1?'':'s').".";
+                        ." time".($number_of_posts==1?'':'s');
                     $this->insight_dao->insertInsight($insight);
                 }
             }

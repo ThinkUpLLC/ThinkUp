@@ -59,7 +59,7 @@ class TestOfTimeSpentInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, $user, $posts, 3);
         $result = $this->insight_dao->getInsight('time_spent', 10, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual('@davidlister has tweeted 4,179 times.', $result->headline);
+        $this->assertEqual('@davidlister has tweeted 4,179 times', $result->headline);
         $this->assertEqual("That's over<strong> 17 hours 24 minutes</strong> of @davidlister's life.", $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $result = $this->baseline_dao->getInsightBaseline('time_spent_41', 10);
@@ -104,7 +104,7 @@ class TestOfTimeSpentInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new TimeSpentInsight();
         $insight_plugin->generateInsight($instance, $user, $posts, 3);
         $result = $this->insight_dao->getInsight('time_spent', 10, date('Y-m-d'));
-        $this->assertEqual('@davidlister has tweeted 4,283 times.', $result->headline);
+        $this->assertEqual('@davidlister has tweeted 4,283 times', $result->headline);
         $this->assertEqual("That's over<strong> 17 hours 50 minutes</strong> of @davidlister's life.", $result->text);
 
         $result = $this->baseline_dao->getInsightBaseline('time_spent_42', 10);
@@ -158,7 +158,7 @@ class TestOfTimeSpentInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, $user, $posts, 3);
         $result = $this->insight_dao->getInsight('time_spent', 10, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual('David Lister posted 6 times in the past week.', $result->headline);
+        $this->assertEqual('David Lister posted 6 times in the past week', $result->headline);
         $this->assertEqual("That's over<strong> 1 minute</strong> of David Lister's life.", $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
     }
@@ -194,7 +194,7 @@ class TestOfTimeSpentInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, $user, $posts, 3);
         $result = $this->insight_dao->getInsight('time_spent', 10, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual('David Lister posted 10 times in the past month.', $result->headline);
+        $this->assertEqual('David Lister posted 10 times in the past month', $result->headline);
         $this->assertEqual("That's over<strong> 2 minutes</strong> of David Lister's life.", $result->text);
     }
 }
