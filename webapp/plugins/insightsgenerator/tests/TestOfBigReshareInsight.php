@@ -114,7 +114,7 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         // First retweet author has 2x more followers
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'20', 'user_name'=>'user1',
         'full_name'=>'User 1', 'description'=>'I am a user', 'avatar'=>'avatar.jpg', 'is_protected'=>0,
-        'follower_count'=>160, 'network'=>'twitter'));
+        'follower_count'=>1600, 'network'=>'twitter'));
 
         // Second big retweet
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>'138', 'author_user_id'=>'23',
@@ -143,11 +143,11 @@ class TestOfBigReshareInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'big_reshare_1345');
         $this->assertEqual($result->filename, 'bigreshare');
-        $this->assertEqual($result->text, '320 more people saw @tester\'s tweet.');
+        $this->assertEqual($result->text, '1,760 more people saw @tester\'s tweet.');
         $this->assertPattern('/People with lots of followers retweeted/', $result->headline);
         $sharers = unserialize($result->related_data.people);
         $retweet_user = $sharers["people"][0];
-        $this->assertEqual($retweet_user->description, 'I am a Jacob');
+        $this->assertEqual($retweet_user->description, 'I am a user');
         $this->debug($this->getRenderedInsightInHTML($result));
     }
 
