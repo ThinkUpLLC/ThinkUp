@@ -52,9 +52,9 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             $this->logger->logInfo("Last week had $count posts", __METHOD__.','.__LINE__);
             if ($count > 1) {
                 $info['headline'] = $this->getVariableCopy(array(
-                    '%username %posted <strong>%count times</strong> in the past week.',
-                    '%username had <strong>%count %posts</strong> over the past week.',
-                    '%username had <strong>%count %posts</strong> over the past week.', // twice as likely on purpose
+                    '%username %posted <strong>%count times</strong> in the past week',
+                    '%username had <strong>%count %posts</strong> over the past week',
+                    '%username had <strong>%count %posts</strong> over the past week', // twice as likely on purpose
                 ), array('count' => $count));
                 $milestones = array(
                     "per_row"    => 1,
@@ -69,20 +69,20 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             } else {
                 if ($instance->network == 'twitter') {
                     $info = $this->getVariableCopyArray(array(
-                        array('headline' => "%username didn't have any new %posts this week.",
+                        array('headline' => "%username didn't have any new %posts this week",
                             'text' => "Nothing wrong with waiting until there's something to say.",
                             'button' => array(
                                     "url" => "http://twitter.com/intent/tweet?text=Hey there, friends.",
                                     "label"  => "Have anything to say now?",
                             )),
-                        array('headline' => '%username didn\'t post anything new on Twitter in the past week.',
+                        array('headline' => '%username didn\'t post anything new on Twitter in the past week',
                             'text' => 'Sometimes we just don\'t have anything to say. Maybe let someone know you '
                                     . 'appreciate their work?',
                             'button' => array(
                                     "url" => "http://twitter.com/intent/tweet?text=You know who is really great?",
                                     "label"  => "Tweet a word of praise",
                             )),
-                        array('headline' => "Seems like %username was pretty quiet on Twitter this past week.",
+                        array('headline' => "Seems like %username was pretty quiet on Twitter this past week",
                             'text' => "Nothing wrong with waiting until there's something to say.",
                             'button' => array(
                                     "url" => "http://twitter.com/intent/tweet?text=Sorry I haven't tweeted in a while!",
@@ -91,13 +91,13 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     ));
                 } else if ($instance->network == 'facebook') {
                     $info = $this->getVariableCopyArray(array(
-                        array('headline' => '%username didn\'t have any new %posts this week.',
+                        array('headline' => '%username didn\'t have any new %posts this week',
                             'text' => 'Nothing wrong with waiting until there\'s something to say.',
                             'button' => array(
                                 'url' => 'http://www.facebook.com/sharer/sharer.php?t=ThinkUp told me to say hi.',
                                 'label' => 'Maybe you\'ve got something to say now?',
                             )),
-                        array('headline' => '%username didn\'t post anything new on Facebook in the past week.',
+                        array('headline' => '%username didn\'t post anything new on Facebook in the past week',
                             'text' => 'Nothing wrong with being quiet. If you want, you could ask your friends '.
                                         'what they\'ve read lately.',
                             'button' => array(
@@ -107,7 +107,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                                     't=Ready any good books lately?',
                                 'label' => 'Read any good books lately?',
                             )),
-                        array('headline' => 'Seems like %username was pretty quiet on Facebook this past week.',
+                        array('headline' => 'Seems like %username was pretty quiet on Facebook this past week',
                             'text' => "Nothing wrong with waiting until there's something to say.",
                             'button' => array(
                                 'url' => 'http://www.facebook.com/sharer/sharer.php?t=Hey there, friends!',
@@ -117,7 +117,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                 } else {
                     $info  = array(
                        'headline '=> $info['headline'],
-                       'text' => "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.",
+                       'text' => "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom",
                        'button' => array(
                             "url" => "http://www.donorschoose.org/",
                             "label"  => "Give to DonorsChoose.org",
