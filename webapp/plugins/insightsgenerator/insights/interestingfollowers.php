@@ -56,7 +56,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
             if (sizeof($least_likely_followers) > 1) {
                 $my_insight->headline = '<strong>'.sizeof($least_likely_followers).
-                    " interesting people</strong> ". "followed $this->username.";
+                    " interesting people</strong> ". "followed $this->username";
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
@@ -86,7 +86,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 $follower = $verified_followers[0];
                 $name = $this->getFollowerName($follower);
                 $my_insight->slug = 'verified_followers';
-                $my_insight->headline = 'Wow: <strong>'.$name."</strong>, a verified user, followed $this->username.";
+                $my_insight->headline = 'Wow: <strong>'.$name."</strong>, a verified user, followed $this->username";
                 $my_insight->header_image = $verified_followers[0]->avatar;
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
@@ -141,7 +141,7 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
                 if (count($local_followers)) {
                     $headline = "<strong>"
                     .(count($local_followers) > 1 ? count($local_followers)." people" : "1 person")
-                    ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username).".";
+                    ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username);
 
                     if (count($local_followers) == 1) {
                         $header_image = $local_followers[0]->avatar;
