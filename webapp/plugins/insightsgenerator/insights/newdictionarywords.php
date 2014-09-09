@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: New Dictionary-Word Count
- Description: Did you use words just added to The Oxford English Dictionary in August 2014?
+ Description: Did you use words just added to The Oxford Dictionary Online in August 2014?
  When: September 2, 2014 until October 2, 2014, Mondays for Twitter, Thursdays for Facebook
  */
 /**
@@ -45,8 +45,8 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                 'single_template' => '%username used the word "%word" %total_times since %first_mention, '
                     . 'and it appears to have caught on: It\'s '
                     . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
-                    .'just been added</a> to the Oxford English Dictionary.',
-                'multiple_template' => 'The Oxford English Dictionary '
+                    .'just been added</a> to the Oxford Dictionary Online.',
+                'multiple_template' => 'The Oxford Dictionary Online '
                     .'<a href="http://blog.oxforddictionaries.com/2014/08/'
                     .'oxford-dictionaries-update-august-2014/">just added</a>'
                     .' %word_list to their online dictionary, '
