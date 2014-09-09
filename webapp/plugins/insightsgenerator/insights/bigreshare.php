@@ -56,10 +56,16 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                         $headline = "Someone with <strong>".$follower_count_multiple.
                         "x</strong> more followers ".$this->terms->getVerb('shared')." ".$this->username;
                     } else {
-                        $headline = "Someone with lots of followers ".$this->terms->getVerb('shared')." "
+                        $headline = $big_reshares[0]->full_name." ".$this->terms->getVerb('shared')." "
                         .$this->username;
                     }
                 }
+                $added_people = 0;
+                foreach ($big_reshares as $big_resharer) {
+                    $added_people += ($big_resharer->follower_count - $user->follower_count);
+                }
+                $insight_text = $added_people." more people saw ".$this->username."'s ".
+                    $this->terms->getNoun('post').".";
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
                 //Instantiate the Insight object
