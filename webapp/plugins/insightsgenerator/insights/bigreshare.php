@@ -64,7 +64,7 @@ class BigReshareInsight extends InsightPluginParent implements InsightPlugin {
                 foreach ($big_reshares as $big_resharer) {
                     $added_people += ($big_resharer->follower_count - $user->follower_count);
                 }
-                $insight_text = $added_people." more people saw ".$this->username."'s ".
+                $insight_text = number_format($added_people)." more people saw ".$this->username."'s ".
                     $this->terms->getNoun('post').".";
                 $simplified_post_date = date('Y-m-d', strtotime($post->pub_date));
 
