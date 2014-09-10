@@ -95,7 +95,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic replied to \@mentionOne /', $result->headline);
-        $this->assertPattern('/\@mentionOne <strong>4 times<\/strong> last week./', $result->headline);
+        $this->assertPattern('/\@mentionOne <strong>4 times<\/strong> last week/', $result->headline);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
@@ -353,7 +353,7 @@ class TestOfInteractionsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/Talky Person replied to Bob Mentioned /', $result->headline);
-        $this->assertPattern('/Bob Mentioned <strong>twice<\/strong> last week./', $result->headline);
+        $this->assertPattern('/Bob Mentioned <strong>twice<\/strong> last week/', $result->headline);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
