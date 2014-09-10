@@ -93,6 +93,7 @@ $plugin_tests->add(new TestOfInteractionsInsight());
 $plugin_tests->add(new TestOfWeeklyBestsInsight());
 $plugin_tests->add(new TestOfResponseTimeInsight());
 $plugin_tests->add(new TestOfFavoritedLinksInsight());
+$plugin_tests->add(new TestOfFavoriteFlashbacksInsight());
 $plugin_tests->add(new TestOfLongLostContactsInsight());
 $plugin_tests->add(new TestOfLinkPromptInsight());
 $plugin_tests->add(new TestOfOutreachPunchcardInsight());

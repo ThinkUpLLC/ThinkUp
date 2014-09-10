@@ -44,20 +44,19 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
             $insight_date=$since_date, $regenerate_existing_insight=false)) {
                 //Generate flashback post list
                 $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
-                $instance->network, $since_date);
+                    $instance->network, $since_date);
                 if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
 
                     $my_insight = new Insight();
 
                     $my_insight->instance_id = $instance->id;
-                    $my_insight->slug = 'favorites_year_ago_flashback'; //slug to label this insight's content
-                    $my_insight->date = $since_date; //date of the data this insight applies to
-                    $my_insight->headline = "Here's what $this->username "
-                        .$this->terms->getVerb('liked')." on this day in years past.";
-                    $my_insight->text = "Can you believe how fast time flies?"; // or just set a strong like "Greetings humans";
-                    // $my_insight->header_image = $header_image;
-                    $my_insight->emphasis = Insight::EMPHASIS_MED; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
-                    $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
+                    $my_insight->slug = 'favorites_year_ago_flashback';
+                    $my_insight->date = $since_date;
+                    $my_insight->headline = "What $this->username " .$this->terms->getVerb('liked')
+                        ." on this day in years past";
+                    $my_insight->text = "Can you believe how fast time flies?";
+                    $my_insight->emphasis = Insight::EMPHASIS_MED;
+                    $my_insight->filename = basename(__FILE__, ".php");
                     $my_insight->setPosts($flashback_favs);
 
                     $this->insight_dao->insertInsight($my_insight);
@@ -65,7 +64,6 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
             }
             $days_ago++;
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
