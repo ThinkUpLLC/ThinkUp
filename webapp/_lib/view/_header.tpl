@@ -41,14 +41,10 @@
 
     <meta itemprop="image" content="{$insight_image}">
     <meta property="og:image" content="{$insight_image}" />
-    <meta property="og:image:secure" content="{$insight_image}" />
+    <!--<meta property="og:image:secure" content="{$insight_image}" />-->
     <meta name="twitter:image:src" content="{$insight_image}">
 
     <meta name="og:image:type" content="image/png">
-    <meta name="twitter:image:width" content="144">
-    <meta name="twitter:image:height" content="144">
-    <meta name="og:image:width" content="144">
-    <meta name="og:image:height" content="144">
 
     {if ($insights[0]->instance->network eq 'twitter')}
     <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
