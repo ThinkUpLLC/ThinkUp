@@ -24,7 +24,7 @@
     {if count($insights) eq 1}
     <meta property="og:site_name" content="ThinkUp" />
     <meta property="og:type" content="article" />
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="{$twitter_card}">
     <meta name="twitter:site" content="@thinkup">
     <meta name="twitter:domain" content="thinkup.com">
 

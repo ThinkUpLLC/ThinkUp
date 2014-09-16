@@ -363,6 +363,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         //Sharing image should be set to ThinkUp logo
         $this->assertPattern('/itemprop="image" content="https:\/\/www.thinkup.com\/join\/assets\/ico\/apple-touch'.
             '-icon-144-precomposed.png/', $results);
+        //Twitter card is summary
+        $this->assertPattern('/name="twitter:card" content="summary"/', $results);
+
         $this->debug($results);
     }
 
@@ -386,6 +389,8 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
         //Sharing image should be set to dynamically-generated share image
         $this->assertPattern('/itemprop="image" content="http:\/\/shares.thinkup.com\/insight\?url=/', $results);
+        //Twitter card is large
+        $this->assertPattern('/name="twitter:card" content="summary_large_image"/', $results);
 
         $this->debug($results);
     }
