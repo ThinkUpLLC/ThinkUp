@@ -136,7 +136,7 @@ class InsightStreamController extends ThinkUpController {
                         .$insight->instance->network_username
                         ."&n=".$insight->instance->network."&d=".(date('Y-m-d', strtotime($insight->date)))
                         ."&s=".$insight->slug;
-                    $insight_image = "https://shares.thinkup.com?url=".$insight_permalink;
+                    $insight_image = "http://shares.thinkup.com/insight?url=".$insight_permalink;
                 } else {
                     $insight_image = "https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png";
                 }
