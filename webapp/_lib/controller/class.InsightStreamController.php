@@ -130,6 +130,17 @@ class InsightStreamController extends ThinkUpController {
                 $insights[] = $insight;
                 $this->addToView('insights', $insights);
                 $this->addToView('expand', true);
+                $thinkupllc_endpoint = Config::getInstance()->getValue('thinkupllc_endpoint');
+                if (isset($thinkupllc_endpoint)) {
+                    $insight_permalink = Utils::getApplicationURL()."?u="
+                        .$insight->instance->network_username
+                        ."&n=".$insight->instance->network."&d=".(date('Y-m-d', strtotime($insight->date)))
+                        ."&s=".$insight->slug;
+                    $insight_image = "https://shares.thinkup.com?url=".$insight_permalink;
+                } else {
+                    $insight_image = "https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png";
+                }
+                $this->addToView('insight_image', $insight_image);
             } else {
                 $this->addErrorMessage("This insight doesn't exist.");
             }

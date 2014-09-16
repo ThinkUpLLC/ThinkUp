@@ -39,10 +39,10 @@
     <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
     <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
 
-    <meta itemprop="image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
-    <meta property="og:image" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
-    <meta property="og:image:secure" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png" />
-    <meta name="twitter:image:src" content="https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png">
+    <meta itemprop="image" content="{$insight_image}">
+    <meta property="og:image" content="{$insight_image}" />
+    <meta property="og:image:secure" content="{$insight_image}" />
+    <meta name="twitter:image:src" content="{$insight_image}">
 
     <meta name="og:image:type" content="image/png">
     <meta name="twitter:image:width" content="144">

@@ -339,6 +339,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
 
         // Logo link should not go to the homepage.
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+
+        // No sharing image
+        $this->assertNoPattern('/itemprop="image"/', $results);
     }
 
     public function testOfNotLoggedInIndividualInsightWithAccess() {
@@ -357,6 +360,33 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertNoPattern('/to see this insight/', $results);
         // Logo link should not go to the homepage.
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+        //Sharing image should be set to ThinkUp logo
+        $this->assertPattern('/itemprop="image" content="https:\/\/www.thinkup.com\/join\/assets\/ico\/apple-touch'.
+            '-icon-144-precomposed.png/', $results);
+        $this->debug($results);
+    }
+
+    public function testOfNotLoggedInIndividualInsightWithAccessLLCEndpointSet() {
+        $config = Config::getInstance();
+        $config->setValue('thinkupllc_endpoint', 'http://example.com');
+        $builders = self::buildPublicAndPrivateInsights();
+
+        $_GET['u'] = 'jack';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = '2012-05-01';
+        $_GET['s'] = 'avg_replies_per_week';
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        //do show public insight
+        $this->assertPattern('/Hey these are some local followers!/', $results);
+        //don't show no access message
+        $this->assertNoPattern('/to see this insight/', $results);
+        // Logo link should not go to the homepage.
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+        //Sharing image should be set to dynamically-generated share image
+        $this->assertPattern('/itemprop="image" content="https:\/\/shares.thinkup.com/', $results);
+
         $this->debug($results);
     }
 
