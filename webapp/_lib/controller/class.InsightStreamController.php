@@ -137,10 +137,13 @@ class InsightStreamController extends ThinkUpController {
                         ."&n=".$insight->instance->network."&d=".(date('Y-m-d', strtotime($insight->date)))
                         ."&s=".$insight->slug;
                     $insight_image = "http://shares.thinkup.com/insight?url=".$insight_permalink;
+                    $twitter_card = "summary_large_image";
                 } else {
                     $insight_image = "https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png";
+                    $twitter_card = "summary";
                 }
                 $this->addToView('insight_image', $insight_image);
+                $this->addToView('twitter_card', $twitter_card);
             } else {
                 $this->addErrorMessage("This insight doesn't exist.");
             }
