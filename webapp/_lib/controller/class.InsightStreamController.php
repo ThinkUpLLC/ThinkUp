@@ -132,10 +132,10 @@ class InsightStreamController extends ThinkUpController {
                 $this->addToView('expand', true);
                 $thinkupllc_endpoint = Config::getInstance()->getValue('thinkupllc_endpoint');
                 if (isset($thinkupllc_endpoint)) {
-                    $insight_permalink = Utils::getApplicationURL()."?u="
+                    $insight_permalink = urlencode(Utils::getApplicationURL()."?u="
                         .$insight->instance->network_username
                         ."&n=".$insight->instance->network."&d=".(date('Y-m-d', strtotime($insight->date)))
-                        ."&s=".$insight->slug;
+                        ."&s=".$insight->slug);
                     $insight_image = "http://shares.thinkup.com/insight?url=".$insight_permalink;
                     $twitter_card = "summary_large_image";
                 } else {
