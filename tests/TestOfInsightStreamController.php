@@ -385,7 +385,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         // Logo link should not go to the homepage.
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
         //Sharing image should be set to dynamically-generated share image
-        $this->assertPattern('/itemprop="image" content="https:\/\/shares.thinkup.com/', $results);
+        $this->assertPattern('/itemprop="image" content="http:\/\/shares.thinkup.com\/insight\?url=/', $results);
 
         $this->debug($results);
     }
