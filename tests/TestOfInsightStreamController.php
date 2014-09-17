@@ -372,6 +372,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
     public function testOfNotLoggedInIndividualInsightWithAccessLLCEndpointSet() {
         $config = Config::getInstance();
         $config->setValue('thinkupllc_endpoint', 'http://example.com');
+        $config->setValue('install_folder', 'hosted-username');
         $builders = self::buildPublicAndPrivateInsights();
 
         $_GET['u'] = 'jack';
@@ -388,7 +389,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         // Logo link should not go to the homepage.
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
         //Sharing image should be set to dynamically-generated share image
-        $this->assertPattern('/itemprop="image" content="http:\/\/shares.thinkup.com\/insight\?url=/', $results);
+        $this->assertPattern('/itemprop="image" content="http:\/\/shares.thinkup.com\/insight\?tu=hosted/', $results);
         //Twitter card is large
         $this->assertPattern('/name="twitter:card" content="summary_large_image"/', $results);
 
