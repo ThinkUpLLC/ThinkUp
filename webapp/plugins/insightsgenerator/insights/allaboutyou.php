@@ -53,13 +53,13 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
 
             if ($count > 1) {
                 $headline = $this->getVariableCopy(array(
-                    '%username is getting personal.',
-                    'It\'s getting personal.',
+                    '%username is getting personal',
+                    'It\'s getting personal',
                     'But enough about me&hellip;',
-                    'Self-reflection is powerful stuff.',
+                    'Self-reflection is powerful stuff',
                     'Speaking from experience&hellip;',
-                    'Sometimes %network is a first-person story.',
-                    'It\'s just me, myself and I.',
+                    'Sometimes %network is a first-person story',
+                    'It\'s just me, myself and I',
                 ), array('network' => ucfirst($instance->network)));
                 $percent = round($count / count($last_week_of_posts) * 100);
                 $plural = count($last_week_of_posts) > 1;
