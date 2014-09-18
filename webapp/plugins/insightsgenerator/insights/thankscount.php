@@ -81,7 +81,7 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                 $insight->date = $this->insight_date;
                 $user_prefix = ($instance->network == 'twitter' ? '@' : '');
                 if ($thankee) {
-                    $insight->headline = $user_prefix. $thankee->username . ' probably appreciated it.';
+                    $insight->headline = $user_prefix. $thankee->username . ' probably appreciated it';
                     $insight->header_image = $thankee->avatar;
                     $insight->text = $this->getVariableCopy(array(
                         '%username %posted '.$this_period_count.' thank-you'.($this_period_count!=1?'s':'').
@@ -89,10 +89,10 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                     ));
                 } else {
                     $insight->headline = $this->getVariableCopy(array(
-                        'Way to show appreciation.',
-                        'Gratitude makes everybody happy.',
-                        'Gratitude is contagious.',
-                        'Saying &ldquo;thanks&rdquo; is a great way to spend time on '.ucfirst($instance->network).'.'
+                        'Way to show appreciation',
+                        'Gratitude makes everybody happy',
+                        'Gratitude is contagious',
+                        'Saying &ldquo;thanks&rdquo; is a great way to spend time on '.ucfirst($instance->network)
                     ));
                     $times = $this->terms->getOccurrencesAdverb($this_period_count);
                     $insight->text = $this->getVariableCopy(array(
