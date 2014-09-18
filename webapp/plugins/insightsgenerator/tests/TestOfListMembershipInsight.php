@@ -441,7 +441,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("@listmaker added @ev to a list that's called &ldquo;list2&rdquo;.", $result->headline);
+        $this->assertEqual("@listmaker added @ev to a list that's called &ldquo;list2&rdquo;", $result->headline);
         $this->assertEqual('@ev got added to a new list, <a href="http://twitter.com/listmaker/list2">list2</a>.',
             $result->text);
 
@@ -457,7 +457,8 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, array(), 3);
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("@ev got added to lists called &ldquo;list2&rdquo; and &ldquo;list1&rdquo;.", $result->headline);
+        $this->assertEqual("@ev got added to lists called &ldquo;list2&rdquo; and &ldquo;list1&rdquo;",
+            $result->headline);
         $this->assertEqual('@ev is on 2 new lists: <a href="http://twitter.com/listmaker/list2">list2</a> '
             . 'and <a href="http://twitter.com/listmaker/list1">list1</a>.', $result->text);
 
