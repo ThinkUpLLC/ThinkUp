@@ -60,7 +60,7 @@ class MetweetInsight extends InsightPluginParent implements InsightPlugin {
 
             if ($metweet_count > 1) {
                 $headline = $this->username." retweeted ".$this->username." mentions "
-                ."<strong>".$this->terms->getOccurrencesAdverb($metweet_count)."</strong> last week.";
+                ."<strong>".$this->terms->getOccurrencesAdverb($metweet_count)."</strong> last week";
 
                 $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
                 $insight_baseline_dao->insertInsightBaseline("metweet_count", $instance->id, $metweet_count,
