@@ -227,5 +227,11 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $new_text = "You were on fire this week!";
         $result = $terms->swapInSecondPerson($username, $text);
         $this->assertEqual($result, $new_text);
+
+        $username = 'Willow Rosenberg';
+        $text = "Congratulations on the congrats, Willow Rosenberg!";
+        $new_text = "Congratulations on the congrats!";
+        $result = $terms->swapInSecondPerson($username, $text);
+        $this->assertEqual($result, $new_text);
     }
 }
