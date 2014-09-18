@@ -81,14 +81,14 @@ class MetaPostsCountInsight extends CriteriaMatchInsightPluginParent implements 
             $baseline_dao->updateInsightBaseline($this->getSlug().'_count', $instance->id, $percent);
 
             $network = ucfirst($instance->network);
-            $potential_headlines = array( "It's $network all the way down.",);
+            $potential_headlines = array( "It's $network all the way down",);
             if ($instance->network == 'facebook') {
-                $potential_headlines[] = "Feelings for Facebook.";
-                $potential_headlines[] = "Feeding the news feed.";
+                $potential_headlines[] = "Feelings for Facebook";
+                $potential_headlines[] = "Feeding the news feed";
             }
             else if ($instance->network == 'twitter') {
-                $potential_headlines[] = "Tweets on tweets on tweets.";
-                $potential_headlines[] = "Tweetin' 'bout Twitter.";
+                $potential_headlines[] = "Tweets on tweets on tweets";
+                $potential_headlines[] = "Tweetin' 'bout Twitter";
             }
             $insight->headline = $this->getVariableCopy($potential_headlines);
 
