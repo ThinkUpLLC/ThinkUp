@@ -84,7 +84,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious');
         $this->assertEqual($result->text, '@testy thanked someone <strong>once</strong> on Twitter last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -114,7 +114,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious');
         $this->assertEqual($result->text, '@testy thanked someone <strong>3 times</strong> on Twitter last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -149,7 +149,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious');
         $this->assertEqual($result->text, '@testy thanked someone <strong>3 times</strong> on Twitter last month.'
             .' That means there was even more to be thankful about in '.date('F', strtotime('-1 month'))
             .' than in '.date('F', strtotime('-2 month')).'.');
@@ -176,25 +176,25 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Gratitude makes everybody happy.');
+        $this->assertEqual($result->headline, 'Gratitude makes everybody happy');
 
         TimeHelper::setTime(2);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Gratitude is contagious.');
+        $this->assertEqual($result->headline, 'Gratitude is contagious');
 
         TimeHelper::setTime(3);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Saying &ldquo;thanks&rdquo; is a great way to spend time on Twitter.');
+        $this->assertEqual($result->headline, 'Saying &ldquo;thanks&rdquo; is a great way to spend time on Twitter');
 
         TimeHelper::setTime(4);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Way to show appreciation.');
+        $this->assertEqual($result->headline, 'Way to show appreciation');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -252,7 +252,7 @@ class TestOfThanksCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@testuser probably appreciated it.');
+        $this->assertEqual($result->headline, '@testuser probably appreciated it');
         $this->assertEqual($result->text, '@testy tweeted 2 thank-yous last month.');
         $this->assertEqual('avatar.jpg', $result->header_image);
 
