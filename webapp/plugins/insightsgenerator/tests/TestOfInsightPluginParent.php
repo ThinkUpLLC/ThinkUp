@@ -228,6 +228,8 @@ class TestOfInsightPluginParent extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('owners', array('id'=> 2, 'joined' => date('Y-m-d'), 'email' =>'b@b.com'));
         $this->assertTrue($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
             $insight_date='today', $regenerate_existing_insight=true, $day_of_month=$bonus_day));
-    }
 
+        $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=true, $day_of_month=$bonus_day, null, null, false));
+    }
 }

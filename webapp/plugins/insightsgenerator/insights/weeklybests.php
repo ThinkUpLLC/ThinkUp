@@ -39,7 +39,8 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         //Monthly
         $did_monthly = false;
         $should_generate_insight = $this->shouldGenerateMonthlyInsight( $slug = 'monthly_best', $instance,
-            $this->insight_date, $regenerate_existing_insight=false, $day_of_month = 1);
+            $this->insight_date, $regenerate_existing_insight=false, $day_of_month = 1, $count_related_posts=null,
+            $excluded_networks=null, $enable_bonus_alternate_day = false);
 
         if ($should_generate_insight) {
             $most_popular_post = null;

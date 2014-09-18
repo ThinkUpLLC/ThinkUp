@@ -147,10 +147,14 @@ class InsightPluginParent {
      * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
      * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
      * @param int $day_of_month the day of the month on which the insight should run
+     * @param int $count_related_posts if set, wouldn't run insight if there are no posts related to insight
+     * @param arr $excluded_networks array of networks for which the insight shouldn't be run
+     * @param bool $enable_bonus_alternate_day whether or not to run insight on alternate day 15 days from day of month
      * @return bool Whether the insight should be generated or not
      */
     public function shouldGenerateMonthlyInsight($slug, Instance $instance, $insight_date=null,
-        $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=null, $excluded_networks=null) {
+        $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=null, $excluded_networks=null,
+        $enable_bonus_alternate_day = true) {
         $run = true;
 
         // Always generate if testing
@@ -169,12 +173,13 @@ class InsightPluginParent {
             }
 
             // Now we check for the bonus first time alternate day of the month
-            if ($run && !$right_day) {
+            if ($run && !$right_day && $enable_bonus_alternate_day) {
                 $alternate_day_of_month = (($day_of_month+15)%date('t'))+1;
                 if (date('j') == $alternate_day_of_month) {
                     $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                     $owner_dao = DAOFactory::getDAO('OwnerDAO');
                     $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+                    //@TODO don't assume there's only one OwnerInstance
                     $owner = $owner_dao->getById($owner_instance[0]->owner_id);
                     if ((time() - strtotime($owner->joined)) < (60*60*24*15)) {
                         $right_day = true;
