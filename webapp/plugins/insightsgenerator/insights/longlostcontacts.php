@@ -67,7 +67,7 @@ class LongLostContactsInsight extends InsightPluginParent implements InsightPlug
                 $headline = $this->username." hasn't replied to "
                     .((count($long_lost_contacts) > 1) ?
                     "<strong>".count($long_lost_contacts)." people</strong> " : $long_lost_contacts[0]->full_name." ")
-                    ."in over a year.";
+                    ."in over a year";
 
                 $insight_text = "It's good to reflect after some time has passed.";
 
