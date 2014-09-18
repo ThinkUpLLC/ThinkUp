@@ -83,7 +83,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         }
                     }
                     if (TimeHelper::getTime() % 2 == 1) {
-                        $headline = $this->username .' got added to lists called ' .join(' ', $headline_groups).'.';
+                        $headline = $this->username .' got added to lists called ' .join(' ', $headline_groups);
                     } else {
                         $headline = "Do " . join(' ', $headline_groups);
                         $headline .= ' sound like good descriptions of ' . $this->username . '?';
@@ -116,7 +116,7 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                         $list_name_parts = explode('/', $new_groups[0]->group_name);
                         $maker = $list_name_parts[0];
                         $headline = $maker .' added '.$this->username.' to a list that\'s called &ldquo;'
-                            . $new_groups[0]->keyword . '&rdquo;.';
+                            . $new_groups[0]->keyword . '&rdquo;';
                     }
                     else {
                         $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
