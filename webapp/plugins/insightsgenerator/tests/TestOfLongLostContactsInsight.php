@@ -66,7 +66,7 @@ class TestOfLongLostContactsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->headline);
         $this->assertPattern('/<strong>2 people<\/strong> /', $result->headline);
-        $this->assertPattern('/in over a year./', $result->headline);
+        $this->assertPattern('/in over a year/', $result->headline);
         $this->assertNoPattern('/someone/', $result->headline);
         $this->assertIsA($contacts, "array");
         $this->assertIsA($contacts["people"][0], "User");
@@ -97,7 +97,7 @@ class TestOfLongLostContactsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@twitteruser hasn\'t replied to /', $result->headline);
         $this->assertPattern('/Twitter Follower One /', $result->headline);
-        $this->assertPattern('/in over a year./', $result->headline);
+        $this->assertPattern('/in over a year/', $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
         $this->assertNoPattern('/people/', $result->headline);
         $this->assertIsA($contacts, "array");
