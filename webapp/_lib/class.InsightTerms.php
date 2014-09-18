@@ -491,6 +491,9 @@ class InsightTerms {
         }
         $text = str_replace($username." has", "you've", $text);
 
+        //Blah lah blah, you!
+        $text = str_replace(", ".$username."!", '!', $text);
+
         //you/You
         if (strpos($text, $username) === 0) {
             //Captitalize if username starts the sentence
