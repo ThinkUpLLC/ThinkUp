@@ -93,14 +93,14 @@ class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin
                     );
 
                     $headlines = array(
-                        "%genderucase reacted to %username's %posts the most.",
-                        "%genderucase responded to %username's %posts the most.",
-                        "%username's %posts resonated with %genderlcase."
+                        "%genderucase reacted to %username's %posts the most",
+                        "%genderucase responded to %username's %posts the most",
+                        "%username's %posts resonated with %genderlcase"
                     );
                     $headlines_100percent = array(
-                        "Only %genderlcase reacted to %username's %posts.",
-                        "Only %genderlcase responded to %username's %posts.",
-                        "%username's %posts resonated with %genderlcase."
+                        "Only %genderlcase reacted to %username's %posts",
+                        "Only %genderlcase responded to %username's %posts",
+                        "%username's %posts resonated with %genderlcase"
                     );
                     if ($female_total > $male_total) {
                         if ($male_total == 0) {
@@ -128,9 +128,9 @@ class GenderAnalysisInsight extends InsightPluginParent implements InsightPlugin
                             number_format($female_total)." by people who identify as female.";
                     } else {
                         $headlines = array(
-                            "Both genders reacted to %username's %posts equally.",
-                            "Both genders responded to %username's %posts equally.",
-                            "%username's %posts resonated with both genders."
+                            "Both genders reacted to %username's %posts equally",
+                            "Both genders responded to %username's %posts equally",
+                            "%username's %posts resonated with both genders"
                         );
                         $headline = $this->getVariableCopy($headlines);
                         $text = "This past week, people who identify as male and female liked and commented on ".

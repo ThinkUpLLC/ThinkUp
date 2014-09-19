@@ -68,7 +68,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Women responded to Gloria Steinem\'s status updates the most.');
+        $this->assertEqual($result->headline, 'Women responded to Gloria Steinem\'s status updates the most');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -104,7 +104,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with women.');
+        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with women');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -140,7 +140,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Women reacted to Gloria Steinem\'s status updates the most.');
+        $this->assertEqual($result->headline, 'Women reacted to Gloria Steinem\'s status updates the most');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -176,7 +176,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Only women responded to Gloria Steinem\'s status updates.');
+        $this->assertEqual($result->headline, 'Only women responded to Gloria Steinem\'s status updates');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -212,7 +212,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with women.');
+        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with women');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -248,7 +248,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Only women reacted to Gloria Steinem\'s status updates.');
+        $this->assertEqual($result->headline, 'Only women reacted to Gloria Steinem\'s status updates');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as female, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -284,7 +284,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Only men responded to Gloria Steinem\'s status updates.');
+        $this->assertEqual($result->headline, 'Only men responded to Gloria Steinem\'s status updates');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -320,7 +320,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with men.');
+        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with men');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -356,7 +356,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $gender_data = unserialize($result->related_data);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Only men reacted to Gloria Steinem\'s status updates.');
+        $this->assertEqual($result->headline, 'Only men reacted to Gloria Steinem\'s status updates');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -418,7 +418,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Men responded to Gloria Steinem\'s status updates the most.');
+        $this->assertEqual($result->headline, 'Men responded to Gloria Steinem\'s status updates the most');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -455,7 +455,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with men.');
+        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with men');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -492,7 +492,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Men reacted to Gloria Steinem\'s status updates the most.');
+        $this->assertEqual($result->headline, 'Men reacted to Gloria Steinem\'s status updates the most');
         $this->assertPattern('/Gloria Steinem\'s status updates were by people who identify as male, '.
             'compared/', $result->text);
         $this->assertIsA($gender_data, "array");
@@ -529,7 +529,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Both genders responded to Gloria Steinem\'s status updates equally.');
+        $this->assertEqual($result->headline, 'Both genders responded to Gloria Steinem\'s status updates equally');
         $this->assertEqual($result->text, 'This past week, people who identify as male and female liked and '.
             'commented on Gloria Steinem\'s status updates at the same rate.');
         $this->assertIsA($gender_data, "array");
@@ -568,7 +568,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with both genders.');
+        $this->assertEqual($result->headline, 'Gloria Steinem\'s status updates resonated with both genders');
         $this->assertEqual($result->text, 'This past week, people who identify as male and female liked and '.
             'commented on Gloria Steinem\'s status updates at the same rate.');
         $this->assertIsA($gender_data, "array");
@@ -607,7 +607,7 @@ class TestOfGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual($result->headline, 'Both genders reacted to Gloria Steinem\'s status updates equally.');
+        $this->assertEqual($result->headline, 'Both genders reacted to Gloria Steinem\'s status updates equally');
         $this->assertEqual($result->text, 'This past week, people who identify as male and female liked and '.
             'commented on Gloria Steinem\'s status updates at the same rate.');
         $this->assertIsA($gender_data, "array");
