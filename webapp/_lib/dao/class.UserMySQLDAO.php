@@ -140,7 +140,8 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
 
             //Capture description version
             //If stored description doesn't match the current one, store the new version
-            if ($user_in_storage->description != $user->description) {
+            if (Utils::stripURLsOutOfText($user_in_storage->description) 
+                != Utils::stripURLsOutOfText($user->description)) {
                 $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
                 $user_versions_dao->addVersionOfField($user_in_storage->id, 'description', $user->description);
             }

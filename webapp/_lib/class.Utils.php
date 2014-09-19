@@ -521,4 +521,13 @@ class Utils {
         $thinkupllc_endpoint = $cfg->getValue('thinkupllc_endpoint');
         return ($thinkupllc_endpoint !== null);
     }
+
+    /**
+     * Remove URLs from a block of text.
+     * @param  str $text Text with URLs in it
+     * @return str Text without URLs in it
+     */
+    public static function stripURLsOutOfText($text) {
+        return preg_replace('/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i', '', $text);
+    }
 }
