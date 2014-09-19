@@ -78,9 +78,8 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
 
             $network = ucfirst($instance->network);
             $potential_headlines = array(
-                'LOLOLOLOL, indeed.',
-                'LOL activity detected!',
-                'OMG LOL!',
+                'LOL activity detected',
+                'OMG LOL',
             );
 
             $insight->text = 'Looks like '.$this->username.' found '.number_format($this_period_count).' thing'
