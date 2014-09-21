@@ -95,6 +95,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function tearDown() {
         $this->builders = null;
         $this->logger->close();
+        $this->instance = null;
+        $this->api = null;
         parent::tearDown();
     }
 
@@ -800,18 +802,35 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($res[0]->url, 'http://t.co/8yet1gjfDm');
     }
 
-    public function testCleanUpFollows() {
+    public function testCleanUpFollowsDeactivateDueToError163() {
         $this->debug(__METHOD__);
-        // first test that the existing data is correct
+        self::setUpInstanceUserEduardCucurella();
+        // First test that the existing data is correct
         $follow_dao = DAOFactory::getDAO('FollowDAO');
-        $this->assertEqual($follow_dao->followExists('930061', '36823', 'twitter', true), true);
-        // setup a Twitter Crawler to get the mocked Error 403 & API Error 163
+        $this->assertTrue($follow_dao->followExists('930061', '36823', 'twitter', true));
+        // Set up a Twitter Crawler to get the mocked Error 403 & API Error 163
         $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
-        $twitter_crawler->api->to->setDataPathFolder('ecucurella/');
-        // call cleanUpFollows which should set the follow to inactive
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/ecucurella-163/');
+        // Call cleanUpFollows which should set the follow to inactive
         $twitter_crawler->cleanUpFollows();
         // Now check the data is as expected
-        $this->assertEqual($follow_dao->followExists('930061', '36823', 'twitter', true), false);
+        $this->assertFalse($follow_dao->followExists('930061', '36823', 'twitter', true));
+    }
+
+    public function testCleanUpFollowsReactivate() {
+        $this->debug(__METHOD__);
+        self::setUpInstanceUserEduardCucurella();
+        // First test that the existing data is correct
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $follow_dao->deactivate('930061', '36823', 'twitter');
+        $this->assertFalse($follow_dao->followExists('930061', '36823', 'twitter', true));
+        // Set up a Twitter crawler
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->api->to->setDataPathFolder('testoftwittercrawler/ecucurella/');
+        // Call cleanUpFollows which should set the follow to inactive
+        $twitter_crawler->cleanUpFollows();
+        // Now check the data is as expected
+        $this->assertFalse($follow_dao->followExists('930061', '36823', 'twitter', true));
     }
 
     public function testMediaHandling() {

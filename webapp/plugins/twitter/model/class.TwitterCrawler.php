@@ -527,8 +527,7 @@ class TwitterCrawler {
         $inserted_follow_count = 0;
 
         if ($continue_fetching) {
-            $this->logger->logUserSuccess("Starting to fetch followers. Please wait. Working...",
-            __METHOD__.','.__LINE__);
+            $this->logger->logUserSuccess("Starting to fetch followers...", __METHOD__.','.__LINE__);
         }
         $follow_dao = DAOFactory::getDAO('FollowDAO');
 
@@ -553,29 +552,29 @@ class TwitterCrawler {
                     $status_message .= count($ids)." follower IDs queued to update. ";
                     $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                     $status_message = "";
-
                     if (count($ids) == 0) {
                         $this->instance->is_archive_loaded_follows = true;
                         $continue_fetching = false;
                     }
-
                     foreach ($ids as $id) {
                         // add/update follow relationship
                         if ($follow_dao->followExists($this->instance->network_user_id, $id['id'], 'twitter')) {
                             //update it
-                            if ($follow_dao->update($this->instance->network_user_id, $id['id'], 'twitter'))
-                            $updated_follow_count = $updated_follow_count + 1;
+                            if ($follow_dao->update($this->instance->network_user_id, $id['id'], 'twitter')) {
+                                $updated_follow_count = $updated_follow_count + 1;
+                            }
                         } else {
                             // insert it
-                            if ($follow_dao->insert($this->instance->network_user_id, $id['id'], 'twitter'))
-                            $inserted_follow_count = $inserted_follow_count + 1;
+                            if ($follow_dao->insert($this->instance->network_user_id, $id['id'], 'twitter')) {
+                                $inserted_follow_count = $inserted_follow_count + 1;
+                            }
                         }
                     }
                     $this->logger->logSuccess("Cursor at ".strval($next_cursor), __METHOD__.','.__LINE__);
                 }
                 if ($updated_follow_count > 0 || $inserted_follow_count > 0 ){
                     $status_message = $updated_follow_count ." follower(s) updated; ". $inserted_follow_count.
-                    " new follow(s) inserted.";
+                        " new follow(s) inserted.";
                     $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
                 }
             } catch (APICallLimitExceededException $e) {
@@ -1056,54 +1055,63 @@ class TwitterCrawler {
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
         while ( $continue_fetching) {
-            $oldfollow = $follow_dao->getOldestFollow('twitter');
-            if ($oldfollow != null) {
+            $old_follow = $follow_dao->getOldestFollow('twitter');
+            if ($old_follow != null) {
                 $endpoint = $this->api->endpoints['show_friendship'];
                 $args = array();
-                $args["source_id"] = $oldfollow["followee_id"];
-                $args["target_id"] = $oldfollow["follower_id"];
+                $args["source_id"] = $old_follow["followee_id"];
+                $args["target_id"] = $old_follow["follower_id"];
 
+                $debug_api_call = $http_status;
                 try {
-                    $this->logger->logInfo("Checking stale follow last seen ".$oldfollow["last_seen"],
-                    __METHOD__.','.__LINE__);
+                    $this->logger->logInfo("Checking stale follow last seen ".$old_follow["last_seen"],
+                        __METHOD__.','.__LINE__);
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
                     if ($http_status == 200) {
                         $friendship = $this->api->parseJSONRelationship($payload);
                         if ($friendship['source_follows_target'] == 'true') {
                             $this->logger->logInfo("Updating follow last seen date: ".$args["source_id"]." follows ".
-                            $args["target_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->update($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter');
+                                $args["target_id"], __METHOD__.','.__LINE__);
+                            $follow_dao->update($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
+                                true, $debug_api_call);
                         } else {
                             $this->logger->logInfo("Deactivating follow: ".$args["source_id"]." does not follow ".
-                            $args["target_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter');
+                                $args["target_id"], __METHOD__.','.__LINE__);
+                            $follow_dao->deactivate($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
+                                $debug_api_call);
                         }
                         if ($friendship['target_follows_source'] == 'true') {
                             $this->logger->logInfo("Updating follow last seen date: ".$args["target_id"]." follows ".
-                            $args["source_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->update($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
+                                $args["source_id"], __METHOD__.','.__LINE__);
+                            $follow_dao->update($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
+                                true, $debug_api_call);
                         } else {
                             $this->logger->logInfo("Deactivating follow: ".$args["target_id"]." does not follow ".
                             $args["source_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
+                            $follow_dao->deactivate($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
+                                $debug_api_call);
                         }
                     } else {
                         $this->logger->logError("Got non-200 response for " .$endpoint->getShortPath(),
-                        __METHOD__.','.__LINE__);
+                            __METHOD__.','.__LINE__);
                         $error_code = $this->api->parseJSONErrorCodeAPI($payload);
                         if ($http_status == 403 && $error_code['error'] == 163) {
                             $this->logger->logError("Marking follow inactive due to 403 Source User Not Found ".
-                            "error response with API 163 error", __METHOD__.','.__LINE__);
+                                "error response with API 163 error", __METHOD__.','.__LINE__);
                             // deactivate in both directions
-                            $follow_dao->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter');
-                            $follow_dao->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
+                            $follow_dao->deactivate($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
+                                $debug_api_call);
+                            $follow_dao->deactivate($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
+                                $debug_api_call);
                         }
                         if ($http_status == 404) {
                             $this->logger->logError("Marking follow inactive due to 404 response",
-                            __METHOD__.','.__LINE__);
+                                __METHOD__.','.__LINE__);
                             // deactivate in both directions
-                            $follow_dao->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter');
-                            $follow_dao->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter');
+                            $follow_dao->deactivate($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
+                                $debug_api_call);
+                            $follow_dao->deactivate($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
+                                $debug_api_call);
                         }
                     }
                 } catch (APICallLimitExceededException $e) {
