@@ -59,11 +59,12 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataIsReturned($ps);
     }
 
-    public function update($user_id, $follower_id, $network, $debug_api_call = '') {
-        $q = " UPDATE #prefix#follows ";
-        $q .= "SET last_seen=NOW(), debug_api_call = :debug ";
+    public function update($user_id, $follower_id, $network, $active=true, $debug_api_call = '') {
+        $q = "UPDATE #prefix#follows ";
+        $q .= "SET last_seen=NOW(), active = :active, debug_api_call = :debug ";
         $q .= "WHERE user_id = :user_id AND follower_id = :follower_id AND network = :network;";
         $vars = array(
+            ':active'=>$this->convertBoolToDB($active),
             ':user_id'=>(string)$user_id,
             ':follower_id'=>(string)$follower_id,
             ':network'=>$network,
@@ -235,7 +236,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     public function getStalestFriends($user_id, $network, $number_days_old=2, $limit=10) {
         $q  = "SELECT u.* FROM #prefix#users AS u ";
         $q .= "INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
-        $q .= "WHERE f.follower_id= :user_id AND f.network=:network ";
+        $q .= "WHERE f.follower_id= :user_id AND f.network=:network AND f.active=1 ";
         $q .= "AND u.user_id NOT IN ";
         $q .= "   (SELECT user_id FROM #prefix#user_errors WHERE network=:network) ";
         $q .= "AND u.last_updated < DATE_SUB(NOW(), INTERVAL :number_days_old DAY) ";

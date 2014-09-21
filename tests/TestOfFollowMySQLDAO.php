@@ -133,9 +133,30 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testUpdate() {
-        $this->assertEqual($this->DAO->update(1234567890, 1324567890, 'twitter'), 0);
-        $this->assertEqual($this->DAO->update(1324567890, 1234567890, 'twitter'), 1);
-        $this->assertEqual($this->DAO->update(1723457890, 1823457890, 'facebook'), 1);
+        $this->assertEqual($this->DAO->update('1234567890', '1324567890', 'twitter'), 0);
+        $this->assertEqual($this->DAO->update('1324567890', '1234567890', 'twitter'), 1);
+        $this->assertEqual($this->DAO->update('1723457890', '1823457890', 'facebook'), 1);
+
+        //Test active bit
+        $q = "SELECT * FROM " . $this->table_prefix . "follows WHERE ";
+        $q .= "user_id = :user_id AND follower_id = :follower_id AND network = :network ";
+
+        $stmt = FollowMySQLDAO::$PDO->prepare($q);
+        $stmt->execute(array(':user_id' => '1723457890', 'follower_id'=>'1823457890', ':network' => 'facebook'));
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['active'], 1, 'Should be active by default, active bit not specified');
+
+        $this->assertEqual($this->DAO->update('1723457890', '1823457890', 'facebook', false), 1);
+        $stmt = FollowMySQLDAO::$PDO->prepare($q);
+        $stmt->execute(array(':user_id' => '1723457890', 'follower_id'=>'1823457890', ':network' => 'facebook'));
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['active'], 0, 'Should be inactive');
+
+        $this->assertEqual($this->DAO->update('1723457890', '1823457890', 'facebook', true), 1);
+        $stmt = FollowMySQLDAO::$PDO->prepare($q);
+        $stmt->execute(array(':user_id' => '1723457890', 'follower_id'=>'1823457890', ':network' => 'facebook'));
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['active'], 1, 'Should be active');
     }
 
     public function testDeactivate() {
