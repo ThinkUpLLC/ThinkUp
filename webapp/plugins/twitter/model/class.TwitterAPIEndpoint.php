@@ -168,7 +168,7 @@ class TwitterAPIEndpoint {
         if (!isset($this->remaining) || !isset($this->limit)) {
             throw new Exception("Endpoint not initialized");
         }
-        if ((($this->remaining * 100 )/$this->limit) < $percent_use_ceiling) {
+        if ((($this->remaining * 100 )/$this->limit) < (100-$percent_use_ceiling)) {
             return false;
         } else {
             return true;
