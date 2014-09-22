@@ -273,7 +273,8 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     public function getOldestFollow($network) {
         $q  = "SELECT user_id AS followee_id, follower_id, last_seen ";
         $q .= "FROM #prefix#follows AS f ";
-        $q .= "WHERE network=:network AND active = 1 ORDER BY f.last_seen ASC LIMIT 1;";
+        $q .= "WHERE network=:network AND active = 1 AND ";
+        $q .= "f.last_seen < DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY f.last_seen ASC LIMIT 1;";
         $vars = array( ':network'=>$network );
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
