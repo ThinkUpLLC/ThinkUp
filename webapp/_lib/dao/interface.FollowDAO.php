@@ -120,12 +120,19 @@ interface FollowDAO {
      */
     public function countTotalFriendsProtected($user_id, $network);
     /**
-     * Get a list of, friends without details in storage.
+     * Get a list of followers without details in storage.
      * @param int $user_id
      * @param str $network
      * @return array Numbered keys, with arrays - named keys
      */
     public function getUnloadedFollowerDetails($user_id, $network);
+    /**
+     * Get a list of friends without details in storage.
+     * @param int $user_id
+     * @param str $network
+     * @return array Numbered keys, with arrays - named keys
+     */
+    public function getUnloadedFriendDetails($user_id, $network);
     /**
      * Get the friends updated the longest time ago, if age is more than a given number of days ago.
      * @param int $user_id

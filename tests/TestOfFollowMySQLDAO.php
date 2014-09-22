@@ -33,6 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
     protected $logger;
+    private $builders;
 
     public function setUp() {
         parent::setUp();
@@ -171,12 +172,26 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetUnloadedFollowerDetails() {
-        $unloaded_followers = $this->DAO->getUnloadedFollowerDetails(1324567890, 'twitter');
+        $unloaded_followers = $this->DAO->getUnloadedFollowerDetails('1324567890', 'twitter');
 
         $this->assertIsA($unloaded_followers, "array");
         $this->assertEqual(count($unloaded_followers), 3);
         $this->assertEqual($unloaded_followers[0]['follower_id'], 17);
         $this->assertEqual($unloaded_followers[1]['follower_id'], 14);
+    }
+
+    public function testGetUnloadedFriendDetails() {
+        $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>'unloaded1', 'follower_id'=>'1324567890',
+            'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>'unloaded2', 'follower_id'=>'1324567890',
+            'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+
+        $unloaded_friends = $this->DAO->getUnloadedFriendDetails('1324567890', 'twitter');
+
+        $this->assertIsA($unloaded_friends, "array");
+        $this->assertEqual(count($unloaded_friends), 2);
+        $this->assertEqual($unloaded_friends[0]['user_id'], 'unloaded2');
+        $this->assertEqual($unloaded_friends[1]['user_id'], 'unloaded1');
     }
 
     public function testCountTotalFollowsWithErrors() {

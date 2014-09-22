@@ -962,6 +962,29 @@ class TwitterCrawler {
         }
     }
     /**
+     * Fetch unloaded friend details.
+     */
+    public function fetchUnloadedFriendDetails() {
+        if (!isset($this->user)) {
+            $this->fetchInstanceUserInfo();
+        }
+        if (isset($this->user)) {
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
+            $strays = $follow_dao->getUnloadedFriendDetails($this->user->user_id, 'twitter');
+            $status_message = count($strays).' unloaded friend details to load.';
+            $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+
+            foreach ($strays as $s) {
+                try {
+                    $this->fetchAndAddUser($s['user_id'], "Friend IDs");
+                } catch (APICallLimitExceededException $e) {
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+                    break;
+                }
+            }
+        }
+    }
+    /**
      * Fetch instance user friends by user IDs.
      */
     public function fetchUserFriendsByIDs() {
