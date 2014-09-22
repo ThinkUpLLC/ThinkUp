@@ -963,12 +963,15 @@ class TwitterCrawler {
     }
     /**
      * Fetch instance user friends by user IDs.
-     * @param int $uid
-     * @param FollowDAO $follow_dao
      */
-    private function fetchUserFriendsByIDs($uid, $follow_dao) {
+    public function fetchUserFriendsByIDs() {
+        if (!isset($this->user)) {
+            $this->fetchInstanceUserInfo();
+        }
         $continue_fetching = true;
         $status_message = "";
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+
         while ($continue_fetching) {
             $args = array();
             $endpoint = $this->api->endpoints['following_ids'];
@@ -976,7 +979,7 @@ class TwitterCrawler {
                 $next_cursor = -1;
             }
             $args['cursor'] = strval($next_cursor);
-            $args['user_id'] = strval($uid);
+            $args['user_id'] = strval($this->user->user_id);
 
             try {
                 list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
@@ -1004,20 +1007,20 @@ class TwitterCrawler {
                 $inserted_follow_count = 0;
                 foreach ($ids as $id) {
                     // add/update follow relationship
-                    if ($follow_dao->followExists($id['id'], $uid, 'twitter')) {
+                    if ($follow_dao->followExists($id['id'], $this->user->user_id, 'twitter')) {
                         //update it
-                        if ($follow_dao->update($id['id'], $uid, 'twitter')) {
+                        if ($follow_dao->update($id['id'], $this->user->user_id, 'twitter')) {
                             $updated_follow_count++;
                         }
                     } else {
                         //insert it
-                        if ($follow_dao->insert($id['id'], $uid, 'twitter')) {
+                        if ($follow_dao->insert($id['id'], $this->user->user_id, 'twitter')) {
                             $inserted_follow_count++;
                         }
                     }
                 }
                 $status_message .= "$updated_follow_count existing follows updated; ".$inserted_follow_count.
-                " new follows inserted.";
+                    " new follows inserted.";
                 $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
             }
         }

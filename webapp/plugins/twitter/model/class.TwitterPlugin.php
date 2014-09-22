@@ -102,6 +102,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin {
                     $twitter_crawler->fetchInstanceUserFavorites();
                     $twitter_crawler->updateStaleGroupMemberships();
                     $twitter_crawler->fetchStrayRepliedToTweets();
+                    $twitter_crawler->fetchUserFriendsByIDs();
                     $twitter_crawler->fetchUnloadedFollowerDetails();
                     $twitter_crawler->cleanUpFollows();
                     $twitter_crawler->updateFriendsProfiles();
