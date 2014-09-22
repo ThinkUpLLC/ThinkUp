@@ -89,7 +89,7 @@ class TestOfTwitterAPIEndpoint extends ThinkUpBasicUnitTestCase {
         $endpoint = new TwitterAPIEndpoint('/test/faker');
         $endpoint->setRemaining(78);
         $endpoint->setLimit(100);
-        $this->assertFalse($endpoint->isAvailable(80));
+        $this->assertTrue($endpoint->isAvailable(80));
 
         $endpoint->setRemaining(81);
         $endpoint->setLimit(100);
@@ -98,5 +98,9 @@ class TestOfTwitterAPIEndpoint extends ThinkUpBasicUnitTestCase {
         $endpoint->setRemaining(180);
         $endpoint->setLimit(180);
         $this->assertTrue($endpoint->isAvailable(80));
+
+        $endpoint->setRemaining(9);
+        $endpoint->setLimit(100);
+        $this->assertFalse($endpoint->isAvailable(90));
     }
 }
