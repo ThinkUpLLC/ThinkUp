@@ -826,7 +826,7 @@ class TwitterCrawler {
     }
 
     /**
-     * Fetch the instance user's friends' tweets.
+     * Fetch the instance user's friends.
      */
     public function fetchInstanceUserFriends() {
         if (!isset($this->user)) {
@@ -991,9 +991,19 @@ class TwitterCrawler {
         if (!isset($this->user)) {
             $this->fetchInstanceUserInfo();
         }
-        $continue_fetching = true;
         $status_message = "";
         $follow_dao = DAOFactory::getDAO('FollowDAO');
+
+        $total_friends_in_system = $follow_dao->countTotalFriends($this->instance->network_user_id, 'twitter');
+
+        if ($total_friends_in_system < $this->user->friend_count) {
+            $continue_fetching = true;
+            $this->logger->logUserInfo($total_friends_in_system." friends in system, ". $this->user->friend_count
+                ." friends according to Twitter; Friend archive is not loaded", __METHOD__.','.__LINE__);
+        } else {
+            $continue_fetching = false;
+            $this->logger->logInfo("Friend archive loaded", __METHOD__.','.__LINE__);
+        }
 
         while ($continue_fetching) {
             $args = array();
