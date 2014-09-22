@@ -207,8 +207,14 @@ abstract class PDODAO {
                 $exception_details .= 'ThinkUp could not execute the following query: '.
                 str_replace(chr(10), "", $stmt->queryString) . ' Details: '. $e->getMessage();
             } else {
-                $exception_details .=
-                ' To see the technical details of what went wrong, set debug = true in ThinkUp\'s config file.';
+                if (!Utils::isThinkUpLLC()) {
+                    $exception_details .=
+                    ' To see the technical details of what went wrong, set debug = true in ThinkUp\'s config file.';
+                } else {
+                    $exception_details .=
+                    ' Contact us at help@thinkup.com.';
+
+                }
             }
             if ( strpos($e->getMessage(),'Data too long for column') !== false) {
                 throw new DataExceedsColumnWidthException($exception_details);
