@@ -246,14 +246,14 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetOldestFollow() {
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>930061, 'follower_id'=>20,
-        'last_seen'=>'2001-04-08 23:54:41', 'active'=>1, 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'20',
+            'last_seen'=>'2001-04-08 23:54:41', 'active'=>1, 'network'=>'twitter'));
 
         $oldest_follow = $this->DAO->getOldestFollow('twitter');
 
         $this->assertNotNull($oldest_follow);
-        $this->assertEqual($oldest_follow["followee_id"], 930061);
-        $this->assertEqual($oldest_follow["follower_id"], 20);
+        $this->assertEqual($oldest_follow["followee_id"], '930061');
+        $this->assertEqual($oldest_follow["follower_id"], '20');
     }
 
     public function testGetMostFollowedFollowers(){
