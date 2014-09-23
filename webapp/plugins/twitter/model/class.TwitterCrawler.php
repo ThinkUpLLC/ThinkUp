@@ -1393,13 +1393,19 @@ class TwitterCrawler {
             //Get stalest friends
             $follow_dao = DAOFactory::getDAO('FollowDAO');
             $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 1,
-                $limit = 50);
+                $limit = 25);
             $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
 
-            foreach ($stalest_friends as $user) {
+            while (isset($stalest_friends) && count($stalest_friends) > 0) {
                 try {
-                    $this->fetchAndAddUser($user->user_id, "Friends stale update");
+                    foreach ($stalest_friends as $user) {
+                        $this->fetchAndAddUser($user->user_id, "Friends stale update");
+                    }
+                    $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter',
+                        $number_days_old = 1, $limit = 25);
+                    $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 } catch (APICallLimitExceededException $e) {
                     $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     break;
