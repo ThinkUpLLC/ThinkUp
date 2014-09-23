@@ -53,7 +53,9 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                     if ($last_description) {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                         $user = $user_dao->getDetailsByUserKey($user_key);
-                        if ($user && $user->description !== $last_description['field_value']) {
+                        if ($user
+                            && Utils::stripURLsOutOfText($user->description)
+                            !== Utils::stripURLsOutOfText($last_description['field_value'])) {
                             $changes[] = array(
                                 'user' => $user,
                                 'field_name' => 'description',
