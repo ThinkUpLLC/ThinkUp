@@ -1392,7 +1392,8 @@ class TwitterCrawler {
         if (isset($this->user)) {
             //Get stalest friends
             $follow_dao = DAOFactory::getDAO('FollowDAO');
-            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 1);
+            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'twitter', $number_days_old = 1,
+                $limit = 50);
             $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
 
