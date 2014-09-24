@@ -108,8 +108,8 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
 
     private function getHeadline($changes, $instance) {
         $network = ucfirst($instance->network);
+        $username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[0]['user']->username;
         if (count($changes) == 1) {
-            $username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[0]['user']->username;
             $base = $this->getVariableCopy(array(
                 "Something's different about %user1",
                 "%user1 changes it up",
@@ -118,11 +118,14 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                 "What's new with %user1"
             ), array('user1' => $username));
         } else {
-            $base = $this->getVariableCopy(array(
-                "Changing of the profile",
-                "Ch-ch-ch-ch-changes",
-                "Change is afoot"
-            ), array('network' => $network));
+            $second_username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[1]['user']->username;
+            if (count($changes) > 2) {
+                $total_more = count($changes) - 2;
+                $base = $username.", ".$second_username.", and ".$total_more." other".
+                (($total_more == 1)?"":"s")." changed their profiles";
+            } else {
+                $base = $username." and ".$second_username." changed their profiles";
+            }
         }
         return $base;
     }
