@@ -150,7 +150,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
-    public function testWithMultipleChanges() {
+    public function testTwoChanges() {
         $builders = array();
 
         // User
@@ -193,7 +193,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, 'Ch-ch-ch-ch-changes');
+        $this->assertEqual($result->headline, '@newlywed and @movingperson changed their profiles');
         $this->assertEqual($result->text, "2 of @buffy's friends changed their Twitter description. "
             . "Even small changes can be big news.");
         $this->assertNull($result->header_image);
@@ -212,6 +212,141 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['changes'][1]['field_description'], 'bio');
         $this->assertEqual($data['changes'][1]['before'], 'I use Google+');
         $this->assertEqual($data['changes'][1]['after'], 'I live in France.');
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testThreeChanges() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friends
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Not Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I am a father, woodworker, sandwich, bird, and pushover. '.
+            'RTs != endorsements', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Maybe Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
+        'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'4', 'user_name'=>'typodude',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Typer',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>4,
+        'network'=>'twitter', 'description'=>'I am a wrighter', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'4', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '2', 'field_name' => 'description',
+            'field_value' => "I am a father, matchmaker, sandwich, bird, and pushover.", 'crawl_time' => '-2d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '3', 'field_name' => 'description',
+            'field_value' => "I use Google+", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '4', 'field_name' => 'description',
+            'field_value' => "I am a writer", 'crawl_time' => '-3d'));
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->headline, '@newlywed, @movingperson, and 1 other changed their profiles');
+        $this->assertEqual($result->text, "3 of @buffy's friends changed their Twitter description. "
+            . "Even small changes can be big news.");
+        $this->assertNull($result->header_image);
+
+        $data = unserialize($result->related_data);
+        $this->assertEqual(3, count($data['changes']));
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFourChanges() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friends
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Not Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I am a father, woodworker, sandwich, bird, and pushover. '.
+            'RTs != endorsements', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Maybe Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
+        'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'4', 'user_name'=>'typodude',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Typer',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>4,
+        'network'=>'twitter', 'description'=>'I am a wrighter', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'5', 'user_name'=>'typodude',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Typer',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>5,
+        'network'=>'twitter', 'description'=>'I am a wrighter', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'4', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'5', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '2', 'field_name' => 'description',
+            'field_value' => "I am a father, matchmaker, sandwich, bird, and pushover.", 'crawl_time' => '-2d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '3', 'field_name' => 'description',
+            'field_value' => "I use Google+", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '4', 'field_name' => 'description',
+            'field_value' => "I am a writer", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '5', 'field_name' => 'description',
+            'field_value' => "I am a writer", 'crawl_time' => '-3d'));
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->headline, '@newlywed, @movingperson, and 2 others changed their profiles');
+        $this->assertEqual($result->text, "4 of @buffy's friends changed their Twitter description. "
+            . "Even small changes can be big news.");
+        $this->assertNull($result->header_image);
+
+        $data = unserialize($result->related_data);
+        $this->assertEqual(4, count($data['changes']));
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -266,79 +401,6 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         );
 
         for ($i=1; $i<6; $i++) {
-            TimeHelper::setTime($i);
-            $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
-            $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
-            $this->assertNotNull($result);
-            $this->assertEqual($result->headline, $headlines[$i]);
-            $this->assertEqual($result->text, $texts[$i]);
-            $this->debug($this->getRenderedInsightInHTML($result));
-            $this->debug($this->getRenderedInsightInEmail($result));
-        }
-    }
-
-    public function testAlternateMultiText() {
-        $builders = array();
-
-        // User
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
-        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
-        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
-        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
-
-        // Friend
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
-        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
-        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
-        'network'=>'twitter', 'description'=>'I just got married!', 'location'=>'San Francisco, CA','is_verified'=>0));
-
-        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
-        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
-        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
-        'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA','is_verified'=>0));
-
-        // Follows
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
-        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
-        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
-
-        // Change
-        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
-            'field_value' => "I'm getting married soon.", 'crawl_time' => '-2d'));
-        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 3, 'field_name' => 'description',
-            'field_value' => "I use Google+", 'crawl_time' => '-3d'));
-
-
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user = $user_dao->getDetailsByUserKey(1);
-
-        $insight_plugin = new BioTrackerInsight();
-        $insight_dao = new InsightMySQLDAO();
-
-        $headlines = array(
-            "",
-            "Ch-ch-ch-ch-changes",
-            "Change is afoot",
-            "Changing of the profile",
-            "Ch-ch-ch-ch-changes",
-            "Change is afoot",
-            "Changing of the profile",
-            "Ch-ch-ch-ch-changes",
-        );
-
-        $texts = array(
-            "",
-            "2 of @buffy's friends changed their Twitter description. Even small changes can be big news.",
-            "2 of @buffy's friends changed their Twitter description. They might appreciate that someone noticed.",
-            "2 of @buffy's friends changed their Twitter description. Spot the difference?",
-            "2 of @buffy's friends changed their Twitter description. Even small changes can be big news.",
-            "2 of @buffy's friends changed their Twitter description. They might appreciate that someone noticed.",
-            "2 of @buffy's friends changed their Twitter description. Spot the difference?",
-            "2 of @buffy's friends changed their Twitter description. Even small changes can be big news.",
-        );
-
-        for ($i=1; $i<8; $i++) {
             TimeHelper::setTime($i);
             $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
             $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
