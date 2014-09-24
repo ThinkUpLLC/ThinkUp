@@ -47,11 +47,11 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
             $excluded_networks=array('foursquare'));
 
         if ($should_generate_insight) {
-            $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0); //, "photos" => 0);
-            $total_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0); //, "photos" => 0);
-            $average_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0);//, "photos" => 0);
-            $total_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0); //, "photos" => 0);
-            $average_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0);//, "photos" => 0);
+            $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
+            $total_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
+            $average_replies = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
+            $total_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
+            $average_reshares = array("all" => 0, "questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);
             if (sizeof( $last_week_of_posts) > 5) {
                 $this->logger->logSuccess("Calculating style stats ", __METHOD__.','.__LINE__);
                 foreach ($last_week_of_posts as $post) {
@@ -70,11 +70,9 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     if (sizeof($post->links) > 0 ) {
                         foreach ($post->links as $link) {
                             if ($link->image_src != null) {
-                                /*
                                 $total_posts["photos"]++;
                                 $total_replies["photos"] += $post->reply_count_cache;
                                 $total_reshares["photos"] += $post->all_retweets;
-                                 */
                             } else {
                                 $total_posts["links"]++;
                                 $total_replies["links"] += $post->reply_count_cache;
@@ -116,7 +114,6 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     $average_reshares["links"] = 0;
                 }
 
-                /*
                 if ($total_posts["photos"] > 0) {
                     $average_replies["photos"] = round($total_replies["photos"] / $total_posts["photos"]);
                     $average_reshares["photos"] = round($total_reshares["photos"] / $total_posts["photos"]);
@@ -124,7 +121,6 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                     $average_replies["photos"] = 0;
                     $average_reshares["photos"] = 0;
                 }
-                 */
 
                 $insight_text = '';
                 arsort($total_posts);
