@@ -217,10 +217,12 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 if ($sentence) {
-                    $headline = $sentence;
+                    //Remove period at the end of the headline
+                    $headline = substr($sentence, 0, (strlen($sentence) - 1));
                     $insight_text = $style_analysis;
                 } elseif ($style_analysis_neg) {
-                    $headline = $style_analysis;
+                    //Remove period at the end of the headline
+                    $headline = substr($style_analysis, 0, (strlen($style_analysis) - 1));
                     $insight_text = $style_analysis_neg;
                 } else {
                     $headline = '';
