@@ -50,12 +50,12 @@ class TwitterAgeInsight extends InsightPluginParent implements InsightPlugin {
                 $explainer = '';
 
                 if ($joined_timestamp <= strtotime('July 15, 2006')) {
-                    $headline = $this->username.' was either a super-early Twitter user or an Odeo employee.';
+                    $headline = $this->username.' was either a super-early Twitter user or an Odeo employee';
                     $explainer = "That's before Twitter even launched!";
                 } else if ($joined_timestamp < strtotime('March 5, 2007')) {
                     $headline = 'Before Barack Obama joined Twitter...';
                 } else if ($joined_timestamp < strtotime('August 23, 2007')) {
-                    $headline = 'Before the hashtag, there was '.$this->username.'.';
+                    $headline = 'Before the hashtag, there was '.$this->username;
                     $explainer = 'That\'s before the hashtag was even '.
                         ' <a href="https://twitter.com/chrismessina/status/223115412">'.
                         'invented</a>!';
@@ -78,7 +78,7 @@ class TwitterAgeInsight extends InsightPluginParent implements InsightPlugin {
                 } else if ($joined_timestamp < ($twitter_start + $first_half_of_twitters_life)) {
                     $headline = $this->getVariableCopy(array(
                         'Somebody is an early bird!',
-                        'Achievement unlocked: %username is old-school.'
+                        'Achievement unlocked: %username is old-school'
                     ));
                 } else if ($joined_timestamp < strtotime('September 8, 2011')) {
                     $headline = 'One of the first 100 million Twitter users...';
@@ -86,7 +86,7 @@ class TwitterAgeInsight extends InsightPluginParent implements InsightPlugin {
                     $headline = 'Pre-IPO!';
                     $explainer = "That's even before Twitter's initial public offering on November 7, 2013.";
                 } else if ($joined_timestamp > strtotime('-6 months')) {
-                    $headline = 'Welcome to the party.';
+                    $headline = 'Welcome to the party';
                 } else {
                     $headline = 'One in 200 million...';
                 }
