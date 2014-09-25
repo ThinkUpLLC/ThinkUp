@@ -42,17 +42,10 @@ class UserVersionsMySQLDAO extends PDODAO implements UserVersionsDAO {
         $ps = $this->execute($q, $vars);
     }
 
-    public function getRecentFriendsVersions($user_key, $past_x_days, $fields = array()) {
-        $q = "SELECT user_id, network FROM #prefix#users WHERE id=:user_key";
-        $ps = $this->execute($q, array(':user_key' => $user_key));
-        $user = $this->getDataRowsAsArrays($ps);
-        if (count($user) < 1) {
-            return null;
-        }
-
+    public function getRecentFriendsVersions(User $user, $past_x_days, $fields = array()) {
         $vars = array(
-            ':user_id' =>$user[0]['user_id'],
-            ':network' =>$user[0]['network'],
+            ':user_id' =>$user->user_id,
+            ':network' =>$user->network,
             ':days_ago' =>$past_x_days
         );
 

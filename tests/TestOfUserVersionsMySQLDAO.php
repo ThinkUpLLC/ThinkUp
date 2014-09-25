@@ -125,7 +125,9 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('network'=>'twitter','id'=>3,'user_id'=>33));
         $builders[] = FixtureBuilder::build('users', array('network'=>'twitter','id'=>4,'user_id'=>44));
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 2);
+        $user_dao = new UserMySQLDAO();
+        $user_1 = $user_dao->getDetailsByUserKey(1);
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 2);
         $this->assertEqual(count($res), 2);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
@@ -134,22 +136,22 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[1]['field_name'], 'bio');
         $this->assertEqual($res[1]['field_value'], 'I work at CompanyCo!');
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 1);
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 1);
         $this->assertEqual(count($res), 1);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
         $this->assertEqual($res[0]['field_value'], 'I am unemployed.');
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 1, array('url'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 1, array('url'));
         $this->assertEqual(count($res), 0);
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 1, array('bio'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 1, array('bio'));
         $this->assertEqual(count($res), 1);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
         $this->assertEqual($res[0]['field_value'], 'I am unemployed.');
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 1, array('bio','url'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 1, array('bio','url'));
         $this->assertEqual(count($res), 1);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
@@ -158,13 +160,13 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'url',
             'field_value' => 'http://company.co', 'crawl_time' => '-2d'));
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 1, array('bio','url'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 1, array('bio','url'));
         $this->assertEqual(count($res), 1);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
         $this->assertEqual($res[0]['field_value'], 'I am unemployed.');
 
-        $res = $this->DAO->getRecentFriendsVersions(1, 3, array('bio','url'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 3, array('bio','url'));
         $this->assertEqual(count($res), 3);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
@@ -178,7 +180,7 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('follows', array('active' => 1, 'user_id' => 44,
             'follower_id' => 11, 'network' => 'twitter'));
-        $res = $this->DAO->getRecentFriendsVersions(1, 3, array('bio','url'));
+        $res = $this->DAO->getRecentFriendsVersions($user_1, 3, array('bio','url'));
         $this->assertEqual(count($res), 4);
         $this->assertEqual($res[0]['user_key'], 2);
         $this->assertEqual($res[0]['field_name'], 'bio');
@@ -193,7 +195,8 @@ class TestOfUserVersionsMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res[3]['field_name'], 'url');
         $this->assertEqual($res[3]['field_value'], 'http://company.co');
 
-        $res = $this->DAO->getRecentFriendsVersions(2, 2);
+        $user_2 = $user_dao->getDetailsByUserKey(2);
+        $res = $this->DAO->getRecentFriendsVersions($user_2, 2);
         $this->assertEqual(count($res), 0);
     }
 

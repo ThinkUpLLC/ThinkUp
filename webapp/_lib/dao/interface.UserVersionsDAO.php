@@ -38,12 +38,12 @@ interface UserVersionsDAO {
 
     /**
      * Fetch recent version changes for a user's friends
-     * @param int $user_key The id from the users table
+     * @param User $user The user whose friends's changes this returns
      * @param int $past_x_days How many days of history to fetch
      * @param arr $fields What fields do we care about (default: all)
      * @return arr An array of field versions.
      */
-    public function getRecentFriendsVersions($user_key, $past_x_days, $fields = array());
+    public function getRecentFriendsVersions(User $user, $past_x_days, $fields = array());
 
     /**
      * Fetch recent version changes for a user
