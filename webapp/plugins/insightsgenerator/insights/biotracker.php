@@ -41,7 +41,7 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
 
         if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug, $instance)) {
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
-            $versions = $user_versions_dao->getRecentFriendsVersions($user->id, 7, array('description'));
+            $versions = $user_versions_dao->getRecentFriendsVersions($user, 7, array('description'));
             //$this->logger->logInfo(Utils::varDumpToString($versions), __METHOD__.','.__LINE__);
             $changes = array();
             $examined_users = array();
