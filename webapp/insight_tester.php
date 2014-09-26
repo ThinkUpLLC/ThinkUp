@@ -15,19 +15,19 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@thinkup">
     <meta name="twitter:domain" content="thinkup.com">
+    <meta name="twitter:image:src" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>">
 
-    <meta itemprop="name" content="Insight Text Tester">
-    <meta name="twitter:title" content="Insight Text Tester">
-    <meta property="og:title" content="Insight Text Tester" />
+    <meta itemprop="name" content="Insight Tester">
+    <meta name="twitter:title" content="Insight Tester">
+    <meta property="og:title" content="Insight Tester" />
 
-    <meta itemprop="description" content="ThinkUp Insight Text Tester">
-    <meta name="description" content="ThinkUp Insight Text Tester">
-    <meta name="twitter:description" content="ThinkUp Insight Text Tester">
+    <meta itemprop="description" content="ThinkUp Insight Tester">
+    <meta name="description" content="ThinkUp Insight Tester">
+    <meta name="twitter:description" content="ThinkUp Insight Tester">
 
     <meta itemprop="image" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png">
-    <meta property="og:image" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png" />
-    <meta property="og:image:secure" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png" />
-    <meta name="twitter:image:src" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png">
+    <meta property="og:image" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>" />
+    <meta property="og:image:secure" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>" />
 
     <meta name="og:image:type" content="image/png">
 
@@ -62,6 +62,7 @@
         </div>
       </nav>
 <div class="container">
+    <a target="_blank"https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?> style="float:right;" href="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>">Get image</a>
     <div class="stream stream-permalink">
             <div class="date-group today">
         <div class="date-marker">
