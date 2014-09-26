@@ -1100,6 +1100,15 @@ body.outlook p {
 
 {foreach from=$insights item=insight}
 {capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
+{if $insight->instance->network eq 'twitter'}
+  {capture name="share_link" assign="share_link"}
+    <a href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$insight->headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|html_entity_decode|escape:'url'}&amp;via=thinkup">Tweet this</a>
+  {/capture}
+{elseif $insight->instance->network eq 'facebook'}
+  {capture name="share_link" assign="share_link"}
+    <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
+  {/capture}
+{/if}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
   {assign var='color_name' value='sepia'}
@@ -1317,7 +1326,7 @@ or isset($insight->related_data.changes)}
                           <img src="https://www.thinkup.com/join/assets/img/icons/{$insight->instance->network}-gray.png" alt="{$insight->instance->network}"><a href="{$permalink}">{$insight->date|date_format:"%b %d"}</a>
                       </td>
                       <td class="six sub-columns date">
-                          <a href="{$permalink}">View this insight</a>
+                        {$share_link}
                       </td>
                   </tr>
               </table>
