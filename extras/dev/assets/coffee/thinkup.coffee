@@ -340,3 +340,11 @@ $ ->
   $(window).load ->
     delayed = -> $('body').hide().show()
     delay = window.setTimeout delayed, 1000
+
+
+  # GOOG event tracking
+  $("body").on "click", ".navbar .btn-signup", ->
+    ga('send', 'event', 'Signup Button', 'click', 'navbar');
+
+  $("body").on "click", ".insight-tout .btn-signup", ->
+    ga('send', 'event', 'Signup Button', 'click', 'tout');

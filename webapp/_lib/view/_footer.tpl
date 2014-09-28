@@ -93,12 +93,7 @@
     {/if}
 
 {if isset($thinkupllc_endpoint)}
-    {literal}<script>
-      var _gaq=[['_setAccount','UA-76614-5'],['_trackPageview']];
-      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-      g.src='//www.google-analytics.com/ga.js';
-      s.parentNode.insertBefore(g,s)}(document,'script'));
-    </script>
+    {literal}
 
     <script type="text/javascript">
     var _sf_async_config={uid:2383,domain:"thinkup.com"};
