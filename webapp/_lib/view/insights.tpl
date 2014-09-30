@@ -26,7 +26,7 @@
     {/capture}
   {elseif $i->instance->network eq 'facebook'}
     {capture name="share_link" assign="share_link"}
-      <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
+      <a class="{$i->instance->network}" href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
     {/capture}
   {/if}
 
