@@ -245,25 +245,6 @@ $ ->
     else
       $(window).scroll -> setActiveDateGroup()
 
-  $("body").on "click", ".share-button-open", (e) ->
-    e.preventDefault()
-    $menu = $(@).parent()
-    $menu.toggleClass("open")
-    rightOffset = $menu.parent().outerWidth(true) - $menu.outerWidth(true) + 4
-    $menu.animate(
-      right: rightOffset
-    , 250
-    )
-
-  $("body").on "click", ".share-button-close", (e) ->
-    e.preventDefault()
-    $menu = $(@).parent()
-    $menu.toggleClass("open")
-    $menu.animate(
-      right: "-275px"
-    , 250
-    )
-
   $("body").on "click", ".panel-body .btn-see-all", (e) ->
     $btn = $(@)
     $list = $btn.prev(".body-list")
