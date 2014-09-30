@@ -166,7 +166,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'This test is a hot mess.', 'pub_date' => '-480d'));
-        $post_builders[] = FixtureBuilder::build('posts', array(
+        $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'This test is a hot mess.', 'pub_date' => '-480d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
@@ -182,14 +182,16 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
+        $earliest_mention = $earliest_mention_builder->columns["pub_date"];
+        $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before &ldquo;hot mess&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "hot mess", "clickbait", "YOLO", and "humblebrag" '
-            . 'to their online dictionary, but no one has to explain them to @testy. Since May 2013, @testy used '
-            . '"hot mess" 3 times, "clickbait" twice, "YOLO" once, and "humblebrag" once.', $result->text);
+            . 'to their online dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention.
+            ', @testy used "hot mess" 3 times, "clickbait" twice, "YOLO" once, and "humblebrag" once.', $result->text);
 
         $data = unserialize($result->related_data);
         $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
