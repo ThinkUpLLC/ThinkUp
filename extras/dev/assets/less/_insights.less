@@ -178,8 +178,7 @@
             top: 4px;
             height: 28px;
             padding: 4px 0 4px 8px;
-            border-left-width: 1px;
-            border-left-style: solid;
+            border-left: 0;
             margin-left: 8px;
             .clearfix;
 
@@ -207,6 +206,31 @@
 
                     .fa-link {
                         .rotate(90deg);
+                    }
+                }
+            }
+
+            a {
+                .fa-override-before;
+
+                &:before {
+                    display: none;
+                    padding-right: 3px;
+                }
+
+                &.twitter:before {
+                    content: "\f099";
+                }
+
+                &.facebook:before {
+                    content: "\f082";
+                }
+
+                &:hover {
+                    color: @link-hover-color;
+
+                    &:before {
+                        display: inline-block;
                     }
                 }
             }

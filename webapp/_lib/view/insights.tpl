@@ -22,11 +22,11 @@
   {capture name=permalink assign="permalink"}{$thinkup_application_url}?u={$i->instance->network_username|urlencode_network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}{/capture}
   {if $i->instance->network eq 'twitter'}
     {capture name="share_link" assign="share_link"}
-      <a href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$i->headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|html_entity_decode|escape:'url'}&amp;via=thinkup">Tweet this</a>
+      <a class="{$i->instance->network}" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$i->headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|html_entity_decode|escape:'url'}&amp;via=thinkup">Tweet this</a>
     {/capture}
   {elseif $i->instance->network eq 'facebook'}
     {capture name="share_link" assign="share_link"}
-      <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
+      <a class="{$i->instance->network}" href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
     {/capture}
   {/if}
 
