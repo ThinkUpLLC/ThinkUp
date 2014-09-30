@@ -408,12 +408,18 @@
       text = $link.text();
       return $link.text($link.data("alt-text")).data("alt-text", text);
     });
-    return $(window).load(function() {
+    $(window).load(function() {
       var delay, delayed;
       delayed = function() {
         return $('body').hide().show();
       };
       return delay = window.setTimeout(delayed, 1000);
+    });
+    $("body").on("click", ".navbar .btn-signup", function() {
+      return ga('send', 'event', 'Signup Button', 'click', 'navbar');
+    });
+    return $("body").on("click", ".insight-tout .btn-signup", function() {
+      return ga('send', 'event', 'Signup Button', 'click', 'tout');
     });
   });
 
