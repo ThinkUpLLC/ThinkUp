@@ -1425,8 +1425,7 @@ body.app-message-visible.account .container {
   top: 4px;
   height: 28px;
   padding: 4px 0 4px 8px;
-  border-left-width: 1px;
-  border-left-style: solid;
+  border-left: 0;
   margin-left: 8px;
 }
 .insight .panel-footer .share-menu:before,
@@ -1472,6 +1471,29 @@ body.app-message-visible.account .container {
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
+}
+.insight .panel-footer .share-menu a:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+}
+.insight .panel-footer .share-menu a:before {
+  display: none;
+  padding-right: 3px;
+}
+.insight .panel-footer .share-menu a.twitter:before {
+  content: "\f099";
+}
+.insight .panel-footer .share-menu a.facebook:before {
+  content: "\f082";
+}
+.insight .panel-footer .share-menu a:hover {
+  color: #46bcff;
+}
+.insight .panel-footer .share-menu a:hover:before {
+  display: inline-block;
 }
 .insight .panel-footer .share-menu.open {
   border: 0;
