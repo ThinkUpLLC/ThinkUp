@@ -1421,8 +1421,7 @@ body.app-message-visible.account .container {
 }
 .insight .panel-footer .share-menu {
   position: absolute;
-  width: 310px;
-  right: -275px;
+  right: 10px;
   top: 4px;
   height: 28px;
   padding: 4px 0 4px 8px;
