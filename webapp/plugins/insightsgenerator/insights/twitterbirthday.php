@@ -35,9 +35,10 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
         $joined_ts = strtotime($user->joined, TimeHelper::getTime());
+        $viable = $joined_ts > strtotime('2000-01-1');
         $joined_day = date('m-d', $joined_ts);
         $is_twitter = $instance->network == 'twitter';
-        if ($is_twitter && date('m-d', TimeHelper::getTime()) == $joined_day) {
+        if ($viable && $is_twitter && date('m-d', TimeHelper::getTime()) == $joined_day) {
             $insight = new Insight();
             $insight->slug = "twitterbirthday";
             $insight->instance_id = $instance->id;
@@ -85,13 +86,13 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
             $bonus_text = array();
             $people = array();
             if ($just_before) {
-                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_before->joined, 
+                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_before->joined,
                     TimeHelper::getTime())));
                 $bonus_text[] = "@".$just_before->username." just beat ".$this->username.", joining $time earlier";
                 $people[] = $just_before;
             }
             if ($just_after) {
-                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_after->joined, 
+                $time = TimeHelper::secondsToGeneralTime(abs($joined_ts - strtotime($just_after->joined,
                     TimeHelper::getTime())));
                 $bonus_text[] = "@".$just_after->username." was a little slower, getting on Twitter $time later";
                 $people[] = $just_after;
