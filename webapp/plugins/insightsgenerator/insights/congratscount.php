@@ -83,10 +83,11 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
                 $these = $this_period_count > 1 ? 'these' : 'this';
                 $are = $this_period_count > 1 ? 'are' : 'is';
                 $people_term = count($unique_friends) > 1 ? 'people' : 'person';
+                $someone = count($unique_friends) > 1 ? 'people' : 'someone';
                 $insight->text = $this->getVariableCopy(array(
                     "%username congratulated %total_friends $people_term in the past month for $these $posts.",
-                    "%total_posts $posts inspired %username to congratulate someone this past month.",
-                    "Here $are the $posts that inspired %username to congratulate people this month.",
+                    "%total_posts $posts inspired %username to congratulate $someone this past month.",
+                    "Here $are the $posts that inspired %username to congratulate $someone this month.",
                 ), array(
                     'network' => ucfirst($instance->network),
                     'total_posts'=>$this_period_count,
