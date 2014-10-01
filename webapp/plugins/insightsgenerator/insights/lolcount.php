@@ -56,7 +56,7 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
 
     public function postMatchesCriteria(Post $post, Instance $instance) {
         $text = strtolower($post->post_text);
-        $has_lol = preg_match('/(\W|^)(lol.*|rofl.*|haha[ha]*)(\W|$)/', $text);
+        $has_lol = preg_match('/(\W|^)(lol|lolol.*|lol.*ing|rofl.*|haha[ha]*)(\W|$)/', $text);
 
         if ($has_lol && $post->in_reply_to_post_id) {
             $post_dao = DAOFactory::getDAO('PostDAO');
