@@ -322,6 +322,12 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
             "Hah, good one" => false,
             "rololing on the floor" => false,
             "not arofl." => false,
+            "I like @lolly, do you?" => false,
+            "@lolly is the best" => false,
+            "lololol!!!" => true,
+            "I am literally loling at that." => true,
+            "I am lolling!" => true,
+            "I want a lollipop." => false,
         );
 
         foreach ($tests as $string => $expected) {
