@@ -55,18 +55,28 @@ class FollowerCountInsight extends InsightPluginParent implements InsightPlugin 
             if (isset($follower_count_history_by_month['milestone'])
                 && $follower_count_history_by_month["milestone"]["will_take"] > 0
                 && $follower_count_history_by_month["milestone"]["next_milestone"] > 0) {
+
+                $months = $follower_count_history_by_month['milestone']['will_take'];
+                $time = '';
+                if ($months >= 12) {
+                    $years = floor($months / 12);
+                    $time = $years . ' year'.($years==1?'':'s');
+                    $months -= 12;
+                    if ($months > 0) {
+                        $time .= ', ';
+                    }
+                }
+                if ($months == 1) {
+                    $time .= '1 month';
+                }
+                else if ($months > 0) {
+                    $time .= "$months months";
+                }
+
+
                 $insight = new Insight();
-                if ($follower_count_history_by_month['milestone']['will_take'] == 1) {
-                    $insight->headline = 'Only ';
-                } else {
-                    $insight->headline = '';
-                }
-                $insight->headline .= '<strong>'.
-                    $follower_count_history_by_month['milestone']['will_take'].' month';
-                if ($follower_count_history_by_month['milestone']['will_take'] > 1) {
-                    $insight->headline .= 's';
-                }
-                $insight->headline .= "</strong> till $this->username reaches <strong>".
+                $insight->headline = $follower_count_history_by_month['milestone']['will_take'] == 1 ? 'Only ' : '';
+                $insight->headline .= "<strong>$time</strong> till $this->username reaches <strong>".
                     number_format($follower_count_history_by_month['milestone']['next_milestone']);
                 $insight->headline .= '</strong> '.$this->terms->getNoun('follower',InsightTerms::PLURAL);
                 $insight->slug = 'follower_count_history_by_month_milestone';

@@ -302,4 +302,103 @@ class TestOfFollowerCountHistoryInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('follower_count_history_by_week_milestone', 1, date('Y-m-d'));
         $this->assertNull($result);
     }
+
+    public function testMonthYearConversion() {
+        $mon = date('n');
+        $yr = date('Y');
+        $builders = array();
+        $mon -= 2;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99984, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        $mon -= 1;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99983, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        for ($i=0; $i<7; $i++) {
+            $mon -= 1;
+            if ($mon < 1) {
+                $mon += 12;
+                $yr--;
+            }
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>42, 'network'=>'twitter',
+                'type'=>'followers', 'count'=>99982-$i, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        }
+
+
+        $insight_plugin = new FollowerCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
+        $this->assertPattern('/>1 year, 4 months</', $result->headline);
+
+        $builders = array();
+        $mon -= 2;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>43, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99988, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        $mon -= 1;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>43, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99987, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        for ($i=0; $i<7; $i++) {
+            $mon -= 1;
+            if ($mon < 1) {
+                $mon += 12;
+                $yr--;
+            }
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>43, 'network'=>'twitter',
+                'type'=>'followers', 'count'=>99986-$i, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        }
+
+        $this->instance->network_user_id=43;
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
+        $this->assertPattern('/>1 year</', $result->headline);
+
+        $builders = array();
+        $mon -= 2;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>44, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99987, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        $mon -= 1;
+        if ($mon < 1) {
+            $mon += 12;
+            $yr--;
+        }
+        $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>44, 'network'=>'twitter',
+            'type'=>'followers', 'count'=>99986, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        for ($i=0; $i<7; $i++) {
+            $mon -= 1;
+            if ($mon < 1) {
+                $mon += 12;
+                $yr--;
+            }
+            $builders[] = FixtureBuilder::build('count_history', array('network_user_id'=>44, 'network'=>'twitter',
+                'type'=>'followers', 'count'=>99985-$i, 'date' => date('Y-m-d', mktime(1,1,1,$mon,1,$yr))));
+        }
+
+        $this->instance->network_user_id=44;
+        $insight_plugin->generateInsight($this->instance, null, array(), 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight('follower_count_history_by_month_milestone', 1, date('Y-m-d'));
+        $this->assertPattern('/>1 year, 1 month</', $result->headline);
+
+    }
 }
