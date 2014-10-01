@@ -184,6 +184,18 @@ class TestOfTwitterBirthdayInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testBadJoinDate() {
+        $insight_plugin = new TwitterBirthdayInsight();
+        TimeHelper::setTime(1 + (365*24*60*60));
+        $user = $this->makeUser('hbtome', date('r', 1));
+        $insight_plugin->generateInsight($this->instance, $user, array(), 3);
+
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('twitterbirthday', 10, $today);
+        $this->assertNull($result);
+    }
+
     /**
      * Create a test user.
      * @param username $username The user's username
