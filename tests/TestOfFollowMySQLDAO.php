@@ -78,22 +78,22 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         //ev is followed by jack
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1234567890',
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'14',
-        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'15',
-        'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter'));
+        'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1623457890',
-        'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter'));
+        'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1324567890',
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1623457890', 'follower_id'=>'1234567890',
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter', 'active'=>1));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'14', 'follower_id'=>'1234567890',
         'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
@@ -105,9 +105,9 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1324567890', 'follower_id'=>'1',
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter', 'active'=>1));
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>'1234567890', 'follower_id'=>'1',
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter', 'active'=>1));
 
         return $builders;
     }
@@ -226,6 +226,16 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $total_friends = $this->DAO->countTotalFriends(1234567890, 'twitter');
 
         $this->assertIsA($total_friends, "int");
+        $this->assertEqual($total_friends, 2);
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'999', 'follower_id'=>'1234567890',
+        'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        $total_friends = $this->DAO->countTotalFriends(1234567890, 'twitter');
+        $this->assertEqual($total_friends, 3);
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'888', 'follower_id'=>'1234567890',
+        'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        $total_friends = $this->DAO->countTotalFriends(1234567890, 'twitter');
         $this->assertEqual($total_friends, 3);
     }
 
@@ -599,5 +609,61 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $result = $this->DAO->getVerifiedFollowerCount(1324567890, 'twitter');
         $this->assertEqual($result, 2);
+    }
+
+
+    public function testGetMedianFollowerCountOfFriends() {
+        $result = $this->DAO->getMedianFollowerCountOfFriends(111, 'twitter');
+        $this->assertEqual($result, 0);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'999', 'follower_count'=>0));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'999', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'888', 'follower_count'=>3));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'888', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getMedianFollowerCountOfFriends(111, 'twitter');
+        $this->assertEqual($result, 0);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'777', 'follower_count'=>27));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'777', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getMedianFollowerCountOfFriends(111, 'twitter');
+        $this->assertEqual($result, 3);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'666', 'follower_count'=>28));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'666', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+        $result = $this->DAO->getMedianFollowerCountOfFriends(111, 'twitter');
+        $this->assertEqual($result, 3);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'555', 'follower_count'=>28000));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'555', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+        $result = $this->DAO->getMedianFollowerCountOfFriends(111, 'twitter');
+        $this->assertEqual($result, 27);
+    }
+
+    public function testGetCountOfFriendsWithFewerFollowers() {
+        $result = $this->DAO->getCountOfFriendsWithFewerFollowers(111, 'twitter', 10);
+        $this->assertEqual($result, 0);
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'999', 'follower_count'=>0));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'999', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'888', 'follower_count'=>3));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'888', 'follower_id'=>'111',
+            'active' => 1, 'last_seen'=>'-1d', 'network'=>'twitter'));
+
+        $result = $this->DAO->getCountOfFriendsWithFewerFollowers(111, 'twitter', 10);
+        $this->assertEqual($result, 2);
+        $result = $this->DAO->getCountOfFriendsWithFewerFollowers(111, 'twitter', 1);
+        $this->assertEqual($result, 1);
+        $result = $this->DAO->getCountOfFriendsWithFewerFollowers(111, 'twitter', 0);
+        $this->assertEqual($result, 0);
     }
 }
