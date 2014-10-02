@@ -56,7 +56,7 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
 
     public function postMatchesCriteria(Post $post, Instance $instance) {
         $text = strtolower($post->post_text);
-        $has_fbomb = preg_match('/fuck/', $text);
+        $has_fbomb = $post->in_reply_to_user_id != $instance->network_user_id && preg_match('/fuck/', $text);
 
         if ($has_fbomb && $post->in_reply_to_post_id) {
             $post_dao = DAOFactory::getDAO('PostDAO');

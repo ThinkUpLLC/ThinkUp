@@ -387,4 +387,20 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         }
 
     }
+
+    public function testIgnoringSelfReplies() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'in_reply_to_user_id' => $this->instance->network_user_id,
+            'post_text' => 'Oh, fuck me.', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new FBombCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNull($result);
+        print_r($result);
+    }
 }
