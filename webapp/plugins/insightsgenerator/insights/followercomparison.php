@@ -41,7 +41,7 @@ class FollowerComparisonInsight extends InsightPluginParent implements InsightPl
 
         $network = $instance->network;
         $user_id = $instance->network_user_id;
-        if ($network == 'twitter' && $this->shouldGenerateMonthlyInsight($this->slug, $instance, 'today', false, 8)) {
+        if ($network == 'twitter' && $this->shouldGenerateMonthlyInsight($this->slug, $instance, 'today', false, 2)) {
 
             $my_count = $user->follower_count;
             $follow_dao = DAOFactory::getDAO('FollowDAO');
