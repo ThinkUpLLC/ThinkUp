@@ -39,7 +39,8 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        $day_of_month = $instance->network == 'facebook' ? 1 : 3;
+        //$day_of_month = $instance->network == 'facebook' ? 1 : 3;
+        $day_of_month = 2;
         $should_generate_insight_monthly = $this->shouldGenerateMonthlyInsight($this->slug, $instance, 'today',
             $regenerate=false, $day_of_month);
 
