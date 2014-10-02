@@ -6,7 +6,7 @@
             <div class="link">
                 <div class="link-title">
                   <img src="//getfavicon.appspot.com/http://{$url}" alt="http://{$url}" width="16" height="16" />
-                  <a href="http://{$url}">{$url}</a>
+                  <a href="http://{$url}/">{$url|regex_replace:"/^www\./":""}</a>
                 </div>
                 <div class="link-metadata">{$count} link{if $count gt 1}s{/if}</div>
             </div>

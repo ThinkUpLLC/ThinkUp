@@ -48,9 +48,7 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
             $links =$link_dao->getLinksByUserSinceDaysAgo($instance->network_user_id, $instance->network, 0, date('t'));
             $slug = "diversify_links_monthly";
             $time_frame = "month";
-            if(count($links ) > 4) {
-                $this->runInsight($links, $slug, $time_frame, $instance, $link_dao);
-            }
+            $this->runInsight($links, $slug, $time_frame, $instance, $link_dao);
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
@@ -68,7 +66,7 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
         $tweet_counts = array();
         $retweet_counts = array();
         foreach($links as $link) {
-            if($link['expanded_url'] == "") {
+            if($link['expanded_url'] == "" || !empty($link['image_src'])) {
                 continue;
             } else {
                 $url = parse_url($link['expanded_url']);
@@ -93,6 +91,9 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
             }
         }
 
+        if (count($total_counts) == 0) {
+            return;
+        }
         $popular_url = array_search(max($total_counts),$total_counts);
 
         arsort($total_counts, SORT_NUMERIC);
@@ -112,30 +113,35 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
         if($counts[0] != $counts[1]) {
             $tweets = $tweet_counts[$popular_url];
             $retweets = $retweet_counts[$popular_url];
+            $more = ' &mdash; more than to any other site.';
+            $links = 'links';
+            if (count($counts) == 1 && $counts[0] == 1) {
+                $links = 'link';
+                $more = '.';
+            }
             if ($tweets == 0) {
                 $a = "It was the best of tabs, it was the worst of tabs. %username %retweeted "
-                    . "%rnum %rlinks to %site_title this month &mdash; more than to any other site.";
-                $b = "%username shared links to %site_title this in %rnum %retweet"
-                    . ($retweet_counts[$popular_url] == 1?'':'s')." this month &mdash; more than to any other site.";
+                    . "%rnum %rlinks to %site_title this month".$more;
+                $b = "%username shared $links to %site_title this in %rnum %retweet"
+                    . ($retweet_counts[$popular_url] == 1?'':'s')." this month".$more;
             } else if ($retweets == 0) {
                 $a = "It was the best of tabs, it was the worst of tabs. %username %posted %pnum %plinks "
-                    . "to %site_title this month &mdash; more than to any other site.";
-                $b = "%username shared links to %site_title in %pnum %post"
-                    . ($tweet_counts[$popular_url] == 1?'':'s')." this month &mdash; more than to any other site.";
+                    . "to %site_title this month".$more;
+                $b = "%username shared $links to %site_title in %pnum %post"
+                    . ($tweet_counts[$popular_url] == 1?'':'s')." this month".$more;
             } else {
                 $a = "It was the best of tabs, it was the worst of tabs. %username %posted %pnum %plinks and %retweeted"
-                    . " %rnum %rlinks to %site_title this month &mdash; more than to any other site.";
-                $b = "%username shared links to %site_title in %pnum "
+                    . " %rnum %rlinks to %site_title this month".$more;
+                $b = "%username shared $links to %site_title in %pnum "
                     . "%post".($tweet_counts[$popular_url] == 1?'':'s')." and %rnum "
-                    . "%retweet".($retweet_counts[$popular_url] == 1?'':'s')." this month &mdash; "
-                    . "more than to any other site.";
+                    . "%retweet".($retweet_counts[$popular_url] == 1?'':'s')." this month".$more;
             }
             $text = $this->getVariableCopy(array($a, $b), array(
                 'pnum' => $tweet_counts[$popular_url],
                 'plinks' => $tweet_counts[$popular_url] == 1 ? 'link' : 'links',
                 'rnum' => $retweet_counts[$popular_url],
                 'rlinks' => $retweet_counts[$popular_url] == 1 ? 'link' : 'links',
-                'site_title' => $popular_url
+                'site_title' => preg_replace('/^www\./','',$popular_url)
             ));
         } else {
             $num = 2;
@@ -145,6 +151,9 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
                 $num = 3;
             }
             $sites = array_slice(array_keys($url_counts), 0, $num);
+            foreach ($sites as $i=>$s) {
+                $sites[$i] = preg_replace('/^www\./', '', $s);
+            }
             $sites[count($sites)-1] = 'and '.$sites[count($sites)-1];
             $sites = join(count($sites)==2 ? ' ' : ', ', $sites);
             $text ="It's good to spread the link love. ".$this->username." shared links equally to "

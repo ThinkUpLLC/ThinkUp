@@ -52,7 +52,7 @@ class TestOfDiversifyLinksInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($insight_plugin, 'DiversifyLinksInsight');
       }
 
-    public function testLessThan5Links() {
+    public function tesNoLinks() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $builders = array();
 
@@ -63,8 +63,6 @@ class TestOfDiversifyLinksInsight extends ThinkUpInsightUnitTestCase {
         'in_reply_to_user_id' => NULL,'in_retweet_of_post_id' => NULL,
         'network'=>'twitter', 'post_text'=>'This is an old post http://example.com/1 with a link.', 'source'=>'web',
         'pub_date'=>$days_ago_3, 'reply_count_cache'=>0, 'is_protected'=>0));
-        $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1',
-        'title'=>'Link 1', 'post_key'=>137, 'expanded_url'=>'http://example.com/1', 'error'=>'', 'image_src'=>''));
 
         $instance = new Instance();
         $instance->id = 10;
@@ -73,10 +71,6 @@ class TestOfDiversifyLinksInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'twitter';
         $insight_plugin = new DiversifyLinksInsight();
         $insight_plugin->generateInsight($instance, null, $posts, 3);
-
-        $today = date('Y-m-d');
-        $result = $insight_dao->getInsight('diversify_links_weekly', 10, $today);
-        $this->assertNull($result);
 
         $today = date('Y-m-d');
         $result = $insight_dao->getInsight('diversify_links_monthly', 10, $today);
@@ -500,6 +494,133 @@ class TestOfDiversifyLinksInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['url_counts']['example1.com'], 51);
         $urls = array_keys($data['url_counts']);
         $this->assertEqual(array('example1.com'), $urls);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testWwwStripping() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+
+        $days_ago_3 = date('Y-m-d H:i:s', strtotime('-3 days'));
+
+        for($i = 137; $i <= 337; $i++) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$i, 'post_id'=>$i, 'author_user_id'=>7612345,
+            'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+            'in_reply_to_user_id' => NULL,'in_retweet_of_post_id' => NULL,
+            'network'=>'twitter','post_text'=>'This is an old post http://www.'.($i%2==1?'a':'b').'.com/1 with a link.',
+            'source'=>'web', 'pub_date'=>$days_ago_3, 'reply_count_cache'=>0, 'is_protected'=>0));
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://www.'.($i%2==1?'a':'b').'.com/',
+            'title'=>'Link 1', 'post_key'=>$i, 'expanded_url'=>'http://www.'.($i%2==1?'a':'b').'.com/',
+            'error'=>'', 'image_src'=>''));
+        }
+
+        TimeHelper::setTime(2);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new DiversifyLinksInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $today = date('Y-m-d');
+        $result = $insight_dao->getInsight('diversify_links_monthly', 10, $today);
+        $this->assertEqual($result->headline, "@testeriffic's most linked-to sites this month");
+        $this->assertEqual($result->text, "It was the best of tabs, it was the worst of tabs. @testeriffic ".
+            "tweeted 101 links to a.com this month &mdash; more than to any other site.");
+        $data = unserialize($result->related_data);
+        $this->assertEqual($data['url_counts']['www.a.com'], 101);
+        $this->assertEqual($data['url_counts']['www.b.com'], 100);
+        $this->assertEqual(count($data['url_counts']), 2);
+
+        $this->debug($rendered = $this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $this->assertPattern('/>a.com</', $rendered);
+        $this->assertNoPattern('/>www.a.com</', $rendered);
+        $this->assertPattern('/>b.com</', $rendered);
+        $this->assertNoPattern('/>www.b.com</', $rendered);
+    }
+
+    public function testOneLink() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+
+        $days_ago_3 = date('Y-m-d H:i:s', strtotime('-3 days'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>444, 'post_id'=>444, 'author_user_id'=>7612345,
+         'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+         'in_reply_to_user_id' => NULL,'in_retweet_of_post_id' => NULL,
+         'network'=>'twitter','post_text'=>'This is an old post http://www.aaa.com/1 with a link.',
+         'source'=>'web', 'pub_date'=>$days_ago_3, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://www.aaaa.com/',
+         'title'=>'Link 1', 'post_key'=>444, 'expanded_url'=>'http://www.aaaa.com/',
+         'error'=>'', 'image_src'=>''));
+
+        TimeHelper::setTime(2);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new DiversifyLinksInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $today = date('Y-m-d');
+        $result = $insight_dao->getInsight('diversify_links_monthly', 10, $today);
+        $this->assertEqual($result->text, 'It was the best of tabs, it was the worst of tabs. @testeriffic tweeted '
+            .'1 link to aaaa.com this month.');
+        $this->assertEqual("@testeriffic's most linked-to site this month", $result->headline);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testPhotoSkipping() {
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+
+        $days_ago_3 = date('Y-m-d H:i:s', strtotime('-3 days'));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>444, 'post_id'=>444, 'author_user_id'=>7612345,
+         'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+         'in_reply_to_user_id' => NULL,'in_retweet_of_post_id' => NULL,
+         'network'=>'twitter','post_text'=>'This is an old post http://www.aaa.com/1 with a link.',
+         'source'=>'web', 'pub_date'=>$days_ago_3, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://www.aaaa.com/',
+         'title'=>'Link 1', 'post_key'=>444, 'expanded_url'=>'http://www.aaaa.com/',
+         'error'=>'', 'image_src'=>'http://photo.com/photo.jpg'));
+
+        TimeHelper::setTime(2);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = 7612345;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new DiversifyLinksInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        $today = date('Y-m-d');
+        $result = $insight_dao->getInsight('diversify_links_monthly', 10, $today);
+        $this->assertNull($result);
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>445, 'post_id'=>445, 'author_user_id'=>7612345,
+         'author_username'=>'testeriffic', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
+         'in_reply_to_user_id' => NULL,'in_retweet_of_post_id' => NULL,
+         'network'=>'twitter','post_text'=>'This is an old post http://www.aaa.com/1 with a link.',
+         'source'=>'web', 'pub_date'=>$days_ago_3, 'reply_count_cache'=>0, 'is_protected'=>0));
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://www.aaaa.com/',
+         'title'=>'Link 1', 'post_key'=>445, 'expanded_url'=>'http://www.aaaa.com/',
+         'error'=>'', 'image_src'=>''));
+
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $result = $insight_dao->getInsight('diversify_links_monthly', 10, $today);
+
+        $this->assertEqual($result->text, 'It was the best of tabs, it was the worst of tabs. @testeriffic tweeted '
+            .'1 link to aaaa.com this month.');
+        $this->assertEqual("@testeriffic's most linked-to site this month", $result->headline);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
