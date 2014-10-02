@@ -216,7 +216,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Congratulations on the congrats, @janesmith!");
         $this->assertEqual($result->text,
-            "3 tweets inspired @janesmith to congratulate someone this past month.");
+            "3 tweets inspired @janesmith to congratulate people this past month.");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['posts']), 2);
         $this->assertEqual("I am getting married!", $data['posts'][0]->post_text);
@@ -278,7 +278,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Twitter is for announcing good news!");
         $this->assertEqual($result->text,
-            "Here is the tweet that inspired @janesmith to congratulate people this month.");
+            "Here is the tweet that inspired @janesmith to congratulate someone this month.");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['posts']), 1);
         $this->assertEqual("I am getting married!", $data['posts'][0]->post_text);
