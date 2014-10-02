@@ -2255,12 +2255,16 @@ ol.body-list {
 ol.body-list .list-item {
   list-style: decimal;
 }
+.body-list.url-list .link-title {
+  line-height: 16px;
+}
 .body-list.url-list .link-title img {
+  margin-top: 1px;
   float: left;
 }
 .body-list.url-list .link-title a {
   margin-left: 8px;
-  line-height: 16px;
+  display: inline-block;
 }
 .body-list.url-list .link-metadata {
   margin-left: 24px;
