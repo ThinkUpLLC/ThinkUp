@@ -1,7 +1,7 @@
 <html lang="en" itemscope itemtype="http://schema.org/Article">
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <title>ThinkUp</title>
+    <title><?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?></title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
@@ -12,18 +12,19 @@
     <meta name="author" content="">
     <meta property="og:site_name" content="ThinkUp" />
     <meta property="og:type" content="article" />
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@thinkup">
     <meta name="twitter:domain" content="thinkup.com">
     <meta name="twitter:image:src" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>">
 
     <meta itemprop="name" content="Insight Tester">
-    <meta name="twitter:title" content="Insight Tester">
-    <meta property="og:title" content="Insight Tester" />
+    <meta name="twitter:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <title></title>
+    <meta property="og:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>" />
 
-    <meta itemprop="description" content="ThinkUp Insight Tester">
-    <meta name="description" content="ThinkUp Insight Tester">
-    <meta name="twitter:description" content="ThinkUp Insight Tester">
+    <meta itemprop="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta name="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta name="twitter:description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
 
     <meta itemprop="image" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png">
     <meta property="og:image" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>" />
@@ -93,6 +94,9 @@
                 </div>
                 <div><label class="blue">High emphasis:</label>
                     <input type="checkbox" id="show-emphasis" class="cb" />
+                </div>
+                <div><label class="blue">Full width:</label>
+                    <input type="checkbox" id="show-wide" class="cb" />
                 </div>
                 <div><label class="blue">Embed:</label>
                   <input type="radio" name="embeds" id="embed-none" class="cb" checked />None
@@ -572,7 +576,8 @@ Specify the following hero image attributes:
         var inputs = ['headline', 'body', 'button', 'avatar', 'hero'];
         var checks = [
         'button', 'avatar',
-        'emphasis', 'hero'
+        'emphasis', 'hero',
+        'wide'
         ];
         var embeds = [
           'post', 'posts', 'user', 'users',
@@ -639,6 +644,13 @@ Specify the following hero image attributes:
             }
           }
           if ($('#show-emphasis:checked').length) {
+            $('.insight').addClass('insight-hero');
+          }
+          else {
+            $('.insight').removeClass('insight-hero');
+          }
+
+          if ($('#show-wide:checked').length) {
             $('.insight').addClass('insight-wide');
           }
           else {
