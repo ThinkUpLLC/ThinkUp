@@ -2,7 +2,7 @@
 /*
  Plugin Name: New Dictionary-Word Count
  Description: Did you use words just added to The Oxford Dictionary Online in August 2014?
- When: September 2, 2014 until October 2, 2014, Mondays for Twitter, Thursdays for Facebook
+ When: September 2, 2014 until November 2, 2014, Mondays for Twitter, Thursdays for Facebook
  */
 /**
  *
@@ -40,7 +40,7 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                     'subtweet', 'YOLO',
                 ),
                 'start' => '2014-09-02',
-                'end' => '2014-10-02',
+                'end' => '2014-11-02',
                 'headline' => 'Before &ldquo;%word&rdquo; went legit',
                 'single_template' => '%username used the word "%word" %total_times since %first_mention, '
                     . 'and it appears to have caught on: It\'s '
@@ -136,8 +136,7 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                     'word' => $words[0],
                     'total_times' => $this->terms->getOccurrencesAdverb($formatted_usage[$words[0]])
                 );
-            }
-            else {
+            } else {
                 $formatted_usage = array_slice($formatted_usage, 0, 5, true);
                 $words = array_keys($formatted_usage);
                 $template = $config['multiple_template'];
