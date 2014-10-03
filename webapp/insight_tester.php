@@ -1,7 +1,7 @@
 <html lang="en" itemscope itemtype="http://schema.org/Article">
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <title>ThinkUp</title>
+    <title><?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?></title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
@@ -12,18 +12,19 @@
     <meta name="author" content="">
     <meta property="og:site_name" content="ThinkUp" />
     <meta property="og:type" content="article" />
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@thinkup">
     <meta name="twitter:domain" content="thinkup.com">
     <meta name="twitter:image:src" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>">
 
     <meta itemprop="name" content="Insight Tester">
-    <meta name="twitter:title" content="Insight Tester">
-    <meta property="og:title" content="Insight Tester" />
+    <meta name="twitter:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <title></title>
+    <meta property="og:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>" />
 
-    <meta itemprop="description" content="ThinkUp Insight Tester">
-    <meta name="description" content="ThinkUp Insight Tester">
-    <meta name="twitter:description" content="ThinkUp Insight Tester">
+    <meta itemprop="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta name="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta name="twitter:description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
 
     <meta itemprop="image" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png">
     <meta property="og:image" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>" />
@@ -79,20 +80,18 @@
                   <!-- <input type="text" id="body" value="I am the body.  Lots more text goes in me, normally."/> -->
                   <!-- <input type="text" id="body" value="I am the body.  Lots more text goes in me, normally."/> -->
                 </div>
-                <div><label class="blue">Hero image:</label> 
-                        <input type="text" style="width: 400px"  id="hero" value="https://www.thinkup.com/assets/images/insights/2014-05/subway.jpg" />
-                        Show: <input type="checkbox" id="show-hero" class="cb" />
+                <div><label class="blue">Hero image <input type="checkbox" id="show-hero" class="cb" /></label>
+                        <input type="text" id="hero" value="https://www.thinkup.com/assets/images/insights/2014-05/subway.jpg" />
                 </div>
-                <div><label class="blue">Button:</label> 
-                        <input type="text" style="width: 400px"  id="button" value="Action!" />
-                        Show: <input type="checkbox" id="show-button" class="cb" />
+                <div><label class="blue">Action button <input type="checkbox" id="show-button" class="cb" /></label> 
+                        <input type="text" id="button" value="Action!" />
                 </div>
-                <div><label class="blue">Avatar:</label> 
-                        <input type="text" style="width: 400px"  id="avatar" value="https://pbs.twimg.com/profile_images/1096005346/1_normal.jpg" />
-                        Show: <input type="checkbox" id="show-avatar" class="cb" />
+                <div><label class="blue">Avatar <input type="checkbox" id="show-avatar" class="cb" /></label> 
+                        <input type="text" id="avatar" value="https://pbs.twimg.com/profile_images/1096005346/1_normal.jpg" />
                 </div>
-                <div><label class="blue">High emphasis:</label>
-                    <input type="checkbox" id="show-emphasis" class="cb" />
+                <div><label class="blue">High emphasis <input type="checkbox" id="show-emphasis" class="cb" /></label>
+                </div>
+                <div><label class="blue">Full width <input type="checkbox" id="show-wide" class="cb" /></label>
                 </div>
                 <div><label class="blue">Embed:</label>
                   <input type="radio" name="embeds" id="embed-none" class="cb" checked />None
@@ -465,8 +464,9 @@ Specify the following hero image attributes:
       height: 34px;
     }
     .preview { margin-right: 120px; }
-    .previewer label.blue { width: 118px; background-color: #46BCFF; color: white; height: 20px; padding-left: 10px}
+    .previewer label.blue { width: 130px; background-color: #46BCFF; color: white; height: 20px; padding-left: 5px; margin-top: 5px; }
     .previewer label.embedLabel { font-weight: normal; }
+    .previewer label .cb { float: right; }
     .previewer input, .previewer textarea { width: 538px; }
     .previewer textarea { margin-bottom: 5px; }
     .previewer div .cb { width: 20px; margin-left: 5px; }
@@ -572,7 +572,8 @@ Specify the following hero image attributes:
         var inputs = ['headline', 'body', 'button', 'avatar', 'hero'];
         var checks = [
         'button', 'avatar',
-        'emphasis', 'hero'
+        'emphasis', 'hero',
+        'wide'
         ];
         var embeds = [
           'post', 'posts', 'user', 'users',
@@ -639,6 +640,13 @@ Specify the following hero image attributes:
             }
           }
           if ($('#show-emphasis:checked').length) {
+            $('.insight').addClass('insight-hero');
+          }
+          else {
+            $('.insight').removeClass('insight-hero');
+          }
+
+          if ($('#show-wide:checked').length) {
             $('.insight').addClass('insight-wide');
           }
           else {
