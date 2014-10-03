@@ -107,7 +107,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
     public function testTwoMatches() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
-        $post_builders[] = FixtureBuilder::build('posts', array(
+        $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I click ALL THE CLICKBAIT!', 'pub_date' => '-580d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
@@ -132,14 +132,16 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
+        $earliest_mention = $earliest_mention_builder->columns["pub_date"];
+        $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before &ldquo;humblebrag&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
             . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
             . 'just added</a> "humblebrag" and "clickbait" to their online '
-            . 'dictionary, but no one has to explain them to @testy. Since February 2013, @testy used "humblebrag" 4 '
-            . 'times and "clickbait" once.', $result->text);
+            . 'dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention
+            . ', @testy used "humblebrag" 4 times and "clickbait" once.', $result->text);
         $data = unserialize($result->related_data);
         $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
         $this->assertEqual($data['hero_image']['alt_text'], 'New dictionary words');
