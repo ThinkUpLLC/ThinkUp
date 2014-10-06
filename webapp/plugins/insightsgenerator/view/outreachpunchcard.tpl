@@ -28,7 +28,7 @@
         var options = {
           legend: 'none',
           tooltip: {
-            text: 'value',
+            trigger: 'none',
           },
           chartArea: {
             left: '0',
