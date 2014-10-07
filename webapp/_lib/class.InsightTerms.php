@@ -387,6 +387,35 @@ class InsightTerms {
     }
 
     /**
+     * Converts a number into an ordinal number; e.g., 1 => 1st
+     * @param  int $number The number to be converted
+     * @return str A string expressing the number as an ordinal
+     */
+    public function getOrdinalAdverb($number) {
+        $end = null;
+        if (strlen($number."") == 2 && substr($number."", 0, 1) == 1) {
+          $end = 'th';
+        }
+        else {
+          $ord_num = $number%10;
+          switch($ord_num) {
+            case 1:
+              $end = 'st';
+              break;
+            case 2:
+              $end = 'nd';
+              break;
+            case 3:
+              $end = 'rd';
+              break;
+            default:
+              $end = 'th';
+          }
+        }
+        return $number.$end;
+    }
+
+    /**
      * Take a string with various term-based tokens, replaced those and return it.
      *
      * Terms are prefixed with a % in a sprintf like format, and replaced with
