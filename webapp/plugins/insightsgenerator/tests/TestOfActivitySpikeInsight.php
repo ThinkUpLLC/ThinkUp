@@ -268,7 +268,7 @@ class TestOfActivitySpikeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual('@buffy got 5x the favorites', $result->headline);
         $this->assertEqual("<strong>10 people</strong> favorited @buffy's tweet, which is more than "
             . "<strong>5x</strong> @buffy's 30-day average.", $result->text);
-        $this->assertEqual($result->emphasis, Insight::EMPHASIS_HIGH);
+        $this->assertEqual($result->emphasis, Insight::EMPHASIS_MED);
 
         $posts = array($this->makePost($replies=1, $retweets=10, $faves=1));
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);

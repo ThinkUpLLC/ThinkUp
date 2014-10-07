@@ -241,7 +241,7 @@ class ActivitySpikeInsight extends InsightPluginParent implements InsightPlugin 
 
                     if ($winning_activity) {
                         $slug = $winning_activity.'_spike_30_day_'.$post->id;
-                        $emphasis = Insight::EMPHASIS_HIGH;
+                        $emphasis = Insight::EMPHASIS_MED;
                         $my_insight_posts = array($post);
                         switch ($winning_activity) {
                             case 'fave':
