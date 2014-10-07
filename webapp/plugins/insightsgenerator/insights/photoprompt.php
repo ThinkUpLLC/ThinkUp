@@ -62,13 +62,19 @@ class PhotoPromptInsight extends InsightPluginParent implements InsightPlugin {
                         $insight->slug = $this->slug;
                         $insight->instance_id = $instance->id;
                         $insight->date = $this->insight_date;
-                        $insight->headline = $this->getVariableCopy(array(
-                            "They're worth a thousand words...",
-                            "Picture this...",
-                            "Missed a photo opportunity?"
-                        ));
 
                         $days = floor((time()- strtotime($photo_at_all->pub_date))/(60*60*24));
+
+                        $insight->headline = $this->getVariableCopy(array(
+                            "A great time for a pic",
+                            "%total days without a pic",
+                            "A thousand words unsaid",
+                          ),
+                          array(
+                            'total' => $days
+                          )
+                        );
+
                         $insight->text = $this->username." hasn't posted a photo in $days day".($days==1?"":"s").". "
                             . "It might be worth finding something to share.";
                         $insight->filename = basename(__FILE__, ".php");

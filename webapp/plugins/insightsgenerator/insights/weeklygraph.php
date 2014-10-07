@@ -136,11 +136,9 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 }
 
                 $headline = $this->getVariableCopy(array(
-                    "What's going on with %username's %posts",
-                    "What's up with %username's %posts",
-                    "What's happening with %username's %posts?",
-                    "Here's the deal with %username's %posts",
-                    "Last week in %username's %posts&hellip;"
+                    "A breakdown of last week's %posts",
+                    "%username's week in %posts",
+                    "Last week in %username's %posts",
                 ));
 
                 $my_insight = new Insight();

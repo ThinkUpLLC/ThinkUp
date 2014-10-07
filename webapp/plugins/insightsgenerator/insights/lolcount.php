@@ -78,9 +78,10 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
 
             $network = ucfirst($instance->network);
             $potential_headlines = array(
-                'LOL activity detected',
-                'OMG LOL',
+              "The LOLs of %month",
+              'LOL activity detected',
             );
+            $last_month = Date('F', strtotime(date('F') . " last month"));
 
             $insight->text = 'Looks like '.$this->username.' found '.number_format($this_period_count).' thing'
                 . ($this_period_count==1?'':'s') . ' LOL-worthy in the last month.';
@@ -92,7 +93,12 @@ class LOLCountInsight extends CriteriaMatchInsightPluginParent implements Insigh
                     .'prior month.';
             }
 
-            $insight->headline = $this->getVariableCopy($potential_headlines);
+            $insight->headline = $this->getVariableCopy(
+              $potential_headlines, array(
+                'other_user' => $matching_posts[0]->author_username,
+                'month' => $last_month
+              )
+            );
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_MED;
             if (count($this->posts_to_include) > 0) {

@@ -83,7 +83,7 @@ class TestOfPhotoPromptInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight('photoprompt', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual('Missed a photo opportunity?', $result->headline);
+        $this->assertEqual('A thousand words unsaid', $result->headline);
         $this->assertEqual("@anseladams hasn't posted a photo in 10 days. "
             . "It might be worth finding something to share.", $result->text);
 
@@ -108,7 +108,7 @@ class TestOfPhotoPromptInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight('photoprompt', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual('Picture this...', $result->headline);
+        $this->assertEqual('12 days without a pic', $result->headline);
         $this->assertEqual("@anseladams hasn't posted a photo in 12 days. "
             . "It might be worth finding something to share.", $result->text);
 
@@ -133,7 +133,7 @@ class TestOfPhotoPromptInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight('photoprompt', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("They're worth a thousand words...", $result->headline);
+        $this->assertEqual("A great time for a pic", $result->headline);
         $this->assertEqual("@anseladams hasn't posted a photo in 8 days. "
             . "It might be worth finding something to share.", $result->text);
 
