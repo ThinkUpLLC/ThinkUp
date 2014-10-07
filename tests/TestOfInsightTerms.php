@@ -88,6 +88,23 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($terms->getMultiplierAdverb(0.1), '0.1x');
     }
 
+    public function testGetOrdinalAdverb() {
+        $terms = new InsightTerms('youtube');
+        $this->assertEqual($terms->getOrdinalAdverb(1), '1st');
+        $this->assertEqual($terms->getOrdinalAdverb(2), '2nd');
+        $this->assertEqual($terms->getOrdinalAdverb(3), '3rd');
+        $this->assertEqual($terms->getOrdinalAdverb(4), '4th');
+        $this->assertEqual($terms->getOrdinalAdverb(11), '11th');
+        $this->assertEqual($terms->getOrdinalAdverb(12), '12th');
+        $this->assertEqual($terms->getOrdinalAdverb(13), '13th');
+        $this->assertEqual($terms->getOrdinalAdverb(20), '20th');
+        $this->assertEqual($terms->getOrdinalAdverb(21), '21st');
+        $this->assertEqual($terms->getOrdinalAdverb(32), '32nd');
+        $this->assertEqual($terms->getOrdinalAdverb(43), '43rd');
+        $this->assertEqual($terms->getOrdinalAdverb(54), '54th');
+        $this->assertEqual($terms->getOrdinalAdverb(109), '109th');
+    }
+
     public function testGetOccurrencesAdverb() {
         $terms = new InsightTerms('youtube');
         $this->assertEqual($terms->getOccurrencesAdverb(1), 'once');
