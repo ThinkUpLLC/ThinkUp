@@ -150,6 +150,82 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testWithOneChangeEmptyOldString() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friend
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I just got married! http://example.com', 'location'=>'San Francisco, CA',
+        'is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
+            'field_value' => "", 'crawl_time' => '-2d'));
+
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $rendered_html = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/\<ins>/', $rendered_html);
+
+        $this->debug($rendered_html);
+    }
+
+    public function testWithOneChangeEmptyNewString() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friend
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'', 'location'=>'San Francisco, CA',
+        'is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
+            'field_value' => "I just got married! http://example.com", 'crawl_time' => '-2d'));
+
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $rendered_html = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/\<del>/', $rendered_html);
+
+        $this->debug($rendered_html);
+    }
+
     public function testTwoChanges() {
         $builders = array();
 
@@ -350,6 +426,107 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFourChangesInStream() {
+        $this->instance = new Instance();
+        $this->instance->id = 1;
+        $this->instance->network_username = 'buffy';
+        $this->instance->network = 'twitter';
+
+        $builders = self::buildPublicStreamInsights();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+            'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+            'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+            'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friends
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+            'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Not Anil',
+            'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+            'network'=>'twitter', 'description'=>'I am a father, woodworker, sandwich, bird, and pushover. '.
+            'RTs != endorsements', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
+            'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1,
+            'full_name'=>'Maybe Anil',
+            'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
+            'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA',
+            'is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'4', 'user_name'=>'typodude',
+            'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Typer',
+            'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>4,
+            'network'=>'twitter', 'description'=>'I am a wrighter', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'5', 'user_name'=>'typodude',
+            'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Typer',
+            'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>5,
+            'network'=>'twitter', 'description'=>'I am a wrighter', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+            'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
+            'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'4', 'follower_id'=>'1',
+            'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'5', 'follower_id'=>'1',
+            'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '2', 'field_name' => 'description',
+            'field_value' => "I am a father, matchmaker, sandwich, bird, and pushover.", 'crawl_time' => '-2d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '3', 'field_name' => 'description',
+            'field_value' => "I use Google+", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '4', 'field_name' => 'description',
+            'field_value' => "I am a writer", 'crawl_time' => '-3d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => '5', 'field_name' => 'description',
+            'field_value' => "I am a writer", 'crawl_time' => '-3d'));
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        $this->debug($results);
+        //TODO Add assertions here
+    }
+
+    private function buildPublicStreamInsights() {
+        $builders = array();
+
+        //owner
+        $salt = 'salt';
+        $pwd1 = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('pwd3', $salt);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'tuuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd1, 'pwd_salt'=>OwnerMySQLDAO::$default_salt));
+
+        //public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'10',
+            'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>'10',
+            'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
+            'posts_per_week'=>77));
+
+        //owner instances
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 1, 'owner_id'=>1) );
+
+        //public insights
+        $time_now = date("Y-m-d H:i:s");
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-05-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'Hey these are some local followers!',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'localfollowers', 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfUsers(), 'header_image'=>'http://example.com/header_image.gif'));
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'1', 'headline'=>'Booyah!', 'text'=>'This is a list of posts!',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'favoriteflashbacks', 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfPosts()));
+        return $builders;
     }
 
     public function testAlternateSingleText() {

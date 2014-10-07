@@ -55,64 +55,8 @@ constants.colors =
   caramel_dark: "#9e5e14"
   caramel_darker: "#71430e"
 
-# This sets the size of the open and closed states of a list
-# It's called on page load and whenever the screen size changes
-setListOpenData = (includeClosed = false, setHeight = false) ->
-  $(".body-list-show-some").each ->
-    $list = $(@)
-    # We only save height-closed on page load
-    if includeClosed
-      $list.height $list.height()
-      $list.data "height-closed", $list.outerHeight(true)
-      $list.find(".list-item").show()
-    if $list.data("rows")? and $list.data("row-height")?
-      padding = if $list.data("row-padding") then $list.data("row-padding") else 0
-      listOpenHeight = ($list.data("rows") * $list.data("row-height")) +
-      (($list.data("rows") - 1) * padding)
-    else
-      listOpenHeight = 0
-      $list.find(".list-item").each -> listOpenHeight += $(@).outerHeight(true)
-    $list.data "height-open", listOpenHeight
-    if setHeight and $list.hasClass "all-items-visible" then $list.height listOpenHeight
-
-# The next two functions make our dates stick to the top on desktop
-setDateGroupData = ->
-  $(".date-group").each (i) ->
-    $(@).data "scroll-top", $(@).offset().top
-    $(@).data "scroll-bottom", ($(@).offset().top + $(@).height() - $(@).find(".date-marker").height())
-
-# Keep track of the group that was last active
-$lastActiveDateGroup = null
-setActiveDateGroup = ->
-  if $(window).scrollTop() + $(window).height() <= $("body").height()
-    # Tracks if any of our date markers are active
-    anyActive = false
-    $(".date-group").each (i) ->
-      # Is the top of the screen inside a date group?
-      # The 45px is to account for the fixed hehader
-      if $(@).offset().top < $(window).scrollTop() + wt.navHeight < $(@).data("scroll-bottom") - 14
-        anyActive = true
-        # Has the active group not been set?
-        if not $lastActiveDateGroup? then $lastActiveDateGroup = $(@)
-        pinDateMarker $(@)
-        # Do we have a new date group?
-        if $lastActiveDateGroup? and not $(@).is $lastActiveDateGroup
-          $lastActiveDateGroup = $(@)
-      else
-        $(@).find(".date-marker").removeClass("fixed absolute").css "top", ""
-    # Now, what to do if nothing is active
-    if $lastActiveDateGroup? and not anyActive
-      # Is the group moving out of the viewport at the top
-      if $lastActiveDateGroup.data("scroll-top") < $(window).scrollTop()
-        pinDateMarker $lastActiveDateGroup, "absolute"
-      # We want to make sure we move the previous one to absolute positioning
-      pinDateMarker $lastActiveDateGroup.prev(), "absolute", false
-
-pinDateMarker = ($container, position = "fixed", clearClasses = true) ->
-  if clearClasses then $(".date-marker").removeClass("fixed absolute").css "top", ""
-  $dm = $container.find(".date-marker")
-  $dm.addClass position
-  if position is "absolute" then $dm.css "top", $container.data "scroll-bottom"
+##### APP CHROME FUNCTIONS (menu, system messages, etc.)
+##### ----------------------------------------------------------
 
 animateContentShift = (state) ->
   # This is called when the menu is opened.
@@ -189,6 +133,10 @@ setFixedPadding = ->
   $(".container").css "padding-top", wt.navHeight
   $(".date-marker").css "top", (wt.navHeight + 14)
 
+
+##### FORMS
+##### -----------------------------------------
+
 timerUsername = null
 checkUsername = ($el) ->
   if timerUsername then clearTimeout timerUsername
@@ -203,11 +151,101 @@ checkUsername = ($el) ->
   , 500
   )
 
-$ ->
-  setListOpenData(true) unless $(".stream-permalink").length
-  $(window).load -> setDateGroupData()
-  setNavHeight()
+##### STREAM AND INSIGHTS
+##### ----------------------------------------
 
+# The next two functions make our dates stick to the top on desktop
+setDateGroupData = ->
+  $(".date-group").each (i) ->
+    $(@).data "scroll-top", $(@).offset().top
+    $(@).data "scroll-bottom", ($(@).offset().top + $(@).height() - $(@).find(".date-marker").height())
+
+# Keep track of the group that was last active
+$lastActiveDateGroup = null
+setActiveDateGroup = ->
+  if $(window).scrollTop() + $(window).height() <= $("body").height()
+    # Tracks if any of our date markers are active
+    anyActive = false
+    $(".date-group").each (i) ->
+      # Is the top of the screen inside a date group?
+      # The 45px is to account for the fixed hehader
+      if $(@).offset().top < $(window).scrollTop() + wt.navHeight < $(@).data("scroll-bottom") - 14
+        anyActive = true
+        # Has the active group not been set?
+        if not $lastActiveDateGroup? then $lastActiveDateGroup = $(@)
+        pinDateMarker $(@)
+        # Do we have a new date group?
+        if $lastActiveDateGroup? and not $(@).is $lastActiveDateGroup
+          $lastActiveDateGroup = $(@)
+      else
+        $(@).find(".date-marker").removeClass("fixed absolute").css "top", ""
+    # Now, what to do if nothing is active
+    if $lastActiveDateGroup? and not anyActive
+      # Is the group moving out of the viewport at the top
+      if $lastActiveDateGroup.data("scroll-top") < $(window).scrollTop()
+        pinDateMarker $lastActiveDateGroup, "absolute"
+      # We want to make sure we move the previous one to absolute positioning
+      pinDateMarker $lastActiveDateGroup.prev(), "absolute", false
+
+pinDateMarker = ($container, position = "fixed", clearClasses = true) ->
+  if clearClasses then $(".date-marker").removeClass("fixed absolute").css "top", ""
+  $dm = $container.find(".date-marker")
+  $dm.addClass position
+  if position is "absolute" then $dm.css "top", $container.data "scroll-bottom"
+
+
+# This sets the size of the open and closed states of a list
+# It's called on page load and whenever the screen size changes
+setListOpenData = (includeClosed = false, setHeight = false) ->
+  $(".body-list-show-some").each ->
+    $list = $(@)
+    # We only save height-closed on page load
+    if includeClosed
+      $list.height $list.height()
+      $list.data "height-closed", $list.outerHeight(true)
+      $list.find(".list-item").show()
+    if $list.data("rows")? and $list.data("row-height")?
+      padding = if $list.data("row-padding") then $list.data("row-padding") else 0
+      listOpenHeight = ($list.data("rows") * $list.data("row-height")) +
+      (($list.data("rows") - 1) * padding)
+    else
+      listOpenHeight = 0
+      $list.find(".list-item").each -> listOpenHeight += $(@).outerHeight(true)
+    $list.data "height-open", listOpenHeight
+    if setHeight and $list.hasClass "all-items-visible" then $list.height listOpenHeight
+
+toggleListVisibility = ($btn) ->
+  $list = $btn.prev(".body-list")
+  listHeight = if $list.hasClass "all-items-visible" then $list.data "height-closed" else $list.data "height-open"
+  $list.animate(
+    height: listHeight
+  , 250
+  , ->
+    oldText = $btn.find(".btn-text").text()
+    $btn.find(".btn-text").text $btn.data "text"
+    $btn.data "text", oldText
+    $list.toggleClass "all-items-visible"
+    $btn.toggleClass "active"
+  )
+
+toggleDiff = ($link) ->
+  $td = $link.parents(".text-diff")
+  $td.find(".bio-diff, .bio-before-after").toggle()
+  setListOpenData(false, true)
+  text = $link.text()
+  $link.text($link.data "alt-text")
+  .data("alt-text", text)
+
+
+$ ->
+  setNavHeight()
+  setListOpenData(true) unless $(".stream-permalink").length
+  $(window).load ->
+    setDateGroupData()
+    # Run this again to catch any images in the stream
+    setListOpenData(true) unless $(".stream-permalink").length
+
+  # Initialize our menu
   isjPMon = false
   jPM = $.jPanelMenu(
     openPosition: "280px"
@@ -217,6 +255,7 @@ $ ->
     afterOff: ->
       $(".app-message, .navbar-default").stop(true, true).css "left", ""
   )
+
   if (!$("body").hasClass("menu-open") or $(window).width() < 820) and !$("body").hasClass("menu-off")
     $("#page-content").css({minHeight: $(window).height() - wt.navHeight})
     jPM.on()
@@ -245,20 +284,10 @@ $ ->
     else
       $(window).scroll -> setActiveDateGroup()
 
+  # Toggle hidden list items
   $("body").on "click", ".panel-body .btn-see-all", (e) ->
-    $btn = $(@)
-    $list = $btn.prev(".body-list")
-    listHeight = if $list.hasClass "all-items-visible" then $list.data "height-closed" else $list.data "height-open"
-    $list.animate(
-      height: listHeight
-    , 250
-    , ->
-      oldText = $btn.find(".btn-text").text()
-      $btn.find(".btn-text").text $btn.data "text"
-      $btn.data "text", oldText
-      $list.toggleClass "all-items-visible"
-      $btn.toggleClass "active"
-    )
+    e.preventDefault()
+    toggleListVisibility $(@)
 
   $(window).load ->
     if $("body").data "app-message-text"
@@ -310,12 +339,7 @@ $ ->
 
   $("body").on "click", ".diff-toggle", (e) ->
     e.preventDefault()
-    $link = $(@)
-    $td = $link.parents(".text-diff")
-    $td.find(".bio-diff, .bio-before-after").toggle()
-    text = $link.text()
-    $link.text($link.data "alt-text")
-    .data("alt-text", text)
+    toggleDiff $(@)
 
   # This is a temporary fix for a font rendering issue.
   $(window).load ->
