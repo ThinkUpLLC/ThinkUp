@@ -84,7 +84,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Say it like you mean it!');
+        $this->assertEqual($result->headline, 'OMG @screamy is serious!');
         $this->assertEqual($result->text, "@screamy used exclamation points in 1 tweet this past month! "
             ."That's 100% of @screamy's tweets!");
 
@@ -116,7 +116,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Say it like you mean it!');
+        $this->assertEqual($result->headline, 'OMG @screamy is serious!');
         $this->assertEqual($result->text, "@screamy used exclamation points in 2 tweets this past month! "
             ."That's 50% of @screamy's tweets!");
 
@@ -148,7 +148,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Say it like you mean it!');
+        $this->assertEqual($result->headline, 'OMG @screamy is serious!');
         $this->assertEqual($result->text, "@screamy used exclamation points in 3 tweets this past month!  "
             . "Some things are just one-exclamation-point exciting! Others are really exciting!!!! "
             . "Here's @screamy's breakdown.");
@@ -181,14 +181,12 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new ExclamationCountInsight();
         $today = date ('Y-m-d');
         $headlines = array(
-            '',
-            '!!!OMG!!!',
-            'Say it like you mean it!',
-            'Get out!',
-            'No way!',
-            'How! Emphatic! Are! You!',
+          '',
+          '30 days of !!!',
+          'OMG @screamy is serious!',
+          'The emphasis is @screamy\'s!!!',
         );
-        for ($i=1; $i<6; $i++) {
+        for ($i=1; $i<4; $i++) {
             TimeHelper::setTime($i);
             $insight_plugin->generateInsight($this->instance, null, $posts, 3);
             $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
@@ -221,7 +219,7 @@ class TestOfExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'Say it like you mean it!');
+        $this->assertEqual($result->headline, 'OMG @screamy is serious!');
         $this->assertEqual($result->text, "@screamy used exclamation points in 252 tweets this past month!  "
             . "Some things are just one-exclamation-point exciting! Others are really exciting!!!! "
             . "Here's @screamy's breakdown.");

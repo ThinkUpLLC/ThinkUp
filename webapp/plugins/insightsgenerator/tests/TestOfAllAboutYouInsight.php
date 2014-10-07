@@ -286,16 +286,14 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
 
         $good_headlines = array(
             null,
-            'It\'s getting personal',
-            'But enough about me&hellip;',
-            'Self-reflection is powerful stuff',
-            'Speaking from experience&hellip;',
+            'Sometimes it\'s all about @testeriffic',
+            'It\s getting personal',
+            'A moment of self-reflection',
             'Sometimes Twitter is a first-person story',
-            'It\'s just me, myself and I',
-            '@testeriffic is getting personal',
+            'A story about @testeriffic',
         );
 
-        for ($i=1; $i<=7; $i++) {
+        for ($i=1; $i<=5; $i++) {
             TimeHelper::setTime($i);
             $insight_plugin->generateInsight($this->instance, null, $posts, 3);
             $result = $insight_dao->getInsight('all_about_you', 10, $today);

@@ -79,7 +79,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
             'author_username'=> $this->instance->network_username, 'network' => $this->instance->network,
             'post_text' => "Well, I'm not going to say that thing people say about good things."));
         $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>2, 'pub_date' => date('Y-m-d', strtotime('-1 day')),
-            'author_username'=> $this->instance->network_username, 'network' => $this->instance->network,
+            'author_username'=> 'a_friend', 'network' => $this->instance->network,
             'post_text' => "A really good thing happened!"));
         $post_builders[] = FixtureBuilder::build('posts', array('pub_date' => date('Y-m-d', strtotime('-1 day')),
             'in_reply_to_user_id' => 1234, 'in_reply_to_post_id' => 2,
@@ -91,7 +91,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "@janesmith's friend had some great news!");
+        $this->assertEqual($result->headline, "@a_friend had some great news");
         $this->assertEqual($result->text, '@janesmith congratulated 1 person in the past month for this tweet.');
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -126,7 +126,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "@janesmith's friends had some great news!");
+        $this->assertEqual($result->headline, "@friend1 had some great news");
         $this->assertEqual($result->text,
             "@janesmith congratulated 2 people in the past month for these tweets.");
         $data = unserialize($result->related_data);
@@ -170,7 +170,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Twitter is for announcing good news!");
+        $this->assertEqual($result->headline, "Congrats to @friend1");
         $this->assertEqual($result->text,
             "Here are the tweets that inspired @janesmith to congratulate people this month.");
         $data = unserialize($result->related_data);
@@ -214,7 +214,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Congratulations on the congrats, @janesmith!");
+        $this->assertEqual($result->headline, "Championing @friend1");
         $this->assertEqual($result->text,
             "3 tweets inspired @janesmith to congratulate people this past month.");
         $data = unserialize($result->related_data);
@@ -246,7 +246,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "@janesmith's friend had some great news!");
+        $this->assertEqual($result->headline, "@friend1 had some great news");
         $this->assertEqual($result->text,
             "@janesmith congratulated 1 person in the past month for this tweet.");
         $data = unserialize($result->related_data);
@@ -276,7 +276,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Twitter is for announcing good news!");
+        $this->assertEqual($result->headline, "Congrats to @friend1");
         $this->assertEqual($result->text,
             "Here is the tweet that inspired @janesmith to congratulate someone this month.");
         $data = unserialize($result->related_data);
@@ -306,7 +306,7 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Congratulations on the congrats, @janesmith!");
+        $this->assertEqual($result->headline, "Championing @friend1");
         $this->assertEqual($result->text,
             "1 tweet inspired @janesmith to congratulate someone this past month.");
         $data = unserialize($result->related_data);

@@ -138,7 +138,7 @@
 {elseif ($i->filename eq 'favoriteflashbacks')}
   {assign var='tout_headline' value="Remember what you found interesting online on this day in years past."}
 {elseif ($i->filename eq 'fbombcount')}
-  {assign var='tout_headline' value="Exactly how much are you cursing online? We can help you find out."}
+  {assign var='tout_headline' value="How much do you curse online? Find out."}
 {elseif ($i->filename eq 'flashbacks')}
   {assign var='tout_headline' value="Get a look back at what you were doing on this day in years past."}
 {elseif ($i->filename eq 'followercountvisualizer')}

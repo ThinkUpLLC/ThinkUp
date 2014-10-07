@@ -79,7 +79,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('least_likely_followers', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Hey, did you see that Popular Gal followed @testuser?', $result->headline);
+        $this->assertEqual('@testuser got an interesting new follower', $result->headline);
         $related = unserialize($result->related_data);
         $this->assertIsA($related['people'], 'Array');
         $this->assertEqual($related['people'][0]->username,'popular1');
@@ -119,7 +119,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('least_likely_followers', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('Hey, did you see that @popular1 followed @testuser?', $result->headline);
+        $this->assertEqual('@testuser got an interesting new follower', $result->headline);
         $related = unserialize($result->related_data);
         $this->assertIsA($related['people'], 'Array');
         $this->assertEqual($related['people'][0]->username,'popular1');
@@ -289,7 +289,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('verified_followers', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Wow: <strong>Verified Dude<\/strong>, a verified user, followed \@testuser/',
+        $this->assertPattern('/@testuser got a new verified follower!/',
             $result->headline);
         $rendered = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/Twitter Folower/', $rendered);
@@ -354,7 +354,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual('', $result->text);
-        $this->assertEqual('<strong>3 interesting people</strong> followed @testuser', $result->headline);
+        $this->assertEqual('@testuser got 3 interesting new followers', $result->headline);
         $this->assertIsA($result->related_data['people'], 'Array');
         $this->assertEqual($result->related_data['people'][0]->username,'popular1');
     }
@@ -409,7 +409,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('<strong>2 verified users</strong> followed @testuser!', $result->headline);
+        $this->assertEqual('@testuser got 2 new verified followers!', $result->headline);
         $this->assertEqual('That makes a total of <strong>3 verified followers</strong>.', $result->text);
         $this->assertEqual('https://www.thinkup.com/assets/images/insights/2014-07/verified.png',$result->header_image);
         $this->assertIsA($result->related_data['people'], 'Array');
@@ -470,7 +470,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/<strong>2 people<\/strong> in San Francisco, CA followed \@testuser/',
+        $this->assertPattern('/@testuser got 2 new followers in San Francisco, CA/',
             $result->headline);
         $this->assertNoPattern('/avatar.jpg/', $result->header_image);
     }
@@ -510,7 +510,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/<strong>1 person<\/strong> in San Francisco, CA followed \@testuser/',
+        $this->assertPattern('/@testuser got a new follower in San Francisco, CA/',
             $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
         $rendered = $this->getRenderedInsightInHTML($result);
@@ -621,7 +621,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/<strong>1 person<\/strong> in San Francisco, CA followed \@testuser/',
+        $this->assertPattern('/@testuser got a new follower in San Francisco, CA/',
             $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
     }
@@ -680,7 +680,7 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/<strong>1 person<\/strong> in San Francisco, CA followed \@testuser/',
+        $this->assertPattern('/@testuser got a new follower in San Francisco, CA/',
             $result->headline);
         $this->assertPattern('/avatar.jpg/', $result->header_image);
     }

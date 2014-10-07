@@ -82,22 +82,15 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
                             $name = ($i == ($number - 1)) ? 'and '.$name : $name.',';
                         }
                     }
-                    if (TimeHelper::getTime() % 2 == 1) {
-                        $headline = $this->username .' got added to lists called ' .join(' ', $headline_groups);
-                    } else {
-                        $headline = "Do " . join(' ', $headline_groups);
-                        $headline .= ' sound like good descriptions of ' . $this->username . '?';
-                    }
+                    $headline = "$number new lists for $this->username's collection";
 
                     if (count($group_urls) > 4) {
                         $group_name_list = join(', ', array_slice($group_urls, 0, 4)).', and '
                             . (count($group_urls)-4).' more';
-                    }
-                    else if (count($group_urls) > 2) {
+                    } else if (count($group_urls) > 2) {
                         $group_urls[count($group_urls)-1] = 'and '.$group_urls[count($group_urls)-1];
                         $group_name_list = join(', ', $group_urls);
-                    }
-                    else {
+                    } else {
                         $group_name_list = join(' and ', $group_urls);
                     }
                     $insight_text = "$this->username is on ".sizeof($new_groups)." new lists: ".$group_name_list;
@@ -113,14 +106,11 @@ class ListMembershipInsight extends InsightPluginParent implements InsightPlugin
 
                 } else {
                     if (TimeHelper::getTime() % 2 == 1 && $instance->network == 'twitter') {
-                        $list_name_parts = explode('/', $new_groups[0]->group_name);
-                        $maker = $list_name_parts[0];
-                        $headline = $maker .' added '.$this->username.' to a list that\'s called &ldquo;'
-                            . $new_groups[0]->keyword . '&rdquo;';
-                    }
-                    else {
-                        $headline = "Does &ldquo;" . str_replace('-', ' ', $new_groups[0]->keyword).
-                            "&rdquo; seem like a good description of " . $this->username . "?";
+                        $headline = "A new list for $this->username's collection";
+                    } else {
+                      $headline = "A new list called &ldquo;"
+                        . str_replace('-', ' ', $new_groups[0]->keyword)
+                        ."&rdquo;";
                     }
                     $insight_text = "$this->username got added to a new list, ".'<a href="'.$new_groups[0]->url.'">'.
                         $new_groups[0]->keyword."</a>";

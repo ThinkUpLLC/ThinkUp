@@ -84,7 +84,8 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'LOL activity detected');
+        $last_month = Date('F', strtotime(date('F') . " last month"));
+        $this->assertEqual($result->headline, 'The LOLs of '.$last_month);
         $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -114,7 +115,8 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'LOL activity detected');
+        $last_month = Date('F', strtotime(date('F') . " last month"));
+        $this->assertEqual($result->headline, 'The LOLs of '.$last_month);
         $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -211,13 +213,14 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'OMG LOL');
+        $this->assertEqual($result->headline, 'LOL activity detected');
 
         TimeHelper::setTime(2);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'LOL activity detected');
+        $last_month = Date('F', strtotime(date('F') . " last month"));
+        $this->assertEqual($result->headline, 'The LOLs of '.$last_month);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -239,7 +242,8 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'LOL activity detected');
+        $last_month = Date('F', strtotime(date('F') . " last month"));
+        $this->assertEqual($result->headline, 'The LOLs of '.$last_month);
         $this->assertEqual($result->text, 'Looks like @testy found 1 thing LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -289,7 +293,8 @@ class TestOfLOLCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'LOL activity detected');
+        $last_month = Date('F', strtotime(date('F') . " last month"));
+        $this->assertEqual($result->headline, 'The LOLs of '.$last_month);
         $this->assertEqual($result->text, 'Looks like @testy found 3 things LOL-worthy in the last month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');

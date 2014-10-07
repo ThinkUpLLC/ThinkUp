@@ -84,7 +84,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
         $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; once in the past month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -114,7 +114,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy gave 3 fucks');
         $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; 3 times in the past month.');
 
         $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -149,7 +149,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy gave 2 fucks');
         $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; twice in the past month. "
             ."That's 1 more than the prior month. WTF?");
 
@@ -185,7 +185,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy gave 3 fucks');
         $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; 3 times in the past month. "
             ."That's 2 more than the prior month. WTF?");
 
@@ -213,37 +213,64 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'Been dropping those F bombs?');
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
 
         TimeHelper::setTime(2);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
 
         TimeHelper::setTime(3);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'Been dropping those F bombs?');
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
 
         $this->instance->network = 'facebook';
 
         TimeHelper::setTime(1);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'Been dropping those F bombs?');
+        $this->assertEqual($result->headline, 'Facebook users curse knowledgeably');
 
         TimeHelper::setTime(3);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, 'Facebook users curse knowledgeably');
 
         TimeHelper::setTime(2);
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
-        $this->assertEqual($result->headline, 'Facebook Users Curse Knowledgeably');
+        $this->assertEqual($result->headline, 'testy really gave a fuck');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testVariableFuckCountInHeadline() {
+        TimeHelper::setTime(3);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'fuck', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'facebook',
+            'post_text' => 'fuck', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new FBombCountInsight();
+        $today = date ('Y-m-d');
+
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
+
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'author_username'=> 'testy', 'network' => 'twitter',
+            'post_text' => 'fuck', 'pub_date' => date('Y-m-d')));
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertEqual($result->headline, 'F-bombs rain from the sky');
+
+        TimeHelper::setTime(1);
     }
 
     public function testWithOneRepliedToPost() {
@@ -262,7 +289,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy really gave a fuck');
         $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; once in the past month. Here is the tweet '.
             'that elicited a "fuck."');
 
@@ -313,7 +340,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy gave 3 fucks');
         $this->assertEqual($result->text, '@testy said &ldquo;fuck&rdquo; 3 times in the past month. Here are some of'.
             ' the tweets that elicited a "fuck."');
 
@@ -355,7 +382,7 @@ class TestOfFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, 'F yeah!');
+        $this->assertEqual($result->headline, '@testy gave 3 fucks');
         $this->assertEqual($result->text, "@testy said &ldquo;fuck&rdquo; 3 times in the past month. "
             ."That's 5 fewer than the prior month. Fucking Awesome.");
 
