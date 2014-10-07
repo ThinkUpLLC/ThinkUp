@@ -7,4 +7,4 @@
 {/foreach}
 </ul>
 
-{if $i->related_data.changes|@count > 2}<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$i->related_data.changes|@count} people</span> <i class="fa fa-chevron-down icon"></i></button>{/if}
+{if $i->related_data.changes|@count > 2}<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$i->related_data.changes|@count} changes</span> <i class="fa fa-chevron-down icon"></i></button>{/if}

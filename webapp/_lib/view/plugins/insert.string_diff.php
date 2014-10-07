@@ -41,9 +41,13 @@
  * @version 1.0
  */
 function smarty_insert_string_diff($params, &$smarty) {
-  if (empty($params['from_text']) || empty($params['to_text'])) {
-    trigger_error("Missing 'from_text' or 'to_text' paramaters");
+  if (empty($params['from_text']) && empty($params['to_text'])) {
+    trigger_error("Missing 'from_text' and 'to_text' paramaters");
     return;
+  } elseif (empty($params['from_text'])) {
+    return "<ins>" . $params['to_text'] . "</ins>";
+  } elseif (empty($params['to_text'])) {
+    return "<del>" . $params['from_text'] . "</del>";
   }
 
   require_once THINKUP_WEBAPP_PATH.'_lib/extlib/FineDiff/finediff.php';

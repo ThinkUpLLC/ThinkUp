@@ -150,6 +150,82 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testWithOneChangeEmptyOldString() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friend
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I just got married! http://example.com', 'location'=>'San Francisco, CA',
+        'is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
+            'field_value' => "", 'crawl_time' => '-2d'));
+
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $rendered_html = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/\<ins>/', $rendered_html);
+
+        $this->debug($rendered_html);
+    }
+
+    public function testWithOneChangeEmptyNewString() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friend
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'', 'location'=>'San Francisco, CA',
+        'is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'description',
+            'field_value' => "I just got married! http://example.com", 'crawl_time' => '-2d'));
+
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $rendered_html = $this->getRenderedInsightInHTML($result);
+        $this->assertPattern('/\<del>/', $rendered_html);
+
+        $this->debug($rendered_html);
+    }
+
     public function testTwoChanges() {
         $builders = array();
 
