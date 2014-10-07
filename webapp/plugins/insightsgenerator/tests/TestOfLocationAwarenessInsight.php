@@ -75,7 +75,7 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
         $today = date('Y-m-d');
         $result = $this->insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Knowing supermayor's location.");
+        $this->assertEqual($result->headline, "5 location shares");
         $this->assertEqual($result->text, "Last week, supermayor included precise location details in 5 posts."
             ." That's roughly 3 hours anyone could have found supermayor in person.");
 
@@ -119,7 +119,7 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
         $today = date('Y-m-d');
         $result = $this->insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Knowing @supermayor's location.");
+        $this->assertEqual($result->headline, "6 location shares");
         $this->assertEqual($result->text, "Last month, @supermayor included precise location details in 6 tweets. "
             . "That's roughly 4 hours anyone could have found @supermayor in person.");
 
@@ -151,7 +151,7 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
         $today = date('Y-m-d');
         $result = $this->insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Knowing supermayor's location.");
+        $this->assertEqual($result->headline, "6 location shares");
         $this->assertEqual($result->text, "Last week, supermayor included precise location details in 6 posts. "
             . "That's roughly 4 hours anyone could have found supermayor in person.");
 
@@ -213,7 +213,7 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
         $today = date('Y-m-d');
         $result = $this->insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Knowing @supermayor's location.");
+        $this->assertEqual($result->headline, "1 location share");
         $this->assertEqual($result->text, "Last month, @supermayor included precise location details in 1 tweet. "
             . "That's roughly 45 minutes anyone could have found @supermayor in person.");
 
@@ -245,7 +245,7 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
         $today = date('Y-m-d');
         $result = $this->insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, "Knowing @supermayor's location.");
+        $this->assertEqual($result->headline, "5 location shares");
         $this->assertEqual($result->text, "Last month, @supermayor included precise location details in 5 tweets. "
             . "That's roughly 3 hours anyone could have found @supermayor in person.");
 
@@ -269,11 +269,10 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
 
         $headlines = array(
             null,
-            "Location, location, location...",
-            "Knowing @supermayor's location.",
-            "Where it's at!",
-            "Finding @supermayor...",
-            "Where in the world is @supermayor?",
+            "@supermayor has been sharing location data",
+            "1 location share",
+            "45 minutes on the map",
+            "@supermayor has been spotted in the wild",
         );
 
         $text = array(
@@ -297,9 +296,11 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
             $this->debug($this->getRenderedInsightInEmail($result));
         }
 
+        // test headlines again with more location shares
         $builders[] = $this->generatePost(true, $i*2);
         $builders[] = $this->generatePost(true, $i*2+1);
-        $headlines[1] = "Location, location, location...";
+        $headlines[2] = "3 location shares";
+        $headlines[3] = "2 hours on the map";
         for ($i=1; $i<=4; $i++) {
             TimeHelper::setTime($i);
             $insight_plugin->generateInsight($this->instance, null, $posts, 3);

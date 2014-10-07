@@ -89,13 +89,13 @@ class ExclamationCountInsight extends CriteriaMatchInsightPluginParent implement
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
                 $insight->emphasis = Insight::EMPHASIS_MED;
-                $insight->headline = $this->getVariableCopy(array(
-                    'How! Emphatic! Are! You!',
-                    '!!!OMG!!!',
-                    'Say it like you mean it!',
-                    'Get out!',
-                    'No way!',
-                ));
+                $insight->headline = $this->getVariableCopy(
+                  array(
+                    'The emphasis is %username\'s!!!',
+                    '30 days of !!!',
+                    'OMG %username is serious!',
+                  )
+                );
                 $showchart = count($this->point_chart) > 2;
                 $insight->text = $this->getVariableCopy(array(
                     "%username used exclamation points in %total %post".($this_period_count==1?'':'s').

@@ -64,9 +64,11 @@ class TestOfFacebookProfilePromptInsight extends ThinkUpInsightUnitTestCase {
 
         $result = $this->insight_dao->getInsight('facebook_profile_prompt', $instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("Is Jon Snow's Facebook profile up to date?", $result->headline);
-        $this->assertEqual("Can't hurt to see if that profile info is still accurate. "
-            . "(Jon Snow's Facebook profile hasn't been updated since January 12th, 2011.)", $result->text);
+        $this->assertEqual("Jon Snow's Facebook profile is a little stale", $result->headline);
+        $this->assertEqual(
+          "Jon Snow's Facebook profile hasn't been updated since January 12th, 2011. " .
+          "Can't hurt to see if that profile info is still accurate. ", $result->text);
+
 
         $last_baseline = $this->baseline_dao->getMostRecentInsightBaseline('facebook_profile_prompted', $instance->id);
         $this->assertNotNull($last_baseline);
@@ -150,7 +152,7 @@ class TestOfFacebookProfilePromptInsight extends ThinkUpInsightUnitTestCase {
 
         $result = $this->insight_dao->getInsight('facebook_profile_prompt', $instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertPattern("/It’s been over \d+ months since Jon Snow's profile was updated./", $result->headline);
+        $this->assertPattern("/Jon Snow's \d+-month-old profile/", $result->headline);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));

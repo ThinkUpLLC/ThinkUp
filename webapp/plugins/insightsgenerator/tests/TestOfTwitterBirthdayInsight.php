@@ -121,7 +121,7 @@ class TestOfTwitterBirthdayInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('twitterbirthday', $this->instance->id, $today);
-        $this->assertEqual('Happy Twitter birthday!', $result->headline);
+        $this->assertEqual('A Very Happy 1st Twitter Birthday!', $result->headline);
         $this->assertEqual('@hbtome joined Twitter 1 year ago today. @second_user just beat @hbtome, joining '
            .'1 day earlier, and @third_user was a little slower, getting on Twitter 1 day later.', $result->text);
 
@@ -142,7 +142,7 @@ class TestOfTwitterBirthdayInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('twitterbirthday', 10, $today);
-        $this->assertEqual('Happy Twitter birthday!', $result->headline);
+        $this->assertEqual('A Very Happy 1st Twitter Birthday!', $result->headline);
         $this->assertEqual('@hbtome joined Twitter 1 year ago today.', $result->text);
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 0);
@@ -172,7 +172,7 @@ class TestOfTwitterBirthdayInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('twitterbirthday', $this->instance->id, $today);
-        $this->assertEqual('Happy Twitter birthday!', $result->headline);
+        $this->assertEqual('A Very Happy 1st Twitter Birthday!', $result->headline);
         $this->assertEqual('@hbtome joined Twitter 1 year ago today. @second_user just beat @hbtome, joining '
            .'1 day earlier.', $result->text);
 

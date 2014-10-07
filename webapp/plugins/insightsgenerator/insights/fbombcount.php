@@ -77,14 +77,20 @@ class FBombCountInsight extends CriteriaMatchInsightPluginParent implements Insi
             $insight->date = $this->insight_date;
 
             $network = ucfirst($instance->network);
-            $potential_headlines = array(
-                'F yeah!',
-                'Been dropping those F bombs?',
-            );
-            if ($instance->network == 'facebook') {
-                $potential_headlines[] = 'Facebook Users Curse Knowledgeably';
+            $potential_headlines = array();
+            if ($this_period_count > 1) {
+                $potential_headlines[] = '%username gave %total fucks';
+                $potential_headlines[] = 'F-bombs rain from the sky';
+            } else {
+                $potential_headlines[] = '%username really gave a fuck';
             }
-            $insight->headline = $this->getVariableCopy($potential_headlines);
+
+            if ($instance->network == 'facebook') {
+                $potential_headlines[] = 'Facebook users curse knowledgeably';
+            }
+            $insight->headline = $this->getVariableCopy(
+              $potential_headlines, array('total' => $this_period_count)
+            );
 
             $insight->text = $this->username.' said &ldquo;fuck&rdquo; '
                 . $this->terms->getOccurrencesAdverb($this_period_count) . ' in the past month.';

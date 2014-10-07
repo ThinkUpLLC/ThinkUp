@@ -75,9 +75,10 @@ class FacebookProfilePromptInsight extends InsightPluginParent implements Insigh
                 $insight->date = $this->insight_date;
 
                 $months = floor($time_since_update / (60*60*24*30));
-                $insight->headline = $this->getVariableCopy(array(
-                    "It’s been over %months months since %username's profile was updated.",
-                    "Is %username's Facebook profile up to date?",
+                $insight->headline = $this->getVariableCopy(
+                  array(
+                    "%username's %months-month-old profile",
+                    "%username's Facebook profile is a little stale",
                 ), array('months' => $months));
                 if (date('Y') == date('Y', $profile_updated_ts)) {
                     $nice_date = date('F jS', $profile_updated_ts);
@@ -85,10 +86,10 @@ class FacebookProfilePromptInsight extends InsightPluginParent implements Insigh
                     $nice_date = date('F jS, Y', $profile_updated_ts);
                 }
                 $insight->text = $this->getVariableCopy(array(
-                    "Might be worth checking if it's still up to date. "
-                        . "%username's Facebook profile hasn't been updated since $nice_date.",
-                    "Can't hurt to see if that profile info is still accurate. "
-                        . "(%username's Facebook profile hasn't been updated since $nice_date.)"
+                    "%username's Facebook profile hasn't been updated since $nice_date. " .
+                    "Might be worth checking if it's still up to date. ",
+                    "%username's Facebook profile hasn't been updated since $nice_date. " .
+                    "Can't hurt to see if that profile info is still accurate. ",
                 ));
 
                 $insight->setButton(array(
