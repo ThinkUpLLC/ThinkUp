@@ -53,17 +53,17 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         $least_likely_followers = array_filter($least_likely_followers, array($this, 'filterFollowers'));
         $least_likely_followers = array_slice($least_likely_followers, 0, 3);
 
-        if (sizeof($least_likely_followers) > 0 ) { //if not null, store insight
-            if (sizeof($least_likely_followers) > 1) {
-                $my_insight->headline = '<strong>'.sizeof($least_likely_followers).
-                    " interesting people</strong> ". "followed $this->username";
+        $total_followers = sizeof($least_likely_followers);
+        if ($total_followers > 0 ) { //if not null, store insight
+            if ($total_followers > 1) {
+                $my_insight->headline = "$this->username has got $total_followers interesting new followers";
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
             } else {
                 $follower = $least_likely_followers[0];
                 $name = $this->getFollowerName($follower);
-                $my_insight->headline = "Hey, did you see that " .$name . " followed $this->username?";
+                $my_insight->headline = "$this->username has got an interesting new follower";
                 $my_insight->slug = 'least_likely_followers';
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 $my_insight->setPeople($least_likely_followers);
@@ -75,25 +75,26 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
         $verified_followers = $follow_dao->getVerifiedFollowersByDay($instance->network_user_id, $instance->network, 0,
             3);
 
-        if (sizeof($verified_followers) > 0 ) { //if not null, store insight
-            if (sizeof($verified_followers) > 1) {
+        $total_followers = sizeof($verified_followers);
+        if ($total_followers > 0 ) { //if not null, store insight
+            if ($total_followers > 1) {
                 $my_insight->slug = 'verified_followers';
-                $my_insight->headline = '<strong>'.sizeof($verified_followers)." verified users</strong> ".
-                    "followed $this->username!";
+
+                $my_insight->headline = "$this->username has got $total_followers new verified followers!";
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
             } else {
                 $follower = $verified_followers[0];
                 $name = $this->getFollowerName($follower);
                 $my_insight->slug = 'verified_followers';
-                $my_insight->headline = 'Wow: <strong>'.$name."</strong>, a verified user, followed $this->username";
+                $my_insight->headline = "$this->username has got a new verified follower!";
                 $my_insight->header_image = $verified_followers[0]->avatar;
                 $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->setPeople($verified_followers);
             }
 
             $total_verified = $follow_dao->getVerifiedFollowerCount($instance->network_user_id, $instance->network);
-            if ($total_verified > sizeof($verified_followers)) {
+            if ($total_verified > $total_followers) {
                 $my_insight->text = "That makes a total of <strong>$total_verified verified followers</strong>.";
             }
             $my_insight->header_image = 'https://www.thinkup.com/assets/images/insights/2014-07/verified.png';
@@ -138,10 +139,11 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
                 //debug
                 //print_r($local_followers);
-                if (count($local_followers)) {
-                    $headline = "<strong>"
-                    .(count($local_followers) > 1 ? count($local_followers)." people" : "1 person")
-                    ."</strong> in ".$user->location." ".$this->terms->getPhraseForAddingAsFriend($this->username);
+                $total_followers = count($local_followers);
+                if ($total_followers) {
+                    $headline = "$this->username has got "
+                      .($total_followers > 1 ? "$total_followers new followers" : "a new follower")
+                      ." nearby";
 
                     if (count($local_followers) == 1) {
                         $header_image = $local_followers[0]->avatar;

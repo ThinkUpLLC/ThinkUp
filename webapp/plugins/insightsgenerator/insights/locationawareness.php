@@ -83,6 +83,7 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
             return;
         }
 
+
         $insight = new Insight();
         $insight->slug = $this->slug;
         $insight->instance_id = $instance->id;
@@ -152,8 +153,7 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
 
     private function getText($period, $total) {
         $posts = $total == 1 ? '%post' : '%posts';
-        // 45 minutes per posting, a rough estimate
-        $time = TimeHelper::secondsToGeneralTime($total * 45 * 60);
+        $time = $this->calculateTime($total);
         return $this->getVariableCopy(array(
             "Last %period, %username included precise location details in %total $posts. "
                 . "That's roughly %time anyone could have found %username in person.",
@@ -166,13 +166,19 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
     }
 
     private function getHeadline($total, $period) {
-        return $this->getVariableCopy(array(
-            "Where in the world is %username?",
-            "Location, location, location...",
-            "Knowing %username's location.",
-            "Where it's at!",
-            "Finding %username...",
-        ));
+      $time = $this->calculateTime($total);
+
+      return $this->getVariableCopy(array(
+        "%username has been spotted in the wild",
+        "%username has been sharing location data",
+        "%total location share".($total > 1 ? 's' : ''),
+        "%time on the map",
+      ), array('total' => $total, 'time' => $time));
+    }
+
+    private function calculateTime($total) {
+        // 45 minutes per posting, a rough estimate
+        return TimeHelper::secondsToGeneralTime($total * 45 * 60);
     }
 
     /**

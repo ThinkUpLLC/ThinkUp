@@ -37,6 +37,8 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
+
+        TimeHelper::setTime(1); // Force one headline for most tests
     }
 
     public function tearDown() {
@@ -66,7 +68,7 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/On this day&hellip;/', $result->headline);
+        $this->assertPattern('/A stroll down memory lane/', $result->headline);
         $possible_text = array("This was @testeriffic's most popular tweet <strong>1 year ago</strong>.",
         "On this day in 2013, this was @testeriffic's most popular tweet.");
         $this->assertTrue(in_array( $result->text, $possible_text));
@@ -93,13 +95,40 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/On this day&hellip;/', $result->headline);
+        $this->assertPattern('/A stroll down memory lane/', $result->headline);
         $possible_text = array("This was testeriffic's most popular status update <strong>1 year ago</strong>.",
         "On this day in 2013, this was testeriffic's most popular status update.");
         $this->assertTrue(in_array( $result->text, $possible_text));
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
+    }
+
+    public function testHeadlines() {
+        // Get data ready that insight requires
+        $builders = self::buildData();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = '7654321';
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new FlashbackInsight();
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+
+        $good_headlines = array(
+          null,
+          "A stroll down memory lane",
+          "Your best tweet from 1 year ago",
+          "A look in the rearview",
+        );
+
+        for ($i=1; $i<=3; $i++) {
+          TimeHelper::setTime($i);
+          $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+          $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
+          $this->assertEqual($result->headline, $good_headlines[$i]);
+        }
     }
 
     private function buildData() {

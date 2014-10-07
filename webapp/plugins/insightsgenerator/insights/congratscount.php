@@ -74,12 +74,23 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
                 $insight->instance_id = $instance->id;
                 $insight->date = $this->insight_date;
                 $insight->emphasis = Insight::EMPHASIS_MED;
-                $insight->headline = $this->getVariableCopy(array(
-                    "%username's friend".(count($unique_friends)==1?'':'s')." had some great news!",
-                    'Congratulations on the congrats, %username!',
-                    '%network is for announcing good news!',
-                ), array('network' => ucfirst($instance->network)));
+
+                $network = $instance->network;
+                $other_user = ($network == 'twitter' ? '@' : '') . $posts_to_show[0]->author_username;
                 $posts = $this_period_count > 1 ? '%posts' : '%post';
+
+                $insight->headline = $this->getVariableCopy(
+                  array(
+                    count($posts_to_show)==1?'A c':'C'.'ongrats-worthy '.$posts,
+                    'Championing %other_user',
+                    'Congrats to %other_user',
+                    '%other_user had some great news',
+                  ),
+                  array(
+                    'network' => ucfirst($network),
+                    'other_user' => $other_user
+                  )
+                );
                 $these = $this_period_count > 1 ? 'these' : 'this';
                 $are = $this_period_count > 1 ? 'are' : 'is';
                 $people_term = count($unique_friends) > 1 ? 'people' : 'person';

@@ -63,7 +63,14 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $number_of_years_ago = $current_year - $post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
-                    $headline = "On this day&hellip;";
+                    // $headline = "On this day&hellip;";
+
+                    $headlines = array(
+                      "A look in the rearview",
+                      "A stroll down memory lane",
+                      "Your best %post from %number_of_years_ago year"
+                        .($number_of_years_ago > 1 ? 's' : '')." ago",
+                    );
                     $time = strtotime("-" . $number_of_years_ago . " year", time());
                     $past_date =date('Y', $time);
                     if ($time % 2 == 0) {
@@ -80,7 +87,12 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $my_insight->instance_id = $instance->id;
                     $my_insight->slug = 'posts_on_this_day_popular_flashback'; //slug to label this insight's content
                     $my_insight->date = $this->insight_date; //date of the data this insight applies to
-                    $my_insight->headline = $headline;
+                    $my_insight->headline = $this->getVariableCopy(
+                      $headlines, array(
+                        'number_of_years_ago' => $number_of_years_ago,
+                      )
+                    );
+
                     $my_insight->text = $insight_text;
                     $my_insight->emphasis = Insight::EMPHASIS_LOW;
                     $my_insight->filename = basename(__FILE__, ".php");

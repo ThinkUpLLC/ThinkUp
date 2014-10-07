@@ -88,12 +88,17 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
                         ' last month.'
                     ));
                 } else {
-                    $insight->headline = $this->getVariableCopy(array(
-                        'Way to show appreciation',
-                        'Gratitude makes everybody happy',
+                    $last_month = Date('F', strtotime(date('F') . " last month"));
+                    $insight->headline = $this->getVariableCopy(
+                      array(
+                        "A good deal of gratitude in %last_month",
+                        "Way to show appreciation in %last_month",
+                        "A word of thanks in %last_month",
                         'Gratitude is contagious',
-                        'Saying &ldquo;thanks&rdquo; is a great way to spend time on '.ucfirst($instance->network)
-                    ));
+                      ), array(
+                        'last_month' => $last_month
+                      )
+                    );
                     $times = $this->terms->getOccurrencesAdverb($this_period_count);
                     $insight->text = $this->getVariableCopy(array(
                         '%username thanked someone <strong>'.$times. '</strong> on '.  ucfirst($instance->network).

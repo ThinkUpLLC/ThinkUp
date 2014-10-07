@@ -45,14 +45,15 @@ class TwitterBirthdayInsight extends InsightPluginParent implements InsightPlugi
             $insight->date = $this->insight_date;
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             $insight->filename = basename(__FILE__, ".php");
-            $insight->headline = "Happy Twitter birthday!";
 
             $follow_dao = DAOFactory::getDAO('FollowDAO');
             $all_friends = $follow_dao->countTotalFriends($instance->network_user_id, $instance->network);
             $late_friends = $follow_dao->countTotalFriendsJoinedAfterDate($instance->network_user_id,
                 $instance->network, $user->joined);
             $years = date('Y', TimeHelper::getTime()) - date('Y', $joined_ts);
+            $ordinal_age = $this->terms->getOrdinalAdverb($years);
 
+            $insight->headline = "A Very Happy $ordinal_age Twitter Birthday!";
             $insight->text = $this->username." joined Twitter $years year".($years==1?'':'s')." ago today";
 
             if ($all_friends > 0 && $late_friends > 0) {

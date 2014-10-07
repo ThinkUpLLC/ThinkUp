@@ -69,9 +69,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
         $this->debug($result->headline);
-        $this->assertEqual($result->headline, 'Do &ldquo;list7&rdquo;, &ldquo;list6&rdquo;, &ldquo;list5&rdquo;, '.
-            'and &ldquo;list4&rdquo; sound like good descriptions of @ev?');
-        $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
+        $this->assertEqual($result->headline, "4 new lists for @ev's collection");
         $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/',
         $result->text);
 
@@ -103,9 +101,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->filename, 'listmembership');
         $this->assertPattern('/\@ev is on 8 new lists:/', $result->text);
         $this->debug($result->headline);
-        $this->assertEqual($result->headline, 'Do &ldquo;list7&rdquo;, &ldquo;list6&rdquo;, &ldquo;list5&rdquo;, '.
-        'and &ldquo;list4&rdquo; sound like good descriptions of @ev?');
-        $this->assertPattern('/and &ldquo;list4&rdquo;/', $result->headline);
+        $this->assertEqual($result->headline, "4 new lists for @ev's collection");
         $this->assertPattern('/bringing the total to \<strong\>58 lists\<\/strong\>\./', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -134,7 +130,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern("/4 new lists for @ev's collection/", $result->headline);
         $this->assertPattern('/new lists: \<a href="http:\/\/twitter.com\/listmaker\/list7"\>list7\<\/a\>/',
         $result->text);
         $this->assertNoPattern('/bringing your total to/', $result->text);
@@ -167,7 +163,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($result->text);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/&ldquo;list22&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern("/4 new lists for @ev's collection/", $result->headline);
         $this->assertPattern('/and 22 more/', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -198,9 +194,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($result->text);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertEqual($result->headline, 'Do &ldquo;list3&rdquo;, &ldquo;list2&rdquo;, &ldquo;list1&rdquo;, '.
-        'and &ldquo;list0&rdquo; sound like good descriptions of @ev?');
-        $this->assertPattern('/&ldquo;list0&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertEqual($result->headline, '4 new lists for @ev\'s collection');
     }
 
     public function test1NewListMembershipNoHistory() {
@@ -226,7 +220,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
         $this->debug($result->headline);
-        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/A new list called &ldquo;list0&rdquo;/', $result->headline);
         $this->assertNoPattern('/bringing/', $result->text);
         $data = unserialize($result->related_data);
         $this->assertNull($data['vis_data']);
@@ -257,7 +251,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/A new list called &ldquo;list0&rdquo;/', $result->headline);
         $this->assertPattern('/bringing the total to \<strong\>6 lists\<\/strong\>./', $result->text);
     }
 
@@ -288,7 +282,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Does &ldquo;list0&rdquo; seem like a good description of @ev?/', $result->headline);
+        $this->assertPattern('/A new list called &ldquo;list0&rdquo;/', $result->headline);
         $this->assertPattern('/@ev got added to a new list/', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -325,7 +319,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->slug, 'new_group_memberships');
         $this->assertEqual($result->filename, 'listmembership');
-        $this->assertPattern('/Do &ldquo;list1&rdquo; and &ldquo;list0&rdquo; sound like good descriptions of @ev?/', $result->headline);
+        $this->assertPattern("/2 new lists for @ev's collection/", $result->headline);
         $this->assertPattern('/@ev is on 2 new lists/', $result->text);
         $this->assertPattern('/to <strong>7 lists/', $result->text);
         $this->assertPattern('/>list1</', $result->text);
@@ -410,9 +404,9 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
         $this->assertPattern('/ev is on 2 new lists/', $result->text);
-        $this->assertNoPattern('/list0/', $result->headline);
-        $this->assertPattern('/list1/', $result->headline);
-        $this->assertPattern('/list2/', $result->headline);
+        $this->assertNoPattern('/list0/', $result->text);
+        $this->assertPattern('/list1/', $result->text);
+        $this->assertPattern('/list2/', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -441,7 +435,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("@listmaker added @ev to a list that's called &ldquo;list2&rdquo;", $result->headline);
+        $this->assertEqual("A new list for @ev's collection", $result->headline);
         $this->assertEqual('@ev got added to a new list, <a href="http://twitter.com/listmaker/list2">list2</a>.',
             $result->text);
 
@@ -457,7 +451,7 @@ class TestOfListMembershipInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, array(), 3);
         $result = $insight_dao->getInsight('new_group_memberships', 1, date ('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual("@ev got added to lists called &ldquo;list2&rdquo; and &ldquo;list1&rdquo;",
+        $this->assertEqual("2 new lists for @ev's collection",
             $result->headline);
         $this->assertEqual('@ev is on 2 new lists: <a href="http://twitter.com/listmaker/list2">list2</a> '
             . 'and <a href="http://twitter.com/listmaker/list1">list1</a>.', $result->text);
