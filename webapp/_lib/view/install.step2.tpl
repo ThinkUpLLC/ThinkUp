@@ -124,8 +124,8 @@
                 <div class="control-group">
                     <label class="control-label" for="db_host">Database Host</label>
                     <div class="controls">
-                        <input type="text" name="db_host" id="db_host" placeholder="localhost"{if isset($db_host)} value="{$db_host}"{/if} required 
-                        data-validation-required-message="<i class='icon-exclamation-sign'></i> A database host is required - if you don't know yours, try 'localhost'.">
+                        <input type="text" name="db_host" id="db_host" {if isset($db_host) && $db_host != ''} value="{$db_host}" {else} value="localhost" {/if} required 
+                        data-validation-required-message="<i class='icon-exclamation-sign'></i> A database host is required - if you don't know yours, try 'localhost'." >
                         <span class="help-inline">Usually <strong>localhost</strong> or specified by your hosting provider.</span>
                         {include file="_usermessage.tpl" field="database_host" enable_bootstrap=1}
                     </div>
