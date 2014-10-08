@@ -1,6 +1,5 @@
 # Config and dotfiles
 .*
-.gitignore
 !.travis.yml
 !.scrutinizer.yml
 webapp/config.inc.php
@@ -17,7 +16,6 @@ extras/scripts/lic_header.py
 # Temp data
 data/
 !tests/data
-webapp/data/
 !webapp/data/README.md
 
 # Compiled packages and process files
