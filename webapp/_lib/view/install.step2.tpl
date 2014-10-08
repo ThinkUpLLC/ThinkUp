@@ -77,7 +77,7 @@
 
                 <div class="form-group">
                     <label class="control-label" for="db_host">Database Host</label>
-                        <input type="text" name="db_host" id="db_host" placeholder="localhost"{if isset($db_host)} value="{$db_host}"{/if} required class="form-control"
+                        <input type="text" name="db_host" id="db_host" placeholder="localhost"{if isset($db_host) && $db_host != ''} value="{$db_host}" {else} value="localhost" {/if} required class="form-control"
                         data-validation-required-message="<i class='fa fa-exclamation-triangle'></i> A database host is required - if you don't know yours, try 'localhost'.">
                         <span class="help-block">Usually <strong>localhost</strong> or specified by your hosting provider.</span>
                         {include file="_usermessage.tpl" field="database_host"}
