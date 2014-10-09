@@ -77,7 +77,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I love testing.', 'pub_date' => '-58d'));
-        $post_builders[] = FixtureBuilder::build('posts', array(
+        $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'Testing is hard.  FML.', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
@@ -87,10 +87,13 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $today = date ('Y-m-d');
+        $earliest_mention = $earliest_mention_builder->columns["pub_date"];
+        $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual('Before &ldquo;FML&rdquo; went legit', $result->headline);
-        $this->assertEqual('@testy used the word "FML" once since August 2014, and it appears to have caught on: '.
+        $this->assertEqual('@testy used the word "FML" once since '.
+            $str_earliest_mention.', and it appears to have caught on: '.
             'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'.
             "just been added</a> to the Oxford Dictionary Online.", $result->text);
         $data = unserialize($result->related_data);
