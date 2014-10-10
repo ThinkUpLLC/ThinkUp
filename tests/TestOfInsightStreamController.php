@@ -120,6 +120,57 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         return $builders;
     }
 
+    protected function buildSinglePublicInsight() {
+        $builders = array();
+
+        //owner
+        $salt = 'salt';
+        $pwd1 = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('pwd3', $salt);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+            'email'=>'tuuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd1, 'pwd_salt'=>OwnerMySQLDAO::$default_salt));
+
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. User',
+            'email'=>'tuuser2@example.com', 'is_activated'=>1, 'pwd'=>$pwd1, 'pwd_salt'=>OwnerMySQLDAO::$default_salt));
+
+        //public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'10',
+            'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>'10',
+            'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
+            'posts_per_week'=>77));
+        //private instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'11',
+            'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>10,
+            'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+        //another public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>'12',
+            'network_username'=>'mary', 'network'=>'twitter', 'network_viewer_id'=>'10',
+            'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
+            'posts_per_week'=>77));
+        // Facebook public instance
+        $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'13',
+            'network_username'=>'Bill Cõsby', 'network'=>'facebook', 'network_viewer_id'=>'10',
+            'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
+            'posts_per_week'=>77));
+
+        //owner instances
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 1, 'owner_id'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 2, 'owner_id'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 3, 'owner_id'=>1) );
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 4, 'owner_id'=>1) );
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id' => 1, 'owner_id'=>2) );
+
+        //public insights
+        $time_now = date("Y-m-d H:i:s");
+
+        $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
+            'instance_id'=>'4', 'headline'=>'Biggest Facebook fans!', 'text'=>'This is a list of users!',
+            'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'localfollowers', 'time_generated'=>$time_now,
+            'related_data'=>self::getRelatedDataListOfUsers('facebook')));
+
+        return $builders;
+    }
+
     public function tearDown() {
         parent::tearDown();
     }
@@ -152,7 +203,25 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertNoPattern('/Retweet spike! Jill\'s post privately got retweeted 110 times/', $results);
         // Logo should not link to homepage for OSP users
         $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+    }
 
+    public function testOfNotLoggedInSingleInsightInStream() {
+        $builders = self::buildSinglePublicInsight();
+
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        $this->debug($results);
+
+        // Don't show login screen
+        $this->assertNoPattern('/Email/', $results);
+        $this->assertNoPattern('/Password/', $results);
+        // Do show public insights
+        $this->assertPattern('/This is a list of users!/', $results);
+        // Logo should not link to homepage for OSP users
+        $this->assertNoPattern('/href="https:\/\/thinkup.com"\><strong>Think/', $results);
+        // Tout shouldn't show up in the stream, only on permalink
+        $this->assertNoPattern('/See which new friends you/', $results);
     }
 
     public function testOfLoggedInInsightsOwnsPrivateInstance() {

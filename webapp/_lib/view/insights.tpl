@@ -12,7 +12,7 @@
       {include file="_insights.firstrun.tpl"}
     {/if}
   {/if}
-  <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
+  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}">
 
 {assign var='cur_date' value=''}
 {assign var='previous_date' value=''}
@@ -114,7 +114,7 @@
 
 {/foreach}
 
-{if count($insights) eq 1 and !isset($logged_in_user)}
+{if isset($smarty.get.s) eq 1 and !isset($logged_in_user)}
 
 {assign var='tout_headline' value="Get more out of the time you spend online."}
 {if ($i->filename eq 'allaboutyou')}
