@@ -91,7 +91,7 @@ class ExclamationCountInsight extends CriteriaMatchInsightPluginParent implement
                 $insight->emphasis = Insight::EMPHASIS_MED;
                 $insight->headline = $this->getVariableCopy(
                   array(
-                    'The emphasis is %username\'s!!!',
+                    //'The emphasis is %username\'s!!!',
                     '30 days of !!!',
                     'OMG %username is serious!',
                   )
