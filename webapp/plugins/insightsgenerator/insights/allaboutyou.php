@@ -55,7 +55,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
                 $headline = $this->getVariableCopy(array(
                     'A story about %username',
                     'Sometimes it\'s all about %username',
-                    'It\s getting personal',
+                    'It\'s getting personal',
                     'A moment of self-reflection',
                     'Sometimes %network is a first-person story',
                 ), array('network' => ucfirst($instance->network)));
