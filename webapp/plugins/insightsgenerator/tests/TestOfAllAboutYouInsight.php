@@ -287,7 +287,7 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $good_headlines = array(
             null,
             'Sometimes it\'s all about @testeriffic',
-            'It\s getting personal',
+            'It\'s getting personal',
             'A moment of self-reflection',
             'Sometimes Twitter is a first-person story',
             'A story about @testeriffic',
