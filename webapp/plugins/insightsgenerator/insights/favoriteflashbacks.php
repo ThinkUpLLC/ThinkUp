@@ -41,19 +41,30 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
         while ($days_ago < $number_days) {
             $since_date = date("Y-m-d", strtotime("-".$days_ago." day"));
             if (self::shouldGenerateInsight('favorites_year_ago_flashback', $instance,
-            $insight_date=$since_date, $regenerate_existing_insight=false)) {
+                $insight_date=$since_date, $regenerate_existing_insight=false)) {
+
                 //Generate flashback post list
                 $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
                     $instance->network, $since_date);
                 if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
+                    $post_year = date(date( 'Y' , strtotime($flashback_favs[0]->pub_date)));
+                    $current_year = date('Y');
+                    $number_of_years_ago = $current_year - $post_year;
+                    $plural = ($number_of_years_ago > 1 )?'s':'';
 
+                    if ($instance->network == 'twitter') {
+                        $headline = $number_of_years_ago." year". $plural." ago " . $this->username
+                            ." favorited @" .$flashback_favs[0]->author_username;
+                    } else {
+                        $headline = $this->terms->getProcessedText($number_of_years_ago." year"
+                            . $plural." ago " . $this->username ." " .$this->terms->getVerb('liked') . " "
+                            . $flashback_favs[0]->author_username."'s %post");
+                    }
                     $my_insight = new Insight();
-
                     $my_insight->instance_id = $instance->id;
                     $my_insight->slug = 'favorites_year_ago_flashback';
                     $my_insight->date = $since_date;
-                    $my_insight->headline = "What $this->username " .$this->terms->getVerb('liked')
-                        ." on this day in years past";
+                    $my_insight->headline = $headline;
                     $my_insight->text = "Can you believe how fast time flies?";
                     $my_insight->emphasis = Insight::EMPHASIS_MED;
                     $my_insight->filename = basename(__FILE__, ".php");
