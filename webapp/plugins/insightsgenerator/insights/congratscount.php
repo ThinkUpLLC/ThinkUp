@@ -81,7 +81,7 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
 
                 $insight->headline = $this->getVariableCopy(
                   array(
-                    count($posts_to_show)==1?'A c':'C'.'ongrats-worthy '.$posts,
+                    (count($posts_to_show)==1?'A c':'C').'ongrats-worthy '.$posts,
                     'Championing %other_user',
                     'Congrats to %other_user',
                     '%other_user had some great news',
