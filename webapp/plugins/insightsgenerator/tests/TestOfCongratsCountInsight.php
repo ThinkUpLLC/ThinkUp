@@ -229,6 +229,50 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testMultipleCongratsOfDifferentTypesV4() {
+        TimeHelper::setTime(4);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>1,
+            'author_username'=> 'friend1', 'network' => 'twitter',
+            'post_text' => 'I am getting married!', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>2,
+            'author_username'=> 'friend2', 'network' => 'twitter',
+            'post_text' => 'I love cheese!', 'pub_date' => date('Y-m-d')));
+        // 3 Congrats, 2 users, 2 available posts
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'in_reply_to_user_id' => 9999, 'in_reply_to_post_id' => 1,
+            'author_username'=> 'janesmith', 'network' => 'twitter',
+            'post_text' => 'Congrats!', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'in_reply_to_user_id' => 9998, 'in_reply_to_post_id' => 2,
+            'author_username'=> 'janesmith', 'network' => 'twitter',
+            'post_text' => 'Well then, congratulations, friend of mine!', 'pub_date' => date('Y-m-d')));
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'in_reply_to_user_id' => 9999, 'in_reply_to_post_id' => 999999,
+            'author_username'=> 'janesmith', 'network' => 'twitter',
+            'post_text' => 'Hey, congrats.', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new CongratsCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, "Congrats-worthy tweets");
+        $this->assertEqual($result->text,
+            "3 tweets inspired @janesmith to congratulate people this past month.");
+        $data = unserialize($result->related_data);
+        $this->assertEqual(count($data['posts']), 2);
+        $this->assertEqual("I am getting married!", $data['posts'][0]->post_text);
+        $this->assertEqual("I love cheese!", $data['posts'][1]->post_text);
+        $this->assertEqual("friend1", $data['posts'][0]->author_username);
+        $this->assertEqual("friend2", $data['posts'][1]->author_username);
+
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testSingularV1() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
@@ -307,6 +351,36 @@ class TestOfCongratsCountInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Championing @friend1");
+        $this->assertEqual($result->text,
+            "1 tweet inspired @janesmith to congratulate someone this past month.");
+        $data = unserialize($result->related_data);
+        $this->assertEqual(count($data['posts']), 1);
+        $this->assertEqual("I am getting married!", $data['posts'][0]->post_text);
+        $this->assertEqual("friend1", $data['posts'][0]->author_username);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testSingularV4() {
+        TimeHelper::setTime(4);
+        $insight_dao = DAOFactory::getDAO('InsightDAO');
+        $post_builders = array();
+        $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>1,
+            'author_username'=> 'friend1', 'network' => 'twitter',
+            'post_text' => 'I am getting married!', 'pub_date' => date('Y-m-d')));
+        // 1 Congrat, 1 users, 1 available posts
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'in_reply_to_user_id' => 9999, 'in_reply_to_post_id' => 1,
+            'author_username'=> 'janesmith', 'network' => 'twitter',
+            'post_text' => 'Congrats!', 'pub_date' => date('Y-m-d')));
+        $insight_plugin = new CongratsCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->getSlug(), $this->instance->id, $today);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, "A congrats-worthy tweet");
         $this->assertEqual($result->text,
             "1 tweet inspired @janesmith to congratulate someone this past month.");
         $data = unserialize($result->related_data);
