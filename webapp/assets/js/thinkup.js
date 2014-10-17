@@ -1,5 +1,5 @@
 (function() {
-  var $lastActiveDateGroup, animateContentShift, checkUsername, constants, featureTest, pinDateMarker, setActiveDateGroup, setDateGroupData, setFixedPadding, setListOpenData, setNavHeight, timerUsername, wt;
+  var $lastActiveDateGroup, animateContentShift, checkUsername, constants, featureTest, pinDateMarker, setActiveDateGroup, setDateGroupData, setFixedPadding, setListOpenData, setNavHeight, timerUsername, toggleDiff, toggleListVisibility, wt;
 
   wt = window.tu = {};
 
@@ -55,92 +55,6 @@
     caramel: "#dd814b",
     caramel_dark: "#9e5e14",
     caramel_darker: "#71430e"
-  };
-
-  setListOpenData = function(includeClosed, setHeight) {
-    if (includeClosed == null) {
-      includeClosed = false;
-    }
-    if (setHeight == null) {
-      setHeight = false;
-    }
-    return $(".body-list-show-some").each(function() {
-      var $list, listOpenHeight, padding;
-      $list = $(this);
-      if (includeClosed) {
-        $list.height($list.height());
-        $list.data("height-closed", $list.outerHeight(true));
-        $list.find(".list-item").show();
-      }
-      if (($list.data("rows") != null) && ($list.data("row-height") != null)) {
-        padding = $list.data("row-padding") ? $list.data("row-padding") : 0;
-        listOpenHeight = ($list.data("rows") * $list.data("row-height")) + (($list.data("rows") - 1) * padding);
-      } else {
-        listOpenHeight = 0;
-        $list.find(".list-item").each(function() {
-          return listOpenHeight += $(this).outerHeight(true);
-        });
-      }
-      $list.data("height-open", listOpenHeight);
-      if (setHeight && $list.hasClass("all-items-visible")) {
-        return $list.height(listOpenHeight);
-      }
-    });
-  };
-
-  setDateGroupData = function() {
-    return $(".date-group").each(function(i) {
-      $(this).data("scroll-top", $(this).offset().top);
-      return $(this).data("scroll-bottom", $(this).offset().top + $(this).height() - $(this).find(".date-marker").height());
-    });
-  };
-
-  $lastActiveDateGroup = null;
-
-  setActiveDateGroup = function() {
-    var anyActive;
-    if ($(window).scrollTop() + $(window).height() <= $("body").height()) {
-      anyActive = false;
-      $(".date-group").each(function(i) {
-        var _ref;
-        if (($(this).offset().top < (_ref = $(window).scrollTop() + wt.navHeight) && _ref < $(this).data("scroll-bottom") - 14)) {
-          anyActive = true;
-          if ($lastActiveDateGroup == null) {
-            $lastActiveDateGroup = $(this);
-          }
-          pinDateMarker($(this));
-          if (($lastActiveDateGroup != null) && !$(this).is($lastActiveDateGroup)) {
-            return $lastActiveDateGroup = $(this);
-          }
-        } else {
-          return $(this).find(".date-marker").removeClass("fixed absolute").css("top", "");
-        }
-      });
-      if (($lastActiveDateGroup != null) && !anyActive) {
-        if ($lastActiveDateGroup.data("scroll-top") < $(window).scrollTop()) {
-          pinDateMarker($lastActiveDateGroup, "absolute");
-        }
-        return pinDateMarker($lastActiveDateGroup.prev(), "absolute", false);
-      }
-    }
-  };
-
-  pinDateMarker = function($container, position, clearClasses) {
-    var $dm;
-    if (position == null) {
-      position = "fixed";
-    }
-    if (clearClasses == null) {
-      clearClasses = true;
-    }
-    if (clearClasses) {
-      $(".date-marker").removeClass("fixed absolute").css("top", "");
-    }
-    $dm = $container.find(".date-marker");
-    $dm.addClass(position);
-    if (position === "absolute") {
-      return $dm.css("top", $container.data("scroll-bottom"));
-    }
   };
 
   animateContentShift = function(state) {
@@ -253,15 +167,129 @@
     }, 500);
   };
 
+  setDateGroupData = function() {
+    return $(".date-group").each(function(i) {
+      $(this).data("scroll-top", $(this).offset().top);
+      return $(this).data("scroll-bottom", $(this).offset().top + $(this).height() - $(this).find(".date-marker").height());
+    });
+  };
+
+  $lastActiveDateGroup = null;
+
+  setActiveDateGroup = function() {
+    var anyActive;
+    if ($(window).scrollTop() + $(window).height() <= $("body").height()) {
+      anyActive = false;
+      $(".date-group").each(function(i) {
+        var _ref;
+        if (($(this).offset().top < (_ref = $(window).scrollTop() + wt.navHeight) && _ref < $(this).data("scroll-bottom") - 14)) {
+          anyActive = true;
+          if ($lastActiveDateGroup == null) {
+            $lastActiveDateGroup = $(this);
+          }
+          pinDateMarker($(this));
+          if (($lastActiveDateGroup != null) && !$(this).is($lastActiveDateGroup)) {
+            return $lastActiveDateGroup = $(this);
+          }
+        } else {
+          return $(this).find(".date-marker").removeClass("fixed absolute").css("top", "");
+        }
+      });
+      if (($lastActiveDateGroup != null) && !anyActive) {
+        if ($lastActiveDateGroup.data("scroll-top") < $(window).scrollTop()) {
+          pinDateMarker($lastActiveDateGroup, "absolute");
+        }
+        return pinDateMarker($lastActiveDateGroup.prev(), "absolute", false);
+      }
+    }
+  };
+
+  pinDateMarker = function($container, position, clearClasses) {
+    var $dm;
+    if (position == null) {
+      position = "fixed";
+    }
+    if (clearClasses == null) {
+      clearClasses = true;
+    }
+    if (clearClasses) {
+      $(".date-marker").removeClass("fixed absolute").css("top", "");
+    }
+    $dm = $container.find(".date-marker");
+    $dm.addClass(position);
+    if (position === "absolute") {
+      return $dm.css("top", $container.data("scroll-bottom"));
+    }
+  };
+
+  setListOpenData = function(includeClosed, setHeight) {
+    if (includeClosed == null) {
+      includeClosed = false;
+    }
+    if (setHeight == null) {
+      setHeight = false;
+    }
+    return $(".body-list-show-some").each(function() {
+      var $list, listOpenHeight, padding;
+      $list = $(this);
+      if (includeClosed) {
+        $list.height($list.height());
+        $list.data("height-closed", $list.outerHeight(true));
+        $list.find(".list-item").show();
+      }
+      if (($list.data("rows") != null) && ($list.data("row-height") != null)) {
+        padding = $list.data("row-padding") ? $list.data("row-padding") : 0;
+        listOpenHeight = ($list.data("rows") * $list.data("row-height")) + (($list.data("rows") - 1) * padding);
+      } else {
+        listOpenHeight = 0;
+        $list.find(".list-item").each(function() {
+          return listOpenHeight += $(this).outerHeight(true);
+        });
+      }
+      $list.data("height-open", listOpenHeight);
+      if (setHeight && $list.hasClass("all-items-visible")) {
+        return $list.height(listOpenHeight);
+      }
+    });
+  };
+
+  toggleListVisibility = function($btn) {
+    var $list, listHeight;
+    $list = $btn.prev(".body-list");
+    listHeight = $list.hasClass("all-items-visible") ? $list.data("height-closed") : $list.data("height-open");
+    return $list.animate({
+      height: listHeight
+    }, 250, function() {
+      var oldText;
+      oldText = $btn.find(".btn-text").text();
+      $btn.find(".btn-text").text($btn.data("text"));
+      $btn.data("text", oldText);
+      $list.toggleClass("all-items-visible");
+      return $btn.toggleClass("active");
+    });
+  };
+
+  toggleDiff = function($link) {
+    var $td, text;
+    $td = $link.parents(".text-diff");
+    $td.find(".bio-diff, .bio-before-after").toggle();
+    setListOpenData(false, true);
+    text = $link.text();
+    return $link.text($link.data("alt-text")).data("alt-text", text);
+  };
+
   $(function() {
     var isjPMon, jPM;
+    setNavHeight();
     if (!$(".stream-permalink").length) {
       setListOpenData(true);
     }
     $(window).load(function() {
-      return setDateGroupData();
+      setDateGroupData();
+      if (!$(".stream-permalink").length) {
+        return setListOpenData(true);
+      }
     });
-    setNavHeight();
     isjPMon = false;
     jPM = $.jPanelMenu({
       openPosition: "280px",
@@ -305,20 +333,8 @@
       }
     }
     $("body").on("click", ".panel-body .btn-see-all", function(e) {
-      var $btn, $list, listHeight;
-      $btn = $(this);
-      $list = $btn.prev(".body-list");
-      listHeight = $list.hasClass("all-items-visible") ? $list.data("height-closed") : $list.data("height-open");
-      return $list.animate({
-        height: listHeight
-      }, 250, function() {
-        var oldText;
-        oldText = $btn.find(".btn-text").text();
-        $btn.find(".btn-text").text($btn.data("text"));
-        $btn.data("text", oldText);
-        $list.toggleClass("all-items-visible");
-        return $btn.toggleClass("active");
-      });
+      e.preventDefault();
+      return toggleListVisibility($(this));
     });
     $(window).load(function() {
       if ($("body").data("app-message-text")) {
@@ -381,13 +397,8 @@
       return $this.toggleClass("visible");
     });
     $("body").on("click", ".diff-toggle", function(e) {
-      var $link, $td, text;
       e.preventDefault();
-      $link = $(this);
-      $td = $link.parents(".text-diff");
-      $td.find(".bio-diff, .bio-before-after").toggle();
-      text = $link.text();
-      return $link.text($link.data("alt-text")).data("alt-text", text);
+      return toggleDiff($(this));
     });
     $(window).load(function() {
       var delay, delayed;
