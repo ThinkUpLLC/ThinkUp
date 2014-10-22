@@ -126,6 +126,7 @@ $plugin_tests->add(new TestOfBioTrackerInsight());
 $plugin_tests->add(new TestOfNewDictionaryWordsInsight());
 $plugin_tests->add(new TestOfFollowerComparisonInsight());
 $plugin_tests->add(new TestOfDiversifyLinksInsight());
+$plugin_tests->add(new TestOfAgeAnalysisInsight());
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());

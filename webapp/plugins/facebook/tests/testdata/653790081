@@ -6,6 +6,7 @@
       "id": "109324835754083",
       "name": "Buffalo, New York"
    },
-   "gender": "male"
+   "gender": "male",
+   "birthday": "01/02/03"
    
 }

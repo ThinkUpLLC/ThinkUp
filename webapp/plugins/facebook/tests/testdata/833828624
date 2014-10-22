@@ -5,6 +5,7 @@
    "last_name": "Valera",
    "link": "http://www.facebook.com/avo77",
    "gender": "male",
+   "birthday": "01/02/03",
    "locale": "es_LA",
    "updated_time": "2010-06-13T00:37:21+0000"
 }
