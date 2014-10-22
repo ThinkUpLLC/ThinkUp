@@ -139,7 +139,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->full_name, 'Gina Trapani');
         $this->assertEqual($user->user_id, 606837591);
         $this->assertEqual($user->gender, "female");
-        $this->assertEqual($user->birthday, '2001-02-03');
+        $this->assertEqual($user->birthday, '2003-01-02');
         $this->assertEqual($user->location, "San Diego, California");
         $this->assertEqual($user->description,
             'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
@@ -203,7 +203,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
         $this->assertEqual($user->gender, 'female');
-        $this->assertEqual($user->birthday, '2001-02-03');
+        $this->assertEqual($user->birthday, '2003-01-02');
         $this->assertEqual($user->location, 'San Diego, California');
         //sleep(1000);
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
@@ -212,7 +212,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
         $this->assertEqual($user->gender, 'male');
-        $this->assertEqual($user->birthday, '0000-00-00');
+        $this->assertEqual($user->birthday, null, 'Malformed, partial birthday not saved');
         $this->assertEqual($user->location, 'La Mesa, California');
 
         $user = $user_dao->getUserByName('Jeffrey McManus', 'facebook');
@@ -221,7 +221,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
         $this->assertTrue($user->is_protected);
         $this->assertEqual($user->gender, 'male');
-        $this->assertEqual($user->birthday, '2001-02-03');
+        $this->assertEqual($user->birthday, '1980-03-22');
         $this->assertEqual($user->location, '');
     }
 

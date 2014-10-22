@@ -80,7 +80,7 @@ class FacebookCrawler {
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,gender,about,location,website,is_verified,'.
-              'subscribers,updated_time':'';
+              'subscribers,updated_time,birthday':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
             if (isset($user_details)) {
                 $user_details->network = $network;
@@ -130,7 +130,14 @@ class FacebookCrawler {
             $user_vals["full_name"] = $details->name;
             $user_vals["user_id"] = $details->id;
             $user_vals["gender"] = $details->gender;
-            $user_vals["birthday"] = $details->birthday;
+            // We only want to store valid full birthdays
+            if (substr_count($details->birthday, '/') > 1) {
+                $birth_ts = strtotime($details->birthday);
+                // This check may become invalid as modern medicine improves
+                if ($birth_ts >= (time() - (60*60*24*365*130))) {
+                    $user_vals["birthday"] = date('Y-m-d', $birth_ts);
+                }
+            }
             $user_vals["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
             $user_vals['url'] = isset($details->website)?$details->website:'';
 
