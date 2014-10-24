@@ -12,15 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="{if isset($logged_in_user)}{$logged_in_user}{/if}">
 
-    {if isset($smarty.get.p) and $smarty.get.p eq 'twitter' and
-    isset($smarty.get.oauth_token) and isset($smarty.get.oauth_verifier)}
-    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=twitter">
-    {/if}
-    {if isset($smarty.get.p) and $smarty.get.p eq 'facebook' and
-    isset($smarty.get.code) and isset($smarty.get.state)}
-    <meta http-equiv="refresh" content="0;url={$site_root_path}account/?p=facebook">
-    {/if}
-
     {if count($insights) eq 1}
     <meta property="og:site_name" content="ThinkUp" />
     <meta property="og:type" content="article" />

@@ -1,3 +1,5 @@
+{include file="_usermessage-v2.tpl" field="user_add"}
+
   <div class="container">
     <header class="container-header">
       <h1>Instagram</h1>

@@ -1,3 +1,4 @@
+    {include file="_usermessage-v2.tpl" field="user_add"}
 
   <div class="container">
     <header class="container-header">
