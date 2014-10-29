@@ -173,7 +173,7 @@ class TestOfTwitterAgeInsight extends ThinkUpInsightUnitTestCase {
 
     public function testLateAdopter() {
         $plugin = new TwitterAgeInsight();
-        $plugin->generateInsight($this->instance, $this->makeUser(date('Y-m-d', strtotime('-3 week', 1399686335))),
+        $plugin->generateInsight($this->instance, $this->makeUser(date('Y-m-d', strtotime('-3 week'))),
             array(), 1);
         $result = $this->insight_dao->getInsight('twitter_age', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
@@ -203,8 +203,6 @@ class TestOfTwitterAgeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual('One in 200 million...', $result->headline);
         $this->assertPattern("/\@princesspeach joined Twitter/", $result->text);
-        $this->assertPattern("/That\'s over/", $result->text);
-        $this->assertPattern("/\% of Twitter's lifetime\!/", $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
