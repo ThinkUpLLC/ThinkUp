@@ -4,7 +4,7 @@
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/instagram/
  Description: Capture and display Instagram posts.
  Class: InstagramPlugin
- Icon: assets/img/instagram_icon.png
+ Icon: instagram
  Version: 0.01
  Author: Dimosthenis Nikoudis
  */

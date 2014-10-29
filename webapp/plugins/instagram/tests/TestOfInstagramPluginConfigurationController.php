@@ -466,6 +466,6 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
         // looks for account delete token
         $this->assertPattern('/name="csrf_token" value="'. self::CSRF_TOKEN .
-        '" \/><!\-\- delete account csrf token \-\->/', $output);
+        '" \/>/', $output);
     }
 }

@@ -144,7 +144,7 @@
     </div>
     <div class="panel-footer">
       <div class="insight-metadata">
-        <i class="fa fa-{$i->instance->network}-square icon icon-network"></i>
+        <i class="fa fa-{$i->instance->network}{if ($i->instance->network neq 'instagram')}-square{/if} icon icon-network"></i>
         <a class="permalink" href="{$permalink}">{$i->date|date_format:"%b %e"}</a>
       </div>
       <div class="share-menu">
