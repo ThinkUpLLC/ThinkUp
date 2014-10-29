@@ -6,9 +6,8 @@
   {if isset($logged_in_user)}
         <li class="service {$facebook_connection_status}"><a href="{$site_root_path}account/?p=facebook" {if $smarty.get.p eq 'facebook'}class="active"{/if}>Facebook<i class="fa fa-{if $facebook_connection_status eq 'active'}check-circle{elseif $facebook_connection_status eq 'error'}exclamation-triangle{else}facebook-square{/if} icon"></i></a></li>
         <li class="service {$twitter_connection_status}"><a href="{$site_root_path}account/?p=twitter" {if $smarty.get.p eq 'twitter'}class="active"{/if}>Twitter<i class="fa fa-{if $twitter_connection_status eq 'active'}check-circle{elseif $twitter_connection_status eq 'error'}exclamation-triangle{else}twitter{/if} icon"></i></a></li>
-        <!--
-        <li class="service inactive"><a href="{$site_root_path}account/?p=instagram">Instagram <i class="fa fa-instagram icon"></i></a></li>
-        -->
+
+        <li class="service {$instagram_connection_status}"><a href="{$site_root_path}account/?p=instagram" {if $smarty.get.p eq 'instagram'}class="active"{/if}>Instagram <i class="fa fa-{if $instagram_connection_status eq 'active'}check-circle{elseif $instagram_connection_status eq 'error'}exclamation-triangle{else}instagram{/if} icon"></i></a></li>
 
       {if !isset($thinkupllc_endpoint)}
 
