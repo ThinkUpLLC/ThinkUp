@@ -97,7 +97,7 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
                         $headline = $generation . ' said it all';
                     } else {
                         $headline = $this->getVariableCopy(array(
-                            '%username resonates with %generation',
+                            '%username resonated with %generation',
                             '%generation have a lot to say',
                         ), array('generation' => $generation));
                     }
