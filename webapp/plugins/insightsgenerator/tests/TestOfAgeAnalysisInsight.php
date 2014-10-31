@@ -110,7 +110,7 @@ class TestOfAgeAnalysisInsight extends ThinkUpInsightUnitTestCase {
     	$related_data = unserialize($result->related_data);
     	$this->assertNotNull($result);
     	$this->assertIsA($result, "Insight");
-    	$this->assertEqual($result->headline, 'Young Lady resonates with Generation Z-ers');
+    	$this->assertEqual($result->headline, 'Young Lady resonated with Generation Z-ers');
         $this->assertEqual($result->text, "Generation Z-ers — people 18-25 years old — had the most to say "
             . "in response to Young Lady's posts on Facebook this week.");
     	$this->assertEqual($related_data['age_data']['18'], 1);
@@ -149,7 +149,7 @@ class TestOfAgeAnalysisInsight extends ThinkUpInsightUnitTestCase {
     	$related_data = unserialize($result->related_data);
     	$this->assertNotNull($result);
     	$this->assertIsA($result, "Insight");
-    	$this->assertEqual($result->headline, 'Adult Person resonates with Millenials');
+    	$this->assertEqual($result->headline, 'Adult Person resonated with Millenials');
         $this->assertEqual($result->text, "Millenials — people 25-35 years old — had the most to say in response "
             . "to Adult Person's posts on Facebook this week.");
     	$this->assertEqual($related_data['age_data']['18'], 1);
@@ -188,7 +188,7 @@ class TestOfAgeAnalysisInsight extends ThinkUpInsightUnitTestCase {
     	$related_data = unserialize($result->related_data);
     	$this->assertNotNull($result);
     	$this->assertIsA($result, "Insight");
-    	$this->assertEqual($result->headline, 'Mid-Life Gal resonates with Gen X-ers');
+    	$this->assertEqual($result->headline, 'Mid-Life Gal resonated with Gen X-ers');
         $this->assertEqual($result->text, "Gen X-ers — people 35-45 years old — had the most to say in response "
             . "to Mid-Life Gal's posts on Facebook this week.");
     	$this->assertEqual($related_data['age_data']['18'], 1);
@@ -227,7 +227,7 @@ class TestOfAgeAnalysisInsight extends ThinkUpInsightUnitTestCase {
     	$related_data = unserialize($result->related_data);
     	$this->assertNotNull($result);
     	$this->assertIsA($result, "Insight");
-    	$this->assertEqual($result->headline, 'Old Man resonates with Baby Boomers');
+    	$this->assertEqual($result->headline, 'Old Man resonated with Baby Boomers');
         $this->assertEqual($result->text, "Baby Boomers — people 45+ years old — had the most to say in response "
             . "to Old Man's posts on Facebook this week.");
     	$this->assertEqual($related_data['age_data']['18'], 1);
