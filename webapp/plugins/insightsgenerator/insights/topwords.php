@@ -30,7 +30,10 @@
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
-    var $stopwords = array(
+    /**
+     * Words we want to ignore in our insight list.  MySQL stop word list and some custom additions
+     */
+    var $stop_words = array(
         // MySQL stop word list
         "a","able","about","across","after","all","almost","also","am","among","an","and","any","
         are","as","at","be","because","been","but","by","can","cannot","could","dear","did","do","does","either",
@@ -92,15 +95,20 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 
+    /**
+     * Cretae a list of most-used words from posts
+     * @param $posts arr Array of posts to analyze
+     * @return arr The most-used words
+     */
     private function getWordsFromPosts($posts) {
         $all_words = array();
         foreach ($posts as $p) {
-            $words = preg_split('/\s+/', $p->post_text);
+            $words = preg_split('/\s+/', html_entity_decode($p->post_text));
             $words = array_filter($words, create_function('$a', 'return substr($a, 0, 1) != "@";'));
             $words = array_map(create_function('$a', "return preg_replace('/[^a-zA-Z0-9\\' -]/', '', \$a);"), $words);
             $words = array_filter($words, create_function('$a', 'return strlen($a) && !preg_match("/[^a-z]/i", $a);'));
             foreach ($words as $word) {
-                if (in_array(strtolower($word), $this->stopwords)) {
+                if (in_array(strtolower($word), $this->stop_words)) {
                     continue;
                 }
                 $stem = Utils::stemWord(strtolower($word));
@@ -131,6 +139,13 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         return $top_words;
     }
 
+    /**
+     * For a given set of posts and named period, possible generate an insight
+     * @param $instance Instance The instance we are working with
+     * @param $posts arr Posts from the current period
+     * @param $old_posts arr Posts from the previous period
+     * @param $period str Name of the period, ie. week or month
+     */
     private function generateForPeriod($instance, $posts, $old_posts, $period) {
         $top_words = $this->getWordsFromPosts($posts);
         $old_words = $this->getWordsFromPosts($old_posts);
@@ -144,7 +159,7 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         }
 
         $text = $this->username." mentioned <b>".$top_words[0]."</b> more than anything else on ".ucfirst($instance->network)
-            . " this $period";
+            . " last $period";
         array_shift($top_words);
         $num_words = count($top_words);
         if ($num_words == 1) {
@@ -161,7 +176,7 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
             foreach ($old_words as $key => $word) {
                 $old_words[$key] = '&quot;'.$word.'&quot;';
             }
-            $text .= " That's compared to last $period, when ".$this->username."'s most-used word"
+            $text .= " That's compared to the $period before, when ".$this->username."'s most-used word"
                 . (count($old_words)==1?" was":"s were")." ";
             $num_words = count($old_words);
             if ($num_words == 1) {
@@ -184,3 +199,6 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         $this->insight_dao->insertInsight($insight);
     }
 }
+
+$insights_plugin_registrar = PluginRegistrarInsights::getInstance();
+$insights_plugin_registrar->registerInsightPlugin('TopWordsInsight');

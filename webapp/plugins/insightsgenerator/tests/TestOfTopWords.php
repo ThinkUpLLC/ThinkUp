@@ -80,7 +80,7 @@ class TestOfTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->text, 'Jane Wordsmith mentioned <b>&quot;Words&quot;</b> more than anything else '
-            . 'on Test_no_monthly this week, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;.');
+            . 'on Test_no_monthly last week, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;.');
         $this->assertEqual($result->headline, 'Your most-used words last week');
 
 
@@ -122,7 +122,7 @@ class TestOfTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->text, "@bookworm mentioned <b>&quot;cheese&quot;</b> more than anything else "
-            . "on Twitter this month, followed by &quot;eat&quot;, &quot;Gouda&quot;, &quot;paired&quot;, and "
+            . "on Twitter last month, followed by &quot;eat&quot;, &quot;Gouda&quot;, &quot;paired&quot;, and "
             . "&quot;love&quot;.");
         $this->assertEqual($result->headline, 'Your most-used words last month');
 
@@ -155,8 +155,8 @@ class TestOfTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->text, 'Jane Wordsmith mentioned <b>&quot;Words&quot;</b> more than anything else '
-            . 'on Test_no_monthly this week, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;. '
-            . 'That\'s compared to last week, when Jane Wordsmith\'s most-used words were &quot;old&quot;, '
+            . 'on Test_no_monthly last week, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;. '
+            . 'That\'s compared to the week before, when Jane Wordsmith\'s most-used words were &quot;old&quot;, '
             . '&quot;last&quot;, &quot;tweet&quot;, and &quot;week&quot;.');
         $this->assertEqual($result->headline, 'Your most-used words last week');
 
@@ -184,8 +184,33 @@ class TestOfTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->text, '@bookworm mentioned <b>&quot;Words&quot;</b> more than anything else '
-            . 'on Twitter this month, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;. '
-            . 'That\'s compared to last month, when @bookworm\'s most-used word was &quot;Asimov&quot;.');
+            . 'on Twitter last month, followed by &quot;love&quot;, &quot;books&quot;, and &quot;cool&quot;. '
+            . 'That\'s compared to the month before, when @bookworm\'s most-used word was &quot;Asimov&quot;.');
+        $this->assertEqual($result->headline, 'Your most-used words last month');
+
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testOfHtmlEntities() {
+        $builders = array();
+        for ($i=0; $i<6; $i++) {
+            $builders[] = $this->generatePost("Letters &amp; symbols are my favorite things!", $i);
+        }
+
+        $insight_plugin = new TopWordsInsight();
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $posts = $post_dao->getAllPostsByUsernameOrderedBy($this->instance->network_username, $this->instance->network,
+            $count=0, $order_by="pub_date", $in_last_x_days = 7,
+            $iterator = false, $is_public = false);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+        $today = date('Y-m-d');
+        $result = $this->insight_dao->getInsight('top_words_month', $this->instance->id, $today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->text, '@bookworm mentioned <b>&quot;favorite&quot;</b> more than anything else '
+            . 'on Twitter last month, followed by &quot;Letters&quot;, &quot;symbols&quot;, and &quot;things&quot;.');
         $this->assertEqual($result->headline, 'Your most-used words last month');
 
 
