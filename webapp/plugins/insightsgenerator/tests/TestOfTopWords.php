@@ -218,6 +218,34 @@ class TestOfTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testOfEmailAndURLs() {
+        $builders = array();
+        for ($i=0; $i<6; $i++) {
+            $builders[] = $this->generatePost("help@thinkup.com if you need help. @help", $i);
+            $builders[] = $this->generatePost("help@thinkup.com is what you want @help", $i);
+            $builders[] = $this->generatePost("http://awesome.com!", $i);
+        }
+
+        $insight_plugin = new TopWordsInsight();
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $posts = $post_dao->getAllPostsByUsernameOrderedBy($this->instance->network_username, $this->instance->network,
+            $count=0, $order_by="pub_date", $in_last_x_days = 7,
+            $iterator = false, $is_public = false);
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+        $today = date('Y-m-d');
+        $result = $this->insight_dao->getInsight('top_words_month', $this->instance->id, $today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->text, '@bookworm mentioned <b>&quot;help@thinkup.com&quot;</b> more than anything else '
+            . 'on Twitter last month, followed by &quot;want&quot;, &quot;need&quot;, &quot;help&quot;, and '
+            . '&quot;http://awesome.com&quot;.');
+        $this->assertEqual($result->headline, 'Your most-used words last month');
+
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     private function generatePost($text, $days_ago) {
         static $i = 1;
         return FixtureBuilder::build('posts', array(

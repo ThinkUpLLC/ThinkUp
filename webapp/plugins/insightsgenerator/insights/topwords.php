@@ -105,8 +105,9 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         foreach ($posts as $p) {
             $words = preg_split('/\s+/', html_entity_decode($p->post_text));
             $words = array_filter($words, create_function('$a', 'return substr($a, 0, 1) != "@";'));
-            $words = array_map(create_function('$a', "return preg_replace('/[^a-zA-Z0-9\\' -]/', '', \$a);"), $words);
-            $words = array_filter($words, create_function('$a', 'return strlen($a) && !preg_match("/[^a-z]/i", $a);'));
+            $words = array_map(create_function('$a', "return preg_replace('/^[^a-zA-Z0-9]+/', '', \$a);"), $words);
+            $words = array_map(create_function('$a', "return preg_replace('/[^a-zA-Z0-9]+$/', '', \$a);"), $words);
+            $words = array_filter($words, create_function('$a', 'return strlen($a);'));
             foreach ($words as $word) {
                 if (in_array(strtolower($word), $this->stop_words)) {
                     continue;
