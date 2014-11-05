@@ -412,4 +412,23 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         $this->debug($stripped_text);
         $this->assertEqual($stripped_text, "My site is , and it is great");
     }
+
+    public function testOfStemWord() {
+        $tests = array(
+            'root' => 'root',
+            'rooted' => 'root',
+            'rooting' => 'root',
+            'roots' => 'root',
+            'Roots' => 'Root',
+            'Root' => 'Root',
+            'pasted' => 'past', // Yes, stems are weird... because English.
+            'paste' => 'past',
+            'tweets' => 'tweet',
+            'tweeting' => 'tweet',
+        );
+        foreach ($tests as $word => $stem) {
+            $test_stem = Utils::stemWord($word);
+            $this->assertEqual($stem, $test_stem, "Stem of $word should be $stem, was $test_stem");
+        }
+    }
 }

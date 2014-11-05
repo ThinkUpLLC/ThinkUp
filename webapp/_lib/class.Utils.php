@@ -530,4 +530,14 @@ class Utils {
     public static function stripURLsOutOfText($text) {
         return preg_replace('/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i', '', $text);
     }
+
+    /**
+     * Use PorterStemmer library to stem a word.
+     * @param str $word The word to stem.
+     * @return str The stemmed word
+     */
+    public static function stemWord($word) {
+        require_once(THINKUP_WEBAPP_PATH.'_lib/extlib/Stemmer/class.PorterStemmer.php');
+        return PorterStemmer::Stem($word);
+    }
 }
