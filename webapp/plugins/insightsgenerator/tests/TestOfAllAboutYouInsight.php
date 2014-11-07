@@ -50,46 +50,6 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         parent::tearDown();
     }
 
-    public function testHasFirstPersonReferences() {
-        $has = AllAboutYouInsight::hasFirstPersonReferences("I don't know, really? I thought so.");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences(
-            "Now that I'm back on Android, realizing just how under sung Google Now is. I want it everywhere.");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences(
-            "New YearÕs Eve! Feeling very gay today, but not very homosexual.");
-        $this->assertFalse($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("Tis the season for adorable cards w/ photos of my ".
-            "friends' kids & pets that remind me what I'd do for the holidays if I had my act together.");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("Took 1 firearms safety class to realize my ".
-            "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("When @anildash told me he was writing this I was ".
-            "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("I like http://about.me/");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("Me like http://about.me/");
-        $this->assertTrue($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("People like http://about.me/");
-        $this->assertFalse($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("The new site is cdmoyer.me");
-        $this->assertFalse($has);
-
-        $has = AllAboutYouInsight::hasFirstPersonReferences("My new site is cdmoyer.me");
-        $this->assertTrue($has);
-    }
-
 
     public function testAllAboutYouInsightNoPriorBaseline() {
         // Get data ready that insight requires
