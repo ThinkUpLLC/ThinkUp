@@ -59,10 +59,10 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         $monthly = 0;
         $weekly = 0;
         if ($instance->network == 'twitter') {
-            $weekly = 7;
+            $weekly = 6;
             $monthly = 27;
         } else if ($instance->network == 'facebook') {
-            $weekly = 6;
+            $weekly = 5;
             $monthly = 25;
         } else if ($instance->network == 'test_no_monthly') {
             $monthly = 0;
