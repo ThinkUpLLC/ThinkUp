@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfInsightPluginParent.php
  *
- * Copyright (c) 2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
  *
  *
  * LICENSE:
@@ -25,7 +25,7 @@
  *
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2014 Nilaksh Das, Gina Trapani
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
@@ -231,5 +231,62 @@ class TestOfInsightPluginParent extends ThinkUpUnitTestCase {
 
         $this->assertFalse($insight_plugin_parent->shouldGenerateMonthlyInsight('a_slug', $instance,
             $insight_date='today', $regenerate_existing_insight=true, $day_of_month=$bonus_day, null, null, false));
+    }
+
+    public function testShouldGenerateAnnualInsight() {
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+
+        $time_now = date("Y-m-d H:i:s");
+        $today = date('Y-m-d', strtotime('today'));
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>76, 'instance_id'=>10, 'slug'=>'some_slug',
+        'date'=>$today, 'time_generated'=>$time_now));
+
+        $builders[] = FixtureBuilder::build('insights', array('id'=>77, 'instance_id'=>10, 'slug'=>'some_other_slug',
+        'date'=>$yesterday, 'time_generated'=>$time_now));
+
+        $insight_plugin_parent = new InsightPluginParent();
+        $insight_plugin_parent->insight_dao = DAOFactory::getDAO('InsightDAO');
+
+        // Test default values
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateAnnualInsight('some_slug', $instance));
+
+        // Test regeneration on a given date
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date=$today));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateAnnualInsight('some_other_slug', $instance,
+            $insight_date=$yesterday));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('some_other_slug', $instance,
+            $insight_date=$yesterday, $regenerate_existing_insight=true));
+
+        // Test for day of month
+        $day_of_month1 = date('n-j');
+        $day_of_month2 = date('n-j', strtotime('-1 day'));
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=$day_of_month1));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=$day_of_month2));
+
+        // Test with last week of posts
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_related_posts=13));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null, $count_related_posts=0));
+
+        // Test excluded networks
+        $this->assertTrue($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('facebook')));
+        $this->assertFalse($insight_plugin_parent->shouldGenerateAnnualInsight('a_slug', $instance,
+            $insight_date='today', $regenerate_existing_insight=false, $day_of_month=null,
+            $count_last_week_of_posts=null, $excluded_networks=array('twitter', 'facebook')));
     }
 }
