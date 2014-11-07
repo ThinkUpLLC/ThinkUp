@@ -4663,4 +4663,115 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res->cols[1]->type, 'number');
         $this->assertEqual($res->cols[1]->label, 'Number of Checkins to this place type');
     }
+
+    public function testGetMostTalkativeDays() {
+        $year = date('Y');
+        // A bunch of posts on 2014-02-07
+        for ($i = 0; $i < 3; $i++) {
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is very shared',
+                    'pub_date' => "$year-02-07",
+                    'author_username' => 'a_user',
+                    'network' => 'twitter'
+                )
+            );
+        }
+
+        // One post on a diff day
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is pretty well shared',
+                'pub_date' => "$year-08-07",
+                'author_username' => 'a_user',
+                'network' => 'twitter'
+            )
+        );
+
+        // Larger group of posts, but in the wrong year
+        for ($i = 0; $i < 4; $i++) {
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is least shared',
+                    'pub_date' => '2013-03-09',
+                    'author_username' => 'a_user',
+                    'network' => 'twitter'
+                )
+            );
+        }
+
+        // large cluster of posts by wrong user
+        for ($i = 0; $i < 5; $i++) {
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'These Sochi games are kind of a cluster already.',
+                    'pub_date' => "$year-03-09",
+                    'author_username' => 'a_different_user',
+                    'network' => 'twitter'
+                )
+            );
+        }
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $days = TimeHelper::getDaysSinceJanFirst();
+
+        $most_talkative_days = $post_dao->getMostTalkativeDays(
+            $author_username = 'a_user',
+            $network = 'twitter',
+            $in_last_x_days = $days
+        );
+
+        // // test that query returns 2 results (only within query span)
+        $this->assertEqual(2, sizeof($most_talkative_days));
+        // $this->debug(Utils::varDumpToString($most_talkative_days[0]));
+        // test that query returns the correct day and # of posts
+        $this->assertEqual(3, $most_talkative_days[0]['post_count']);
+        $this->assertEqual("$year-02-07", $most_talkative_days[0]['pub_date']);
+    }
+
+    public function testGetAllPostsByUsernameOn() {
+        $year = Date('Y');
+        $user = "a_user";
+        $network = "twitter";
+        for ($i=0; $i<5; $i++) {
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is very shared',
+                    'pub_date' => "$year-02-07 $i0:$i0:00",
+                    'author_username' => $user,
+                    'network' => $network
+                )
+            );
+        }
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is very shared',
+                'pub_date' => "$year-02-06",
+                'author_username' => $user,
+                'network' => $network
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is very shared',
+                'pub_date' => "$year-02-08",
+                'author_username' => $user,
+                'network' => $network
+            )
+        );
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+
+        $all_posts_on_day = $post_dao->getAllPostsByUsernameOn(
+            $user,
+            $network = $network,
+            $date = Date("$year-02-07")
+        );
+
+        // // test that query returns 5 results (only on requested date)
+        $this->assertEqual(5, sizeof($all_posts_on_day));
+        foreach ($all_posts_on_day as $post) {
+            $this->assertPattern("/$year-02-07/", $post->pub_date);
+        }
+    }
 }
