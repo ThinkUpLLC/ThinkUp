@@ -1252,6 +1252,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getThisYearOfPostsIterator($author_id, $network) {
+        return $this->getPostsByUserInRange($author_id, $network, $from=date('Y-m-d', strtotime('January 1')),
+            $until = date('Y-m-d'), $order_by='pub_date', $direction='ASC', $iterator=true, $is_public=false);
+    }
+
     /**
      * Get all posts by a given user with configurable order by field and direction
      * @param str $author_username
