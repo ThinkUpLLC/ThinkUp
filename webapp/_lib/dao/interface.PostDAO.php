@@ -800,4 +800,24 @@ interface PostDAO {
      * @return arr of Post objects
      */
     public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
+
+    /**
+     * Return days user posted the most frequently
+     * @param str $author_username
+     * @param str $network
+     * @param int $in_last_x_days
+     * @param int $limit
+     * @return arr of rows with pub_date and associated post_count
+     */
+    public function getMostTalkativeDays($author_username, $network='twitter',
+        $in_last_x_days=0, $limit=3, $since=null);
+
+    /**
+     * Get all posts by a given user with configurable order by field and direction
+     * @param str $author_username
+     * @param str $network Default "twitter"
+     * @param Date $date
+     * @return array Posts with link object set
+     */
+    public function getAllPostsByUsernameOn($author_username, $network="twitter", $date);
 }
