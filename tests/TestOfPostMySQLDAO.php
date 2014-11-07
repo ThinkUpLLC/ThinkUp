@@ -4663,4 +4663,69 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($res->cols[1]->type, 'number');
         $this->assertEqual($res->cols[1]->label, 'Number of Checkins to this place type');
     }
+
+    public function testGetPostCountForYear() {
+        $year = Date('Y');
+        $user = "a_user";
+        $network = "twitter";
+
+        // Five posts from current year
+        for ($i=1; $i<6; $i++) {
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is a post',
+                    'pub_date' => "$year-0$i-07 $i0:$i0:00",
+                    'author_username' => $user,
+                    'network' => $network
+                )
+            );
+        }
+        // a post from last year
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is an old post',
+                'pub_date' => "2013-01-07 10:10:00",
+                'author_username' => $user,
+                'network' => $network
+            )
+        );
+        // 2 posts from next year
+        for ($i=1; $i<3; $i++) {
+            $next_year = $year + 1;
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is an old post',
+                    'pub_date' => "$next_year-01-07 10:10:00",
+                    'author_username' => $user,
+                    'network' => $network
+                )
+            );
+        }
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+
+        // test that query returns a post_count of 5
+        $total_post_count = $post_dao->getPostCountForYear(
+            $author_username = $user,
+            $network = $network,
+            $year = $year
+        );
+        $this->assertEqual(5, $total_post_count['post_count']);
+
+        // test that query returns a post_count of 1 for 2013
+        $total_post_count = $post_dao->getPostCountForYear(
+            $author_username = $user,
+            $network = $network,
+            $year = 2013
+        );
+        $this->assertEqual(1, $total_post_count['post_count']);
+
+        // test that query returns a post_count of 1 for $next_year
+        $total_post_count = $post_dao->getPostCountForYear(
+            $author_username = $user,
+            $network = $network,
+            $year = $next_year
+        );
+        $this->assertEqual(2, $total_post_count['post_count']);
+    }
 }
