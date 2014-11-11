@@ -276,12 +276,12 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
 
                     if ($user->follower_count == $met_milestone) {
                         $headlines = array(
-                            '%username has reached %total %followers',
+                            '%username reached %total %followers',
                             '%total people follow %username',
                         );
                     } else {
                         $headlines = array(
-                            '%username has passed %total %followers',
+                            '%username passed %total %followers',
                             'More than %total people follow %username',
                         );
                     }

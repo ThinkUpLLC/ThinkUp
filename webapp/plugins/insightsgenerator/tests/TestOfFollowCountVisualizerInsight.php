@@ -116,7 +116,7 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@mario has reached 56 followers');
+        $this->assertEqual($result->headline, '@mario reached 56 followers');
         $this->assertEqual($result->text, "@mario's followers could fill a yellow school bus.");
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
@@ -156,7 +156,7 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@mario has passed 56 followers');
+        $this->assertEqual($result->headline, '@mario passed 56 followers');
         $this->assertEqual($result->text, "@mario's followers could fill a yellow school bus.");
         $data = unserialize($result->related_data);
         $this->assertNotNull($data['hero_image']);
