@@ -179,8 +179,8 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($result, $new_text);
 
         $username = 'buffysummers';
-        $text = "@buffysummers has passed 1 million viewers!";
-        $new_text = "You've passed 1 million viewers!";
+        $text = "@buffysummers has it good";
+        $new_text = "You have it good";
         $result = $terms->swapInSecondPerson($username, $text);
         $this->assertEqual($result, $new_text);
 

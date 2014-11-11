@@ -511,12 +511,12 @@ class InsightTerms {
         }
         $text = str_replace($username." hasn't", "you haven't", $text);
 
-        //you've/You've
+        //you have/You have
         if (strpos($text, $username." has") === 0) {
             //Captitalize if username starts the sentence
-            $text = str_replace($username." has", "You've", $text);
+            $text = str_replace($username." has", "You have", $text);
         }
-        $text = str_replace($username." has", "you've", $text);
+        $text = str_replace($username." has", "you have", $text);
 
         //Blah lah blah, you!
         $text = str_replace(", ".$username."!", '!', $text);
