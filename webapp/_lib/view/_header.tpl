@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" itemscope itemtype="http://schema.org/Article">
-<head prefix="og: http://ogp.me/ns#">
+<html lang="en" prefix="og: http://ogp.me/ns#" itemscope itemtype="http://schema.org/Article">
+<head>
     <meta charset="utf-8">
     <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
@@ -24,33 +24,34 @@
     {if count($insights) eq 1}
     <meta property="og:site_name" content="ThinkUp" />
     <meta property="og:type" content="article" />
-    <meta name="twitter:card" content="{$twitter_card}">
-    <meta name="twitter:site" content="@thinkup">
-    <meta name="twitter:domain" content="thinkup.com">
+    <meta name="twitter:card" content="{$twitter_card}" />
+    <meta name="twitter:site" content="@thinkup" />
+    <meta name="twitter:domain" content="thinkup.com" />
 
     <meta property="og:url" content="{$thinkup_application_url}?u={$insights[0]->instance->network_username|urlencode_network_username}&n={$insights[0]->instance->network}&d={$insights[0]->date|date_format:'%Y-%m-%d'}&s={$insights[0]->slug}" />
 
-    <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
-    <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}">
+    <meta itemprop="name" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
+    <meta name="twitter:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:70}" />
     <meta property="og:title" content="{$insights[0]->headline|strip_tags:true|strip|truncate:100}" />
 
     {capture name=desc_default}Check out {$insights[0]->instance->network_username}'s insight{/capture}
-    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
-    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
-    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}">
+    <meta itemprop="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}" />
+    <meta name="description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}" />
+    <meta name="twitter:description" content="{$insights[0]->text|strip_tags:true|strip|truncate:200|default:$smarty.capture.desc_default}" />
 
     <meta itemprop="image" content="{$insight_image}">
     <meta property="og:image" content="{$insight_image}" />
     <meta property="og:image:secure" content="{$insight_image}" />
-    <meta name="twitter:image:src" content="{$insight_image}">
+    <meta name="twitter:image:src" content="{$insight_image}" />
+    <meta name="twitter:image:width" content="540" />
 
-    <meta name="og:image:type" content="image/png">
+    <meta property="og:image:type" content="image/png">
 
     {if ($insights[0]->instance->network eq 'twitter')}
-    <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}">
+    <meta name="twitter:creator" content="@{$insights[0]->instance->network_username}" />
     {/if}
     {else}
-    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}">
+    <meta name="description" content="{if $controller_title}{$controller_title} | {/if}{$app_title}" />
     {/if}
 
 
