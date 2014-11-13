@@ -40,7 +40,7 @@ $eoy_insight_tests->add(new TestOfEOYBiggestFansInsight());
 $eoy_insight_tests->add(new TestOfEOYMostTalkativeDayInsight());
 $eoy_insight_tests->add(new TestOfEOYAllAboutYouInsight());
 $eoy_insight_tests->add(new TestOfEOYPopularPicInsight());
-
+$eoy_insight_tests->add(new TestOfEOYExclamationCountInsight());
 
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
