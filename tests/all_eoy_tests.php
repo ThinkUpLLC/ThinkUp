@@ -46,6 +46,7 @@ $eoy_insight_tests->add(new TestOfEOYGenderAnalysisInsight());
 $eoy_insight_tests->add(new TestOfEOYMostRetweetedPostInsight());
 $eoy_insight_tests->add(new TestOfEOYBestieInsight());
 $eoy_insight_tests->add(new TestOfEOYMostLinksInsight());
+$eoy_insight_tests->add(new TestOfEOYWordCountInsight());
 
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 
