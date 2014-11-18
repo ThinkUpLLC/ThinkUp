@@ -4,13 +4,13 @@ YouTube
 ThinkUp's YouTube plugin collects videos, comments, likes, dislikes and view counts from YouTube for an authorized user.
 
 The user must have their YouTube account linked to their Google+ account in order to use the plugin as the latest,
-YouTube API requires an account holders Google+ ID to retrive the data ThinkUp requires.
+YouTube API requires an account holders Google+ ID to retrieve the data ThinkUp requires.
 
 
 Configure the YouTube Plugin (Admin only)
 -----------------------------------------
 
-To use the YouTube plugin, you'l need to `create a Google APIs project on google.com
+To use the YouTube plugin, you'll need to `create a Google APIs project on google.com
 <http://code.google.com/apis/console#access>`_. Click "Services" and switch the YouTube Analytics API, YouTube Data API
 v3 and Google+ API to "On." Next, click on "API Access" then "Create an OAuth 2.0 client ID." Edit the settings for your
 new Client ID then click "Next."

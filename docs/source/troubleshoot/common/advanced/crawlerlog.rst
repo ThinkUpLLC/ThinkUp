@@ -9,7 +9,7 @@ To capture the output of ThinkUp's verbose developer log, in the config.inc.php 
  $THINKUP_CFG['log_location']              =
  $THINKUP_CFG['source_root_path'].'logs/crawler.log';
 
-Then, when the crawlwer runs, the crawler.log file will contain the output. To test, SSH into your web server, run the
+Then, when the crawler runs, the crawler.log file will contain the output. To test, SSH into your web server, run the
 crawler at the command line and tail -f crawler.log as you go. The output will look something like this (annotated).
 
 .. image:: imgs/crawler_log_output.jpg

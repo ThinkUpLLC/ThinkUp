@@ -10,7 +10,7 @@ comments, and names of those who +1'ed a post are not available yet.
 Configure the Google+ Plugin (Admin only)
 -----------------------------------------
 
-To use the Google+ plugin, you'l need to `create a Google APIs project on google.com 
+To use the Google+ plugin, you'll need to `create a Google APIs project on google.com 
 <http://code.google.com/apis/console#access>`_. Click "Services" and switch Google+ API to "On." Next, click on
 "API Access" then "Create an OAuth 2.0 client ID." Edit the settings for your new Client ID then click "Next."
 Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs as 

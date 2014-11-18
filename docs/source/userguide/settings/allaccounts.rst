@@ -6,7 +6,7 @@ The Users area of Settings lets administrators manage ThinkUp users and activity
 All Users
 ---------
 TODO
-See a full list of users, when they last logged in, activate/deactive user accounts, etc
+See a full list of users, when they last logged in, activate/deactivate user accounts, etc
 
 Invite User
 -----------

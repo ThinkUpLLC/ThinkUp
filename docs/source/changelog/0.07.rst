@@ -6,7 +6,7 @@ Beta 0.7 - 27 Dec 2010
 *   Improved login security: To avoid the potential for brute-force
     password cracking attempts on ThinkUp's login page, there is now a cap
     on the number of failed logins. After 10 failed login attempts, a
-    ThinkUp users's account gets deactivated. To reactivate, the user
+    ThinkUp user's account gets deactivated. To reactivate, the user
     resets his/her password via email. (Look for more security-focused
     updates to the system in future releases.)
 

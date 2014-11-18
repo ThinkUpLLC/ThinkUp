@@ -3,7 +3,7 @@ Most Retweeted Posts
 
 Gets a user's most retweeted posts.
 
-**API call type slug:** ``user_posts_most_reweeted``
+**API call type slug:** ``user_posts_most_retweeted``
 
 **Example Usage:** ``webapp/api/v1/post.php?type=user_posts_most_retweeted&username=samwhoo``
 
