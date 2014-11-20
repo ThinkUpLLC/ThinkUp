@@ -46,6 +46,46 @@ class TestOfAgeAnalysisInsight extends ThinkUpInsightUnitTestCase {
         parent::tearDown();
     }
 
+    public function testAlternateText() {
+        TimeHelper::setTime(3);
+    	// Get data ready that insight requires
+    	$builders = self::buildDataTeens();
+
+    	$instance = new Instance();
+    	$instance->id = 100;
+    	$instance->network_user_id = 1;
+    	$instance->network_username = 'Teen Dude';
+    	$instance->network = 'facebook';
+
+        $post_dao = new PostMySQLDAO();
+        $last_week_of_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+            $network=$instance->network, $count=0, $order_by="pub_date", $in_last_x_days = $number_days,
+            $iterator = false, $is_public = false);
+
+    	$insight_plugin = new AgeAnalysisInsight();
+    	$insight_plugin->generateInsight($instance, null, $last_week_of_posts, 5);
+
+    	// Assert that insight got inserted
+    	$insight_dao = new InsightMySQLDAO();
+    	$today = date ('Y-m-d');
+    	$result = $insight_dao->getInsight('age_analysis', 100, $today);
+    	$related_data = unserialize($result->related_data);
+    	$this->assertNotNull($result);
+    	$this->assertIsA($result, "Insight");
+    	$this->assertEqual($result->headline, 'Teens said it all');
+        $this->assertEqual($result->text, "Teens — people less than 18 years old — wrote 100% of the "
+            . "comments on Teen Dude's Facebook posts this week.");
+    	$this->assertEqual($related_data['age_data']['18'], 2);
+    	$this->assertEqual($related_data['age_data']['18_25'], 0);
+    	$this->assertEqual($related_data['age_data']['25_35'], 0);
+    	$this->assertEqual($related_data['age_data']['35_45'], 0);
+    	$this->assertEqual($related_data['age_data']['45'], 0);
+
+        $result->id = 1;
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testAgeAnalysisForFacebookTeens() {
     	// Get data ready that insight requires
     	$builders = self::buildDataTeens();
