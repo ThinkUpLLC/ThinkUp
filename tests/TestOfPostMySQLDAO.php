@@ -872,6 +872,20 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $direction="DESC");
 
         $this->assertEqual(sizeof($posts), 0);
+        $this->assertIsA($posts, 'Array');
+
+        // Test For Iterator
+        $mentions = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter',
+            $from = '2006-03-01 00:00:00',
+            $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date",
+            $direction="DESC", $iterator = true);
+
+        $count = 0;
+        foreach ($mentions as $m) {
+            $count++;
+        }
+        $this->assertEqual($count, 10);
+        $this->assertIsA($mentions, 'PostIterator');
     }
 
     /**
