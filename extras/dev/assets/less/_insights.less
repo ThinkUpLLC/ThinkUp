@@ -13,6 +13,7 @@
     border-top-color: @border-top;
     border-bottom-color: @headline-bgd;
 
+
     .panel-heading {
         background: @headline-bgd;
     }
@@ -21,6 +22,20 @@
         .panel-heading {
             .panel-title {
                 color: @headline-color;
+            }
+        }
+    }
+
+    &.insight-yearend-tease {
+        background: transparent;
+        border-top-color: fade(@border-top, 25%);
+        border-bottom-color: fade(@headline-bgd, 25%);
+
+        .panel-heading {
+            background: fade(@headline-bgd, 25%);
+
+            .panel-title {
+                opacity: .75;
             }
         }
     }
@@ -44,6 +59,18 @@
 
     .insight-color-background {
         background-color: @headline-bgd;
+    }
+
+    .insight-yearend-header {
+        background-color: @border-top;
+
+        .btn {
+            background-color: @headline-bgd;
+
+            &:hover {
+                background-color: darken(@headline-bgd, 5%);
+            }
+        }
     }
 
     .tweet .photo {
@@ -433,6 +460,61 @@
                 width: auto;
                 text-align: left;
             }
+        }
+    }
+}
+
+.insight-yearend-tease {
+
+    .panel-heading {
+        padding: 10px;
+        width: 100%;
+
+        .panel-title {
+            text-align: center;
+        }
+    }
+}
+
+.insight-yearend {
+    &:extend(.insight-hero);
+
+    .insight-yearend-header {
+        font-size: (16/14em);
+        line-height: 1.3333;
+        color: #fff;
+        position: relative;
+        padding: 5px 10px 10px;
+
+        .stream-yearend & {
+            display: none;
+        }
+
+        @media (min-width: 400px) {
+            font-size: (18/14em);
+        }
+
+        .logo {
+            height: 16px;
+            vertical-align: -3px;
+            padding-right: 3px;
+
+            @media (min-width: 400px) {
+                vertical-align: -4px;
+                height: 19px;
+            }
+        }
+
+        .btn {
+            position: absolute;
+            top: 2px;
+            right: 10px;
+            font-size: (14/18em);
+            line-height: (26/14);
+            color: #fff;
+            padding: 0 5px;
+            font-weight: 300;
+            transition: background-color .25s;
         }
     }
 }
