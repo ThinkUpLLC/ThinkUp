@@ -410,11 +410,12 @@ interface PostDAO {
      * @param str $direction The direction with which to order the results. Defaults
      * to "DESC".
      * @param bool $is_public Whether or not the result of the method call will be displayed publicly. Defaults to
+     * @param bool $iterator Should this return an iterator.  Defaults to false
      * false.
      * @return array Posts with author and link set
      */
     public function getAllRepliesInRange($user_id, $network, $count, $from, $until, $page = 1, $order_by = 'pub_date',
-    $direction = 'DESC', $is_public = false);
+    $direction = 'DESC', $is_public = false, $iterator = false);
 
     /**
      * Get posts by a user ordered by reply count desc

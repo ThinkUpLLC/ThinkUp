@@ -1603,7 +1603,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllRepliesInRange($user_id, $network, $count, $from, $until,$page = 1, $order_by = 'pub_date',
-    $direction = 'DESC', $is_public = false) {
+    $direction = 'DESC', $is_public = false, $iterator = false) {
         $start_on_record = ($page - 1) * $count;
 
         $order_by = $this->sanitizeOrderBy($order_by);
@@ -1627,6 +1627,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
 
