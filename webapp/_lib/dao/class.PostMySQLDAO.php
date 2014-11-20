@@ -1474,8 +1474,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllMentionsInRange($author_username, $count, $network = "twitter", $from, $until, $page=1,
-    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
-        return $this->getMentionsInRange($author_username, $count, $network, $from, $until, $iterator = false, $page,
+    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC', $iterator=false) {
+        return $this->getMentionsInRange($author_username, $count, $network, $from, $until, $iterator, $page,
         $public, $include_rts, $order_by, $direction);
     }
 

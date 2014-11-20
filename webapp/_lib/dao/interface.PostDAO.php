@@ -377,12 +377,12 @@ interface PostDAO {
      * @param bool $public Public mentions only, defaults to false
      * @param bool $include_rts Whether or not to include retweets. Defaults to true.
      * @param str $order_by The database column to order the results by.
-     * @param str $direction The direction with which to order the results. Defaults
-     * to "DESC".
+     * @param str $direction The direction with which to order the results. Defaults to "DESC".
+     * @param bool $iterator Should this return an iterator.  Defaults to false.
      * @return array of Post objects with author and link set
      */
     public function getAllMentionsInRange($author_username, $count, $network = "twitter", $from, $until, $page=1,
-    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
+    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC', $iterator = false);
 
     /**
      * Get all replies to a given user ID
@@ -410,7 +410,7 @@ interface PostDAO {
      * @param str $direction The direction with which to order the results. Defaults
      * to "DESC".
      * @param bool $is_public Whether or not the result of the method call will be displayed publicly. Defaults to
-     * @param bool $iterator Should this return an iterator.  Defaults to false
+     * @param bool $iterator Should this return an iterator.  Defaults to false.
      * false.
      * @return array Posts with author and link set
      */
