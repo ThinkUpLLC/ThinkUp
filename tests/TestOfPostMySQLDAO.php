@@ -762,6 +762,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $is_public = false);;
 
         $this->assertEqual(sizeof($posts), 0);
+        $this->assertIsA($posts, 'Array');
+
+        // test iterator
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500,$from = '2006-02-28 23:50:00',
+            $until = '2006-03-01 00:30:59',  $page = 1, $order_by="pub_date", $direction="ASC",$is_public=false,
+            $iterator=true );
+        $this->assertIsA($posts, 'PostIterator');
+        $this->assertEqual(sizeof($posts), 1);
     }
 
     /**
@@ -864,6 +872,20 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $direction="DESC");
 
         $this->assertEqual(sizeof($posts), 0);
+        $this->assertIsA($posts, 'Array');
+
+        // Test For Iterator
+        $mentions = $dao->getAllMentionsInRange("jack", $count = 200, $network = 'twitter',
+            $from = '2006-03-01 00:00:00',
+            $until = '2006-03-01 01:00:00', $page=1, $public=false, $include_rts = true, $order_by="pub_date",
+            $direction="DESC", $iterator = true);
+
+        $count = 0;
+        foreach ($mentions as $m) {
+            $count++;
+        }
+        $this->assertEqual($count, 10);
+        $this->assertIsA($mentions, 'PostIterator');
     }
 
     /**
@@ -2589,6 +2611,99 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         foreach ($posts as $post) {
             $this->assertEqual(sizeof($post->links), 0);
         }
+    }
+
+    public function testGetThisYearOfPostsIterator() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $this->assertIsA($posts,'PostIterator');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(0, $cnt);
+        $counter = 99999;
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-100 day')),
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $this->assertIsA($posts,'PostIterator');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(1, $cnt);
+
+        $counter++;
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-200 day')),
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(2, $cnt);
+
+        $counter++;
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-400 day')),
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(2, $cnt);
+
+        $yearday = date('z');
+        $counter++;
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-'.($yearday+1).' day')),
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(2, $cnt);
+
+        $counter++;
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-'.($yearday).' day')),
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        $posts = $dao->getThisYearOfPostsIterator(18, 'twitter');
+        $cnt = 0;
+        foreach($posts as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(3, $cnt);
     }
 
     /**

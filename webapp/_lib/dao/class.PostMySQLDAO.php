@@ -1252,6 +1252,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getThisYearOfPostsIterator($author_id, $network) {
+        return $this->getPostsByUserInRange($author_id, $network, $from=date('Y-m-d', strtotime('January 1')),
+            $until = date('Y-m-d'), $order_by='pub_date', $direction='ASC', $iterator=true, $is_public=false);
+    }
+
     /**
      * Get all posts by a given user with configurable order by field and direction
      * @param str $author_username
@@ -1469,8 +1474,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllMentionsInRange($author_username, $count, $network = "twitter", $from, $until, $page=1,
-    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
-        return $this->getMentionsInRange($author_username, $count, $network, $from, $until, $iterator = false, $page,
+    $public=false, $include_rts = true, $order_by = 'pub_date', $direction = 'DESC', $iterator=false) {
+        return $this->getMentionsInRange($author_username, $count, $network, $from, $until, $iterator, $page,
         $public, $include_rts, $order_by, $direction);
     }
 
@@ -1598,7 +1603,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllRepliesInRange($user_id, $network, $count, $from, $until,$page = 1, $order_by = 'pub_date',
-    $direction = 'DESC', $is_public = false) {
+    $direction = 'DESC', $is_public = false, $iterator = false) {
         $start_on_record = ($page - 1) * $count;
 
         $order_by = $this->sanitizeOrderBy($order_by);
@@ -1622,6 +1627,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
 

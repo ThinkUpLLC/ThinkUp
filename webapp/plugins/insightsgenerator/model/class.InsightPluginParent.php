@@ -193,6 +193,39 @@ class InsightPluginParent {
     }
 
     /**
+     * Determine whether an annual insight should be generated.
+     * @param str $slug slug of the insight to be generated
+     * @param Instance $instance user and network details for which the insight has to be generated
+     * @param str $insight_date valid strtotime parameter for insight date, defaults to 'today'
+     * @param bool $regenerate_existing_insight whether the insight should be regenerated over a day
+     * @param str $day_of_year Day of the year to run in American MM/DD format. (ex. 12/25 = Christmas, December 25th)
+     * @param int $count_related_posts if set, wouldn't run insight if there are no posts related to insight
+     * @param arr $excluded_networks array of networks for which the insight shouldn't be run
+     * @return bool Whether the insight should be generated or not
+     */
+    public function shouldGenerateAnnualInsight($slug, Instance $instance, $insight_date=null,
+        $regenerate_existing_insight=false, $day_of_year=null, $count_related_posts=null, $excluded_networks=array()) {
+        if (Utils::isTest()) {
+            return true;
+        }
+        if ($day_of_year === null) {
+            $day_of_year = date('n-j');
+        }
+        $run = self::shouldGenerateInsight($slug, $instance, $insight_date, $regenerate_existing_insight,
+            $count_related_posts, $excluded_networks);
+        if (!$run) {
+            return false;
+        }
+        list($month, $date) = preg_split('/[^0-9]+/', $day_of_year);
+        if ((int)$month == date('n') && (int)$date == date('j')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
      * Take an array of string arrays, pick one at random and substitute each token with a value.
      * Text is processed with InsightTerms::getProcessedText()
      * The normal usage would be to pass an array of Insight fields, such as text, headline, etc.
