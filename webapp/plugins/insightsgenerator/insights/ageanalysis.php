@@ -105,7 +105,7 @@ class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
                     $text = $this->getVariableCopy(array(
                         "%generation — people %age_range years old — had the most to say in response to "
                             . "%username's posts on Facebook this week.",
-                        "%generation — people %age_range years old — wrote %percent of the comments on "
+                        "%generation — people %age_range years old — wrote %percent% of the comments on "
                             . "%username's Facebook posts this week.",
                     ), array(
                         'generation' => $generation,
