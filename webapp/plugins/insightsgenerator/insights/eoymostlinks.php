@@ -41,7 +41,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Date to run this insight
      **/
-    //var $run_date = '12-12';
+    var $run_date = '12-12';
     //staging
     //var $run_date = '12-05';
 
