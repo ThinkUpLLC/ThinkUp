@@ -10,6 +10,25 @@
     }
 }
 
+.btn-yearend {
+    &:extend(.btn-default);
+    border: 1px solid @blue-darker;
+    color: @blue-darker;
+    transition: background-color .25s;
+    background-color: fade(@blue-darker, 0%);
+    margin: 0 5px 1em;
+    font-size: (13/14em);
+
+    .fa {
+        margin-right: 3px;
+    }
+
+    &:hover, &:focus {
+        color: @blue-darker;
+        background-color: fade(@blue-darker, 10%);
+    }
+}
+
 .btn-transparent {
     background: transparent;
     color: @link-color;
