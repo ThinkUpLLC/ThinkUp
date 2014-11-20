@@ -12,7 +12,43 @@
       {include file="_insights.firstrun.tpl"}
     {/if}
   {/if}
-  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}">
+
+  {if isset($smarty.get.yearend)}
+    {capture name=img_date assign="img_date"}
+    {if $smarty.now|date_format:"%Y%m%d" > 20141130}
+      {$smarty.now|date_format:"%Y%m%d"}
+    {elseif $smarty.now|date_format:"%Y%m%d" > 20141223}
+      20141223
+    {else}
+      20141201
+    {/if}
+    {/capture}
+    <div class="stream-yearend-header">
+      <h1><img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">ThinkUp’s 2014 Year in Review</h1>
+      <h2>24 days of insights and this copy will be written by Anil</h2>
+
+      <div class="share-buttons">
+        <a class="btn btn-yearend" href="#"><i class="fa fa-twitter"></i> Share on Twitter</a> <a class="btn btn-yearend" href="#"><i class="fa fa-facebook"></i> Share on Facebook</a>
+      </div>
+    </div>
+  {/if}
+
+  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}{if isset($smarty.get.yearend)} stream-yearend{/if}">
+
+  {if isset($smarty.get.yearend)}
+    <div class="date-group">
+      <div class="date-marker">
+        <div class="relative">Tomorrow</div>
+      </div>
+
+      <div class="panel panel-default insight insight-hero insight-yearend-tease">
+        <div class="panel-heading">
+          <div class="panel-title">It’s going to be good.</div>
+        </div>
+      </div>
+    </div>
+  {/if}
+
 
 {assign var='cur_date' value=''}
 {assign var='previous_date' value=''}
@@ -68,7 +104,13 @@
 
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
   {if $i->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
-  (isset($i->related_data.hero_image) and $i->emphasis > '1') | $i->slug eq 'weekly_graph'}insight-wide{/if}" id="insight-{$i->id}">
+  (isset($i->related_data.hero_image) and $i->emphasis > '1') | $i->slug eq 'weekly_graph'}insight-wide{/if}{if $i->slug|strpos:'eoy_'===0}insight-yearend{/if}" id="insight-{$i->id}">
+  {if $i->slug|strpos:'eoy_'===0}
+  <div class="insight-yearend-header">
+    <img src="{$site_root_path}assets/img/thinkup-logo-white.png" alt="ThinkUp" class="logo"> 2014 Year in Review
+    <a class="btn" href="/year-in-review.php">See more!</a>
+  </div>
+  {/if}
   <div class="panel-heading{if $i->header_image neq ''} panel-heading-illustrated{/if}">
     <h2 class="panel-title">{$i->headline}</h2>
     {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
