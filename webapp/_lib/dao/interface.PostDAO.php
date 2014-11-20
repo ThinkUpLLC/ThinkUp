@@ -281,6 +281,15 @@ interface PostDAO {
     $iterator=false, $is_public = false);
 
     /**
+     * Get all posts by a given user since January 1st as an Iterator
+     *
+     * @param str $author_id The ID of the author to search for.
+     * @param str $network The network of the user to search for.
+     * @return Iterator Posts Iterator
+     */
+    public function getThisYearOfPostsIterator($author_id, $network);
+
+    /**
      * Get all posts by an author given an author ID
      * @param str $author_id
      * @param str  $network
@@ -771,6 +780,7 @@ interface PostDAO {
      */
     public function getAllPostsByHashtagId($hashtag_id, $network, $count, $order_by="pub_date", $direction="DESC",
     $page=1, $is_public = false);
+
 
     /**
      * Delete Posts given a hashtag_id
