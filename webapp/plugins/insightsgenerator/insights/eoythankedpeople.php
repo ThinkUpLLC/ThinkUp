@@ -82,9 +82,10 @@ class EOYThankedPeopleInsight extends InsightPluginParent implements InsightPlug
             $insight->date = $this->insight_date;
             if ($instance->network == 'facebook') {
                 $insight->headline = $this->username . ' has friends to be thankful for';
-                $insight->text = "These are the friends ".$this->username." was thankful for this year.";
+                $insight->text = "These are some of the ".count($thankees) ." friends ".$this->username." thanked "
+                    . "this year.";
                 $insight->setHeroImage(array(
-                    'url' => 'https://farm3.staticflickr.com/2629/4135626581_7bc080c706_z.jpg',
+                    'url' => 'https://www.thinkup.com/assets/images/insights/2014-11/thanksgiving-2.jpg',
                     'alt_text' => $insight->headline,
                     'credit' => 'Photo: John-Morgan',
                     'img_link' => 'https://www.flickr.com/photos/aidanmorgan/4135626581/sizes/z/'
@@ -95,9 +96,10 @@ class EOYThankedPeopleInsight extends InsightPluginParent implements InsightPlug
                 ));
             } else {
                 $insight->headline = "Reflecting on what ".$this->username." is thankful for";
-                $insight->text = "These are the people ".$this->username." was thankful for this year.";
+                $insight->text = "These are some of the ".count($thankees)." people ".$this->username." thanked "
+                    . "this year.";
                 $insight->setHeroImage(array(
-                    'url' => 'https://farm4.staticflickr.com/3141/2441818832_aa89a2ffa2_z.jpg',
+                    'url' => 'https://www.thinkup.com/assets/images/insights/2014-11/thanksgiving-1.jpg',
                     'alt_text' => $insight->headline,
                     'credit' => 'Photo: stevevoght',
                     'img_link' => 'https://www.flickr.com/photos/voght/2441818832/sizes/z/'
@@ -109,7 +111,7 @@ class EOYThankedPeopleInsight extends InsightPluginParent implements InsightPlug
             }
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
-            $insight->setPeople($thankees);
+            $insight->setPeople(array_slice($thankees, 0, 20));
             $this->insight_dao->insertInsight($insight);
         }
         $this->logger->logInfo("Done generating insight", __METHOD__ . ',' . __LINE__);

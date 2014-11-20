@@ -134,7 +134,7 @@ class TestOfEOYThankedPeopleInsight extends ThinkUpInsightUnitTestCase {
 
         $data = unserialize($result->related_data);
         $this->assertEqual($result->headline, 'Reflecting on what @Thankster is thankful for');
-        $this->assertEqual($result->text, 'These are the people @Thankster was thankful for this year.');
+        $this->assertEqual($result->text, 'These are some of the 2 people @Thankster thanked this year.');
         $this->assertEqual(count($data['people']), 2);
         $this->assertEqual($data['people'][0]->username, 'one');
         $this->assertEqual($data['people'][1]->username, 'two');
@@ -186,7 +186,7 @@ class TestOfEOYThankedPeopleInsight extends ThinkUpInsightUnitTestCase {
 
         $data = unserialize($result->related_data);
         $this->assertEqual($result->headline, 'Mr. Thankful has friends to be thankful for');
-        $this->assertEqual($result->text, 'These are the friends Mr. Thankful was thankful for this year.');
+        $this->assertEqual($result->text, 'These are some of the 2 friends Mr. Thankful thanked this year.');
         $this->assertEqual(count($data['people']), 2);
         $this->assertEqual($data['people'][0]->username, 'Second User');
         $this->assertEqual($data['people'][1]->username, 'Third User');
