@@ -762,6 +762,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $is_public = false);;
 
         $this->assertEqual(sizeof($posts), 0);
+        $this->assertIsA($posts, 'Array');
+
+        // test iterator
+        $posts = $dao->getAllRepliesInRange(13, 'twitter', 500,$from = '2006-02-28 23:50:00',
+            $until = '2006-03-01 00:30:59',  $page = 1, $order_by="pub_date", $direction="ASC",$is_public=false,
+            $iterator=true );
+        $this->assertIsA($posts, 'PostIterator');
+        $this->assertEqual(sizeof($posts), 1);
     }
 
     /**
