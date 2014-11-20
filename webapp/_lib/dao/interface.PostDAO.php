@@ -858,4 +858,11 @@ interface PostDAO {
      * @return array array('user_id', 'total_replies_from', 'total_replies_to', 'avatar')
      */
     public function getBestie(Instance $instance, $in_last_x_days);
+
+    /**
+     * Get the most recent post by a user with a link that has not yet been expanded.
+     * @param  Instance $instance
+     * @return str (or null, if there's no post)
+     */
+    public function getMostRecentUnexpandedLinkPubDate(Instance $instance);
 }
