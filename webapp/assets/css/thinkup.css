@@ -1212,10 +1212,12 @@ body.app-message-visible.account .container {
   font-size: 13px;
   color: #cacaca;
 }
-.stream .date-group:first-child {
+.stream .date-group:first-child,
+.stream .date-group:first-of-type {
   margin-top: 0;
 }
-.stream .date-group:first-child:before {
+.stream .date-group:first-child:before,
+.stream .date-group:first-of-type:before {
   border: 0;
   display: none;
 }
@@ -1293,6 +1295,46 @@ body.app-message-visible.account .container {
     margin-left: 160px;
   }
 }
+.stream-yearend-header {
+  text-align: center;
+  line-height: 1;
+}
+.stream-yearend-header h1 {
+  font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
+  color: #46bcff;
+  font-size: 2.5em;
+  font-weight: 700;
+  margin: .25em;
+}
+@media (min-width: 540px) {
+  .stream-yearend-header h1 {
+    font-size: 4.28571429em;
+  }
+}
+.stream-yearend-header h1 .calendar {
+  height: 27px;
+  padding-right: 9px;
+  vertical-align: -1px;
+}
+@media (min-width: 540px) {
+  .stream-yearend-header h1 .calendar {
+    height: 46px;
+    padding-right: 18px;
+    vertical-align: -2px;
+  }
+}
+.stream-yearend-header h2 {
+  font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
+  color: #2785d3;
+  font-size: 1.25em;
+  font-weight: 400;
+  margin: 0 .5em .5em;
+}
+@media (min-width: 540px) {
+  .stream-yearend-header h2 {
+    font-size: 2em;
+  }
+}
 .insight {
   border: 0;
   border-radius: 0px;
@@ -1311,6 +1353,17 @@ body.app-message-visible.account .container {
 .insight.insight-hero .panel-heading .panel-title {
   color: #d0374b;
 }
+.insight.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(218, 96, 112, 0.25);
+  border-bottom-color: rgba(252, 147, 158, 0.25);
+}
+.insight.insight-yearend-tease .panel-heading {
+  background: rgba(252, 147, 158, 0.25);
+}
+.insight.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
+}
 .insight .panel-body,
 .insight .panel-desktop-right,
 .insight .panel-footer {
@@ -1328,6 +1381,15 @@ body.app-message-visible.account .container {
 }
 .insight .insight-color-background {
   background-color: #fc939e;
+}
+.insight .insight-yearend-header {
+  background-color: #da6070;
+}
+.insight .insight-yearend-header .btn {
+  background-color: #fc939e;
+}
+.insight .insight-yearend-header .btn:hover {
+  background-color: #fb7a88;
 }
 .insight .tweet .photo {
   background: rgba(252, 147, 158, 0.25);
@@ -1593,6 +1655,17 @@ body.app-message-visible.account .container {
 .insight-message.insight-hero .panel-heading .panel-title {
   color: #2785d3;
 }
+.insight-message.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(39, 133, 211, 0.25);
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+.insight-message.insight-yearend-tease .panel-heading {
+  background: rgba(255, 255, 255, 0.25);
+}
+.insight-message.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
+}
 .insight-message .panel-body,
 .insight-message .panel-desktop-right,
 .insight-message .panel-footer {
@@ -1610,6 +1683,15 @@ body.app-message-visible.account .container {
 }
 .insight-message .insight-color-background {
   background-color: #ffffff;
+}
+.insight-message .insight-yearend-header {
+  background-color: #2785d3;
+}
+.insight-message .insight-yearend-header .btn {
+  background-color: #ffffff;
+}
+.insight-message .insight-yearend-header .btn:hover {
+  background-color: #f2f2f2;
 }
 .insight-message .tweet .photo {
   background: rgba(255, 255, 255, 0.25);
@@ -1702,6 +1784,50 @@ body.app-message-visible.account .container {
     text-align: left;
   }
 }
+.insight-yearend-tease .panel-heading {
+  padding: 10px;
+  width: 100%;
+}
+.insight-yearend-tease .panel-heading .panel-title {
+  text-align: center;
+}
+.insight-yearend .insight-yearend-header {
+  font-size: 1.14285714em;
+  line-height: 1.3333;
+  color: #fff;
+  position: relative;
+  padding: 5px 10px 10px;
+}
+.stream-yearend .insight-yearend .insight-yearend-header {
+  display: none;
+}
+@media (min-width: 400px) {
+  .insight-yearend .insight-yearend-header {
+    font-size: 1.28571429em;
+  }
+}
+.insight-yearend .insight-yearend-header .logo {
+  height: 16px;
+  vertical-align: -3px;
+  padding-right: 3px;
+}
+@media (min-width: 400px) {
+  .insight-yearend .insight-yearend-header .logo {
+    vertical-align: -4px;
+    height: 19px;
+  }
+}
+.insight-yearend .insight-yearend-header .btn {
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  font-size: 0.77777778em;
+  line-height: 1.85714286;
+  color: #fff;
+  padding: 0 5px;
+  font-weight: 300;
+  transition: background-color 0.25s;
+}
 .insight-pea {
   background: #9dd767;
   border-top-color: #5fac1c;
@@ -1712,6 +1838,17 @@ body.app-message-visible.account .container {
 }
 .insight-pea.insight-hero .panel-heading .panel-title {
   color: #417505;
+}
+.insight-pea.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(95, 172, 28, 0.25);
+  border-bottom-color: rgba(157, 215, 103, 0.25);
+}
+.insight-pea.insight-yearend-tease .panel-heading {
+  background: rgba(157, 215, 103, 0.25);
+}
+.insight-pea.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-pea .panel-body,
 .insight-pea .panel-desktop-right,
@@ -1731,6 +1868,15 @@ body.app-message-visible.account .container {
 .insight-pea .insight-color-background {
   background-color: #9dd767;
 }
+.insight-pea .insight-yearend-header {
+  background-color: #5fac1c;
+}
+.insight-pea .insight-yearend-header .btn {
+  background-color: #9dd767;
+}
+.insight-pea .insight-yearend-header .btn:hover {
+  background-color: #90d253;
+}
 .insight-pea .tweet .photo {
   background: rgba(157, 215, 103, 0.25);
 }
@@ -1744,6 +1890,17 @@ body.app-message-visible.account .container {
 }
 .insight-salmon.insight-hero .panel-heading .panel-title {
   color: #d0374b;
+}
+.insight-salmon.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(218, 96, 112, 0.25);
+  border-bottom-color: rgba(252, 147, 158, 0.25);
+}
+.insight-salmon.insight-yearend-tease .panel-heading {
+  background: rgba(252, 147, 158, 0.25);
+}
+.insight-salmon.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-salmon .panel-body,
 .insight-salmon .panel-desktop-right,
@@ -1763,6 +1920,15 @@ body.app-message-visible.account .container {
 .insight-salmon .insight-color-background {
   background-color: #fc939e;
 }
+.insight-salmon .insight-yearend-header {
+  background-color: #da6070;
+}
+.insight-salmon .insight-yearend-header .btn {
+  background-color: #fc939e;
+}
+.insight-salmon .insight-yearend-header .btn:hover {
+  background-color: #fb7a88;
+}
 .insight-salmon .tweet .photo {
   background: rgba(252, 147, 158, 0.25);
 }
@@ -1776,6 +1942,17 @@ body.app-message-visible.account .container {
 }
 .insight-creamsicle.insight-hero .panel-heading .panel-title {
   color: #f36400;
+}
+.insight-creamsicle.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(255, 143, 65, 0.25);
+  border-bottom-color: rgba(255, 187, 78, 0.25);
+}
+.insight-creamsicle.insight-yearend-tease .panel-heading {
+  background: rgba(255, 187, 78, 0.25);
+}
+.insight-creamsicle.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-creamsicle .panel-body,
 .insight-creamsicle .panel-desktop-right,
@@ -1795,6 +1972,15 @@ body.app-message-visible.account .container {
 .insight-creamsicle .insight-color-background {
   background-color: #ffbb4e;
 }
+.insight-creamsicle .insight-yearend-header {
+  background-color: #ff8f41;
+}
+.insight-creamsicle .insight-yearend-header .btn {
+  background-color: #ffbb4e;
+}
+.insight-creamsicle .insight-yearend-header .btn:hover {
+  background-color: #ffb134;
+}
 .insight-creamsicle .tweet .photo {
   background: rgba(255, 187, 78, 0.25);
 }
@@ -1811,6 +1997,20 @@ body.app-message-visible.account .container {
 .insight-historical.insight-hero .panel-heading .panel-title,
 .insight-sepia.insight-hero .panel-heading .panel-title {
   color: #8a876f;
+}
+.insight-historical.insight-yearend-tease,
+.insight-sepia.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(161, 159, 139, 0.25);
+  border-bottom-color: rgba(192, 189, 175, 0.25);
+}
+.insight-historical.insight-yearend-tease .panel-heading,
+.insight-sepia.insight-yearend-tease .panel-heading {
+  background: rgba(192, 189, 175, 0.25);
+}
+.insight-historical.insight-yearend-tease .panel-heading .panel-title,
+.insight-sepia.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-historical .panel-body,
 .insight-sepia .panel-body,
@@ -1837,6 +2037,18 @@ body.app-message-visible.account .container {
 .insight-sepia .insight-color-background {
   background-color: #c0bdaf;
 }
+.insight-historical .insight-yearend-header,
+.insight-sepia .insight-yearend-header {
+  background-color: #a19f8b;
+}
+.insight-historical .insight-yearend-header .btn,
+.insight-sepia .insight-yearend-header .btn {
+  background-color: #c0bdaf;
+}
+.insight-historical .insight-yearend-header .btn:hover,
+.insight-sepia .insight-yearend-header .btn:hover {
+  background-color: #b5b1a1;
+}
 .insight-historical .tweet .photo,
 .insight-sepia .tweet .photo {
   background: rgba(192, 189, 175, 0.25);
@@ -1851,6 +2063,17 @@ body.app-message-visible.account .container {
 }
 .insight-purple.insight-hero .panel-heading .panel-title {
   color: #7348b0;
+}
+.insight-purple.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(142, 105, 194, 0.25);
+  border-bottom-color: rgba(182, 144, 226, 0.25);
+}
+.insight-purple.insight-yearend-tease .panel-heading {
+  background: rgba(182, 144, 226, 0.25);
+}
+.insight-purple.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-purple .panel-body,
 .insight-purple .panel-desktop-right,
@@ -1870,6 +2093,15 @@ body.app-message-visible.account .container {
 .insight-purple .insight-color-background {
   background-color: #b690e2;
 }
+.insight-purple .insight-yearend-header {
+  background-color: #8e69c2;
+}
+.insight-purple .insight-yearend-header .btn {
+  background-color: #b690e2;
+}
+.insight-purple .insight-yearend-header .btn:hover {
+  background-color: #a97cdd;
+}
 .insight-purple .tweet .photo {
   background: rgba(182, 144, 226, 0.25);
 }
@@ -1883,6 +2115,17 @@ body.app-message-visible.account .container {
 }
 .insight-mint.insight-hero .panel-heading .panel-title {
   color: #1c8e6e;
+}
+.insight-mint.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(36, 185, 143, 0.25);
+  border-bottom-color: rgba(65, 218, 179, 0.25);
+}
+.insight-mint.insight-yearend-tease .panel-heading {
+  background: rgba(65, 218, 179, 0.25);
+}
+.insight-mint.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-mint .panel-body,
 .insight-mint .panel-desktop-right,
@@ -1902,6 +2145,15 @@ body.app-message-visible.account .container {
 .insight-mint .insight-color-background {
   background-color: #41dab3;
 }
+.insight-mint .insight-yearend-header {
+  background-color: #24b98f;
+}
+.insight-mint .insight-yearend-header .btn {
+  background-color: #41dab3;
+}
+.insight-mint .insight-yearend-header .btn:hover {
+  background-color: #2cd6aa;
+}
 .insight-mint .tweet .photo {
   background: rgba(65, 218, 179, 0.25);
 }
@@ -1915,6 +2167,17 @@ body.app-message-visible.account .container {
 }
 .insight-bubblegum.insight-hero .panel-heading .panel-title {
   color: #8f3963;
+}
+.insight-bubblegum.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(179, 72, 124, 0.25);
+  border-bottom-color: rgba(245, 118, 181, 0.25);
+}
+.insight-bubblegum.insight-yearend-tease .panel-heading {
+  background: rgba(245, 118, 181, 0.25);
+}
+.insight-bubblegum.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-bubblegum .panel-body,
 .insight-bubblegum .panel-desktop-right,
@@ -1934,6 +2197,15 @@ body.app-message-visible.account .container {
 .insight-bubblegum .insight-color-background {
   background-color: #f576b5;
 }
+.insight-bubblegum .insight-yearend-header {
+  background-color: #b3487c;
+}
+.insight-bubblegum .insight-yearend-header .btn {
+  background-color: #f576b5;
+}
+.insight-bubblegum .insight-yearend-header .btn:hover {
+  background-color: #f35ea8;
+}
 .insight-bubblegum .tweet .photo {
   background: rgba(245, 118, 181, 0.25);
 }
@@ -1947,6 +2219,17 @@ body.app-message-visible.account .container {
 }
 .insight-seabreeze.insight-hero .panel-heading .panel-title {
   color: #126370;
+}
+.insight-seabreeze.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(25, 138, 156, 0.25);
+  border-bottom-color: rgba(68, 201, 215, 0.25);
+}
+.insight-seabreeze.insight-yearend-tease .panel-heading {
+  background: rgba(68, 201, 215, 0.25);
+}
+.insight-seabreeze.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-seabreeze .panel-body,
 .insight-seabreeze .panel-desktop-right,
@@ -1966,6 +2249,15 @@ body.app-message-visible.account .container {
 .insight-seabreeze .insight-color-background {
   background-color: #44c9d7;
 }
+.insight-seabreeze .insight-yearend-header {
+  background-color: #198a9c;
+}
+.insight-seabreeze .insight-yearend-header .btn {
+  background-color: #44c9d7;
+}
+.insight-seabreeze .insight-yearend-header .btn:hover {
+  background-color: #2fc3d3;
+}
 .insight-seabreeze .tweet .photo {
   background: rgba(68, 201, 215, 0.25);
 }
@@ -1979,6 +2271,17 @@ body.app-message-visible.account .container {
 }
 .insight-dijon.insight-hero .panel-heading .panel-title {
   color: #926d01;
+}
+.insight-dijon.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(197, 147, 1, 0.25);
+  border-bottom-color: rgba(228, 191, 40, 0.25);
+}
+.insight-dijon.insight-yearend-tease .panel-heading {
+  background: rgba(228, 191, 40, 0.25);
+}
+.insight-dijon.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-dijon .panel-body,
 .insight-dijon .panel-desktop-right,
@@ -1998,6 +2301,15 @@ body.app-message-visible.account .container {
 .insight-dijon .insight-color-background {
   background-color: #e4bf28;
 }
+.insight-dijon .insight-yearend-header {
+  background-color: #c59301;
+}
+.insight-dijon .insight-yearend-header .btn {
+  background-color: #e4bf28;
+}
+.insight-dijon .insight-yearend-header .btn:hover {
+  background-color: #d7b21b;
+}
 .insight-dijon .tweet .photo {
   background: rgba(228, 191, 40, 0.25);
 }
@@ -2011,6 +2323,17 @@ body.app-message-visible.account .container {
 }
 .insight-sandalwood.insight-hero .panel-heading .panel-title {
   color: #a02c08;
+}
+.insight-sandalwood.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(209, 58, 10, 0.25);
+  border-bottom-color: rgba(253, 133, 96, 0.25);
+}
+.insight-sandalwood.insight-yearend-tease .panel-heading {
+  background: rgba(253, 133, 96, 0.25);
+}
+.insight-sandalwood.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-sandalwood .panel-body,
 .insight-sandalwood .panel-desktop-right,
@@ -2030,6 +2353,15 @@ body.app-message-visible.account .container {
 .insight-sandalwood .insight-color-background {
   background-color: #fd8560;
 }
+.insight-sandalwood .insight-yearend-header {
+  background-color: #d13a0a;
+}
+.insight-sandalwood .insight-yearend-header .btn {
+  background-color: #fd8560;
+}
+.insight-sandalwood .insight-yearend-header .btn:hover {
+  background-color: #fd7247;
+}
 .insight-sandalwood .tweet .photo {
   background: rgba(253, 133, 96, 0.25);
 }
@@ -2043,6 +2375,17 @@ body.app-message-visible.account .container {
 }
 .insight-caramel.insight-hero .panel-heading .panel-title {
   color: #71430e;
+}
+.insight-caramel.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(158, 94, 20, 0.25);
+  border-bottom-color: rgba(221, 129, 75, 0.25);
+}
+.insight-caramel.insight-yearend-tease .panel-heading {
+  background: rgba(221, 129, 75, 0.25);
+}
+.insight-caramel.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
 }
 .insight-caramel .panel-body,
 .insight-caramel .panel-desktop-right,
@@ -2061,6 +2404,15 @@ body.app-message-visible.account .container {
 }
 .insight-caramel .insight-color-background {
   background-color: #dd814b;
+}
+.insight-caramel .insight-yearend-header {
+  background-color: #9e5e14;
+}
+.insight-caramel .insight-yearend-header .btn {
+  background-color: #dd814b;
+}
+.insight-caramel .insight-yearend-header .btn:hover {
+  background-color: #d97236;
 }
 .insight-caramel .tweet .photo {
   background: rgba(221, 129, 75, 0.25);
@@ -2290,7 +2642,8 @@ ol.body-list .list-item {
   background: #f8d9dd;
   color: #dc4154;
 }
-.btn-default {
+.btn-default,
+.btn-yearend {
   background: #125c9c;
   border: 0;
   color: #fff;
@@ -2300,6 +2653,22 @@ ol.body-list .list-item {
 .btn-default:focus {
   background: #1777ca;
   color: #fff;
+}
+.btn-yearend {
+  border: 1px solid #2785d3;
+  color: #2785d3;
+  transition: background-color 0.25s;
+  background-color: rgba(39, 133, 211, 0);
+  margin: 0 5px 1em;
+  font-size: 0.92857143em;
+}
+.btn-yearend .fa {
+  margin-right: 3px;
+}
+.btn-yearend:hover,
+.btn-yearend:focus {
+  color: #2785d3;
+  background-color: rgba(39, 133, 211, 0.1);
 }
 .btn-transparent {
   background: transparent;
