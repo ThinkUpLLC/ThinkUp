@@ -144,6 +144,24 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $earliest_pub_date;
     }
 
+    public function getMostRecentUnexpandedLinkPubDate(Instance $instance) {
+        $q = "SELECT p.post_id, p.pub_date FROM #prefix#posts p
+            INNER JOIN #prefix#links l ON l.post_key = p.id
+            WHERE author_username = :author_username AND p.network = :network AND l.expanded_url = '' AND l.error = ''
+            ORDER BY pub_date DESC LIMIT 1";
+        $vars = array(
+            ':author_username'=>$instance->network_username,
+            ':network'=>$instance->network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        if (isset($result['pub_date'])) {
+            return $result['pub_date'];
+        } else {
+            return null;
+        }
+    }
     /**
      * Add author object to post
      * @param array $row
