@@ -33,7 +33,7 @@
             }
         }
 
-        &:first-child {
+        &:first-child, &:first-of-type {
             margin-top: 0;
 
             &:before {
@@ -121,6 +121,47 @@
 
         .insight {
             margin-left: 160px;
+        }
+    }
+}
+
+.stream-yearend-header {
+    text-align: center;
+    line-height: 1;
+
+    h1 {
+        font-family: @tablet-gothic-condensed;
+        color: @blue;
+        font-size: 2.5em;
+        font-weight: 700;
+        margin: .25em;
+
+        @media (min-width: 540px) {
+            font-size: (60/14em);
+        }
+
+        .calendar {
+            height: 27px;
+            padding-right: 9px;
+            vertical-align: -1px;
+
+            @media (min-width: 540px) {
+                height: 46px;
+                padding-right: 18px;
+                vertical-align: -2px;
+            }
+        }
+    }
+
+    h2 {
+        font-family: @tablet-gothic-condensed;
+        color: @blue-darker;
+        font-size: 1.25em;
+        font-weight: 400;
+        margin: 0 .5em .5em;
+
+        @media (min-width: 540px) {
+            font-size: 2em;
         }
     }
 }
