@@ -142,8 +142,6 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
         $this->assertEqual($data['hero_image']['alt_text'], '');
         $this->assertEqual($data['hero_image']['img_link'],
             'https://www.flickr.com/photos/deapeajay/3024604627/');
-        $this->assertEqual($data['button']['label'], 'Tell \'em "thanks" for the thanks');
-        $this->assertEqual($data['button']['url'], 'https://twitter.com/intent/tweet?text=Thanks!');
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
@@ -196,8 +194,6 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
         $this->assertEqual($data['hero_image']['alt_text'], '');
         $this->assertEqual($data['hero_image']['img_link'],
             'https://www.flickr.com/photos/dexxus/2981387336/');
-        $this->assertEqual($data['button']['label'], 'Share your appreciation');
-        $this->assertEqual($data['button']['url'], 'http://www.facebook.com/sharer/sharer.php?t=Thanks!');
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
