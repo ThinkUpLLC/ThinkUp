@@ -138,4 +138,16 @@ class TimeHelper {
             's' => (int) $seconds,
         );
     }
+
+    /**
+     * Get number of days since January 1 of the current year.
+     * @param  int $time Time to calculate from; defaults to time()
+     * @return int number of days from January 1 of current year to today
+     */
+    public static function getDaysSinceJanFirst($time = null) {
+        if (!isset($time)) {
+            $time = time();
+        }
+        return (((int) date('z', $time)) + 1);
+    }
 }
