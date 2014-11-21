@@ -431,4 +431,16 @@ class TestOfUtils extends ThinkUpUnitTestCase {
             $this->assertEqual($stem, $test_stem, "Stem of $word should be $stem, was $test_stem");
         }
     }
+
+    public function testOfDaysSinceJanFirst() {
+        $test_date = new DateTime();
+        $test_date->setDate(date('Y'), 2, 21);
+        $days = Utils::daysSinceJanFirst(false, $test_date->getTimestamp());
+        $this->assertEqual($days, 52);
+
+        $test_date = new DateTime();
+        $test_date->setDate(date('Y'), 1, 30);
+        $days = Utils::daysSinceJanFirst(false, $test_date->getTimestamp());
+        $this->assertEqual($days, 30);
+    }
 }
