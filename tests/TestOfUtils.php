@@ -449,5 +449,4 @@ class TestOfUtils extends ThinkUpUnitTestCase {
             $this->assertEqual(Utils::getPopularityIndex($post), 1000+$i*10);
             $i++;
         }
-    }
 }
