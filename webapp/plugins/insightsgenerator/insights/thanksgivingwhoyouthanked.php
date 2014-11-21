@@ -99,10 +99,6 @@ class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements In
                     'credit' => 'Photo: John-Morgan',
                     'img_link' => 'https://www.flickr.com/photos/aidanmorgan/4135626581/'
                 ));
-                $insight->setButton(array(
-                    'label' => 'Share your thanks',
-                    'url' => 'http://www.facebook.com/sharer/sharer.php?t=Thanks!',
-                ));
             } else {
                 $insight->headline = 'Who '.$this->username." was thankful for";
                 if (count($thankees) > 20) {
@@ -116,10 +112,6 @@ class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements In
                     'alt_text' => $insight->headline,
                     'credit' => 'Photo: Steve Voght',
                     'img_link' => 'https://www.flickr.com/photos/voght/2441818832/'
-                ));
-                $insight->setButton(array(
-                    'label' => 'Say "thanks" one more time',
-                    'url' => 'https://twitter.com/intent/tweet?text=Thanks!',
                 ));
             }
             $insight->filename = basename(__FILE__, ".php");
