@@ -540,4 +540,34 @@ class Utils {
         require_once(THINKUP_WEBAPP_PATH.'_lib/extlib/Stemmer/class.PorterStemmer.php');
         return PorterStemmer::Stem($word);
     }
+
+    /**
+     * Get number of days from January 1 of the current year
+     * @param  bool $current_day Calculate from current day; defaults to true
+     * @param  int $alt_time Alternate time to calculate days from
+     * @return int number of days from January 1 of current year to today
+     */
+    public static function daysSinceJanFirst($current_day = true, $alt_time) {
+        $year = date('Y');
+        if ($current_day) {
+            $time = time();
+        } else {
+            $time = $alt_time;
+        }
+        return (int) ceil(($time - strtotime("01-01-$year"))/(60*60*24));
+    }
+
+    /**
+     * Calculate popularity of post
+     * @param Post $post
+     * @return int $popularity_index The popularity index of this post
+     */
+    public static function getPopularityIndex(Post $post) {
+        $reply_count = $post->reply_count_cache;
+        $retweet_count = $post->retweet_count_cache;
+        $fav_count = $post->favlike_count_cache;
+
+        $popularity_index = (5 * $reply_count) + (3 * $retweet_count) + (2 * $fav_count);
+        return $popularity_index;
+    }
 }
