@@ -2,6 +2,26 @@
 {include file="_navigation.tpl"}
 
 <div class="container">
+  {if $is_year_end}
+    {capture name=img_date assign="img_date"}
+    {if $smarty.now|date_format:"%Y%m%d" > 20141130}
+      {$smarty.now|date_format:"%Y%m%d"}
+    {elseif $smarty.now|date_format:"%Y%m%d" > 20141223}
+      20141223
+    {else}
+      20141201
+    {/if}
+    {/capture}
+    <div class="stream-yearend-header">
+      <h1><img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {/if}Best of 2014</h1>
+<!--      <h2>24 days of insights</h2>
+
+      <div class="share-buttons">
+        <a class="btn btn-yearend" href="#"><i class="fa fa-twitter"></i> Share on Twitter</a> <a class="btn btn-yearend" href="#"><i class="fa fa-facebook"></i> Share on Facebook</a>
+      </div>  -->
+    </div>
+  {/if}
+
   {if $message_header}
     {if !isset($thinkupllc_endpoint)}
     <div class="no-insights">
@@ -13,29 +33,9 @@
     {/if}
   {/if}
 
-  {if isset($smarty.get.yearend)}
-    {capture name=img_date assign="img_date"}
-    {if $smarty.now|date_format:"%Y%m%d" > 20141130}
-      {$smarty.now|date_format:"%Y%m%d"}
-    {elseif $smarty.now|date_format:"%Y%m%d" > 20141223}
-      20141223
-    {else}
-      20141201
-    {/if}
-    {/capture}
-    <div class="stream-yearend-header">
-      <h1><img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">%username's Best of 2014</h1>
-      <h2>24 days of insights</h2>
+  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}{if $is_year_end} stream-yearend{/if}">
 
-      <div class="share-buttons">
-        <a class="btn btn-yearend" href="#"><i class="fa fa-twitter"></i> Share on Twitter</a> <a class="btn btn-yearend" href="#"><i class="fa fa-facebook"></i> Share on Facebook</a>
-      </div>
-    </div>
-  {/if}
-
-  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}{if isset($smarty.get.yearend)} stream-yearend{/if}">
-
-  {if isset($smarty.get.yearend)}
+  {if $is_year_end && $tomorrows_teaser}
     <div class="date-group">
       <div class="date-marker">
         <div class="relative">Tomorrow</div>
@@ -43,7 +43,7 @@
 
       <div class="panel panel-default insight insight-hero insight-yearend-tease">
         <div class="panel-heading">
-          <div class="panel-title">It’s going to be good.</div>
+          <div class="panel-title">{$tomorrows_teaser}</div>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@
   {if $i->slug|strpos:'eoy_'===0}
   <div class="insight-yearend-header">
     <img src="{$site_root_path}assets/img/thinkup-logo-white.png" alt="ThinkUp" class="logo"> Best of 2014
-    <a class="btn" href="/2014/">See more</a>
+    <a class="btn" href="{$site_root_path}2014/">See more</a>
   </div>
   {/if}
   <div class="panel-heading{if $i->header_image neq ''} panel-heading-illustrated{/if}">
