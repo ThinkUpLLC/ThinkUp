@@ -43,16 +43,16 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-01';
+    //var $run_date = '12-01';
     //staging
-    //var $run_date = '11-24';
+    var $run_date = '11-24';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
 
         $regenerate = false;
         //testing
-        // $regenerate = true;
+        $regenerate = true;
 
         $year = date('Y');
 
