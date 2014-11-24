@@ -1302,13 +1302,13 @@ body.app-message-visible.account .container {
 .stream-yearend-header h1 {
   font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
   color: #46bcff;
-  font-size: 2.5em;
+  font-size: 2.25em;
   font-weight: 700;
   margin: .25em;
 }
 @media (min-width: 540px) {
   .stream-yearend-header h1 {
-    font-size: 4.28571429em;
+    font-size: 2.25em;
   }
 }
 .stream-yearend-header h1 .calendar {
@@ -1318,7 +1318,6 @@ body.app-message-visible.account .container {
 }
 @media (min-width: 540px) {
   .stream-yearend-header h1 .calendar {
-    height: 46px;
     padding-right: 18px;
     vertical-align: -2px;
   }
@@ -1338,9 +1337,9 @@ body.app-message-visible.account .container {
 .insight {
   border: 0;
   border-radius: 0px;
-  background: #fc939e;
-  border-top-color: #da6070;
-  border-bottom-color: #fc939e;
+  background: #d0d0d0;
+  border-top-color: #666666;
+  border-bottom-color: #d0d0d0;
   max-width: 540px;
   margin: 0 0 14px;
   border-style: solid;
@@ -1348,18 +1347,18 @@ body.app-message-visible.account .container {
   border-bottom-width: 2px;
 }
 .insight .panel-heading {
-  background: #fc939e;
+  background: #d0d0d0;
 }
 .insight.insight-hero .panel-heading .panel-title {
-  color: #d0374b;
+  color: #666666;
 }
 .insight.insight-yearend-tease {
   background: transparent;
-  border-top-color: rgba(218, 96, 112, 0.25);
-  border-bottom-color: rgba(252, 147, 158, 0.25);
+  border-top-color: rgba(102, 102, 102, 0.25);
+  border-bottom-color: rgba(208, 208, 208, 0.25);
 }
 .insight.insight-yearend-tease .panel-heading {
-  background: rgba(252, 147, 158, 0.25);
+  background: rgba(208, 208, 208, 0.25);
 }
 .insight.insight-yearend-tease .panel-heading .panel-title {
   opacity: .75;
@@ -1377,22 +1376,22 @@ body.app-message-visible.account .container {
   background-color: #ffffff;
 }
 .insight .insight-color-text {
-  color: #fc939e;
+  color: #d0d0d0;
 }
 .insight .insight-color-background {
-  background-color: #fc939e;
+  background-color: #d0d0d0;
 }
 .insight .insight-yearend-header {
-  background-color: #da6070;
+  background-color: #666666;
 }
 .insight .insight-yearend-header .btn {
-  background-color: #fc939e;
+  background-color: #d0d0d0;
 }
 .insight .insight-yearend-header .btn:hover {
-  background-color: #fb7a88;
+  background-color: #c3c3c3;
 }
 .insight .tweet .photo {
-  background: rgba(252, 147, 158, 0.25);
+  background: rgba(208, 208, 208, 0.25);
 }
 .insight .panel-heading {
   border-radius: 0;
@@ -1403,7 +1402,7 @@ body.app-message-visible.account .container {
 .insight .panel-heading .panel-title {
   font-family: "tablet-gothic-semi-condensed", sans-serif;
   font-weight: 600;
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1.10526316;
   margin-bottom: 6px;
   font-weight: 400;
@@ -1790,6 +1789,7 @@ body.app-message-visible.account .container {
 }
 .insight-yearend-tease .panel-heading .panel-title {
   text-align: center;
+  font-size: 17px;
 }
 .insight-yearend .insight-yearend-header {
   font-size: 1.14285714em;
