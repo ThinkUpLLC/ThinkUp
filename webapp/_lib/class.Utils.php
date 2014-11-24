@@ -542,7 +542,7 @@ class Utils {
     }
 
     /**
-     * Calculate popularity of post
+     * Calculate popularity of post.
      * @param Post $post
      * @return int $popularity_index The popularity index of this post
      */
