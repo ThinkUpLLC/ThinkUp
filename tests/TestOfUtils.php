@@ -432,7 +432,7 @@ class TestOfUtils extends ThinkUpUnitTestCase {
         }
     }
 
-    public function testOfPopularityIndex() {
+    public function testOfGetPopularityIndex() {
         // posts of varying degrees of popularity
         $posts = array();
         Mock::generate('Post');
