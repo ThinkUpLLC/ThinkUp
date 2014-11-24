@@ -540,4 +540,16 @@ class Utils {
         require_once(THINKUP_WEBAPP_PATH.'_lib/extlib/Stemmer/class.PorterStemmer.php');
         return PorterStemmer::Stem($word);
     }
+
+    /**
+     * Calculate popularity of post.
+     * @param Post $post
+     * @return int $popularity_index The popularity index of this post
+     */
+    public static function getPopularityIndex(Post $post) {
+        return
+            (5 * $post->reply_count_cache) +
+            (3 * $post->retweet_count_cache) +
+            (2 * $post->favlike_count_cache);
+    }
 }
