@@ -41,9 +41,9 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-15';
+    //var $run_date = '12-15';
     //staging
-    //var $run_date = '12-08';
+    var $run_date = '12-08';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);

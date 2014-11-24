@@ -41,9 +41,9 @@ class EOYLOLCountInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-13';
+    //var $run_date = '12-13';
     //staging
-    //var $run_date = '12-08';
+    var $run_date = '12-08';
     /**
      * @var array Popularity scores of LOLed at posts
      */
@@ -57,7 +57,7 @@ class EOYLOLCountInsight extends InsightPluginParent implements InsightPlugin {
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,

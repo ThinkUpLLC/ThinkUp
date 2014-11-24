@@ -41,9 +41,9 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-10';
+    //var $run_date = '12-10';
     //staging
-    //var $run_date = '12-04';
+    var $run_date = '12-08';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -51,7 +51,7 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $year = date('Y');
 
