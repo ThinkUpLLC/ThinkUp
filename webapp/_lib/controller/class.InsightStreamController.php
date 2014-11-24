@@ -158,7 +158,7 @@ class InsightStreamController extends ThinkUpController {
     /**
      * Load view with data to display page of insights.
      */
-    private function displayPageOfInsights() {
+    protected function displayPageOfInsights() {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
 
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
