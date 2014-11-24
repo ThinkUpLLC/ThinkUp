@@ -540,4 +540,20 @@ class Utils {
         require_once(THINKUP_WEBAPP_PATH.'_lib/extlib/Stemmer/class.PorterStemmer.php');
         return PorterStemmer::Stem($word);
     }
+
+    /**
+     * Get number of days from January 1 of the current year
+     * @param  bool $current_day Calculate from current day; defaults to true
+     * @param  int $alt_time Alternate time to calculate days from
+     * @return int number of days from January 1 of current year to today
+     */
+    public static function daysSinceJanFirst($current_day = true, $alt_time) {
+        $year = date('Y');
+        if ($current_day) {
+            $time = time();
+        } else {
+            $time = $alt_time;
+        }
+        return (int) ceil(($time - strtotime("01-01-$year"))/(60*60*24));
+    }
 }
