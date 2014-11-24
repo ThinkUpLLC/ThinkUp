@@ -188,6 +188,15 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Password/', $results);
     }
 
+    public function testOfThanksgivingMessage() {
+        $builders = self::buildPublicAndPrivateInsights();
+
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        $this->assertPattern('/Happy Thanksgiving!/', $results);
+    }
+
     public function testOfNotLoggedInInsights() {
         $builders = self::buildPublicAndPrivateInsights();
 
