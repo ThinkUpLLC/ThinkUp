@@ -41,9 +41,9 @@ class EOYGenderAnalysisInsight extends InsightPluginParent implements InsightPlu
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-07';
+    //var $run_date = '12-07';
     //staging
-    //var $run_date = '12-03';
+    var $run_date = '12-03';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -57,7 +57,7 @@ class EOYGenderAnalysisInsight extends InsightPluginParent implements InsightPlu
         $year = date('Y');
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug, $instance, $insight_date = "$year-$this->run_date",
-            $regenerate = false, $day_of_year = $this->run_date
+            $regenerate = true, $day_of_year = $this->run_date
         );
 
         if (!$should_generate_insight) {
