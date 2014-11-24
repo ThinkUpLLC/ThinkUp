@@ -43,9 +43,9 @@ class EOYMostConversationInsight extends InsightPluginParent implements InsightP
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-11';
+    //var $run_date = '12-11';
     //staging
-    //var $run_date = '12-05';
+    var $run_date = '12-05';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -55,7 +55,7 @@ class EOYMostConversationInsight extends InsightPluginParent implements InsightP
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,

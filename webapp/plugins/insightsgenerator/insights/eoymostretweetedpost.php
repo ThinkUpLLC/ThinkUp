@@ -43,9 +43,9 @@ class EOYMostRetweetedPostInsight extends InsightPluginParent implements Insight
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-08';
+    //var $run_date = '12-08';
     //staging
-    //var $run_date = '12-04';
+    var $run_date = '12-04';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -53,7 +53,7 @@ class EOYMostRetweetedPostInsight extends InsightPluginParent implements Insight
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $year = date('Y');
 
