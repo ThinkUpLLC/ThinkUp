@@ -83,6 +83,11 @@ class InsightStreamController extends ThinkUpController {
                 $this->addToView('twitter_connection_status', $connection_status['twitter']);
             }
         }
+
+        if (Utils::isTest() || date("Y-m-d") == '2014-11-27') {
+            $this->addInfoMessage("Happy Thanksgiving! We're thankful you're using ThinkUp.");
+        }
+
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         return $this->generateView();
     }
