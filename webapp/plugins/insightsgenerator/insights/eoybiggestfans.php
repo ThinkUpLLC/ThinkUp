@@ -41,9 +41,9 @@ class EOYBiggestFansInsight extends InsightPluginParent implements InsightPlugin
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-02';
+    //var $run_date = '12-02';
     //staging
-    //var $run_date = '11-24';
+    var $run_date = '11-24';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
