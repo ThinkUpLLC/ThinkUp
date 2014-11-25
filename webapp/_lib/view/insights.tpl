@@ -116,8 +116,12 @@
 
 {if isset($smarty.get.s) eq 1 and !isset($logged_in_user)}
 
-{assign var='tout_headline' value="Get more out of the time you spend online."}
-{if ($i->filename eq 'allaboutyou')}
+{assign var='tout_headline' value="You could be having so much more fun online!"}
+{if ($i->filename eq 'activityspike')}
+  {assign var='tout_headline' value="What's really leaving an impression online? Find out!"}
+{elseif ($i->filename eq 'ageanalysis')}
+  {assign var='tout_headline' value="Which age group do you connect with? Find out."}
+{elseif ($i->filename eq 'allaboutyou')}
   {assign var='tout_headline' value="Find out how much you mention yourself."}
 {elseif ($i->filename eq 'amplifier')}
   {assign var='tout_headline' value="See which friends you're helping out on Twitter or Facebook."}
@@ -175,8 +179,14 @@
   {assign var='tout_headline' value="Find out what time of day you get the biggest responses on Twitter and Facebook."}
 {elseif ($i->filename eq 'thankscount')}
   {assign var='tout_headline' value="How thankful have you been to your friends online? We'll let you know."}
+{elseif ($i->filename eq 'thanksgivingwhothankedyou')}
+  {assign var='tout_headline' value="Who was thankful for you this year? We'll let you know."}
+{elseif ($i->filename eq 'thanksgivingwhoyouthanked')}
+  {assign var='tout_headline' value="Who were you thankful this year? We'll remind you!"}
 {elseif ($i->filename eq 'timespent')}
   {assign var='tout_headline' value="How much of your life have you spent on your social networks? Find out!"}
+{elseif ($i->filename eq 'topwords')}
+  {assign var='tout_headline' value="Which words did you use most? We'll show you what you're really saying."}
 {elseif ($i->filename eq 'twitterage')}
   {assign var='tout_headline' value="Find out just how ahead of the curve you were in joining Twitter!"}
 {elseif ($i->filename eq 'twitterbirthday')}
