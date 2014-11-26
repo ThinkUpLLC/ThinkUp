@@ -15,7 +15,7 @@
 
 
     .panel-heading {
-        background: @headline-bgd;
+        background-color: @headline-bgd;
     }
 
     &.insight-hero {
@@ -386,6 +386,16 @@
             margin-left: 0;
         }
     }
+
+    &.insight-hero {
+        .panel-heading {
+            padding: 15px 10px;
+
+            .panel-title {
+                margin-bottom: 5px;
+            }
+        }
+    }
 }
 
 
@@ -478,20 +488,28 @@
 
 .insight-yearend {
     &:extend(.insight-hero);
+    border-top-width: 0;
+
+    .stream-yearend & {
+        border-top-width: 5px;
+    }
 
     .insight-yearend-header {
         font-size: (16/14em);
         line-height: 1.3333;
         color: #fff;
         position: relative;
-        padding: 5px 10px 10px;
+        padding: 20px 10px;
+        background-image: url(/assets/img/snowflakes.png);
+        background-size: 540px 186px;
+        background-position: 0 0;
 
         .stream-yearend & {
             display: none;
         }
 
         @media (min-width: 400px) {
-            font-size: (18/14em);
+            font-size: (20/14em);
         }
 
         .logo {
@@ -500,22 +518,28 @@
             padding-right: 3px;
 
             @media (min-width: 400px) {
-                vertical-align: -4px;
-                height: 19px;
+                vertical-align: -5px;
+                height: 21px;
             }
         }
 
         .btn {
             position: absolute;
-            top: 2px;
+            top: 15px;
             right: 10px;
             font-size: (14/18em);
-            line-height: (26/14);
+            line-height: (30/14);
             color: #fff;
             padding: 0 5px;
             font-weight: 300;
             transition: background-color .25s;
         }
+    }
+
+    .panel-heading {
+        background-image: url(/assets/img/snowflakes.png);
+        background-size: 540px 186px;
+        background-position: 0 -66px;
     }
 }
 
@@ -562,6 +586,10 @@
 
 .insight-caramel {
     .insight-colors(@color-caramel-dark, @color-caramel, @color-caramel-darker);
+}
+
+.insight-blue {
+    .insight-colors(@blue-darker, @blue, @blue-darker);
 }
 
 .panel-heading h2.lead {
