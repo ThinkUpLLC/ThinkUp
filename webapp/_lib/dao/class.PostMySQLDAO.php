@@ -1257,14 +1257,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $until = date('Y-m-d'), $order_by='pub_date', $direction='ASC', $iterator=true, $is_public=false);
     }
 
-    /**
-     * Get all posts by a given user with configurable order by field and direction
-     * @param str $author_username
-     * @param str $network Default "twitter"
-     * @param int|bool $count False if no limit (ie, return all rows)
-     * @param str $order_by field name Default "pub_date"
-     * @return array Posts with link object set
-     */
     public function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
     $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false, $since = null) {
         $order_by = $this->sanitizeOrderBy($order_by);
