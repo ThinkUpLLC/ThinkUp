@@ -835,4 +835,12 @@ interface PostDAO {
      */
     public function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
         $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false, $since = null);
+
+    /**
+     * Get a PostIterator with links of all a user's posts this year, since January 1st.
+     * @param  str $author_id
+     * @param  str $network
+     * @return PostIterator
+     */
+    public function getThisYearOfPostsWithLinksIterator($author_id, $network);
 }

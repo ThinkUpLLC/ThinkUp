@@ -1257,6 +1257,45 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $until = date('Y-m-d'), $order_by='pub_date', $direction='ASC', $iterator=true, $is_public=false);
     }
 
+    public function getThisYearOfPostsWithLinksIterator($author_id, $network) {
+        return $this->getPostsWithLinksIteratorByUserInRange($author_id, $network,
+            $from=date('Y-m-d', strtotime('January 1')), $until = date('Y-m-d'), $order_by='pub_date',
+            $direction='ASC', $is_public=false);
+    }
+
+    private function getPostsWithLinksIteratorByUserInRange($author_id, $network, $from, $until, $order_by="pub_date",
+        $direction="DESC", $is_public = false) {
+        $direction = $direction=="DESC" ? "DESC": "ASC";
+
+        $order_by = $this->sanitizeOrderBy($order_by);
+
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date, l.* ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "INNER JOIN #prefix#links l ON l.post_key = p.id ";
+        $q .= "WHERE p.author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
+        if ($order_by == 'reply_count_cache') {
+            $q .= "AND reply_count_cache > 0 ";
+        }
+        if ($order_by == 'retweet_count_cache') {
+            $q .= "AND retweet_count_cache > 0 ";
+        }
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= "ORDER BY $order_by $direction ";
+        $vars = array(
+            ':author_id'=> (string)$author_id,
+            ':network'=> $network,
+            ':from' => $from,
+            ':until' => $until
+        );
+        //echo Utils::mergeSQLVars($q, $vars);
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return (new PostIterator($ps));
+    }
+
     public function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
     $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false, $since = null) {
         $order_by = $this->sanitizeOrderBy($order_by);
