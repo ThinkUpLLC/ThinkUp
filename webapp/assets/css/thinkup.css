@@ -1182,8 +1182,7 @@ body.app-message-visible.account .container {
     text-align: center;
   }
 }
-.stream,
-.stream-yearend {
+.stream {
   min-width: 320px;
   width: 100%;
   padding: 0 5px;
@@ -1245,8 +1244,7 @@ body.app-message-visible.account .container {
   display: none;
 }
 @media (min-width: 540px) {
-  .stream,
-  .stream-yearend {
+  .stream {
     padding: 0 10px;
   }
   .stream .date-group,
@@ -1349,7 +1347,7 @@ body.app-message-visible.account .container {
   border-bottom-width: 2px;
 }
 .insight .panel-heading {
-  background: #d0d0d0;
+  background-color: #d0d0d0;
 }
 .insight.insight-hero .panel-heading .panel-title {
   color: #666666;
@@ -1651,7 +1649,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #46bcff;
 }
 .insight-message .panel-heading {
-  background: #ffffff;
+  background-color: #ffffff;
 }
 .insight-message.insight-hero .panel-heading .panel-title {
   color: #2785d3;
@@ -2436,58 +2434,6 @@ body.app-message-visible.account .container {
 }
 .insight-caramel .tweet .photo {
   background: rgba(221, 129, 75, 0.25);
-}
-.insight-blue {
-  background: #46bcff;
-  border-top-color: #2785d3;
-  border-bottom-color: #46bcff;
-}
-.insight-blue .panel-heading {
-  background-color: #46bcff;
-}
-.insight-blue.insight-hero .panel-heading .panel-title {
-  color: #2785d3;
-}
-.insight-blue.insight-yearend-tease {
-  background: transparent;
-  border-top-color: rgba(39, 133, 211, 0.25);
-  border-bottom-color: rgba(70, 188, 255, 0.25);
-}
-.insight-blue.insight-yearend-tease .panel-heading {
-  background: rgba(70, 188, 255, 0.25);
-}
-.insight-blue.insight-yearend-tease .panel-heading .panel-title {
-  opacity: .75;
-}
-.insight-blue .panel-body,
-.insight-blue .panel-desktop-right,
-.insight-blue .panel-footer {
-  background: #ffffff;
-}
-.insight-blue .panel-footer {
-  border-top-color: #dbdbdb;
-}
-.insight-blue .panel-footer .share-menu {
-  border-color: #dbdbdb;
-  background-color: #ffffff;
-}
-.insight-blue .insight-color-text {
-  color: #46bcff;
-}
-.insight-blue .insight-color-background {
-  background-color: #46bcff;
-}
-.insight-blue .insight-yearend-header {
-  background-color: #2785d3;
-}
-.insight-blue .insight-yearend-header .btn {
-  background-color: #46bcff;
-}
-.insight-blue .insight-yearend-header .btn:hover {
-  background-color: #2cb3ff;
-}
-.insight-blue .tweet .photo {
-  background: rgba(70, 188, 255, 0.25);
 }
 .panel-heading h2.lead {
   font-weight: 700;
