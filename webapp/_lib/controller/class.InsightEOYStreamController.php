@@ -39,6 +39,8 @@ class InsightEOYStreamController extends InsightStreamController {
         $cfg = Config::getInstance();
         $thinkup_username = $cfg->getValue('install_folder');
         $this->addToView('thinkup_username', $thinkup_username);
+        //TODO complete copy list with dates and insight descriptions
+        $this->addToView('tomorrows_teaser', 'Most-loved post in 2014');
 
         $this->addToView('is_year_end', true);
         $insight_dao = DAOFactory::getDAO('InsightDAO');

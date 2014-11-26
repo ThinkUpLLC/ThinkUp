@@ -25,17 +25,17 @@
     {/capture}
     <div class="stream-yearend-header">
       <h1><img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {/if}Best of 2014</h1>
-      <h2>24 days of insights</h2>
+<!--      <h2>24 days of insights</h2>
 
       <div class="share-buttons">
         <a class="btn btn-yearend" href="#"><i class="fa fa-twitter"></i> Share on Twitter</a> <a class="btn btn-yearend" href="#"><i class="fa fa-facebook"></i> Share on Facebook</a>
-      </div>
+      </div>  -->
     </div>
   {/if}
 
   <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}{if $is_year_end} stream-yearend{/if}">
 
-  {if $is_year_end}
+  {if $is_year_end && $tomorrows_teaser}
     <div class="date-group">
       <div class="date-marker">
         <div class="relative">Tomorrow</div>
@@ -43,7 +43,7 @@
 
       <div class="panel panel-default insight insight-hero insight-yearend-tease">
         <div class="panel-heading">
-          <div class="panel-title">It’s going to be good.</div>
+          <div class="panel-title">{$tomorrows_teaser}</div>
         </div>
       </div>
     </div>
