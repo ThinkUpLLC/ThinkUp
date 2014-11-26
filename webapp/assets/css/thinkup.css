@@ -1811,7 +1811,7 @@ body.app-message-visible.account .container {
   color: #fff;
   position: relative;
   padding: 20px 10px;
-  background-image: url(https://www.thinkup.com/join/assets/img/eoy-header.png);
+  background-image: url(https://www.thinkup.com/assets/images/insights/2014-12/eoy-header.png);
   background-position: 0 0;
 }
 .stream-yearend .insight-yearend .insight-yearend-header {
@@ -1845,7 +1845,7 @@ body.app-message-visible.account .container {
   transition: background-color 0.25s;
 }
 .insight-yearend .panel-heading {
-  background-image: url(https://www.thinkup.com/join/assets/img/eoy-header.png);
+  background-image: url(https://www.thinkup.com/assets/images/insights/2014-12/eoy-header.png);
   background-position: 0 -66px;
 }
 .insight-pea {
