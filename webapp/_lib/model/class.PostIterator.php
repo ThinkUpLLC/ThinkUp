@@ -93,6 +93,13 @@ class PostIterator implements Iterator {
             if ($row) {
                 $post = new Post($row);
                 $this->row = $post;
+
+                //If there are link fields, instantiate Link object and add it to the post
+                if (isset($row['url'])) {
+                    $link = new Link($row);
+                    $post->addLink($link);
+                }
+
                 $this->valid = true;
             } else {
                 // close our cursor...
