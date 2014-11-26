@@ -800,4 +800,13 @@ interface PostDAO {
      * @return arr of Post objects
      */
     public function searchPostsByHashtag($keywords, Hashtag $hashtag, $network, $page_number=1, $page_count=20);
+
+    /**
+     * Get all posts by a given user with configurable order by field and direction
+     * @param str $author_username
+     * @param str $network Default "twitter"
+     * @param Date $year
+     * @return array Row with year and total posts for that year
+     */
+    public function getPostCountForYear($author_username, $network="twitter", $year);
 }

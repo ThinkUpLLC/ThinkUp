@@ -2691,4 +2691,24 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
+
+    public function getPostCountForYear($author_username, $network="twitter", $year) {
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':year'=>$year
+        );
+        $q =  "SELECT  Year(pub_date) as YEAR, ";
+        $q .= "COUNT(*) AS post_count ";
+        $q .= "FROM    #prefix#posts p ";
+        $q .= "WHERE author_username = :author_username AND p.network = :network ";
+        $q .= "AND   Year(pub_date) = :year ;";
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        return $all_rows[0];
+    }
+
 }
