@@ -820,4 +820,19 @@ interface PostDAO {
      * @return array Posts with link object set
      */
     public function getAllPostsByUsernameOn($author_username, $network="twitter", $date);
+
+    /**
+     * Get all posts by a given user with configurable order by field and direction.
+     * @param str $author_username
+     * @param str $network Default "twitter"
+     * @param int|bool $count False if no limit (ie, return all rows)
+     * @param str $order_by field name Default "pub_date"
+     * @param bool $iterator
+     * @param str $in_last_x_days
+     * @param bool $is_public
+     * @param str $since
+     * @return array Posts with link object set
+     */
+    public function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
+        $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false, $since = null);
 }
