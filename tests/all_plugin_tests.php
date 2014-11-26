@@ -131,12 +131,6 @@ $plugin_tests->add(new TestOfTopWordsInsight());
 $plugin_tests->add(new TestOfThanksgivingWhoYouThankedInsight());
 $plugin_tests->add(new TestOfThanksgivingWhoThankedYouInsight());
 
-//EOY insights
-$plugin_tests->add(new TestOfEOYMostFavlikedPostInsight());
-$plugin_tests->add(new TestOfEOYBiggestFansInsight());
-$plugin_tests->add(new TestOfEOYMostTalkativeDayInsight());
-$plugin_tests->add(new TestOfEOYAllAboutYouInsight());
-
 // One-time or developer insight tests that don't have to run every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 // $plugin_tests->add(new TestOfOlympics2014Insight());
