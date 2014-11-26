@@ -349,7 +349,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
 
         //accented character
-        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Cõsby',
+        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Malcolm Jamal Warñer',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>7));
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
@@ -358,7 +358,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('insights', array('id'=>4, 'instance_id'=>7,
         'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Wow: Made the List:',
-        'text'=>'This was Bill Cosby\'s most popular post a year ago.',
+        'text'=>'This was Malcolm Jamal Warner\'s most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am')), 'related_data'=>null));
 
         // Hero image
@@ -624,12 +624,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'text'=>'CDMoyer is on 29 new lists', 'related_data'=>null,
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
 
-        $builders[] = FixtureBuilder::build('instances', array('id'=>6,'network_username'=>'Bill Cosby',
+        $builders[] = FixtureBuilder::build('instances', array('id'=>6,'network_username'=>'Malcolm Jamal Warner',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>6));
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
         'slug'=>'new_group_memberships', 'headline'=>'Wow: Made the List:',
-        'text'=>'Bill Cosby is on 1,234 new lists', 'related_data'=>null,
+        'text'=>'Malcolm Jamal Warner is on 1,234 new lists', 'related_data'=>null,
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
 
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
