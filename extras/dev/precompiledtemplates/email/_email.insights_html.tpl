@@ -1167,12 +1167,30 @@ body.outlook p {
   {assign var='color_light' value='fee4e7'}
 {/if}
 
+{if $i->slug|strpos:'eoy_'===0}
+  {assign var='color_name' value='blue'}
+  {assign var='color_dark' value='fC939e'}
+  {assign var='color' value='fC939e'}
+  {assign var='color_light' value='46bcff'}
+{/if}
+
 <table class="row insight insight-{$color_name}">
   <tr>
     <td class="wrapper last">
 
-      <table class="twelve columns insight-header">
+      {if $i->slug|strpos:'eoy_'===0}
+      <table class="twelve columns insight-yearend-header">
         <tr>
+          <td class="text-pad">
+              <h6><a class="btn" href="{$site_root_path}2014/">ThinkUp Best of 2014</a></h6>
+          </td>
+          <td class="expander"></td>
+        </tr>
+        </table>
+      {/if}
+
+      <table class="twelve columns insight-header">
+       <tr>
           <td class="text-pad">
               <h6><a href="{$permalink}">{$insight->headline}</a></h6>
           </td>

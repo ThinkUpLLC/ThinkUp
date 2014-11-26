@@ -1,12 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <meta name="viewport" content="width=device-width"/>
-  {literal}
-  {/literal}
-
-<style type="text/css">{literal}
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width" /></head><body style="-ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; background: #f0f0f0; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0; min-width: 100%; padding: 0; text-align: left; width: 100% !important" bgcolor="#f0f0f0"><style type="text/css">{literal}
 body {
 width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; padding: 0;
 }
@@ -318,30 +314,32 @@ color: #417505 !important;
     display: inherit !important;
   }
 }
-{/literal}</style>
-</head>
-<body style="width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
-  <table class="body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; height: 100%; width: 100%; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; background: #f0f0f0; margin: 0; padding: 0;">
-    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-      <td class="center" align="center" valign="top" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;">
-        <center style="width: 100%; min-width: 580px;">
+{/literal}</style><p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">
+  {literal}
+  {/literal}
 
-          <table class="row top-message" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; background: #2785d3; padding: 0px;">
-            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-              <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-                <center style="width: 100%; min-width: 580px;">
+</p>
+  <table class="body" style="background: #f0f0f0; border-collapse: collapse; border-spacing: 0; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; height: 100%; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; width: 100%" bgcolor="#f0f0f0">
+    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+      <td class="center" align="center" valign="top" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: center; vertical-align: top; word-break: break-word">
+        <center style="min-width: 580px; width: 100%">
 
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 0 0;" align="left" valign="top">
+          <table class="row top-message" style="background: #2785d3; border-collapse: collapse; border-spacing: 0; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#2785d3">
+            <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+              <td class="center" align="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: center; vertical-align: top; word-break: break-word" valign="top">
+                <center style="min-width: 580px; width: 100%">
 
-                        <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                              <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 9px; margin: 0; padding: 0 0 0px;" align="center" valign="top">
-                                  <center style="width: 100%; min-width: 580px;">{if isset($show_welcome_message) and
+                  <table class="container" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0 0 28px; text-align: inherit; vertical-align: top; width: 580px">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                      <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 0px 0 0; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+
+                        <table class="twelve columns" align="center" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+                          <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                              <td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0 0 0px; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+                                  <center style="min-width: 580px; width: 100%">{if isset($show_welcome_message) and
                                   $show_welcome_message}Welcome to ThinkUp!{else}{$header_text}{/if}</center>
                             </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 9px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #47AEE9; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
                           </tr>
                         </table>
 
@@ -354,19 +352,19 @@ color: #417505 !important;
             </tr>
           </table>
 
-          <table class="row header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-bottom-style: solid; border-bottom-color: #2785d3; border-bottom-width: 1px; background: #46bcff; padding: 0px;">
-            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-              <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-                <center style="width: 100%; min-width: 580px;">
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
-                        <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                            <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-                              <center style="width: 100%; min-width: 580px;"><a href="{$application_url}" style="text-decoration: none; color: #2ba6cb;"><img class="center" src="https://www.thinkup.com/join/assets/img/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a></center>
+          <table class="row header" style="background: #46bcff; border-bottom-color: #2785d3; border-bottom-style: solid; border-bottom-width: 1px; border-collapse: collapse; border-spacing: 0; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#46bcff">
+            <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+              <td class="center" align="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: center; vertical-align: top; word-break: break-word" valign="top">
+                <center style="min-width: 580px; width: 100%">
+                  <table class="container" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0 0 28px; text-align: inherit; vertical-align: top; width: 580px">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                      <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                        <table class="twelve columns" align="center" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+                          <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                            <td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 0px 10px; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+                              <center style="min-width: 580px; width: 100%"><a href="{$application_url}" style="color: #2ba6cb; text-decoration: none"><img class="center" src="https://www.thinkup.com/join/assets/img/thinkup-logo-header.png" alt="ThinkUp" width="70" height="19" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: none; margin: 0 auto; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" /></a></center>
                             </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
                           </tr>
                         </table>
                       </td>
@@ -378,19 +376,19 @@ color: #417505 !important;
           </table>
 
 {if isset($thinkupllc_email_tout)}
-          <table class="row bottom-message" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-bottom-style: solid; border-bottom-color: #BBC7CE; border-bottom-width: 1px; background: #FFFABE; padding: 0px;">
-            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-              <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
-                <center style="width: 100%; min-width: 580px;">
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                      <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
-                        <table class="twelve columns" align="center" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                            <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 11px; margin: 0; padding: 5px 0 5px 5px;" align="left" valign="top">
-                              <center style="width: 100%; min-width: 580px;">{$thinkupllc_email_tout}</center>
+          <table class="row bottom-message" style="background: #FFFABE; border-bottom-color: #BBC7CE; border-bottom-style: solid; border-bottom-width: 1px; border-collapse: collapse; border-spacing: 0; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#FFFABE">
+            <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+              <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                <center style="min-width: 580px; width: 100%">
+                  <table class="container" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0 0 28px; text-align: inherit; vertical-align: top; width: 580px">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                      <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                        <table class="twelve columns" align="center" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+                          <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                            <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 5px 0 5px 5px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                              <center style="min-width: 580px; width: 100%">{$thinkupllc_email_tout}</center>
                             </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 11px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
                           </tr>
                         </table>
                       </td>
@@ -402,21 +400,21 @@ color: #417505 !important;
           </table>
 {/if}
 
-<br>
-<br>
-          <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
-            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-              <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
+<br />
+<br />
+          <table class="container" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0 0 28px; text-align: inherit; vertical-align: top; width: 580px">
+            <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+              <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
 {if !(isset($show_welcome_message) and $show_welcome_message)}
-<table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
-      <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-              <h6 class="center" style="text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 1.3; word-break: normal; font-size: 20px; margin: 0; padding: 0;" align="center">{$header_text}</h6>
+<table class="row" style="border-collapse: collapse; border-spacing: 0; display: block; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%">
+  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+    <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+      <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 0px 10px; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+              <h6 class="center" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 20px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: center; word-break: normal" align="center">{$header_text}</h6>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
 
@@ -425,41 +423,41 @@ color: #417505 !important;
 </table>
 {/if}
 {if isset($show_welcome_message) and $show_welcome_message}
-<table class="row insight welcome-insight" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #2785d3; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #46bcff; border-bottom-width: 2px; margin-bottom: 14px; background: #fff; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+<table class="row insight welcome-insight" style="background: #fff; border-bottom-color: #46bcff; border-bottom-style: solid; border-bottom-width: 2px; border-collapse: collapse; border-spacing: 0; border-top-color: #2785d3; border-top-style: solid; border-top-width: 5px; display: block; margin-bottom: 14px; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#fff">
+  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+    <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
 
-      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
-              <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: left; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="left">Thanks for joining ThinkUp!</h6>
+      <table class="twelve columns insight-header" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 10px 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+              <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 18px; font-weight: bold; line-height: 1.3; margin: 0; padding: 0; text-align: left; word-break: normal" align="left">Thanks for joining ThinkUp!</h6>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
 
-      <table class="twelve columns insight-body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-            <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px;" align="left" valign="top">
-              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Now you can sit back, relax, and keep doing what you&rsquo;re doing. Each day you&rsquo;ll get an email like this with your new insights from ThinkUp.</p>
+      <table class="twelve columns insight-body" style="background: #fff; border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px" bgcolor="#fff">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+            <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">Now you can sit back, relax, and keep doing what you’re doing. Each day you’ll get an email like this with your new insights from ThinkUp.</p>
               <ul>
                 <li>Add more networks or update your settings from your
-                  <a href="https://thinkup.com/join/user/membership.php" style="color: #2ba6cb; text-decoration: none;">membership page</a>.</li>
+                  <a href="https://thinkup.com/join/user/membership.php" style="color: #2ba6cb; text-decoration: none">membership page</a>.</li>
                 <li>Have questions or need help? Just reply to this email.</li>
               </ul>
 
-              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">Check out your insight stream at <a href="{$application_url}" style="color: #2ba6cb; text-decoration: none;">{$application_url}</a>.
+              <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">Check out your insight stream at <a href="{$application_url}" style="color: #2ba6cb; text-decoration: none">{$application_url}</a>.
                 This is gonna be great.</p>
             </td>
-            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
-        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="insight-footer" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; border-top-style: solid; border-top-color: #dbdbdb; border-top-width: 0; background: #fff; margin: 0; padding: 10px 10px 0;" align="left" valign="top">
-            <img src="https://www.thinkup.com/join/assets/img/chart-landscape.png" alt="Chart graphic" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block;" align="left" />
+        <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="insight-footer" style="-moz-hyphens: auto; -webkit-hyphens: auto; background: #fff; border-collapse: collapse !important; border-top-color: #dbdbdb; border-top-style: solid; border-top-width: 0; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 10px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" bgcolor="#fff" valign="top">
+            <img src="https://www.thinkup.com/join/assets/img/chart-landscape.png" alt="Chart graphic" style="-ms-interpolation-mode: bicubic; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" />
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
 
@@ -468,27 +466,27 @@ color: #417505 !important;
 </table>
 {/if}
 {if isset($pay_prompt_explainer) and isset($pay_prompt_headline) and isset($pay_prompt_button_label)}
-<table class="row insight payment-reminder" style="border-top-width: 1px; border-top-color: #1b5c92; border-top-style: solid; border-bottom-width: 1px; border-bottom-color: #1b5c92; border-bottom-style: solid; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; margin-bottom: 18px; background: #2785d3; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="center !important" valign="top">
-      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="center !important" valign="top">
-            <h6 style="color: #f4fcf9 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: center !important; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="center !important">{$pay_prompt_headline}</h6>
-            <p style="color: #e9f3fb; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: center !important; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="center !important">{$pay_prompt_explainer}</p>
-            <br>
-            <div style="text-align: center;" align="center"><!--[if mso]>
+<table class="row insight payment-reminder" style="background: #2785d3; border-bottom-color: #1b5c92; border-bottom-style: solid; border-bottom-width: 1px; border-collapse: collapse; border-spacing: 0; border-top-color: #1b5c92; border-top-style: solid; border-top-width: 1px; display: block; margin-bottom: 18px; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#2785d3">
+  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+    <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: center !important; vertical-align: top; word-break: break-word" align="center !important" valign="top">
+      <table class="twelve columns insight-header" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 10px 10px; text-align: center !important; vertical-align: top; word-break: break-word" align="center !important" valign="top">
+            <h6 style="color: #f4fcf9 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 18px; font-weight: bold; line-height: 1.3; margin: 0; padding: 0; text-align: center !important; word-break: normal" align="center !important">{$pay_prompt_headline}</h6>
+            <p style="color: #e9f3fb; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: center !important" align="center !important">{$pay_prompt_explainer}</p>
+            <br />
+            <div style="text-align: center" align="center"><!--[if mso]>
               <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$pay_prompt_url}" style="height:60px;v-text-anchor:middle;width:160px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
                 <w:anchorlock/>
                 <center>
               <![endif]-->
-                  <a href="{$pay_prompt_url}" class="reminder-button" style="border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-weight: bold; width: 160px; font-size: 20px; line-height: 10px; text-align: center; text-decoration: none; -webkit-text-size-adjust: none; background: #24b98f;">&nbsp;<br><span style="line-height: 26px;">Join ThinkUp</span><br><span class="second-line" style="font-size: 12px; line-height: 14px; color: #e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
+                  <a href="{$pay_prompt_url}" class="reminder-button" style="-webkit-text-size-adjust: none; background: #24b98f; border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-size: 20px; font-weight: bold; line-height: 10px; text-align: center; text-decoration: none; width: 160px"> <br /><span style="line-height: 26px">Join ThinkUp</span><br /><span class="second-line" style="color: #e9f8f4; font-size: 12px; font-weight: normal; line-height: 14px">{$pay_prompt_button_label}</span><br /> </a>
               <!--[if mso]>
                 </center>
               </v:roundrect>
             <![endif]--></div>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="center !important" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: center !important; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="center !important" valign="top"></td>
         </tr>
       </table>
     </td>
@@ -497,18 +495,18 @@ color: #417505 !important;
 {/if}
 
 {foreach from=$insights item=insight}
-{capture name=permalink assign="permalink"}{$application_url}?u={$insight->instance->network_username|urlencode_network_username}&amp;n={$insight->instance->network|urlencode}&amp;d={$insight->date|date_format:'%Y-%m-%d'}&amp;s={$insight->slug}{/capture}
-{if $insight->instance->network eq 'twitter'}
+{capture name=permalink assign="permalink"}{$application_url}?u={$insight-&gt;instance-&gt;network_username|urlencode_network_username}&amp;n={$insight-&gt;instance-&gt;network|urlencode}&amp;d={$insight-&gt;date|date_format:'%Y-%m-%d'}&amp;s={$insight-&gt;slug}{/capture}
+{if $insight-&gt;instance-&gt;network eq 'twitter'}
   {capture name="share_link" assign="share_link"}
-    <a href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$insight->headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|html_entity_decode|escape:'url'}&amp;via=thinkup" style="color: #2ba6cb; text-decoration: none;">Tweet this</a>
+    <a href="https://twitter.com/intent/tweet?related=thinkup&amp;text={$insight-&gt;headline|strip_tags:true|strip|truncate:100}&amp;url={$permalink|html_entity_decode|escape:'url'}&amp;via=thinkup" style="color: #2ba6cb; text-decoration: none">Tweet this</a>
   {/capture}
-{elseif $insight->instance->network eq 'facebook'}
+{elseif $insight-&gt;instance-&gt;network eq 'facebook'}
   {capture name="share_link" assign="share_link"}
-    <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}" style="color: #2ba6cb; text-decoration: none;">Share on Facebook</a>
+    <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}" style="color: #2ba6cb; text-decoration: none">Share on Facebook</a>
   {/capture}
 {/if}
-{math equation="x % 10" x=$insight->id assign=random_color_num}
-{if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
+{math equation="x % 10" x=$insight-&gt;id assign=random_color_num}
+{if $i-&gt;slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
   {assign var='color_name' value='sepia'}
   {assign var='color_dark' value='A19F8B'}
   {assign var='color' value='C0BDAF'}
@@ -565,142 +563,160 @@ color: #417505 !important;
   {assign var='color_light' value='fee4e7'}
 {/if}
 
-<table class="row insight insight-{$color_name}" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #{$color_dark}; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #{$color}; border-bottom-width: 2px; margin-bottom: 14px; background: #{$color}; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+{if $i-&gt;slug|strpos:'eoy_'===0}
+  {assign var='color_name' value='blue'}
+  {assign var='color_dark' value='fC939e'}
+  {assign var='color' value='fC939e'}
+  {assign var='color_light' value='46bcff'}
+{/if}
 
-      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
-              <h6 style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 1.3; word-break: normal; font-size: 20px; margin: 0; padding: 0;" align="left"><a href="{$permalink}" style="color: #fff !important; text-decoration: none; font-weight: bold; font-size: 18px;">{$insight->headline}</a></h6>
+<table class="row insight insight-{$color_name}" style="background: #{$color}; border-bottom-color: #{$color}; border-bottom-style: solid; border-bottom-width: 2px; border-collapse: collapse; border-spacing: 0; border-top-color: #{$color_dark}; border-top-style: solid; border-top-width: 5px; display: block; margin-bottom: 14px; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#{$color}">
+  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+    <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+
+      {if $i-&gt;slug|strpos:'eoy_'===0}
+      <table class="twelve columns insight-yearend-header" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 10px 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+              <h6 style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 20px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; word-break: normal" align="left"><a class="btn" href="{$site_root_path}2014/" style="color: #fff !important; font-size: 18px; font-weight: bold; text-decoration: none">ThinkUp Best of 2014</a></h6>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         </table>
-{if isset($insight->related_data.hero_image.url) && isset($insight->related_data.hero_image.alt_text) && isset($insight->related_data.hero_image.credit)}
-      <table class="twelve columns insight-image" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
-              <img src="{$insight->related_data.hero_image.url}" alt="{$insight->related_data.hero_image.alt_text}" class="center" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto;" align="none" />
-              <small class="text-pad" style="padding-left: 10px; padding-right: 10px; font-size: 10px;">{$insight->related_data.hero_image.credit}</small>
+      {/if}
+
+      <table class="twelve columns insight-header" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+       <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 10px 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+              <h6 style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 20px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; word-break: normal" align="left"><a href="{$permalink}" style="color: #fff !important; font-size: 18px; font-weight: bold; text-decoration: none">{$insight-&gt;headline}</a></h6>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
+        </tr>
+        </table>
+{if isset($insight-&gt;related_data.hero_image.url) &amp;&amp; isset($insight-&gt;related_data.hero_image.alt_text) &amp;&amp; isset($insight-&gt;related_data.hero_image.credit)}
+      <table class="twelve columns insight-image" style="background: #fff; border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px" bgcolor="#fff">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+              <img src="{$insight-&gt;related_data.hero_image.url}" alt="{$insight-&gt;related_data.hero_image.alt_text}" class="center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; float: none; margin: 0 auto; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+              <small class="text-pad" style="font-size: 10px; padding-left: 10px; padding-right: 10px">{$insight-&gt;related_data.hero_image.credit}</small>
+          </td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         </table>
 {/if}
 
-{if $insight->text ne '' or isset($insight->related_data.posts) or isset($insight->related_data.people)
-or isset($insight->related_data.changes)}
-    <table class="twelve columns insight-body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; background: #fff; margin: 0 auto; padding: 0;">
-        {if $insight->text ne ''}
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-            <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px;" align="left" valign="top">
-                {$insight->text|strip_tags:false}
+{if $insight-&gt;text ne '' or isset($insight-&gt;related_data.posts) or isset($insight-&gt;related_data.people)
+or isset($insight-&gt;related_data.changes)}
+    <table class="twelve columns insight-body" style="background: #fff; border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px" bgcolor="#fff">
+        {if $insight-&gt;text ne ''}
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+            <td class="text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                {$insight-&gt;text|strip_tags:false}
             </td>
-            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         {/if}
-        {if isset($insight->related_data.people)}
-        {foreach from=$insight->related_data.people key=uid item=user}
-        {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-            <td class="sub-grid object user text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 10px; padding: 10px;" align="left" valign="top">
-                <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                        <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
-                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{$user->avatar|use_https}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
+        {if isset($insight-&gt;related_data.people)}
+        {foreach from=$insight-&gt;related_data.people key=uid item=user}
+        {if isset($user-&gt;network) and isset($user-&gt;user_id) and isset($user-&gt;avatar)}
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+            <td class="sub-grid object user text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0 0 10px; padding: 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                        <td class="two sub-columns center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 10px 0 0px; text-align: center; vertical-align: top; width: 16.666666%; word-break: break-word" align="center" valign="top">
+                            <a href="{if $user-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user-&gt;network eq 'facebook'}https://facebook.com/{/if}{$user-&gt;user_id}" title="{$user-&gt;user_fullname}" style="color: #2ba6cb; text-decoration: none"><img src="{$user-&gt;avatar|use_https}" alt="{$user-&gt;user_fullname}" width="60" height="60" class="img-circle" style="-ms-interpolation-mode: bicubic; -webkit-border-radius: 50%; border-radius: 50%; border: none; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" /></a>
                         </td>
-                        <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
-                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
+                        <td class="ten sub-columns" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 10px 0 0px; text-align: left; vertical-align: top; width: 83.333333%; word-break: break-word" align="left" valign="top">
+                            <div class="user-name" style="font-weight: bold"><a href="{if $user-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user-&gt;network eq 'facebook'}https://facebook.com/{/if}{$user-&gt;user_id}" title="{$user-&gt;user_fullname}" style="color: #2ba6cb; text-decoration: none">{$user-&gt;full_name}</a></div>
                             <div class="user-text">
-                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
-                                    {$user->follower_count|number_format} followers
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">{if $user-&gt;network eq 'twitter'}
+                                    {$user-&gt;follower_count|number_format} followers
                                 {else}
-                                    {if isset($user->other.total_likes)}
-                                    {$user->other.total_likes|number_format} likes
+                                    {if isset($user-&gt;other.total_likes)}
+                                    {$user-&gt;other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
-                                {if $user->description neq ''}
-                                    <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$user->description}</p>
+                                {if $user-&gt;description neq ''}
+                                    <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">{$user-&gt;description}</p>
                                 {/if}
                             </div>
                         </td>
                     </tr>
                 </table>
             </td>
-            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         {/if}
         {/foreach}
         {/if}
-        {if isset($insight->related_data.changes)}
-        {foreach from=$insight->related_data.changes item=change name=changed }
+        {if isset($insight-&gt;related_data.changes)}
+        {foreach from=$insight-&gt;related_data.changes item=change name=changed }
         {assign var='user' value=$change.user}
         {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
-        {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-            <td class="sub-grid object user text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 10px; padding: 10px;" align="left" valign="top">
-                <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                        <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
-                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{$user->avatar|use_https}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
+        {if isset($user-&gt;network) and isset($user-&gt;user_id) and isset($user-&gt;avatar)}
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+            <td class="sub-grid object user text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0 0 10px; padding: 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                        <td class="two sub-columns center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 10px 0 0px; text-align: center; vertical-align: top; width: 16.666666%; word-break: break-word" align="center" valign="top">
+                            <a href="{if $user-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user-&gt;network eq 'facebook'}https://facebook.com/{/if}{$user-&gt;user_id}" title="{$user-&gt;user_fullname}" style="color: #2ba6cb; text-decoration: none"><img src="{$user-&gt;avatar|use_https}" alt="{$user-&gt;user_fullname}" width="60" height="60" class="img-circle" style="-ms-interpolation-mode: bicubic; -webkit-border-radius: 50%; border-radius: 50%; border: none; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" /></a>
                         </td>
-                        <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
-                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
+                        <td class="ten sub-columns" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 10px 0 0px; text-align: left; vertical-align: top; width: 83.333333%; word-break: break-word" align="left" valign="top">
+                            <div class="user-name" style="font-weight: bold"><a href="{if $user-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user-&gt;network eq 'facebook'}https://facebook.com/{/if}{$user-&gt;user_id}" title="{$user-&gt;user_fullname}" style="color: #2ba6cb; text-decoration: none">{$user-&gt;full_name}</a></div>
                             <div class="user-text">
-                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
-                                    {$user->follower_count|number_format} followers
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">{if $user-&gt;network eq 'twitter'}
+                                    {$user-&gt;follower_count|number_format} followers
                                 {else}
-                                    {if isset($user->other.total_likes)}
-                                    {$user->other.total_likes|number_format} likes
+                                    {if isset($user-&gt;other.total_likes)}
+                                    {$user-&gt;other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
                                 {if $bio_diff neq ''}
-                                    <p class="text-diff" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$bio_diff}</p>
+                                    <p class="text-diff" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; margin: 0 0 10px; padding: 0; text-align: left" align="left">{$bio_diff}</p>
                                 {/if}
                             </div>
                         </td>
                     </tr>
                 </table>
             </td>
-            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         {/if}
         {/foreach}
         {/if}
-        {if isset($insight->related_data.posts)}
-        {foreach from=$insight->related_data.posts key=uid item=post name=bar}
-        {if isset($post->network) and isset($post->author_user_id) and isset($post->author_avatar)}
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-            <td class="sub-grid object tweet text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 18px; padding: 10px;" align="left" valign="top">
-                <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                        <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
-                            <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}" style="color: #2ba6cb; text-decoration: none;"><img src="{$post->author_avatar|use_https}" alt="{$post->author_username}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
+        {if isset($insight-&gt;related_data.posts)}
+        {foreach from=$insight-&gt;related_data.posts key=uid item=post name=bar}
+        {if isset($post-&gt;network) and isset($post-&gt;author_user_id) and isset($post-&gt;author_avatar)}
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+            <td class="sub-grid object tweet text-pad" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0 0 18px; padding: 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                        <td class="two sub-columns center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 10px 0 0px; text-align: center; vertical-align: top; width: 16.666666%; word-break: break-word" align="center" valign="top">
+                            <a href="{if $post-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post-&gt;network eq 'facebook'}https://facebook.com/{/if}{$post-&gt;author_user_id}" title="{$post-&gt;author_username}" style="color: #2ba6cb; text-decoration: none"><img src="{$post-&gt;author_avatar|use_https}" alt="{$post-&gt;author_username}" width="60" height="60" class="img-circle" style="-ms-interpolation-mode: bicubic; -webkit-border-radius: 50%; border-radius: 50%; border: none; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" /></a>
                         </td>
-                        <td class="ten sub-columns last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px 0;" align="left" valign="top">
-                            <div class="byline" style="font-family: georgia, serif;"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}" style="color: #46bcff; text-decoration: none;"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
-                            <div class="tweet-body" style="font-family: georgia, serif;">{$post->post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
+                        <td class="ten sub-columns last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; min-width: 0px; padding: 10px 0px 0; text-align: left; vertical-align: top; width: 83.333333%; word-break: break-word" align="left" valign="top">
+                            <div class="byline" style="font-family: georgia, serif"><a href="{if $post-&gt;network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post-&gt;network eq 'facebook'}https://facebook.com/{/if}{$post-&gt;author_user_id}" title="{$post-&gt;author_username}" style="color: #46bcff; text-decoration: none"><strong>{$post-&gt;author_fullname}</strong> {if $post-&gt;network eq 'twitter'}<span class="username">@{$post-&gt;author_username}</span>{/if}</a></div>
+                            <div class="tweet-body" style="font-family: georgia, serif">{$post-&gt;post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
                             <div class="tweet-actions">
-                              <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}" class="tweet-action tweet-action-permalink" style="color: #999; text-decoration: none; font-size: 12px;">{$post->pub_date|date_format:'%b %e, %Y'}</a>
+                              <a href="{if $post-&gt;network eq 'twitter'}https://twitter.com/{$post-&gt;author_username}/status/{/if}{if $post-&gt;network eq 'facebook'}https://www.facebook.com/{$post-&gt;author_user_id}/posts/{/if}{$post-&gt;post_id}" class="tweet-action tweet-action-permalink" style="color: #999; font-size: 12px; text-decoration: none">{$post-&gt;pub_date|date_format:'%b %e, %Y'}</a>
                             </div>
                         </td>
                     </tr>
                 </table>
             </td>
-            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
         {/if}
 
-        {if isset($post->links[0]->image_src) and $post->links[0]->image_src neq ""}
-        <tr class="insight-image-inline" style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="sub-grid" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 10px;" align="left" valign="top">
-            <table class="twelve sub-columns last" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; background: #{$color_light}; padding: 0;">
-              <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 0px;" align="left" valign="top">
-                    <a href="{$post->links[0]->url}" style="color: #2ba6cb; text-decoration: none;"><img src="{$post->links[0]->image_src}" alt="{$post->author_fullname}" class="center" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a>
+        {if isset($post-&gt;links[0]-&gt;image_src) and $post-&gt;links[0]-&gt;image_src neq ""}
+        <tr class="insight-image-inline" style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="sub-grid" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+            <table class="twelve sub-columns last" style="background: #{$color_light}; border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%" bgcolor="#{$color_light}">
+              <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                <td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0 0px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                    <a href="{$post-&gt;links[0]-&gt;url}" style="color: #2ba6cb; text-decoration: none"><img src="{$post-&gt;links[0]-&gt;image_src}" alt="{$post-&gt;author_fullname}" class="center" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: none; margin: 0 auto; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" /></a>
                 </td>
-                <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
               </tr>
             </table>
           </td>
@@ -709,26 +725,26 @@ or isset($insight->related_data.changes)}
         {/foreach}
         {/if}
 
-        {if isset($insight->related_data.posts) or isset($insight->related_data.people)}
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px;" align="left" valign="top">&nbsp;</td></tr>
+        {if isset($insight-&gt;related_data.posts) or isset($insight-&gt;related_data.people)}
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left"><td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 18px; margin: 0; padding: 10px 0px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top"> </td></tr>
         {/if}
     </table>
 {/if}
-        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="insight-footer sub-grid" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; border-top-style: solid; border-top-color: #dbdbdb; border-top-width: 1px; background: #fff; margin: 0; padding: 4px 10px;" align="left" valign="top">
-              <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
-                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                      <td class="six sub-columns permalink" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 50%; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 13px; margin: 0; padding: 0;" align="left" valign="top">
-                          <img src="https://www.thinkup.com/join/assets/img/icons/{$insight->instance->network}-gray.png" alt="{$insight->instance->network}" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; margin-right: 5px;" align="left" /><a href="{$permalink}" style="color: #999; text-decoration: none;">{$insight->date|date_format:"%b %d"}</a>
+        <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="insight-footer sub-grid" style="-moz-hyphens: auto; -webkit-hyphens: auto; background: #fff; border-collapse: collapse !important; border-top-color: #dbdbdb; border-top-style: solid; border-top-width: 1px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 4px 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" bgcolor="#fff" valign="top">
+              <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
+                  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                      <td class="six sub-columns permalink" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 13px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; min-width: 0px; padding: 0; text-align: left; vertical-align: top; width: 50%; word-break: break-word" align="left" valign="top">
+                          <img src="https://www.thinkup.com/join/assets/img/icons/{$insight-&gt;instance-&gt;network}-gray.png" alt="{$insight-&gt;instance-&gt;network}" style="-ms-interpolation-mode: bicubic; clear: both; display: block; float: left; margin-right: 5px; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" /><a href="{$permalink}" style="color: #999; text-decoration: none">{$insight-&gt;date|date_format:"%b %d"}</a>
                       </td>
-                      <td class="six sub-columns date" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: right; min-width: 0px; width: 50%; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 13px; margin: 0; padding: 0;" align="right" valign="top">
+                      <td class="six sub-columns date" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 13px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; min-width: 0px; padding: 0; text-align: right; vertical-align: top; width: 50%; word-break: break-word" align="right" valign="top">
                         {$share_link}
                       </td>
                   </tr>
               </table>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
     </td>
@@ -736,15 +752,15 @@ or isset($insight->related_data.changes)}
 </table>
 {/foreach}
 
-<table class="row email-settings" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
-      <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-              <small class="center" style="font-size: 11px; color: #999;">You receive new insights from ThinkUp once a {if $weekly_or_daily eq 'Daily'}day{else}week{/if}.<br>To get insights once a {if $weekly_or_daily eq "Daily"}week{else}day{/if} or unsubscribe altogether, <a href="{$unsub_url}" style="color: #2ba6cb; text-decoration: none;">change your email settings.</a><br>If you reply to this email, an actual human will read it.</small>
+<table class="row email-settings" style="border-collapse: collapse; border-spacing: 0; display: block; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%">
+  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+    <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+      <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+        <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+          <td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 0px 10px; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+              <small class="center" style="color: #999; font-size: 11px">You receive new insights from ThinkUp once a {if $weekly_or_daily eq 'Daily'}day{else}week{/if}.<br />To get insights once a {if $weekly_or_daily eq "Daily"}week{else}day{/if} or unsubscribe altogether, <a href="{$unsub_url}" style="color: #2ba6cb; text-decoration: none">change your email settings.</a><br />If you reply to this email, an actual human will read it.</small>
           </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+          <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
         </tr>
       </table>
 
@@ -758,34 +774,34 @@ or isset($insight->related_data.changes)}
             </tr>
           </table>
 
-          <table class="row footer" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; border-top-style: solid; border-top-color: #dbdbdb; border-top-width: 1px; color: #999; margin-top: 14px; padding: 0px;">
-            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-              <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-                <center style="width: 100%; min-width: 580px;">
+          <table class="row footer" style="border-collapse: collapse; border-spacing: 0; border-top-color: #dbdbdb; border-top-style: solid; border-top-width: 1px; color: #999; margin-top: 14px; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%">
+            <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+              <td class="center" align="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: center; vertical-align: top; word-break: break-word" valign="top">
+                <center style="min-width: 580px; width: 100%">
 
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
-                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+                  <table class="container" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0 0 28px; text-align: inherit; vertical-align: top; width: 580px">
+                    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                      <td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 10px 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
 
-                        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                          <td class="footer sub-grid" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
-                              <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
-                                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-                                      <td class="three sub-columns privacy" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 25%; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 16px; font-size: 12px; margin: 0; padding: 0px 0 0 0px;" align="left" valign="top">
-                                    &copy;2014 ThinkUp, LLC<br>
-                                        <a class="privacy" href="https://github.com/ThinkUpLLC/policy" style="color: #46bcff; text-decoration: none;">Privacy and stuff</a>
+                        <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 580px">
+                          <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                          <td class="footer sub-grid" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0px 0px 10px; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+                              <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
+                                  <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+                                      <td class="three sub-columns privacy" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; min-width: 0px; padding: 0px 0 0 0px; text-align: left; vertical-align: top; width: 25%; word-break: break-word" align="left" valign="top">
+                                    ©2014 ThinkUp, LLC<br />
+                                        <a class="privacy" href="https://github.com/ThinkUpLLC/policy" style="color: #46bcff; text-decoration: none">Privacy and stuff</a>
                                       </td>
-                                      <td class="six sub-columns links" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: middle; text-align: center; min-width: 0px; width: 50%; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 16px; font-size: 12px; margin: 0; padding: 0px 0 0 0px;" align="center" valign="middle">
-                                          <a href="https://twitter.com/thinkup" style="color: #46bcff; text-decoration: none;"><img src="https://www.thinkup.com/join/assets/img/icons/twitter-blue.png" width="20" height="20" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: inline; height: 20px; padding: 0 10px; border: none;" align="none" /></a><a href="https://facebook.com/thinkupapp" style="color: #46bcff; text-decoration: none;"><img src="https://www.thinkup.com/join/assets/img/icons/facebook-blue.png" width="20" height="20" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: inline; height: 20px; padding: 0 10px; border: none;" align="none" /></a><a href="https://plus.google.com/109397312975756759279" style="color: #46bcff; text-decoration: none;"><img src="https://www.thinkup.com/join/assets/img/icons/google-plus-blue.png" width="20" height="20" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: inline; height: 20px; padding: 0 10px; border: none;" align="none" /></a><a href="https://github.com/ginatrapani/ThinkUp" style="color: #46bcff; text-decoration: none;"><img src="https://www.thinkup.com/join/assets/img/icons/github-blue.png" width="20" height="20" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: inline; height: 20px; padding: 0 10px; border: none;" align="none" /></a>
+                                      <td class="six sub-columns links" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; min-width: 0px; padding: 0px 0 0 0px; text-align: center; vertical-align: middle; width: 50%; word-break: break-word" align="center" valign="middle">
+                                          <a href="https://twitter.com/thinkup" style="color: #46bcff; text-decoration: none"><img src="https://www.thinkup.com/join/assets/img/icons/twitter-blue.png" width="20" height="20" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: inline; float: none; height: 20px; max-width: 100%; outline: none; padding: 0 10px; text-decoration: none; width: auto" align="none" /></a><a href="https://facebook.com/thinkupapp" style="color: #46bcff; text-decoration: none"><img src="https://www.thinkup.com/join/assets/img/icons/facebook-blue.png" width="20" height="20" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: inline; float: none; height: 20px; max-width: 100%; outline: none; padding: 0 10px; text-decoration: none; width: auto" align="none" /></a><a href="https://plus.google.com/109397312975756759279" style="color: #46bcff; text-decoration: none"><img src="https://www.thinkup.com/join/assets/img/icons/google-plus-blue.png" width="20" height="20" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: inline; float: none; height: 20px; max-width: 100%; outline: none; padding: 0 10px; text-decoration: none; width: auto" align="none" /></a><a href="https://github.com/ginatrapani/ThinkUp" style="color: #46bcff; text-decoration: none"><img src="https://www.thinkup.com/join/assets/img/icons/github-blue.png" width="20" height="20" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: inline; float: none; height: 20px; max-width: 100%; outline: none; padding: 0 10px; text-decoration: none; width: auto" align="none" /></a>
                                       </td>
-                                      <td class="three sub-columns motto" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: right; min-width: 0px; width: 25%; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 16px; font-size: 12px; margin: 0; padding: 0px 0 0 0px;" align="right" valign="top">
+                                      <td class="three sub-columns motto" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #999; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; min-width: 0px; padding: 0px 0 0 0px; text-align: right; vertical-align: top; width: 25%; word-break: break-word" align="right" valign="top">
                                           It is nice to be nice.
                                       </td>
                                   </tr>
                               </table>
                           </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+                            <td class="expander" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; visibility: hidden; width: 0px; word-break: break-word" align="left" valign="top"></td>
                           </tr>
                         </table>
 
@@ -803,5 +819,5 @@ or isset($insight->related_data.changes)}
       </td>
     </tr>
   </table>
-</body>
-</html>
+
+</body></html>
