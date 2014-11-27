@@ -68,6 +68,7 @@
 
   {math equation="x % 10" x=$i->id assign=random_color_num}
   {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}{assign var='color' value='historical'}
+  {elseif $i->slug|strpos:'eoy_'===0 and not $is_year_end}{assign var='color' value='blue'}
   {elseif $random_color_num eq '0'}{assign var='color' value='pea'}
   {elseif $random_color_num eq '1'}{assign var='color' value='creamsicle'}
   {elseif $random_color_num eq '2'}{assign var='color' value='purple'}
