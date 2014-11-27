@@ -133,15 +133,6 @@ class TestOfEOYBiggestFansInsight extends ThinkUpInsightUnitTestCase {
             "Cordelia Chase, Wesley Wyndam-Pryce, and Winifred &ldquo;Fred&rdquo; " .
             "Burkle liked Mark Zuckerberg's status updates the most this year.", $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        // return false;
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 }

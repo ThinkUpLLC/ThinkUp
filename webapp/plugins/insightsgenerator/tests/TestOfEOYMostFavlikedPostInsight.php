@@ -165,7 +165,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("In the Walk of Fame that is @buffy's Twitter stream, " .
             "these fan favorites earned the most stars in $year.", $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testFacebookNormalCase() {
@@ -221,7 +221,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
             "Buffy Summers's friends mashing the thumbs-up button the most in $year.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case: Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case: Facebook");
     }
 
     // Text variations in amount: if matches == 1
@@ -254,7 +254,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("In the Walk of Fame that is @buffy's Twitter stream, " .
             "this fan favorite earned the most stars in $year.", $result->text);
 
-        $this->dumpRenderedInsight($result, "One match: Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "One match: Twitter");
     }
 
     public function testFacebookOneMatch() {
@@ -288,7 +288,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
             "Buffy Summers's friends mashing the thumbs-up button the most in $year.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "One match: Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "One match: Facebook");
     }
 
     // // test if user had no likes this year
@@ -321,7 +321,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("@buffy didn't get any faves in $year, which is crazy! " .
             "Give @thinkup a mention and we'd be happy to change that.", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches: Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "No matches: Twitter");
     }
 
     public function testFacebookNoMatches() {
@@ -354,7 +354,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("No one liked Buffy Summers's status updates on Facebook " .
             "in $year, but no biggie: We like Buffy Summers plenty.", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches: Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "No matches: Facebook");
     }
 
     public function testFavlikeCount() {
@@ -421,13 +421,5 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id,
             $year.'-'.$insight_plugin->run_date);
         $this->assertPattern("/100 likes/", $result->related_data);
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
     }
 }

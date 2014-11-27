@@ -1182,4 +1182,22 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             return array_slice($users, 0, rand($min,$max));
         }
     }
+
+    /**
+     * Dump rendered insight for stream and email, plus the email subject line and optional message.
+     * @param  Insight  $insight
+     * @param  Instance $instance
+     * @param  str   $message default null
+     * @return void
+     */
+    protected function dumpRenderedInsight(Insight $insight, Instance $instance, $message=null) {
+        if (isset($message)) {
+            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
+        }
+        $terms = new InsightTerms($instance->network);
+        $email_subject_line = $terms->swapInSecondPerson($instance->network_username, $insight->headline);
+        $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">Email Subject: ".$email_subject_line."</h4>");
+        $this->debug($this->getRenderedInsightInHTML($insight));
+        $this->debug($this->getRenderedInsightInEmail($insight));
+    }
 }

@@ -189,7 +189,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             "about a tweetstorm.) These are @buffy's most popular tweets from that day.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testFacebookNormalCase() {
@@ -259,7 +259,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             "popular status updates from that day.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 
     public function testTwitterMultipleMatches() {
@@ -314,7 +314,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             "March 7th, and April 7th</strong> — more than on any other days this year. These are " .
             "@buffy's most popular tweets from each day.", $result->text);
 
-        $this->dumpRenderedInsight($result, "Multiple days, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Multiple days, Twitter");
     }
 
     public function testFacebookMultipleMatches() {
@@ -372,7 +372,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             "are Buffy Summers's most popular status updates from each day."
             , $result->text);
 
-        $this->dumpRenderedInsight($result, "Multiple days, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Multiple days, Facebook");
     }
 
     public function testMostPopularPosts() {
@@ -468,27 +468,5 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
         // $this->debug(Utils::varDumpToString($posts));
         $this->assertEqual('This is the most popular post!', $posts[0]->post_text);
     }
-
-
-    private function dumpAllHTML() {
-        $controller = new InsightStreamController();
-        $_GET['u'] = $this->instance->network_username;
-        $_GET['n'] = $this->instance->network;
-        $_GET['d'] = date ('Y-m-d');
-        $_GET['s'] = 'eoy_most_shared';
-        $results = $controller->go();
-        //output this to an HTML file to see the insight fully rendered
-        $this->debug($results);
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        // return false;
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
-    }
-
 }
 

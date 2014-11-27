@@ -204,7 +204,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
             "at least 1,000 characters. In $year, these were the most popular pics @ev " .
             "shared on Twitter.", $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testTwitterOneMatch() {
@@ -242,7 +242,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
             "at least 1,000 characters. In $year, this was the most popular pic @ev " .
             "shared on Twitter.", $result->text);
 
-        $this->dumpRenderedInsight($result, "One match, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "One match, Twitter");
     }
 
     public function testTwitterNoMatch() {
@@ -275,7 +275,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("@ev didn't share any pics on Twitter this year. Bummer! " .
             "On the plus side: @ev probably doesn't need to worry about leaked nudes!", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "No matches, Twitter");
     }
 
     public function testFacebookNormalCase() {
@@ -346,7 +346,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
             "were the most popular pics Mark Zuckerberg shared on Facebook.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 
     public function testFacebookOneMatch() {
@@ -385,7 +385,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
             "was the most popular pic Mark Zuckerberg shared on Facebook.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "One match, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "One match, Facebook");
     }
 
     public function testFacebookNoMatch() {
@@ -420,16 +420,7 @@ class TestOfEOYPopularPicInsight extends ThinkUpInsightUnitTestCase {
             "Bummer! On the plus side: " .
             "Mark Zuckerberg probably doesn't need to worry about leaked nudes!", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches, Facebook");
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        // return false;
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $this->instance, "No matches, Facebook");
     }
 }
 

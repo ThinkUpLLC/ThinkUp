@@ -142,7 +142,7 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
             "year, with $this_month_str eliciting the most fucks. Overall: Great fucking year.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testTwitterOneMatch() {
@@ -192,7 +192,7 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
             "year, in January. Overall: Great fucking year.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "One match, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "One match, Twitter");
     }
 
 
@@ -242,7 +242,7 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
             "$this_month_str on the receiving end of the most fucks. Fuck yeah.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 
     public function testFacebookOneMatch() {
@@ -281,7 +281,7 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $posts = array();
         $insight_plugin = new EOYFBombCountInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-        //
+
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $year = date('Y');
@@ -294,16 +294,6 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("Mark Zuckerberg dropped 1 f-bomb on Facebook in $year, in " .
             "January. Fuck yeah.", $result->text);
 
-        $this->dumpRenderedInsight($result, "One match, Facebook");
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        // return false;
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $this->instance, "One match, Facebook");
     }
 }
-
