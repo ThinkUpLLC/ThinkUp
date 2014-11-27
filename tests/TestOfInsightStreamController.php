@@ -63,7 +63,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         'posts_per_week'=>77));
         // Facebook public instance
         $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'13',
-        'network_username'=>'Bill Cõsby', 'network'=>'facebook', 'network_viewer_id'=>'10',
+        'network_username'=>'Bill Jônes', 'network'=>'facebook', 'network_viewer_id'=>'10',
         'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
         'posts_per_week'=>77));
 
@@ -95,7 +95,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike', 'time_generated'=>$time_now,
         'related_data'=>self::getRelatedDataListOfPosts()));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
-        'instance_id'=>'4', 'headline'=>'Booyah Facebook!', 'text'=>'This is Bill Cõsby\'s Facebook post!',
+        'instance_id'=>'4', 'headline'=>'Booyah Facebook!', 'text'=>'This is Bill Jônes\'s Facebook post!',
         'emphasis'=>Insight::EMPHASIS_HIGH, 'filename'=>'retweetspike',
         'time_generated'=>$time_now, 'related_data'=>self::getRelatedDataListOfPosts('facebook')));
         $builders[] = FixtureBuilder::build('insights', array('date'=>'2012-06-01', 'slug'=>'avg_replies_per_week',
@@ -148,7 +148,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
             'posts_per_week'=>77));
         // Facebook public instance
         $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>'13',
-            'network_username'=>'Bill Cõsby', 'network'=>'facebook', 'network_viewer_id'=>'10',
+            'network_username'=>'Bill Jônes', 'network'=>'facebook', 'network_viewer_id'=>'10',
             'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>1, 'posts_per_day'=>11,
             'posts_per_week'=>77));
 
@@ -514,9 +514,9 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $results = $controller->go();
         $this->debug($results);
         //Assert spaces are encoded
-        $this->assertPattern('/Bill\+Cõsby/', $results);
+        $this->assertPattern('/Bill\+Jônes/', $results);
         //Assert accented characters are not encoded
-        $this->assertNoPattern('/Bill\+Cosby/', $results);
+        $this->assertNoPattern('/Bill\+Jones/', $results);
     }
 
     public function testForIconLinks() {
