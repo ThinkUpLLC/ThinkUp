@@ -140,7 +140,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
             "tweets</strong>. That's 100% of @ev's tweets this year!",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testTwitterNoMatches() {
@@ -178,7 +178,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("In $year, @ev didn't use one exclamation point on " .
             "Twitter. Must be holding out for something really exciting!", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "No matches, Twitter");
     }
 
 
@@ -228,7 +228,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
             "containing exclamation points. That's 100% of Mark Zuckerberg's " .
             "Facebook posts this year!", $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 
     public function testFacebookNoMatches() {
@@ -269,15 +269,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("In $year, Mark Zuckerberg didn't use one exclamation point on " .
             "Facebook. Must be holding out for something really exciting!", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches, Facebook");
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $this->instance, "No matches, Facebook");
     }
 }
 

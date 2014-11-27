@@ -127,7 +127,7 @@ class TestOfEOYAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
             "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;. Sometimes, you've " .
             "just got to get personal.", $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
     public function testFacebookNormalCase() {
@@ -181,7 +181,7 @@ class TestOfEOYAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
             "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;. Sometimes, Facebook is a first-person story.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, "Normal case, Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
 
     public function testTwitterNoMatches() {
@@ -224,16 +224,7 @@ class TestOfEOYAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
             "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;. Sometimes, you've " .
             "just got to get personal &mdash; unless you're @ev, apparently!", $result->text);
 
-        $this->dumpRenderedInsight($result, "No matches, Twitter");
-    }
-
-    private function dumpRenderedInsight($result, $message) {
-        // return false;
-        if (isset($message)) {
-            $this->debug("<h4 style=\"text-align: center; margin-top: 20px;\">$message</h4>");
-        }
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $this->instance, "No matches, Twitter");
     }
 }
 
