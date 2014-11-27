@@ -1182,7 +1182,8 @@ body.app-message-visible.account .container {
     text-align: center;
   }
 }
-.stream {
+.stream,
+.stream-yearend {
   min-width: 320px;
   width: 100%;
   padding: 0 5px;
@@ -1244,7 +1245,8 @@ body.app-message-visible.account .container {
   display: none;
 }
 @media (min-width: 540px) {
-  .stream {
+  .stream,
+  .stream-yearend {
     padding: 0 10px;
   }
   .stream .date-group,
@@ -1347,7 +1349,7 @@ body.app-message-visible.account .container {
   border-bottom-width: 2px;
 }
 .insight .panel-heading {
-  background: #d0d0d0;
+  background-color: #d0d0d0;
 }
 .insight.insight-hero .panel-heading .panel-title {
   color: #666666;
@@ -1649,7 +1651,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #46bcff;
 }
 .insight-message .panel-heading {
-  background: #ffffff;
+  background-color: #ffffff;
 }
 .insight-message.insight-hero .panel-heading .panel-title {
   color: #2785d3;
@@ -1716,6 +1718,12 @@ body.app-message-visible.account .container {
     width: 100%;
     margin-left: 0;
   }
+}
+.insight-wide.insight-hero .panel-heading {
+  padding: 15px 10px;
+}
+.insight-wide.insight-hero .panel-heading .panel-title {
+  margin-bottom: 5px;
 }
 .insight-tout {
   position: relative;
@@ -1791,19 +1799,27 @@ body.app-message-visible.account .container {
   text-align: center;
   font-size: 17px;
 }
+.insight-yearend {
+  border-top-width: 0;
+}
+.stream-yearend .insight-yearend {
+  border-top-width: 5px;
+}
 .insight-yearend .insight-yearend-header {
   font-size: 1.14285714em;
   line-height: 1.3333;
   color: #fff;
   position: relative;
-  padding: 5px 10px 10px;
+  padding: 20px 10px;
+  background-image: url(https://www.thinkup.com/assets/images/insights/2014-12/eoy-header.png);
+  background-position: 0 0;
 }
 .stream-yearend .insight-yearend .insight-yearend-header {
   display: none;
 }
 @media (min-width: 400px) {
   .insight-yearend .insight-yearend-header {
-    font-size: 1.28571429em;
+    font-size: 1.42857143em;
   }
 }
 .insight-yearend .insight-yearend-header .logo {
@@ -1813,20 +1829,24 @@ body.app-message-visible.account .container {
 }
 @media (min-width: 400px) {
   .insight-yearend .insight-yearend-header .logo {
-    vertical-align: -4px;
-    height: 19px;
+    vertical-align: -5px;
+    height: 21px;
   }
 }
 .insight-yearend .insight-yearend-header .btn {
   position: absolute;
-  top: 2px;
+  top: 15px;
   right: 10px;
   font-size: 0.77777778em;
-  line-height: 1.85714286;
+  line-height: 2.14285714;
   color: #fff;
   padding: 0 5px;
   font-weight: 300;
   transition: background-color 0.25s;
+}
+.insight-yearend .panel-heading {
+  background-image: url(https://www.thinkup.com/assets/images/insights/2014-12/eoy-header.png);
+  background-position: 0 -66px;
 }
 .insight-pea {
   background: #9dd767;
@@ -1834,7 +1854,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #9dd767;
 }
 .insight-pea .panel-heading {
-  background: #9dd767;
+  background-color: #9dd767;
 }
 .insight-pea.insight-hero .panel-heading .panel-title {
   color: #417505;
@@ -1886,7 +1906,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #fc939e;
 }
 .insight-salmon .panel-heading {
-  background: #fc939e;
+  background-color: #fc939e;
 }
 .insight-salmon.insight-hero .panel-heading .panel-title {
   color: #d0374b;
@@ -1938,7 +1958,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #ffbb4e;
 }
 .insight-creamsicle .panel-heading {
-  background: #ffbb4e;
+  background-color: #ffbb4e;
 }
 .insight-creamsicle.insight-hero .panel-heading .panel-title {
   color: #f36400;
@@ -1992,7 +2012,7 @@ body.app-message-visible.account .container {
 }
 .insight-historical .panel-heading,
 .insight-sepia .panel-heading {
-  background: #c0bdaf;
+  background-color: #c0bdaf;
 }
 .insight-historical.insight-hero .panel-heading .panel-title,
 .insight-sepia.insight-hero .panel-heading .panel-title {
@@ -2059,7 +2079,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #b690e2;
 }
 .insight-purple .panel-heading {
-  background: #b690e2;
+  background-color: #b690e2;
 }
 .insight-purple.insight-hero .panel-heading .panel-title {
   color: #7348b0;
@@ -2111,7 +2131,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #41dab3;
 }
 .insight-mint .panel-heading {
-  background: #41dab3;
+  background-color: #41dab3;
 }
 .insight-mint.insight-hero .panel-heading .panel-title {
   color: #1c8e6e;
@@ -2163,7 +2183,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #f576b5;
 }
 .insight-bubblegum .panel-heading {
-  background: #f576b5;
+  background-color: #f576b5;
 }
 .insight-bubblegum.insight-hero .panel-heading .panel-title {
   color: #8f3963;
@@ -2215,7 +2235,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #44c9d7;
 }
 .insight-seabreeze .panel-heading {
-  background: #44c9d7;
+  background-color: #44c9d7;
 }
 .insight-seabreeze.insight-hero .panel-heading .panel-title {
   color: #126370;
@@ -2267,7 +2287,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #e4bf28;
 }
 .insight-dijon .panel-heading {
-  background: #e4bf28;
+  background-color: #e4bf28;
 }
 .insight-dijon.insight-hero .panel-heading .panel-title {
   color: #926d01;
@@ -2319,7 +2339,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #fd8560;
 }
 .insight-sandalwood .panel-heading {
-  background: #fd8560;
+  background-color: #fd8560;
 }
 .insight-sandalwood.insight-hero .panel-heading .panel-title {
   color: #a02c08;
@@ -2371,7 +2391,7 @@ body.app-message-visible.account .container {
   border-bottom-color: #dd814b;
 }
 .insight-caramel .panel-heading {
-  background: #dd814b;
+  background-color: #dd814b;
 }
 .insight-caramel.insight-hero .panel-heading .panel-title {
   color: #71430e;
@@ -2416,6 +2436,58 @@ body.app-message-visible.account .container {
 }
 .insight-caramel .tweet .photo {
   background: rgba(221, 129, 75, 0.25);
+}
+.insight-blue {
+  background: #46bcff;
+  border-top-color: #2785d3;
+  border-bottom-color: #46bcff;
+}
+.insight-blue .panel-heading {
+  background-color: #46bcff;
+}
+.insight-blue.insight-hero .panel-heading .panel-title {
+  color: #2785d3;
+}
+.insight-blue.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(39, 133, 211, 0.25);
+  border-bottom-color: rgba(70, 188, 255, 0.25);
+}
+.insight-blue.insight-yearend-tease .panel-heading {
+  background: rgba(70, 188, 255, 0.25);
+}
+.insight-blue.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
+}
+.insight-blue .panel-body,
+.insight-blue .panel-desktop-right,
+.insight-blue .panel-footer {
+  background: #ffffff;
+}
+.insight-blue .panel-footer {
+  border-top-color: #dbdbdb;
+}
+.insight-blue .panel-footer .share-menu {
+  border-color: #dbdbdb;
+  background-color: #ffffff;
+}
+.insight-blue .insight-color-text {
+  color: #46bcff;
+}
+.insight-blue .insight-color-background {
+  background-color: #46bcff;
+}
+.insight-blue .insight-yearend-header {
+  background-color: #2785d3;
+}
+.insight-blue .insight-yearend-header .btn {
+  background-color: #46bcff;
+}
+.insight-blue .insight-yearend-header .btn:hover {
+  background-color: #2cb3ff;
+}
+.insight-blue .tweet .photo {
+  background: rgba(70, 188, 255, 0.25);
 }
 .panel-heading h2.lead {
   font-weight: 700;

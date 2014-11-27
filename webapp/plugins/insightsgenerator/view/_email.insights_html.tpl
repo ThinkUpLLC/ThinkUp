@@ -565,13 +565,32 @@ color: #417505 !important;
   {assign var='color_light' value='fee4e7'}
 {/if}
 
-<table class="row insight insight-{$color_name}" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #{$color_dark}; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #{$color}; border-bottom-width: 2px; margin-bottom: 14px; background: #{$color}; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+{if $insight->slug|strpos:'eoy_'===0}
+  {assign var='color_name' value='blue'}
+  {assign var='color_dark' value='2785D3'}
+  {assign var='color' value='46BCFF'}
+  {assign var='color_light' value='46BCFF'}
+{/if}
 
-      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+<table class="row insight insight-{$color_name}" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #{$color_dark}; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #{$color}; border-bottom-width: 2px; margin-bottom: 14px; background-color: #{$color_dark}; padding: 0px;">
+  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0;" align="left" valign="top">
+
+
+    {if $insight->slug|strpos:'eoy_'===0}
+      <table class="twelve columns insight-yearend-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 10px 0px 0px; background-color: #{$color_dark}">
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
           <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="left" valign="top">
+            <h6 style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 1.3; word-break: normal; font-size: 20px; margin: 0; padding: 0;" align="left"><a href="{$application_url}2014/" style="color: #fff !important; text-decoration: none; font-weight: bold; font-size: 18px;">ThinkUp Best of 2014</a></h6>
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+        </tr>
+      </table>
+    {/if}
+
+      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 10px 0 0 0; background-color: #{$color}">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 10px 10px;" align="left" valign="top">
               <h6 style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 1.3; word-break: normal; font-size: 20px; margin: 0; padding: 0;" align="left"><a href="{$permalink}" style="color: #fff !important; text-decoration: none; font-weight: bold; font-size: 18px;">{$insight->headline}</a></h6>
           </td>
           <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>

@@ -349,7 +349,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
 
         //accented character
-        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Cõsby',
+        $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Jõnes',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>7));
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
@@ -358,7 +358,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
         $builders[] = FixtureBuilder::build('insights', array('id'=>4, 'instance_id'=>7,
         'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'Wow: Made the List:',
-        'text'=>'This was Bill Cosby\'s most popular post a year ago.',
+        'text'=>'This was Bill Jones\'s most popular post a year ago.',
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am')), 'related_data'=>null));
 
         // Hero image
@@ -466,17 +466,17 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         /**
          * Now that we're utf8_encoding email contents for Mandrill compatibility, this accented character is
          * not handled the way it should. The utf8_encode outputs:
-         * http://downtonabb.ey/?u=Bill+CÃµsby&amp;n=facebook&amp;d=2014-03-04&amp;s=frequency
+         * http://downtonabb.ey/?u=Bill+JÃµnes&amp;n=facebook&amp;d=2014-03-04&amp;s=frequency
          * So we're temporarily commenting out this assertion, a terrible--but temporary!--solution.
          * The long-term solution is to retrieve insights by network_user_id rather than name.
          * https://github.com/ginatrapani/ThinkUp/issues/972
          */
         //Should preserve accented character
-        //$this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Cõsby/', $merge_vars['insights'],
+        //$this->assertPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Jõnes/', $merge_vars['insights'],
         //    'Insight URL should not contain spaces');
 
         $this->debug($merge_vars['insights']);
-        $this->assertNoPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Cosby/', $merge_vars['insights'],
+        $this->assertNoPattern('/http:\/\/downtonabb.ey\/.*\?u=Bill\+Jones/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
         $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
             'Facebook icon should appear');
@@ -624,12 +624,12 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'text'=>'CDMoyer is on 29 new lists', 'related_data'=>null,
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
 
-        $builders[] = FixtureBuilder::build('instances', array('id'=>6,'network_username'=>'Bill Cosby',
+        $builders[] = FixtureBuilder::build('instances', array('id'=>6,'network_username'=>'Bill Jones',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>6));
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
         'slug'=>'new_group_memberships', 'headline'=>'Wow: Made the List:',
-        'text'=>'Bill Cosby is on 1,234 new lists', 'related_data'=>null,
+        'text'=>'Bill Jones is on 1,234 new lists', 'related_data'=>null,
         'time_generated'=>date('Y-m-d 03:00:00', strtotime($day_to_run.' 5pm')-(60*60*24*3))));
 
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -671,7 +671,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/example.com/', $sent);
         $this->assertPattern('/You receive new insights from ThinkUp once a week./', $merge_vars['insights']);
         $this->assertPattern('/To get insights once a day or unsubscribe altogether/', $merge_vars['insights']);
-        $this->assertPattern('/http:\/\/example.com\/.*\?u=Bill\+Cosby/', $merge_vars['insights'],
+        $this->assertPattern('/http:\/\/example.com\/.*\?u=Bill\+Jones/', $merge_vars['insights'],
             'Insight URL should not contain spaces');
         $this->assertPattern('/Wow:/', $merge_vars['insights'], 'Do not strip colons from headline');
         $this->assertPattern('/assets\/img\/icons\/facebook-gray\.png/', $merge_vars['insights'],
