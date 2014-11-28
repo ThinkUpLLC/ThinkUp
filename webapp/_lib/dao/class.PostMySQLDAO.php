@@ -2691,4 +2691,80 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts;
     }
+
+    public function getMostTalkativeDays($author_username, $network='twitter', $in_last_x_days = 0, $limit = 3,
+        $since = null ) {
+        $q = "SELECT  DATE_FORMAT(p.pub_date, '%Y-%m-%d') AS pub_date, ";
+        $q .= "COUNT(*) AS post_count ";
+        $q .= "FROM   #prefix#posts p ";
+        $q .= "WHERE author_username = :author_username AND p.network = :network ";
+
+        if ($in_last_x_days > 0) {
+            if ($since == null) {
+                $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            } else {
+                $q .= "AND pub_date >= DATE_SUB(:since, INTERVAL :in_last_x_days DAY) ";
+                $vars[':since'] = $since;
+            }
+            $vars[':in_last_x_days'] = (int)$in_last_x_days;
+        }
+
+        $q .= "GROUP  BY DATE(p.pub_date) ";
+        $q .= "ORDER  BY post_count DESC ";
+        $q .= "LIMIT  :limit;";
+
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':in_last_x_days'=>$in_last_x_days,
+            ':limit'=>$limit
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+
+    public function getAllPostsByUsernameOn($author_username, $network="twitter", $date) {
+        $vars = array(
+            ':author_username'=>$author_username,
+            ':network'=>$network,
+            ':date'=>$date
+        );
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "WHERE author_username = :author_username AND p.network = :network ";
+        $q .= "AND DATE(pub_date) = :date;";
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        $posts = array();
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
 }
