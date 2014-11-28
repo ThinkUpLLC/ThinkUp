@@ -150,10 +150,6 @@ class InsightStreamController extends ThinkUpController {
                 }
                 $this->addToView('insight_image', $insight_image);
                 $this->addToView('twitter_card', $twitter_card);
-
-                if (Utils::isTest() || date("Y-m-d") == '2014-11-27') {
-                    $this->addInfoMessage("Happy Thanksgiving! We're thankful you're using ThinkUp.");
-                }
             } else {
                 $this->addErrorMessage("This insight doesn't exist.");
             }
@@ -227,9 +223,6 @@ class InsightStreamController extends ThinkUpController {
             } else { //redirect to login
                 return false;
             }
-        }
-        if (Utils::isTest() || date("Y-m-d") == '2014-11-27') {
-            $this->addInfoMessage("Happy Thanksgiving! We're thankful you're using ThinkUp.");
         }
         return true;
     }
