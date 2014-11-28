@@ -91,7 +91,7 @@ class Loader {
         );
 
         // set default lookup path for special classes
-        self::$special_classes ["Smarty"] = THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php";
+        self::$special_classes ["Smarty"] = THINKUP_WEBAPP_PATH . "_lib/extlib/Smarty-2.6.28/libs/Smarty.class.php";
 
         if (isset($paths)) {
             foreach($paths as $path) {

@@ -126,7 +126,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testInstallerCheckPath() {
         $installer = Installer::getInstance();
         $this->assertTrue($installer->checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
-        'smarty_path' => THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/')));
+        'smarty_path' => THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.28/libs/')));
     }
 
     public function testInstallerCheckStep1() {
