@@ -378,7 +378,7 @@
         .panel-heading {
             float: none;
             width: 100%;
-            padding: 5px 10px 15px;
+            padding: 5px 10px 5px;
         }
 
         .panel-footer, .panel-body, .panel-desktop-right {
@@ -485,7 +485,10 @@
         line-height: 1.3333;
         color: #fff;
         position: relative;
-        padding: 5px 10px 10px;
+        padding: 10px 10px 10px;
+        background-image: url(https://www.thinkup.com/assets/images/insights/2014-12/eoy-header.jpg);
+        background-size: 560px 250px;
+        background-position: 0 -40px;
 
         .stream-yearend & {
             display: none;
@@ -508,7 +511,7 @@
 
         .btn {
             position: absolute;
-            top: 2px;
+            top: 8px;
             right: 10px;
             font-size: (14/18em);
             line-height: (26/14);
@@ -518,6 +521,15 @@
             transition: background-color .25s;
         }
     }
+
+    div.panel-heading {
+            .stream-yearend & {
+                background-position: 0 -0;
+            }
+
+        }
+
+
 }
 
 .insight-pea {
