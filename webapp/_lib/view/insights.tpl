@@ -13,12 +13,14 @@
     {/if}
     {/capture}
     <div class="stream-yearend-header">
-      <h1><img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {/if}Best of 2014</h1>
-<!--      <h2>24 days of insights</h2>
+      <h1>
+        <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of 2014
 
-      <div class="share-buttons">
-        <a class="btn btn-yearend" href="#"><i class="fa fa-twitter"></i> Share on Twitter</a> <a class="btn btn-yearend" href="#"><i class="fa fa-facebook"></i> Share on Facebook</a>
-      </div>  -->
+        <span class="share-buttons">
+          <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+2014&amp;url={$site_root_path|html_entity_decode|escape:'url'}2014&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$site_root_path|html_entity_decode|escape:'url'}2014"><i class="fa fa-fw fa-facebook"></i></a>
+        </span>
+      </h1>
+
     </div>
   {/if}
 
