@@ -41,9 +41,9 @@ class EOYPopularPicInsight extends InsightPluginParent implements InsightPlugin 
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-04';
+    //var $run_date = '12-04';
     //staging
-    //var $run_date = '11-04';
+    var $run_date = '11-27';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -52,7 +52,7 @@ class EOYPopularPicInsight extends InsightPluginParent implements InsightPlugin 
         $year = date('Y');
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
