@@ -119,11 +119,12 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual(100, $posts[0]->favlike_count_cache);
     }
 
-    public function testTwitterNormalCase() {
+    public function testTwitterNormalCaseIncompleteData() {
         // Set up and test normal twitter case
         $builders = self::setUpPublicInsight($this->instance);
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1001',
             'post_text' => 'This is very liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -133,6 +134,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1002',
             'post_text' => 'This is pretty well liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -142,6 +144,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1003',
             'post_text' => 'This is least liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -149,6 +152,70 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 25
             )
         );
+        $this->instance->last_post_id = '1001';
+
+        $posts = array();
+        $insight_plugin = new EOYMostFavlikedPostInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $year = date('Y');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id,
+            $year.'-'.$insight_plugin->run_date);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("@buffy's most-faved tweets of $year", $result->headline);
+        $this->assertEqual("In the Walk of Fame that is @buffy's Twitter stream, " .
+            "these fan favorites earned the most stars in $year (at least since February).", $result->text);
+
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case incomplete data, Twitter");
+    }
+
+    public function testTwitterNormalCaseCompleteData() {
+        // Set up and test normal twitter case
+        $builders = self::setUpPublicInsight($this->instance);
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1001',
+            'post_text' => 'This is very liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 100
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1002',
+            'post_text' => 'This is pretty well liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 50
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1003',
+            'post_text' => 'This is least liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 25
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1004',
+            'post_text' => 'This is least liked',
+            'pub_date' => '2013-12-07',
+            'author_username' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 25
+            )
+        );
+        $this->instance->last_post_id = '1004';
 
         $posts = array();
         $insight_plugin = new EOYMostFavlikedPostInsight();
@@ -165,16 +232,17 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("In the Walk of Fame that is @buffy's Twitter stream, " .
             "these fan favorites earned the most stars in $year.", $result->text);
 
-        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case complete data, Twitter");
     }
 
-    public function testFacebookNormalCase() {
+    public function testFacebookNormalCaseIncompleteData() {
         // set up and test facebook
         $this->instance->network_username = 'Buffy Summers';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1001',
             'post_text' => 'This is very liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -185,6 +253,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1002',
             'post_text' => 'This is pretty well liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -195,8 +264,79 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1003',
             'post_text' => 'This is least liked',
             'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'author_fullname' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 1
+            )
+        );
+
+        $posts = array();
+        $insight_plugin = new EOYMostFavlikedPostInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $year = date('Y');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id,
+            $year.'-'.$insight_plugin->run_date);
+        // $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("Buffy Summers's most-liked status updates of $year", $result->headline);
+        $this->assertEqual("Liked it? Nah. They LOVED it. These status updates had " .
+            "Buffy Summers's friends mashing the thumbs-up button the most in $year (at least since February).",
+            $result->text);
+
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, incomplete data: Facebook");
+    }
+
+    public function testFacebookNormalCaseCompleteData() {
+        // set up and test facebook
+        $this->instance->network_username = 'Buffy Summers';
+        $this->instance->network = 'facebook';
+        $builders = self::setUpPublicInsight($this->instance);
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1001',
+            'post_text' => 'This is very liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'author_fullname' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 100
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1002',
+            'post_text' => 'This is pretty well liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'author_fullname' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 50
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1003',
+            'post_text' => 'This is least liked',
+            'pub_date' => '2014-02-07',
+            'author_username' => $this->instance->network_username,
+            'author_fullname' => $this->instance->network_username,
+            'network' => $this->instance->network,
+            'favlike_count_cache' => 1
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+            'post_id' => '1004',
+            'post_text' => 'This is least liked',
+            'pub_date' => '2013-12-07',
             'author_username' => $this->instance->network_username,
             'author_fullname' => $this->instance->network_username,
             'network' => $this->instance->network,
@@ -221,7 +361,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
             "Buffy Summers's friends mashing the thumbs-up button the most in $year.",
             $result->text);
 
-        $this->dumpRenderedInsight($result, $this->instance, "Normal case: Facebook");
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, complete data: Facebook");
     }
 
     // Text variations in amount: if matches == 1
@@ -230,6 +370,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         // set up single popular post
         $builders[] = FixtureBuilder::build('posts',
             array(
+            'post_id' => '1003',
             'post_text' => 'This is very liked',
             'pub_date' => '2014-02-07',
             'author_username' => $this->instance->network_username,
@@ -237,7 +378,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
             'favlike_count_cache' => 100
             )
         );
-
+        $this->instance->last_post_id = '1003';
         $posts = array();
         $insight_plugin = new EOYMostFavlikedPostInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
@@ -252,7 +393,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertEqual("@buffy's most-faved tweet of $year", $result->headline);
         $this->assertEqual("In the Walk of Fame that is @buffy's Twitter stream, " .
-            "this fan favorite earned the most stars in $year.", $result->text);
+            "this fan favorite earned the most stars in $year (at least since February).", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "One match: Twitter");
     }
@@ -285,7 +426,7 @@ class TestOfEOYMostFavlikedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertEqual("Buffy Summers's most-liked status update of $year", $result->headline);
         $this->assertEqual("Liked it? Nah. They LOVED it. This status update had " .
-            "Buffy Summers's friends mashing the thumbs-up button the most in $year.",
+            "Buffy Summers's friends mashing the thumbs-up button the most in $year (at least since February).",
             $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "One match: Facebook");

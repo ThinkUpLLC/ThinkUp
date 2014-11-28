@@ -83,17 +83,28 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                 }
             }
 
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
+            if ( date('Y', strtotime($earliest_pub_date)) == date('Y') ) {
+                //Earliest post was this year; figure out what month we have data since this year
+                $since = date('F', strtotime($earliest_pub_date));
+                $qualified_year = $year." (at least since ".$since.")";
+            } else {
+                $qualified_year = $year;
+            }
+
+
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
                         'headline' => "%username's most-faved tweets of %year",
                         'body' => "In the Walk of Fame that is %username's Twitter " .
-                            "stream, these fan favorites earned the most stars in %year."
+                            "stream, these fan favorites earned the most stars in %qualified_year."
                     ),
                     'one' => array(
                         'headline' => "%username's most-faved tweet of %year",
                         'body' => "In the Walk of Fame that is %username's Twitter " .
-                            "stream, this fan favorite earned the most stars in %year."
+                            "stream, this fan favorite earned the most stars in %qualified_year."
                     ),
                     'none' => array(
                         'headline' => "What's in a fave?",
@@ -107,13 +118,13 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                         'headline' => "%username's most-liked status updates of %year",
                         'body' => "Liked it? Nah. They LOVED it. These status updates " .
                             "had %username's friends mashing the thumbs-up button the " .
-                            "most in %year."
+                            "most in %qualified_year."
                     ),
                     'one' => array(
                         'headline' => "%username's most-liked status update of %year",
                         'body' => "Liked it? Nah. They LOVED it. This status update " .
                             "had %username's friends mashing the thumbs-up button the " .
-                            "most in %year."
+                            "most in %qualified_year."
                     ),
                     'none' => array(
                         'headline' => "Like, what's the deal?",
@@ -138,7 +149,8 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                     $copy[$network][$type]['headline']
                 ),
                 array(
-                    'year' => $year
+                    'year' => $year,
+                    'qualified_year' => $qualified_year
                 )
             );
             $insight->text = $this->getVariableCopy(
@@ -146,7 +158,8 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                     $copy[$network][$type]['body']
                 ),
                 array(
-                    'year' => $year
+                    'year' => $year,
+                    'qualified_year' => $qualified_year
                 )
             );
 
