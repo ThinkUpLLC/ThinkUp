@@ -116,6 +116,35 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     /**
+     * Get earliest post ID and pub_date captured for a user on a network.
+     * @param  str $author_username
+     * @param  str $network
+     * @return arr array('post_id'=> $post_id, 'pub_date'=>$pub_date)
+     */
+    private function getEarliestPostIDAndDate($author_username, $network) {
+        $q = "SELECT p.post_id, p.pub_date FROM tu_posts p WHERE author_username =  :author_username ";
+        $q .= "AND p.network = :network  ORDER BY pub_date ASC LIMIT 1";
+        $vars = array(
+            ':author_username'=>(string)$author_username,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowAsArray($ps);
+    }
+
+    public function getEarliestCapturedPostPubDate(Instance $instance) {
+        if ($instance->network == 'twitter') {
+            $post = $this->getPost($instance->last_post_id, $instance->network);
+            $earliest_pub_date = $post->pub_date;
+        } else {
+            $earliest_pub_date_arr = $this->getEarliestPostIDAndDate($instance->network_username, $instance->network);
+            $earliest_pub_date = $earliest_pub_date_arr['pub_date'];
+        }
+        return $earliest_pub_date;
+    }
+
+    /**
      * Add author object to post
      * @param array $row
      * @return Post post with author member variable set

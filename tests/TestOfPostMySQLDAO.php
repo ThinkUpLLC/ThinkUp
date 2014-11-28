@@ -1324,17 +1324,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $pb1 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>30,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
-        'network'=>'facebook', 'pub_date'=>'-3h'));
+        'network'=>'facebook', 'pub_date'=>'-3h', 'author_username'=>'Facebook User 3'));
         array_push($builders, $pb1);
 
         $pb2 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>31,
         'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-2h'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-2h', 'author_username'=>'Facebook User 2'));
         array_push($builders, $pb2);
 
         $pb3 = FixtureBuilder::build('posts', array('post_id'=>147, 'author_user_id'=>32,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-1h'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-1h', 'author_username'=>'Facebook User 3'));
         array_push($builders, $pb3);
 
         return $builders;
@@ -4730,7 +4730,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetAllPostsByUsernameOn() {
-        $year = Date('Y');
+        $year = date('Y');
         $user = "a_user";
         $network = "twitter";
         for ($i=0; $i<5; $i++) {
@@ -4773,5 +4773,40 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         foreach ($all_posts_on_day as $post) {
             $this->assertPattern("/$year-02-07/", $post->pub_date);
         }
+    }
+
+    public function testGetEarliestCapturedPostPubDate() {
+        $instance = new Instance();
+        //Test Twitter
+        $instance->network_username = 'ev';
+        $instance->network = 'twitter';
+        $instance->last_post_id = '39';
+
+        $dao = new PostMySQLDAO();
+        $result = $dao->getEarliestCapturedPostPubDate($instance);
+        $this->assertEqual($result, '2006-01-01 00:39:00');
+
+        //Test Facebook - no posts
+        $instance->network_username = 'ev';
+        $instance->network = 'facebook';
+        $instance->last_post_id = '';
+
+        $dao = new PostMySQLDAO();
+        $result = $dao->getEarliestCapturedPostPubDate($instance);
+        $this->assertNull($result);
+
+        //Test Facebook - with posts
+        $builders = $this->buildFacebookPostAndReplies();
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>155, 'author_user_id'=>30,
+        'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
+        'network'=>'facebook', 'pub_date'=>'2013-01-01', 'author_username'=>'Facebook User 3'));
+        array_push($builders, $pb1);
+
+        $instance->network_username = 'Facebook User 3';
+        $instance->network = 'facebook';
+
+        $dao = new PostMySQLDAO();
+        $result = $dao->getEarliestCapturedPostPubDate($instance);
+        $this->assertEqual($result, '2013-01-01 00:00:00');
     }
 }
