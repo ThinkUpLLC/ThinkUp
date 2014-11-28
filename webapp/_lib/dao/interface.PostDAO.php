@@ -843,4 +843,11 @@ interface PostDAO {
      * @return PostIterator
      */
     public function getThisYearOfPostsWithLinksIterator($author_id, $network);
+
+    /**
+     * Get the pub_date of the earliest post captured for an instance.
+     * @param  Instance $instance
+     * @return str
+     */
+    public function getEarliestCapturedPostPubDate(Instance $instance);
 }
