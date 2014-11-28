@@ -37,6 +37,7 @@ $eoy_insight_tests = new TestSuite('EOY insight tests');
 //EOY insight tests
 $eoy_insight_tests->add(new TestOfEOYMostFavlikedPostInsight());
 $eoy_insight_tests->add(new TestOfEOYAllAboutYouInsight());
+$eoy_insight_tests->add(new TestOfEOYMostTalkativeDayInsight());
 
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 
