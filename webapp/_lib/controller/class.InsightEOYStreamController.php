@@ -31,7 +31,11 @@
  *
  */
 class InsightEOYStreamController extends InsightStreamController {
-
+    /**
+     * Template name
+     * @var string
+     */
+    var $tpl_name = 'insights-eoy.tpl';
     /**
      * Load view with data to display page of insights.
      */
