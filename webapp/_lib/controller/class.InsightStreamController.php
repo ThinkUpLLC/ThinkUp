@@ -36,10 +36,15 @@ class InsightStreamController extends ThinkUpController {
      * @var int
      */
     const PAGE_INSIGHTS_COUNT = 20;
+    /**
+     * Template name
+     * @var string
+     */
+    var $tpl_name = 'insights.tpl';
 
     public function control() {
         $config = Config::getInstance();
-        $this->setViewTemplate('insights.tpl');
+        $this->setViewTemplate($this->tpl_name);
         $this->addToView('enable_bootstrap', true);
         $this->addToView('developer_log', $config->getValue('is_log_verbose'));
         $this->addToView('thinkup_application_url', Utils::getApplicationURL());

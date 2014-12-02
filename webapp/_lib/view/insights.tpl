@@ -235,6 +235,10 @@
   {assign var='tout_headline' value="Join ThinkUp and you'll be celebrating your Twitter birthday, too!'"}
 {/if}
 
+{if $i->slug|strpos:'eoy_'===0}
+  {assign var='tout_headline' value="What's <em>your</em> Best of 2014? Find out!"}
+{/if}
+
 <div class="panel panel-default insight insight-default insight-hero insight-wide insight-message insight-tout">
   <div class="panel-heading">
     <h2 class="panel-title">{$tout_headline}</h2>
