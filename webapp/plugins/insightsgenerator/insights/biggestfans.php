@@ -45,7 +45,8 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             $day_of_month = 2;
         }
         $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance,
-            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month);
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month,
+            null, array('twitter'));
 
         $prefix = $instance->network == 'twitter' ? '@' : '';
         if ($should_generate_insight) { //it's the right day of the month
@@ -87,7 +88,8 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             $day_of_week = 3;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance,
-            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_week = $day_of_week );
+            $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_week = $day_of_week,
+            null, array('twitter') );
         if ($should_generate_insight) { //it's Sunday
             // Past 7 days
             $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
