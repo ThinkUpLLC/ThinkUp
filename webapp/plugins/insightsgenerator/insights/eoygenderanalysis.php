@@ -95,9 +95,20 @@ class EOYGenderAnalysisInsight extends InsightPluginParent implements InsightPlu
             $who = 'men';
         }
 
+        $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
+        $qualified_year = "";
+        if (date('Y', strtotime($earliest_pub_date)) == date('Y')) {
+            if (date('n', strtotime($earliest_pub_date)) > 1 ) { //not January
+                //Earliest post was this year; figure out what month we have data since this year
+                $since = date('F', strtotime($earliest_pub_date));
+                $qualified_year = " (at least since ".$since.")";
+            }
+        }
+
         $female_text = $females == 1 ? 'like or comemnt' : 'likes and comments';
         $text = 'This year, '.number_format($females).' '.$female_text.' on '.$this->username.'\'s status updates were '
-            . 'by peope who identify as female, compared to '.$males.' by people who identify as male.';
+            . 'by peope who identify as female, compared to '.$males.' by people who identify as male'
+            . $qualified_year.'.';
 
         $insight = new Insight();
         $insight->instance_id = $instance->id;

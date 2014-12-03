@@ -140,7 +140,34 @@ class TestOfEOYGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
-    private function buildData($male, $female) {
+    public function testMonthQualifier() {
+        $builders = self::buildData(7, 8, 'June 1');
+        $instance = new Instance();
+        $instance->id = 100;
+        $instance->network_user_id = '9654321';
+        $instance->network_username = 'Abby Whelan';
+        $instance->network = 'facebook';
+
+        $insight_plugin = new EOYGenderAnalysisInsight();
+        $insight_plugin->generateInsight($instance, null, array(), 1);
+
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug, 100, date('Y').'-12-07');
+        $gender_data = unserialize($result->related_data);
+        $this->assertNotNull($result);
+        $this->assertEqual($result->headline, "Abby Whelan's status updates resonated with women in 2014");
+        $this->assertEqual($result->text, "This year, 8 likes and comments on Abby Whelan's status updates "
+            . "were by peope who identify as female, compared to 7 by people who identify as male (at least since June).");
+        $this->assertIsA($gender_data, "array");
+        $this->assertEqual(count($gender_data), 1);
+        $this->assertTrue($gender_data['pie_chart']['male'] < $gender_data['pie_chart']['female']);
+        $this->assertEqual($gender_data['pie_chart']['male'], 7);
+        $this->assertEqual($gender_data['pie_chart']['female'], 8);
+
+        $this->dumpRenderedInsight($result, $instance, "More Female, Qualified Month");
+    }
+
+    private function buildData($male, $female, $pub_date='January 4') {
         $builders = array();
 
         for ($i=0; $i<$male; $i++) {
@@ -155,9 +182,9 @@ class TestOfEOYGenderAnalysisInsight extends ThinkUpInsightUnitTestCase {
         }
 
         $builders[] = FixtureBuilder::build('posts', array('id'=>333, 'post_id'=>333,
-            'author_user_id'=>'9654321', 'author_username'=>'Olivia Pope', 'author_fullname'=>'Olivia Pope',
+            'author_user_id'=>'9654321', 'author_username'=>'Abby Whelan', 'author_fullname'=>'Olivia Pope',
             'author_avatar'=>'avatar.jpg', 'network'=>'facebook', 'post_text'=>'This is a simple post.',
-            'pub_date'=>date('Y-m-d', strtotime('January 4')) , 'reply_count_cache'=>3,
+            'pub_date'=>date('Y-m-d', strtotime($pub_date)) , 'reply_count_cache'=>3,
             'is_protected'=>0,'favlike_count_cache' => 2));
 
         $id = 334;
