@@ -102,8 +102,8 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         // set up posts with exclamation
         $builders = self::setUpPublicInsight($this->instance);
         $counter = 0;
-        $max_month = date('n');
-        $year = date('Y');
+        $max_month = 12;//date('n');
+        $year = 2014;//date('Y');
         for ($i=1; $i<=$max_month; $i++) {
             $month = "".$i;
             if ($i < 10) {
@@ -136,7 +136,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual("@ev's !!!'s of Twitter, $year", $result->headline);
-        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>$counter " .
+        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>66 " .
             "tweets</strong>. That's 100% of @ev's tweets this year!",
             $result->text);
 
@@ -187,8 +187,8 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Mark Zuckerberg';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
-        $max_month = Date('n');
+        $year = 2014; //date('Y');
+        $max_month = 12; //Date('n');
         $counter = 0;
         for ($i=3; $i<=$max_month; $i++) {
             $month = "".$i;
@@ -224,7 +224,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("Mark Zuckerberg's emphatic $year on Facebook!",
             $result->headline);
         $this->assertEqual("Enthusiasm is contagious, and in $year, Mark Zuckerberg " .
-            "spread the excitement in a total of <strong>$counter status updates</strong> ".
+            "spread the excitement in a total of <strong>63 status updates</strong> ".
             "containing exclamation points. That's 100% of Mark Zuckerberg's " .
             "Facebook posts this year (at least since March)!", $result->text);
 
