@@ -1299,6 +1299,11 @@ body.app-message-visible.account .container {
   text-align: center;
   line-height: 1;
 }
+@media (min-width: 540px) {
+  .stream-yearend-header {
+    padding-left: 60px;
+  }
+}
 .stream-yearend-header h1 {
   font-family: "tablet-gothic-semi-condensed", helvetica, arial, sans-serif;
   color: #46bcff;
@@ -2661,12 +2666,13 @@ ol.body-list .list-item {
   color: #fff;
 }
 .btn-yearend {
-  border: 1px solid #2785d3;
-  color: #2785d3;
+  border: none;
+  color: #999999;
   transition: background-color 0.25s;
   background-color: rgba(39, 133, 211, 0);
-  margin: 0 5px 1em;
-  font-size: 0.92857143em;
+  margin: 0;
+  padding: 3px 6px 1px 6px;
+  font-size: 14px;
 }
 .btn-yearend .fa {
   margin-right: 3px;
@@ -2674,7 +2680,7 @@ ol.body-list .list-item {
 .btn-yearend:hover,
 .btn-yearend:focus {
   color: #2785d3;
-  background-color: rgba(39, 133, 211, 0.1);
+  background-color: rgba(102, 102, 102, 0.1);
 }
 .btn-transparent {
   background: transparent;
