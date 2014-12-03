@@ -102,10 +102,10 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
     public function testTwitterNormalCase() {
         // set up posts with exclamation
         $builders = self::setUpPublicInsight($this->instance);
-        $year = date('Y');
+        $year = 2014; //date('Y');
         $counter = 0;
-        $this_month = Date('n');
-        $this_month_str = Date('F');
+        $this_month = 12; //Date('n');
+        $this_month_str = 'December'; //Date('F');
         for ($i=1; $i<=$this_month; $i++) {
             $month = "".$i;
             if ($i < 10) {
@@ -138,8 +138,8 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual("@ev gave $counter fucks on Twitter in $year", $result->headline);
-        $this->assertEqual("Whiskey Tango Foxtrot: @ev said &ldquo;fuck&rdquo; <strong>77 times</strong> on Twitter ".
-            "this year, with November eliciting the most fucks.",
+        $this->assertEqual("Whiskey Tango Foxtrot: @ev said &ldquo;fuck&rdquo; <strong>90 times</strong> on Twitter ".
+            "this year, with December eliciting the most fucks.",
             $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
@@ -200,10 +200,10 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Mark Zuckerberg';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = date('Y');
+        $year = 2014;//date('Y');
         $counter = 0;
-        $this_month = Date('n');
-        $this_month_str = Date('F');
+        $this_month = 12; //Date('n');
+        $this_month_str = 'December'; //Date('F');
         for ($i=3; $i<=$this_month; $i++) {
             $month = "".$i;
             if ($i < 10) {
@@ -230,14 +230,14 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
-        $year = date('Y');
+        $year = 2014; //date('Y');
         $result = $insight_dao->getInsight('eoy_fbomb_count', $this->instance->id,
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual("Mark Zuckerberg put the &ldquo;F&rdquo; in &ldquo;Facebook&rdquo; this year",
             $result->headline);
-        $this->assertEqual("Mark Zuckerberg dropped <strong>72 F-bombs</strong> on Facebook in 2014, with November ".
+        $this->assertEqual("Mark Zuckerberg dropped <strong>85 F-bombs</strong> on Facebook in 2014, with December ".
             "on the receiving end of the most fucks (at least since March). WTF?!", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
