@@ -12,12 +12,13 @@
 
 .btn-yearend {
     &:extend(.btn-default);
-    border: 1px solid @blue-darker;
-    color: @blue-darker;
+    border: none;
+    color: @gray-light;
     transition: background-color .25s;
     background-color: fade(@blue-darker, 0%);
-    margin: 0 5px 1em;
-    font-size: (13/14em);
+    margin: 0;
+    padding: 3px 6px 1px 6px;
+    font-size: (14px);
 
     .fa {
         margin-right: 3px;
@@ -25,7 +26,7 @@
 
     &:hover, &:focus {
         color: @blue-darker;
-        background-color: fade(@blue-darker, 10%);
+        background-color: fade(@gray, 10%);
     }
 }
 
