@@ -121,23 +121,23 @@ class TestOfTimeHelper extends ThinkUpBasicUnitTestCase {
         $test_date = new DateTime();
         $test_date->setDate(2014, 2, 21);
         $days = TimeHelper::getDaysSinceJanFirst($test_date->getTimestamp());
-        $this->assertEqual($days, 52);
+        $this->assertEqual($days, 51);
 
         $test_date = new DateTime();
         $test_date->setDate(2014, 1, 30);
         $days = TimeHelper::getDaysSinceJanFirst($test_date->getTimestamp());
-        $this->assertEqual($days, 30);
+        $this->assertEqual($days, 29);
 
         //Non leap year
         $test_date = new DateTime();
         $test_date->setDate(2014, 3, 1);
         $days = TimeHelper::getDaysSinceJanFirst($test_date->getTimestamp());
-        $this->assertEqual($days, 60);
+        $this->assertEqual($days, 59);
 
         //Leap year
         $test_date = new DateTime();
         $test_date->setDate(2016, 3, 1);
         $days = TimeHelper::getDaysSinceJanFirst($test_date->getTimestamp());
-        $this->assertEqual($days, 61);
+        $this->assertEqual($days, 60);
     }
 }

@@ -148,6 +148,6 @@ class TimeHelper {
         if (!isset($time)) {
             $time = time();
         }
-        return (((int) date('z', $time)) + 1);
+        return (((int) date('z', $time)));
     }
 }
