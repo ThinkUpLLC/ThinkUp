@@ -2884,7 +2884,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 total_replies_to, total_replies_from, avatar
                 FROM #prefix#view_replies_to_from
                 ORDER by bff_score DESC;";
-
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $ps = $this->execute($q, $vars);
             $bestie = $this->getDataRowAsArray($ps);
