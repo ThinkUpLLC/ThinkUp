@@ -850,4 +850,12 @@ interface PostDAO {
      * @return str
      */
     public function getEarliestCapturedPostPubDate(Instance $instance);
+
+    /**
+     * Get a user's "bestie", the user s/he replies to and gets replies from the most.
+     * @param  Instance $instance
+     * @param  int   $in_last_x_days
+     * @return array array('user_id', 'total_replies_from', 'total_replies_to', 'avatar')
+     */
+    public function getBestie(Instance $instance, $in_last_x_days);
 }
