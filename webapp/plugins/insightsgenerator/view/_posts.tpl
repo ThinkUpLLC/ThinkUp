@@ -19,7 +19,7 @@ $posts: List of multiple posts
 </ul>
 
 {if count($posts) gt 2}
-<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$posts|@count} tweets</span> <i class="fa fa-chevron-down icon"></i></button>
+<button class="btn btn-default btn-block btn-see-all" data-text="Actually, please hide them"><span class="btn-text">See all {$posts|@count} {if $i->instance->network eq 'twitter'}tweets{else}posts{/if}</span> <i class="fa fa-chevron-down icon"></i></button>
 {/if}
 
 {/if}
