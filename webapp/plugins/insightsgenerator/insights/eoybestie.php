@@ -41,9 +41,9 @@ class EOYBestieInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-09';
+    //var $run_date = '12-09';
     //staging
-    //var $run_date = '12-04';
+    var $run_date = '12-04';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -53,7 +53,7 @@ class EOYBestieInsight extends InsightPluginParent implements InsightPlugin {
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
