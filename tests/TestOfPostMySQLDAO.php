@@ -1315,7 +1315,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         array_push($builders, $ub1);
 
         $ub2 = FixtureBuilder::build('users', array('user_id'=>31, 'user_name'=>'fbuser2',
-        'full_name'=>'Facebook User 2', 'is_protected'=>0, 'network'=>'facebook'));
+        'full_name'=>'Facebook User 2', 'is_protected'=>0, 'network'=>'facebook', 'avatar'=>'fbpic.jpg'));
         array_push($builders, $ub2);
 
         $ub3 = FixtureBuilder::build('users', array('user_id'=>32, 'user_name'=>'fbuser3',
@@ -4808,5 +4808,160 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $result = $dao->getEarliestCapturedPostPubDate($instance);
         $this->assertEqual($result, '2013-01-01 00:00:00');
+    }
+
+    public function testGetBestieTwitter() {
+        $instance = new Instance();
+        $dao = new PostMySQLDAO();
+
+        $instance->network_username = 'ev';
+        $instance->network_user_id = '13';
+        $instance->network = 'twitter';
+
+        //Test no bestie
+        $result = $dao->getBestie($instance, 338);
+        $this->assertNull($result);
+
+        //Test bestie
+        //User fixtures set up in buildData
+        /*
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
+        'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
+        'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>70,
+        'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>20, 'user_name'=>'user1',
+        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>90,
+        'network'=>'twitter'));
+         */
+
+        //Add replies to friends
+        $counter = 1;
+        while ($counter < 10) {
+            if (($counter % 2) == 1) {
+                $in_reply_to_user_id = 18; //shutterbug
+            } else {
+                $in_reply_to_user_id = 19; //linkbaiter
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+34358,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-12d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>$in_reply_to_user_id,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        //Add replies from friends
+        $counter = 1;
+        while ($counter < 10) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 19;
+                $author_username = 'linkbaiter';
+            } else {
+                $author_user_id = 20;
+                $author_username = 'user1';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>'13',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $result = $dao->getBestie($instance, 338);
+        $this->assertIsA($result, 'Array');
+        $this->assertEqual($result['user_name'], 'linkbaiter');
+        $this->assertEqual($result['user_id'], '19');
+        $this->assertEqual($result['total_replies_to'], 4);
+        $this->assertEqual($result['total_replies_from'], 5);
+        $this->assertEqual($result['avatar'], 'avatar.jpg');
+    }
+
+    public function testGetBestieFacebook() {
+        $instance = new Instance();
+        $dao = new PostMySQLDAO();
+
+        $builders = self::buildFacebookPostAndReplies();
+
+        $instance->network_username = 'fbuser1';
+        $instance->network_user_id = '30';
+        $instance->network = 'facebook';
+
+        //Test no bestie
+        $result = $dao->getBestie($instance, 338);
+        $this->assertNull($result);
+
+        //Test bestie
+        //User fixtures set up
+        /*
+        $ub1 = FixtureBuilder::build('users', array('user_id'=>30, 'user_name'=>'fbuser1',
+        'full_name'=>'Facebook User 1', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub1);
+
+        $ub2 = FixtureBuilder::build('users', array('user_id'=>31, 'user_name'=>'fbuser2',
+        'full_name'=>'Facebook User 2', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub2);
+
+        $ub3 = FixtureBuilder::build('users', array('user_id'=>32, 'user_name'=>'fbuser3',
+        'full_name'=>'Facebook User 3', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub3);
+         */
+
+        //Add replies to friends
+        $counter = 1;
+        while ($counter < 10) {
+            if (($counter % 2) == 1) {
+                $in_reply_to_user_id = 31; //fbuser2
+            } else {
+                $in_reply_to_user_id = 32; //fbuser3
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+34358,
+            'author_user_id'=>'30', 'author_username'=>'fbuser1',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-12d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>$in_reply_to_user_id,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        //Add replies from friends
+        $counter = 1;
+        while ($counter < 10) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 31;
+                $author_username = 'fbuser2';
+            } else {
+                $author_user_id = 32;
+                $author_username = 'fbuser3';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>'30',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $result = $dao->getBestie($instance, 338);
+        $this->assertIsA($result, 'Array');
+        $this->assertEqual($result['user_name'], 'fbuser2');
+        $this->assertEqual($result['user_id'], '31');
+        $this->assertEqual($result['total_replies_from'], 5);
+        $this->assertEqual($result['avatar'], 'fbpic.jpg');
     }
 }
