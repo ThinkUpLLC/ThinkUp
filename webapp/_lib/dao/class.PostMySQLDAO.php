@@ -122,7 +122,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return arr array('post_id'=> $post_id, 'pub_date'=>$pub_date)
      */
     private function getEarliestPostIDAndDate($author_username, $network) {
-        $q = "SELECT p.post_id, p.pub_date FROM tu_posts p WHERE author_username =  :author_username ";
+        $q = "SELECT p.post_id, p.pub_date FROM #prefix#posts p WHERE author_username =  :author_username ";
         $q .= "AND p.network = :network  ORDER BY pub_date ASC LIMIT 1";
         $vars = array(
             ':author_username'=>(string)$author_username,
@@ -2827,4 +2827,82 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getBestie(Instance $instance, $in_last_x_days) {
+        if ($instance->network == 'facebook') {
+            //For Facebook bestie, only count comments on user's status updates
+            $q = "SELECT count(*) AS total_replies_from, author_user_id AS user_id, u.user_name, u.avatar ";
+            $q .= "FROM #prefix#posts p INNER JOIN #prefix#users u ON p.author_user_id = u.user_id WHERE ";
+            $q .= "author_user_id != :user_id AND ";
+            $q .= "in_reply_to_user_id = :user_id AND ";
+            $q .= "p.network=:network AND ";
+            $q .= "pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            $q .= "GROUP BY author_user_id ORDER BY total_replies_from DESC LIMIT 1;";
+            $vars = array(
+                ':user_id'=>$instance->network_user_id,
+                ':network'=>$instance->network,
+                ':in_last_x_days'=>$in_last_x_days
+            );
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q, $vars);
+            return $this->getDataRowAsArray($ps);
+        } elseif ($instance->network == 'twitter') {
+            //For Twitter bestie, count replies to as well as replies from other users to calculate bestie
+            self::dropBestieViews();
+            $vars = array(
+                ':user_id'=>$instance->network_user_id,
+                ':network'=>$instance->network,
+                ':in_last_x_days'=>$in_last_x_days
+            );
+
+            $q ="CREATE VIEW #prefix#view_replied_to AS
+                SELECT count(*) AS total_replies_to, in_reply_to_user_id, u.user_name
+                FROM #prefix#posts p INNER JOIN #prefix#users u ON p.in_reply_to_user_id = u.user_id WHERE
+                author_user_id = :user_id AND
+                p.network=:network AND
+                in_reply_to_user_id IS NOT NULL AND
+                pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) AND
+                u.user_id != :user_id
+                GROUP BY in_reply_to_user_id ORDER BY total_replies_to DESC;";
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q, $vars);
+
+            $q = "CREATE view #prefix#view_replies_to_from AS
+                SELECT count(*) AS total_replies_from, rt.total_replies_to, author_user_id, u.user_name, u.avatar
+                FROM #prefix#posts p INNER JOIN #prefix#users u ON p.author_user_id = u.user_id
+                INNER JOIN #prefix#view_replied_to rt ON rt.in_reply_to_user_id = p.author_user_id
+                WHERE
+                p.in_reply_to_user_id = :user_id AND
+                p.network=:network AND
+                total_replies_to > 2 AND
+                pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY)
+                GROUP BY author_user_id ORDER BY total_replies_from DESC;";
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q, $vars);
+
+            $q = "SELECT user_name, author_user_id AS user_id,
+                (total_replies_from + (total_replies_to * 1.25)) AS bff_score,
+                total_replies_to, total_replies_from, avatar
+                FROM #prefix#view_replies_to_from
+                ORDER by bff_score DESC;";
+
+            if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+            $ps = $this->execute($q, $vars);
+            $bestie = $this->getDataRowAsArray($ps);
+
+            //Clean up views
+            self::dropBestieViews();
+            return $bestie;
+        }
+        return null;
+    }
+
+    private function dropBestieViews() {
+        $q = "DROP VIEW IF EXISTS #prefix#view_replied_to";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q);
+
+        $q = "DROP VIEW IF EXISTS #prefix#view_replies_to_from";
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q);
+    }
 }
