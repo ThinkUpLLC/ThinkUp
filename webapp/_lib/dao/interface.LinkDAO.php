@@ -103,6 +103,13 @@ interface LinkDAO {
      */
     public function getLinksToExpand($limit = 1500);
     /**
+     * Gets a number of links posted by active service users (instances) that have not been expanded.
+     * Non standard output - Scheduled for deprecation.
+     * @param int $limit
+     * @return array of Link objects
+     */
+    public function getLinksToExpandForInstances($limit = 1500);
+    /**
      * Gets all links with short URL starting with a prefix.
      * Non standard output - Scheduled for deprecation.
      * @param str $url

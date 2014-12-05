@@ -242,6 +242,24 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getDataRowsAsObjects($ps, 'Link');
     }
 
+    public function getLinksToExpandForInstances($limit = 1500) {
+        $q  = "SELECT * ";
+        $q .= "FROM (  ";
+        $q .= "SELECT l.* FROM #prefix#links AS l INNER JOIN #prefix#posts p ON l.post_key = p.id
+            INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id AND p.network = i.network
+            WHERE i.is_active = 1 AND l.expanded_url = '' AND l.error = '' ORDER BY l.id DESC LIMIT :limit";
+        $q .= ") AS l1 ";
+        $q .= "GROUP BY l1.url ";
+
+        $vars = array(
+            ':limit'=>$limit
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowsAsObjects($ps, 'Link');
+    }
+
     public function getLinksToExpandByURL($url, $limit = 0) {
         $q  = "SELECT l.url ";
         $q .= "FROM #prefix#links AS l ";

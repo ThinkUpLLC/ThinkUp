@@ -120,7 +120,10 @@ class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
      * Save expanded version of all unexpanded URLs to data store, as well as intermediary short links.
      */
     public function expandOriginalURLs($flickr_api_key=null) {
-        $links_to_expand = $this->link_dao->getLinksToExpand($this->link_limit);
+        $links_to_expand = $this->link_dao->getLinksToExpandForInstances($this->link_limit);
+        if (count($links_to_expand) < 1) {
+            $links_to_expand = $this->link_dao->getLinksToExpand($this->link_limit);
+        }
 
         $this->logger->logUserInfo(count($links_to_expand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
