@@ -43,7 +43,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
      **/
     //var $run_date = '12-12';
     //staging
-    //var $run_date = '12-05';
+    var $run_date = '12-05';
 
     var $posts_by_domain = array();
 
@@ -55,7 +55,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
