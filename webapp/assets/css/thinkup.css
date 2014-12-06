@@ -1704,17 +1704,32 @@ body.app-message-visible.account .container {
 .insight-message.insight-wide .panel-body {
   padding: 0;
 }
+.insight-wide .panel-title {
+  margin-right: 75px;
+}
 @media (min-width: 540px) {
   .insight-wide .panel-heading {
     float: none;
     width: 100%;
     padding: 5px 10px 5px;
   }
+  .insight-wide .panel-heading .userpic-featured {
+    left: 445px;
+    position: relative;
+    top: -35px;
+    margin-bottom: -75px;
+    z-index: 1;
+    /*
+*/
+  }
   .insight-wide .panel-footer,
   .insight-wide .panel-body,
   .insight-wide .panel-desktop-right {
     width: 100%;
     margin-left: 0;
+  }
+  .insight-wide .panel-body .panel-body-inner {
+    padding-top: 30px;
   }
 }
 .insight-tout {
