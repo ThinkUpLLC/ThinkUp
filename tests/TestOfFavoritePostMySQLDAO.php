@@ -658,6 +658,74 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(strtotime($result[0]->favorited_timestamp), strtotime($four_ago), 'check for timestamp');
     }
 
+    public function testGetCountOfFavoritedUsersInRange() {
+        // no faves
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(0, count($result));
+
+        // wrong network
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1002, 'fav_of_user_id' => 1,
+			'author_user_id' => 1, 'network' => 'facebook', 'fav_timestamp' => '2014-01-02'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(0, count($result));
+
+        // 1 user, 1 fave
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1002, 'fav_of_user_id' => 1,
+			'author_user_id' => 1, 'network' => 'twitter', 'fav_timestamp' => '2014-01-02'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 1);
+
+        // 1 user, 2 faves
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1004, 'fav_of_user_id' => 1,
+			'author_user_id' => 1, 'network' => 'twitter', 'fav_timestamp' => '2014-01-02'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 2);
+
+        // multipl users
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1005, 'fav_of_user_id' => 1,
+			'author_user_id' => 99, 'network' => 'twitter', 'fav_timestamp' => '2014-01-08'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 99);
+        $this->assertEqual($result[1]['count'], 1);
+
+        // past date
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1006, 'fav_of_user_id' => 1,
+			'author_user_id' => 99, 'network' => 'twitter', 'fav_timestamp' => '2014-02-08'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 99);
+        $this->assertEqual($result[1]['count'], 1);
+
+        // past date
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1007, 'fav_of_user_id' => 1,
+			'author_user_id' => 99, 'network' => 'twitter', 'fav_timestamp' => '2012-02-08'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 99);
+        $this->assertEqual($result[1]['count'], 1);
+
+        // on date, should be included
+		$builders[] = FixtureBuilder::build( 'favorites', array('post_id' => 1008, 'fav_of_user_id' => 1,
+			'author_user_id' => 99, 'network' => 'twitter', 'fav_timestamp' => '2014-01-01'));
+		$result = $this->dao->getCountOfFavoritedUsersInRange(1, 'twitter', '2014-01-01', '2014-02-01');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual($result[0]['user_id'], 1);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 99);
+        $this->assertEqual($result[1]['count'], 2);
+    }
+
 	private function buildFavoriteArray() {
 		$vals = array ();
 		$vals ["favoriter_id"] = "1075560752";
