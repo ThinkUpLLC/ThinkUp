@@ -164,4 +164,14 @@ interface FavoritePostDAO extends PostDAO {
      * @return array with commenter's birthdays
      */
     public function getBirthdayOfCommenters($post_id, $network);
+
+    /**
+     * Get a list of the user_ids of posts you favorited, and how many times, in a date range
+     * @param int $user_id The user who did the favoritng
+     * @param str $network The network
+     * @param str $from Earliest date
+     * @param str $until Latest date
+     * @return arr Array of user_id, count pairs
+     */
+    public function getCountOfFavoritedUsersInRange($user_id, $network, $from, $until);
 }
