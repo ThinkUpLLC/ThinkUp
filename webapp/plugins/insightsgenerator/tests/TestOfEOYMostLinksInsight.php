@@ -58,32 +58,32 @@ class TestOfEOYMostLinksInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($insight_plugin, 'EOYMostLinksInsight' );
     }
 
-    public function testIsNetworkPhoto() {
+    public function testIsIntraNetwork() {
         $insight_plugin = new EOYMostLinksInsight();
 
         $url = "https://twitter.com/ginatrapani/status/456469734515408897/photo/1";
         $network = 'twitter';
-        $result = $insight_plugin->isNetworkPhoto($url, $network);
+        $result = $insight_plugin->isIntraNetwork($url, $network);
         $this->assertTrue($result);
 
         $network = 'facebook';
-        $result = $insight_plugin->isNetworkPhoto($url, $network);
+        $result = $insight_plugin->isIntraNetwork($url, $network);
         $this->assertFalse($result);
 
         $network = 'facebook';
         $url = "https://twitter.com/ginatrapani/status/456469734515408897/photo/1";
-        $result = $insight_plugin->isNetworkPhoto($url, $network);
+        $result = $insight_plugin->isIntraNetwork($url, $network);
         $this->assertFalse($result);
 
         $network = 'facebook';
-        $url = "https://www.facebook.com/photo.php?fbid=1015253345";
-        $result = $insight_plugin->isNetworkPhoto($url, $network);
+        $url = "https://www.facebook.com/somepage";
+        $result = $insight_plugin->isIntraNetwork($url, $network);
         $this->assertTrue($result);
 
         $url = "https://twitter.com/ginatrapani/status/456469734515408897";
         $network = 'twitter';
-        $result = $insight_plugin->isNetworkPhoto($url, $network);
-        $this->assertFalse($result);
+        $result = $insight_plugin->isIntraNetwork($url, $network);
+        $this->assertTrue($result);
     }
 
     public function testLinkUtilities() {

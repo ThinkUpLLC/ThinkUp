@@ -238,8 +238,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
             $post_id = $post->post_id;
             $network = $post->network;
             foreach ($post->links as $link) {
-                if ($link->expanded_url == "" /*|| !empty($link->image_src)*/
-                    || $this->isNetworkPhoto($link->expanded_url, $network)) {
+                if ($link->expanded_url == ""  || $this->isIntraNetwork($link->expanded_url, $network)) {
                     // $this->logger->logInfo("Skipping link ID ".$link->id." with expanded URL ". $link->expanded_url,
                     //     __METHOD__.','.__LINE__);
                     continue;
@@ -283,22 +282,17 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
         return $popular_url;
     }
 
-    public function isNetworkPhoto($url, $network) {
+    /**
+     * Is this a link to the originating network?
+     * @param  str  $url
+     * @param  str  $network
+     * @return bool
+     */
+    public function isIntraNetwork($url, $network) {
         if ($network == 'twitter') {
-            //Twitter in-link photo regex
-            //$pattern = "/^https\:\/\/twitter.com\/\w*\/status\/[0-9]*\/photo\/[0-9]/";
-            //Prior art: https://github.com/ginatrapani/ThinkUp/pull/1894/files
-            if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
-                return false;
-            } else {
-                return true;
-            }
+            return preg_match('/twitter.com/', $url);
         } elseif ($network = 'facebook') {
-            if (!preg_match("/facebook.com\/photo.php/", $url)) {
-                return false;
-            } else {
-                return true;
-            }
+            return preg_match("/facebook.com/", $url);
         }
         return false;
     }
