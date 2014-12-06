@@ -172,8 +172,10 @@ class EOYFBombCountInsight extends InsightPluginParent implements InsightPlugin 
                         'rows' => $rows
                     ));
                 }
+            } elseif ($count == 1) {
+                $type = "one";
             } else {
-                $type = 'one';
+                return;
             }
 
             $terms = new InsightTerms($instance->network);

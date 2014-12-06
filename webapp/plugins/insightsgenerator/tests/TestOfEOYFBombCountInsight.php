@@ -194,6 +194,48 @@ class TestOfEOYFBombCountInsight extends ThinkUpInsightUnitTestCase {
         $this->dumpRenderedInsight($result, $this->instance, "One match, Twitter");
     }
 
+    public function testTwitterNoMatch() {
+        $builders = self::setUpPublicInsight($this->instance);
+        $year = date('Y');
+        // set up posts with no exclamation
+        for ($i=1; $i<13; $i++) {
+            $month = "".$i;
+            if ($i < 10) {
+                $month = "0$month";
+            }
+            $builders[] = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is a post that I did',
+                    'author_user_id' => $this->instance->network_user_id,
+                    'pub_date' => "$year-$month-01",
+                    'post_id' => $i,
+                    'author_username' => $this->instance->network_username,
+                    'network' => $this->instance->network,
+                )
+            );
+        }
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is a frakking post that I did',
+                'pub_date' => "$year-01-01",
+                'post_id' => $i+10,
+                'author_user_id' => $this->instance->network_user_id,
+                'author_username' => $this->instance->network_username,
+                'network' => $this->instance->network,
+            )
+        );
+
+        $posts = array();
+        $insight_plugin = new EOYFBombCountInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+        //
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $year = date('Y');
+        $result = $insight_dao->getInsight('eoy_fbomb_count', $this->instance->id,
+            $year.'-'.$insight_plugin->run_date);
+        $this->assertNull($result);
+    }
 
     public function testFacebookNormalCaseIncompleteData() {
         // set up posts with exclamation
