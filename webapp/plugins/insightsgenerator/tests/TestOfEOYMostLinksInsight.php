@@ -389,7 +389,7 @@ class TestOfEOYMostLinksInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("Mark Zuckerberg's most-shared site of $year", $result->headline);
         $this->assertEqual("Looks like <strong>lifehacker.com</strong> owes Mark Zuckerberg a thank you. " .
             "In $year, Mark Zuckerberg directed friends to <strong>lifehacker.com</strong> more than to " .
-            "any other site.", $result->text);
+            "any other site. Here are the posts with links to <strong>lifehacker.com</strong>.", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }

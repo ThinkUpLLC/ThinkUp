@@ -135,13 +135,14 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
                         'headline' => "%username's most-shared site of $year",
                         'body' => "Looks like <strong>%domain</strong> owes %username a thank you. In " .
                             "$year, %username directed friends to <strong>%domain</strong> more than " .
-                            "to any other site%qualified_year."
+                            "to any other site%qualified_year. Here are the posts with links to ".
+                            "<strong>%domain</strong>."
                     ),
                     'one' => array(
                         'headline' => "%username's most-shared site of $year",
                         'body' => "Looks like <strong>%domain</strong> owes %username a thank you. In " .
                             "$year, %username directed friends to <strong>%domain</strong> more than " .
-                            "to any other site%qualified_year."
+                            "to any other site%qualified_year. Here is the post that links to <strong>%domain</strong>"
                     ),
                     'none' => array(
                         'headline' => "%username shared no links in $year",
