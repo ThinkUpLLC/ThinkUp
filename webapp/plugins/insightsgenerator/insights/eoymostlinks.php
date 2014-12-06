@@ -92,8 +92,12 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
             $this->logger->logInfo("Got popular posts linking to ", __METHOD__.','.__LINE__);
 
             $most_recent_unexpanded_link_date = $post_dao->getMostRecentUnexpandedLinkPubDate($instance);
-            $this->logger->logInfo("Most recent unexpanded link date is ".$most_recent_unexpanded_link_date." - ".
-                date('Y-m-d', strtotime($most_recent_unexpanded_link_date)), __METHOD__.','.__LINE__);
+            if (isset($most_recent_unexpanded_link_date)) {
+                $this->logger->logInfo("Most recent unexpanded link date is ".$most_recent_unexpanded_link_date." - ".
+                    date('Y-m-d', strtotime($most_recent_unexpanded_link_date)), __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logInfo("No links have gone unexpanded ", __METHOD__.','.__LINE__);
+            }
             $qualified_year = "";
             if ( isset($most_recent_unexpanded_link_date)
                 && date('Y', strtotime($most_recent_unexpanded_link_date)) == date('Y') ) {
@@ -165,7 +169,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
                     $copy[$network][$type]['body']
                 ),
                 array(
-                    'domain' => $popular_domain,
+                    'domain' => str_replace('www.', '', $popular_domain),
                     'qualified_year' => $qualified_year
                 )
             );
@@ -234,8 +238,8 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
             $post_id = $post->post_id;
             $network = $post->network;
             foreach ($post->links as $link) {
-                if ($link->expanded_url == "" || !empty($link->image_src)
-                    || $this->isTwitterPhoto($link->expanded_url, $network)) {
+                if ($link->expanded_url == "" /*|| !empty($link->image_src)*/
+                    || $this->isNetworkPhoto($link->expanded_url, $network)) {
                     // $this->logger->logInfo("Skipping link ID ".$link->id." with expanded URL ". $link->expanded_url,
                     //     __METHOD__.','.__LINE__);
                     continue;
@@ -279,12 +283,18 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
         return $popular_url;
     }
 
-    public function isTwitterPhoto($url, $network) {
+    public function isNetworkPhoto($url, $network) {
         if ($network == 'twitter') {
             //Twitter in-link photo regex
             //$pattern = "/^https\:\/\/twitter.com\/\w*\/status\/[0-9]*\/photo\/[0-9]/";
             //Prior art: https://github.com/ginatrapani/ThinkUp/pull/1894/files
-            if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)){
+            if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
+                return false;
+            } else {
+                return true;
+            }
+        } elseif ($network = 'facebook') {
+            if (!preg_match("/facebook.com\/photo.php/", $url)) {
                 return false;
             } else {
                 return true;
