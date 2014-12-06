@@ -512,4 +512,21 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
 		}
 		return $age;
 	}
+
+    public function getCountOfFavoritedUsersInRange($user_id, $network, $from, $until) {
+        $q = "SELECT count(*) as count, author_user_id as user_id FROM #prefix#favorites f ";
+        $q .= "WHERE f.fav_of_user_id=:user_id AND f.network=:network AND f.fav_timestamp BETWEEN  :from AND :until ";
+        $q .= "GROUP BY f.author_user_id ";
+
+        $vars = array (
+            ':user_id' => $user_id,
+            ':network' => $network,
+            ':from' => $from,
+            ':until' => $until,
+        );
+        if ($this->profiler_enabled) { Profiler::setDAOMethod (__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows;
+    }
 }
