@@ -176,9 +176,9 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
 
             $insight->headline = $headline;
             $insight->text = $insight_text;
-            if ($instance->network == 'twitter') {
+            //if ($instance->network == 'twitter') {
                 $insight->setPosts($posts);
-            }
+            //}
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
 
