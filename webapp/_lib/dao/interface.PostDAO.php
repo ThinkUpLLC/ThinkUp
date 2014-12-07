@@ -865,4 +865,14 @@ interface PostDAO {
      * @return str (or null, if there's no post)
      */
     public function getMostRecentUnexpandedLinkPubDate(Instance $instance);
+
+    /**
+     * Get a list of user_id/count pairs for users that were retweeted by user_id in the given time period
+     * @param int $user_id
+     * @param str $network
+     * @param str $from Start date
+     * @param str $until End date
+     * @return arr user_id/count pairs that $user_id retweetd
+     */
+    public function getRetweetsPerUserInRange($user_id, $network, $from, $until);
 }

@@ -2922,4 +2922,23 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q);
     }
+
+    public function getRetweetsPerUserInRange($user_id, $network, $from, $until) {
+        $q =   "SELECT in_rt_of_user_id as user_id, count(*) as count ";
+        $q .=  "FROM #prefix#posts WHERE in_retweet_of_post_id IS NOT NULL AND  ";
+        $q .=  "author_user_id=:user_id AND network=:network AND pub_date BETWEEN :from AND :until ";
+        $q .=  "GROUP BY in_rt_of_user_id";
+
+        $vars = array(
+            ':user_id' => $user_id,
+            ':network' => $network,
+            ':from' => $from,
+            ':until' => $until,
+        );
+
+        if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
+        $ps = $this->execute($q, $vars);
+        $rows = $this->getDataRowsAsArrays($ps);
+        return $rows;
+    }
 }
