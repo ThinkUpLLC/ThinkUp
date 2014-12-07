@@ -4964,4 +4964,58 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result['total_replies_from'], 5);
         $this->assertEqual($result['avatar'], 'fbpic.jpg');
     }
+
+    public function testGetRetweetsPerUserInRange() {
+        $builders = array();
+        $dao = new PostMySQLDAO();
+
+        // No retweets
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2013-01-01', '2013-12-31');
+        $this->assertEqual(0, count($result));
+
+        // Only too early
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>999, 'author_user_id'=>1,
+            'in_rt_of_user_id' => 2, 'in_retweet_of_post_id' => 2, 'pub_date'=> '2012-12-31'));
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2013-01-01', '2013-12-31');
+        $this->assertEqual(0, count($result));
+
+        // Increase range
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2012-01-01', '2013-12-31');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual($result[0]['user_id'], 2);
+        $this->assertEqual($result[0]['count'], 1);
+
+
+        // two retweets
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1000, 'author_user_id'=>1,
+            'in_rt_of_user_id' => 2, 'in_retweet_of_post_id' => 2, 'pub_date'=> '2013-12-31'));
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2012-01-01', '2013-12-31');
+        $this->assertEqual(1, count($result));
+        $this->assertEqual($result[0]['user_id'], 2);
+        $this->assertEqual($result[0]['count'], 2);
+
+        // two users
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1001, 'author_user_id'=>1,
+            'in_rt_of_user_id' => 3, 'in_retweet_of_post_id' => 2, 'pub_date'=> '2013-12-31'));
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2012-01-01', '2013-12-31');
+        $this->assertEqual(2, count($result));
+        $this->assertEqual($result[0]['user_id'], 2);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 3);
+        $this->assertEqual($result[1]['count'], 1);
+
+        // three users
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1002, 'author_user_id'=>1,
+            'in_rt_of_user_id' => 4, 'in_retweet_of_post_id' => 2, 'pub_date'=> '2013-06-15'));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1003, 'author_user_id'=>1,
+            'in_rt_of_user_id' => 4, 'in_retweet_of_post_id' => 2, 'pub_date'=> '2013-06-15'));
+        $result = $dao->getRetweetsPerUserInRange(1, 'twitter', '2012-01-01', '2013-12-31');
+        $this->assertEqual(3, count($result));
+        $this->assertEqual($result[0]['user_id'], 2);
+        $this->assertEqual($result[0]['count'], 2);
+        $this->assertEqual($result[1]['user_id'], 3);
+        $this->assertEqual($result[1]['count'], 1);
+        $this->assertEqual($result[2]['user_id'], 4);
+        $this->assertEqual($result[2]['count'], 2);
+    }
 }
