@@ -81,7 +81,7 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
                 $network = $network
             );
             $domain_counts = $this->getDomainCounts($last_year_of_posts);
-            $this->logger->logInfo("Got domain counts ".Utils::varDumpToString($domain_counts),
+            $this->logger->logInfo("Got domain counts "/*.Utils::varDumpToString($domain_counts)*/,
                 __METHOD__.','.__LINE__);
 
             $popular_domain = $this->getPopularDomain($domain_counts);
