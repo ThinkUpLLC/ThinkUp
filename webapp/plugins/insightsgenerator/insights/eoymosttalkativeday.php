@@ -174,6 +174,10 @@ class EOYMostTalkativeDayInsight extends InsightPluginParent implements InsightP
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             $insight->filename = $filename;
 
+            //Avoid broken avatars
+            foreach ($popular_posts as $post) {
+                $post->author_avatar = $user->avatar;
+            }
             $insight->setPosts($popular_posts);
 
             $this->insight_dao->insertInsight($insight);

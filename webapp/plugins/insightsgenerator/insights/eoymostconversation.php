@@ -75,8 +75,7 @@ class EOYMostConversationInsight extends InsightPluginParent implements InsightP
 
             $top_three_replied_to = $this->topThreeThisYear($instance);
             foreach ($top_three_replied_to as $key => $post) {
-                $post->count = $post->reply_count_cache . " " .
-                    $this->terms->getNoun('reply', $post->reply_count_cache > 1);
+                $post->author_avatar = $user->avatar;
             }
 
             $post_dao = DAOFactory::getDAO('PostDAO');
