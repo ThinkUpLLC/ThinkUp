@@ -118,7 +118,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
                         'post_id' => $counter + 100,
                         'author_username' => $this->instance->network_username,
                         'author_user_id' => $this->instance->network_user_id,
-                        'network' => $this->instance->network,
+                        'network' => $this->instance->network
                     )
                 );
             }
@@ -136,7 +136,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual("@ev's !!!'s of Twitter, $year", $result->headline);
-        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>66 " .
+        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>78 " .
             "tweets</strong>. That's 100% of @ev's tweets this year!",
             $result->text);
 
@@ -145,7 +145,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
 
     public function testTwitterNoMatches() {
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         // set up posts with no exclamation
         for ($i=1; $i<13; $i++) {
             $month = "".$i;
@@ -159,6 +159,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
                     'author_username' => $this->instance->network_username,
                     'author_user_id' => $this->instance->network_user_id,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 2000
                 )
             );
         }
@@ -224,7 +225,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("Mark Zuckerberg's emphatic $year on Facebook!",
             $result->headline);
         $this->assertEqual("Enthusiasm is contagious, and in $year, Mark Zuckerberg " .
-            "spread the excitement in a total of <strong>63 status updates</strong> ".
+            "spread the excitement in a total of <strong>75 status updates</strong> ".
             "containing exclamation points. That's 100% of Mark Zuckerberg's " .
             "Facebook posts this year (at least since March)!", $result->text);
 
@@ -235,7 +236,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Mark Zuckerberg';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         // set up posts with no exclamation
         for ($i=1; $i<13; $i++) {
             $month = "".$i;
@@ -249,6 +250,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
                     'author_username' => $this->instance->network_username,
                     'author_user_id' => $this->instance->network_user_id,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 1000
                 )
             );
         }
