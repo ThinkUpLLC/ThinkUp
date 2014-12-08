@@ -160,6 +160,12 @@ class EOYPopularPicInsight extends InsightPluginParent implements InsightPlugin 
 
             $insight->headline = $headline;
             $insight->text = $insight_text;
+            //Avoid InsightFieldExceedsMaxLengthException
+            $posts = array_slice($posts, 0, 12);
+            //Avoid broken avatars
+            foreach ($posts as $post) {
+                $post->author_avatar = $user->avatar;
+            }
             $insight->setPosts($posts);
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;

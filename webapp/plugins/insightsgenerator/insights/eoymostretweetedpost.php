@@ -157,9 +157,9 @@ class EOYMostRetweetedPostInsight extends InsightPluginParent implements Insight
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             $insight->filename = basename(__FILE__, ".php");
 
+            //Avoid broken avatars
             foreach ($top_three_shared as $post) {
-                $post->count = $post->retweet_count_cache . " " .
-                    $this->terms->getNoun('retweet', $post->retweet_count_cache > 1);
+                $post->author_avatar = $user->avatar;
             }
             $insight->setPosts($top_three_shared);
 

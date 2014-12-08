@@ -79,8 +79,8 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                 if ($post->favlike_count_cache == 0) {
                     unset($top_three_favliked[$key]);
                 } else {
-                    $post->count = $post->favlike_count_cache . " " .
-                        $this->terms->getNoun('favlike', $post->favlike_count_cache > 1);
+                    //Avoid broken avatars
+                    $post->author_avatar = $user->avatar;
                 }
             }
 
