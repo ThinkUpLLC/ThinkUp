@@ -47,7 +47,8 @@ do
     then
         echo "ERROR: Couldn't find test for $INAME"
     else
-        TEST_DEBUG=1 php $TEST | sed 's/TestOf.*</</' | tail -n +2 > "$LOCAL_TMP_PATH/$INAME.html"
+        echo "<!DOCTYPE html>" > "$LOCAL_TMP_PATH/$INAME.html"
+        TEST_DEBUG=1 php $TEST | sed 's/TestOf[^<]*</</' >> "$LOCAL_TMP_PATH/$INAME.html"
         echo "<li><a href='$INAME.html'>$INAME</a></li>" >>  "$LOCAL_TMP_PATH/index.html"
     fi
 done
