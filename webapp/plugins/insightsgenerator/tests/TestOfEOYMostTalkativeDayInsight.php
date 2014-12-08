@@ -127,7 +127,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
     public function testTwitterNormalCase() {
         // Set up and test normal twitter case
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         for ($i=0; $i<5; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
@@ -197,7 +197,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Buffy Summers';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         for ($i=0; $i<5; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
@@ -265,7 +265,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
     public function testTwitterMultipleMatches() {
         // Set up and test twitter mutliple case
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         for ($i=0; $i<5; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
@@ -273,6 +273,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-02-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 1000
                 )
             );
         }
@@ -283,6 +284,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-03-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 2000
                 )
             );
         }
@@ -293,6 +295,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-04-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 3000
                 )
             );
         }
@@ -322,7 +325,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Buffy Summers';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         for ($i=0; $i<5; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
@@ -330,6 +333,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-02-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 1000
                 )
             );
         }
@@ -340,6 +344,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-03-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 2000
                 )
             );
         }
@@ -350,6 +355,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
                     'pub_date' => "$year-04-07",
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
+                    'post_id'=> $i + 3000
                 )
             );
         }
@@ -378,7 +384,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
     public function testMostPopularPosts() {
         // Set up several posts along with popular posts
         $builders = self::setUpPublicInsight($this->instance);
-        $year = Date('Y');
+        $year = date('Y');
         for ($i=0; $i<5; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
