@@ -56,7 +56,7 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
         $year = date('Y');
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
-            $slug,
+            $this->slug,
             $instance,
             $insight_date = "$year-$this->run_date",
             $regenerate,
