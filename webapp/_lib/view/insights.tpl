@@ -17,7 +17,7 @@
          <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of 2014
 
          <span class="share-buttons">
-           <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+2014&amp;url={$site_root_path|html_entity_decode|escape:'url'}2014&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$site_root_path|html_entity_decode|escape:'url'}2014"><i class="fa fa-fw fa-facebook"></i></a>
+           <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+2014&amp;url={$thinkup_application_url}2014/&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$thinkup_application_url}2014/"><i class="fa fa-fw fa-facebook"></i></a>
          </span>
        </h1>
 
