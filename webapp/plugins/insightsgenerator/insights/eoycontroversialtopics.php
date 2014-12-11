@@ -41,9 +41,9 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-16';
+    //var $run_date = '12-16';
     //staging
-    //var $run_date = '11-06';
+    var $run_date = '12-11';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -57,7 +57,7 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
         $year = date('Y');
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
