@@ -41,9 +41,9 @@ class EOYLongestStreakInsight extends InsightPluginParent implements InsightPlug
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-17';
+    //var $run_date = '12-17';
     //staging
-    //var $run_date = '12-10';
+    var $run_date = '12-10';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -53,7 +53,7 @@ class EOYLongestStreakInsight extends InsightPluginParent implements InsightPlug
 
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
