@@ -41,9 +41,9 @@ class EOYWhoYouAmplifiedInsight extends InsightPluginParent implements InsightPl
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-18';
+    //var $run_date = '12-18';
     //staging
-    //var $run_date = '12-11';
+    var $run_date = '12-11';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -57,7 +57,7 @@ class EOYWhoYouAmplifiedInsight extends InsightPluginParent implements InsightPl
         $year = date('Y');
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug, $instance, $insight_date = "$year-$this->run_date",
