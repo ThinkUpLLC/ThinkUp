@@ -114,8 +114,8 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                     }
                 }
                 $headline = $this->username.' kept the drama off of Facebook';
-                $insight_text = $this->username.' avoided contentious topics like immigration and ebola, '
-                    . 'which can be a great way to keep Facebook a little more friendly'.$qualified_year.'.';
+                $insight_text = $this->username." avoided contentious topics like immigration and ebola in $year"
+                    . $qualified_year. ', which can be a great way to keep Facebook a little more friendly.';
                 $posts = null;
             }
             else {
@@ -128,8 +128,11 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                     }
                     $mentioned[] = $m['term'];
                 }
-                $mentioned[count($mentioned)-1] = 'and '.$mentioned[count($mentioned)-1];
-                $mention_string = join(count($mentioned)==2?' ':', ', $mentioned);
+                $num = count($mentioned);
+                if ($num > 1) {
+                    $mentioned[$num-1] = 'and '.$mentioned[$num-1];
+                }
+                $mention_string = join($num==2?' ':', ', $mentioned);
                 $insight_text = $this->username." talked about $mention_string in $year. ".
                     "It's great to use Facebook to address things that matter.";
             }

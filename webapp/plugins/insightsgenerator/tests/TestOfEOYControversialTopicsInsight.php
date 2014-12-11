@@ -60,15 +60,12 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Your Rude Uncle kept the drama off of Facebook");
-        $this->assertEqual($result->text, "Your Rude Uncle avoided contentious topics like immigration and ebola, ".
-            "which can be a great way to keep Facebook a little more friendly.");
+        $this->assertEqual($result->text, "Your Rude Uncle avoided contentious topics like immigration and ebola ".
+            "in ".date('Y').", which can be a great way to keep Facebook a little more friendly.");
         $data = unserialize($result->related_data);
         $this->assertNull($data['posts']);
 
         $this->dumpRenderedInsight($result, $this->instance, "No Topics");
-
-        /*
-         */
     }
 
     public function testNoTopicsQualified() {
@@ -89,8 +86,9 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Your Rude Uncle kept the drama off of Facebook");
-        $this->assertEqual($result->text, "Your Rude Uncle avoided contentious topics like immigration and ebola, ".
-            "which can be a great way to keep Facebook a little more friendly (at least since June).");
+        $this->assertEqual($result->text, "Your Rude Uncle avoided contentious topics like immigration and ebola ".
+            "in ".date('Y')." (at least since June), which can be a great way to keep Facebook a little more "
+            . "friendly.");
         $data = unserialize($result->related_data);
         $this->assertNull($data['posts']);
 
@@ -98,10 +96,11 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testOneTopic() {
+        $year = date('Y');
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'pub_date' => $year.'-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'This Ferguson stuff is crazy!',
             )
@@ -113,8 +112,8 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of 2014's big issues");
-        $this->assertEqual($result->text, "Your Rude Uncle talked about and Ferguson in 2014. It's great to use "
+        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of $year's big issues");
+        $this->assertEqual($result->text, "Your Rude Uncle talked about Ferguson in $year. It's great to use "
             . "Facebook to address things that matter.");
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
@@ -123,24 +122,25 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testTwoTopics() {
+        $year = date('Y');
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'This Ferguson stuff is crazy!',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-05', 'post_id' => 2, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-05", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'I don\'t understand immigration.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 3, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-01", 'post_id' => 3, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'I should be in charge of immigration.',
             )
@@ -152,8 +152,8 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of 2014's big issues");
-        $this->assertEqual($result->text, "Your Rude Uncle talked about Ferguson and immigration in 2014. "
+        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of $year's big issues");
+        $this->assertEqual($result->text, "Your Rude Uncle talked about Ferguson and immigration in $year. "
             . "It's great to use Facebook to address things that matter.");
         $data = unserialize($result->related_data);
         $this->assertEqual(2, count($data['posts']));
@@ -164,24 +164,25 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testThreeTopics() {
+        $year = date('Y');
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'This Ferguson stuff is crazy!',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-04-05', 'post_id' => 2, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-04-05", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'I don\'t understand immigration.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-01-01', 'post_id' => 3, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-01-01", 'post_id' => 3, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'What is an ISIS?',
             )
@@ -193,8 +194,8 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of 2014's big issues");
-        $this->assertEqual($result->text, "Your Rude Uncle talked about ISIS, Ferguson, and immigration in 2014. "
+        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of $year's big issues");
+        $this->assertEqual($result->text, "Your Rude Uncle talked about ISIS, Ferguson, and immigration in $year. "
             . "It's great to use Facebook to address things that matter.");
         $data = unserialize($result->related_data);
         $this->assertEqual(3, count($data['posts']));
@@ -206,31 +207,32 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testFourTopics() {
+        $year = date('Y');
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'This Ferguson stuff is crazy!',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-03-01', 'post_id' => 2, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-03-01", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'Climate Change is made up! Buffalo has always had killer storms.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-04-05', 'post_id' => 3, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-04-05", 'post_id' => 3, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'I don\'t understand immigration.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-01-01', 'post_id' => 4, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-01-01", 'post_id' => 4, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'What is an ISIS?',
             )
@@ -242,9 +244,9 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of 2014's big issues");
+        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of $year's big issues");
         $this->assertEqual($result->text, "Your Rude Uncle talked about ISIS, Ferguson, climate change, and "
-            . "immigration in 2014. It's great to use Facebook to address things that matter.");
+            . "immigration in $year. It's great to use Facebook to address things that matter.");
         $data = unserialize($result->related_data);
         $this->assertEqual(3, count($data['posts']));
         $this->assertEqual($data['posts'][0]->post_text, 'What is an ISIS?');
@@ -256,17 +258,18 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testSameTopicMultipleTerms() {
+        $year = date('Y');
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'This Ferguson stuff is crazy!',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
-                'pub_date' => '2014-01-11', 'post_id' => 2, 'author_username' => $this->instance->network_username,
+                'pub_date' => "$year-01-11", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
                 'post_text' => 'Where is Ferguson, anyways?  Antartica?',
             )
@@ -278,8 +281,8 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of 2014's big issues");
-        $this->assertEqual($result->text, "Your Rude Uncle talked about and Ferguson in 2014. It's great to use "
+        $this->assertEqual($result->headline, "Your Rude Uncle wasn't afraid of $year's big issues");
+        $this->assertEqual($result->text, "Your Rude Uncle talked about Ferguson in $year. It's great to use "
             . "Facebook to address things that matter.");
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
