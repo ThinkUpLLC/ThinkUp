@@ -101,7 +101,7 @@ class EOYFBombCountInsight extends InsightPluginParent implements InsightPlugin 
                 $point_chart[$month] = 0;
             }
             foreach ($last_year_of_posts as $post) {
-                if ($this->hasFBomb($post)) {
+                if ($this->hasFBomb($post, $instance)) {
                     $date = new DateTime($post->pub_date);
                     $month = $date->format('M');
                     $point_chart[$month]++;
@@ -219,7 +219,7 @@ class EOYFBombCountInsight extends InsightPluginParent implements InsightPlugin 
         return date('F', strtotime("$short_month 1 2014"));
     }
 
-    public function hasFBomb(Post $post) {
+    public function hasFBomb(Post $post, Instance $instance) {
         $text = strtolower($post->post_text);
         $has_fbomb = $post->in_reply_to_user_id != $instance->network_user_id && preg_match('/fuck/', $text);
 

@@ -1098,11 +1098,11 @@ class TwitterCrawler {
                 $args["source_id"] = $old_follow["followee_id"];
                 $args["target_id"] = $old_follow["follower_id"];
 
-                $debug_api_call = $http_status;
                 try {
                     $this->logger->logInfo("Checking stale follow last seen ".$old_follow["last_seen"],
                         __METHOD__.','.__LINE__);
                     list($http_status, $payload) = $this->api->apiRequest($endpoint, $args);
+                    $debug_api_call = $http_status;
                     if ($http_status == 200) {
                         $friendship = $this->api->parseJSONRelationship($payload);
                         if ($friendship['source_follows_target'] == 'true') {
