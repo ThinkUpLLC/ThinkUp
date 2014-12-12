@@ -875,4 +875,13 @@ interface PostDAO {
      * @return arr user_id/count pairs that $user_id retweetd
      */
     public function getRetweetsPerUserInRange($user_id, $network, $from, $until);
+
+    /**
+     * Get all posts by a given user with configurable order by field and direction
+     * @param str $author_username
+     * @param str $network
+     * @param Date $year
+     * @return array Row with year and total posts for that year
+     */
+    public function getPostCountForYear($author_username, $network, $year);
 }
