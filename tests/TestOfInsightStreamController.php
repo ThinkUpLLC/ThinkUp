@@ -525,4 +525,48 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/ Posted by <a href="https:\/\/twitter.com\/intent\/user\?screen_name=thinkup'.
             '">@thinkup<\/a>/', $results);
     }
+
+
+    public function testOfNotLoggedInIndividualInsightNotInShareMode() {
+        $builders = self::buildPublicAndPrivateInsights();
+
+        $_GET['u'] = 'jack';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = '2012-05-01';
+        $_GET['s'] = 'avg_replies_per_week';
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        //do show public insight
+        $this->assertPattern('/Hey these are some local followers!/', $results);
+        //don't show no access message
+        $this->assertNoPattern('/to see this insight/', $results);
+        //Make sure we're not showing extraneous stuff like the footer
+        $this->assertPattern('/It is nice to be nice./', $results);
+
+        $this->debug($results);
+    }
+
+    public function testOfNotLoggedInIndividualInsightLightShareMode() {
+        $builders = self::buildPublicAndPrivateInsights();
+
+        $_GET['u'] = 'jack';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = '2012-05-01';
+        $_GET['s'] = 'avg_replies_per_week';
+        $_GET['share'] = '1';
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+
+        //do show public insight
+        $this->assertPattern('/Hey these are some local followers!/', $results);
+        //don't show no access message
+        $this->assertNoPattern('/to see this insight/', $results);
+        //Make sure we're not showing extraneous stuff like the footer
+        $this->assertNoPattern('/It is nice to be nice./', $results);
+
+        $this->debug($results);
+    }
+
+
 }
