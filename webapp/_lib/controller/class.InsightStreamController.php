@@ -52,6 +52,9 @@ class InsightStreamController extends ThinkUpController {
         if ($this->shouldRefreshCache() ) {
             if (isset($_GET['u']) && isset($_GET['n']) && isset($_GET['d']) && isset($_GET['s'])) {
                 $this->displayIndividualInsight();
+                if (isset($_GET['share'])) {
+                    $this->addToView('share_mode', true);
+                }
             } else {
                 if (!$this->displayPageOfInsights()) {
                     $controller = new LoginController(true);
