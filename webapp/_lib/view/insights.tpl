@@ -1,5 +1,8 @@
 {include file="_header.tpl"}
-{include file="_navigation.tpl"}
+{if !isset($share_mode)}
+  {include file="_navigation.tpl"}
+{/if}
+
 
 <div class="container">
   {if $is_year_end}
