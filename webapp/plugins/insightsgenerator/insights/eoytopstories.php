@@ -81,6 +81,30 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 'the Super Bowl' => array('Super Bowl','Superbowl'),
                 'MH370' => array('MH370','MH 370', 'Malaysia Airlines'),
                 'the World Cup' => array("World Cup"),
+                'the Sochi Olympics' => array('Sochi','Olympics'),
+                'LeBron James' => array('lebron'),
+                'Derek Jeter' => array('jeter'),
+                'Floyd Wayweather Jr.' => array('mayweather'),
+                'Carmelo Anthony' => array('carmelo'),
+                'Cristiano Ronaldo' => array('ronaldo'),
+                'Dale Earnhardt Jr.' => array('earnhardt'),
+                'Dale Earnhardt Jr.' => array('earnhardt'),
+                'Beyoncé' => array('beyonce'),
+                'Pharrell' => array('pharrell'),
+                'Nicki Minaj' => array('minaj'),
+                'Taylor Swift' => array('Taylor Swift'),
+                'Sam Smith' => array('Sam Smith'),
+                'Jimmy Fallon' => array('fallon'),
+                'Kim Kardashian' => array('kardashian'),
+                'Game of Thrones' => array('game of thrones'),
+                'Orange is the New Black' => array('Orange is the New Black','oitnb'),
+                'The Walking Dead' => array('walking dead'),
+                'Downton Abbey' => array('downton'),
+                'True Detective' => array('True Detective'),
+                'Frozen' => array('Frozen'),
+                'Guardians of the Galaxy' => array('Guardians of the Galaxy'),
+                'The Lego Movie' => array('lego movie'),
+                'Gone Girl' => array('Gone Girl'),
             );
 
             $matches = array();
@@ -127,7 +151,7 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 }
                 $mention_string = join($num==2?' ':', ', $mentioned);
                 $thatwas = $num == 1 ? 'That was one' : 'Those were some';
-                $insight_text = $this->username."'s $year included $mention_string.  $thatwas of "
+                $insight_text = $this->username."'s $year included $mention_string. $thatwas of "
                     . "Facebook's top topics of the year &mdash; that's so $year!";
             }
 
