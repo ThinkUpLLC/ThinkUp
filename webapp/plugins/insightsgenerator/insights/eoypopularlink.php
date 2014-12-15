@@ -197,11 +197,17 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
         foreach ($last_year_of_posts as $post) {
             if (sizeof($post->links) > 0) {
                 foreach ($post->links as $link) {
-                    if ($link->image_src == ''
-                        && strpos($link->url, 'www.facebook.com/photo.php') === false
-                        && strpos($link->url, 'www.facebook.com/events') === false) {
-                        $popularity_index = Utils::getPopularityIndex($post);
-                        $scored_links[$post->post_id] = $popularity_index;
+                    if ($post->network == 'facebook') {
+                        if ( strpos($link->url, 'www.facebook.com/photo.php') === false
+                            && strpos($link->url, 'www.facebook.com/events') === false ) {
+                            $popularity_index = Utils::getPopularityIndex($post);
+                            $scored_links[$post->post_id] = $popularity_index;
+                        }
+                    } else {
+                        if ($link->image_src == '' ) {
+                            $popularity_index = Utils::getPopularityIndex($post);
+                            $scored_links[$post->post_id] = $popularity_index;
+                        }
                     }
                 }
             }
@@ -209,7 +215,6 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
         arsort($scored_links);
         return $scored_links;
     }
-
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
