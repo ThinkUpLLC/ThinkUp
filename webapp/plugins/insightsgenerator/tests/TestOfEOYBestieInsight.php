@@ -324,7 +324,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertEqual("fbuser1's Facebook bestie of 2014", $result->headline);
         $this->assertEqual("Everyone loves getting comments from their friends. In 2014, fbuser2 commented on ".
-            "fbuser1's status updates <strong>5 times</strong>, more than anyone else (at least since November). ".
+            "fbuser1's status updates <strong>5 times</strong>, more than anyone else (at least since December). ".
             "Best friends forever!",
             $result->text);
 
