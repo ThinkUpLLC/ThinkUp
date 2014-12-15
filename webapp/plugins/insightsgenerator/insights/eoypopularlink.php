@@ -197,7 +197,7 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
         foreach ($last_year_of_posts as $post) {
             if (sizeof($post->links) > 0) {
                 foreach ($post->links as $link) {
-                    if ($link->image_src == null || $link->image_src == '') {
+                    if ($link->image_src == '' && strpos($link->url, 'www.facebook.com/photo.php') === false) {
                         $popularity_index = Utils::getPopularityIndex($post);
                         $scored_links[$post->post_id] = $popularity_index;
                     }
