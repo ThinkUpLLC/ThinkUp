@@ -94,7 +94,7 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
-                        'headline' => "%username's most popular link on Twitter, %year",
+                        'headline' => "%username's most popular links on Twitter, %year",
                         'body' => "The wealth of the web, shared in a constant 23 characters: " .
                             "These are the most popular links %username shared on " .
                             "Twitter in %qualified_year."
@@ -113,7 +113,7 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
                 ),
                 'facebook' => array(
                     'normal' => array(
-                        'headline' => "%username's most popular link on Facebook, %year",
+                        'headline' => "%username's most popular links on Facebook, %year",
                         'body' => "We laughed, we cried, we linked. These are the most " .
                             "popular links %username shared on Facebook in %qualified_year."
                     ),
@@ -197,7 +197,9 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
         foreach ($last_year_of_posts as $post) {
             if (sizeof($post->links) > 0) {
                 foreach ($post->links as $link) {
-                    if ($link->image_src == '' && strpos($link->url, 'www.facebook.com/photo.php') === false) {
+                    if ($link->image_src == ''
+                        && strpos($link->url, 'www.facebook.com/photo.php') === false
+                        && strpos($link->url, 'www.facebook.com/events') === false) {
                         $popularity_index = Utils::getPopularityIndex($post);
                         $scored_links[$post->post_id] = $popularity_index;
                     }

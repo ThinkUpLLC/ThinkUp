@@ -223,7 +223,7 @@ class TestOfEOYPopularLinkInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         // $this->assertEqual(1, count($result->posts));
-        $this->assertEqual("@ev's most popular link on Twitter, $year", $result->headline);
+        $this->assertEqual("@ev's most popular links on Twitter, $year", $result->headline);
         $this->assertEqual("The wealth of the web, shared in a constant 23 characters: " .
             "These are the most popular links @ev shared on Twitter in $year.",
             $result->text);
@@ -369,7 +369,7 @@ class TestOfEOYPopularLinkInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("Mark Zuckerberg's most popular link on Facebook, $year", $result->headline);
+        $this->assertEqual("Mark Zuckerberg's most popular links on Facebook, $year", $result->headline);
         $this->assertEqual("We laughed, we cried, we linked. These are the most popular " .
             "links Mark Zuckerberg shared on Facebook in $year (at least since March).", $result->text);
 
