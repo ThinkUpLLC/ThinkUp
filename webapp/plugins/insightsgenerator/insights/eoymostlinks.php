@@ -158,6 +158,8 @@ class EOYMostLinksInsight extends InsightPluginParent implements InsightPlugin {
                 $type = 'one';
             } else {
                 $type = 'none';
+                //Don't show this insight if there are no multiple posts linking to a single popular domain
+                return;
             }
             $headline = $this->getVariableCopy(
                 array(
