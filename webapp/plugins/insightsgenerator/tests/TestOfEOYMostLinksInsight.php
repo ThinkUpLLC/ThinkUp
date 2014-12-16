@@ -311,18 +311,11 @@ class TestOfEOYMostLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new EOYMostLinksInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
-        // Assert that insight got inserted
+        // Assert that insight didn't get inserted
         $insight_dao = new InsightMySQLDAO();
         $result = $insight_dao->getInsight('eoy_most_links', $this->instance->id,
             $year.'-'.$insight_plugin->run_date);
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        // $this->assertEqual(1, count($result->posts));
-        $this->assertEqual("@ev tweeted nary a link in $year", $result->headline);
-        $this->assertEqual("This year, @ev didn't post a single link on Twitter. " .
-            "You can do better than that, internet!", $result->text);
-
-        $this->dumpRenderedInsight($result, $this->instance, "No match, Twitter");
+        $this->assertNull($result);
     }
 
     public function testFacebookNormalCase() {
