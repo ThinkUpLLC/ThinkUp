@@ -161,7 +161,9 @@
 
 {/foreach}
 
-{include file="_insight.touts.tpl"}
+{if !isset($share_mode)}
+  {include file="_insight.touts.tpl"}
+{/if}
 
     </div><!-- end date-group -->
 
