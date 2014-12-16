@@ -52,7 +52,7 @@ class EOYPopularLinkInsight extends InsightPluginParent implements InsightPlugin
         $year = date('Y');
         $regenerate = false;
         //testing
-        $regenerate = true;
+        //$regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
