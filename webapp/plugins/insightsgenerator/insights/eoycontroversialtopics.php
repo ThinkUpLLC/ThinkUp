@@ -83,7 +83,7 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                 'isis' => array("ISIS"),
                 'israel' => array("Israel"),
                 'palestine' => array("Palestine"),
-                'hamas' => array("hamas"),
+                //'hamas' => array("hamas"),
                 'donaldsterling' => array("Donald Sterling"),
                 'marriage' => array("gay marriage","marriage equality","same-sex marriage"),
                 'ebola' => array("ebola"),
