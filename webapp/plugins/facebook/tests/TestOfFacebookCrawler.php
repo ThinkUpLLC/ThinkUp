@@ -128,6 +128,18 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($fbc->access_token, 'fauxaccesstoken');
     }
 
+    public function testConstructorExtendedInitialMaxCrawlTime() {
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        //Assert max_crawl_time gets uppped for initial crawl
+        $this->assertEqual($fbc->max_crawl_time, FacebookCrawler::MAX_CRAWL_TIME_EXTENDED);
+
+        //Put user in DB
+        $fbc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, "Owner Status");
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        //Assert max_crawl_time does not get upped
+        $this->assertEqual($fbc->max_crawl_time, 10);
+    }
+
     public function testFetchUser() {
         $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
         $fbc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, "Owner Status");
