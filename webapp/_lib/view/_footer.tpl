@@ -117,6 +117,10 @@
         </script>{/literal}
     {/if}
 
+{else} <!-- in share mode -->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 {/if} <!-- /not in share mode -->
 
 {if isset($thinkupllc_endpoint)}
