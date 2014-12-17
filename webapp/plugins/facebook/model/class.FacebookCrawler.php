@@ -54,6 +54,12 @@ class FacebookCrawler {
      */
     var $page_like_count_set = false;
     /**
+     * Extended max_crawl_time.
+     * If crawler has never run before, and max_crawl_time is shorter than this, extend it to this.
+     * @var integer
+     */
+    const MAX_CRAWL_TIME_EXTENDED = 120;
+    /**
      * @param Instance $instance
      * @return FacebookCrawler
      */
@@ -62,6 +68,15 @@ class FacebookCrawler {
         $this->logger = Logger::getInstance();
         $this->access_token = $access_token;
         $this->max_crawl_time = $max_crawl_time;
+
+        //If crawler has never run before, and max_crawl_time is short, extend it
+        if ($max_crawl_time < self::MAX_CRAWL_TIME_EXTENDED) {
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            //If user is not in storage then crawler has not run before
+            if (!$user_dao->isUserInDB($instance->network_user_id, $instance->network)) {
+                $this->max_crawl_time = self::MAX_CRAWL_TIME_EXTENDED;
+            }
+        }
     }
     /**
      * If user doesn't exist in the datastore, fetch details from Facebook API and insert into the datastore.
