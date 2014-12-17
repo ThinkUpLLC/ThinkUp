@@ -157,7 +157,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
                 "id" => 1510,
                 "url" => "http://t.co/Euiv1aMgVD",
                 "expanded_url" => null,
-                "title" => null,
+                "title" => 'Link title!',
                 "description" => null,
                 "image_src" => null,
                 "caption" => null,
