@@ -2622,6 +2622,7 @@ body.app-message-visible.account .container {
 .body-list .list-item {
   margin-top: 17px;
   display: none;
+  clear: left;
 }
 .body-list .list-item:first-child {
   display: block;

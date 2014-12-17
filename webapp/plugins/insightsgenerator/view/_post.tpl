@@ -11,6 +11,33 @@ $hide_avatar (optional) do not display the user's avatar, typically used if the 
   <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{if isset($post->author->avatar)}{$post->author->avatar|use_https}{else}{$post->author_avatar|use_https}{/if}" alt="{$post->author_username}" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
   <div class="tweet-body">{$post->post_text|filter_xss|link_usernames_to_twitter}</div>
+
+{*
+On Facebook, links may be included with a post but not inline in post_text.
+Therefore, on Facebook posts, list links that are not images.
+*}
+{if $post->network eq 'facebook'}
+{foreach from=$post->links item=l}
+  {if $l->image_src neq $l->url}
+  <div class="tweet-body">
+    <div class="link">
+      <a href="{$l->url}" class="link-title">
+        {if isset($l->title) && $l->title neq ''}
+            {$l->title|truncate:100}
+        {elseif ($l->caption neq '')}
+            {$l->caption|truncate:100}
+        {elseif $l->expanded_url}
+            {$l->expanded_url|truncate:40}
+        {else}
+            {$l->url|truncate:40}
+        {/if}
+      </a>
+    </div>
+  </div>
+  {/if}
+{/foreach}
+{/if}
+
 {foreach from=$post->links item=l}
   {if !isset($breakphotos) and isset($l->image_src) and $l->image_src neq ""}
   <div class="photo clearfix">

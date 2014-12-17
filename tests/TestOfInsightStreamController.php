@@ -438,6 +438,36 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->debug($results);
     }
 
+    public function testOfInsightPostsWithLinksAndImages() {
+        $builders = self::buildPublicAndPrivateInsights();
+
+        //Insight with tweets that have links and images
+        $_GET['u'] = 'jack';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = '2012-06-01';
+        $_GET['s'] = 'avg_replies_per_week';
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        //don't show link title
+        $this->assertNoPattern('/Link title/', $results);
+        //do show image
+        $this->assertPattern('/instagr.am\/p\/EYhds\/media/', $results);
+        $this->debug($results);
+
+        //Insight with FB post that has a link with image
+        $_GET['u'] = 'Bill Jônes';
+        $_GET['n'] = 'facebook';
+        $_GET['d'] = '2012-06-01';
+        $_GET['s'] = 'avg_replies_per_week';
+        $controller = new InsightStreamController();
+        $results = $controller->go();
+        //do show link title
+        $this->assertPattern('/Gina Trapani - Timeline Photos | Facebook/', $results);
+        //do show image
+        $this->assertPattern('/fbcdn-photos-b-a.akamaihd.net/', $results);
+        $this->debug($results);
+    }
+
     public function testOfNotLoggedInIndividualInsightWithAccessLLCEndpointSet() {
         $config = Config::getInstance();
         $config->setValue('thinkupllc_endpoint', 'http://example.com');
