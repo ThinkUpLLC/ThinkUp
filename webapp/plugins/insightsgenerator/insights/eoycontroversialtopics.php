@@ -149,6 +149,11 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             if ($posts) {
+                $posts = array_slice($posts, 0, 12);
+                $link_dao = DAOFactory::getDAO('LinkDAO');
+                foreach ($posts as $post) {
+                    $post->links = $link_dao->getLinksForPost($post->post_id, $post->network);
+                }
                 $insight->setPosts($posts);
             }
 
