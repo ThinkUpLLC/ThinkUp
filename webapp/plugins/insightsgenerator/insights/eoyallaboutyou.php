@@ -145,6 +145,7 @@ class EOYAllAboutYouInsight extends InsightPluginParent implements InsightPlugin
             $insight->text = $insight_text;
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
+            $insight->header_image = $user->avatar;
 
             $this->insight_dao->insertInsight($insight);
         }
