@@ -117,7 +117,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
         $this->assertEqual($result->text, "Anderson Cooper's $year included the Super Bowl. That was one of "
-            . "Facebook's top topics of the year &mdash; that's so $year!");
+            . '<a href="http://newsroom.fb.com/news/2014/12/2014-year-in-review/">Facebook\'s top topics of the year'
+            . '</a> &mdash; that\'s so '.$year.'!');
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
 
@@ -157,7 +158,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
         $this->assertEqual($result->text, "Anderson Cooper's $year included The Walking Dead and "
-            . "Robin Williams. Those were some of Facebook's top topics of the year &mdash; that's so $year!");
+            . "Robin Williams. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
+            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
         $data = unserialize($result->related_data);
         $this->assertEqual(2, count($data['posts']));
         $this->assertEqual($data['posts'][0]->post_text, 'The Walking Dead is my favorite show!');
@@ -199,7 +201,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
         $this->assertEqual($result->text, "Anderson Cooper's $year included MH370, the World Cup, and the Ice "
-            . "Bucket Challenge. Those were some of Facebook's top topics of the year &mdash; that's so $year!");
+            . "Bucket Challenge. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
+            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
         $data = unserialize($result->related_data);
         $this->assertEqual(3, count($data['posts']));
         $this->assertEqual($data['posts'][0]->post_text, 'MH370 is still missing.');
@@ -249,7 +252,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
         $this->assertEqual($result->text, "Anderson Cooper's $year included MH370, the World Cup, the Super Bowl, and "
-            . "Robin Williams. Those were some of Facebook's top topics of the year &mdash; that's so $year!");
+            . "Robin Williams. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
+            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
         $data = unserialize($result->related_data);
         $this->assertEqual(3, count($data['posts']));
         $this->assertEqual($data['posts'][0]->post_text, 'MH370?');
@@ -285,7 +289,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
         $this->assertEqual($result->text, "Anderson Cooper's $year included the Super Bowl. That was one of "
-            . "Facebook's top topics of the year &mdash; that's so $year!");
+            . "<a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-review/\">Facebook's top topics of the "
+            . "year</a> &mdash; that's so $year!");
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
         $this->assertEqual($data['posts'][0]->post_text, 'Super bowl, tomorrow!');

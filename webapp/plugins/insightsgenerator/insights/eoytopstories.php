@@ -139,6 +139,11 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 $posts = null;
                 //Show avatar if there are no posts
                 $insight->header_image = $user->avatar;
+                //Show button if there are no posts
+                $insight->setButton(array(
+                    'url' => 'http://newsroom.fb.com/news/2014/12/2014-year-in-review/',
+                    'label' => "See Facebook's Year in Review"
+                ));
             } else {
                 $headline = $this->username." was part of $year's biggest trends";
                 $posts = array();
@@ -156,7 +161,8 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 $mention_string = join($num==2?' ':', ', $mentioned);
                 $thatwas = $num == 1 ? 'That was one' : 'Those were some';
                 $insight_text = $this->username."'s $year included $mention_string. $thatwas of "
-                    . "Facebook's top topics of the year &mdash; that's so $year!";
+                    . '<a href="http://newsroom.fb.com/news/2014/12/2014-year-in-review/">Facebook\'s top topics of '
+                    . "the year</a> &mdash; that's so $year!";
             }
 
             $insight->instance_id = $instance->id;
@@ -166,10 +172,6 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
             $insight->text = $insight_text;
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
-            $insight->setButton(array(
-                'url' => 'http://newsroom.fb.com/news/2014/12/2014-year-in-review/',
-                'label' => "See Facebook's Year in Review"
-            ));
             if ($posts) {
                 $insight->setPosts($posts);
             }
