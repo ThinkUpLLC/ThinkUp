@@ -173,6 +173,11 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             if ($posts) {
+                $posts = array_slice($posts, 0, 12);
+                $link_dao = DAOFactory::getDAO('LinkDAO');
+                foreach ($posts as $post) {
+                    $post->links = $link_dao->getLinksForPost($post->post_id, $post->network);
+                }
                 $insight->setPosts($posts);
             }
 
