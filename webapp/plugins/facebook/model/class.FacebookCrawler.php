@@ -58,7 +58,7 @@ class FacebookCrawler {
      * If crawler has never run before, and max_crawl_time is shorter than this, extend it to this.
      * @var integer
      */
-    const MAX_CRAWL_TIME_EXTENDED = 120;
+    const MAX_CRAWL_TIME_EXTENDED = 240;
     /**
      * @param Instance $instance
      * @return FacebookCrawler
