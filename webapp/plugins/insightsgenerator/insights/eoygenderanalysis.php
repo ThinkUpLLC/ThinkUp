@@ -117,6 +117,7 @@ class EOYGenderAnalysisInsight extends InsightPluginParent implements InsightPlu
         $insight->text = $text;
         $insight->filename = basename(__FILE__, ".php");
         $insight->emphasis = Insight::EMPHASIS_HIGH;
+        $insight->header_image = $user->avatar;
         $insight->setPieChart(array('gender' => 'value','female' => $females, 'male' => $males));
         $this->insight_dao->insertInsight($insight);
     }

@@ -103,6 +103,8 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                 }
             }
 
+            $insight = new Insight();
+
             if (count($matches) == 0) {
                 $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
                 $qualified_year = "";
@@ -117,6 +119,8 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                 $insight_text = $this->username." avoided contentious topics like immigration and ebola in $year"
                     . $qualified_year. ', which can be a good way to keep Facebook more friendly.';
                 $posts = null;
+                //Show avatar if there are no posts
+                $insight->header_image = $user->avatar;
             }
             else {
                 $headline = $this->username." took on $year's hot-button issues";
@@ -137,7 +141,6 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
                     "It's great to use Facebook to discuss issues that matter.";
             }
 
-            $insight = new Insight();
             $insight->instance_id = $instance->id;
             $insight->slug = $this->slug;
             $insight->date = "$year-$this->run_date";
