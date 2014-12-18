@@ -101,7 +101,7 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 'The Walking Dead' => array('walking dead'),
                 'Downton Abbey' => array('downton'),
                 'True Detective' => array('True Detective'),
-                'Frozen' => array('Frozen'),
+                //'Frozen' => array('Frozen'),
                 'Guardians of the Galaxy' => array('Guardians of the Galaxy'),
                 'The Lego Movie' => array('lego movie'),
                 'Gone Girl' => array('Gone Girl'),
