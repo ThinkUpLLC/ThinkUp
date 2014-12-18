@@ -120,6 +120,8 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 }
             }
 
+            $insight = new Insight();
+
             if (count($matches) == 0) {
                 $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
                 $qualified_year = "";
@@ -135,6 +137,8 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                     . $this->username." broke away from the herd and avoided talking about 2014's biggest stories "
                     ."on Facebook this year" . $qualified_year. '.';
                 $posts = null;
+                //Show avatar if there are no posts
+                $insight->header_image = $user->avatar;
             } else {
                 $headline = $this->username." was part of $year's biggest trends";
                 $posts = array();
@@ -155,7 +159,6 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                     . "Facebook's top topics of the year &mdash; that's so $year!";
             }
 
-            $insight = new Insight();
             $insight->instance_id = $instance->id;
             $insight->slug = $this->slug;
             $insight->date = "$year-$this->run_date";
