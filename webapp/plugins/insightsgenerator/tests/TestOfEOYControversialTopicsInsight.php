@@ -290,4 +290,30 @@ class TestOfEOYControversialTopicsInsight extends ThinkUpInsightUnitTestCase {
 
         $this->dumpRenderedInsight($result, $this->instance, "One Topic, Mentioned multiple times");
     }
+
+    public function testWordInWord() {
+        $year = date('Y');
+        $builders = array();
+        $builders[] = FixtureBuilder::build('posts',
+            array(
+                'pub_date' => $year.'-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
+                'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
+                'post_text' => 'Awesome vacation in the Bahamas, not to be confused with Hhamas. Crisis in ferguson!',
+            )
+        );
+        $insight_plugin = new EOYControversialTopicsInsight();
+        $day = date('Y').'-'.$insight_plugin->run_date;
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin->generateInsight($this->instance, new User(), array(), 3);
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->headline, "Alec Baldwin took on $year's hot-button issues");
+        $this->assertEqual($result->text, "Alec Baldwin mentioned Ferguson on Facebook in $year. It's great to use "
+            . "Facebook to discuss issues that matter.");
+        $data = unserialize($result->related_data);
+        $this->assertEqual(1, count($data['posts']));
+
+        $this->dumpRenderedInsight($result, $this->instance, "One Topic");
+    }
 }
