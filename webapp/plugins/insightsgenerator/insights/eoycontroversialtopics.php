@@ -57,7 +57,7 @@ class EOYControversialTopicsInsight extends InsightPluginParent implements Insig
         $year = date('Y');
         $regenerate = false;
         //testing
-        $regenerate = true;
+        //$regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
