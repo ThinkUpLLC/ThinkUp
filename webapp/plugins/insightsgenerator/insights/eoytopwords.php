@@ -77,6 +77,17 @@ class EOYTopWordsInsight extends InsightPluginParent implements InsightPlugin {
                 return;
             }
 
+            // Get qualified year
+            $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
+            $qualified_year = "";
+            if ( date('Y', strtotime($earliest_pub_date)) == date('Y') ) {
+                if ( date('n', strtotime($earliest_pub_date)) > 1 ) { //not January
+                    //Earliest post was this year; figure out what month we have data since this year
+                    $since = date('F', strtotime($earliest_pub_date));
+                    $qualified_year = " (at least since ".$since.")";
+                }
+            }
+
             foreach ($words as $key => $word) {
                 $words[$key][0] = '&#8220;'.$word[0];
             }
@@ -98,7 +109,7 @@ class EOYTopWordsInsight extends InsightPluginParent implements InsightPlugin {
             }
             if ($instance->network == 'facebook') {
                 $text = "How to describe $year? ".$this->username." used <strong>$first ".number_format($words[0][1]).
-                    " times</strong> on Facebook this year &mdash; more than any other word";
+                    " times</strong> on Facebook this year$qualified_year. That's more than any other word";
                 if (!$rest) {
                     $text .= '.';
                 } else {
@@ -109,7 +120,7 @@ class EOYTopWordsInsight extends InsightPluginParent implements InsightPlugin {
                 $network = ucfirst($instance->network);
                 $text = "Would you say it's been a $first year? " . $this->username . " might. " . $this->username .
                     " mentioned <strong>$first ".number_format($words[0][1]).
-                    " times</strong> on $network in $year — more than any other word this year";
+                    " times</strong> on $network in $year$qualified_year. That's more than any other word this year";
                 if (!$rest) {
                     $text .= '.';
                 } else {

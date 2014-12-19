@@ -74,7 +74,7 @@ class TestOfEOYTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "@bookworm's most-used words on Twitter, $year");
         $this->assertEqual($result->text, "Would you say it's been a &#8220;love&#8221; year? @bookworm might. "
-            . "@bookworm mentioned <strong>&#8220;love&#8221; 20 times</strong> on Twitter in $year — more than "
+            . "@bookworm mentioned <strong>&#8220;love&#8221; 20 times</strong> on Twitter in $year. That's more than "
             . "any other word this year &mdash; followed by &#8220;wine,&#8221; &#8220;books,&#8221; "
             . "and &#8220;cheese.&#8221;");
         $data = unserialize($result->related_data);
@@ -105,7 +105,7 @@ class TestOfEOYTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Jane Wordsmith's most-used words on Facebook, $year");
         $this->assertEqual($result->text, "How to describe $year? Jane Wordsmith used <strong>&#8220;arrays&#8221; "
-            . "4 times</strong> on Facebook this year &mdash; more than any other word &mdash; "
+            . "4 times</strong> on Facebook this year. That's more than any other word &mdash; "
             . "followed by &#8220;creating&#8221; and &#8220;things.&#8221; Sound about right?");
         $data = unserialize($result->related_data);
         $this->assertNotNull($data['bar_chart']);
@@ -131,8 +131,8 @@ class TestOfEOYTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "@bookworm's most-used word on Twitter, $year");
         $this->assertEqual($result->text, "Would you say it's been a &#8220;singularity&#8221; year? @bookworm might. "
-            . "@bookworm mentioned <strong>&#8220;singularity&#8221; 12 times</strong> on Twitter in $year — more "
-            . "than any other word this year.");
+            . "@bookworm mentioned <strong>&#8220;singularity&#8221; 12 times</strong> on Twitter in $year. That's "
+            . "more than any other word this year.");
         $data = unserialize($result->related_data);
         $this->assertNotNull($data['bar_chart']);
         $this->assertEqual(1, count($data['bar_chart']['rows']));
@@ -157,7 +157,7 @@ class TestOfEOYTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "@bookworm's most-used word on Twitter, $year");
         $this->assertEqual($result->text, "Would you say it's been a &#8220;loneliness&#8221; year? @bookworm might. "
-            . "@bookworm mentioned <strong>&#8220;loneliness&#8221; 12 times</strong> on Twitter in $year — "
+            . "@bookworm mentioned <strong>&#8220;loneliness&#8221; 12 times</strong> on Twitter in $year. That's "
             . "more than any other word this year.");
         $data = unserialize($result->related_data);
         $this->assertNotNull($data['bar_chart']);
@@ -184,7 +184,7 @@ class TestOfEOYTopWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "@bookworm's most-used words on Twitter, 2014");
         $this->assertEqual($result->text, "Would you say it's been a &#8220;many&#8221; year? @bookworm might. "
-            . "@bookworm mentioned <strong>&#8220;many&#8221; 5 times</strong> on Twitter in 2014 — more than "
+            . "@bookworm mentioned <strong>&#8220;many&#8221; 5 times</strong> on Twitter in 2014. That's more than "
             . "any other word this year &mdash; followed by &#8220;hashtags,&#8221; &#8220;spread,&#8221; "
             . "&#8220;kid,&#8221; and &#8220;helps.&#8221;");
         $data = unserialize($result->related_data);
