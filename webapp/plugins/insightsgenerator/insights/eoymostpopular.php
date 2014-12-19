@@ -74,7 +74,7 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
             $post_dao = DAOFactory::getDAO('PostDAO');
             $network = $instance->network;
 
-            $last_year_of_posts = $post_dao->getThisYearOfPostsWithLinksIterator(
+            $last_year_of_posts = $post_dao->getThisYearOfPostsIterator(
                 $author_id = $instance->network_user_id,
                 $network = $network
             );
@@ -170,6 +170,8 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
         $top_post = null;
         foreach ($top as $post_id => $score) {
             $top_post = $post_dao->getPost($post_id, $instance->network);
+            $link_dao = DAOFactory::getDAO('LinkDAO');
+            $post->links = $link_dao->getLinksForPost($top_post->post_id, $top_post->network);
         }
         return $top_post;
     }
