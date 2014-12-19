@@ -1,13 +1,13 @@
 <?php
 /*
- Plugin Name: Most popular post (End of Year)
- Description: Your most popular post this year.
- When: December 23
+ Plugin Name: Most popular post per month (End of Year)
+ Description: Your most popular post each month this year.
+ When: December 31
  */
 
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/insights/eoymostpopular.php
+ * ThinkUp/webapp/plugins/insightsgenerator/insights/eoymostpopularkpermonth.php
  *
  * Copyright (c) 2014 Adam Pash
  *
@@ -33,18 +33,22 @@
  * @copyright 2014 Adam Pash
  */
 
-class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin {
+class EOYMostPopularPerMonthInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Slug for this insight
      **/
-    var $slug = 'eoy_most_popular';
+    var $slug = 'eoy_most_popular_per_month';
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-23';
+    var $run_date = '12-31';
     //staging
-    //var $run_date = '12-15';
-
+    //var $run_date = '12-19';
+    /**
+     * Popular posts per month
+     * @var array [month int] => array('post_id'=>x, 'popularity_index'=>y)
+     */
+    var $posts_per_month;
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
@@ -65,6 +69,13 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
 
         if ($should_generate_insight) {
             $this->logger->logInfo("Should generate", __METHOD__.','.__LINE__);
+
+            $i = 1;
+            while ($i < 13) {
+                $this->posts_per_month[$i] = array('post_id'=>null, 'popularity_index'=>0);
+                $i++;
+            }
+
             $insight = new Insight();
             $insight->instance_id = $instance->id;
             $insight->slug = $this->slug;
@@ -79,8 +90,7 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
                 $network = $network
             );
 
-            $scored_posts = $this->getScoredPosts($last_year_of_posts);
-            $top_post = $this->getMostPopularPost($instance, $scored_posts);
+            $this->setScoredPosts($last_year_of_posts);
 
             $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
             $qualified_year = $year.".";
@@ -89,42 +99,33 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
                     //Earliest post was this year; figure out what month we have data since this year
                     $since = date('F', strtotime($earliest_pub_date));
                     $qualified_year = $year." (at least since ".$since.").";
+                    $cut_off_posts = (date('n', strtotime($earliest_pub_date)) - 1);
+                    $this->posts_per_month = array_slice($this->posts_per_month, $cut_off_posts);
                 }
+            }
+
+            $top_posts = $this->getMostPopularPosts($instance);
+            if (count($top_posts) < 3) {
+                $this->logger->logInfo("Not enough top posts per month to generate", __METHOD__.','.__LINE__);
+                return;
             }
 
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
-                        'headline' => "%username's most popular tweet of %year",
-                        'body' => "We don't tweet for the glory, but a little " .
-                        "attention doesn't hurt. With <strong>%list_of_stats</strong>, " .
-                        "this is %username's most popular tweet of %qualified_year"
+                        'headline' => "%username's top tweets of each month in %year",
+                        'body' => "What a year! These are %username's most popular tweets of each month in ".
+                            "%qualified_year"
                     ),
                 ),
                 'facebook' => array(
                     'normal' => array(
-                        'headline' => "%username's most popular status update of %year",
-                        'body' => "Sometimes you just say the right thing. With <strong>" .
-                            "%list_of_stats</strong>, this is %username's most " .
-                            "popular status update of %qualified_year"
+                        'headline' => "%username's top posts of each month in %year",
+                        'body' => "It was a good year. Check out %username's most popular status updates of each ".
+                            "month of %qualified_year"
                     ),
                 )
             );
-
-            $stats = array();
-            if ($top_post->favlike_count_cache > 0) {
-                $stats[] = $top_post->favlike_count_cache . " " .
-                    $this->terms->getNoun('like', $top_post->favlike_count_cache);
-            }
-            if ($top_post->retweet_count_cache > 0) {
-                $stats[] = $top_post->retweet_count_cache . " " .
-                    $this->terms->getNoun('retweet', $top_post->retweet_count_cache);
-            }
-            if ($top_post->reply_count_cache > 0) {
-                $stats[] = $top_post->reply_count_cache . " " .
-                    $this->terms->getNoun('reply', $top_post->reply_count_cache);
-            }
-            $list_of_stats = $this->makeList($stats);
 
             $type = 'normal';
             $headline = $this->getVariableCopy(
@@ -141,14 +142,13 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
                     $copy[$network][$type]['body']
                 ),
                 array(
-                    'qualified_year' => $qualified_year,
-                    'list_of_stats' => $list_of_stats
+                    'qualified_year' => $qualified_year
                 )
             );
 
             $insight->headline = $headline;
             $insight->text = $insight_text;
-            $insight->setPosts(array($top_post));
+            $insight->setPosts($top_posts);
             $insight->filename = basename(__FILE__, ".php");
             $insight->emphasis = Insight::EMPHASIS_HIGH;
 
@@ -159,59 +159,41 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
     }
 
     /**
-     * Get at most three most popular posts that had an image
+     * Get popular posts of each month.
      * @param Instance $instance
-     * @param array $scored_posts
      * @return array $posts
      */
-    public function getMostPopularPost(Instance $instance, $scored_posts) {
-        $top = array_slice($scored_posts, 0, 1, true);
+    public function getMostPopularPosts(Instance $instance) {
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $top_post = null;
-        foreach ($top as $post_id => $score) {
-            $top_post = $post_dao->getPost($post_id, $instance->network);
-            $link_dao = DAOFactory::getDAO('LinkDAO');
-            $top_post->links = $link_dao->getLinksForPost($top_post->post_id, $top_post->network);
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $top_posts = array();
+        foreach ($this->posts_per_month as $post_for_month) {
+            if (isset($post_for_month['post_id'])) {
+                $top_post = $post_dao->getPost($post_for_month['post_id'], $instance->network);
+                $top_post->links = $link_dao->getLinksForPost($top_post->post_id, $top_post->network);
+                $top_posts[] = $top_post;
+            }
         }
-        return $top_post;
+        return $top_posts;
     }
 
     /**
-     * Get scores for all posts this year
+     * Score monthly posts.
      * @param PostIterator $last_year_of_posts
-     * @return array $scored_posts
+     * @return void
      */
-    public function getScoredPosts($last_year_of_posts) {
+    public function setScoredPosts($last_year_of_posts) {
         $scored_posts = array();
         foreach ($last_year_of_posts as $post) {
             $popularity_index = Utils::getPopularityIndex($post);
-            $scored_posts[$post->post_id] = $popularity_index;
-        }
-        arsort($scored_posts);
-        return $scored_posts;
-    }
-
-    /**
-     * Turn an array of items into a list with "and"
-     * @param arr $items Array of strings to join in a list
-     * @return str List of items, like "Item 1, item 2, and item 3"
-     */
-    private function makeList($items) {
-        $count = count($items);
-        if ($count === 0) {
-            return '';
-        }
-        if ($count === 1) {
-            return $items[0];
-        }
-        if ($count === 2) {
-            return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
-        }
-        if ($count > 2) {
-            return implode(', ', array_slice($items, 0, -1)) . ', and ' . end($items);
+            $month = date('n', strtotime($post->pub_date));
+            if ($popularity_index > $this->posts_per_month[$month]['popularity_index']) {
+                $this->posts_per_month[$month]['post_id'] = $post->post_id;
+                $this->posts_per_month[$month]['popularity_index'] = $popularity_index;
+            }
         }
     }
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
-$insights_plugin_registrar->registerInsightPlugin('EOYMostPopularInsight');
+$insights_plugin_registrar->registerInsightPlugin('EOYMostPopularPerMonthInsight');
