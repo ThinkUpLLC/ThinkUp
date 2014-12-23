@@ -54,6 +54,24 @@
     </div>
   {/if}
 
+  {* TODO: Delete after Jan 1 2015 *}
+  {if !$is_year_end && $show_eoy_tout}
+  <div class="date-group">
+    <div class="date-marker">
+      <div class="relative">Now</div>
+    </div>
+
+    <a href="{$site_root_path}2014/">
+    <div class="panel panel-default insight insight-hero insight-mint insight-yearend insight-wide">
+      <div class="insight-yearend-header">
+        {if isset($thinkup_username)}{$thinkup_username}'s{else}<img src="{$site_root_path}assets/img/thinkup-logo-white.png" alt="ThinkUp" class="logo">{/if} Best of 2014
+        <a class="btn" href="{$site_root_path}2014/">See it now</a>
+      </div>
+      </div>
+    </div>
+    </a>
+  {/if}
+{* END TODO: Delete after Jan 1 2015 *}
 
 {assign var='cur_date' value=''}
 {assign var='previous_date' value=''}
