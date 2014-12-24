@@ -7,7 +7,7 @@
 <div class="container">
   {if $is_year_end}
     {capture name=img_date assign="img_date"}
-    {if $smarty.now|date_format:"%Y%m%d" > 20141130}
+    {if $smarty.now|date_format:"%Y%m%d" > 20141130 && $smarty.now|date_format:"%Y%m%d" < 20141224}
       {$smarty.now|date_format:"%Y%m%d"}
     {elseif $smarty.now|date_format:"%Y%m%d" > 20141223}
       20141223
