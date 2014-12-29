@@ -98,8 +98,12 @@ class Mailer {
             // We want to be able to handle this specific error differently.
             throw $unknown_template_error;
         } catch (Mandrill_Error $e) {
-            throw new Exception('An error occurred while sending email to '.$to.' from '.$from.' via Mandrill. '
-            . get_class($e) . ': ' . $e->getMessage().'  Message contents: '.Utils::varDumpToString($message));
+            // Write contents of the email to file for easier debugging, parsing it in the log is difficult
+            self::setLastMail(json_encode($message));
+
+            throw new Exception('An error occurred while sending email to '.$to.' from '.$from_email.' via Mandrill. '
+                . get_class($e) . ': ' . $e->getMessage() . '.  Message JSON written to '
+                . (FileDataManager::getDataPath(Mailer::EMAIL)) );
         }
     }
     /**
