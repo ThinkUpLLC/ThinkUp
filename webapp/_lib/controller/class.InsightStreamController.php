@@ -172,15 +172,6 @@ class InsightStreamController extends ThinkUpController {
      * Load view with data to display page of insights.
      */
     protected function displayPageOfInsights() {
-        /** TODO: Delete after Jan 1 2015*/
-        $cfg = Config::getInstance();
-        $thinkup_username = $cfg->getValue('install_folder');
-        $this->addToView('thinkup_username', $thinkup_username);
-        if (time() > strtotime('Dec 24 2014 02:59:00') && time() < strtotime('Jan 1 2015 00:00:00')) {
-            $this->addToView('show_eoy_tout', true);
-        }
-        /** END TODO: Delete after Jan 1 2015 */
-
         $insight_dao = DAOFactory::getDAO('InsightDAO');
 
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;

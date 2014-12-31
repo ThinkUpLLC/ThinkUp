@@ -1395,12 +1395,6 @@ body.app-message-visible.account .container {
 .insight .insight-yearend-header .btn:hover {
   background-color: #c3c3c3;
 }
-.insight .insight-yearend-header a {
-  color: #fff;
-}
-.insight .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight .tweet .photo {
   background: rgba(208, 208, 208, 0.25);
 }
@@ -1703,12 +1697,6 @@ body.app-message-visible.account .container {
 .insight-message .insight-yearend-header .btn:hover {
   background-color: #f2f2f2;
 }
-.insight-message .insight-yearend-header a {
-  color: #fff;
-}
-.insight-message .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-message .tweet .photo {
   background: rgba(255, 255, 255, 0.25);
 }
@@ -1915,12 +1903,6 @@ body.app-message-visible.account .container {
 .insight-pea .insight-yearend-header .btn:hover {
   background-color: #90d253;
 }
-.insight-pea .insight-yearend-header a {
-  color: #fff;
-}
-.insight-pea .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-pea .tweet .photo {
   background: rgba(157, 215, 103, 0.25);
 }
@@ -1973,12 +1955,6 @@ body.app-message-visible.account .container {
 .insight-salmon .insight-yearend-header .btn:hover {
   background-color: #fb7a88;
 }
-.insight-salmon .insight-yearend-header a {
-  color: #fff;
-}
-.insight-salmon .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-salmon .tweet .photo {
   background: rgba(252, 147, 158, 0.25);
 }
@@ -2030,12 +2006,6 @@ body.app-message-visible.account .container {
 }
 .insight-creamsicle .insight-yearend-header .btn:hover {
   background-color: #ffb134;
-}
-.insight-creamsicle .insight-yearend-header a {
-  color: #fff;
-}
-.insight-creamsicle .insight-yearend-header a:hover {
-  text-decoration: none;
 }
 .insight-creamsicle .tweet .photo {
   background: rgba(255, 187, 78, 0.25);
@@ -2105,14 +2075,6 @@ body.app-message-visible.account .container {
 .insight-sepia .insight-yearend-header .btn:hover {
   background-color: #b5b1a1;
 }
-.insight-historical .insight-yearend-header a,
-.insight-sepia .insight-yearend-header a {
-  color: #fff;
-}
-.insight-historical .insight-yearend-header a:hover,
-.insight-sepia .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-historical .tweet .photo,
 .insight-sepia .tweet .photo {
   background: rgba(192, 189, 175, 0.25);
@@ -2166,12 +2128,6 @@ body.app-message-visible.account .container {
 .insight-purple .insight-yearend-header .btn:hover {
   background-color: #a97cdd;
 }
-.insight-purple .insight-yearend-header a {
-  color: #fff;
-}
-.insight-purple .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-purple .tweet .photo {
   background: rgba(182, 144, 226, 0.25);
 }
@@ -2223,12 +2179,6 @@ body.app-message-visible.account .container {
 }
 .insight-mint .insight-yearend-header .btn:hover {
   background-color: #2cd6aa;
-}
-.insight-mint .insight-yearend-header a {
-  color: #fff;
-}
-.insight-mint .insight-yearend-header a:hover {
-  text-decoration: none;
 }
 .insight-mint .tweet .photo {
   background: rgba(65, 218, 179, 0.25);
@@ -2282,12 +2232,6 @@ body.app-message-visible.account .container {
 .insight-bubblegum .insight-yearend-header .btn:hover {
   background-color: #f35ea8;
 }
-.insight-bubblegum .insight-yearend-header a {
-  color: #fff;
-}
-.insight-bubblegum .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-bubblegum .tweet .photo {
   background: rgba(245, 118, 181, 0.25);
 }
@@ -2339,12 +2283,6 @@ body.app-message-visible.account .container {
 }
 .insight-seabreeze .insight-yearend-header .btn:hover {
   background-color: #2fc3d3;
-}
-.insight-seabreeze .insight-yearend-header a {
-  color: #fff;
-}
-.insight-seabreeze .insight-yearend-header a:hover {
-  text-decoration: none;
 }
 .insight-seabreeze .tweet .photo {
   background: rgba(68, 201, 215, 0.25);
@@ -2398,12 +2336,6 @@ body.app-message-visible.account .container {
 .insight-dijon .insight-yearend-header .btn:hover {
   background-color: #d7b21b;
 }
-.insight-dijon .insight-yearend-header a {
-  color: #fff;
-}
-.insight-dijon .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-dijon .tweet .photo {
   background: rgba(228, 191, 40, 0.25);
 }
@@ -2456,12 +2388,6 @@ body.app-message-visible.account .container {
 .insight-sandalwood .insight-yearend-header .btn:hover {
   background-color: #fd7247;
 }
-.insight-sandalwood .insight-yearend-header a {
-  color: #fff;
-}
-.insight-sandalwood .insight-yearend-header a:hover {
-  text-decoration: none;
-}
 .insight-sandalwood .tweet .photo {
   background: rgba(253, 133, 96, 0.25);
 }
@@ -2513,12 +2439,6 @@ body.app-message-visible.account .container {
 }
 .insight-caramel .insight-yearend-header .btn:hover {
   background-color: #d97236;
-}
-.insight-caramel .insight-yearend-header a {
-  color: #fff;
-}
-.insight-caramel .insight-yearend-header a:hover {
-  text-decoration: none;
 }
 .insight-caramel .tweet .photo {
   background: rgba(221, 129, 75, 0.25);
