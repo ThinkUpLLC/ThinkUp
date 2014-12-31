@@ -202,9 +202,9 @@ class TestOfEOYMostPopularPerMonthInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         // $this->assertEqual(1, count($result->posts));
-        $this->assertEqual("@ev's top tweets of each month in $year", $result->headline);
-        $this->assertEqual("What a year! These are @ev's most popular tweets of each month in $year.",
-            $result->text);
+        $this->assertEqual("@ev's biggest tweets of each month in $year", $result->headline);
+        $this->assertEqual("Twelve months make a year, and this year's almost behind us. Take one last look back ".
+            "at @ev's biggest tweets of each month in $year.", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
@@ -279,9 +279,9 @@ class TestOfEOYMostPopularPerMonthInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/This is the least popular post/', $result->related_data);
         $this->assertNoPattern('/do not include this post/', $result->related_data);
-        $this->assertEqual("@ev's top tweets of each month in $year", $result->headline);
-        $this->assertEqual("What a year! These are @ev's most popular tweets of each month in $year ".
-            "(at least since October).", $result->text);
+        $this->assertEqual("@ev's biggest tweets of each month in $year", $result->headline);
+        $this->assertEqual("Twelve months make a year, and this year's almost behind us. Take one last look back ".
+            "at @ev's biggest tweets of each month in $year (at least since October).", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case with since date, Twitter");
     }
@@ -343,9 +343,10 @@ class TestOfEOYMostPopularPerMonthInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $year = date('Y');
-        $this->assertEqual("Mark Zuckerberg's top posts of each month in $year", $result->headline);
-        $this->assertEqual("It was a good year. Check out Mark Zuckerberg's most popular status updates of ".
-            "each month of 2014 (at least since May).", $result->text);
+        $this->assertEqual("Mark Zuckerberg's biggest posts of each month in $year", $result->headline);
+        $this->assertEqual("This year's about to enter the history books. For better or for worse, these were ".
+            "Mark Zuckerberg's most popular status updates of each month of $year ".
+            "(at least since May).", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
