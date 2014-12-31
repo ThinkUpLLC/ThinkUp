@@ -113,16 +113,16 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
-                        'headline' => "%username's top tweets of each month in %year",
-                        'body' => "What a year! These are %username's most popular tweets of each month in ".
-                            "%qualified_year"
+                        'headline' => "%username's biggest tweets of each month in %year",
+                        'body' => "Twelve months make a year, and this year's almost behind us. Take one last look ".
+                            "back at %username's biggest tweets of each month in %qualified_year"
                     ),
                 ),
                 'facebook' => array(
                     'normal' => array(
-                        'headline' => "%username's top posts of each month in %year",
-                        'body' => "It was a good year. Check out %username's most popular status updates of each ".
-                            "month of %qualified_year"
+                        'headline' => "%username's biggest posts of each month in %year",
+                        'body' => "This year's about to enter the history books. For better or for worse, these were ".
+                            "%username's most popular status updates of each month of %qualified_year"
                     ),
                 )
             );
