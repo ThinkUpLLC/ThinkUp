@@ -59,7 +59,6 @@ $start_time = microtime(true);
 if (!$JUST_INSTALL) {
     require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
     require_once THINKUP_ROOT_PATH.'tests/all_plugin_tests.php';
-    require_once THINKUP_ROOT_PATH.'tests/all_eoy_tests.php';
     require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
 }
 

@@ -110,7 +110,7 @@ $plugin_tests->add(new TestOfWeeklyGraphInsight());
 $plugin_tests->add(new TestOfInterestingFollowersInsight());
 $plugin_tests->add(new TestOfThanksCountInsight());
 $plugin_tests->add(new TestOfLOLCountInsight());
-$plugin_tests->add(new TestOfFBombCountInsight());
+//$plugin_tests->add(new TestOfFBombCountInsight());
 $plugin_tests->add(new TestOfActivitySpikeInsight());
 $plugin_tests->add(new TestOfFollowCountVisualizerInsight());
 $plugin_tests->add(new TestOfCongratsCountInsight());
