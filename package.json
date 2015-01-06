@@ -5,11 +5,14 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-cssmin": "^0.11.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
+    "grunt-contrib-less": "~0.11.3",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-premailer": "~0.2.4",
-    "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-less": "~0.11.3"
+    "grunt-processhtml": "^0.3.3"
   },
   "repository": {
     "type": "git",
