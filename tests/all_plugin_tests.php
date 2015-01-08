@@ -128,12 +128,8 @@ $plugin_tests->add(new TestOfFollowerComparisonInsight());
 $plugin_tests->add(new TestOfDiversifyLinksInsight());
 $plugin_tests->add(new TestOfAgeAnalysisInsight());
 $plugin_tests->add(new TestOfTopWordsInsight());
-$plugin_tests->add(new TestOfThanksgivingWhoYouThankedInsight());
-$plugin_tests->add(new TestOfThanksgivingWhoThankedYouInsight());
-// One-time or developer insight tests that don't have to run every time
+// Don't run the developer insight test every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
-// $plugin_tests->add(new TestOfOlympics2014Insight());
-// $plugin_tests->add(new TestOfOscars2014Insight());
 
 $version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
