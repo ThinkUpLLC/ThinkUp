@@ -130,7 +130,7 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
 
     public function testNotEnoughAvailableFileSpace() {
         // More disk space than is available
-        AppUpgraderDiskUtil::$DISK_SPACE_NEEDED = disk_free_space(dirname(__FILE__))+(1024*1024*10);
+        AppUpgraderDiskUtil::$DISK_SPACE_NEEDED = disk_free_space(dirname(__FILE__))+(1024*1024*10*10);
         $upgrade_controller = new UpgradeApplicationController(true);
         try {
             $upgrade_controller->runUpdate($this->test_web_dir);
