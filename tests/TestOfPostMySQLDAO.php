@@ -2626,7 +2626,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
             'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
             'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
-            'pub_date'=>date('Y-m-d h:i:s', strtotime('-100 day')),
+            //This test assumes it's at least Jan 2, will fail on 1st
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-1 day')),
             'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
@@ -2644,7 +2645,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
             'author_user_id'=>'18', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
             'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
-            'pub_date'=>date('Y-m-d h:i:s', strtotime('-200 day')),
+            //This test assumes it's at least Jan 3, will fail an 1st and 2nd
+            'pub_date'=>date('Y-m-d h:i:s', strtotime('-2 day')),
             'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>null,
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
