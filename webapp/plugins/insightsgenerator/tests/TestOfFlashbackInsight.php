@@ -69,9 +69,10 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/A stroll down memory lane/', $result->headline);
+        $last_year = (date('Y')) - 1;
         $possible_text = array("This was @testeriffic's most popular tweet <strong>1 year ago</strong>.",
-        "On this day in 2013, this was @testeriffic's most popular tweet.");
-        $this->assertTrue(in_array( $result->text, $possible_text));
+            "On this day in ".$last_year.", this was @testeriffic's most popular tweet.");
+        $this->assertTrue(in_array( $result->text, $possible_text), $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
@@ -96,9 +97,10 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/A stroll down memory lane/', $result->headline);
+        $last_year = (date('Y')) - 1;
         $possible_text = array("This was testeriffic's most popular status update <strong>1 year ago</strong>.",
-        "On this day in 2013, this was testeriffic's most popular status update.");
-        $this->assertTrue(in_array( $result->text, $possible_text));
+            "On this day in ".$last_year.", this was testeriffic's most popular status update.");
+        $this->assertTrue(in_array( $result->text, $possible_text), $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
