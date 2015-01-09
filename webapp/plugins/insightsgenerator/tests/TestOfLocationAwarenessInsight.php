@@ -96,19 +96,19 @@ class TestOfLocationAwarenessInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => 'Hello Buffalo', 'pub_date' => '-2d'));
         $builders[] = FixtureBuilder::build('posts', array( 'geo' => '34.425323111,-103.191544111',
             'network' => $this->instance->network, 'author_username' => $this->instance->network_username,
-            'post_text' => 'I am at the mall of America', 'pub_date' => '-2d'));
+            'post_text' => 'I am at the mall of America', 'pub_date' => '-3d'));
         $builders[] = FixtureBuilder::build('posts', array( 'geo' => '34.425323111,-103.191544111',
             'network' => $this->instance->network, 'author_username' => $this->instance->network_username,
-            'post_text' => 'Back at the mall', 'pub_date' => '-2d'));
+            'post_text' => 'Back at the mall', 'pub_date' => '-3d'));
         $builders[] = FixtureBuilder::build('posts', array( 'geo' => '34.425323111,-103.191544111',
             'network' => $this->instance->network, 'author_username' => $this->instance->network_username,
-            'post_text' => 'Still here.', 'pub_date' => '-2d'));
+            'post_text' => 'Still here.', 'pub_date' => '-3d'));
         $builders[] = FixtureBuilder::build('posts', array( 'geo' => '34.425323111,-103.191544111',
             'network' => $this->instance->network, 'author_username' => $this->instance->network_username,
-            'post_text' => 'I love shopping', 'pub_date' => '-2d'));
+            'post_text' => 'I love shopping', 'pub_date' => '-3d'));
         $builders[] = FixtureBuilder::build('posts', array( 'geo' => '34.425323111,-103.191544111',
             'network' => $this->instance->network, 'author_username' => $this->instance->network_username,
-            'post_text' => 'Shopping is my life', 'pub_date' => '-2d'));
+            'post_text' => 'Shopping is my life', 'pub_date' => '-3d'));
 
         $insight_plugin = new LocationAwarenessInsight();
         $post_dao = DAOFactory::getDAO('PostDAO');
