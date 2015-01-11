@@ -281,7 +281,7 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
                         );
                     } else {
                         $headlines = array(
-                            '%username passed %total %followers',
+                            'A while ago, %username passed %total %followers',
                             'More than %total people follow %username',
                         );
                     }
