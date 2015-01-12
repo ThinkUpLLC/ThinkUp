@@ -274,20 +274,13 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
                     $insight->filename = basename(__FILE__, ".php");
                     $insight->emphasis = Insight::EMPHASIS_HIGH;
 
-                    if ($user->follower_count == $met_milestone) {
-                        $headlines = array(
-                            '%username reached %total %followers',
-                            '%total people follow %username',
-                        );
-                    } else {
-                        $headlines = array(
-                            '%username passed %total %followers',
-                            'More than %total people follow %username',
-                        );
-                    }
+                    $headlines = array(
+                        '%username reached %total %followers',
+                        '%total people follow %username',
+                    );
 
                     $insight->headline = $this->getVariableCopy($headlines,
-                        array( 'total' => number_format($met_milestone)));
+                        array( 'total' => number_format($user->follower_count)));
                     $insight->text = str_replace('%username', $this->username, $this->milestones[$met_milestone]);
                     if (isset($this->hero_images[$met_milestone])) {
                         $insight->setHeroImage($this->hero_images[$met_milestone]);
@@ -298,7 +291,6 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
-
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();
