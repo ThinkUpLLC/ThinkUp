@@ -29,19 +29,10 @@
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
-
-$version = explode('.', PHP_VERSION); //dont run redis or instagram test for php less than 5.3
-if ($version[0] >= 5 && $version[1] >= 3) { //only run Instagram tests if PHP 5.3
-    require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramPlugin.php';
-    require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramCrawler.php';
-    require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramAPIAccessor.php';
-    require_once THINKUP_WEBAPP_PATH.'plugins/instagram/tests/classes/mock.Proxy.php';
-} else {
-    class TestOfInstagramPlugin extends ThinkUpUnitTestCase {
-        public function testUnsupportedPHP() {}
-    }
-    return;
-}
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramPlugin.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramCrawler.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramAPIAccessor.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/tests/classes/mock.Proxy.php';
 
 class TestOfInstagramPlugin extends ThinkUpUnitTestCase {
 

@@ -210,10 +210,7 @@ class TestOfFoursquareCrawler extends ThinkUpUnitTestCase {
         // Check the place ID was set
         $this->assertEqual($post->place_id, '4e22eac31838712abe8186e3');
         // Check the geo coordinates were set
-        //$this->assertEqual($post->geo, '52.477241961421,-1.4845029364055');
-        //PHP 5.2.17 doesn't match full-length coordinate
-        $this->assertPattern('/52.477241961/', $post->geo);
-        $this->assertPattern('/-1.4845029364/', $post->geo);
+        $this->assertEqual($post->geo, '52.477241961421,-1.4845029364055');
 
         // Now check the details about the place were stored in the places table
         // Check all the fields were returned

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/instagram/model/class.InstagramAPIAccessor.php
+ * ThinkUp/webapp/plugins/instagram/model/PHP5.3/class.InstagramAPIAccessor.php
  *
  * Copyright (c) 2013 Dimosthenis Nikoudis
  *
@@ -21,13 +21,32 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Instagram Plugin Configuration Controller
+ * Instagram API Accessor
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2013 Dimosthenis Nikoudis
  */
-$version = explode('.', PHP_VERSION); //dont run redis or instagram test for php less than 5.3
-if ($version[0] >= 5 && $version[1] >= 3) { //only run Instagram tests if PHP 5.3
-    require_once dirname(__FILE__) . '/PHP5.3/' . basename(__FILE__);
+class InstagramAPIAccessor {
+    /**
+     * Make an API request.
+     * @param str $path
+     * @param str $access_token
+     * @param str $fields Comma-delimited list of fields to return from Instagram API
+     * @return array Decoded JSON response
+     */
+    public static function apiRequest($type, $id, $access_token, $params = array()) {
+        $logger = Logger::getInstance();
+        $instagram = new Instagram\Instagram($access_token);
+        if ($type == 'user') {
+            return $instagram->getUser($id);
+        } else if ($type == 'friends') {
+            $user = $instagram->getUser($id);
+            return $user->getFollowers();
+        } else if ($type == 'media') {
+            $user = $instagram->getUser($id);
+            $media = $user->getMedia($params);
+            return $media;
+        }
+    }
 }

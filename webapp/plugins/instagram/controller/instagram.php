@@ -34,17 +34,14 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2013 Dimosthenis Nikoudis
  */
-$version = explode('.', PHP_VERSION); //don't load Instagram plugin for PHP less than 5.3
-if ($version[0] >= 5 && $version[1] >= 3) {
-    if (!class_exists('Instagram\Instagram')) {
-        Loader::addSpecialClass('SplClassLoader', 'plugins/instagram/extlib/SplClassLoader.php');
-        $loader = new SplClassLoader('Instagram', 'plugins/instagram/extlib');
-        $loader->register();
-    }
-
-    $webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
-    $webapp_plugin_registrar->registerPlugin('instagram', 'InstagramPlugin');
-
-    $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
-    $crawler_plugin_registrar->registerCrawlerPlugin('InstagramPlugin');
+if (!class_exists('Instagram\Instagram')) {
+    Loader::addSpecialClass('SplClassLoader', 'plugins/instagram/extlib/SplClassLoader.php');
+    $loader = new SplClassLoader('Instagram', 'plugins/instagram/extlib');
+    $loader->register();
 }
+
+$webapp_plugin_registrar = PluginRegistrarWebapp::getInstance();
+$webapp_plugin_registrar->registerPlugin('instagram', 'InstagramPlugin');
+
+$crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
+$crawler_plugin_registrar->registerCrawlerPlugin('InstagramPlugin');

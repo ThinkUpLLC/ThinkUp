@@ -70,11 +70,9 @@ $plugin_tests->add(new TestOfFoursquarePluginConfigurationController());
 $plugin_tests->add(new TestOfYouTubeCrawler());
 $plugin_tests->add(new TestOfYouTubePlugin());
 $plugin_tests->add(new TestOfYouTubePluginConfigurationController());
-if ($version[0] >= 5 && $version[1] >= 3) { //only run Instagram tests if PHP 5.3
-    $plugin_tests->add(new TestOfInstagramPlugin());
-    $plugin_tests->add(new TestOfInstagramCrawler());
-    $plugin_tests->add(new TestOfInstagramPluginConfigurationController());
-}
+$plugin_tests->add(new TestOfInstagramPlugin());
+$plugin_tests->add(new TestOfInstagramCrawler());
+$plugin_tests->add(new TestOfInstagramPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightPluginParent());
 $plugin_tests->add(new TestOfInsightsGeneratorPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightsGeneratorPlugin());
@@ -131,10 +129,7 @@ $plugin_tests->add(new TestOfTopWordsInsight());
 // Don't run the developer insight test every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 
-$version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
-if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
-    $plugin_tests->add(new TestOfStreamMessageQueueRedis());
-}
+$plugin_tests->add(new TestOfStreamMessageQueueRedis());
 
 $tr = new TextReporter();
 $start =  ((float)$usec + (float)$sec);

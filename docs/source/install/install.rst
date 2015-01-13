@@ -11,11 +11,11 @@ Prerequisites
 -------------
 
 -  File-system access to a web host, preferably over FTP or SFTP.
--  `PHP 5.2 <http://php.net>`_ or higher with the `Client URL (cURL) library
+-  `PHP 5.4 <http://php.net>`_ or higher with the `Client URL (cURL) library
    <http://us3.php.net/manual/en/book.curl.php>`_,
    `GD support <http://www.php.net/manual/en/book.image.php>`_, and the `PDO MySQL driver
    <http://php.net/manual/en/ref.pdo-mysql.php>`_.
-   (ThinkUp also requires the following items, which PHP 5.2+ enables by default: the filter, hash, and JSON
+   (ThinkUp also requires the following items, which PHP 5.4+ enables by default: the filter, hash, and JSON
    libraries, as well as session support.)
 -  `MySQL 5.0.3 <http://mysql.com/>`_ or higher.
 -  A publicly available web server. (Twitter authorization requires a public callback URL, so you'll need to expose
@@ -119,8 +119,8 @@ Requirements Check
 .. image:: imgs/reqcheck.png
 
 The first screen in the install process is a requirements check, to ensure your environment matches the requirements
-listed above. If any of ThinkUp's requirements aren't provided by your system, you'll see a detailed message like the 
-one above. You will probably need to speak to your web hosting company about resolving these issues by getting 
+listed above. If any of ThinkUp's requirements aren't provided by your system, you'll see a detailed message like the
+one above. You will probably need to speak to your web hosting company about resolving these issues by getting
 additional PHP modules enabled or making sure your system is configured correctly.
 
 Configuration Details
@@ -143,8 +143,8 @@ The opening section creates your administrative account for the system:
 The second section is where ThinkUp needs the details about your database:
 
 -  Under **Database Host**, enter the address of the server for your database. This is often "localhost".
--  Under **Database Name**, type the name of the database you'll use for ThinkUp. You may have created this database 
-   earlier, or you can enter the name of the database you'd like to create (if your database user has permissions to 
+-  Under **Database Name**, type the name of the database you'll use for ThinkUp. You may have created this database
+   earlier, or you can enter the name of the database you'd like to create (if your database user has permissions to
    create them directly through MySQL).
 -  Under **User Name**, type inthe MySQL user name you have been given to access the database.
 -  Under **Password**, type the MySQL password you have been given to access the database.
@@ -152,7 +152,7 @@ The second section is where ThinkUp needs the details about your database:
 .. image:: imgs/configadvanced.png
 
 A third section is available, entitled "Advanced Options", which  may be necessary for some hosting environments where
-you are given a specific MySQL socket or port that is needed to connect. This section also allows you to set a **table 
+you are given a specific MySQL socket or port that is needed to connect. This section also allows you to set a **table
 prefix**, which can be very useful if you're reusing an existing database. Most people can leave this section alone.
 
 Activate Your Account
@@ -183,5 +183,5 @@ Luckily, help is here!
 -  :doc:`Troubleshooting ThinkUp: Common Problems and Solutions </troubleshoot/common/index>`  contains answers to the
    most common installation issues.
 -  Live help is available around the clock from the ThinkUp community on :doc:`IRC </contact>`.
--  Non-live (but still pretty snappy!) help is available on the 
+-  Non-live (but still pretty snappy!) help is available on the
    `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_.

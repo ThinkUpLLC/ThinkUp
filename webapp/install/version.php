@@ -27,5 +27,5 @@
  * @copyright 2009-2013 Dwi Widiastuti, Gina Trapani, Guillaume Boudreau
  */
 $THINKUP_VERSION = '2.0-beta.10';
-$THINKUP_VERSION_REQUIRED['php'] = '5.2';
+$THINKUP_VERSION_REQUIRED['php'] = '5.4';
 $THINKUP_VERSION_REQUIRED['mysql'] = '5';

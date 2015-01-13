@@ -239,27 +239,12 @@ class Utils {
 
     /**
      * Validate email address
-     * This method uses a raw regex instead of filter_var because as of PHP 5.3.3,
-     * filter_var($email, FILTER_VALIDATE_EMAIL) validates local email addresses.
-     * From 5.2 to 5.3.3, it does not.
-     * Therefore, this method uses the PHP 5.2 regex instead of filter_var in order to return consistent results
-     * regardless of PHP version.
-     * http://svn.php.net/viewvc/php/php-src/trunk/ext/filter/logical_filters.c?r1=297250&r2=297350
      *
      * @param str $email Email address to validate
      * @return bool Whether or not it's a valid address
      */
     public static function validateEmail($email = '') {
-        //return filter_var($email, FILTER_VALIDATE_EMAIL));
-        $reg_exp = "/^((\\\"[^\\\"\\f\\n\\r\\t\\b]+\\\")|([A-Za-z0-9_][A-Za-z0-9_\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\".
-        "/\\=\\?\\^\\`\\|\\{\\}]*(\\.[A-Za-z0-9_\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\/\\=\\?\\^\\`\\|\\{\\}]*)*))@((\\".
-        "[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.".
-        "((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\\])|".
-        "(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.".
-        "((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|".
-        "((([A-Za-z0-9])(([A-Za-z0-9\\-])*([A-Za-z0-9]))?(\\.(?=[A-Za-z0-9\\-]))?)+[A-Za-z]+))$/D";
-        //return (preg_match($reg_exp, $email) === false)?false:true;
-        return (preg_match($reg_exp, $email)>0)?true:false;
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**

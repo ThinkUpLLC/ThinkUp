@@ -31,7 +31,6 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/mock_objects.php';
 
 $RUNNING_ALL_TESTS = true;
-$version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 $eoy_insight_tests = new TestSuite('EOY insight tests');
 
 //EOY insight tests
@@ -62,8 +61,6 @@ $eoy_insight_tests->add(new TestOfEOYTopWordsInsight());
 $eoy_insight_tests->add(new TestOfEOYMostPopularPerMonthInsight());
 $eoy_insight_tests->add(new TestOfThanksgivingWhoYouThankedInsight());
 $eoy_insight_tests->add(new TestOfThanksgivingWhoThankedYouInsight());
-
-$version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
 
 $tr = new TextReporter();
 $eoy_insight_tests->run( $tr );
