@@ -46,8 +46,9 @@ class ExclamationCountInsight extends CriteriaMatchInsightPluginParent implement
             $day_of_month = 12;
         } else if ($instance->network == 'facebook') {
             $day_of_month = 16;
-        }
-        else {
+        } else if ($instance->network == 'instagram') {
+            $day_of_month = 10;
+        } else {
             return false;
         }
 

@@ -64,6 +64,9 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         } else if ($instance->network == 'facebook') {
             $weekly = 5;
             $monthly = 25;
+        } else if ($instance->network == 'instagram') {
+            $weekly = 4;
+            $monthly = 23;
         } else if ($instance->network == 'test_no_monthly') {
             $monthly = 0;
             $weekly = 2;
@@ -72,6 +75,7 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         $did_monthly = false;
         $post_dao = DAOFactory::getDAO('PostDAO');
         if ($monthly && self::shouldGenerateMonthlyInsight('top_words_month', $instance, 'today', false, $monthly)) {
+            $this->logger->logInfo("Generating monthly", __METHOD__.','.__LINE__);
             $day = 60 * 60 * 24;
             $month_days = date('t');
             $last_month_days = date('t', time() - ($month_days * $day));
@@ -86,6 +90,7 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
 
         $do_weekly = $weekly && !$did_monthly;
         if ($do_weekly && self::shouldGenerateWeeklyInsight('top_words_week', $instance, 'today', false, $weekly)) {
+            $this->logger->logInfo("Generating weekly", __METHOD__.','.__LINE__);
             $day = 60 * 60 * 24;
             $old_posts = $post_dao->getPostsByUserInRange($instance->network_user_id, $instance->network,
                 date('Y-m-d', time() - (14 * $day)),

@@ -137,6 +137,10 @@ class InstagramCrawler {
         $id = $this->instance->network_user_id;
         $option_dao = DAOFactory::getDAO('OptionDAO');
         $network = $this->instance->network;
+
+        //Force-refresh instance user in data store
+        self::fetchUser($this->instance->network_user_id, 'Owner info', true);
+
         //Checks if last friends update is over 2 days ago and runs storeFriends if it is.
         $friends_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_friends');
         $friends_last_updated_check = microtime(true) - 172800;
