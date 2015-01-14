@@ -71,7 +71,7 @@ class InstagramCrawler {
             // Get owner user details and save them to DB
             $user_details = null;
             try {
-                $user_details = InstagramAPIaccessor::apiRequest('user', $user_id, $this->access_token);
+                $user_details = InstagramAPIAccessor::apiRequest('user', $user_id, $this->access_token);
             } catch (Instagram\Core\ApiException $e) {
                 $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Instagram API, ".
                 "error was ".$e->getMessage(), __METHOD__.','.__LINE__);
