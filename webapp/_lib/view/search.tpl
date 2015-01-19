@@ -8,7 +8,7 @@
     {$message_body}
     </div>
   {/if}
-  <div class="stream{if count($insights) eq 1} stream-permalink{/if}">
+  <div class="stream stream-permalink">
 
     <div class="date-group{if $i->date|relative_day eq "today"} today{/if}">
         <div class="date-marker">
