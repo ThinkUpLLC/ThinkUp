@@ -46,6 +46,13 @@ Therefore, on Facebook posts, list links that are not images.
   {assign var="breakphotos" value="true"}
   {/if}
 {/foreach}
+
+{if isset($post->standard_resolution_url)}
+  <div class="photo clearfix">
+    <img src="{$post->standard_resolution_url}" class="photo_img" alt="Photo from {$post->author_fullname}">
+  </div>
+{/if}
+
   <div class="tweet-actions">
     <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if
       $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
