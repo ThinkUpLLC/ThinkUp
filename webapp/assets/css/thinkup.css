@@ -2669,6 +2669,58 @@ ol.body-list .list-item {
   background: #f8d9dd;
   color: #dc4154;
 }
+.insight-blue {
+  background: #46bcff;
+  border-top-color: #2785d3;
+  border-bottom-color: #46bcff;
+}
+.insight-blue .panel-heading {
+  background: #46bcff;
+}
+.insight-blue.insight-hero .panel-heading .panel-title {
+  color: #2785d3;
+}
+.insight-blue.insight-yearend-tease {
+  background: transparent;
+  border-top-color: rgba(39, 133, 211, 0.25);
+  border-bottom-color: rgba(70, 188, 255, 0.25);
+}
+.insight-blue.insight-yearend-tease .panel-heading {
+  background: rgba(70, 188, 255, 0.25);
+}
+.insight-blue.insight-yearend-tease .panel-heading .panel-title {
+  opacity: .75;
+}
+.insight-blue .panel-body,
+.insight-blue .panel-desktop-right,
+.insight-blue .panel-footer {
+  background: #ffffff;
+}
+.insight-blue .panel-footer {
+  border-top-color: #dbdbdb;
+}
+.insight-blue .panel-footer .share-menu {
+  border-color: #dbdbdb;
+  background-color: #ffffff;
+}
+.insight-blue .insight-color-text {
+  color: #46bcff;
+}
+.insight-blue .insight-color-background {
+  background-color: #46bcff;
+}
+.insight-blue .insight-yearend-header {
+  background-color: #2785d3;
+}
+.insight-blue .insight-yearend-header .btn {
+  background-color: #46bcff;
+}
+.insight-blue .insight-yearend-header .btn:hover {
+  background-color: #2cb3ff;
+}
+.insight-blue .tweet .photo {
+  background: rgba(70, 188, 255, 0.25);
+}
 .btn-default,
 .btn-yearend {
   background: #125c9c;

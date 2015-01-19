@@ -1,6 +1,7 @@
 {include file="_header.tpl"}
 {include file="_navigation.tpl"}
 
+{assign var='color' value='blue'}
 <div class="container">
   {if $message_header}
     <div class="no-insights">
