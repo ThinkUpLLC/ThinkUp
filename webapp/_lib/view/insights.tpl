@@ -120,7 +120,7 @@
     {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
     <p class="panel-subtitle">{$i->text|link_usernames_to_twitter}</p>{/if}
     {if $i->header_image neq ''}
-    <img src="{$i->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
+    <img src="{insert name='user_avatar' avatar_url=$i->header_image image_proxy_sig=$image_proxy_sig}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
     {/if}
   </div>
   <div class="panel-desktop-right">

@@ -321,6 +321,9 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             $daily_or_weekly = $weekly ? 'Weekly' : 'Daily';
             $view->assign('weekly_or_daily', $daily_or_weekly);
             $view->assign('pay_prompt_url', $config->getValue('thinkupllc_endpoint').'membership.php');
+            if ($config->getValue('image_proxy_enabled') == true) {
+                $view->assign('image_proxy_sig', $config->getValue('image_proxy_sig'));
+            }
             $insights_markup = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
 
             $parameters = array();

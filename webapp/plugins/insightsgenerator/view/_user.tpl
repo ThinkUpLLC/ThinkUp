@@ -11,7 +11,7 @@ $bio_after (optional) If this is a bio change, the current bio
 <div class="user{if $i->header_image eq $user->avatar } hide-photo{/if}">
         {if $user->avatar ne $i->header_image}
         <a href="{if $user->network eq 'twitter' or $user->network eq 'facebook'}{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={else}https://facebook.com/{/if}{$user->user_id}{else}https://instagram.com/{$user->username}{/if}">
-        <img src="{$user->avatar|use_https}" alt="{$user->full_name}" class="img-circle pull-left user-photo">
+        <img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle pull-left user-photo">
         </a>
         {/if}
         <div class="user-about">

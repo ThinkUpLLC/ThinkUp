@@ -93,6 +93,9 @@ class InsightStreamController extends ThinkUpController {
         }
 
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
+        if ($config->getValue('image_proxy_enabled') == true) {
+            $this->addToView('image_proxy_sig', $config->getValue('image_proxy_sig'));
+        }
         return $this->generateView();
     }
 
