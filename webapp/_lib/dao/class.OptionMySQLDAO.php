@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.OptionMySQLDAO.php
  *
- * Copyright (c) 2009-2013 Mark Wilkie
+ * Copyright (c) 2009-2015 Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving generic ThinkUp options and their values.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2015 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class OptionMySQLDAO extends PDODAO implements OptionDAO {
@@ -125,7 +125,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
         }
         if (is_null($data)) {
             $q = 'SELECT option_id, namespace,  option_name, option_value
-                    FROM #prefix#options 
+                    FROM #prefix#options
                     WHERE namespace = :namespace';
             if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
             $stmt = $this->execute($q, array(':namespace' => $namespace));

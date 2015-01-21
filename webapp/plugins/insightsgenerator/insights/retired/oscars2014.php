@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/oscars2014.php
  *
- * Copyright (c) 2014 Gina Trapani, Anil Dash
+ * Copyright (c) 2014-2015 Gina Trapani, Anil Dash
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Gina Trapani, Anil Dash
+ * @copyright 2014-2015 Gina Trapani, Anil Dash
  * @author Anil Dash <anil[at]thinkup[dot]com>
  */
 

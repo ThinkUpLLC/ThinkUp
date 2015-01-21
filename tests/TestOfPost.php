@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPost.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of Post class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -36,22 +36,22 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         $test_patterns = array (
         "Introducing the ThinkUp developers mailing list http://bit.ly/gXpdUZ"=> array ('http://bit.ly/gXpdUZ'),
         "http://j.mp/g2F037 good advice (Mad Men-illustrated) for women in tech"=> array ('http://j.mp/g2F037') ,
-        "blah blah blah http:///badurl.com d http://bit.ly and http://example.org"=> array ('http://bit.ly', 
+        "blah blah blah http:///badurl.com d http://bit.ly and http://example.org"=> array ('http://bit.ly',
         'http://example.org'),
         "blah blah blah http:///badurl.com d HTTP://yo.com/exi.xml?hi=yes and http://example.org/blah/yoiadsf/934324/"
         => array ('HTTP://yo.com/exi.xml?hi=yes', 'http://example.org/blah/yoiadsf/934324/'),
         "I bought the book at http://amazon.com. You should read it, too"=> array ('http://amazon.com'),
-        "So, Who's on first? check “http://culturalwormhole.blogspot.com/” for more."=> 
+        "So, Who's on first? check “http://culturalwormhole.blogspot.com/” for more."=>
         array ('http://culturalwormhole.blogspot.com/'),
-        "We know all about that (http://friendoflou.com), but we're not impressed." => 
+        "We know all about that (http://friendoflou.com), but we're not impressed." =>
         array ('http://friendoflou.com'),
         "A more terse, yet still friendly introduction notme.com norme.com/ bit.ly/gXpdUZ and blah yo.com/exi".
         ".xml?hi=yes blah" => array ('http://bit.ly/gXpdUZ', 'http://yo.com/exi.xml?hi=yes'),
-        "tersely www.google.com notme.google.com www.nytimes.com"=> array ('http://www.google.com', 
+        "tersely www.google.com notme.google.com www.nytimes.com"=> array ('http://www.google.com',
         'http://www.nytimes.com'),
-        "would you believe this url?  http://foo.com/more_(than)_one_(parens)   " => 
+        "would you believe this url?  http://foo.com/more_(than)_one_(parens)   " =>
         array('http://foo.com/more_(than)_one_(parens)'),
-        "detects embedding <http://foo.com/blah_blah/> nicely <tag>http://example.com</tag>" 
+        "detects embedding <http://foo.com/blah_blah/> nicely <tag>http://example.com</tag>"
         => array('http://foo.com/blah_blah/', 'http://example.com'),
         '"RT @someone doesnt screw up RTs with quotes that bookend a link like http://example.com"'
         => array('http://example.com'),

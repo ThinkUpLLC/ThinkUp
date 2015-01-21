@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/eoylolcount.php
  *
- * Copyright (c) 2014 Adam Pash
+ * Copyright (c) 2014-2015 Adam Pash
  *
  * LICENSE:
  *
@@ -26,11 +26,11 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2014 Adam Pash
+ * Copyright (c) 2014-2015 Adam Pash
  *
  * @author Adam Pash adam.pash@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Adam Pash
+ * @copyright 2014-2015 Adam Pash
  */
 
 class EOYLOLCountInsight extends InsightPluginParent implements InsightPlugin {

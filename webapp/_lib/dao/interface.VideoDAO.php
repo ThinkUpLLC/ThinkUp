@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.VideoDAO.php
  *
- * Copyright (c) 2011-2013 Aaron Kalair
+ * Copyright (c) 2011-2015 Aaron Kalair
  *
  * LICENSE:
  *

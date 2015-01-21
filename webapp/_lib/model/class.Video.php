@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Video.php
  *
- * Copyright (c) 2009-2013 Aaron Kalair
+ * Copyright (c) 2009-2015 Aaron Kalair
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * This class represents a video posted on a network such as YouTube.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Aaron Kalair
+ * @copyright 2009-2015 Aaron Kalair
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfExportController.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie, Michael Louis Thaler
+ * Copyright (c) 2009-2015 Gina Trapani, Mark Wilkie, Michael Louis Thaler
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @author Michael Louis Thaler <michael[dot]louis[dot]thaler[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Mark Wilkie, Michael Louis Thaler
+ * @copyright 2009-2015 Gina Trapani, Mark Wilkie, Michael Louis Thaler
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
@@ -162,7 +162,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('post_id' => '2', 'author_username'=>'someuser1',
         'post_text'=>'My second post', 'network'=>'twitter'));
         $builders[] = FixtureBuilder::build('posts', array('post_id' => '3', 'author_username'=>'someuser2',
-        'post_text'=>'Reply to first post', 'network'=>'twitter', 'in_reply_to_post_id' => '1', 
+        'post_text'=>'Reply to first post', 'network'=>'twitter', 'in_reply_to_post_id' => '1',
         'author_user_id'=>'15'));
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'15', 'network_username'=>'someuser2',
         'network'=>'twitter'));
@@ -182,7 +182,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('post_id' => '2', 'author_username'=>'someuser1',
         'post_text'=>'My second Facebook post', 'network'=>'facebook page'));
         $builders[] = FixtureBuilder::build('posts', array('post_id' => '3', 'author_username'=>'someuser2',
-        'post_text'=>'Reply to first Facebook post', 'network'=>'facebook page', 'in_reply_to_post_id' => '1', 
+        'post_text'=>'Reply to first Facebook post', 'network'=>'facebook page', 'in_reply_to_post_id' => '1',
         'author_user_id'=>'15'));
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'15', 'network_username'=>'someuser2',
         'network'=>'facebook'));

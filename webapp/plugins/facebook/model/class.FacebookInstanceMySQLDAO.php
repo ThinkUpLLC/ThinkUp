@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/model/class.FacebookInstanceMySQLDAO.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Chris Moyer <chris[at]inarow[dot]net>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  */
 class FacebookInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
 

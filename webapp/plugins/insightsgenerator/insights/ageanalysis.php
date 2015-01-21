@@ -25,11 +25,11 @@
  *
  * AgeAnalysisInsight
  *
- * Copyright (c) 2014 Anna Shkerina
+ * Copyright (c) 2014-2015 Anna Shkerina
  *
  * @author Anna Shkerina blond00792@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Anna Shkerina
+ * @copyright 2014-2015 Anna Shkerina
  */
 class AgeAnalysisInsight extends InsightPluginParent implements InsightPlugin {
     public function generateInsight(Instance $instance,  User $user, $last_week_of_posts, $number_days) {

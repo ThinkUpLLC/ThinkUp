@@ -12,7 +12,7 @@
  *
  * ThinkUp/extras/wordpress/thinkup/thinkup.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Sam Rose, Mark Jaquith
+ * Copyright (c) 2009-2015 Gina Trapani, Sam Rose, Mark Jaquith
  *
  * LICENSE:
  *
@@ -33,7 +33,7 @@
  *
  * @author Sam Rose
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2015 Gina Trapani
  */
 require_once 'classes/ThinkUpShortcodeHandler.class.php';
 require_once 'classes/ThinkUpAdminPages.class.php';
@@ -108,7 +108,7 @@ class ThinkUpWordPressPlugin {
                     'key' => 'thinkup_twitter_username',
                     'label' => __('Default Twitter username:', 'thinkup-wp-plugin'),
                     'description' => __('(Required) Override this by using the "username" parameter in the shortcodes.',
-                    'thinkup-wp-plugin'), 
+                    'thinkup-wp-plugin'),
                     'type' => 'text',
                     'value' => get_option('thinkup_twitter_username')
             ),

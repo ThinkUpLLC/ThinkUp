@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.urlencode_network_username.php
  *
- * Copyright (c) 2014 Matt Jacobs
+ * Copyright (c) 2014-2015 Matt Jacobs
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    text
  * Example:  {$network_username|urlencode_network_username}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Matt Jacobs
+ * @copyright 2014-2015 Matt Jacobs
  * @author   Matt Jacobs
  * @version 1.0
  * @param string

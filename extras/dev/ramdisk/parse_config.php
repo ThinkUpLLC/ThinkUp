@@ -3,7 +3,7 @@
  *
  * ThinkUp/extras/dev/ramdisk/parse_config.php
  *
- * Copyright (c) 2009-2013 mwilkie
+ * Copyright (c) 2009-2015 mwilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author mwilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 mwilkie
+ * @copyright 2009-2015 mwilkie
  */
 require_once 'webapp/config.inc.php';
 

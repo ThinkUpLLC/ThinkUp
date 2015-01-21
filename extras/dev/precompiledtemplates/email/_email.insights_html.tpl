@@ -1376,7 +1376,7 @@ or isset($insight->related_data.changes)}
                               <table>
                                   <tr>
                                       <td class="three sub-columns privacy">
-                                    &copy;2014 ThinkUp, LLC<br>
+                                    &copy;2014-2015 ThinkUp, LLC<br>
                                         <a class="privacy" href="https://github.com/ThinkUpLLC/policy">Privacy and stuff</a>
                                       </td>
                                       <td class="six sub-columns links">

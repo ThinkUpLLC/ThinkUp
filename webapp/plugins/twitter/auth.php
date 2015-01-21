@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/auth.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie, Christoffer Viken
+ * Copyright (c) 2009-2015 Gina Trapani, Mark Wilkie, Christoffer Viken
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Mark Wilkie, Christoffer Viken
+ * @copyright 2009-2015 Gina Trapani, Mark Wilkie, Christoffer Viken
  *
  * This file has been deprecated; Twitter authorization now happens on the plugin settings page. Therefore, just
  * redirect there from here.

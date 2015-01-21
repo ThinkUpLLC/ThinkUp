@@ -3,7 +3,7 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="copyright-privacy">
-                <div class="copyright">&copy;2014 ThinkUp, LLC</div>
+                <div class="copyright">&copy;2014-2015 ThinkUp, LLC</div>
                 {if isset($thinkupllc_endpoint)}
                 <div class="privacy"><a href="https://www.thinkup.com/join/about/privacy.php">Privacy</a> and <a href="https://www.thinkup.com/join/about/terms.php">Terms</a></div>
                 {/if}

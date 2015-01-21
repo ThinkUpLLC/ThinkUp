@@ -23,7 +23,7 @@
  * Test of LOL Count Insight
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 
@@ -94,7 +94,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual('Before &ldquo;FML&rdquo; went legit', $result->headline);
         $this->assertEqual('@testy used the word "FML" once since '.
             $str_earliest_mention.', and it appears to have caught on: '.
-            'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'.
+            'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'.
             "just been added</a> to the Oxford Dictionary Online.", $result->text);
         $data = unserialize($result->related_data);
         $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
@@ -141,7 +141,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual('Before &ldquo;humblebrag&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
-            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
+            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
             . 'just added</a> "humblebrag" and "clickbait" to their online '
             . 'dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention
             . ', @testy used "humblebrag" 4 times and "clickbait" once.', $result->text);
@@ -193,7 +193,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertEqual('Before &ldquo;hot mess&rdquo; went legit', $result->headline);
         $this->assertEqual('The Oxford Dictionary Online '
-            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
+            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
             . 'just added</a> "hot mess", "clickbait", "YOLO", and "humblebrag" '
             . 'to their online dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention.
             ', @testy used "hot mess" 3 times, "clickbait" twice, "YOLO" once, and "humblebrag" once.', $result->text);

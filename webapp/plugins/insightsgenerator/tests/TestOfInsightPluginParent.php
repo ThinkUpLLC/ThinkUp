@@ -2,7 +2,7 @@
 /**
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfInsightPluginParent.php
  *
- * Copyright (c) 2013-2014 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2015 Nilaksh Das, Gina Trapani
  *
  *
  * LICENSE:
@@ -25,7 +25,7 @@
  *
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2014 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2015 Nilaksh Das, Gina Trapani
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

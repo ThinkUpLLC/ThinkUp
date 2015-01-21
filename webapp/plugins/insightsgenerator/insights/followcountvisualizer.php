@@ -7,7 +7,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/followcountvisualizer.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 class FollowCountVisualizerInsight extends InsightPluginParent implements InsightPlugin {
@@ -220,7 +220,7 @@ class FollowCountVisualizerInsight extends InsightPluginParent implements Insigh
             'url' => 'https://www.thinkup.com/assets/images/insights/2014-05/buffalo.jpg',
             'alt_text' => 'Taste of Buffalo',
             'credit' => 'Photo: Taste of Buffalo presented by TOPS',
-            'img_link' => 'http://www.tasteofbuffalo.com/media-room-2013',
+            'img_link' => 'http://www.tasteofbuffalo.com/media-room-2015',
         ),
         334300 => array(
             'url' => 'https://www.thinkup.com/assets/images/insights/2014-05/belize.jpg',

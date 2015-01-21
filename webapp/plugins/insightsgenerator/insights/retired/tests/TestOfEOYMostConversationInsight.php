@@ -23,11 +23,11 @@
  *
  * Description of what this class does
  *
- * Copyright (c) 2014 Adam Pash
+ * Copyright (c) 2014-2015 Adam Pash
  *
  * @author Adam Pash adam.pash@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Adam Pash
+ * @copyright 2014-2015 Adam Pash
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

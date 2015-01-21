@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/embedthread/tests/TestOfThreadJSController.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2015 Gina Trapani
  */
 require_once dirname(__FILE__) . '/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
@@ -83,7 +83,7 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
     public function testProtectedPost() {
         $b = $this->activateEmbedThread();
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5',
         'network'=>'twitter', 'is_protected'=>1));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
         'network'=>'twitter'));
@@ -105,7 +105,7 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
     public function testPublicPostWithAllPublicReplies() {
         $b = $this->activateEmbedThread();
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5',
         'network'=>'twitter', 'is_protected'=>0));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
         'network'=>'twitter'));
@@ -113,19 +113,19 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
         $public_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'11', 'username'=>'jack',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1002', 'author_user_id'=>'11',
-        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
 
         $public_reply_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'12', 'username'=>'jill',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1003', 'author_user_id'=>'12',
-        'author_username'=>'jill', 'post_text'=>'This is another public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jill', 'post_text'=>'This is another public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
 
         $public_reply_author_builder3 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
-        'author_username'=>'mary', 'post_text'=>'This is yet another public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'mary', 'post_text'=>'This is yet another public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>0));
 
         $_GET['p'] = 1001;
@@ -148,7 +148,7 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
     public function testPublicPostWithProtectedReplies() {
         $b = $this->activateEmbedThread();
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5',
         'network'=>'twitter', 'is_protected'=>0));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
         'network'=>'twitter'));
@@ -156,7 +156,7 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
         $private_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
         'is_protected'=>'1', 'network'=>'twitter'));
         $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
-        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'1'));
 
         $_GET['p'] = 1001;
@@ -177,7 +177,7 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
     public function testPublicPostWithMixedAccessReplies() {
         $b = $this->activateEmbedThread();
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5',
         'network'=>'twitter', 'is_protected'=>0));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
         'network'=>'twitter'));
@@ -185,19 +185,19 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
         $public_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'11', 'username'=>'jack',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1002', 'author_user_id'=>'11',
-        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
 
         $public_reply_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'12', 'username'=>'jill',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1003', 'author_user_id'=>'12',
-        'author_username'=>'jill', 'post_text'=>'This is another public reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'jill', 'post_text'=>'This is another public reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
 
         $private_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
         'is_protected'=>'1', 'network'=>'twitter'));
         $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
-        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter', 
+        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter',
         'in_reply_to_post_id'=>1001, 'is_protected'=>'1'));
 
         $_GET['p'] = 1001;

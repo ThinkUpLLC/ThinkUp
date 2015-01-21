@@ -21,11 +21,11 @@
  *
  * EOYWhoYouAmplifiedInsight
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * @author Chris Moyer chris@inarow.net
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

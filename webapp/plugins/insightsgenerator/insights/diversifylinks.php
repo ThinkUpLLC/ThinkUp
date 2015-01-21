@@ -8,7 +8,7 @@
   *
   * ThinkUp/webapp/plugins/insightsgenerator/insights/diversifyyourlinks.php
   *
-  * Copyright (c) 2014 Gareth Brady
+  * Copyright (c) 2014-2015 Gareth Brady
   *
   * LICENSE:
   *
@@ -26,7 +26,7 @@
   * <http://www.gnu.org/licenses/>.
   *
   * @license http://www.gnu.org/licenses/gpl.html
-  * @copyright 2014 Gareth Brady
+  * @copyright 2014-2015 Gareth Brady
   * @author Gareth Brady <gareth.brady92 [at] gmail [dot] com>
   */
 

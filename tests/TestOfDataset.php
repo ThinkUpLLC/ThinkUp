@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfDataset.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2015 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * Test of Dataset
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2015 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -167,7 +167,7 @@ class TestOfDataset extends ThinkUpUnitTestCase {
         'network'=>'twitter'));
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
         $posts1_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
-        'post_text'=>'@someuser1 My first post', 'network'=>'twitter', 
+        'post_text'=>'@someuser1 My first post', 'network'=>'twitter',
         'retweet_count_cache' => 1, 'pub_date' => '+1d' ));
         $posts2_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
         'post_text'=>'My second @someuser1 post', 'network'=>'twitter'));

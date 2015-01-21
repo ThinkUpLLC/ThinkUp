@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.Serializer.php
  *
- * Copyright (c) 2014 Gina Trapani
+ * Copyright (c) 2014-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014  Gina Trapani
+ * @copyright 2014-2015  Gina Trapani
  */
 class Serializer {
     /**

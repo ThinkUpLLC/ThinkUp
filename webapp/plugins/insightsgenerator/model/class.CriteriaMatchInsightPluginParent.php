@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/model/class.CriteriaMatchInsightPluginParent.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 /**

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/api/v1/post.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Sam Rose
+ * Copyright (c) 2009-2015 Gina Trapani, Sam Rose
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Sam Rose <samwho@lbak.co.uk>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Sam Rose
+ * @copyright 2009-2015 Gina Trapani, Sam Rose
  */
 chdir("../../");
 require_once 'init.php';

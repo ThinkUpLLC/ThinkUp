@@ -25,7 +25,7 @@
  * Test for the Oscars2014Insight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2014 Gina Trapani, Anil Dash
+ * @copyright 2012-2015 Gina Trapani, Anil Dash
  * @author Anil Dash <anil[at]thinkup[dot]com>
  */
 

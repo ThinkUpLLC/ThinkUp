@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.UserMySQLDAO.php
  *
- * Copyright (c) 2009-2013 Gina Trapani
+ * Copyright (c) 2009-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * User Data Access Object MySQL Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani
+ * @copyright 2009-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -142,7 +142,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
 
             //Capture description version
             //If stored description doesn't match the current one, store the new version
-            if (Utils::stripURLsOutOfText($user_in_storage->description) 
+            if (Utils::stripURLsOutOfText($user_in_storage->description)
                 != Utils::stripURLsOutOfText($user->description)) {
                 $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
                 $user_versions_dao->addVersionOfField($user_in_storage->id, 'description', $user->description);

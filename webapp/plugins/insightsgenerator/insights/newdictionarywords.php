@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/newdictionarywords.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPlugin {
@@ -44,11 +44,11 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                 'headline' => 'Before &ldquo;%word&rdquo; went legit',
                 'single_template' => '%username used the word "%word" %total_times since %first_mention, '
                     . 'and it appears to have caught on: It\'s '
-                    . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
+                    . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
                     .'just been added</a> to the Oxford Dictionary Online.',
                 'multiple_template' => 'The Oxford Dictionary Online '
                     .'<a href="http://blog.oxforddictionaries.com/2014/08/'
-                    .'oxford-dictionaries-update-august-2014/">just added</a>'
+                    .'oxford-dictionaries-update-august-2015/">just added</a>'
                     .' %word_list to their online dictionary, '
                     . 'but no one has to explain them to %username. Since %first_mention, %username used '
                     . '%word_times_list.',

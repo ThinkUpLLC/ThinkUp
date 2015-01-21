@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/foursquare/tests/TestOfFoursquarePluginConfigurationController.php
  *
- * Copyright (c) 2012-2013 Aaron Kalair
+ * Copyright (c) 2012-2015 Aaron Kalair
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Aaron Kalair
+ * @copyright 2012-2015 Aaron Kalair
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';

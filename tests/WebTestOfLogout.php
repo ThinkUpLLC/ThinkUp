@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/WebTestOfLogout.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Chris Moyer
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

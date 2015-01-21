@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/instagram/controller/class.InstagramPluginConfigurationController.php
  *
- * Copyright (c) 2009-2013 Dimosthenis Nikoudis
+ * Copyright (c) 2009-2015 Dimosthenis Nikoudis
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Dimosthenis Nikoudis
+ * @copyright 2009-2015 Dimosthenis Nikoudis
  */
 class InstagramPluginConfigurationController extends PluginConfigurationController {
     /**

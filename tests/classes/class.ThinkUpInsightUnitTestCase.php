@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/class.ThinkUpInsightUnitTestCase.php
  *
- * Copyright (c) 2014 Gina Trapani
+ * Copyright (c) 2014-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  *
  * Adds database support to the basic unit test case, for tests that need ThinkUp's database structure.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Gina Trapani
+ * @copyright 2014-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

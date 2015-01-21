@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfEOYControversialTopicsInsight.php
  *
- * Copyright (c) 2012-2014 Gina Trapani
+ * Copyright (c) 2012-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,11 +22,11 @@
  *
  * Test for the EOYControversialTopicsInsight class.
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * @author Chris Moyer chris@inarow.net
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Adam Pash
+ * @copyright 2014-2015 Adam Pash
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

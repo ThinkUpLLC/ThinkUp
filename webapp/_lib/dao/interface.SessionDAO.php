@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.SessionDAO.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Session Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer
  *
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/instagram/tests/TestOfInstagramPlugin.php
  *
- * Copyright (c) 2009-2013 Dimosthenis Nikoudis
+ * Copyright (c) 2009-2015 Dimosthenis Nikoudis
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Dimosthenis Nikoudis
+ * @copyright 2009-2015 Dimosthenis Nikoudis
  */
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';

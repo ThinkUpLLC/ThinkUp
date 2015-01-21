@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.SessionMySQLDAO.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * The data access object for retrieving and saving sessions in the ThinkUp database.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer
  *
  */

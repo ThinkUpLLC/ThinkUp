@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfSubscriberChangeInsight.php
  *
- * Copyright (c) 2012-2013 Aaron Kalair
+ * Copyright (c) 2012-2015 Aaron Kalair
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the SubscriberChangeInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2013 Gina Trapani
+ * @copyright 2012-2015 Gina Trapani
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  */
 

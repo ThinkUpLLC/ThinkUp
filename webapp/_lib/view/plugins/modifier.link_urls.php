@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.link_urls.php
  *
- * Copyright (c) 2009-2014 Matt Jacobs
+ * Copyright (c) 2009-2015 Matt Jacobs
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    post text
  * Example:  {$post->post_text|link_urls}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2014 Matt Jacobs
+ * @copyright 2009-2015 Matt Jacobs
  * @author   Matt Jacobs
  * @version 1.0
  * @param string

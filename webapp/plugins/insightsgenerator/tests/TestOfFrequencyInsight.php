@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfFrequencyInsight.php
  *
- * Copyright (c) 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
+ * Copyright (c) 2013-2015 Gina Trapani, Anil Dash, Chris Moyer
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the FrequencyInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2014 Gina Trapani, Anil Dash, Chris Moyer
+ * @copyright 2013-2015 Gina Trapani, Anil Dash, Chris Moyer
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Anil Dash <anil[at]thinkup[dot]com>
  * @author Chris Moyer <chris[at]inarow[dot]net>

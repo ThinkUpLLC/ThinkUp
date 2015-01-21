@@ -1,9 +1,9 @@
-<?php 
+<?php
 /**
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.OpenFileException.php
  *
- * Copyright (c) 2009-2013 Mark Wilkie
+ * Copyright (c) 2009-2015 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * OpenFileException
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Mark Wilkie
+ * @copyright 2009-2015 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

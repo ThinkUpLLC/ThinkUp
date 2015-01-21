@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/controller/class.TwitterPluginConfigurationController.php
  *
- * Copyright (c) 2009-2013 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2015 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Handles plugin configuration requests.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2015 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -164,7 +164,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
                 if (isset($instance)) {
                     $owner_instance = $owner_instance_dao->get($this->owner->id, $instance->id);
                     if ($owner_instance != null) {
-                        $owner_instance_dao->updateTokens($this->owner->id, $instance->id, 
+                        $owner_instance_dao->updateTokens($this->owner->id, $instance->id,
                         $token_array['oauth_token'], $token_array['oauth_token_secret']);
                         $this->addSuccessMessage($authed_twitter_user['user_name'].
                         " on Twitter is already set up in ThinkUp! To add a different Twitter account, ".

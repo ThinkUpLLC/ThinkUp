@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfTimeHelper.php
  *
- * Copyright (c) 2014 Chris Moyer
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of TimeHelper
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Chris Moyer
+ * @copyright 2014-2015 Chris Moyer
  * @author Chris Moyer
  *
  */

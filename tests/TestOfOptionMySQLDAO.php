@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfOptionMySQLDAO.php
  *
- * Copyright (c) 2009-2013 Mark Wilkie
+ * Copyright (c) 2009-2015 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2013 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2015 Gina Trapani, Mark Wilkie
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
@@ -151,7 +151,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         # we'll add or subtract a few seconds from/to the date to account for any lag...
         # date created is still 2 days old
         $this->assertTrue(strtotime($data['created']) < (time() - (24 * 60 * 60 * 2) + 20000 ), '
-        '.strtotime($data['created']) . ' 
+        '.strtotime($data['created']) . '
         ' . (time() - (24 * 60 * 60 * 2) + 20000 ));
         # last updated is now
         $this->assertTrue(strtotime($data['last_updated']) > (time() - 10) );
@@ -177,7 +177,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         # we'll add or subtract a few seconds from/to the date to account for any lag...
         # date created is still 2 days old
         $this->assertTrue(strtotime($data['created']) < (time() - (24 * 60 * 60 * 2) + 20000 ), '
-        '.strtotime($data['created']) . ' 
+        '.strtotime($data['created']) . '
         ' . (time() - (24 * 60 * 60 * 2) + 20000 ));
         # last updated is now
         $this->assertTrue(strtotime($data['last_updated']) > (time() - 10) );

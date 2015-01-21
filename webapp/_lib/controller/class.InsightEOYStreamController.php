@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.InsightEOYStreamController.php
  *
- * Copyright (c) 2014 Gina Trapani
+ * Copyright (c) 2014-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * Displays a list of insights for authenticated service users.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Gina Trapani
+ * @copyright 2014-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

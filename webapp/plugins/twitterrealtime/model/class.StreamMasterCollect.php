@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitterrealtime/model/class.StreamMasterCollect.php
  *
- * Copyright (c) 2011-2013 Amy Unruh
+ * Copyright (c) 2011-2015 Amy Unruh
  *
  * LICENSE:
  *
@@ -138,7 +138,7 @@ class StreamMasterCollect {
                             $start_new_proc = true;
                         } else {
                             $logger->logInfo("process " . $stream_hash[$idx]['process_id'] .
-                                " listed with recent update time for instance with $owner_email and " . 
+                                " listed with recent update time for instance with $owner_email and " .
                             $stream_hash[$idx]['instance_id'] . "-- not starting another one",
                             __METHOD__.','.__LINE__);
                             $count++; // include this proc in the count of running processes

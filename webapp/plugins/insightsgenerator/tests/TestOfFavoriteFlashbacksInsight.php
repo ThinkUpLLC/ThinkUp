@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfFavoritedLinksInsight.php
  *
- * Copyright (c) 2012-2013 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2012-2015 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of FavoriteFlashbacksInsight
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014 Gina Trapani
+ * @copyright 2014-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani [at] gmail [dot] com>
  */
 
