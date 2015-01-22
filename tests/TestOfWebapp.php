@@ -33,7 +33,6 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 require_once THINKUP_WEBAPP_PATH.'plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitter/model/class.TwitterPlugin.php';
-require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.TwitterRealtimePlugin.php';
 
 class TestOfWebapp extends ThinkUpUnitTestCase {
 

@@ -302,9 +302,7 @@ class TestOfInsightStreamController extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/Welcome to ThinkUp/', $results);
         $this->assertPattern('/Set up a/', $results);
         $this->assertPattern('/Twitter/', $results);
-        $this->assertPattern('/Foursquare/', $results);
-        $this->assertPattern('/Facebook/', $results);
-        $this->assertPattern('/Google/', $results);
+        $this->assertPattern('/Instagram/', $results);
         $this->assertPattern('/account/', $results);
 
         $cfg = Config::getInstance();

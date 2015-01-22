@@ -52,7 +52,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins();
-        $this->assertTrue(count($plugins) >= 9);
+        $this->assertTrue(count($plugins) >= 5);
 
         $plugin_names = array();
         $plugin_folder_names = array();
@@ -66,15 +66,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(in_array('Facebook', $plugin_names));
         $this->assertTrue(in_array('facebook', $plugin_folder_names));
 
-        $this->assertTrue(in_array('Foursquare', $plugin_names));
-        $this->assertTrue(in_array('foursquare', $plugin_folder_names));
-
-        $this->assertTrue(in_array('GeoEncoder', $plugin_names));
-        $this->assertTrue(in_array('geoencoder', $plugin_folder_names));
-
-        $this->assertTrue(in_array('Google+', $plugin_names));
-        $this->assertTrue(in_array('googleplus', $plugin_folder_names));
-
         $this->assertTrue(in_array('Hello ThinkUp', $plugin_names));
         $this->assertTrue(in_array('hellothinkup', $plugin_folder_names));
 
@@ -83,9 +74,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertTrue(in_array('Twitter', $plugin_names));
         $this->assertTrue(in_array('twitter', $plugin_folder_names));
-
-        $this->assertTrue(in_array('Twitter Realtime', $plugin_names));
-        $this->assertTrue(in_array('twitterrealtime', $plugin_folder_names));
     }
 
     public function testInsertPlugin() {

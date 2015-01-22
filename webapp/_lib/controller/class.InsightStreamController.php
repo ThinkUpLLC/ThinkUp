@@ -227,8 +227,8 @@ class InsightStreamController extends ThinkUpController {
                         "".$plugin_link."facebook\">Facebook</a> account.");
                     } else {
                         $this->addToView('message_body', "Set up a ".$plugin_link."twitter\">Twitter</a>, ".
-                        "".$plugin_link."facebook\">Facebook</a>, ".$plugin_link.
-                        "googleplus\">Google+</a>, or ".$plugin_link."foursquare\">Foursquare</a> account.");
+                        "".$plugin_link."facebook\">Facebook</a>, or "
+                        .$plugin_link."instagram\">Instagram</a> account.");
                     }
                 }
             } else { //redirect to login
