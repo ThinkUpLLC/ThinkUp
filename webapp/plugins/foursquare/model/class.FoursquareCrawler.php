@@ -338,12 +338,20 @@ class FoursquareCrawler {
                 // Check if any photos are attached to this checkin
                 if ($item->photos->count > 0 && $done != null) {
                     foreach($item->photos->items as $photo) {
+                        if (isset($photo->prefix) && isset($photo->suffix)) {
+                            $url = $photo->prefix . $photo->width . "x" . $photo->height . $photo->suffix;
+                        } elseif (isset($photo->url)) { //photo API changed? this seems to be legacy
+                            $url["avatar"] = $photo->url;
+                        } else {
+                            // no photo url; skip to next iteration to avoid uncaught exceptions
+                            continue;
+                        }
                         $photo_store = new Link(array(
-                            'url'=> $photo->url,
-                            'expanded_url'=> $photo->url,
+                            'url'=> $url,
+                            'expanded_url'=> $url,
                             'title'=> ' ',
                             'description'=> ' ',
-                            'image_src'=> $photo->url,
+                            'image_src'=> $url,
                             'caption'=> ' ',
                             'clicks'=> 0,
                             'post_key'=> $done,
@@ -361,6 +369,7 @@ class FoursquareCrawler {
 
                         // Delete the current photo info ready for the next one
                         $photo_store = null;
+                        $url = null;
                     }
                 }
 
