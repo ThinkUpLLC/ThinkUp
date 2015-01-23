@@ -19,7 +19,7 @@ except for the external libraries listed below.
 - [SimpleTest](http://www.simpletest.org/) (Included)
 - [Smarty](http://smarty.net) (Included)
 - [Twitter OAuth by Abraham Williams](http://github.com/abraham/twitteroauth) (Included)
-- [ReCAPTCHA PHP library](https://developers.google.com/recaptcha/docs/php) (Included)
+- [ReCAPTCHA PHP library](https://developers.google.com/recaptcha/old/docs/php) (Included)
 - [Twitter Text (PHP Edition)](https://github.com/ngnpope/twitter-text-php) (Included)
 - [Mandrill Library (PHP Edition)](https://mandrillapp.com/api/docs/index.php.html) (Included)
 - [PHP-FineDiff](https://github.com/gorhill/PHP-FineDiff) (Included)
