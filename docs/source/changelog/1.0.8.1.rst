@@ -10,7 +10,7 @@ Changelog:
 *   Expand URLs plugin: Don't require both Flickr and Bitly API keys to save settings
 *   Facebook Plugin: Alert user when Facebook's tokens have expired via email and on the dashboard
 *   Facebook Plugin: Update application setup instructions to match Facebook's UI changes
-*   Twitter plugin: Accomodate localhost installations in Twitter's OAuth callback URL
+*   Twitter plugin: Accommodate localhost installations in Twitter's OAuth callback URL
 *   Optimize images using pullcrusher
 
 .. Note:: This release started storing the data displayed in dashboard charts like Response Rates, Clickthrough Rates,

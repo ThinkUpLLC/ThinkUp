@@ -146,7 +146,7 @@ The second section is where ThinkUp needs the details about your database:
 -  Under **Database Name**, type the name of the database you'll use for ThinkUp. You may have created this database
    earlier, or you can enter the name of the database you'd like to create (if your database user has permissions to
    create them directly through MySQL).
--  Under **User Name**, type inthe MySQL user name you have been given to access the database.
+-  Under **User Name**, type in the MySQL user name you have been given to access the database.
 -  Under **Password**, type the MySQL password you have been given to access the database.
 
 .. image:: imgs/configadvanced.png

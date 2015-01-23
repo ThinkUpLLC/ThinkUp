@@ -12,7 +12,7 @@ The page to request post API results from is located in <thinkup>/api/v1/post.ph
 and optional parameters. Some of these are mapped to work in exactly the same way as the Twitter API but some are 
 ThinkUp-specific.
 
-The output from the API is modelled after the 
+The output from the API is modeled after the 
 `Twitter Mentions API  <http://dev.twitter.com/doc/get/statuses/mentions>`_ and it's overloaded with ThinkUp data. 
 ThinkUp- specific data can be found in a "thinkup" namespace in each post and user JSON object.
 

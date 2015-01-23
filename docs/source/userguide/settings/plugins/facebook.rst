@@ -6,7 +6,7 @@ ThinkUp's Facebook plugin collects posts and status updates for Facebook user pr
 Set Up the Facebook Plugin (Admin only)
 ---------------------------------------
 
-To use the Facebook plugin, you'l need to `create a Facebook application on facebook.com 
+To use the Facebook plugin, you'll need to `create a Facebook application on facebook.com 
 <https://developers.facebook.com/apps>`_. Set the Web Site > Site URL  as recommended, and the Facebook-provided API
 Key, Application Secret and Application ID in the Facebook plugin's settings page in ThinkUp.
 

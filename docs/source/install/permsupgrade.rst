@@ -1,7 +1,7 @@
 Web-based Upgrader File Permissions
 ===================================
 
-In order to use its web-based upgrader, ThinkUp must have the permssion able to write new application files.
+In order to use its web-based upgrader, ThinkUp must have the permission able to write new application files.
 
 The recommended and most secure way to enable the ThinkUp web-based upgrader is to change the owner of all of ThinkUp's
 files and folders. The command to do this using sudo is:

@@ -10,7 +10,7 @@ Basic commenting
 ----------------
 
 First thing to remember about PHPDoc is that all user comments need to
-be enclosed in C-style comments with two leading asteriks, like so:
+be enclosed in C-style comments with two leading asterisks, like so:
 
 ::
 
