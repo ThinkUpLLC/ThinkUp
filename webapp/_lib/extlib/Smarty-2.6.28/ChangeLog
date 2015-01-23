@@ -1,3 +1,21 @@
+2013-09-30
+
+    * Fixed old vulnerability bug https://bugs.gentoo.org/show_bug.cgi?id=356615
+
+2013-07-16  Uwe Tews
+
+    * Fixed made Smarty_Compiler.class.php compatible with PHP 5.5
+
+
+2012-09-24  Uwe Tews
+
+    * Fixed  escape Smarty error messages to avoid possible script execution
+
+    
+2010-04-17  Uwe Tews
+
+    * Fixed security hole in {math} plugin
+    
 2007-09-27  TAKAGI Masahiro  <matakagi@gmail.com>
 
     * docs/ja/designers/language-custom-functions/language-function-html-checkboxes.xml:
@@ -5250,7 +5268,7 @@
 
     * libs/Smarty.class.php
       libs/Smarty_Compiler.class.php:
-      added CVS $Id: ChangeLog 2746 2007-09-28 01:32:05Z changelog $
+      added CVS $Id: ChangeLog 4779 2013-09-30 19:14:32Z Uwe.Tews@googlemail.com $
 
 2003-03-31  Messju Mohr  <messju@lammfellpuschen.de>
 

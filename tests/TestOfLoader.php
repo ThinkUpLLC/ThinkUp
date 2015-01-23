@@ -57,7 +57,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check special classes
         $this->assertEqual( Loader::getSpecialClasses(),
-        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php'));
+        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.28/libs/Smarty.class.php'));
     }
 
     public function testLoaderRegisterWithStringAdditionalPath() {
@@ -184,7 +184,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $special_classes = Loader::getSpecialClasses();
         $this->assertEqual( Loader::getSpecialClasses(),
         array(
-        'Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php',
+        'Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.28/libs/Smarty.class.php',
         'ConsumerUserStream'=>THINKUP_WEBAPP_PATH . 'plugins/twitterrealtime/model/class.ConsumerUserStream.php'
         ));
         //shouldn't throw a not found error

@@ -1,5 +1,3 @@
-Version 2.6.26 (June 18th, 2009)
--------------------------------
 - revert super global access changes, and instead rely on
   USE_SUPER_GLOBALS for security
 
