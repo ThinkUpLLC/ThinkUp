@@ -64,8 +64,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
     public function setUpNonWritableInstallation() {
         //Extract into test_installer directory and set necessary folder permissions
         @exec('cp build/thinkup.zip webapp/test_installer/.;'.
-        'cd webapp/test_installer/;unzip thinkup.zip;'.
-        'mkdir thinkup/data/compiled_view/;');
+        'cd webapp/test_installer/;unzip thinkup.zip;');
     }
 
     public function tearDown() {

@@ -633,11 +633,15 @@ class Installer {
             } else {
                 /* write the config file */
                 $handle = fopen($config_file, 'w');
-                foreach( $new_config_file_contents as $line ) {
-                    fwrite($handle, $line);
+                if ($handle !== false ) {
+                    foreach( $new_config_file_contents as $line ) {
+                        fwrite($handle, $line);
+                    }
+                    fclose($handle);
+                    return true;
+                } else {
+                    return false;
                 }
-                fclose($handle);
-                return true;
             }
         }
     }

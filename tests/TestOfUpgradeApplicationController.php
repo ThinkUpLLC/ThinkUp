@@ -244,8 +244,8 @@ class TestOfUpgradeApplicationController extends ThinkUpUnitTestCase {
         '{"version":"100.1", "url":"'.THINKUP_WEBAPP_PATH.'test_installer/thinkup.zip"}');
 
         $update_info = $upgrade_controller->runUpdate( $this->test_web_dir );
-        $this->assertPattern('/data\/\d+\-v1\-config\.inc\.backup\.php/', $update_info['config']);
-        $this->assertPattern('/data\/\d+\-v1\-backup\.zip/', $update_info['backup']);
+        $this->assertPattern('/\d+\-v1\-config\.inc\.backup\.php/', $update_info['config']);
+        $this->assertPattern('/\d+\-v1\-backup\.zip/', $update_info['backup']);
 
         $this->assertTrue(file_exists($this->test_web_dir . '/index.php'), "we should have our index file back");
         $data_path = FileDataManager::getDataPath();
