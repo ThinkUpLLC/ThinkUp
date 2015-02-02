@@ -91,7 +91,8 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
 
         $twitter_instance_builder= FixtureBuilder::build('instances_twitter',
-        array('id'=> $instance_builder->columns['last_insert_id'],'last_reply_id'=>'10'));
+            array('id'=> $instance_builder->columns['last_insert_id'],'last_reply_id'=>'10',
+            'last_follower_id_cursor'=>'abcdefg'));
 
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
         'instance_id'=>$instance_builder->columns['last_insert_id'], 'owner_id'=>'2'));
@@ -104,6 +105,8 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($instance->network_user_id, $instance_builder->columns['network_user_id']);
         $this->assertEqual($instance->network_viewer_id, $instance_builder->columns['network_viewer_id']);
         $this->assertEqual($instance->last_reply_id, $twitter_instance_builder->columns['last_reply_id']);
+        $this->assertEqual($instance->last_follower_id_cursor,
+            $twitter_instance_builder->columns['last_follower_id_cursor']);
 
         //Try a non existent one
         $result = $this->DAO->getFreshestByOwnerId(3);
@@ -245,6 +248,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
         $this->assertIsA($result, "TwitterInstance");
         $this->assertNull($result->last_favorite_id);
+        $this->assertNull($result->last_follower_id_cursor);
         $this->assertFalse($this->DAO->doesMetaDataExist(101));
 
         $logger = Logger::getInstance();
@@ -253,6 +257,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertNull($updated_result->last_favorite_id);
+        $this->assertNull($updated_result->last_follower_id_cursor);
         $this->assertEqual($updated_result->last_reply_id, '1');
         $this->assertNull($updated_result->last_unfav_page_checked);
 
@@ -263,6 +268,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertEqual($updated_result->last_favorite_id, 101);
         $this->assertEqual($updated_result->last_reply_id, '1');
+        $this->assertNull($updated_result->last_follower_id_cursor);
         $this->assertNull($updated_result->last_unfav_page_checked);
 
         $result->last_reply_id = '13';
@@ -271,6 +277,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertEqual($updated_result->last_favorite_id, 101);
         $this->assertEqual($updated_result->last_reply_id, '13');
+        $this->assertNull($updated_result->last_follower_id_cursor);
         $this->assertNull($updated_result->last_unfav_page_checked);
 
         $this->DAO->save($result, 500, $logger);
@@ -278,6 +285,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($updated_result, "TwitterInstance");
         $this->assertEqual($updated_result->last_favorite_id, 101);
         $this->assertEqual($updated_result->last_reply_id, '13');
+        $this->assertNull($updated_result->last_follower_id_cursor);
         $this->assertNull($updated_result->last_unfav_page_checked);
 
         $this->DAO->save($result, 500, $logger);
@@ -643,5 +651,4 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         //earliest_reply_in_system
         //earliest_post_in_system
     }
-
 }

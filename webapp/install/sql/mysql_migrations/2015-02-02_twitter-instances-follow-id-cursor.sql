@@ -1,0 +1,1 @@
+ALTER TABLE tu_instances_twitter ADD last_follower_id_cursor VARCHAR(80) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Last follower ID cursor of the page saved for the instance.' ;

@@ -86,23 +86,24 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
     private function insertMetaData($instance_object) {
         $q  = "INSERT INTO ".$this->getMetaTableName()." ";
         $q .= "(id, ";
-        $lfi = ($instance_object->last_favorite_id != "" ? true : false);
-        if ($lfi){
+        $has_last_fav_id = ($instance_object->last_favorite_id != "" ? true : false);
+        if ($has_last_fav_id){
             $q .= "last_favorite_id, ";
         }
-        $q .= "last_reply_id) ";
+        $q .= "last_reply_id, last_follower_id_cursor) ";
         $q .= "VALUES (:instance_id, ";
-        if ($lfi){
+        if ($has_last_fav_id){
             $q .= ":last_favorite_id, ";
         }
-        $q .= ":last_reply_id) ";
+        $q .= ":last_reply_id, :last_follower_id_cursor) ";
         $vars = array(
             ':instance_id'                  => $instance_object->id,
             ':last_favorite_id'             => $instance_object->last_favorite_id,
             ':last_reply_id'                => isset($instance_object->last_reply_id)?
-            $instance_object->last_reply_id:'',
+                $instance_object->last_reply_id:'',
+            ':last_follower_id_cursor'      => $instance_object->last_follower_id_cursor,
         );
-        if (!$lfi){
+        if (!$has_last_fav_id){
             unset ($vars[':last_favorite_id']);;
         }
         $ps = $this->execute($q, $vars);
@@ -115,22 +116,23 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
      * @return int Number of affected rows
      */
     private function updateMetaData($instance_object) {
-        $lfi = ($instance_object->last_favorite_id != "" ? true : false);
+        $has_last_fav_id = ($instance_object->last_favorite_id != "" ? true : false);
         isset($instance_object->last_reply_id)?$instance_object->last_reply_id:1;
         $q  = "UPDATE ".$this->getMetaTableName()." SET ";
-        if ($lfi){
-            $q .= "last_favorite_id = :lastfavid, ";
+        if ($has_last_fav_id){
+            $q .= "last_favorite_id = :last_fav_id, ";
         }
-        $q .= "last_reply_id = :lpfr ";
+        $q .= "last_reply_id = :last_reply_id,  last_follower_id_cursor = :last_follower_id_cursor ";
         $q .= "WHERE id=:id;";
 
         $vars = array(
-            ':lastfavid'     => $instance_object->last_favorite_id,
-            ':lpfr'         => $instance_object->last_reply_id,
-            ':id'           => $instance_object->id
+            ':last_fav_id'      => $instance_object->last_favorite_id,
+            ':last_reply_id'    => $instance_object->last_reply_id,
+            ':last_follower_id_cursor'    => $instance_object->last_follower_id_cursor,
+            ':id'               => $instance_object->id
         );
-        if (!$lfi){
-            unset ($vars[':lastfavid']);;
+        if (!$has_last_fav_id){
+            unset ($vars[':last_fav_id']);;
         }
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);

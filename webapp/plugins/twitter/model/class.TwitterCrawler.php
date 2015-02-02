@@ -534,6 +534,7 @@ class TwitterCrawler {
         while ( $continue_fetching) {
             $args = array();
             $endpoint = $this->api->endpoints['followers_ids'];
+            $next_cursor = $this->instance->last_follower_id_cursor;
             if (!isset($next_cursor)) {
                 $next_cursor = -1;
             }
@@ -546,14 +547,16 @@ class TwitterCrawler {
                     $continue_fetching = false;
                 } else {
                     $status_message = "Parsing JSON. ";
-                    $status_message .= "Cursor ".$next_cursor.":";
+                    $status_message .= "Cursor ".$next_cursor.": ";
                     $ids = $this->api->parseJSONIDs($payload);
                     $next_cursor = $this->api->getNextCursor();
-                    $status_message .= count($ids)." follower IDs queued to update. ";
+                    $this->instance->last_follower_id_cursor = $next_cursor;
+                    $status_message .= number_format(count($ids))." follower IDs queued to update. ";
                     $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                     $status_message = "";
                     if (count($ids) == 0) {
                         $this->instance->is_archive_loaded_follows = true;
+                        $this->instance->last_follower_id_cursor = null;
                         $continue_fetching = false;
                     }
                     foreach ($ids as $id) {
@@ -582,6 +585,13 @@ class TwitterCrawler {
                 break;
             }
         }
+    }
+    /**
+     * Clear the follower ID last cursor saved to file.
+     * @return bool
+     */
+    public function clearFollowerIDLastCursor() {
+        return unlink(FileDataManager::getDataPath('follower-id-last-cursor.txt'));
     }
     /**
      * Fetch instance user's followers: Page back only if more than 2% of follows are missing from database
@@ -634,7 +644,7 @@ class TwitterCrawler {
                         $continue_fetching = false;
                     } else {
                         $status_message = "Parsing JSON. ";
-                        $status_message .= "Cursor ".$next_cursor.":";
+                        $status_message .= "Cursor ".$next_cursor.": ";
                         $users = $this->api->parseJSONUsers($payload);
                         $next_cursor = $this->api->getNextCursor();
                         $status_message .= count($users)." followers queued to update. ";
@@ -667,20 +677,26 @@ class TwitterCrawler {
                         $this->logger->logSuccess("Cursor at ".strval($next_cursor), __METHOD__.','.__LINE__);
                     }
                     if ($updated_follow_count > 0 || $inserted_follow_count > 0 ){
-                        $status_message = $updated_follow_count ." follower(s) updated; ". $inserted_follow_count.
-                        " new follow(s) inserted.";
+                        $status_message = number_format($updated_follow_count) ." follower(s) updated; "
+                            . number_format($inserted_follow_count). " new follow(s) inserted.";
                         $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
                     }
                 } catch (APICallLimitExceededException $e) {
                     $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
                     $continue_fetching = false;
+
+                    if (!$this->instance->is_archive_loaded_follows) {
+                        $this->logger->logInfo("Follower archive is STILL not loaded; begin fetching followers by IDs.",
+                            __METHOD__.','.__LINE__);
+                        $this->fetchInstanceUserFollowersByIDs();
+                    }
                     break;
                 }
             }
         }
     }
-
-    /** Find group memberships that are probably no longer active, verify, and
+    /**
+     * Find group memberships that are probably no longer active, verify, and
      * deactivate or update
      */
     public function updateStaleGroupMemberships() {

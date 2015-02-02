@@ -41,12 +41,17 @@ class TwitterInstance extends Instance {
      * @var int Last reply post ID to the instance saved.
      */
     var $last_reply_id;
+    /**
+     * @var int Last follower ID cursor of the page saved for the instance.
+     */
+    var $last_follower_id_cursor;
     public function __construct($row = false) {
         parent::__construct($row);
         if ($row) {
             $this->id = $row['id'];
             $this->last_favorite_id = $row['last_favorite_id'];
             $this->last_reply_id = $row['last_reply_id'];
+            $this->last_follower_id_cursor = $row['last_follower_id_cursor'];
         }
     }
 }
