@@ -34,11 +34,6 @@ var TUApplicationSettings = function() {
     this.DEBUG = false;
 
     /**
-     * @var boolean tab view for setting has been loaded
-     */
-    this.TAB_LOADED = false;
-
-    /**
      * Init our plugin options form
      */
     this.init = function() {
@@ -46,13 +41,7 @@ var TUApplicationSettings = function() {
         var loading_image = new Image();
         loading_image.src = site_root_path + 'assets/img/loading.gif';
 
-        // register on submit event on our form
-        $(document).ready(function() {
-            if (tu_app_settings.DEBUG) {
-                console.debug("app settings tab selected");
-            }
-            tu_app_settings.load_settings();
-        });
+        tu_app_settings.load_settings();
 
         $('#recaptcha_enable')
                 .click(
@@ -71,16 +60,6 @@ var TUApplicationSettings = function() {
                                 $('#recaptcha_enable_deps').hide();
                             }
                         });
-        if (document.location.href.match(/#app_settings/)) {
-            if (tu_app_settings.DEBUG) {
-                console
-                    .debug("app settings tab loaded with hash #app_settings");
-            }
-            setTimeout(function() {
-                tu_app_settings.load_settings();
-            }, 1000);
-        }
-
     };
 
     this.save_settings = function() {
@@ -166,39 +145,29 @@ var TUApplicationSettings = function() {
         }
     };
     this.load_settings = function() {
-        if (!tu_app_settings.TAB_LOADED) {
-            if (this.DEBUG) {
-                console.debug("app settings tab not yet loaded, loading...");
-            }
-            controller_uri = site_root_path + 'account/appconfig.php';
-            $
-                    .ajax( {
-                        url : controller_uri,
-                        dataType : 'json',
-                        error : function(data) {
-                            $('#app_setting_loading_div').hide();
-                            $('#app_settings_div').show();
-                            $('#settings_error_message')
-                                    .html(
-                                            'Sorry, but we are unable to process your request at this time.');
-                            $('#settings_error_message_error').show();
-                        },
-                        success : function(data) {
-                            tu_app_settings._load_settings(data);
-                        }
-                    });
-        } else {
-            if (this.DEBUG) {
-                console.debug("app settings already loaded, not loading...");
-            }
-        }
+        controller_uri = site_root_path + 'account/appconfig.php';
+        $
+                .ajax( {
+                    url : controller_uri,
+                    dataType : 'json',
+                    error : function(data) {
+                        $('#app_setting_loading_div').hide();
+                        $('#app_settings_div').show();
+                        $('#settings_error_message')
+                                .html(
+                                        'Sorry, but we are unable to process your request at this time.');
+                        $('#settings_error_message_error').show();
+                    },
+                    success : function(data) {
+                        tu_app_settings._load_settings(data);
+                    }
+                });
     };
 
     this._load_settings = function(data) {
         this.settings_data = data;
         $('#app_setting_loading_div').hide();
         $('#app_settings_div').show();
-        this.TAB_LOADED = true;
         $('#app-settings-form').submit(function() {
             tu_app_settings.save_settings();
         });
