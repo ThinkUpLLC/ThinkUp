@@ -2642,11 +2642,11 @@ ol.body-list .list-item {
   float: left;
 }
 .body-list.url-list .link-title a {
-  margin-left: 8px;
+  margin-left: 4px;
   display: inline-block;
 }
 .body-list.url-list .link-metadata {
-  margin-left: 24px;
+  margin-left: 4px;
 }
 .body-list.all-items-visible,
 .body-list.body-list-show-all {
