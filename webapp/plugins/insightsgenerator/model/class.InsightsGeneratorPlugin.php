@@ -255,13 +255,17 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $config = Config::getInstance();
         $view = new ViewManager();
         $view->caching=false;
+        $logger = Logger::getInstance();
 
         // If we've got a Mandrill key and template, send HTML
         if ($config->getValue('mandrill_api_key') != null && !empty($options['mandrill_template'])) {
+            $logger->logUserInfo("Mandrill API key and template set; sending HTML", __METHOD__.','.__LINE__);
             $view->assign('insights', $insights);
             $view->assign('application_url', Utils::getApplicationURL());
             $view->assign('header_text', $this->getEmailMessageHeaderText());
             if (Utils::isThinkUpLLC()) {
+                $logger->logUserInfo("Email via ThinkUpLLC, process welcome / free trial messaging",
+                    __METHOD__.','.__LINE__);
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
                 if (!isset($options['last_daily_email'])) {
@@ -315,6 +319,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                     $view->assign('thinkupllc_email_tout', $thinkupllc_email_tout);
                 }
             } else {
+                $logger->logUserInfo("Email is NOT via ThinkUpLLC", __METHOD__.','.__LINE__);
                 $view->assign('unsub_url', Utils::getApplicationURL().'account/index.php?m=manage#instances');
             }
             // It's a weekly digest if we're going back more than a day or two.
@@ -324,7 +329,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
             if ($config->getValue('image_proxy_enabled') == true) {
                 $view->assign('image_proxy_sig', $config->getValue('image_proxy_sig'));
             }
-            $insights_markup = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).'_email.insights_html.tpl');
+            $insights_markup = $view->fetch(Utils::getPluginViewDirectory($this->folder_name)
+                .'_email.insights_html.tpl');
 
             $parameters = array();
             $parameters['insights'] = $insights_markup;
@@ -338,12 +344,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 } else {
                     $subject_line = $this->getEmailMessageSubjectLine($daily_or_weekly, $insights);
                 }
+                $logger->logUserInfo("About to call Mailer::mailHTMLViaMandrillTemplate", __METHOD__.','.__LINE__);
                 Mailer::mailHTMLViaMandrillTemplate($owner->email, $subject_line,
-                $options['mandrill_template']->option_value, $parameters);
+                    $options['mandrill_template']->option_value, $parameters);
                 return true;
             } catch (Mandrill_Unknown_Template $e) {
                 // In this case, we'll fall back to plain text sending and warn the user in the log
-                $logger = Logger::getInstance();
                 $logger->logUserError("Invalid mandrill template configured:".
                 $options['mandrill_template']->option_value.".", __METHOD__.','.__LINE__);
                 unset($options['mandrill_template']);
@@ -356,6 +362,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
         $message = $view->fetch(Utils::getPluginViewDirectory($this->folder_name).$template);
         list ($subject, $message) = explode("\n", $message, 2);
 
+        $logger->logUserInfo("About to call Mailer::mail", __METHOD__.','.__LINE__);
         Mailer::mail($owner->email, $subject, $message);
         return true;
     }
