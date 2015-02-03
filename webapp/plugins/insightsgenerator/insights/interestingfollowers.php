@@ -95,7 +95,8 @@ class InterestingFollowersInsight extends InsightPluginParent implements Insight
 
             $total_verified = $follow_dao->getVerifiedFollowerCount($instance->network_user_id, $instance->network);
             if ($total_verified > $total_followers) {
-                $my_insight->text = "That makes a total of <strong>$total_verified verified followers</strong>.";
+                $my_insight->text = "That makes a total of <strong>".number_format($total_verified)
+                    ." verified followers</strong>.";
             }
             $my_insight->header_image = 'https://www.thinkup.com/assets/images/insights/2014-07/verified.png';
         }
