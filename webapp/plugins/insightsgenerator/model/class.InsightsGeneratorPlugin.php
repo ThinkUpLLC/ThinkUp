@@ -354,6 +354,13 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $options['mandrill_template']->option_value.".", __METHOD__.','.__LINE__);
                 unset($options['mandrill_template']);
             }
+        } else {
+            if ($config->getValue('mandrill_api_key') == null) {
+                $logger->logUserInfo("Mandrill API key is null", __METHOD__.','.__LINE__);
+            }
+            if (empty($options['mandrill_template'])) {
+                $logger->logUserInfo("Mandrill template is not set", __METHOD__.','.__LINE__);
+            }
         }
 
         $view->assign('app_title', $config->getValue('app_title_prefix')."ThinkUp" );
