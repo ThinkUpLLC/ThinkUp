@@ -3,7 +3,7 @@ Welcome, ThinkUp contributor!
 Filing Issues
 =============
 
-When you file a ticket in ThinkUp's issue tracker, help us help you. First, make sure the issue has not already been filed. If you have a question or comment, discuss it on [the community mailing list](http://groups.google.com/group/thinkupapp) instead of filing a ticket.
+When you file a ticket in ThinkUp's issue tracker, help us help you. First, make sure the issue has not already been filed. If you have a question or comment, discuss it on [the community mailing list](http://groups.google.com/group/thinkup) instead of filing a ticket.
 
 Most tickets fall under one of three categories.
 
