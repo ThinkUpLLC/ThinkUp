@@ -315,8 +315,14 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                     } else {
                         //Check subscription status and show a message if Payment failed
                         //@TODO Handle Payment due state here as well
+                        $logger->logUserInfo("User is not in free trial; check subscription status",
+                            __METHOD__.','.__LINE__);
+
                         $thinkupllc_api_accessor = new ThinkUpLLCAPIAccessor();
                         $subscription_status = $thinkupllc_api_accessor->getSubscriptionStatus($owner->email);
+                        $logger->logUserInfo("Subscription status is ".Utils::varDumpToString($subscription_status),
+                            __METHOD__.','.__LINE__);
+
                         if (isset($subscription_status['subscription_status'])
                             && $subscription_status['subscription_status'] == 'Payment failed') {
 
