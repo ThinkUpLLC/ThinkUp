@@ -269,9 +269,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
                 if (!isset($options['last_daily_email'])) {
+                    $logger->logUserInfo("No daily email ever sent before, include welcome message",
+                        __METHOD__.','.__LINE__);
                     $view->assign('show_welcome_message', true);
                 } else {
                     if ($owner->is_free_trial) {
+                        $logger->logUserInfo("Owner is in free trial", __METHOD__.','.__LINE__);
                         $creation_date = new DateTime($owner->joined);
                         $now = new DateTime();
                         $end_of_trial = $creation_date->add(new DateInterval('P15D'));
@@ -325,6 +328,9 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
 
                         if (isset($subscription_status['subscription_status'])
                             && $subscription_status['subscription_status'] == 'Payment failed') {
+
+                            $logger->logUserInfo("Owner has payment failure; include alert in email",
+                                __METHOD__.','.__LINE__);
 
                             $payment_failed_copy = array ();
                             $payment_failed_copy[] = array(
