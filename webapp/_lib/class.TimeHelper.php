@@ -32,15 +32,49 @@
  */
 class TimeHelper {
     /**
-     * @var int Do we have an override time set?
+     * Override time used to simulate different times in tests
+     * @var int
      */
     private static $override_time = 0;
-
     /**
-     * @var int What was the last time we returned?
+     * Last time value returned
+     * @var int
      */
     private static $last_time = 0;
-
+    /**
+     * Override day of year used to simulate different days of the year in tests
+     * @var int
+     */
+    private static $override_day_of_year = 0;
+    /**
+     * Last day of year value returned
+     * @var int
+     */
+    private static $last_day_of_year = 0;
+    /**
+     * Get the current day of the year or the override value.  Just like date('z'), but test-friendly.
+     * @return int Day of current year
+     */
+    public static function getDayOfYear() {
+        $ret = self::$override_day_of_year ? self::$override_day_of_year : date('z');
+        self::$last_day_of_year = $ret;
+        return $ret;
+    }
+    /**
+     * Set the day of year for testing. Should ONLY be used inside tests.
+     * @param int $doy Day of year
+     * @return void
+     */
+    public static function setDayOfYear($doy) {
+        self::$override_day_of_year = $doy;
+    }
+    /**
+     * Clear the override time for testing. Should ONLY be used inside tests.
+     * @return void
+     */
+    public static function clearDayOfYear() {
+        self::setDayOfYear(0);
+    }
     /**
      * Get the time.  Just like time(), but test friendly
      * @return int Unix timestamp
@@ -50,7 +84,6 @@ class TimeHelper {
         self::$last_time = $ret;
         return $ret;
     }
-
     /**
      * Set the time for testing
      * Should ONLY be used inside tests.
@@ -59,7 +92,6 @@ class TimeHelper {
     public static function setTime($time) {
         self::$override_time = $time;
     }
-
     /**
      * Clear the overriden time for testing
      * Should ONLY be used inside tests.
@@ -67,7 +99,6 @@ class TimeHelper {
     public static function clearTime() {
         self::setTime(0);
     }
-
     /**
      * Get the number of days in a given month and year.
      * @param  int $year
@@ -77,7 +108,6 @@ class TimeHelper {
     public static function getDaysInMonth($year, $month) {
         return round((mktime(0, 0, 0, $month+1, 1, $year) - mktime(0, 0, 0, $month, 1, $year)) / 86400);
     }
-
     /**
      * Convert seconds to a general, non-exact, conversational unit of time, i.e., a day, 5 minutes, 2 weeks.
      * @param  int $seconds
@@ -103,7 +133,6 @@ class TimeHelper {
 
         return $seconds." second".($seconds==1?'':'s');
     }
-
     /**
      * Get exact number of days, hours, minutes, and seconds a total number of seconds represents.
      *
@@ -138,7 +167,6 @@ class TimeHelper {
             's' => (int) $seconds,
         );
     }
-
     /**
      * Get number of days since January 1 of the current year.
      * @param  int $time Time to calculate from; defaults to time()

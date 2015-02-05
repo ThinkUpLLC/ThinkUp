@@ -407,23 +407,7 @@ color: #417505 !important;
           <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0 0 28px;">
             <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
               <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
-{if !(isset($show_welcome_message) and $show_welcome_message)}
-<table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
-  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
-      <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
-        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
-          <td class="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-              <h6 class="center" style="text-align: center; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 1.3; word-break: normal; font-size: 20px; margin: 0; padding: 0;" align="center">{$header_text}</h6>
-          </td>
-          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
-        </tr>
-      </table>
 
-    </td>
-  </tr>
-</table>
-{/if}
 {if isset($show_welcome_message) and $show_welcome_message}
 <table class="row insight welcome-insight" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #2785d3; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #46bcff; border-bottom-width: 2px; margin-bottom: 14px; background: #fff; padding: 0px;">
   <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
@@ -483,6 +467,35 @@ color: #417505 !important;
                 <center>
               <![endif]-->
                   <a href="{$pay_prompt_url}" class="reminder-button" style="border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-weight: bold; width: 160px; font-size: 20px; line-height: 10px; text-align: center; text-decoration: none; -webkit-text-size-adjust: none; background: #24b98f;">&nbsp;<br><span style="line-height: 26px;">Join ThinkUp</span><br><span class="second-line" style="font-size: 12px; line-height: 14px; color: #e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
+              <!--[if mso]>
+                </center>
+              </v:roundrect>
+            <![endif]--></div>
+          </td>
+          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; visibility: hidden; width: 0px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="center !important" valign="top"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/if}
+
+{if isset($payment_failed_explainer) and isset($payment_failed_headline) and isset($payment_failed_button_label)}
+<table class="row insight payment-failed" style="border-top-width: 1px; border-top-color: #d0021b; border-top-style: solid; border-bottom-width: 1px; border-bottom-color: #d0021b; border-bottom-style: solid; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; margin-bottom: 18px; background: #fff; padding: 0px;">
+  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="center !important" valign="top">
+      <table class="twelve columns insight-header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center !important; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0px 10px 10px;" align="center !important" valign="top">
+            <h6 style="color: #2785d3 !important; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: bold; text-align: center !important; line-height: 1.3; word-break: normal; font-size: 18px; margin: 0; padding: 0;" align="center !important">{$payment_failed_headline}</h6>
+            <p style="color: #666; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: center !important; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="center !important">{$payment_failed_explainer}</p>
+            <br>
+            <div style="text-align: center;" align="center"><!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$pay_prompt_url}" style="height:60px;v-text-anchor:middle;width:275px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
+                <w:anchorlock/>
+                <center>
+              <![endif]-->
+                  <a href="{$pay_prompt_url}" class="reminder-button" style="border-radius: 4px; color: #ffffff; display: inline-block; font-family: sans-serif; font-weight: bold; width: 275px; font-size: 20px; line-height: 10px; text-align: center; text-decoration: none; -webkit-text-size-adjust: none; background: #d0021b;">&nbsp;<br><span style="line-height: 26px;">{$payment_failed_button_label}</span><br>&nbsp;</a>
               <!--[if mso]>
                 </center>
               </v:roundrect>

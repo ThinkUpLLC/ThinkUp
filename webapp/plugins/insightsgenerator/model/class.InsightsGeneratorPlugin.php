@@ -312,6 +312,51 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                                 $view->assign('pay_prompt_button_label', 'Just $10/month');
                             }
                         }
+                    } else {
+                        //Check subscription status and show a message if Payment failed
+                        //@TODO Handle Payment due state here as well
+                        $thinkupllc_api_accessor = new ThinkUpLLCAPIAccessor();
+                        $subscription_status = $thinkupllc_api_accessor->getSubscriptionStatus($owner->email);
+                        if (isset($subscription_status['subscription_status'])
+                            && $subscription_status['subscription_status'] == 'Payment failed') {
+
+                            $payment_failed_copy = array ();
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Oops! Your account needs attention',
+                                'explainer' => "We had a problem processing your last membership payment. "
+                                    ."But it's easy to fix."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Uh oh, problem with your subscription...',
+                                'explainer' => "There was a problem processing your last membership payment. "
+                                    ."To fix it, update your payment info."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Your ThinkUp subscription is out of date...',
+                                'explainer' => "We tried to charge your Amazon account for your ThinkUp membership,"
+                                    ." and there was an error. But it's easy to fix."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Action required to keep your ThinkUp account active',
+                                'explainer' => "We weren't able to process your last membership payment—maybe your "
+                                    ."info is out of date? Fixing it just takes a moment."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>"Urgent! Keep your ThinkUp account active",
+                                'explainer' => "We tried to process your ThinkUp subscription, but "
+                                    ."the payment was not successful. Please update your payment information "
+                                    ."now to make sure your ThinkUp membership stays in good standing."
+                            );
+
+                            $copy_index = TimeHelper::getDayOfYear() % count($payment_failed_copy);
+                            $payment_failed_headline = $payment_failed_copy[$copy_index]['headline'];
+                            $payment_failed_explainer = $payment_failed_copy[$copy_index]['explainer'];
+                            $payment_failed_button_label = "Update your payment info";
+
+                            $view->assign('payment_failed_headline', $payment_failed_headline);
+                            $view->assign('payment_failed_explainer', $payment_failed_explainer);
+                            $view->assign('payment_failed_button_label', $payment_failed_button_label);
+                        }
                     }
                 }
                 $thinkupllc_email_tout = $config->getValue('thinkupllc_email_tout');

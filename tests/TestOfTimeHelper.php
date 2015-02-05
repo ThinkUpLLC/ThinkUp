@@ -33,6 +33,25 @@ require_once THINKUP_WEBAPP_PATH.'config.inc.php';
 
 
 class TestOfTimeHelper extends ThinkUpBasicUnitTestCase {
+    public function testGetDayOfYear() {
+        $doy = date('z');
+        $doy2 = TimeHelper::getDayOfYear();
+        $this->assertEqual($doy, $doy2);
+    }
+
+    public function testSetClearDayOfYear() {
+        $start = TimeHelper::getDayOfYear();
+        $this->assertNotEqual($start, 400); //not more than 365 days in a year
+
+        TimeHelper::setDayOfYear(450);
+        $now = TimeHelper::getDayOfYear();
+        $this->assertEqual(450, $now);
+
+        TimeHelper::clearDayOfYear();
+        $now = TimeHelper::getDayOfYear();
+        $this->assertNotEqual(450, $now);
+    }
+
     public function testGetTime() {
         $time = time();
         $time2 = TimeHelper::getTime();

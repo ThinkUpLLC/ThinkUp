@@ -36,6 +36,7 @@ require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstance.
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightsGeneratorPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/model/class.CriteriaMatchInsightPluginParent.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/tests/classes/mock.ThinkUpLLCAPIAccessor.php';
 
 class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
 
@@ -589,6 +590,112 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
                 $i++;
             }
         }
+    }
+
+    public function testMandrillHTMLDailyPaymentFailed() {
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin = new InsightsGeneratorPlugin();
+        $config = Config::getInstance();
+        $config->setValue('mandrill_api_key','1234');
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
+
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $long_ago = date('Y-m-d', strtotime('-7 day'));
+        $plugin_option_dao->insertOption($plugin_id, 'mandrill_template', $template = 'my_template');
+        $plugin_option_dao->insertOption($plugin_id, 'last_daily_email', $long_ago);
+        $options = $plugin_option_dao->getOptionsHash($plugin->folder_name, true);
+        $builders = self::buildDataForDailyEmailFreeTrial();
+
+        $i = 0;
+        while ($i < 5) {
+            $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User',
+                'is_admin'=>1, 'email'=>'paymentfailed@example.com', 'is_activated'=>1,
+                'email_notification_frequency' => 'daily', 'timezone' => 'America/New_York',
+                'is_free_trial'=>0, 'joined'=>'-'.$i.'d', 'membership_level'=>'Member'));
+            $this->simulateLogin('paymentfailed@example.com');
+            $plugin->current_timestamp = strtotime('5pm');
+            //Cycle through the 5 copy options for when a payment fails
+            TimeHelper::setDayOfYear($i);
+            $plugin->crawl();
+            $sent = Mailer::getLastMail();
+            $merge_vars = array();
+            $decoded = json_decode($sent);
+            foreach ($decoded->global_merge_vars as $mv) {
+                $merge_vars[$mv->name] = $mv->content;
+            }
+            $html_email = $merge_vars['insights'];
+            $this->debug($html_email);
+            $this->assertPattern('/Update your payment info/', $html_email);
+            unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+            $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+            $owner_builder = null;
+            $i++;
+        }
+
+        //No payment failure info for Paid status
+        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User',
+            'is_admin'=>1, 'email'=>'paid@example.com', 'is_activated'=>1,
+            'email_notification_frequency' => 'daily', 'timezone' => 'America/New_York',
+            'is_free_trial'=>0, 'joined'=>'-'.$i.'d', 'membership_level'=>'Member'));
+        $this->simulateLogin('paid@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $merge_vars = array();
+        $decoded = json_decode($sent);
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $html_email = $merge_vars['insights'];
+        $this->debug($html_email);
+        $this->assertNoPattern('/Update your payment info/', $html_email);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $owner_builder = null;
+
+        //No payment failure info for Free trial status
+        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User',
+            'is_admin'=>1, 'email'=>'freetrial@example.com', 'is_activated'=>1,
+            'email_notification_frequency' => 'daily', 'timezone' => 'America/New_York',
+            'is_free_trial'=>0, 'joined'=>'-'.$i.'d', 'membership_level'=>'Member'));
+        $this->simulateLogin('freetrial@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $merge_vars = array();
+        $decoded = json_decode($sent);
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $html_email = $merge_vars['insights'];
+        $this->debug($html_email);
+        $this->assertNoPattern('/Update your payment info/', $html_email);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $owner_builder = null;
+
+        //No payment failure info for unknown subscriber
+        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User',
+            'is_admin'=>1, 'email'=>'notinthedatabase@example.com', 'is_activated'=>1,
+            'email_notification_frequency' => 'daily', 'timezone' => 'America/New_York',
+            'is_free_trial'=>0, 'joined'=>'-'.$i.'d', 'membership_level'=>'Member'));
+        $this->simulateLogin('freetrial@example.com');
+        $plugin->current_timestamp = strtotime('5pm');
+        $plugin->crawl();
+        $sent = Mailer::getLastMail();
+        $merge_vars = array();
+        $decoded = json_decode($sent);
+        foreach ($decoded->global_merge_vars as $mv) {
+            $merge_vars[$mv->name] = $mv->content;
+        }
+        $html_email = $merge_vars['insights'];
+        $this->debug($html_email);
+        $this->assertNoPattern('/Update your payment info/', $html_email);
+        unlink(FileDataManager::getDataPath(Mailer::EMAIL));
+        $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
+        $owner_builder = null;
     }
 
     /**

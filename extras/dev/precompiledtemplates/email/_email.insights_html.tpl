@@ -877,8 +877,31 @@ body.outlook p {
         padding: 10px 10px 0;
       }
 
-
       .payment-reminder td h6, .payment-reminder td p, .payment-reminder td {
+        text-align: center !important;
+      }
+
+      .payment-failed {
+          background: #fff;
+          margin-bottom: 18px;
+      }
+
+      .payment-failed td h6 {
+          color: #2785d3 !important;
+          font-weight: bold;
+          font-size: 18px;
+      }
+
+      .payment-failed td p {
+        color: #666;
+      }
+
+      .payment-failed .insight-footer {
+        border-top: 0;
+        padding: 10px 10px 0;
+      }
+
+      .payment-failed td h6, .payment-failed td p, .payment-failed td {
         text-align: center !important;
       }
 
@@ -1008,23 +1031,7 @@ body.outlook p {
           <table class="container">
             <tr>
               <td>
-{if !(isset($show_welcome_message) and $show_welcome_message)}
-<table class="row">
-  <tr>
-    <td class="wrapper last">
-      <table class="twelve columns">
-        <tr>
-          <td class="center">
-              <h6 class="center">{$header_text}</h6>
-          </td>
-          <td class="expander"></td>
-        </tr>
-      </table>
 
-    </td>
-  </tr>
-</table>
-{/if}
 {if isset($show_welcome_message) and $show_welcome_message}
 <table class="row insight welcome-insight">
   <tr>
@@ -1085,6 +1092,36 @@ body.outlook p {
               <![endif]-->
                   <a href="{$pay_prompt_url}" class="reminder-button"
             style="background-color:#24b98f;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:160px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">Join ThinkUp</span><br><span class="second-line" style="font-size:12px;line-height:14px;color:#e9f8f4; font-weight: normal;">{$pay_prompt_button_label}</span><br>&nbsp;</a>
+              <!--[if mso]>
+                </center>
+              </v:roundrect>
+            <![endif]--></div>
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{/if}
+
+{if isset($payment_failed_explainer) and isset($payment_failed_headline) and isset($payment_failed_button_label)}
+<table class="row insight payment-failed" style="border-top: 1px solid #d0021b;border-bottom: 1px solid #d0021b;">
+  <tr>
+    <td class="wrapper last">
+      <table class="twelve columns insight-header">
+        <tr>
+          <td class="text-pad">
+            <h6>{$payment_failed_headline}</h6>
+            <p style="margin-bottom: 0;">{$payment_failed_explainer}</p>
+            <br>
+            <div style="text-align:center;"><!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{$pay_prompt_url}" style="height:60px;v-text-anchor:middle;width:275px;" arcsize="10%" stroke="f" fillcolor="#24b98f">
+                <w:anchorlock/>
+                <center>
+              <![endif]-->
+                  <a href="{$pay_prompt_url}" class="reminder-button"
+            style="background-color:#d0021b;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-weight:bold;width:275px;font-size:20px;line-height:10px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">&nbsp;<br><span style="line-height:26px;">{$payment_failed_button_label}</span><br>&nbsp;</a>
               <!--[if mso]>
                 </center>
               </v:roundrect>
