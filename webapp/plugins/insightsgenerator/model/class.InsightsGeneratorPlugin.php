@@ -269,9 +269,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
                 if (!isset($options['last_daily_email'])) {
+                    $logger->logUserInfo("No daily email ever sent before, include welcome message",
+                        __METHOD__.','.__LINE__);
                     $view->assign('show_welcome_message', true);
                 } else {
                     if ($owner->is_free_trial) {
+                        $logger->logUserInfo("Owner is in free trial", __METHOD__.','.__LINE__);
                         $creation_date = new DateTime($owner->joined);
                         $now = new DateTime();
                         $end_of_trial = $creation_date->add(new DateInterval('P15D'));
@@ -311,6 +314,60 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             } elseif ($owner->membership_level == 'Pro') {
                                 $view->assign('pay_prompt_button_label', 'Just $10/month');
                             }
+                        }
+                    } else {
+                        //Check subscription status and show a message if Payment failed
+                        //@TODO Handle Payment due state here as well
+                        $logger->logUserInfo("User is not in free trial; check subscription status",
+                            __METHOD__.','.__LINE__);
+
+                        $thinkupllc_api_accessor = new ThinkUpLLCAPIAccessor();
+                        $membership_details = $thinkupllc_api_accessor->getSubscriptionStatus($owner->email);
+                        $logger->logUserInfo("Subscription status is ".Utils::varDumpToString($membership_details),
+                            __METHOD__.','.__LINE__);
+
+                        if (isset($membership_details->subscription_status)
+                            && $membership_details->subscription_status == 'Payment failed') {
+
+                            $logger->logUserInfo("Owner has payment failure; include alert in email",
+                                __METHOD__.','.__LINE__);
+
+                            $payment_failed_copy = array ();
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Oops! Your account needs attention',
+                                'explainer' => "We had a problem processing your last membership payment. "
+                                    ."But it's easy to fix."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Uh oh, problem with your subscription...',
+                                'explainer' => "There was a problem processing your last membership payment. "
+                                    ."To fix it, update your payment info."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Your ThinkUp subscription is out of date...',
+                                'explainer' => "We tried to charge your Amazon account for your ThinkUp membership,"
+                                    ." and there was an error. But it's easy to fix."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>'Action required to keep your ThinkUp account active',
+                                'explainer' => "We weren't able to process your last membership payment—maybe your "
+                                    ."info is out of date? Fixing it just takes a moment."
+                            );
+                            $payment_failed_copy[] = array(
+                                'headline'=>"Urgent! Keep your ThinkUp account active",
+                                'explainer' => "We tried to process your ThinkUp subscription, but "
+                                    ."the payment was not successful. Please update your payment information "
+                                    ."now to make sure your ThinkUp membership stays in good standing."
+                            );
+
+                            $copy_index = TimeHelper::getDayOfYear() % count($payment_failed_copy);
+                            $payment_failed_headline = $payment_failed_copy[$copy_index]['headline'];
+                            $payment_failed_explainer = $payment_failed_copy[$copy_index]['explainer'];
+                            $payment_failed_button_label = "Update your payment info";
+
+                            $view->assign('payment_failed_headline', $payment_failed_headline);
+                            $view->assign('payment_failed_explainer', $payment_failed_explainer);
+                            $view->assign('payment_failed_button_label', $payment_failed_button_label);
                         }
                     }
                 }
