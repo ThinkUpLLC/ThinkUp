@@ -31,7 +31,7 @@ class ThinkUpLLCAPIAccessor {
     /**
      * Get the subscription status for a ThinkUp.com member via an API call.
      * @param  str $email
-     * @return arr
+     * @return Object
      */
     public function getSubscriptionStatus($email) {
         $cfg = Config::getInstance();

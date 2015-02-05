@@ -31,15 +31,33 @@ class ThinkUpLLCAPIAccessor {
     /**
      * Get the subscription status for a ThinkUp.com member via an API call.
      * @param  str $email
-     * @return arr
+     * @return Object
      */
     public function getSubscriptionStatus($email) {
         if ($email == 'paymentfailed@example.com') {
-            return array ('email'=>'paymentfailed@example.com', 'subscription_status'=>'Payment failed');
+            $resp = <<<EOD
+{
+    "email":"paymentfailed@example.com",
+    "subscription_status":"Payment failed"
+}
+EOD;
+            return JSONDecoder::decode($resp);
         } elseif ($email == 'paid@example.com') {
-            return array ('email'=>'paymentfailed@example.com', 'subscription_status'=>'Paid');
+            $resp = <<<EOD
+{
+    "email":"paid@example.com",
+    "subscription_status":"Paid"
+}
+EOD;
+            return JSONDecoder::decode($resp);
         } elseif ($email == 'freetrial@example.com') {
-            return array ('email'=>'paymentfailed@example.com', 'subscription_status'=>'Free trial');
+            $resp = <<<EOD
+{
+    "email":"freetrial@example.com",
+    "subscription_status":"Free trial"
+}
+EOD;
+            return JSONDecoder::decode($resp);
         } else {
             return null;
         }

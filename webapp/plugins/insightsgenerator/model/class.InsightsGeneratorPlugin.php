@@ -322,12 +322,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             __METHOD__.','.__LINE__);
 
                         $thinkupllc_api_accessor = new ThinkUpLLCAPIAccessor();
-                        $subscription_status = $thinkupllc_api_accessor->getSubscriptionStatus($owner->email);
+                        $membership_details = $thinkupllc_api_accessor->getSubscriptionStatus($owner->email);
                         $logger->logUserInfo("Subscription status is ".Utils::varDumpToString($subscription_status),
                             __METHOD__.','.__LINE__);
 
-                        if (isset($subscription_status['subscription_status'])
-                            && $subscription_status['subscription_status'] == 'Payment failed') {
+                        if (isset($membership_details->subscription_status)
+                            && $membership_details->subscription_status == 'Payment failed') {
 
                             $logger->logUserInfo("Owner has payment failure; include alert in email",
                                 __METHOD__.','.__LINE__);
