@@ -1,7 +1,7 @@
 <html lang="en" itemscope itemtype="http://schema.org/Article">
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <title><?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?></title>
+    <title><?php echo empty($_GET['headline']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?></title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
@@ -18,13 +18,13 @@
     <meta name="twitter:image:src" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>">
 
     <meta itemprop="name" content="Insight Tester">
-    <meta name="twitter:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta name="twitter:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?>">
     <title></title>
-    <meta property="og:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>" />
+    <meta property="og:title" content="<?php echo empty($_GET['headline']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?>" />
 
-    <meta itemprop="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
-    <meta name="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
-    <meta name="twitter:description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Tester' : $_GET['headline'] ?>">
+    <meta itemprop="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?>">
+    <meta name="description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?>">
+    <meta name="twitter:description" content="<?php echo empty($_GET['body']) ? 'ThinkUp Insight Creator' : $_GET['headline'] ?>">
 
     <meta itemprop="image" content="https://www.thinkup.com/joinassets/ico/apple-touch-icon-144-precomposed.png">
     <meta property="og:image" content="https://shares.thinkup.com/insight?<?php echo $_SERVER['QUERY_STRING'] ?>" />
@@ -65,50 +65,60 @@
         </div>
       </nav>
 <div class="container">
+<center><h4>Welcome to ThinkUp's Insight Creator</h4>
+<p>Fill out the fields below to propose a ThinkUp insight.</p></center>
     <div class="stream stream-permalink">
             <div class="date-group today">
         <div class="date-marker">
                         <div class="relative">N/A ago</div>
             <div class="absolute">Today</div>
                     </div>
-        
+
         <div>
             <form method="post" action="#" class="previewer">
-                <div><label class="blue">Headline:</label> <input type="text" id="headline" value="I am the headline!" /></div>
-                <div><label class="blue">Body:</label> 
-                  <textarea id="body">I am the body.  Lots more text goes in me, normally.</textarea>
+                <div><label class="blue">Network</label>
+                  <select class="insight-network">
+                    <option value="twitter">Twitter</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                  </select>
+                </div>
+
+                <div><label class="blue">Headline:</label> <input type="text" id="headline" value="@catlady99 rescued twice the kittens this week" /></div>
+                <div><label class="blue">Body:</label>
+                  <textarea id="body">@catlady99 shared <strong>68</strong> rescue kittens this week. That's compared to 32 felines last week. Way to save the kitties!</textarea>
                   <!-- <input type="text" id="body" value="I am the body.  Lots more text goes in me, normally."/> -->
                   <!-- <input type="text" id="body" value="I am the body.  Lots more text goes in me, normally."/> -->
                 </div>
                 <div><label class="blue">Hero image <input type="checkbox" id="show-hero" class="cb" /></label>
-                        <input type="text" id="hero" value="https://www.thinkup.com/assets/images/insights/2014-05/subway.jpg" />
+                        <input type="text" id="hero" value="https://farm4.staticflickr.com/3170/3110862090_0aab78c4d1_b.jpg" />
                 </div>
-                <div><label class="blue">Action button <input type="checkbox" id="show-button" class="cb" /></label> 
-                        <input type="text" id="button" value="Action!" />
+                <div><label class="blue">Action button <input type="checkbox" id="show-button" class="cb" /></label>
+                        <input type="text" id="button" value="Share a kitten" />
                 </div>
-                <div><label class="blue">Avatar <input type="checkbox" id="show-avatar" class="cb" /></label> 
-                        <input type="text" id="avatar" value="https://pbs.twimg.com/profile_images/1096005346/1_normal.jpg" />
+                <div><label class="blue">Header image <input type="checkbox" id="show-avatar" class="cb" checked="true" /></label>
+                        <input type="text" id="avatar" value="https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg" />
                 </div>
                 <div><label class="blue">High emphasis <input type="checkbox" id="show-emphasis" class="cb" /></label>
                 </div>
                 <div><label class="blue">Full width <input type="checkbox" id="show-wide" class="cb" /></label>
                 </div>
-                <div><label class="blue">Embed:</label>
-                  <input type="radio" name="embeds" id="embed-none" class="cb" checked />None
+                <div><label class="blue">Embed</label>
+                  <input type="radio" name="embeds" id="embed-none" class="cb" />None
                   <input type="radio" name="embeds" id="show-post" class="cb" /><label for="show-post" class="embedLabel">Post</label>
                   <input type="radio" name="embeds" id="show-posts" class="cb" /><label for="show-posts" class="embedLabel">Posts</label>
                   <input type="radio" name="embeds" id="show-user" class="cb" /><label for="show-user" class="embedLabel">User</label>
                   <input type="radio" name="embeds" id="show-users" class="cb" /><label for="show-users" class="embedLabel">Users</label>
                   <input type="radio" name="embeds" id="show-bar" class="cb" /><label for="show-bar" class="embedLabel">Bar chart</label>
-                  <input type="radio" name="embeds" id="show-line" class="cb" /><label for="show-line" class="embedLabel">Line chart</label>
+                  <input type="radio" name="embeds" id="show-line" class="cb" checked /><label for="show-line" class="embedLabel">Line chart</label>
                   <input type="radio" name="embeds" id="show-pie" class="cb" /><label for="show-pie" class="embedLabel">Pie chart</label>
                 </div>
-                <div><label class="blue">Color:</label> 
+                <div><label class="blue">Color</label>
                   <select class="insight-color">
                     <option value="salmon">Salmon</option>
                     <option value="creamsicle">Creamsicle</option>
                     <option value="pea">Pea</option>
-                    <option value="sepia">Sepia</option>
+                    <!--<option value="sepia">Sepia</option>-->
                     <option value="purple">Purple</option>
                     <option value="mint">Mint</option>
                     <option value="bubblegum">Bubblegum</option>
@@ -132,7 +142,7 @@
     <div class="panel-body">
       <figure class="insight-hero-image preview-hero">
         <img src="https://www.thinkup.com/assets/images/insights/2014-05/subway.jpg" alt="New York City subway car" class="img-responsive">
-        <figcaption class="insight-hero-credit">Photo: Julian Dunn</figcaption>
+        <figcaption class="insight-hero-credit">Photo: Robert Wiśniewski</a></figcaption>
       </figure>
             <div class="panel-body-inner">
             <p id="insight-text-"><span class="preview-body"></span></p>
@@ -144,7 +154,7 @@
 
              <div class="user">
                <a href="#">
-                 <img src="https://pbs.twimg.com/profile_images/378800000094875503/88ec3120528d2e75172814a05cc19243_400x400.png" alt="Gina Trapani" class="img-circle pull-left user-photo">
+                 <img src="https://pbs.twimg.com/profile_images/550825678673682432/YRqb4FJE.png" alt="Gina Trapani" class="img-circle pull-left user-photo">
                </a>
                <div class="user-about">
                  <div class="user-name"><a href="#">Gina Trapani <i class="fa fa-twitter icon icon-network"></i></a></div>
@@ -168,7 +178,7 @@
 
              <div class="user">
                <a href="#">
-                 <img src="https://pbs.twimg.com/profile_images/378800000094875503/88ec3120528d2e75172814a05cc19243_400x400.png" alt="Gina Trapani" class="img-circle pull-left user-photo">
+                 <img src="https://pbs.twimg.com/profile_images/550825678673682432/YRqb4FJE.png" alt="Gina Trapani" class="img-circle pull-left user-photo">
                </a>
                <div class="user-about">
                  <div class="user-name"><a href="#">Gina Trapani <i class="fa fa-twitter icon icon-network"></i></a></div>
@@ -184,7 +194,7 @@
 
              <div class="user">
                <a href="#">
-                 <img src="https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg" alt="Anil" class="img-circle pull-left user-photo">
+                 <img src="https://pbs.twimg.com/profile_images/529664614863101952/yBQgCUMW.png" alt="Anil" class="img-circle pull-left user-photo">
                </a>
                <div class="user-about">
                  <div class="user-name"><a href="#">Anil <i class="fa fa-twitter icon icon-network"></i></a></div>
@@ -234,7 +244,7 @@
             <ul class="body-list tweet-list body-list-show-all preview-post">
                 <li class="list-item">
                     <blockquote class="tweet">
-                       <a href="https://twitter.com/intent/user?user_id=7861312" title="feliciaday"><img src="https://pbs.twimg.com/profile_images/429050041500590080/8Sn16xxH_normal.jpeg" alt="feliciaday" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
+                       <a href="https://twitter.com/intent/user?user_id=7861312" title="feliciaday"><img src="https://pbs.twimg.com/profile_images/521350369268355073/LT5IlZFI.jpeg" alt="feliciaday" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
                        <div class="byline"><a href="https://twitter.com/intent/user?user_id=7861312" title="feliciaday"><strong>Felicia Day</strong> <span class="username">@feliciaday</span></a></div>
                        <div class="tweet-body">I just backed Word Realms on <a href="https://twitter.com/intent/user?screen_name=Kickstarter">@Kickstarter</a><span> <a href="http://t.co/YZvO0yW3">http://t.co/YZvO0yW3</a></span></div>
                        <div class="tweet-actions">
@@ -255,12 +265,12 @@
 <ul class="body-list preview-posts tweet-list body-list-show-some all-items-visible">
 
     <li class="list-item">
-      
+
 <blockquote class="tweet">
   <a href="https://twitter.com/intent/user?user_id=16347964" title="shl"><img src="https://pbs.twimg.com/profile_images/2374496291/y9a7z6e8xau88v4t6ovh_normal.png" alt="shl" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="https://twitter.com/intent/user?user_id=16347964" title="shl"><strong>Sahil Lavingia</strong> <span class="username">@shl</span></a></div>
   <div class="tweet-body"><span>Gumroad + Twitter = in-Tweet purchases, finally! <a href="https://t.co/b8njUwOhDJ">https://t.co/b8njUwOhDJ</a></span></div>
- 
+
     <div class="tweet-actions">
     <a href="https://twitter.com/shl/status/508969172722675712" class="tweet-action tweet-action-permalink">Sep  8, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=508969172722675712" class="tweet-action"><i class="fa fa-reply icon"></i></a>
@@ -269,14 +279,14 @@
     </div>
 </blockquote>
     </li>
-    
+
     <li class="list-item" style="display: list-item;">
-      
+
 <blockquote class="tweet">
   <a href="https://twitter.com/intent/user?user_id=6981492" title="ftrain"><img src="https://pbs.twimg.com/profile_images/3363818792/c90e33ccf22e3146d5cd871ce561795a_normal.png" alt="ftrain" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="https://twitter.com/intent/user?user_id=6981492" title="ftrain"><strong>Paul Ford</strong> <span class="username">@ftrain</span></a></div>
   <div class="tweet-body"><span><a href="http://t.co/gqMrHhqpu0">http://t.co/gqMrHhqpu0</a></span></div>
- 
+
     <div class="tweet-actions">
     <a href="https://twitter.com/ftrain/status/505416713580867585" class="tweet-action tweet-action-permalink">Aug 29, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=505416713580867585" class="tweet-action"><i class="fa fa-reply icon"></i></a>
@@ -285,14 +295,14 @@
     </div>
 </blockquote>
     </li>
-    
+
     <li class="list-item" style="display: list-item;">
-      
+
 <blockquote class="tweet">
   <a href="https://twitter.com/intent/user?user_id=666073" title="trammell"><img src="https://pbs.twimg.com/profile_images/479778647444692992/inahCiKL_normal.png" alt="trammell" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="https://twitter.com/intent/user?user_id=666073" title="trammell"><strong>Trammell</strong> <span class="username">@trammell</span></a></div>
   <div class="tweet-body"><a href="https://twitter.com/intent/user?screen_name=anildash">@anildash</a><span> <a href="http://t.co/WBeIYfNIXm">http://t.co/WBeIYfNIXm</a> #blessed</span></div>
- 
+
     <div class="tweet-actions">
     <a href="https://twitter.com/trammell/status/501926686527479808" class="tweet-action tweet-action-permalink">Aug 20, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=501926686527479808" class="tweet-action"><i class="fa fa-reply icon"></i></a>
@@ -310,17 +320,18 @@
     </div>
     <div class="panel-footer">
       <div class="insight-metadata">
-        <i class="fa fa--square icon icon-network"></i>
-        <a class="permalink" href="#">Jun 16</a>
+        <i class="fa fa-twitter-square icon icon-network"></i>
+        <a class="permalink" href="#"><?php date_default_timezone_set('America/New_York'); echo date('M d'); ?></a>
       </div>
-      <div class="share-menu">
-        <a class="twitter" href="https://twitter.com/intent/tweet?related=thinkup&amp;text=::headline::&amp;url=::url::&amp;via=thinkup">Tweet this</a>
+<!--      <div class="share-menu">
+        <a class="twitter" href="https://twitter.com/intent/tweet?related=thinkup&amp;text=::headline::&amp;url=::url::&amp;via=thinkup">Share this</a>
       </div>
+-->
     </div>
   </div>
 </div>
   <div class="share-or-edit">
-    <button class="generate-issue btn btn-default btn-action btn-bottom"><i class="fa fa-github"></i> Submit a feature request!</button>
+    <button class="generate-issue btn btn-default btn-action btn-bottom"><i class="fa fa-github"></i> File a ticket</button>
     <a class="twitter" href="https://twitter.com/intent/tweet?related=thinkup&amp;text=::headline::&amp;url=::url::&amp;via=thinkup">
       <button class="btn btn-bottom btn-action btn-primary"><i class="fa fa-twitter"></i> Tweet this</button>
     </a>
@@ -348,13 +359,13 @@ Describe what this insight is in a single sentence. This is the description that
 
 # Full explainer
 
-How does it make the user feel? What is the goal of this insight? 
+How does it make the user feel? What is the goal of this insight?
 
 # Audience for the insight
 
 Which networks, if any, are excluded from this insight?
 
-Does this insight serve users with less or more activity? 
+Does this insight serve users with less or more activity?
 
 First-run: does this insight show up on a user's first crawl?
 
@@ -385,7 +396,7 @@ For example:
 
 Include multiple variations whenever possible.
 
-For example: 
+For example:
 
 * That's more than the population of Belize.
 * That's more people than can fit in Yankee Stadium.
@@ -403,7 +414,7 @@ For example:
 
 # Criteria and logic
 
-Describe the rules for when this insight runs. 
+Describe the rules for when this insight runs.
 
 * What data does this insight need? Last week's posts? Last month's? Just the user's posts?
 * Does the insight count replies as well as non-replies?
@@ -601,6 +612,7 @@ Specify the following hero image attributes:
           }
 
           queryString.push('color', $('.insight-color').val());
+          queryString.push('network', $('.insight-network').val());
 
           var embed = $("input:radio[name=embeds]:checked").attr('id');
           queryString.push('embed', embed);
@@ -609,6 +621,7 @@ Specify the following hero image attributes:
         }
         var update_preview = function () {
           update_color($('.insight-color')[0]);
+          update_network($('.insight-network')[0]);
           for (var i=0; i < inputs.length; i++) {
             var input = inputs[i];
             var value = $('#'+input).val()
@@ -706,9 +719,25 @@ Specify the following hero image attributes:
           }
           $('.insight').addClass("insight-" + element.value);
         }
+        var update_network = function (element) {
+          var _ref = element.options;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            var option = _ref[_i];
+            $('.icon-network').removeClass("fa-" + option.value + "-square");
+            $('.icon-network').removeClass("fa-" + option.value);
+          }
+          if (element.value == 'instagram') {
+            $('.icon-network').addClass("fa-" + element.value);
+          } else {
+            $('.icon-network').addClass("fa-" + element.value + "-square");
+          }
+        }
         $('.previewer :input').change(update_preview).keyup(update_preview);
         $('.insight-color').change(function() {
           update_color(this);
+        });
+        $('.insight-network').change(function() {
+          update_network(this);
         });
         $('.previewer :input').blur(update_url);
         $('.editToggle').click(function() {
@@ -815,7 +844,7 @@ $('.generate-issue').on('click', function() {
   });
   text = encodeURIComponent(text);
   var title = encodeURIComponent("New Insight: [Name this insight]");
-  var url = 'https://github.com/ginatrapani/ThinkUp/issues/new?title=' + title + '&body='+ text;
+  var url = 'https://github.com/ThinkUpLLC/ThinkUp/issues/new?title=' + title + '&body='+ text;
   var win = window.open(url, '_blank');
   if(win){
     //Browser has allowed it to be opened
