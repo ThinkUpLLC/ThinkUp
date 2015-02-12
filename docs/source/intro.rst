@@ -43,8 +43,6 @@ on social networks with readers, subscribers, and followers.
 What ThinkUp Can Do
 -------------------
 
-.. sidebar:: ThinkUp's Features in Action
-
 At its heart, ThinkUp is a conversation analysis tool. ThinkUp helps you pose questions to your followers on social
 networks, and compile and share the responses, whether you're The White House asking U.S. citizens what our country's
 next Grand Challenge should be, or a writer asking what the best brand of ballpoint pen is.

@@ -1,5 +1,5 @@
 Can I add more than one Twitter, Facebook, or Instagram account to ThinkUp?
-=========================================================================
+===========================================================================
 
 Yes. You can add as many Twitter accounts and/or Facebook profiles and pages and/or Instagram accounts as you want to a
 single ThinkUp installation. For performance reasons, we recommend you don't add more than six accounts to one
