@@ -182,6 +182,4 @@ Luckily, help is here!
 
 -  :doc:`Troubleshooting ThinkUp: Common Problems and Solutions </troubleshoot/common/index>`  contains answers to the
    most common installation issues.
--  Live help is available around the clock from the ThinkUp community on :doc:`IRC </contact>`.
--  Non-live (but still pretty snappy!) help is available on the
-   `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_.
+-  Help is available on the `ThinkUp mailing list <http://groups.google.com/group/thinkup>`_.

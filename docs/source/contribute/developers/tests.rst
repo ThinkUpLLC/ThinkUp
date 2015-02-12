@@ -203,5 +203,4 @@ Possible reasons for getting a high number of test failures include:
    ``sudo /etc/init.d/apparmor reload``
 
 If you have double-checked these and everything appears to be intact,
-send an email to the mailing list or pop into the IRC channel and we'll
-see what we can do to help you out.
+send an email to the mailing list and we'll see what we can do to help you out.

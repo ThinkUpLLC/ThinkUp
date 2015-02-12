@@ -72,7 +72,7 @@ ThinkUp application:
 
 *   Improved indexes on tu_follows table to speed up queries
     Related mailing list thread:
-    http://groups.google.com/group/thinkupapp/browse_thread/thread/78bbafc3e0efb754/738e61a3ad9f6833?hl=en&lnk=gst&q=tu_follows#738e61a3ad9f6833%20%20
+    http://groups.google.com/group/thinkup/browse_thread/thread/78bbafc3e0efb754/738e61a3ad9f6833?hl=en&lnk=gst&q=tu_follows#738e61a3ad9f6833%20%20
 
 *   Fixed several broken/out-of-date links and bad markup throughout the app
 *   Fixed base URL calculation logic which generated undefined index errors

@@ -20,6 +20,6 @@ URL, add the following lines before the `curl_exec` call: ::
    $opts[CURLOPT_SSL_VERIFYPEER] = false;
 
 
-See also this `mailing list thread about SSL certs 
-<http://groups.google.com/group/thinkupapp/browse_thread/thread/b86557dbd6747ee7>`_.
+See also this `mailing list thread about SSL certs
+<http://groups.google.com/group/thinkup/browse_thread/thread/b86557dbd6747ee7>`_.
 

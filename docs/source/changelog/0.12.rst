@@ -19,7 +19,7 @@ Beta 0.12 - 17 May 2011
 
 *   Invalid JSON returned by the Post API
 *   SlickGrid export button no longer opens a new tab
-*   Doesn't show :doc:`follower count history milestones </userguide/listings/twitter/dashboard_followers-history>`
+*   Doesn't show follower count history milestones
     unless they're within 10 days, weeks, or months (i.e., no more "You will reach 1,000 followers in 954 weeks")
 *   Deprecated the Embed Thread plugin and made it core functionality, with the option to disable it in
     :doc:`Settings > Application </userguide/settings/application>`

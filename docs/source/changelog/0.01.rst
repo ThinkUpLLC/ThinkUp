@@ -7,7 +7,7 @@ version.
 
 The major difference between the last alpha and first beta is the UI
 interface overhaul discussed here:
-http://groups.google.com/group/thinkupapp/browse_thread/thread/9f12e013ee2c4751
+http://groups.google.com/group/thinkup/browse_thread/thread/9f12e013ee2c4751
 
 Otherwise, compared to the 0.008 alpha, beta 0.1 includes a very long
 laundry list of bugfixes and updates. You can see the complete

@@ -1,7 +1,7 @@
 Capture Social Data
 ===================
 
-Once you've set up service users like your Twitter, Facebook, or Google+ account, you want to start capturing data
+Once you've set up service users like your Twitter, Facebook, or Instagram account, you want to start capturing data
 from those networks. Here's how.
 
 Manually in Your Browser
@@ -18,7 +18,7 @@ using either RSS or cron.
 Automatically via RSS
 ---------------------
 
-Use your RSS newsreader to capture social media data on a regular basis. In 
+Use your RSS newsreader to capture social media data on a regular basis. In
 :doc:`Settings > Account </userguide/settings/account>`, you'll find a secret RSS URL button. Copy and paste the feed
 link into your favorite newsreader, and refresh the subscription in order to kick off a ThinkUp update.
 
@@ -30,6 +30,6 @@ Automatically via Cron
 ----------------------
 
 Alternately, advanced users can add a command to the server's `crontab <http://en.wikipedia.org/wiki/Cron>`_ which
-runs hourly (or whatever interval you prefer) to update ThinkUp data. Copy and paste the command from the 
+runs hourly (or whatever interval you prefer) to update ThinkUp data. Copy and paste the command from the
 "Automate ThinkUp Crawls" section of the :doc:`Settings > Account </userguide/settings/account>` page. Just be sure to
 change ``yourpassword`` to your real password!

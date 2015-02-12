@@ -8,7 +8,7 @@ branch, here's how.
 Quickfire Do's and Don't's
 --------------------------
 
-If you aren't familiar with git and GitHub, try reading the 
+If you aren't familiar with git and GitHub, try reading the
 `ThinkUp Beginner's Guide <https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-ThinkUp-for-Beginners-by-a-Beginner>`_
 and the `GitHub bootcamp documentation <http://help.github.com/#github_bootcamp>`_. If you're
 familiar with git and GitHub, here's the short version of what you need
@@ -61,12 +61,12 @@ Step-by-step (the short version)
 
 #. Fork on GitHub. (Click the Fork button.)
 #. Clone to your server (``$ git clone git@github.com:you/ThinkUp.git``)
-#. Set up remote upstream (``$ git remote add upstream git://github.com/ginatrapani/ThinkUp.git``)
+#. Set up remote upstream (``$ git remote add upstream git://github.com/ThinkUpLLC/ThinkUp.git``)
 #. Run any outstanding database migrations (``$ cd install/cli/; php upgrade.php --with-new-sql``)
-#. Branch for new issue (``$ git branch ###-description; git checkout ###-description``) and develop on issue branch. 
+#. Branch for new issue (``$ git branch ###-description; git checkout ###-description``) and develop on issue branch.
 #. As time passes, the upstream ThinkUp repository accumulates new commits. Keep your working copy's master branch
    and issue branch up to date by periodically rebasing: fetch upstream, rebase master, rebase issue branch.
-#. When development is complete, rebase one more time, then branch from dev branch to release candidate branch. Squash 
+#. When development is complete, rebase one more time, then branch from dev branch to release candidate branch. Squash
    all X commits that pertain to the issue into one clean, descriptive commit (``$ git rebase -i HEAD-X``)
 #. Push release candidate branch to GitHub (``$ git push origin ###-description-rc``)
 #. Issue pull request on GitHub. (Click the Pull Request button.)
@@ -117,7 +117,7 @@ the newly created thinkup directory on your server.
 Install a running instance of ThinkUp on your development server using
 any of a number of installation guides.
 
-Running nightly code from ThinkUp's  git repository will require you to :doc:`catch up on necessary database 
+Running nightly code from ThinkUp's  git repository will require you to :doc:`catch up on necessary database
 migrations </install/fromsource>`.
 
 Create an Issue-Specific Development Branch
@@ -171,7 +171,7 @@ entering:
 
 ::
 
-    $ git remote add upstream git://github.com/ginatrapani/ThinkUp.git
+    $ git remote add upstream git://github.com/ThinkUpLLC/ThinkUp.git
 
 Verify you've now got "origin" and "upstream" remotes by entering:
 

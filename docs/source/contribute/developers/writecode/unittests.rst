@@ -21,7 +21,7 @@ This list is a work in progress.
    on the DAO's get method to verify the update. Instead, use raw SQL to
    retrieve the inserted/updated row and assert it works. `Related
    mailing list
-   thread. <http://groups.google.com/group/thinkupapp/browse_thread/thread/cc9ca0fb19378245>`_
+   thread. <http://groups.google.com/group/thinkup/browse_thread/thread/cc9ca0fb19378245>`_
 
 -  **Crawler plugin tests:** When testing data returned by a web service
    API, do not query the live API in your tests. Instead, mock a class

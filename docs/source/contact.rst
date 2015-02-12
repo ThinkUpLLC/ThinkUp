@@ -7,22 +7,8 @@ The ThinkUp community is available to brainstorm, ask and answer questions, and 
 Mailing Lists
 -------------
 
-The community's main hub of communication is our email list. Join in on user discussions on the 
-`ThinkUp General Mailing List <http://groups.google.com/group/thinkupapp>`_.
-
-Developers, ask technical questions and help out other developers on the `ThinkUp Developer Mailing List <http://groups.google.com/a/expertlabs.org/group/thinkup-dev>`_.
-
-IRC Channel
------------
-
-Chat live with ThinkUp community members in our IRC channel. Here are the connection details: 
-
-* IRC Server: irc.freenode.net
-* Channel/Room: #thinkup
-* Port: 6667 (Default)
-
-For technical discussions, ThinkUp developers congregate in the #thinkup-dev channel. See also our 
-`community guide to IRC <https://github.com/ginatrapani/ThinkUp/wiki/IRC>`_.
+The community's main hub of communication is our email list. Join in on user discussions on the
+`ThinkUp General Mailing List <http://groups.google.com/group/thinkup>`_.
 
 Blog, Facebook, and Twitter
 ---------------------------

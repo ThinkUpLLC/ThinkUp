@@ -112,4 +112,4 @@ this line of code: $this->addToView (‘log', ‘full');. This is how
 controllers pass key=value pairs to Smarty templates.
 
 That just about covers the basics. If you have any further questions
-don't hesitate to ping the :doc:`mailing list </contact>` or ask in the :doc:`IRC channel </contact>`.
+don't hesitate to ping the :doc:`mailing list </contact>`.

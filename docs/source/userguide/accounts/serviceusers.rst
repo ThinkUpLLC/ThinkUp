@@ -13,16 +13,14 @@ How to Add a Service User
 -------------------------
 
 Add service users to your ThinkUp account through a series of approved plugins included with your installation. To get
-started, in :doc:`Settings > Plugins </userguide/settings/plugins/index>`, click on the Facebook, Google+, or Twitter plugin
+started, in :doc:`Settings > Plugins </userguide/settings/plugins/index>`, click on the Facebook, Instagram, or Twitter plugin
 to add a new service user for each respective network.
 
 See the links below for further instructions on how to add new service users for each ThinkUp plugin.
 
 * :doc:`Facebook</userguide/settings/plugins/facebook>`
-* :doc:`Google+</userguide/settings/plugins/googleplus>`
-* :doc:`Twitter</userguide/settings/plugins/twitter>`
-* :doc:`Foursquare</userguide/settings/plugins/foursquare>`
-* :doc:`YouTube</userguide/settings/plugins/youtube>`
+* :doc:`Twitter</userguide/settings/plugins/twitter/index>`
+* :doc:`Instagram</userguide/settings/plugins/instagram>`
 
 Switch Service User
 -------------------

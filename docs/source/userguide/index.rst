@@ -10,7 +10,6 @@ ThinkUp features offered by both the core application and the default plugins wh
    accounts/index
    accounts/serviceusers
    datacapture
-   listings/index
    settings/plugins/index
    settings/index
    api/index

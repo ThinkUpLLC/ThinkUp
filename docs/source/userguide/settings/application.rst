@@ -1,13 +1,13 @@
 Application (Administrators only)
 =================================
 
-Administrators can change application-level settings in ThinkUp. 
+Administrators can change application-level settings in ThinkUp.
 
 Default service user
 --------------------
 
 Choose the public service user which will appear by default when a non-logged in user visits the ThinkUp dashboard.
-By default, this is set to the last updated service user, that is, the service user which was last crawled 
+By default, this is set to the last updated service user, that is, the service user which was last crawled
 successfully.
 
 If you set this to a public service user which becomes private, this setting will fall back to its default, the last
@@ -30,34 +30,34 @@ Once you change this setting, go back to the Dashboard and click on "Capture Dat
 Enable reCAPTCHA
 ----------------
 
-Configure `reCAPTCHA <http://www.google.com/recaptcha>`_ in the ThinkUp user registration form. 
+Configure `reCAPTCHA <http://www.google.com/recaptcha>`_ in the ThinkUp user registration form.
 
-By default, ThinkUp generates a CAPTCHA image using the `GD <http://php.net/manual/en/book.image.php>`_ library. 
-However, reCAPTCHA helps digitize books, and works without GD. To enable reCAPTCHA, get reCAPTCHA API keys, then 
-check the Enable ReCAPTCHA box and enter the keys. 
+By default, ThinkUp generates a CAPTCHA image using the `GD <http://php.net/manual/en/book.image.php>`_ library.
+However, reCAPTCHA helps digitize books, and works without GD. To enable reCAPTCHA, get reCAPTCHA API keys, then
+check the Enable ReCAPTCHA box and enter the keys.
 
-If you do not have the `GD <http://php.net/manual/en/book.image.php>`_ library installed on your server, 
+If you do not have the `GD <http://php.net/manual/en/book.image.php>`_ library installed on your server,
 reCAPTCHA is a good alternative CAPTCHA solution.
 
 Enable beta upgrades
 --------------------
 
-Get notified when there is a new ThinkUp beta version available, and have the option to upgrade to it using the 
+Get notified when there is a new ThinkUp beta version available, and have the option to upgrade to it using the
 web-based upgrader. **Proceed at your own risk!** ThinkUp betas are unstable versions for testers only. Some may
 include database migrations that you must run manually (using ``$ cd install/cli/; php upgrade.php --with-new-sql``).
 
 Disable the JSON API
 --------------------
 
-Check this box if you don't want to allow users or third-party applications access to public data via the 
-:doc:`ThinkUp API </userguide/api/index>`. When this box is checked, every API request will get 
+Check this box if you don't want to allow users or third-party applications access to public data via the
+:doc:`ThinkUp API </userguide/api/index>`. When this box is checked, every API request will get
 an :doc:`APIDisabledException </userguide/api/errors/apidisabled>`.
 
 Disable thread embeds
 ---------------------
 
-Check this box if you don't want to allow users to 
-:doc:`embed ThinkUp threads on third-party web sites </userguide/listings/all/post_listings>` using a JavaScript
+Check this box if you don't want to allow users to
+embed ThinkUp threads on third-party web sites using a JavaScript
 embed code. When this box is checked, the code will not be available for use.
 
 Disable usage reporting

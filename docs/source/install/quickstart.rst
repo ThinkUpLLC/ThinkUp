@@ -3,7 +3,7 @@ Quick Start
 
 To run ThinkUp, you'll need a web server running PHP and MySQL. Most ThinkUp users purchase or already have server
 access from a web hosting provider. We built ThinkUp so that it can run on the most common and widely-available
-LAMP-based hosting plans. 
+LAMP-based hosting plans.
 
 Once you have access to a public web server to install ThinkUp, you install it in three easy steps.
 
@@ -23,4 +23,4 @@ Some web hosting providers or plans have known incompatibilities with ThinkUp. S
 *   GoDaddy's shared hosting plan triggers :doc:`database server timeout errors </troubleshoot/common/mysqlgoneaway>`.
 
 Have notes about your ThinkUp hosting provider that should appear on this page? Please post them to the
-`ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_.
+`ThinkUp mailing list <http://groups.google.com/group/thinkup>`_.

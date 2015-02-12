@@ -18,7 +18,7 @@ Beta 0.10 - 20 April 2011
 *   Application documentation: Launched official application documentation which developers will submit along with
     each patch to the project. Eventually these docs will be hosted on thinkupapp.com, but the initial version is
     available at http://readthedocs.org/docs/thinkup/en/latest/. Background information:
-    http://groups.google.com/group/thinkupapp/browse_thread/thread/aee02b16d968c8ed/656b0849117acd0b
+    http://groups.google.com/group/thinkup/browse_thread/thread/aee02b16d968c8ed/656b0849117acd0b
 *   (Developers) Error-level only logging: New config file value, ``$THINKUP_CFG['log_verbosity']``, lets you set the
     log to only log errors.
 

@@ -5,8 +5,8 @@ Introduction
 
     We're an open source community of developers, writers, designers, bloggers, journalists, data nerds,
     and social media enthusiasts whose goal is to make meaningful software with world-class documentation.
-    
-    You're reading the very beginning of that effort. This documentation is an incomplete, work-in-progress. Please 
+
+    You're reading the very beginning of that effort. This documentation is an incomplete, work-in-progress. Please
     join us and help :doc:`fill in the gaps </contribute/documentation>`.
 
 `ThinkUp <http://thinkup.com>`_ is a free, open source web application that captures your posts, tweets, replies,
@@ -18,7 +18,7 @@ from your network. All you need is a web server that can run a PHP application.
 `Expert Labs <http://expertlabs.org>`_ incubated ThinkUp. Today, ThinkUp LLC, a company founded by Anil Dash and
 Gina Trapani, leads development on the project.
 
-ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and 
+ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and
 is available on `GitHub <http://github.com/ginatrapani/ThinkUp>`_.
 
 Find out more at http://thinkup.com.
@@ -26,7 +26,7 @@ Find out more at http://thinkup.com.
 Who ThinkUp Is For
 ------------------
 
-ThinkUp is for organizations and personalities who are active on social media networks, have more than 1,000 friends 
+ThinkUp is for organizations and personalities who are active on social media networks, have more than 1,000 friends
 or followers, and need deeper analysis tools to derive meaning from those interactions.
 
 ThinkUp is for:
@@ -44,10 +44,6 @@ What ThinkUp Can Do
 -------------------
 
 .. sidebar:: ThinkUp's Features in Action
-
-    .. raw:: html
-
-        <iframe title="YouTube video player" style="width: 100%; height:250px; border: 0;" src="http://www.youtube.com/embed/PnVe9NYolDU?rel=0"></iframe> 
 
 At its heart, ThinkUp is a conversation analysis tool. ThinkUp helps you pose questions to your followers on social
 networks, and compile and share the responses, whether you're The White House asking U.S. citizens what our country's

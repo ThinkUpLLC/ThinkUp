@@ -12,6 +12,7 @@ ready to write your tests and docs first.
 
    setup
    devfromsource
+   styleguide
    tests
    writecode/index
    plugins/index

@@ -4,7 +4,7 @@ Beta 0.14 - 09 Aug 2011
 **New Features:**
 
 *   Added missing pagination from user and post listings
-*   Added ability to :doc:`reset your RSS feed URL's API key without having to change your ThinkUp password 
+*   Added ability to :doc:`reset your RSS feed URL's API key without having to change your ThinkUp password
     </userguide/settings/account>`
 *   Added realtime plugin support throughout core app (though not packaging Twitter Realtime with user distribution yet)
 *   Added ability to deal with Twitter username changes gracefully
@@ -26,8 +26,8 @@ Beta 0.14 - 09 Aug 2011
 *   Improved usability in installation timezone dropdown by adding client TZ auto-detection
 *   Improved Instagr.am image embedding
 *   Improved :doc:`ExpandURLs process </userguide/settings/plugins/expandurls>` to avoid endless loop-checking malformed
-    links 
-*   Improved GeoEncoder plugin settings area usability and :doc:`documentation </userguide/settings/plugins/geoencoder>`
+    links
+*   Improved GeoEncoder plugin settings area usability and documentation
 *   Cleaned up and standardized post presentation across views
 *   Optimized/sped up crawler SQL query for saving instance data
 *   Converted all :doc:`post publish_dates to UTC </contribute/developers/timezones>`

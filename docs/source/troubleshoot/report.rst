@@ -8,7 +8,7 @@ to get help or feedback most efficiently.
 Step 1: Search
 --------------
 
-To avoid duplicate work, search `ThinkUp's documentation <http://thinkup.com/docs/>`_, 
+To avoid duplicate work, search `ThinkUp's documentation <http://thinkup.com/docs/>`_,
 `mailing list archive <https://groups.google.com/forum/?pli=1#!forum/thinkupapp>`_ and
 `issue tracker <https://github.com/ginatrapani/ThinkUp/issues>`_ to make sure your
 problem or idea hasn't already been documented, discussed or reported. If it has, follow up on the existing mailing
@@ -32,7 +32,7 @@ and not a known bug, a rejected feature idea or an environmental problem versus 
 Step 3: Contact the Community
 -----------------------------
 
-Send an email to the `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_ describing your problem or
+Send an email to the `ThinkUp mailing list <http://groups.google.com/group/thinkup>`_ describing your problem or
 feature idea. Be specific.
 
 Write a Great Bug Report
@@ -59,10 +59,10 @@ Propose a New Feature
 
 If you've got an idea for a new ThinkUp feature, we invite you to  :doc:`pull the source code and start
 building </contribute/developers/index>`! If you're not a coder, the better you pitch your feature idea to the
-community, the more likely an interested developer will work on it. 
+community, the more likely an interested developer will work on it.
 
-To pitch your feature idea, describe exactly how you think the new functionality should work, and include wireframes and 
-screenshots. Sell your idea to the community by clearly explaining its benefits and use cases, and how you plan to 
+To pitch your feature idea, describe exactly how you think the new functionality should work, and include wireframes and
+screenshots. Sell your idea to the community by clearly explaining its benefits and use cases, and how you plan to
 help make the feature. We only build features which align with :doc:`ThinkUp's purpose </intro>`.
 
 Thanks for helping us make ThinkUp a great application, and for respecting the community's time and public spaces.

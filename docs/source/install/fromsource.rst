@@ -11,7 +11,7 @@ using this command:
 
 ::
 
-    $ git clone git@github.com:ginatrapani/ThinkUp.git
+    $ git clone git@github.com:ThinkUpLLC/ThinkUp.git
 
 2. Visit ThinkUp's location in your web browser, and walk through the application installation process.
 
@@ -26,10 +26,10 @@ Notes
 
 When you run ThinkUp from source, keep in mind you will have:
 
-* A slightly different folder structure than the user distribution. The application code for ThinkUp lives in 
+* A slightly different folder structure than the user distribution. The application code for ThinkUp lives in
   the webapp folder in the GitHub repository. In the user distribution, the application code is the root folder.
 * Many more files than you'll need to run ThinkUp which are not included in the user distribution, including tests,
   test data, developer tools, and more.
 * The need to run any database migrations which have occurred since the last user distribution. Instructions on how
-  to do that are detailed above. 
+  to do that are detailed above.
 

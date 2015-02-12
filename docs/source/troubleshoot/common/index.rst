@@ -22,7 +22,6 @@ ThinkUp is a work in progress. Certain known problems can occur on different ser
    backupcannotwrite
    slowbigdb
    couldnotwritesession
-   notgeoencodedyet
 
 Advanced Troubleshooting
 ------------------------
@@ -34,4 +33,4 @@ Advanced Troubleshooting
    advanced/slowsqllog
    advanced/pageprofiler
    advanced/directdb
- 
+

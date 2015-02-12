@@ -8,11 +8,6 @@ The official ThinkUp distribution comes with a set of approved plugins. Click on
 
    expandurls
    facebook
-   foursquare
-   geoencoder
-   googleplus
    insightsgenerator
    instagram
    twitter/index
-   twitterrealtime
-   youtube
