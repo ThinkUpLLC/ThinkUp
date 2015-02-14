@@ -28,7 +28,7 @@ We're always on the lookout for new insight ideas! The more specific and detaile
 Other Feature requests
 ----------------------
 
-If your issue is a feature request, rather than file an issue, propose it on [the community mailing list](http://groups.google.com/group/thinkupapp) first. ThinkUp has been an active project for over five years now, so most feature requests have been discussed at one time or another.
+If your issue is a feature request, rather than file an issue, propose it on [the community mailing list](http://groups.google.com/group/thinkup) first. ThinkUp has been an active project for over five years now, so most feature requests have been discussed at one time or another.
 
 
 Pull Requests
