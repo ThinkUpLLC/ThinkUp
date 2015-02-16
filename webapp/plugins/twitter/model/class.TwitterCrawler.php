@@ -854,11 +854,14 @@ class TwitterCrawler {
             $this->instance->total_friends_in_system = $follow_dao->countTotalFriends($this->instance->network_user_id,
             'twitter');
 
+            $this->logger->logUserInfo($this->instance->total_friends_in_system." friends in system, ".
+                $this->user->friend_count." friends according to Twitter", __METHOD__.','.__LINE__);
+
             if ($this->instance->total_friends_in_system < $this->user->friend_count) {
                 $this->instance->is_archive_loaded_friends = false;
-                $this->logger->logUserInfo($this->instance->total_friends_in_system." friends in system, ".
-                $this->user->friend_count." friends according to Twitter; Friend archive is not loaded",
-                __METHOD__.','.__LINE__);
+            } elseif ($this->instance->total_friends_in_system > $this->user->friend_count) {
+                $this->instance->is_archive_loaded_friends = true;
+                $this->cleanUpFollows($friends_only = true);
             } else {
                 $this->instance->is_archive_loaded_friends = true;
                 $this->logger->logInfo("Friend archive loaded", __METHOD__.','.__LINE__);
@@ -1102,12 +1105,19 @@ class TwitterCrawler {
     }
     /**
      * For each API call left, grab oldest follow relationship, check if it exists, and update table.
+     * @param bool $friends_only If true, only check for stale friends, not just follows in general
      */
-    public function cleanUpFollows() {
+    public function cleanUpFollows($friends_only = false) {
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
-        while ( $continue_fetching) {
-            $old_follow = $follow_dao->getOldestFollow('twitter');
+        while ($continue_fetching) {
+            if ($friends_only) {
+                $old_follow = $follow_dao->getOldestFriend($this->instance->network_user_id, 'twitter');
+                $this->logger->logInfo("Checking stale friends", __METHOD__.','.__LINE__);
+            } else {
+                $old_follow = $follow_dao->getOldestFollow('twitter');
+                $this->logger->logInfo("Checking stale followers", __METHOD__.','.__LINE__);
+            }
             if ($old_follow != null) {
                 $endpoint = $this->api->endpoints['show_friendship'];
                 $args = array();

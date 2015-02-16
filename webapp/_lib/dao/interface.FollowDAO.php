@@ -149,6 +149,13 @@ interface FollowDAO {
      */
     public function getOldestFollow($network);
     /**
+     * Gets the person in storage the user follows, where the follow was seen the longest time ago.
+     * @param str $user_id
+     * @param str $network
+     * @return array Named keys
+     */
+    public function getOldestFriend($user_id, $network);
+    /**
      * Gets the followers with most followers.
      * @param int $user_id
      * @param str $network
