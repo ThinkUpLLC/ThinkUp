@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Instagram
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/instagram/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/instagram/
  Description: Capture and display Instagram posts.
  Class: InstagramPlugin
  Icon: instagram

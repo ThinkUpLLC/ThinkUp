@@ -195,7 +195,7 @@ cat<< END >>'webapp/plugins/'$plugin_name_lcase'/controller/'$plugin_name_lcase'
 <?php
 /*
  Plugin Name: $1
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/$plugin_name_lcase/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/$plugin_name_lcase/
  Description:
  Class: $1Plugin
  Icon: assets/img/plugin_icon.png

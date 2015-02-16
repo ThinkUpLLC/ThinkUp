@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Twitter
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/twitter/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/twitter/
  Description: Capture and display tweets.
  Icon: twitter
  Class: TwitterPlugin

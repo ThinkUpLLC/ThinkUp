@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Expand URLs
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/expandurls/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/expandurls/
  Description: Expand shortened links.
  Icon: link
  Version: 0.01
