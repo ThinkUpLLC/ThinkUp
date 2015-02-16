@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Hello ThinkUp
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/hellothinkup/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/hellothinkup/
  Description: Developer example plugin.
  Class: HelloThinkUpPlugin
  Version: 0.01

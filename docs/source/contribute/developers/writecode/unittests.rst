@@ -27,6 +27,6 @@ This list is a work in progress.
    API, do not query the live API in your tests. Instead, mock a class
    that returns all possible values that you expect from the API, and
    write tests against those values. For example, the `mock TwitterOAuth
-   class <http://github.com/ginatrapani/ThinkUp/blob/master/webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php>`_
+   class <https://github.com/ThinkUpLLC/ThinkUp/blob/master/webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php>`_
    reads test Twitter data from files stored in the testdata directory,
    instead of hitting Twitter.com live.

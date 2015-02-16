@@ -47,7 +47,7 @@ Set up Eclipse PDT to work with ThinkUp
   issues in Eclipse, install `this
   plugin <https://github.com/dgreen99/org.eclipse.mylyn.github/wiki>`_.
 
-  - Server: `http://github.com/ginatrapani/ThinkUp <http://github.com/ginatrapani/ThinkUp>`_
+  - Server: `https://github.com/ThinkUpLLC/ThinkUp <https://github.com/ThinkUpLLC/ThinkUp>`_
   - Find your GitHub API Key in `Applications <https://github.com/settings/applications>`_ under **Account settings**.
 
 Useful Keyboard Shortcuts

@@ -33,7 +33,7 @@ sql/build-db\_mysql-upcoming-release.sql file using the automated migratedb shel
 To do so, run the extras/scripts/migratedb script at the command line.
 First you'll need to create and edit your configuration file. Check out
 the
-`README <http://github.com/ginatrapani/ThinkUp/tree/master/extras/scripts/>`_
+`README <https://github.com/ThinkUpLLC/ThinkUp/tree/master/extras/scripts/>`_
 for instructions on how to do that.
 
 Run ThinkUp's tests to make sure the database creation script works.

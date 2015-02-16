@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Facebook
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/facebook/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/facebook/
  Description: Capture and display Facebook posts.
  Class: FacebookPlugin
  Icon: facebook

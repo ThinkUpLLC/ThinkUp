@@ -20,7 +20,7 @@ request, make sure that:
 #. **All existing unit tests pass.** Gina won't merge any code into the
    master development trunk that makes existing tests in
    ``/thinkup/tests/`` fail. Check out the `tests
-   README <http://github.com/ginatrapani/thinkup/blob/master/tests/README.md>`_
+   README <https://github.com/ThinkUpLLC/ThinkUp/blob/master/tests/README.md>`_
    for more on how to set up, run, and write tests.
 #. **You've added regression tests for your new code.** If you've fixed
    a bug, you should have added a test which fails in the current

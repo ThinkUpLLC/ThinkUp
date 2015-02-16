@@ -19,7 +19,7 @@ from your network. All you need is a web server that can run a PHP application.
 Gina Trapani, leads development on the project.
 
 ThinkUp's source code is licensed under the `GNU General Public License <http://www.gnu.org/licenses/gpl.html>`_ and
-is available on `GitHub <http://github.com/ginatrapani/ThinkUp>`_.
+is available on `GitHub <https://github.com/ThinkUpLLC/ThinkUp>`_.
 
 Find out more at http://thinkup.com.
 

@@ -9,14 +9,14 @@ Quickfire Do's and Don't's
 --------------------------
 
 If you aren't familiar with git and GitHub, try reading the
-`ThinkUp Beginner's Guide <https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-ThinkUp-for-Beginners-by-a-Beginner>`_
+`ThinkUp Beginner's Guide <https://github.com/ThinkUpLLC/ThinkUp/wiki/Developer-Guide%3A-ThinkUp-for-Beginners-by-a-Beginner>`_
 and the `GitHub bootcamp documentation <http://help.github.com/#github_bootcamp>`_. If you're
 familiar with git and GitHub, here's the short version of what you need
 to know. Once you fork and download the ThinkUp code:
 
 -  **Don't develop on the master branch.** Always create a development
    branch specific to `the
-   issue <http://github.com/ginatrapani/thinkup/issues>`_ you're working
+   issue <https://github.com/ThinkUpLLC/ThinkUp/issues>`_ you're working
    on. Name it by issue # and description. For example, if you're
    working on Issue #100, a retweet bugfix, your development branch
    should be called 100-retweet-bugfix. If you decide to work on another
@@ -85,7 +85,7 @@ GitHub account and your hosting server.
 #. Create a free account on GitHub.
 
 #. Fork the project from
-   `ginatrapani/thinkup <http://github.com/ginatrapani/thinkup>`_
+   `ginatrapani/thinkup <https://github.com/ThinkUpLLC/ThinkUp>`_
 
 #. Make sure you've got an SSH public key created on your server and
    recorded in your GitHub account. You can see your SSH Public Keys on

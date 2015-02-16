@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Insights Generator
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/insightsgenerator/
+ Plugin URI: https://github.com/ThinkUpLLC/ThinkUp/tree/master/webapp/plugins/insightsgenerator/
  Description: Pluggable plugin populates the insights stream.
  Class: InsightsGeneratorPlugin
  Icon: list
