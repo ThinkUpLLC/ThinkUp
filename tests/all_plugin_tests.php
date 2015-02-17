@@ -68,7 +68,7 @@ $plugin_tests->add(new TestOfListMembershipInsight());
 $plugin_tests->add(new TestOfSavedSearchResultsInsight());
 $plugin_tests->add(new TestOfStyleStatsInsight());
 $plugin_tests->add(new TestOfMetweetInsight());
-$plugin_tests->add(new TestOfInteractionsInsight());
+//$plugin_tests->add(new TestOfInteractionsInsight());
 $plugin_tests->add(new TestOfWeeklyBestsInsight());
 $plugin_tests->add(new TestOfResponseTimeInsight());
 $plugin_tests->add(new TestOfFavoritedLinksInsight());
