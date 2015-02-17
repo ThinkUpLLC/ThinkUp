@@ -34,7 +34,7 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
     /**
      * Slug for this insight
      */
-    var $slug = '';
+    var $slug = 'diversify_links_monthly';
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
@@ -46,9 +46,8 @@ class DiversifyLinksInsight extends InsightPluginParent implements InsightPlugin
         if ($should_generate_insight_monthly) {
             $link_dao = DAOFactory::getDAO('LinkDAO');
             $links =$link_dao->getLinksByUserSinceDaysAgo($instance->network_user_id, $instance->network, 0, date('t'));
-            $slug = "diversify_links_monthly";
             $time_frame = "month";
-            $this->runInsight($links, $slug, $time_frame, $instance, $link_dao);
+            $this->runInsight($links, $this->slug, $time_frame, $instance, $link_dao);
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
