@@ -107,6 +107,7 @@ $plugin_tests->add(new TestOfFollowerComparisonInsight());
 $plugin_tests->add(new TestOfDiversifyLinksInsight());
 $plugin_tests->add(new TestOfAgeAnalysisInsight());
 $plugin_tests->add(new TestOfTopWordsInsight());
+$plugin_tests->add(new TestOfBestieInsight());
 // Don't run the developer insight test every time
 // $plugin_tests->add(new TestOfHelloThinkUpInsight());
 
