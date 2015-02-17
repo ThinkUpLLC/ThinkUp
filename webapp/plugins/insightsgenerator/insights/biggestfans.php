@@ -2,7 +2,7 @@
 /*
  Plugin Name: Biggest Fans
  Description: Who has liked your posts the most over the last 7 and 30 days.
- When: Sundays for Twitter, Wednesdays otherwise, and 1st of the month for Twitter, 2nd otherwise
+ When: Wednesdays and the 2nd of the month, Facebook only
  */
 
 /**
