@@ -50,8 +50,52 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         "we're","weren't","what'd","what's","when'd","when'll","when's","where'd","where'll","where's","who'd",
         "who'll","who's","why'd","why'll","why's","won't","would've","wouldn't","you'd","you'll","you're","you've",
 
+        // French
+        "alors","au","aucuns","aussi","autre","avant","avec","avoir","bon","car","ce","cela","ces","ceux","chaque",
+        "ci","comme","comment","dans","dedans","dehors","depuis","des","devrait","doit","donc","dos","du","début",
+        "elle","elles","en","encore","essai","est","et","eu","fait","faites","fois","font","hors","ici","il","ils",
+        "je", "juste","la","le","les","leur","là","ma","maintenant","mais","mes","mine","moins","mon","mot","même",
+        "ni","nommés","notre","nous","ou","où","par","parce","pas","peu","peut","plupart","pour","pourquoi","quand",
+        "que","quel","quelle","quelles","quels","qui","sa","sans","ses","seulement","si","sien","son","sont","sous",
+        "soyez","sujet","sur","ta","tandis","tellement","tels","tes","ton","tous","tout","trop","très","tu","voient",
+        "vont","votre","vous","vu","ça","étaient","état","étions","été","être",
+
+        // Dutch
+        "aan","af","al","als","bij","dan","dat","die","dit","een","en","er","had","heb","hem","het","hij","hoe","hun",
+        "ik","in","is","je","kan","men","met","mij","nog","nu","of","ons","ook","te","tot","uit","van","was","wat",
+        "wel","wij","zal","ze","zei","zij","zo","zou",
+
+        // Spanish
+        "alguna","algunas","alguno","algunos","algún","ambos","ampleamos","ante","antes","aquel","aquellas",
+        "aquellos","aqui","arriba","atras","bajo","bastante","bien","cada","cierta","ciertas","cierto","ciertos",
+        "como","con","conseguimos","conseguir","consigo","consigue","consiguen","consigues","cual","cuando","dentro",
+        "desde","donde","dos","el","ellas","ellos","empleais","emplean","emplear","empleas","empleo","en","encima",
+        "entonces","entre","era","eramos","eran","eras","eres","es","esta","estaba","estado","estais","estamos",
+        "estan","estoy","fin","fue","fueron","fui","fuimos","gueno","ha","hace","haceis","hacemos","hacen","hacer",
+        "haces","hago","incluso","intenta","intentais","intentamos","intentan","intentar","intentas","intento","ir",
+        "la","largo","las","lo","los","mientras","mio","modo","muchos","muy","nos","nosotros","otro","para","pero",
+        "podeis","podemos","poder","podria","podriais","podriamos","podrian","podrias","por","por qué","porque",
+        "primero","puede","pueden","puedo","quien","sabe","sabeis","sabemos","saben","saber","sabes","ser","si",
+        "siendo","sin","sobre","sois","solamente","solo","somos","soy","su","sus","también","teneis","tenemos",
+        "tener","tengo","tiempo","tiene","tienen","todo","trabaja","trabajais","trabajamos","trabajan","trabajar",
+        "trabajas","trabajo","tras","tuyo","ultimo","un","una","unas","uno","unos","usa","usais","usamos","usan",
+        "usar","usas","uso","va","vais","valor","vamos","van","vaya","verdad","verdadera","verdadero","vosotras",
+        "vosotros","voy","yo",
+
+        // Italian
+        "adesso","ai","alla","allo","allora","altre","altri","altro","anche","ancora","avere","aveva","avevano",
+        "ben","buono","che","chi","cinque","comprare","consecutivi","consecutivo","cosa","cui","da","del","della",
+        "dello","dentro","deve","devo","di","doppio","due","e","ecco","fare","fine","fino","fra","gente","giu",
+        "hai","hanno","ho","il","indietro","invece","io","la","lavoro","le","lei","lo","loro","lui","lungo","ma",
+        "meglio","molta","molti","molto","nei","nella","no","noi","nome","nostro","nove","nuovi","nuovo","o","oltre",
+        "ora","otto","peggio","pero","persone","piu","poco","primo","promesso","qua","quarto","quasi","quattro",
+        "quello","questo","qui","quindi","quinto","rispetto","sara","secondo","sei","sembra","sembrava","senza",
+        "sette","sia","siamo","siete","solo","sono","sopra","soprattutto","sotto","stati","stato","stesso","su",
+        "subito","sul","sulla","tanto","te","tempo","terzo","tra","tre","triplo","ultimo","un","una","uno","va",
+        "vai","voi","volte","vostro",
+
         // Our list
-        "rt","is","are");
+        "rt","is","are","http");
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
