@@ -52,6 +52,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
 
+        $user = new User();
+        $user->avatar = 'https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg';
+
         $posts = array();
         $posts[] = new Post(array(
             'post_text' => 'a',
@@ -77,7 +80,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1); //use the first possible headline
         $insight_plugin = new WeeklyGraphInsight();
-        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $insight_plugin->generateInsight($instance, $user, $posts, 3);
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();

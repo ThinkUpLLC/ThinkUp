@@ -147,7 +147,7 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight->date = $this->insight_date;
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
-                $my_insight->header_image = $header_image;
+                $my_insight->header_image = $user->avatar;
                 $my_insight->filename = basename(__FILE__, ".php");
                 $my_insight->emphasis = Insight::EMPHASIS_MED;
                 if (count($posts) > 3) {
