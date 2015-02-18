@@ -95,7 +95,7 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         "vai","voi","volte","vostro",
 
         // Our list
-        "rt","is","are");
+        "rt","is","are","http");
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
