@@ -101,7 +101,7 @@ class BestieInsight extends InsightPluginParent implements InsightPlugin {
                     'Peas in a pod!',
                     'Best buds!',
                     'What pals!',
-                    'OMG get a room!'
+                    'Two of a kind.'
                 );
 
                 $copy_ender = $this->getVariableCopy($copy_endings);
