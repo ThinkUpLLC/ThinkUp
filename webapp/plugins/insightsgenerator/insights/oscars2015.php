@@ -50,7 +50,7 @@ class Oscars2015Insight extends InsightPluginParent implements InsightPlugin {
             $iterator = false, $is_public = false);
 
             if (self::shouldGenerateWeeklyInsight('oscars_2015', $instance, $insight_date='today',
-                $regenerate_existing_insight=false, $day_of_week=2, count($last_month_of_posts))) {
+                $regenerate_existing_insight=false, $day_of_week=1, count($last_month_of_posts))) {
                 foreach ($last_month_of_posts as $post) {
                     $this->logger->logInfo("Post text is: " . $post->post_text, __METHOD__.','.__LINE__);
                     //  see if $post date is before the awards aired
