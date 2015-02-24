@@ -116,11 +116,11 @@ class Oscars2015Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bbig hero 6/i", $depunctuated_text, $matches)) { $topic = 'Big Hero 6'; }
         if(preg_match_all("/\bbirdman/i", $depunctuated_text, $matches)) { $topic = 'Birdman'; }
         if(preg_match_all("/\bcitizenfour/i", $depunctuated_text, $matches)) { $topic = 'Citizenfour'; }
-        if(preg_match_all("/\bcommon/i", $depunctuated_text, $matches)) { $topic = 'Common'; }
+//        if(preg_match_all("/\bcommon/i", $depunctuated_text, $matches)) { $topic = 'Common'; }
         if(preg_match_all("/\bcrisis hotline/i", $depunctuated_text, $matches)) { $topic = 'Crisis Hotline'; }
         if(preg_match_all("/\beddie redmayne/i", $depunctuated_text, $matches)) { $topic = 'Eddie Redmayne'; }
-        if(preg_match_all("/\bfeast/i", $depunctuated_text, $matches)) { $topic = 'Feast'; }
-        if(preg_match_all("/\bglory/i", $depunctuated_text, $matches)) { $topic = 'Glory'; }
+//        if(preg_match_all("/\bfeast/i", $depunctuated_text, $matches)) { $topic = 'Feast'; }
+//        if(preg_match_all("/\bglory/i", $depunctuated_text, $matches)) { $topic = 'Glory'; }
         if(preg_match_all("/\bgrand budapest hotel/i", $depunctuated_text, $matches)) { $topic = 'Grand Budapest Hotel'; }
         if(preg_match_all("/\bimitation game/i", $depunctuated_text, $matches)) { $topic = 'The Imitation Game'; }
         if(preg_match_all("/\iñárritu/i", $depunctuated_text, $matches)) { $topic = 'Alejandro González Iñárritu'; }
@@ -131,9 +131,9 @@ class Oscars2015Insight extends InsightPluginParent implements InsightPlugin {
         if(preg_match_all("/\bjohn legend/i", $depunctuated_text, $matches)) { $topic = 'John Legend'; }
         if(preg_match_all("/\bjulianne moore/i", $depunctuated_text, $matches)) { $topic = 'Julianne Moore'; }
         if(preg_match_all("/\bpatricia arquette/i", $depunctuated_text, $matches)) { $topic = 'Patricia Arquette'; }
-        if(preg_match_all("/\bthe phone call/i", $depunctuated_text, $matches)) { $topic = 'The Phone Call'; }
+//        if(preg_match_all("/\bthe phone call/i", $depunctuated_text, $matches)) { $topic = 'The Phone Call'; }
         if(preg_match_all("/\bveterans press 1/i", $depunctuated_text, $matches)) { $topic = 'Crisis Hotline'; }
-        if(preg_match_all("/\bwhiplash/i", $depunctuated_text, $matches)) { $topic = 'Whiplash'; }
+//        if(preg_match_all("/\bwhiplash/i", $depunctuated_text, $matches)) { $topic = 'Whiplash'; }
 
         return $topic;
     }
