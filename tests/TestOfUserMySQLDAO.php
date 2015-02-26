@@ -160,7 +160,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
 
         $user_array = array('id'=>3, 'user_id'=>'13', 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
-            'avatar'=>'avatar.jpg', 'gender'=>'', 'location'=>'NYC', 'description'=>'Blogger',
+            'avatar'=>'avatar-base.jpg', 'gender'=>'', 'location'=>'NYC', 'description'=>'Blogger',
             'url'=>'http://ginatrapani.org', 'is_verified'=>1, 'is_protected'=>0, 'follower_count'=>5000,
             'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter', 'last_post_id'=>'abc102');
         $user = new User($user_array, 'Test Insert');
@@ -168,11 +168,11 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_from_db = $user_dao->getDetails('13', 'twitter');
         $this->assertEqual($user_from_db->user_id, '13');
         $this->assertEqual($user_from_db->username, 'ginatrapani');
-        $this->assertEqual($user_from_db->avatar, 'avatar.jpg');
+        $this->assertEqual($user_from_db->avatar, 'avatar-base.jpg');
         $this->assertEqual($user_from_db->gender, '');
         $this->assertEqual($user_from_db->location, 'NYC');
         $this->assertTrue($user_from_db->is_verified);
-        $changes = $user_versions_dao->getRecentVersions(3, 999);
+        $changes = $user_versions_dao->getRecentVersions(3, 999, array('description'));
         //Bio version got inserted
         $this->assertEqual(1, count($changes));
 
@@ -189,19 +189,23 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user_from_db->gender, '');
         $this->assertEqual($user_from_db->location, 'San Diego');
         $this->assertFalse($user_from_db->is_verified);
-        $changes = $user_versions_dao->getRecentVersions(3, 999);
+        $changes = $user_versions_dao->getRecentVersions(3, 999, array('description'));
         //Bio didn't change
         $this->assertEqual(1, count($changes));
 
-        //Test description version capture
+        //Test description and avatar version capture
         $user_array = array('user_id'=>'13', 'user_name'=>'ginatrapanichanged', 'full_name'=>'Gina Trapani ',
             'avatar'=>'avatara.jpg', 'gender'=>'', 'location'=>'San Diego', 'description'=>'Writer http://example.com',
             'url'=>'http://ginatrapani.org', 'is_verified'=>0, 'is_protected'=>0, 'follower_count'=>5000,
             'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
         $this->assertEqual($user_dao->updateUser($user1), 1, "1 row updated");
-        $changes = $user_versions_dao->getRecentVersions(3, 999);
+        $changes = $user_versions_dao->getRecentVersions(3, 999, array('description'));
         //Bio changed
+        $this->assertEqual(2, count($changes));
+
+        $changes = $user_versions_dao->getRecentVersions(3, 999, array('avatar'));
+        //Avatar changed
         $this->assertEqual(2, count($changes));
 
         //Test description version non-capture (URLs only)
@@ -211,7 +215,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
             'post_count'=>1000, 'joined'=>'2007-03-06 13:48:05', 'network'=>'twitter');
         $user1 = new User($user_array, 'Test Update');
         $this->assertEqual($user_dao->updateUser($user1), 1, "1 row updated");
-        $changes = $user_versions_dao->getRecentVersions(3, 999);
+        $changes = $user_versions_dao->getRecentVersions(3, 999, array('description'));
         //Only URL in bio changed, doesn't count as a change so this doesn't go up
         $this->assertEqual(2, count($changes));
 
@@ -314,34 +318,34 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
 
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(0, count($changes));
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(0, count($changes));
 
         $user->description = 'I am dynamic!';
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(1, count($changes));
 
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(1, count($changes));
 
         $user->description = 'I am un-dynamic!';
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(2, count($changes));
 
         $user->url = 'http://newurl.com/';
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(2, count($changes));
 
         $user->user_name = 'dynamichuman';
         $user_dao->updateUser($user);
-        $changes = $user_versions_dao->getRecentVersions(9, 9999);
+        $changes = $user_versions_dao->getRecentVersions(9, 9999, array('description'));
         $this->assertEqual(2, count($changes));
     }
 

@@ -147,6 +147,14 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
                 $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
                 $user_versions_dao->addVersionOfField($user_in_storage->id, 'description', $user->description);
             }
+            //Capture avatar version
+            //If stored avatar doesn't match the current one, store the new version
+            if ($user_in_storage->avatar != $user->avatar) {
+                if (!isset($user_versions_dao)) {
+                    $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+                }
+                $user_versions_dao->addVersionOfField($user_in_storage->id, 'avatar', $user->avatar);
+            }
         }
 
         if ($has_friend_count) {
@@ -165,11 +173,12 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
 
-        //If a new user got inserted, add the base bio into user_versions
+        //If a new user got inserted, add the base bio and avatar into user_versions
         if (!isset($user_in_storage)) {
             $new_user_id = $this->getInsertId($ps);
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
             $user_versions_dao->addVersionOfField($new_user_id, 'description', $user->description);
+            $user_versions_dao->addVersionOfField($new_user_id, 'avatar', $user->avatar);
         }
         $results = $this->getUpdateCount($ps);
         return $results;
