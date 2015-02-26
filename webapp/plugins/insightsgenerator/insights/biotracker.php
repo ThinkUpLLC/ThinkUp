@@ -31,15 +31,21 @@
  */
 class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
     /**
-     * Slug for this insight
+     * Slug for the bio change insight
      **/
-    var $slug = 'bio_tracker';
+    var $slug_bio = 'bio_tracker';
+    /**
+     * Slug for the avatar change insight
+     **/
+    var $slug_avatar = 'avatar_tracker';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
-        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("Begin generating profile change insight", __METHOD__.','.__LINE__);
 
-        if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug, $instance)) {
+        //Bio changes
+        if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug_bio, $instance)) {
+            $this->logger->logInfo("Should generate bio change tracker", __METHOD__.','.__LINE__);
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
             $versions = $user_versions_dao->getRecentFriendsVersions($user, 7, array('description'));
             //$this->logger->logInfo(Utils::varDumpToString($versions), __METHOD__.','.__LINE__);
@@ -67,18 +73,65 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
             }
-            $this->logger->logInfo("Got ".count($changes)." changes", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Got ".count($changes)." bio changes", __METHOD__.','.__LINE__);
             if (count($changes) > 0) {
                 $changes = array_slice($changes, 0, 10);
                 $insight = new Insight();
                 $insight->instance_id = $instance->id;
-                $insight->slug = $this->slug;
+                $insight->slug = $this->slug_bio;
                 $insight->date = $this->insight_date;
                 $insight->filename = basename(__FILE__, ".php");
                 $insight->emphasis = Insight::EMPHASIS_MED;
                 $insight->related_data = array('changes' => $changes);
-                $insight->text = $this->getText($changes, $instance);
-                $insight->headline = $this->getHeadline($changes, $instance);
+                $insight->text = $this->getTextBioChange($changes, $instance);
+                $insight->headline = $this->getHeadlineBioChange($changes, $instance);
+                if (count($changes) == 1) {
+                    $insight->header_image = $changes[0]["user"]->avatar;
+                }
+                $this->insight_dao->insertInsight($insight);
+            }
+        }
+
+        //Avatar changes
+        if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug_avatar, $instance)) {
+            $this->logger->logInfo("Should generate avatar change tracker", __METHOD__.','.__LINE__);
+            $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
+            $versions = $user_versions_dao->getRecentFriendsVersions($user, 7, array('avatar'));
+            //$this->logger->logInfo(Utils::varDumpToString($versions), __METHOD__.','.__LINE__);
+            $changes = array();
+            $examined_users = array();
+            foreach ($versions as $change) {
+                $user_key = intval($change['user_key']);
+                if (!in_array($user_key, $examined_users)) {
+                    $examined_users[] = $user_key;
+                    $last_version = $user_versions_dao->getVersionBeforeDay($user_key,date('Y-m-d'),'avatar');
+                    if ($last_version) {
+                        $user_dao = DAOFactory::getDAO('UserDAO');
+                        $user = $user_dao->getDetailsByUserKey($user_key);
+                        if ($user && ($user->avatar !== $last_version['field_value'])) {
+                            $changes[] = array(
+                                'user' => $user,
+                                'field_name' => 'avatar',
+                                'field_description' => 'avatar',
+                                'before' => $last_version['field_value'],
+                                'after' => $user->avatar
+                            );
+                        }
+                    }
+                }
+            }
+            $this->logger->logInfo("Got ".count($changes)." avatar changes", __METHOD__.','.__LINE__);
+            if (count($changes) > 0) {
+                $changes = array_slice($changes, 0, 10);
+                $insight = new Insight();
+                $insight->instance_id = $instance->id;
+                $insight->slug = $this->slug_avatar;
+                $insight->date = $this->insight_date;
+                $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_MED;
+                $insight->related_data = array('changes' => $changes);
+                $insight->text = $this->getTextAvatarChange($changes, $instance);
+                $insight->headline = $this->getHeadlineAvatarChange($changes, $instance);
                 if (count($changes) == 1) {
                     $insight->header_image = $changes[0]["user"]->avatar;
                 }
@@ -89,7 +142,7 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 
-    private function getText($changes, $instance) {
+    private function getTextBioChange($changes, $instance) {
         $network = ucfirst($instance->network);
         $text_options = array(
             "Spot the difference?",
@@ -106,7 +159,23 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         return $base . ' '. $this->getVariableCopy($text_options);
     }
 
-    private function getHeadline($changes, $instance) {
+    private function getTextAvatarChange($changes, $instance) {
+        $network = ucfirst($instance->network);
+        $text_options = array(
+            "What do you think?"
+        );
+        if (count($changes) == 1) {
+            $username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[0]['user']->username;
+            $base = "$username has a new $network photo.";
+            $they = $username;
+        } else {
+            $base = count($changes) . " of ".$this->username."'s friends changed their $network avatar.";
+            $text_options[] = "They might appreciate that someone noticed.";
+        }
+        return $base . ' '. $this->getVariableCopy($text_options);
+    }
+
+    private function getHeadlineBioChange($changes, $instance) {
         $network = ucfirst($instance->network);
         $username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[0]['user']->username;
         if (count($changes) == 1) {
@@ -130,6 +199,27 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         return $base;
     }
 
+    private function getHeadlineAvatarChange($changes, $instance) {
+        $network = ucfirst($instance->network);
+        $username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[0]['user']->username;
+        if (count($changes) == 1) {
+            $base = $this->getVariableCopy(array(
+                "%user1 has a new profile picture",
+                "%user1 changes it up",
+                "%user1 tries something new"
+            ), array('user1' => $username));
+        } else {
+            $second_username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[1]['user']->username;
+            if (count($changes) > 2) {
+                $total_more = count($changes) - 2;
+                $base = $username.", ".$second_username.", and ".$total_more." other".
+                (($total_more == 1)?"":"s")." changed their avatar";
+            } else {
+                $base = $username." and ".$second_username." changed their profile photos";
+            }
+        }
+        return $base;
+    }
 }
 
 $insights_plugin_registrar = PluginRegistrarInsights::getInstance();

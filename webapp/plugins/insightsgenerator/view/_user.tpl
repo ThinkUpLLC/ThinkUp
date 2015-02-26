@@ -41,6 +41,21 @@ $bio_after (optional) If this is a bio change, the current bio
                 {else if $user->description neq ''}
                     <p>{$user->description}</p>
                 {/if}
+
+                {if isset($avatar_before) and isset($avatar_after)}
+                <div class="text-diff">
+                    <div class="bio-before-after">
+                        <p class="bio-before"><strong>Before:</strong><br>
+                        <img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle" style="float:none">
+                        </p>
+                        <p class="bio-after"><strong>After:</strong><br>
+                        <img src="{insert name='user_avatar' avatar_url=$avatar_after image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle" style="float:none"><br>
+                        </p>
+                    </div>
+                    <p><a class="diff-toggle" href="#" data-alt-text="Hide before/after">Show before/after</a></p>
+                </div>
+                {/if}
+
             </div>
         </div>
 </div>

@@ -2,7 +2,11 @@
 
 {foreach from=$i->related_data.changes item=change name=changed }
 <li class="list-item">
-    {include file=$tpl_path|cat:"_user.tpl" user=$change.user bio_before=$change.before bio_after=$change.after}
+    {if $change.field_name eq 'description'}
+        {include file=$tpl_path|cat:"_user.tpl" user=$change.user bio_before=$change.before bio_after=$change.after}
+    {elseif $change.field_name eq 'avatar'}
+        {include file=$tpl_path|cat:"_user.tpl" user=$change.user avatar_before=$change.before avatar_after=$change.after}
+    {/if}
 </li>
 {/foreach}
 </ul>

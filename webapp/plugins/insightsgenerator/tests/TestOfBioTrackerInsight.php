@@ -55,15 +55,15 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($insight_plugin, 'BioTrackerInsight' );
     }
 
-    public function testWithNoChanges() {
+    public function testWithNoBioChanges() {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $today);
         $this->assertNull($result);
     }
 
-    public function testWithOneChange() {
+    public function testWithOneBioChange() {
         $builders = array();
 
         // User
@@ -93,7 +93,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "@newlywed changes it up");
@@ -110,6 +110,60 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual($data['changes'][0]['field_description'], 'bio');
         $this->assertEqual($data['changes'][0]['before'], 'I\'m getting married soon.');
         $this->assertEqual($data['changes'][0]['after'], 'I just got married!');
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testWithOneAvatarChange() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friend
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Popular Gal',
+        'avatar'=>'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I just got married!', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'avatar',
+            'field_value' => "https://pbs.twimg.com/profile_images/527818874343800833/w00gmaNl_normal.jpeg",
+            'crawl_time' => '-2d'));
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug_avatar, 10, $this->today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->headline, "@newlywed changes it up");
+        $this->assertEqual($result->text,
+            "@newlywed has a new Twitter photo. What do you think?");
+        $this->assertNotNull($result->header_image);
+        $this->assertEqual($result->header_image,
+            'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg');
+
+        $data = unserialize($result->related_data);
+        $this->assertEqual(1, count($data['changes']));
+        $this->assertEqual($data['changes'][0]['user']->username, 'newlywed');
+        $this->assertEqual($data['changes'][0]['field_name'], 'avatar');
+        $this->assertEqual($data['changes'][0]['field_description'], 'avatar');
+        $this->assertEqual($data['changes'][0]['before'],
+            'https://pbs.twimg.com/profile_images/527818874343800833/w00gmaNl_normal.jpeg');
+        $this->assertEqual($data['changes'][0]['after'],
+            'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -146,7 +200,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNull($result);
     }
 
@@ -181,7 +235,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $rendered_html = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/\<ins>/', $rendered_html);
 
@@ -219,14 +273,85 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $rendered_html = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/\<del>/', $rendered_html);
 
         $this->debug($rendered_html);
     }
 
-    public function testTwoChanges() {
+    public function testTwoAvatarChanges() {
+        $builders = array();
+
+        // User
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'1', 'user_name'=>'nosey',
+        'full_name'=>'Twitter User', 'follower_count'=>1, 'is_protected'=>1, 'id' => 1,
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
+        'network'=>'twitter', 'description'=>'A test Twitter User', 'location'=>'San Francisco, CA'));
+
+        // Friends
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'2', 'user_name'=>'newlywed',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Not Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg', 'id' =>2,
+        'network'=>'twitter', 'description'=>'I am a father, woodworker, sandwich, bird, and pushover. '.
+            'RTs != endorsements', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'3', 'user_name'=>'movingperson',
+        'post_count' => 101, 'follower_count'=>36000,'is_protected'=>0,'friend_count'=>1, 'full_name'=>'Maybe Anil',
+        'avatar'=>'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg', 'id' =>3,
+        'network'=>'twitter', 'description'=>'I live in France.', 'location'=>'San Francisco, CA','is_verified'=>0));
+
+        // Follows
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'2', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'3', 'follower_id'=>'1',
+        'last_seen'=>'-0d', 'first_seen'=>'-0d', 'network'=>'twitter','active'=>1));
+
+        // Change
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 2, 'field_name' => 'avatar',
+            'field_value' => "https://pbs.twimg.com/profile_images/527818874343800833/w00gmaNl_normal.jpeg",
+            'crawl_time' => '-2d'));
+        $builders[] = FixtureBuilder::build('user_versions', array('user_key' => 3, 'field_name' => 'avatar',
+            'field_value' => "https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg",
+            'crawl_time' => '-3d'));
+
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetailsByUserKey(1);
+
+        $insight_plugin = new BioTrackerInsight();
+        $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
+        $insight_dao = new InsightMySQLDAO();
+        $result = $insight_dao->getInsight($insight_plugin->slug_avatar, 10, $this->today);
+        $this->assertNotNull($result);
+
+        $this->assertEqual($result->headline, '@newlywed and @movingperson changed their profile photos');
+        $this->assertEqual($result->text, "2 of @buffy's friends changed their Twitter avatar. "
+            . "They might appreciate that someone noticed.");
+        $this->assertNull($result->header_image);
+
+        $data = unserialize($result->related_data);
+        $this->assertEqual(2, count($data['changes']));
+        $this->assertEqual($data['changes'][0]['user']->username, 'newlywed');
+        $this->assertEqual($data['changes'][0]['field_name'], 'avatar');
+        $this->assertEqual($data['changes'][0]['field_description'], 'avatar');
+        $this->assertEqual($data['changes'][0]['before'],
+            'https://pbs.twimg.com/profile_images/527818874343800833/w00gmaNl_normal.jpeg');
+        $this->assertEqual($data['changes'][0]['after'],
+            'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg');
+
+        $this->assertEqual($data['changes'][1]['user']->username, 'movingperson');
+        $this->assertEqual($data['changes'][1]['field_name'], 'avatar');
+        $this->assertEqual($data['changes'][1]['field_description'], 'avatar');
+        $this->assertEqual($data['changes'][1]['before'],
+            'https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg');
+        $this->assertEqual($data['changes'][1]['after'],
+            'https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg');
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testTwoBioChanges() {
         $builders = array();
 
         // User
@@ -266,7 +391,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, '@newlywed and @movingperson changed their profiles');
@@ -341,7 +466,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, '@newlywed, @movingperson, and 1 other changed their profiles');
@@ -413,7 +538,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new BioTrackerInsight();
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
         $insight_dao = new InsightMySQLDAO();
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, '@newlywed, @movingperson, and 2 others changed their profiles');
@@ -580,7 +705,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         for ($i=1; $i<6; $i++) {
             TimeHelper::setTime($i);
             $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
-            $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+            $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
             $this->assertNotNull($result);
             $this->assertEqual($result->headline, $headlines[$i]);
             $this->assertEqual($result->text, $texts[$i]);
@@ -628,7 +753,7 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
 
         TimeHelper::setTime(1);
         $insight_plugin->generateInsight($this->instance, $user, $posts, 3);
-        $result = $insight_dao->getInsight($insight_plugin->slug, 10, $this->today);
+        $result = $insight_dao->getInsight($insight_plugin->slug_bio, 10, $this->today);
         $this->assertNotNull($result);
         $rendered_html = $this->getRenderedInsightInHTML($result);
         $this->assertPattern('/Cofounder @thinkup &amp; @activateinc &bull; Writer /', $rendered_html);

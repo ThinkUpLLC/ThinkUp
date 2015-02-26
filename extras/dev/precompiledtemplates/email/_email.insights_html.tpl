@@ -1273,9 +1273,14 @@ or isset($insight->related_data.changes)}
         {/foreach}
         {/if}
         {if isset($insight->related_data.changes)}
+
         {foreach from=$insight->related_data.changes item=change name=changed }
         {assign var='user' value=$change.user}
-        {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+
+        {if $change.field_description eq 'bio'}
+          {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+        {/if}
+
         {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
         <tr>
             <td class="sub-grid object user text-pad">
@@ -1294,8 +1299,10 @@ or isset($insight->related_data.changes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
-                                {if $bio_diff neq ''}
+                                {if isset($bio_diff) && $bio_diff neq ''}
                                     <p class="text-diff">{$bio_diff}</p>
+                                {else}
+                                    <p>{$user->description}</p>
                                 {/if}
                             </div>
                         </td>

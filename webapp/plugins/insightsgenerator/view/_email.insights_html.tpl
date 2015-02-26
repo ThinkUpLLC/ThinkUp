@@ -647,9 +647,14 @@ or isset($insight->related_data.changes)}
         {/foreach}
         {/if}
         {if isset($insight->related_data.changes)}
+
         {foreach from=$insight->related_data.changes item=change name=changed }
         {assign var='user' value=$change.user}
-        {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+
+        {if $change.field_description eq 'bio'}
+          {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+        {/if}
+
         {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
             <td class="sub-grid object user text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 10px; padding: 10px;" align="left" valign="top">
@@ -668,8 +673,10 @@ or isset($insight->related_data.changes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
-                                {if $bio_diff neq ''}
+                                {if isset($bio_diff) && $bio_diff neq ''}
                                     <p class="text-diff" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$bio_diff}</p>
+                                {else}
+                                    <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$user->description}</p>
                                 {/if}
                             </div>
                         </td>
