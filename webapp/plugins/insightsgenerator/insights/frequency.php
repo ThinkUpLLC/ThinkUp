@@ -55,13 +55,13 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     '%username %posted <strong>%count times</strong> in the past week',
                     '%username had <strong>%count %posts</strong> over the past week',
                     '%username had <strong>%count %posts</strong> over the past week', // twice as likely on purpose
-                ), array('count' => $count));
+                ), array('count' => number_format($count)));
                 $milestones = array(
                     "per_row"    => 1,
                     "label_type" => "icon",
                     "items" => array(
                         0 => array(
-                            "number" => $count,
+                            "number" => number_format($count),
                             "label"  => $this->terms->getNoun('post', $count),
                         ),
                     ),
@@ -144,7 +144,8 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                     if ($diff == 1) {
                         $info['text'] =$this->terms->getProcessedText("That's 1 $comp %post than the prior week.");
                     } elseif ($diff > 0) {
-                        $info['text'] =$this->terms->getProcessedText("That's $diff $comp %posts than the prior week.");
+                        $info['text'] =$this->terms->getProcessedText("That's ".number_format($diff).
+                            " $comp %posts than the prior week.");
                     }
                 }
             }
@@ -155,7 +156,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             $my_insight->instance_id = $instance->id;
             $my_insight->slug = 'frequency'; //slug to label this insight's content
             $my_insight->date = $this->insight_date; //date of the data this insight applies to
-            $my_insight->header_image = '';
+            $my_insight->header_image = $user->avatar;
             $my_insight->emphasis = Insight::EMPHASIS_LOW; //Set emphasis optionally, default is Insight::EMPHASIS_LOW
             $my_insight->filename = basename(__FILE__, ".php"); //Same for every insight, must be set exactly this way
             $my_insight->setMilestones($milestones);
