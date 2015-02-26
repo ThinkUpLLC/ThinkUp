@@ -33,7 +33,7 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/flashbacks.php';
 
-class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
+class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
@@ -59,16 +59,17 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'twitter';
         $insight_plugin = new FlashbackInsight();
+        TimeHelper::setTime(3);
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
         $fav_posts = unserialize($result->related_data);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/A stroll down memory lane/', $result->headline);
+        $this->assertPattern('/On this day in 2014/', $result->headline);
         $last_year = (date('Y')) - 1;
         $possible_text = array("This was @testeriffic's most popular tweet <strong>1 year ago</strong>.",
             "On this day in ".$last_year.", this was @testeriffic's most popular tweet.");
@@ -76,9 +77,12 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    public function testFlashbackInsightForFacebook() {
+    public function testFlashbackInsightForFacebookYearAgo() {
         // Get data ready that insight requires
         $builders = self::buildData();
         $instance = new Instance();
@@ -87,16 +91,17 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $instance->network_username = 'testeriffic';
         $instance->network = 'facebook';
         $insight_plugin = new FlashbackInsight();
+        TimeHelper::setTime(2);
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
         $fav_posts = unserialize($result->related_data);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/A stroll down memory lane/', $result->headline);
+        $this->assertPattern('/A year ago today/', $result->headline);
         $last_year = (date('Y')) - 1;
         $possible_text = array("This was testeriffic's most popular status update <strong>1 year ago</strong>.",
             "On this day in ".$last_year.", this was testeriffic's most popular status update.");
@@ -104,33 +109,39 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    public function testHeadlines() {
+    public function testFlashbackInsightForFacebookMoreThanAYearAgo() {
         // Get data ready that insight requires
         $builders = self::buildData();
         $instance = new Instance();
         $instance->id = 10;
-        $instance->network_user_id = '7654321';
+        $instance->network_user_id = '765432fc';
         $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
+        $instance->network = 'facebook';
         $insight_plugin = new FlashbackInsight();
+        TimeHelper::setTime(2);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/3 years ago today/', $result->headline);
+        $last_year = (date('Y')) - 1;
+        $this->assertEqual("On this day in 2012, this was testeriffic's most popular status update.", $result->text);
+        $this->assertIsA($fav_posts, "array");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts), 1);
 
-        $good_headlines = array(
-          null,
-          "A stroll down memory lane",
-          "Your best tweet from 1 year ago",
-          "A look in the rearview",
-        );
-
-        for ($i=1; $i<=3; $i++) {
-          TimeHelper::setTime($i);
-          $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
-          $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
-          $this->assertEqual($result->headline, $good_headlines[$i]);
-        }
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
     }
 
     private function buildData() {
@@ -173,6 +184,15 @@ class TestOfFlashbackInsight extends ThinkUpUnitTestCase {
         'author_username'=>'testeriffic', 'author_fullname'=>'facebook User', 'author_avatar'=>'avatar.jpg',
         'network'=>'facebook', 'post_text'=>'This is an old post http://t.co/aMHh5XHGfS with a link.', 'source'=>'web',
         'pub_date'=>'-365d', 'reply_count_cache'=>70, 'is_protected'=>0, 'in_reply_to_post_id'=>null,
+        'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'in_rt_of_user_id'=>null));
+
+        //Get the date 3 years ago today in a way that accounts for leap years
+        $date = new DateTime();
+        $date->sub(new DateInterval('P3Y'));
+        $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>'765432fc',
+        'author_username'=>'testeriffic', 'author_fullname'=>'facebook User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'facebook', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
+        'pub_date'=>$date->format('Y-m-d H:i:s'), 'reply_count_cache'=>60, 'is_protected'=>0, 'in_reply_to_post_id'=>null,
         'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'in_rt_of_user_id'=>null));
 
         return $builders;

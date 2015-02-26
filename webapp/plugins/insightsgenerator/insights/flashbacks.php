@@ -63,18 +63,24 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                     $number_of_years_ago = $current_year - $post_year;
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
-                    $headlines = array(
-                      "A look in the rearview",
-                      "A stroll down memory lane",
-                      "Your best %post from %number_of_years_ago year"
-                        .($number_of_years_ago > 1 ? 's' : '')." ago",
-                    );
                     $time = strtotime("-" . $number_of_years_ago . " year", time());
                     $past_date =date('Y', $time);
-                    if ($time % 2 == 0) {
+                    if (TimeHelper::getTime() % 2 == 0) {
+                        if ($number_of_years_ago == 1 ){
+                            $headlines = array(
+                              "A year ago today"
+                            );
+                        } else {
+                            $headlines = array(
+                              "%number_of_years_ago years ago today"
+                            );
+                        }
                         $insight_text = "On this day in " .$past_date . ", this was $this->username's most popular "
                         .$this->terms->getNoun('post').".";
                     } else {
+                        $headlines = array(
+                          "On this day in ".$past_date,
+                        );
                         $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
                         ." <strong>$number_of_years_ago year$plural ago</strong>.";
                     }
