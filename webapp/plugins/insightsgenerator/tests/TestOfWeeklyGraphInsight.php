@@ -86,14 +86,13 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; there were '
-            . '19 favorites, beating out 7 replies and 7 retweets.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 19 favorites, beating out 7 replies and 7 retweets.',
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testWeeklyGraphInsightForFacebook() {
@@ -128,14 +127,12 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("tester_fb's week in status updates", $result->headline);
-        $this->assertEqual('Whatever tester_fb said in the past week must have been memorable '.
-            '&mdash; there were 19 likes, beating out 10 comments.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("Whatever tester_fb said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, tester_fb got 19 likes, beating out 10 comments.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testWeeklyGraphInsightWithOneReply() {
@@ -164,14 +161,13 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('@testeriffic really inspired conversations in the past week &mdash; '
-            . 'replies outnumbered favorites or retweets.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("@testeriffic really inspired conversations", $result->headline);
+        $this->assertEqual('In the past week, replies to @testeriffic outnumbered favorites or retweets.',
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testWeeklyGraphInsightWithFavorites() {
@@ -200,14 +196,12 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '.
-            'there were 3 favorites.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 3 favorites.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testWeeklyGraphInsightWithRepliesAndFavorites() {
@@ -233,16 +227,13 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '
-            .'there were 5 favorites, beating out 4 replies.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 5 favorites, beating out 4 replies.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
-
 
     public function  testForCommas() {
         $instance = new Instance();
@@ -268,10 +259,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('@testeriffic shared a lot of things people wanted to amplify in the past week. '
-            . 'Retweets outnumbered replies by 5,820 and favorites by 8,765.', $result->text);
-
+        $this->assertEqual("@testeriffic shared lots of things people wanted to amplify", $result->headline);
+        $this->assertEqual("This past week, @testeriffic's retweets outnumbered replies by 5,820 and favorites ".
+            "by 8,765.", $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array();
         $posts[] = new Post(array(
@@ -287,12 +278,11 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '
-            . 'there were 999,999 favorites, beating out 4,179 replies and 4,242 retweets.', $result->text);
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 999,999 favorites, beating out 4,179 replies '.
+            'and 4,242 retweets.', $result->text);
 
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testSkipInsightIfNoActivity() {
@@ -346,9 +336,8 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
 
         $data = unserialize($result->related_data);
         $this->assertNull($data['posts']);
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->assertEqual("@testeriffic really inspired conversations", $result->headline);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testPostLimitAndSorting() {
@@ -392,9 +381,7 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
             //print_r($post);
             $this->assertEqual('cool...', $post->c[0]->v);
         }
-
-        $this->debug($this->getRenderedInsightInHTML($result));
-        $this->debug($this->getRenderedInsightInEmail($result));
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testInsightTextsTwitter() {
@@ -415,10 +402,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(1); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('@testeriffic really inspired conversations in the past week &mdash; replies outnumbered '
-            .'favorites or retweets.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("@testeriffic really inspired conversations", $result->headline);
+        $this->assertEqual('In the past week, replies to @testeriffic outnumbered favorites or retweets.',
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -429,10 +416,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(2); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in @testeriffic's tweets", $result->headline);
-        $this->assertEqual('@testeriffic shared a lot of things people wanted to amplify in the past week. '.
-            'Retweets outnumbered replies by 3 and favorites by 3.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("@testeriffic shared lots of things people wanted to amplify", $result->headline);
+        $this->assertEqual("This past week, @testeriffic's retweets outnumbered replies by 3 and favorites by 3.",
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 3,
@@ -443,10 +430,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(3); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("A breakdown of last week's tweets", $result->headline);
-        $this->assertEqual('@testeriffic really inspired conversations in the past week &mdash; '.
-            'replies outnumbered favorites.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("@testeriffic really inspired conversations", $result->headline);
+        $this->assertEqual('In the past week, replies to @testeriffic outnumbered favorites.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 3,
@@ -457,10 +443,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(4); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual('@testeriffic really inspired conversations in the past week, getting more replies than '.
-            'anything else.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("@testeriffic really inspired conversations", $result->headline);
+        $this->assertEqual('@testeriffic got more replies than anything else.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -471,10 +456,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(5); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in @testeriffic's tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '.
-            'there were 3 favorites, beating out 2 retweets.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 3 favorites, beating out 2 retweets.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -484,10 +468,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         )));
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in @testeriffic's tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; there were '
-            .'3 favorites.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 3 favorites.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 1,
@@ -497,10 +480,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         )));
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in @testeriffic's tweets", $result->headline);
-        $this->assertEqual('Whatever @testeriffic said in the past week must have been memorable &mdash; '.
-            'there were 3 favorites, beating out 1 reply and 2 retweets.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, @testeriffic got 3 favorites, beating out 1 reply and 2 retweets.',
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testSingularLike() {
@@ -520,16 +503,15 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(1); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("@testeriffic's week in tweets", $result->headline);
-        $this->assertEqual("Whatever @testeriffic said in the past week must have been memorable &mdash; there was 1 favorite.",
-            $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever @testeriffic said must have been memorable", $result->headline);
+        $this->assertEqual("In the past week, @testeriffic got 1 favorite.", $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 
     public function testInsightTextsFacebook() {
         $instance = new Instance();
         $instance->id = 10;
-        $instance->network_username = 'Jo Thinkup';
+        $instance->network_username = 'Jo ThinkUp';
         $instance->network = 'facebook';
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
@@ -544,10 +526,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(1); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Jo Thinkup's week in status updates", $result->headline);
-        $this->assertEqual('Jo Thinkup really inspired conversations in the past week &mdash; comments outnumbered '
-            .'likes or reshares.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Jo ThinkUp really inspired conversations", $result->headline);
+        $this->assertEqual('In the past week, comments to Jo ThinkUp outnumbered likes or reshares.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -558,10 +539,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(2); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in Jo Thinkup's status updates", $result->headline);
-        $this->assertEqual('Jo Thinkup shared a lot of things people wanted to amplify in the past week. '.
-            'Reshares outnumbered comments by 3 and likes by 3.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Jo ThinkUp shared lots of things people wanted to amplify", $result->headline);
+        $this->assertEqual("This past week, Jo ThinkUp's reshares outnumbered comments by 3 and likes by 3.",
+            $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 3,
@@ -572,10 +553,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(3); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("A breakdown of last week's status updates", $result->headline);
-        $this->assertEqual('Jo Thinkup really inspired conversations in the past week &mdash; '.
-            'comments outnumbered likes.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Jo ThinkUp really inspired conversations", $result->headline);
+        $this->assertEqual('In the past week, comments to Jo ThinkUp outnumbered likes.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 3,
@@ -586,10 +566,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(4); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Jo Thinkup's week in status updates", $result->headline);
-        $this->assertEqual('Jo Thinkup really inspired conversations in the past week, getting more comments than '.
-            'anything else.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Jo ThinkUp really inspired conversations", $result->headline);
+        $this->assertEqual('Jo ThinkUp got more comments than anything else.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -600,10 +579,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         TimeHelper::setTime(5); //set headline to expect
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in Jo Thinkup's status updates", $result->headline);
-        $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; '.
-            'there were 3 likes, beating out 2 reshares.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever Jo ThinkUp said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, Jo ThinkUp got 3 likes, beating out 2 reshares.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 0,
@@ -613,10 +591,9 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         )));
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in Jo Thinkup's status updates", $result->headline);
-        $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; there were '
-            .'3 likes.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever Jo ThinkUp said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, Jo ThinkUp got 3 likes.', $result->text);
+        $this->dumpRenderedInsight($result, $instance, "");
 
         $posts = array(new Post(array(
             'reply_count_cache' => 1,
@@ -626,9 +603,10 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         )));
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $result = $insight_dao->getInsight('weekly_graph', 10, $today);
-        $this->assertEqual("Last week in Jo Thinkup's status updates", $result->headline);
-        $this->assertEqual('Whatever Jo Thinkup said in the past week must have been memorable &mdash; '.
-            'there were 3 likes, beating out 1 comment and 2 reshares.', $result->text);
-        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->assertEqual("Whatever Jo ThinkUp said must have been memorable", $result->headline);
+        $this->assertEqual('In the past week, Jo ThinkUp got 3 likes, beating out 1 comment and 2 reshares.',
+            $result->text);
+
+        $this->dumpRenderedInsight($result, $instance, "");
     }
 }

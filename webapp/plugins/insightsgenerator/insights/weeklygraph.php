@@ -83,7 +83,7 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 $posts = array_slice($engaged_posts, 0, 10);
 
                 if ($total_replies >= $total_likes && $total_replies >= $total_retweets) {
-                    $insight_text = $this->username." really inspired conversations in the past week";
+                    $insight_headline = $this->username." really inspired conversations";
                     $lower = array();
                     if ($total_replies > $total_likes) {
                         $lower[] = $this->terms->getNoun('like', InsightTerms::PLURAL);
@@ -92,16 +92,15 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                         $lower[] = $this->terms->getNoun('retweet', InsightTerms::PLURAL);
                     }
                     if (count($lower) == 0) {
-                        $insight_text .= ', getting more '.
+                        $insight_text = $this->username.' got more '.
                             $this->terms->getNoun('reply', InsightTerms::PLURAL)." than anything else.";
                     } else {
-                        $insight_text .= ' &mdash; '. $this->terms->getNoun('reply', InsightTerms::PLURAL).
-                            ' outnumbered '.join(' or ', $lower).'.';
+                        $insight_text = 'In the past week, '. $this->terms->getNoun('reply', InsightTerms::PLURAL).
+                            ' to '.$this->username.' outnumbered '.join(' or ', $lower).'.';
                     }
                 } else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
-                    $insight_text = "Whatever ".$this->username." said in the past week must have been memorable";
-                    $were = $total_likes == 1 ? 'was' : 'were';
-                    $insight_text .= ' &mdash; there '.$were.' '.number_format($total_likes).' '.
+                    $insight_headline = "Whatever ".$this->username." said must have been memorable";
+                    $insight_text = 'In the past week, '.$this->username.' got '.number_format($total_likes).' '.
                         $this->terms->getNoun('like', $total_likes==1?InsightTerms::SINGULAR : InsightTerms::PLURAL);
                     $lower = array();
                     if ($total_likes > $total_replies && $total_replies > 0) {
@@ -118,8 +117,8 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                         $insight_text .= ', beating out '.join(' and ', $lower).'.';
                     }
                 } else {
-                    $insight_text = $this->username.
-                        " shared a lot of things people wanted to amplify in the past week.";
+                    $insight_headline= $this->username.
+                        " shared lots of things people wanted to amplify";
                     $lower = array();
                     if ($total_retweets > $total_replies) {
                         $lower[] = $this->terms->getNoun('reply', InsightTerms::PLURAL) . ' by '
@@ -130,22 +129,17 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                             .number_format($total_retweets - $total_likes);
                     }
                     if (count($lower) > 0) {
-                        $insight_text .= ' '.ucfirst($this->terms->getNoun('retweet', InsightTerms::PLURAL))
+                        $insight_text = 'This past week, '.$this->username."'s "
+                            .$this->terms->getNoun('retweet', InsightTerms::PLURAL)
                             .' outnumbered '.join(' and ', $lower). '.';
                     }
                 }
-
-                $headline = $this->getVariableCopy(array(
-                    "A breakdown of last week's %posts",
-                    "%username's week in %posts",
-                    "Last week in %username's %posts",
-                ));
 
                 $my_insight = new Insight();
                 $my_insight->slug = 'weekly_graph';
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $this->insight_date;
-                $my_insight->headline = $headline;
+                $my_insight->headline = $insight_headline;
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = $user->avatar;
                 $my_insight->filename = basename(__FILE__, ".php");
