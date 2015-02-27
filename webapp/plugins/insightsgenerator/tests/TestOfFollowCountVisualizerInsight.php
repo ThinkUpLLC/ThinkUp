@@ -44,7 +44,6 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'mario';
         $this->instance->network = 'twitter';
         $this->instance->is_public = 1;
-        TimeHelper::setTime(1);
 
         $this->builders = array();
         $this->builders[] = FixtureBuilder::build('users',array('user_id'=>42,'network'=>'twitter',
@@ -76,15 +75,15 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testPassed56() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(57), array(), 1);
 
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '57 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers could fill a yellow school bus.");
+        $this->assertEqual($result->headline, "@mario's followers would fill a yellow school bus");
+        $this->assertEqual($result->text,
+            "@mario has 57 followers&mdash;and they wouldn't all fit on a 56-seat yellow bus.");
         $data = unserialize($result->related_data);
         $this->assertNotNull($data['hero_image']);
         $this->assertEqual($data['hero_image']['url'],'https://www.thinkup.com/assets/images/insights/2014-05/bus.jpg');
@@ -94,31 +93,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 56);
-    }
-
-    public function testPassed56AlternateHeadline() {
-        TimeHelper::setTime(2);
-        $insight_plugin = new FollowCountVisualizerInsight();
-        $insight_plugin->generateInsight($this->instance, $this->makeUser(57), array(), 1);
-
-        $insight_dao = DAOFactory::getDAO('InsightDAO');
-        $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
-        $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '@mario reached 57 followers');
-        $this->assertEqual($result->text, "@mario's followers could fill a yellow school bus.");
-        $data = unserialize($result->related_data);
-        $this->assertNotNull($data['hero_image']);
-        $this->assertEqual($data['hero_image']['url'],'https://www.thinkup.com/assets/images/insights/2014-05/bus.jpg');
-        $this->assertEqual($data['hero_image']['img_link'],'https://www.flickr.com/photos/ivydawned/5460058051');
-
-        $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-        $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
-        $this->assertNotNull($latest);
-        $this->assertEqual($latest->value, 56);
+        $this->dumpRenderedInsight($result, $this->instance, __METHOD__);
     }
 
     public function testPassed115() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(117), array(), 1);
 
@@ -127,8 +105,9 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '117 people follow @mario');
-        $this->assertEqual($result->text, "That's how many fans saw the Rolling Stones' first live performance.");
+        $this->assertEqual($result->headline, '@mario has as many fans as the Rolling Stones');
+        $this->assertEqual($result->text,
+            "@mario has 117 followers, but only 115 people attended the Rolling Stones' first live performance.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
             'https://www.thinkup.com/assets/images/insights/2014-05/stones.jpg');
@@ -139,10 +118,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 115);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testPassed200() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(201), array(), 1);
 
@@ -151,8 +130,8 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '201 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers could fill a New York City subway car.");
+        $this->assertEqual($result->headline, "@mario's followers would pack a New York City subway");
+        $this->assertEqual($result->text, "@mario has 201 followers, but only 200 people fit in a typical subway car.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
             'https://www.thinkup.com/assets/images/insights/2014-05/subway.jpg');
@@ -163,10 +142,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 200);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testPassed360() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(363), array(), 1);
 
@@ -175,8 +154,9 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '363 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers outnumber singers in the Mormon Tabernacle Choir.");
+        $this->assertEqual($result->headline, "@mario's followers outnumber the Mormon Tabernacle Choir");
+        $this->assertEqual($result->text,
+            "@mario has 363 followers, but there are only 360 singers in the Mormon Tabernacle Choir.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
             'https://www.thinkup.com/assets/images/insights/2014-05/choir.jpg');
@@ -186,10 +166,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 360);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testJustPassed400() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(402), array(), 1);
 
@@ -198,8 +178,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '402 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers could fill up a 747.");
+        $this->assertEqual($result->headline, "@mario's followers would fill a 747");
+        $this->assertEqual($result->text,
+            "Some of @mario's 402 followers would have to go on standby, because they'd fill a 400-seat airplane "
+            ."to capacity.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
             'https://www.thinkup.com/assets/images/insights/2014-05/747.jpg');
@@ -210,10 +192,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 400);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testJustPassed560() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(565), array(), 1);
 
@@ -222,8 +204,9 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '565 people follow @mario');
-        $this->assertEqual($result->text, "That's 10 school buses full of students.");
+        $this->assertEqual($result->headline, "@mario's followers would need more than 10 buses");
+        $this->assertEqual($result->text,
+            "@mario has 565 followers, but only 560 students would fill 10 yellow school buses.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
             'https://www.thinkup.com/assets/images/insights/2014-05/buses.jpg');
@@ -234,10 +217,10 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 560);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testJustPassed12500() {
-        TimeHelper::setTime(1);
         $insight_plugin = new FollowCountVisualizerInsight();
         $insight_plugin->generateInsight($this->instance, $this->makeUser(12600), array(), 1);
 
@@ -246,29 +229,30 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInHTML($result));
 
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '12,600 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers could fill up Wembley Arena.");
+        $this->assertEqual($result->headline, "@mario's followers would fill Wembley Arena");
+        $this->assertEqual($result->text,
+            "@mario has 12,600 followers, but there are only 12,500 seats at Wembley Arena.");
         $this->assertNotNull($result->related_data['hero_image']);
         $this->assertEqual($result->related_data['hero_image']['url'],
-            'https://www.thinkup.com/assets/images/insights/2014-05/wembley.jpg');
+            'https://www.thinkup.com/assets/images/insights/2015-02/wembley.jpg');
         $this->assertEqual($result->related_data['hero_image']['img_link'],
-            'https://www.flickr.com/photos/36593372@N04/8240126447');
+            'https://www.flickr.com/photos/tim_uk/10353361694');
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 12500);
+        $this->dumpRenderedInsight($result, $this->instance);
     }
 
     public function testRenderingAllVisualizations() {
-        TimeHelper::setTime(1);
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $insight_plugin = new FollowCountVisualizerInsight();
 
         foreach ($insight_plugin->milestones as $milestone=>$copy) {
-            $insight_plugin->generateInsight($this->instance, $this->makeUser($milestone), array(), 1);
+            $insight_plugin->generateInsight($this->instance, $this->makeUser($milestone+17), array(), 1);
             $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
-            $this->debug($this->getRenderedInsightInHTML($result));
+            $this->dumpRenderedInsight($result, $this->instance, __METHOD__);
         }
     }
 
@@ -292,8 +276,9 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '36,001 people follow @mario');
-        $this->assertEqual($result->text, "That's how many runners were in the 2014 Boston Marathon.");
+        $this->assertEqual($result->headline, "@mario's followers outnumber Boston Marathon runners");
+        $this->assertEqual($result->text,
+            "@mario has 36,001 followers, but only 36,000 people ran the 2014 Boston Marathon.");
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
@@ -320,15 +305,15 @@ class TestOfFollowCountVisualizerInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $result = $insight_dao->getInsight('follow_count_visualizer', $this->instance->id, date('Y-m-d'));
         $this->assertNotNull($result);
-        $this->assertEqual($result->headline, '50,001 people follow @mario');
-        $this->assertEqual($result->text, "@mario's followers could fill Yankee Stadium.");
+        $this->assertEqual($result->headline, "@mario's followers would fill Yankee Stadium");
+        $this->assertEqual($result->text,
+            "@mario has 50,001 followers, but only 50,000 fans can fit in Yankee Stadium.");
 
         $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
         $latest = $baseline_dao->getMostRecentInsightBaseline('follower_vis_last_run', $this->instance->id);
         $this->assertNotNull($latest);
         $this->assertEqual($latest->value, 50000);
     }
-
     /**
      * Create a test user.
      * @param  int $num_followers
