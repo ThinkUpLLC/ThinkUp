@@ -33,30 +33,55 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
 
     public function getSchedule() {
         return array(
-            'oxford_august_2014' => array(
+            // 'oxford_august_2014' => array(
+            //     'words' => array(
+            //         'adorbs', 'amazeballs', 'baller', 'binge-watch', 'clickbait', 'cray', 'dox', 'FML', 'hot mess',
+            //         'humblebrag', 'ICYMI', 'listicle', 'live-tweet', 'mansplain', 'neckbeard', 'side-eye', 'SMH',
+            //         'subtweet', 'YOLO',
+            //     ),
+            //     'start' => '2014-09-02',
+            //     'end' => '2014-11-02',
+            //     'headline' => 'Before &ldquo;%word&rdquo; went legit',
+            //     'single_template' => '%username used the word "%word" %total_times since %first_mention, '
+            //         . 'and it appears to have caught on: It\'s '
+            //         . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2014/">'
+            //         .'just been added</a> to the Oxford Dictionary Online.',
+            //     'multiple_template' => 'The Oxford Dictionary Online '
+            //         .'<a href="http://blog.oxforddictionaries.com/2014/08/'
+            //         .'oxford-dictionaries-update-august-2015/">just added</a>'
+            //         .' %word_list to their online dictionary, '
+            //         . 'but no one has to explain them to %username. Since %first_mention, %username used '
+            //         . '%word_times_list.',
+            //     'hero_image' => array(
+            //         'img_link' => 'http://www.flickr.com/photos/bethanyking/822518337',
+            //         'alt_text' => 'New dictionary words',
+            //         'credit' => 'Photo: Bethany King',
+            //         'url' => 'https://www.thinkup.com/assets/images/insights/2014-08/new_dictionary_words.jpg'
+            //     )
+            // ),
+            'oxford_december_2014' => array(
                 'words' => array(
-                    'adorbs', 'amazeballs', 'baller', 'binge-watch', 'clickbait', 'cray', 'dox', 'FML', 'hot mess',
-                    'humblebrag', 'ICYMI', 'listicle', 'live-tweet', 'mansplain', 'neckbeard', 'side-eye', 'SMH',
-                    'subtweet', 'YOLO',
+                    'digital footprint', 'duck face', 'hawt', 'jel', 'izakaya', 'lolcat', 'man crush', 'permadeath',
+                    'respawn', 'WRT', 'xlnt', 'simples', 'tech wreck', 'crony capitalism', 'flash crash', 'duckface',
                 ),
-                'start' => '2014-09-02',
-                'end' => '2014-11-02',
+                'start' => '2014-12-04',
+                'end' => '2015-05-01',
                 'headline' => 'Before &ldquo;%word&rdquo; went legit',
                 'single_template' => '%username used the word "%word" %total_times since %first_mention, '
                     . 'and it appears to have caught on: It\'s '
-                    . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
-                    .'just been added</a> to the Oxford Dictionary Online.',
-                'multiple_template' => 'The Oxford Dictionary Online '
-                    .'<a href="http://blog.oxforddictionaries.com/2014/08/'
-                    .'oxford-dictionaries-update-august-2015/">just added</a>'
+                    . '<a href="http://blog.oxforddictionaries.com/2014/12/oxford-dictionaries-new-words-december-'
+                    . '2014/">just been added</a> to OxfordDictionariesOnline.com.',
+                'multiple_template' => 'OxfordDictionariesOnline.com '
+                    .'<a href="http://blog.oxforddictionaries.com/2014/12/oxford-dictionaries-new-words-december-2014/'
+                    .'">just added</a>'
                     .' %word_list to their online dictionary, '
                     . 'but no one has to explain them to %username. Since %first_mention, %username used '
                     . '%word_times_list.',
                 'hero_image' => array(
-                    'img_link' => 'http://www.flickr.com/photos/bethanyking/822518337',
+                    'img_link' => 'https://www.flickr.com/photos/seeminglee/4041872282',
                     'alt_text' => 'New dictionary words',
-                    'credit' => 'Photo: Bethany King',
-                    'url' => 'https://www.thinkup.com/assets/images/insights/2014-08/new_dictionary_words.jpg'
+                    'credit' => 'Photo: See-ming Lee',
+                    'url' => 'https://www.thinkup.com/assets/images/insights/2015-03/dictionarywordsomglol.jpg'
                 )
             ),
         );
@@ -70,6 +95,7 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
         foreach ($this->getSchedule() as $baseline_slug=>$data) {
             $now = TimeHelper::getTime();
             if ($now >= strtotime($data['start']) && $now <= strtotime($data['end'])) {
+                $this->logger->logInfo("$now is in-schedule", __METHOD__.','.__LINE__);
                 $baseline = $baseline_dao->getMostRecentInsightBaseline($baseline_slug, $instance->id);
                 if (!$baseline) {
                     if ( ($instance->network == 'facebook' && date('w') == 4 /*Thursday*/)
@@ -83,6 +109,8 @@ class NewDictionaryWordsInsight extends InsightPluginParent implements InsightPl
                 } else {
                     $this->logger->logInfo("Already exists", __METHOD__.','.__LINE__);
                 }
+            } else {
+                $this->logger->logInfo("Not in-schedule", __METHOD__.','.__LINE__);
             }
         }
 

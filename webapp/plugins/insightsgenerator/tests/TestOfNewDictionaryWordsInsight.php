@@ -44,7 +44,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'twitter';
         $this->instance = $instance;
 
-        TimeHelper::setTime(1410739200); // Set it to the September 2014 words timeframe
+        TimeHelper::setTime(1425329077); // Set it to the March 2015 words timeframe
     }
 
     public function tearDown() {
@@ -79,7 +79,7 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
             'post_text' => 'I love testing.', 'pub_date' => '-58d'));
         $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Testing is hard.  FML.', 'pub_date' => '-38d'));
+            'post_text' => 'Testing is hawt', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'ThinkUp is cool.', 'pub_date' => '-3d'));
@@ -91,17 +91,17 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before &ldquo;FML&rdquo; went legit', $result->headline);
-        $this->assertEqual('@testy used the word "FML" once since '.
+        $this->assertEqual('Before &ldquo;hawt&rdquo; went legit', $result->headline);
+        $this->assertEqual('@testy used the word "hawt" once since '.
             $str_earliest_mention.', and it appears to have caught on: '.
-            'It\'s <a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'.
-            "just been added</a> to the Oxford Dictionary Online.", $result->text);
+            'It\'s <a href="http://blog.oxforddictionaries.com/2014/12/oxford-dictionaries-new-words-december-2014/">'.
+            "just been added</a> to OxfordDictionariesOnline.com.", $result->text);
         $data = unserialize($result->related_data);
-        $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
+        $this->assertEqual($data['hero_image']['img_link'], 'https://www.flickr.com/photos/seeminglee/4041872282');
         $this->assertEqual($data['hero_image']['alt_text'], 'New dictionary words');
-        $this->assertEqual($data['hero_image']['credit'], 'Photo: Bethany King');
+        $this->assertEqual($data['hero_image']['credit'], 'Photo: See-ming Lee');
         $this->assertEqual($data['hero_image']['url'],
-            'https://www.thinkup.com/assets/images/insights/2014-08/new_dictionary_words.jpg');
+            'https://www.thinkup.com/assets/images/insights/2015-03/dictionarywordsomglol.jpg');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -112,19 +112,19 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $post_builders = array();
         $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'I click ALL THE CLICKBAIT!', 'pub_date' => '-580d'));
+            'post_text' => 'I click ALL THE DUCKFACE!', 'pub_date' => '-580d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I love testing.', 'pub_date' => '-58d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Testing is really easy.  No humblebrag.', 'pub_date' => '-38d'));
+            'post_text' => 'Testing is my man crush.  No humblebrag.', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Testing is really easy.  No humblebrag.', 'pub_date' => '-38d'));
+            'post_text' => 'Testing is my man crush.  No humblebrag.', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Testing is really easy.  No humblebrag.', 'pub_date' => '-38d'));
+            'post_text' => 'Testing is my man crush.  No humblebrag.', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I have a lot of figurines.  #hummelbrag.  #humblebrag.', 'pub_date' => '-38d'));
@@ -139,18 +139,18 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before &ldquo;humblebrag&rdquo; went legit', $result->headline);
-        $this->assertEqual('The Oxford Dictionary Online '
-            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
-            . 'just added</a> "humblebrag" and "clickbait" to their online '
-            . 'dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention
-            . ', @testy used "humblebrag" 4 times and "clickbait" once.', $result->text);
+        $this->assertEqual('Before &ldquo;man crush&rdquo; went legit', $result->headline);
+        $this->assertEqual('OxfordDictionariesOnline.com <a href="http://blog.oxforddictionaries.com/2014/12/oxford'.
+            '-dictionaries-new-words-december-2014/">just added</a> "man crush" and "duckface" to their online '.
+            'dictionary, but no one has to explain them to @testy. Since July 2013, @testy used "man crush" 3 times '.
+            'and "duckface" once.', $result->text);
+
         $data = unserialize($result->related_data);
-        $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
+        $this->assertEqual($data['hero_image']['img_link'], 'https://www.flickr.com/photos/seeminglee/4041872282');
         $this->assertEqual($data['hero_image']['alt_text'], 'New dictionary words');
-        $this->assertEqual($data['hero_image']['credit'], 'Photo: Bethany King');
+        $this->assertEqual($data['hero_image']['credit'], 'Photo: See-ming Lee');
         $this->assertEqual($data['hero_image']['url'],
-            'https://www.thinkup.com/assets/images/insights/2014-08/new_dictionary_words.jpg');
+            'https://www.thinkup.com/assets/images/insights/2015-03/dictionarywordsomglol.jpg');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -161,28 +161,28 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $post_builders = array();
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'I click ALL THE CLICKBAIT!', 'pub_date' => '-380d'));
+            'post_text' => 'I click ALL THE DUCK FACE!', 'pub_date' => '-380d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'I click ALL THE CLICKBAIT!', 'pub_date' => '-380d'));
+            'post_text' => 'I click ALL THE DUCK FACE!', 'pub_date' => '-380d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'This test is a hot mess.', 'pub_date' => '-480d'));
+            'post_text' => 'This test is a hawt.', 'pub_date' => '-480d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'This test is a hot mess.', 'pub_date' => '-480d'));
+            'post_text' => 'This test is a hawt.', 'pub_date' => '-480d'));
         $earliest_mention_builder = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'This test is a hot mess.', 'pub_date' => '-480d'));
+            'post_text' => 'This test is a hawt.', 'pub_date' => '-480d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
             'post_text' => 'I love testing.', 'pub_date' => '-58d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Testing is really easy.  No humblebrag.', 'pub_date' => '-38d'));
+            'post_text' => 'Testing is really easy.  No man crush.', 'pub_date' => '-38d'));
         $post_builders[] = FixtureBuilder::build('posts', array(
             'author_username'=> 'testy', 'network' => 'twitter',
-            'post_text' => 'Write some tests.  yolo!', 'pub_date' => '-3d'));
+            'post_text' => 'Write some tests.  lolcat!', 'pub_date' => '-3d'));
         $insight_plugin = new NewDictionaryWordsInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
@@ -191,19 +191,19 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $str_earliest_mention = date('F Y', strtotime($earliest_mention));
         $result = $insight_dao->getInsight('new_dictionary_words', $this->instance->id, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('Before &ldquo;hot mess&rdquo; went legit', $result->headline);
-        $this->assertEqual('The Oxford Dictionary Online '
-            . '<a href="http://blog.oxforddictionaries.com/2014/08/oxford-dictionaries-update-august-2015/">'
-            . 'just added</a> "hot mess", "clickbait", "YOLO", and "humblebrag" '
+        $this->assertEqual('Before &ldquo;hawt&rdquo; went legit', $result->headline);
+        $this->assertEqual('OxfordDictionariesOnline.com '
+            . '<a href="http://blog.oxforddictionaries.com/2014/12/oxford-dictionaries-new-words-december-2014/">'
+            . 'just added</a> "hawt", "duck face", "man crush", and "lolcat" '
             . 'to their online dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention.
-            ', @testy used "hot mess" 3 times, "clickbait" twice, "YOLO" once, and "humblebrag" once.', $result->text);
+            ', @testy used "hawt" 3 times, "duck face" twice, "man crush" once, and "lolcat" once.', $result->text);
 
         $data = unserialize($result->related_data);
-        $this->assertEqual($data['hero_image']['img_link'], 'http://www.flickr.com/photos/bethanyking/822518337');
+        $this->assertEqual($data['hero_image']['img_link'], 'https://www.flickr.com/photos/seeminglee/4041872282');
         $this->assertEqual($data['hero_image']['alt_text'], 'New dictionary words');
-        $this->assertEqual($data['hero_image']['credit'], 'Photo: Bethany King');
+        $this->assertEqual($data['hero_image']['credit'], 'Photo: See-ming Lee');
         $this->assertEqual($data['hero_image']['url'],
-            'https://www.thinkup.com/assets/images/insights/2014-08/new_dictionary_words.jpg');
+            'https://www.thinkup.com/assets/images/insights/2015-03/dictionarywordsomglol.jpg');
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
