@@ -108,8 +108,8 @@ class LlamasInsight extends InsightPluginParent implements InsightPlugin {
                 $insight->setHeroImage($hero_image);
                 $this->insight_dao->insertInsight($insight);
             }
+            $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
         }
-        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
 
