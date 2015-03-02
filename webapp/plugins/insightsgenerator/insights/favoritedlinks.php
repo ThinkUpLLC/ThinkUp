@@ -57,17 +57,22 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                     $good_links = array();
                     $good_post = false;
                     foreach ($post->links as $link) {
-                        $url = !empty($link->expanded_url) ? $link->expanded_url : $link->url;
-                        // Skipping photos that look like links
-                        if (!preg_match('/pic.twitter.com/', $url) && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
-                            $seen_expanded = !empty($link->expanded_url) && in_array($link->expanded_url, $seen_urls);
-                            // Skip URLs we've seen before
-                            if (!$seen_expanded && !in_array($link->url, $seen_urls)) {
-                                $good_links[] = $link;
-                                $seen_urls[] = $link->url;
-                                $seen_urls[] = $link->expanded_url;
-                                $num_good_links++;
-                                $good_post = true;
+                        if (!empty($link->title)) {
+                            $url = !empty($link->expanded_url) ? $link->expanded_url : $link->url;
+                            // Skipping photos that look like links
+                            if (!preg_match('/pic.twitter.com/', $url)
+                                && !preg_match('/twitter.com\/.*\/photo\//', $url)) {
+
+                                $seen_expanded = !empty($link->expanded_url)
+                                    && in_array($link->expanded_url, $seen_urls);
+                                // Skip URLs we've seen before
+                                if (!$seen_expanded && !in_array($link->url, $seen_urls)) {
+                                    $good_links[] = $link;
+                                    $seen_urls[] = $link->url;
+                                    $seen_urls[] = $link->expanded_url;
+                                    $num_good_links++;
+                                    $good_post = true;
+                                }
                             }
                         }
                     }
@@ -122,7 +127,6 @@ class FavoritedLinksInsight extends InsightPluginParent implements InsightPlugin
                 $this->insight_dao->insertInsight($my_insight);
             }
         }
-
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
     }
 }
