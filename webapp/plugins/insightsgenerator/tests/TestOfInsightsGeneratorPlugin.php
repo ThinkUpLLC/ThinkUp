@@ -499,7 +499,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         // Assert Twitter user list
         $this->assertPattern('/2 interesting people followed @snooki/', $merge_vars['insights']);
         $this->assertPattern('/https:\/\/pbs.twimg.com\/profile_images\/436950275908055040\/'.
-            '0Z8Pa9fD_normal.jpeg/', $merge_vars['insights']);
+            '0Z8Pa9fD_bigger.jpeg/', $merge_vars['insights']);
         $this->assertPattern('/Jon Angelo Gjetting/', $merge_vars['insights']);
         $this->assertPattern('/Creative Director thriving/', $merge_vars['insights']);
         // Assert Facebook user list
@@ -510,7 +510,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/This was your fave a year ago./', $merge_vars['insights']);
         $this->assertPattern('/@thinkup/', $merge_vars['insights']);
         $this->assertPattern('/https:\/\/pbs.twimg.com\/profile_images\/2600723193\/'.
-            'rvi01vw1b4mtq8gudcs6_normal.png/', $merge_vars['insights']);
+            'rvi01vw1b4mtq8gudcs6_bigger.png/', $merge_vars['insights']);
         // Assert Facebook posts list
         $this->assertPattern('/Your top Facebook posts/', $merge_vars['insights']);
         $this->assertPattern('/Matt Jacobs/', $merge_vars['insights']);
