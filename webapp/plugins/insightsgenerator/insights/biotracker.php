@@ -132,9 +132,6 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                 $insight->related_data = array('changes' => $changes);
                 $insight->text = $this->getTextAvatarChange($changes, $instance);
                 $insight->headline = $this->getHeadlineAvatarChange($changes, $instance);
-                if (count($changes) == 1) {
-                    $insight->header_image = $changes[0]["user"]->avatar;
-                }
                 $this->insight_dao->insertInsight($insight);
             }
         }
@@ -205,8 +202,8 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         if (count($changes) == 1) {
             $base = $this->getVariableCopy(array(
                 "%user1 has a new profile picture",
-                "%user1 changes it up",
-                "%user1 tries something new"
+                "%user1 got a new look",
+                "%user1 is looking good!"
             ), array('user1' => $username));
         } else {
             $second_username = ($changes[0]['user']->network == 'twitter' ? '@' : '') . $changes[1]['user']->username;

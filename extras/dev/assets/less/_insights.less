@@ -710,6 +710,45 @@
     .bio-before-after {
         display: none;
     }
+
+    .avatar-change {
+        .table>thead>tr>th,
+        .table>tbody>tr>th,
+        .table>tfoot>tr>th,
+        .table>thead>tr>td,
+        .table>tbody>tr>td,
+        .table>tfoot>tr>td {
+            border: none;
+        }
+        img.img-circle {
+            width: 96px;
+            height: 96px;
+        }
+
+        @media (max-width: 767px) {
+            border: none;
+        }
+    }
+    .avatar-change table {
+        table-layout: fixed;
+        width: 200px;
+        th {
+            padding: 0;
+        }
+        td {
+            width: 100px;
+            padding: 0;
+        }
+        tr {
+            width: 250px;
+        }
+    }
+    .avatar-before {
+        text-align: center;
+    }
+    .avatar-after {
+        text-align: center;
+    }
 }
 
 .link {

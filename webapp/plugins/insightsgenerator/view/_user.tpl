@@ -8,8 +8,8 @@ $bio_after (optional) If this is a bio change, the current bio
 *}
 
 {if isset($user)}
-<div class="user{if $i->header_image eq $user->avatar } hide-photo{/if}">
-        {if $user->avatar ne $i->header_image}
+<div class="user{if isset($avatar_before)} hide-photo{/if}">
+        {if !isset($avatar_before)}
         <a href="{if $user->network eq 'twitter' or $user->network eq 'facebook'}{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={else}https://facebook.com/{/if}{$user->user_id}{else}https://instagram.com/{$user->username}{/if}">
         <img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle pull-left user-photo">
         </a>
@@ -24,6 +24,7 @@ $bio_after (optional) If this is a bio change, the current bio
                     {$user->other.total_likes|number_format} likes
                     {/if}
                 {/if}</p>
+
                 {if isset($bio_before) and isset($bio_after)}
                 <div class="text-diff">
                     <div class="bio-diff">
@@ -39,11 +40,26 @@ $bio_after (optional) If this is a bio change, the current bio
                     <p><a class="diff-toggle" href="#" data-alt-text="Show diff">Show before/after</a></p>
                 </div>
                 {else if $user->description neq ''}
+                    {if !isset($avatar_before)}
                     <p>{$user->description}</p>
+                    {/if}
                 {/if}
 
+
+
                 {if isset($avatar_before) and isset($avatar_after)}
-                <div class="text-diff">
+                <div class="table-responsive avatar-change">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th class="avatar-before"><img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle"></th>
+                            <th class="avatar-after"><img src="{insert name='user_avatar' avatar_url=$avatar_after image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle"></th>
+                        </tr>
+                        <tr>
+                            <td class="avatar-before">Before</td>
+                            <td class="avatar-after">After</td>
+                        </tr>
+                    </table>
+<!--
                     <div class="bio-before-after">
                         <p class="bio-before"><strong>Before:</strong><br>
                         <img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle" style="float:none">
@@ -52,7 +68,8 @@ $bio_after (optional) If this is a bio change, the current bio
                         <img src="{insert name='user_avatar' avatar_url=$avatar_after image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle" style="float:none"><br>
                         </p>
                     </div>
-                    <p><a class="diff-toggle" href="#" data-alt-text="Hide before/after">Show before/after</a></p>
+-->
+
                 </div>
                 {/if}
 

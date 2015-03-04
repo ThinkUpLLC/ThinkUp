@@ -148,12 +148,10 @@ class TestOfBioTrackerInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug_avatar, 10, $this->today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "@newlywed changes it up");
+        $this->assertEqual($result->headline, "@newlywed got a new look");
         $this->assertEqual($result->text,
             "@newlywed has a new Twitter photo. What do you think?");
-        $this->assertNotNull($result->header_image);
-        $this->assertEqual($result->header_image,
-            'https://pbs.twimg.com/profile_images/1101513964/IMG_0267_pigtail_prof2_normal.jpg');
+        $this->assertNull($result->header_image);
 
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['changes']));
