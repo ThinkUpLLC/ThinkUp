@@ -476,6 +476,11 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             curl_setopt($ch, CURLOPT_TIMEOUT, self::FILE_DOWNLOAD_TIMEOUT);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+            //Avoid Travis CI error "server certificate verification failed"
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
             $data = curl_exec($ch);
             if ( !$data) {
                 $zipfile = false;
