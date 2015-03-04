@@ -653,6 +653,8 @@ or isset($insight->related_data.changes)}
 
         {if $change.field_description eq 'bio'}
           {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
+        {else}
+          {assign var="bio_diff" value=""}
         {/if}
 
         {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
