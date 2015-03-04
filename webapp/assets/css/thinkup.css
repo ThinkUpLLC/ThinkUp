@@ -2549,6 +2549,43 @@ body.app-message-visible.account .container {
 .user .bio-before-after {
   display: none;
 }
+.user .avatar-change .table > thead > tr > th,
+.user .avatar-change .table > tbody > tr > th,
+.user .avatar-change .table > tfoot > tr > th,
+.user .avatar-change .table > thead > tr > td,
+.user .avatar-change .table > tbody > tr > td,
+.user .avatar-change .table > tfoot > tr > td {
+  border: none;
+}
+.user .avatar-change img.img-circle {
+  width: 96px;
+  height: 96px;
+}
+@media (max-width: 767px) {
+  .user .avatar-change {
+    border: none;
+  }
+}
+.user .avatar-change table {
+  table-layout: fixed;
+  width: 200px;
+}
+.user .avatar-change table th {
+  padding: 0;
+}
+.user .avatar-change table td {
+  width: 100px;
+  padding: 0;
+}
+.user .avatar-change table tr {
+  width: 250px;
+}
+.user .avatar-before {
+  text-align: center;
+}
+.user .avatar-after {
+  text-align: center;
+}
 .link .link-title {
   font-weight: bold;
 }
