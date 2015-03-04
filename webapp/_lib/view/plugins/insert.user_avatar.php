@@ -45,6 +45,15 @@ function smarty_insert_user_avatar($params, &$smarty) {
         return;
     } else {
         $avatar_url_https = preg_replace('/^http:(.+)$/', "https:$1", $params['avatar_url']);
+        if (!empty($params['avatar_size']) && $params['avatar_size'] == 'original') {
+            //Get the original version of the avatar
+            //https://dev.twitter.com/overview/general/user-profile-images-and-banners
+            $avatar_url_https = str_replace('_normal', '', $avatar_url_https);
+        } else {
+            //Get the bigger version of the avatar
+            //https://dev.twitter.com/overview/general/user-profile-images-and-banners
+            $avatar_url_https = str_replace('_normal', '_bigger', $avatar_url_https);
+        }
         if (!empty($params['image_proxy_sig'])) {
             return 'https://www.thinkup.com/join/img.php?url='.$avatar_url_https
                 ."&t=avatar&s=".$params['image_proxy_sig'];

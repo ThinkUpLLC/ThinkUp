@@ -49,8 +49,8 @@ $bio_after (optional) If this is a bio change, the current bio
                 <div class="table-responsive avatar-change">
                     <table class="table table-condensed">
                         <tr>
-                            <th class="avatar-before"><img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle"></th>
-                            <th class="avatar-after"><img src="{insert name='user_avatar' avatar_url=$avatar_after image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle"></th>
+                            <th class="avatar-before"><img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig avatar_size='original'}" alt="{$user->full_name}" class="img-circle"></th>
+                            <th class="avatar-after"><img src="{insert name='user_avatar' avatar_url=$avatar_after image_proxy_sig=$image_proxy_sig avatar_size='original'}" alt="{$user->full_name}" class="img-circle"></th>
                         </tr>
                         <tr>
                             <td class="avatar-before">Before</td>
