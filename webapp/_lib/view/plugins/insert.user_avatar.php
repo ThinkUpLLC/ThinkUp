@@ -55,7 +55,7 @@ function smarty_insert_user_avatar($params, &$smarty) {
             $avatar_url_https = str_replace('_normal', '_bigger', $avatar_url_https);
         }
         if (!empty($params['image_proxy_sig'])) {
-            return 'https://www.thinkup.com/join/img.php?url='.$avatar_url_https
+            return 'https://images.thinkup.com/?url='.$avatar_url_https
                 ."&t=avatar&s=".$params['image_proxy_sig'];
         } else {
             return $avatar_url_https;
