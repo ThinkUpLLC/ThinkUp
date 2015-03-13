@@ -1132,25 +1132,36 @@ class TwitterCrawler {
                     if ($http_status == 200) {
                         $friendship = $this->api->parseJSONRelationship($payload);
                         if ($friendship['source_follows_target'] == 'true') {
-                            $this->logger->logInfo("Updating follow last seen date: ".$args["source_id"]." follows ".
-                                $args["target_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->update($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
-                                true, $debug_api_call);
-                        } else {
-                            $this->logger->logInfo("Deactivating follow: ".$args["source_id"]." does not follow ".
-                                $args["target_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->deactivate($old_follow["followee_id"], $old_follow["follower_id"], 'twitter',
+                            $this->logger->logInfo("Updating follow last seen date. source_follows_target is true ".
+                                $args["source_id"]." follows ". $args["target_id"].
+                                " follower_id is ".$old_follow["follower_id"]." and followee_id is ".
+                                $old_follow["followee_id"], __METHOD__.','.__LINE__);
+
+                            $follow_dao->update($args["target_id"], $args["source_id"], 'twitter', true,
                                 $debug_api_call);
+                        } else {
+                            $this->logger->logInfo("Deactivating follow source_follows_target is false: ".
+                                $args["source_id"]." does not follow ". $args["target_id"].
+                                " follower_id is ".$old_follow["follower_id"]." and followee_id is ".
+                                $old_follow["followee_id"], __METHOD__.','.__LINE__);
+
+                            $follow_dao->deactivate($args["target_id"], $args["source_id"], 'twitter', $debug_api_call);
                         }
                         if ($friendship['target_follows_source'] == 'true') {
-                            $this->logger->logInfo("Updating follow last seen date: ".$args["target_id"]." follows ".
-                                $args["source_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->update($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
-                                true, $debug_api_call);
+                            $this->logger->logInfo("Updating follow last seen date. target_follows_source is true ".
+                                $args["target_id"]." follows ". $args["source_id"].
+                                " follower_id is ".$old_follow["follower_id"]." and followee_id is ".
+                                $old_follow["followee_id"], __METHOD__.','.__LINE__);
+
+                            $follow_dao->update($args["source_id"], $args["target_id"], 'twitter', true,
+                                $debug_api_call);
                         } else {
-                            $this->logger->logInfo("Deactivating follow: ".$args["target_id"]." does not follow ".
-                            $args["source_id"], __METHOD__.','.__LINE__);
-                            $follow_dao->deactivate($old_follow["follower_id"], $old_follow["followee_id"], 'twitter',
+                            $this->logger->logInfo("Deactivating follow target_follows_source is false ".
+                                $args["target_id"]." does not follow ". $args["source_id"].
+                                " follower_id is ".$old_follow["follower_id"]." and followee_id is ".
+                                $old_follow["followee_id"], __METHOD__.','.__LINE__);
+
+                            $follow_dao->deactivate($args["source_id"], $args["target_id"], 'twitter',
                                 $debug_api_call);
                         }
                     } else {
