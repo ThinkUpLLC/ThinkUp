@@ -942,6 +942,27 @@ body.outlook p {
       table.footer .motto {
           text-align: right;
       }
+
+    .avatar-change table {
+        table-layout: fixed;
+        width: 225px;
+        th {
+            padding: 0;
+        }
+        td {
+            width: 100px;
+            padding: 0;
+        }
+        tr {
+            width: 250px;
+        }
+    }
+    .avatar-before {
+        text-align: center;
+    }
+    .avatar-after {
+        text-align: center;
+    }
   </style>{/literal}
 </head>
 <body>
@@ -1204,6 +1225,10 @@ body.outlook p {
   {assign var='color_light' value='fee4e7'}
 {/if}
 
+{assign var="bio_diff" value=""}
+{assign var="avatar_before" value=""}
+{assign var="avatar_after" value=""}
+
 <table class="row insight insight-{$color_name}">
   <tr>
     <td class="wrapper last">
@@ -1279,8 +1304,11 @@ or isset($insight->related_data.changes)}
 
         {if $change.field_description eq 'bio'}
           {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
-        {else}
-          {assign var="bio_diff" value=""}
+        {elseif $change.field_description eq 'avatar'}
+          {if isset($change.before) and isset($change.after)}
+            {assign var="avatar_before" value=$change.before}
+            {assign var="avatar_after" value=$change.after}
+          {/if}
         {/if}
 
         {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
@@ -1288,10 +1316,14 @@ or isset($insight->related_data.changes)}
             <td class="sub-grid object user text-pad">
                 <table>
                     <tr>
+                       {if $avatar_before neq ''}
+                        <td class="twelve sub-columns">
+                        {else}
                         <td class="two sub-columns center">
                             <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
                         </td>
                         <td class="ten sub-columns">
+                        {/if}
                             <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
                             <div class="user-text">
                                 <p>{if $user->network eq 'twitter'}
@@ -1301,8 +1333,21 @@ or isset($insight->related_data.changes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
-                                {if isset($bio_diff) && $bio_diff neq ''}
+                                {if $bio_diff neq ''}
                                     <p class="text-diff">{$bio_diff}</p>
+                                {elseif $avatar_before neq '' }
+                                <div class="avatar-change">
+                                 <table class="table">
+                                     <tr>
+                                         <th class="avatar-before"><img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" width="100" height="100" class="img-circle"></th>
+                                         <th class="avatar-after"><img src="{insert name='user_avatar' avatar_url=$avatar_after  image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" width="100" height="100" class="img-circle"></th>
+                                     </tr>
+                                     <tr>
+                                         <td class="avatar-before">Before</td>
+                                         <td class="avatar-after">After</td>
+                                     </tr>
+                                 </table>
+                                </div>
                                 {else}
                                     <p>{$user->description}</p>
                                 {/if}

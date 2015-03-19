@@ -578,6 +578,10 @@ color: #417505 !important;
   {assign var='color_light' value='fee4e7'}
 {/if}
 
+{assign var="bio_diff" value=""}
+{assign var="avatar_before" value=""}
+{assign var="avatar_after" value=""}
+
 <table class="row insight insight-{$color_name}" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; border-top-width: 5px; border-top-color: #{$color_dark}; border-top-style: solid; border-bottom-style: solid; border-bottom-color: #{$color}; border-bottom-width: 2px; margin-bottom: 14px; background: #{$color}; padding: 0px;">
   <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
     <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
@@ -653,8 +657,11 @@ or isset($insight->related_data.changes)}
 
         {if $change.field_description eq 'bio'}
           {insert name="string_diff" from_text=$change.before to_text=$change.after assign="bio_diff" is_email=true}
-        {else}
-          {assign var="bio_diff" value=""}
+        {elseif $change.field_description eq 'avatar'}
+          {if isset($change.before) and isset($change.after)}
+            {assign var="avatar_before" value=$change.before}
+            {assign var="avatar_after" value=$change.after}
+          {/if}
         {/if}
 
         {if isset($user->network) and isset($user->user_id) and isset($user->avatar)}
@@ -662,10 +669,14 @@ or isset($insight->related_data.changes)}
             <td class="sub-grid object user text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0 0 10px; padding: 10px;" align="left" valign="top">
                 <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
                     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                       {if $avatar_before neq ''}
+                        <td class="twelve sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 100%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
+                        {else}
                         <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
                             <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
                         </td>
                         <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
+                        {/if}
                             <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
                             <div class="user-text">
                                 <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
@@ -675,8 +686,21 @@ or isset($insight->related_data.changes)}
                                     {$user->other.total_likes|number_format} likes
                                     {/if}
                                 {/if}</p>
-                                {if isset($bio_diff) && $bio_diff neq ''}
+                                {if $bio_diff neq ''}
                                     <p class="text-diff" style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$bio_diff}</p>
+                                {elseif $avatar_before neq '' }
+                                <div class="avatar-change">
+                                 <table class="table" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 225px; table-layout: fixed; padding: 0;">
+                                     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                                         <th class="avatar-before" style="text-align: center;" align="center"><img src="{insert name='user_avatar' avatar_url=$avatar_before image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" width="100" height="100" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%;" align="left" /></th>
+                                         <th class="avatar-after" style="text-align: center;" align="center"><img src="{insert name='user_avatar' avatar_url=$avatar_after  image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" width="100" height="100" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%;" align="left" /></th>
+                                     </tr>
+                                     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                                         <td class="avatar-before" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px;" align="center" valign="top">Before</td>
+                                         <td class="avatar-after" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 0px;" align="center" valign="top">After</td>
+                                     </tr>
+                                 </table>
+                                </div>
                                 {else}
                                     <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{$user->description}</p>
                                 {/if}
