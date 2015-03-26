@@ -261,10 +261,12 @@ function show_advanced() {
   }
 }
 
-if( required_values_set ) {
-  $('#add-account-div').show();
-} else {
-  if(! is_admin) {
-    $('#contact-admin-div').show();
-  }
+if( typeof required_values_set != 'undefined'){
+    if( required_values_set ) {
+        $('#add-account-div').show();
+    } else {
+        if(! is_admin) {
+            $('#contact-admin-div').show();
+        }
+    }
 }
