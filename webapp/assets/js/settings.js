@@ -225,6 +225,9 @@ if ((show_plugin && (!window.location.hash || window.location.hash == '' || wind
 
 
 function show_settings() {
+    if( typeof settings_visible == 'undefined'){
+        var settings_visible = false;
+    }
     if (settings_visible) {
         $(".plugin-settings").hide();
         $('#settings-flip-prompt').html('Show');
