@@ -115,7 +115,7 @@ class InstagramCrawler {
                 $user_vals["location"] = '';
                 $user_vals["description"] = $details->getBio()!=null?$details->getBio():'';
                 $user_vals["is_protected"] = 0;
-                $user_vals["joined"] = null;
+                $user_vals["joined"] = ''; //Column 'joined' cannot be null
                 $user_vals["network"] = $details->network;
                 //this will help us in getting correct range of posts
                 $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
