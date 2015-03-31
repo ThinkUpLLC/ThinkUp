@@ -90,7 +90,12 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
      */
     protected function setUpInstagramInteractions($options) {
         // Create our instagram Application instance
-        $redirect_uri = Utils::getApplicationURL().'account/?p=instagram';
+        if (Utils::isThinkUpLLC()) {
+            $redirect_uri = Config::getInstance()->getValue('thinkupllc_endpoint').'instagram/?u='.
+                Config::getInstance()->getValue('install_folder');
+        } else {
+            $redirect_uri = Utils::getApplicationURL().'account/?p=instagram';
+        }
         $scope = array( 'likes', 'comments', 'relationships' );
 
         $instagram = new Instagram\Auth(array(
