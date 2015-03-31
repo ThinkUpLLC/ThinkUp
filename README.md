@@ -6,7 +6,7 @@ Twitter, Facebook, and Instagram. Find out more at  [http://thinkup.com](http://
 ## Support and Documentation
 
 Refer to [ThinkUp's documentation](http://thinkupapp.com/docs/), or contact the ThinkUp community on the
-[project mailing list](http://groups.google.com/group/thinkupapp) for support.
+[project mailing list](http://groups.google.com/group/thinkup) for support.
 
 ## License
 
