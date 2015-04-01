@@ -54,8 +54,8 @@ Therefore, on Facebook posts, list links that are not images.
 {/if}
 
   <div class="tweet-actions">
-    <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if
-      $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
+    <a href="{if $post->network eq 'facebook' || $post->network eq 'twitter'}{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if
+      $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}{elseif $post->network eq 'instagram'}{$post->permalink}{/if}"
       class="tweet-action tweet-action-permalink">{$post->pub_date|date_format:'%b %e, %Y'}</a>
   {if $post->network eq 'twitter'}
     <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}" class="tweet-action"><i class="fa fa-reply icon"></i></a>
