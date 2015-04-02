@@ -39,11 +39,14 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
         $since_date = date("Y-m-d");
         $filename = basename(__FILE__, ".php");
 
-        if ($instance->network == 'twitter') {
+        if ($instance->network == 'facebook') {
             $day_of_month = 1;
-        } else {
+        } elseif ($instance->network == 'instagram') {
             $day_of_month = 2;
+        } else { //This doesn't actually run for Twitter since crawler doesn't capture favoriters
+            $day_of_month = 3;
         }
+
         $should_generate_insight = self::shouldGenerateMonthlyInsight('biggest_fans_last_30_days', $instance,
             $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_month = $day_of_month,
             null, array('twitter'));

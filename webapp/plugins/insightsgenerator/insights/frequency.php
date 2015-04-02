@@ -41,8 +41,10 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         $info = array('text' => '');
         if ($instance->network == 'twitter') {
             $day_of_week = 1;
+        } elseif ($instance->network == 'instagram') {
+            $day_of_week = 3;
         } else {
-            $day_of_week = 4;
+            $day_of_week = 5;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('frequency', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week=$day_of_week);
