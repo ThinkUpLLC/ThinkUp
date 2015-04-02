@@ -116,13 +116,12 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                         ));
                 } else {
                     $info  = array(
-                       'headline '=> $info['headline'],
-                       'text' => "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom",
+                       'headline'=> $this->getVariableCopy(array('%username didn\'t post any new %posts this week')),
+                       'text' => "Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.",
                        'button' => array(
                             "url" => "http://www.donorschoose.org/",
                             "label"  => "Give to DonorsChoose.org",
                     ));
-
                 }
             }
 

@@ -138,6 +138,35 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         }
     }
 
+    public function testFrequencyInsightNoPostsThisWeekInstagram() {
+        $insight_dao = new InsightMySQLDAO();
+        // Get data ready that insight requires
+        $posts = array();
+        $instance = new Instance();
+        $instance->id = 1;
+        $instance->network_username = 'Silent Bob';
+        $instance->network = 'instagram';
+        $insight_plugin = new FrequencyInsight();
+        $user = new User();
+        $user->avatar = 'https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg';
+
+        $insight_plugin->generateInsight($instance, $user, $posts, 3);
+        // Assert that insight got inserted
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 1, $today);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertNotNull($result->time_generated);
+
+            $this->assertEqual('Silent Bob didn\'t post any new photos this week',
+            $result->headline);
+            $this->assertEqual('Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.',
+                $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testFrequencyInsightNoPriorBaseline() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
