@@ -159,10 +159,36 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertNotNull($result->time_generated);
 
-            $this->assertEqual('Silent Bob didn\'t post any new photos this week',
-            $result->headline);
-            $this->assertEqual('Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.',
-                $result->text);
+        $this->assertEqual('Silent Bob didn\'t post any new photos this week',
+        $result->headline);
+        $this->assertEqual('Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.',
+            $result->text);
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFrequencyInsightExactly1Post() {
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects();
+        $posts = array_slice( $posts, 0, 1);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FrequencyInsight();
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
+            'instance_id'=>10, 'value'=>19));
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 10, $today);
+        $this->assertNotNull($result);
+
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
@@ -176,7 +202,7 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
 
-        // Assert that insight got inserted
+        // Assert that insight didn't get inserted without a prior baseline
         $insight_dao = new InsightMySQLDAO();
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $today = date ('Y-m-d');
@@ -193,7 +219,7 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         $instance->network = 'facebook';
         $insight_plugin = new FrequencyInsight();
 
-        // Assert that insight got inserted
+        // Assert that insight didn't get inserted without a prior baseline
         $insight_dao = new InsightMySQLDAO();
         $insight_plugin->generateInsight($instance, null, $posts, 3);
         $today = date ('Y-m-d');

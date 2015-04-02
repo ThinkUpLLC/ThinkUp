@@ -66,6 +66,22 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
                         ),
                     ),
                 );
+            } elseif ($count == 1) {
+                $info['headline'] = $this->getVariableCopy(array(
+                    '%username %posted <strong>once</strong> in the past week',
+                    '%username had <strong>one photo</strong> over the past week',
+                    '%username had <strong>one photo</strong> over the past week', // twice as likely on purpose
+                ), array('count' => number_format($count)));
+                $milestones = array(
+                    "per_row"    => 1,
+                    "label_type" => "icon",
+                    "items" => array(
+                        0 => array(
+                            "number" => number_format($count),
+                            "label"  => $this->terms->getNoun('post', $count),
+                        ),
+                    ),
+                );
             } else {
                 if ($instance->network == 'twitter') {
                     $info = $this->getVariableCopyArray(array(
@@ -128,7 +144,7 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
             $insight_baseline_dao->insertInsightBaseline("frequency", $instance->id, $count, $this->insight_date);
 
-            if ($count > 1) {
+            if ($count > 0) {
                 //Week over week comparison
                 //Get insight baseline from last Monday
                 $last_monday = date('Y-m-d', strtotime('-7 day'));
