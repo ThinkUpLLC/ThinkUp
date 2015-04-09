@@ -71,7 +71,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if (isset($row)) {
             $insight = new Insight($row);
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
@@ -98,7 +102,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
     public function getPreCachedInsightData($slug, $instance_id, $date) {
         $insight = self::getInsight($slug, $instance_id, $date);
         if (isset($insight->related_data) && $insight->related_data != '') {
-            return Serializer::unserializeString($insight->related_data);
+            try {
+                return Serializer::unserializeString($insight->related_data);
+            } catch (SerializerException $e) {
+                return null;
+            }
         } else {
             return null;
         }
@@ -188,7 +196,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $insights = $this->getDataRowsAsObjects($ps, "Insight");
         foreach ($insights as $insight) {
             if ($insight->related_data !== null) {
-                $insight->related_data = Serializer::unserializeString($insight->related_data);
+                try {
+                    $insight->related_data = Serializer::unserializeString($insight->related_data);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $insight->date. " ".date('H').":".date('i');
@@ -306,7 +318,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $row['date']. " ".date('H').":".date('i');
@@ -337,7 +353,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $row['date']. " ".date('H').":".date('i');
@@ -383,7 +403,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $row['date']. " ".date('H').":".date('i');
@@ -429,7 +453,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data =  null;
+                }
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $row['date']. " ".date('H').":".date('i');
@@ -458,7 +486,12 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
             $insight->instance = new Instance($row);
             $insight->instance->avatar = $row['avatar'];
             if ($row['related_data'] !== null) {
-                $insight->related_data = Serializer::unserializeString($row['related_data']);
+                try {
+                    $insight->related_data = Serializer::unserializeString($row['related_data']);
+                } catch (SerializerException $e) {
+                    $insight->related_data = null;
+                }
+
             }
             //assume insight came at same time of day as now for relative day notation
             $insight->date = $row['date']. " ".date('H').":".date('i');
@@ -479,7 +512,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $ps = $this->execute($q, $vars);
         $insight = $this->getDataRowAsObject($ps, "Insight");
         if ($insight->related_data !== null) {
-            $insight->related_data = Serializer::unserializeString($insight->related_data);
+            try {
+                $insight->related_data = Serializer::unserializeString($insight->related_data);
+            } catch (SerializerException $e) {
+                $insight->related_data = null;
+            }
         }
         return $insight;
     }
