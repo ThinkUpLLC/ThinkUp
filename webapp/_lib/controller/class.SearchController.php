@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.SearchController.php
  *
- * Copyright (c) 2013 Gina Trapani
+ * Copyright (c) 2013-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -21,11 +21,11 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Grid Export Controller
- * Exports Grid posts from an instance user on ThinkUp.
+ * Search Controller
+ * Display search results.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Gina Trapani
+ * @copyright 2013-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -40,6 +40,11 @@ class SearchController extends ThinkUpAuthController {
         $this->setViewTemplate('search.tpl');
         $this->addToView('enable_bootstrap', true);
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
+
+        $config = Config::getInstance();
+        if ($config->getValue('image_proxy_enabled') == true) {
+            $this->addToView('image_proxy_sig', $config->getValue('image_proxy_sig'));
+        }
 
         if ($this->shouldRefreshCache() ) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
