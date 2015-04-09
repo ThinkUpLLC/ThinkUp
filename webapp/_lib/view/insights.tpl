@@ -1,6 +1,6 @@
 {include file="_header.tpl"}
 {if !isset($share_mode)}
-  {include file="_navigation.tpl"}
+  {include file="_navigation.tpl" display_search_box="true"}
 {/if}
 
 

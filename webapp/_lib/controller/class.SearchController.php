@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.SearchController.php
  *
- * Copyright (c) 2013 Gina Trapani
+ * Copyright (c) 2013-2015 Gina Trapani
  *
  * LICENSE:
  *
@@ -21,11 +21,11 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Grid Export Controller
- * Exports Grid posts from an instance user on ThinkUp.
+ * Search Controller
+ * Display search results for all an owner's instances.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Gina Trapani
+ * @copyright 2013-2015 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -41,86 +41,61 @@ class SearchController extends ThinkUpAuthController {
         $this->addToView('enable_bootstrap', true);
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
 
+        $config = Config::getInstance();
+        if ($config->getValue('image_proxy_enabled') == true) {
+            $this->addToView('image_proxy_sig', $config->getValue('image_proxy_sig'));
+        }
+
         if ($this->shouldRefreshCache() ) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
-            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
-            if (isset($_GET['q']) && isset($_GET['n']) && isset($_GET['u']) && isset($_GET['c'])) {
-                $instance = $instance_dao->getByUsernameOnNetwork(stripslashes($_GET["u"]), $_GET['n']);
-                if (isset($instance) && $_GET['q'] != '') {
-                    if ($owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
-                        switch ($_GET["c"]) {
-                            case "posts":
-                                self::searchPosts();
-                                break;
-                            case "followers":
-                                self::searchFollowers($instance->network_user_id);
-                                break;
-                            case "searches":
-                                self::searchSearches();
-                                break;
-                            default:
-                                self::searchPosts();
-                        }
-                    } else {
-                        $this->addErrorMessage("Whoops! You don't have access to that user. Please try again.");
-                    }
+            if (isset($_GET['q'])) {
+                if ($_GET['q'] == '') {
+                    $this->addErrorMessage("Uh-oh. Your search term is missing. Please try again.");
                 } else {
-                    if (!isset($instance)) {
-                        $this->addErrorMessage("Whoops! That user doesn't exist. Please try again.");
+                    //Get an owner's instances
+                    $instances = $instance_dao->getByOwner($owner);
+                    $instances_search_results = array();
+                    //Foreach instance
+                    foreach ($instances as $instance) {
+                        if ($instance->network !== 'facebook') {
+                            //Get follower search results
+                            $results = self::searchFollowers($instance->network_user_id, $instance->network);
+                            //Unique array key
+                            $arr_key = count($results)."-"
+                                .$instance->network_user_id.'-'.$instance->network;
+                            $instances_search_results[$arr_key]['instance'] = $instance;
+                            $instances_search_results[$arr_key]['search_results'] = $results;
+                            $arr_key = null;
+                            $results = null;
+                        }
                     }
-                    if ($_GET['q'] == '') {
-                        $this->addErrorMessage("Uh-oh. Your search term is missing. Please try again.");
-                    }
+                    //Order sets of results by network with most results first
+                    ksort($instances_search_results, SORT_STRING);
+                    $instances_search_results = array_reverse($instances_search_results);
+                    $this->addToView('instances_search_results', $instances_search_results);
                 }
             } else {
                 $this->addErrorMessage("Uh-oh. Your search terms are missing. Please try again.");
             }
             //Populate search dropdown with service users
-            $instances = $instance_dao->getByOwner($owner);
             $this->addToView('instances', $instances);
-            $saved_searches = array();
-            if (sizeof($instances) > 0) {
-                $instancehashtag_dao = DAOFactory::getDAO('InstanceHashtagDAO');
-                $saved_searches = $instancehashtag_dao->getHashtagsByInstances($instances);
-            }
-            $this->addToView('saved_searches', $saved_searches);
         }
         return $this->generateView();
     }
     /**
-     * Populate view with post search results
-     */
-    private function searchPosts() {
-        $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
-        $keywords = explode(' ', $_GET['q']);
-        $this->addToView('current_page', $page_number);
-
-        $post_dao = DAOFactory::getDAO('PostDAO');
-        $posts = $post_dao->searchPostsByUser($keywords, $_GET['n'], $_GET['u'], $page_number,
-        $page_count=(self::PAGE_RESULTS_COUNT+1));
-
-        if (isset($posts) && sizeof($posts) > 0) {
-            if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {
-                $this->addToView('next_page', $page_number+1);
-                $this->addToView('last_page', $page_number-1);
-                array_pop($posts);
-            }
-            $this->addToView('posts', $posts);
-        }
-    }
-    /**
      * Populate view with follower search results.
      * @param str $user_id
+     * @param array Users
      */
-    private function searchFollowers($user_id) {
+    private function searchFollowers($user_id, $network) {
         $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
         $keywords = explode(' ', $_GET['q']);
 
         $follow_dao = DAOFactory::getDAO('FollowDAO');
-        $users = $follow_dao->searchFollowers($keywords, $_GET['n'], $user_id, $page_number,
-        $page_count=(self::PAGE_RESULTS_COUNT+1));
+        $users = $follow_dao->searchFollowers($keywords, $network, $user_id, $page_number,
+            $page_count=(self::PAGE_RESULTS_COUNT));
 
         if (isset($users) && sizeof($users) > 0) {
             if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {
@@ -128,35 +103,9 @@ class SearchController extends ThinkUpAuthController {
                 $this->addToView('last_page', $page_number-1);
                 array_pop($users);
             }
-            $this->addToView('users', $users);
-        }
-    }
-    /**
-     * Populate view with post search results from search hashtags or keywords.
-     */
-    private function searchSearches() {
-        $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
-        $this->addToView('current_page', $page_number);
-
-        $keywords = explode(' ', $_GET['q']);
-        if (isset($_GET['k'])) {
-            $hashtag_dao = DAOFactory::getDAO('HashtagDAO');
-            $hashtag = $hashtag_dao->getHashtag($_GET['k'], $_GET['n']);
-            if (isset($hashtag)) {
-                $post_dao = DAOFactory::getDAO('PostDAO');
-                $posts = $post_dao->searchPostsByHashtag($keywords, $hashtag, $_GET['n'], $page_number,
-                $page_count=(self::PAGE_RESULTS_COUNT+1));
-                if (isset($posts) && sizeof($posts) > 0) {
-                    if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {
-                        $this->addToView('next_page', $page_number+1);
-                        $this->addToView('last_page', $page_number-1);
-                        array_pop($posts);
-                    }
-                    $this->addToView('posts', $posts);
-                }
-            } else {
-                $this->addErrorMessage("Uh-oh. ".$_GET['k']." is not a saved search. Please try again.");
-            }
+            return $users;
+        } else {
+            return null;
         }
     }
 }
