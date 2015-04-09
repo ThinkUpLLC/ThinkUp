@@ -32,9 +32,9 @@
         {/if}
         {if $smarty.get.c eq 'followers'}
           {if $users|@count > 0}
-            Looks like {$users|@count} people answer to "{$smarty.get.q}".
+            Looks like {$users|@count} people answer to "{$smarty.get.q|replace:'name:':''}".
           {else}
-            Hmm, no luck looking for "{$smarty.get.q}" people.
+            Hmm, no luck looking for "{$smarty.get.q|replace:'name:':''}" people.
           {/if}
         {/if}
     </h2>
