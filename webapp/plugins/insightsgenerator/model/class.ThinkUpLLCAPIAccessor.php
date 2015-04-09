@@ -71,7 +71,12 @@ class ThinkUpLLCAPIAccessor {
             //echo $api_call;
             $result = self::getURLContents($api_call);
             //print_r($result);
-            $result_decoded = JSONDecoder::decode($result);
+            try {
+                $result_decoded = JSONDecoder::decode($result);
+            } catch (JSONDecoderException $e) {
+                //Punt
+                return true;
+            }
             //print_r($result_decoded);
             return $result_decoded->show_diff;
         }

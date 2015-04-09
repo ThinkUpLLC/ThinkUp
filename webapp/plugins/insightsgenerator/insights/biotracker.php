@@ -114,8 +114,23 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                             //Extra check for ThinkUp LLC users
                             if (Utils::isThinkUpLLC()) {
                                 $api_accessor = new ThinkUpLLCAPIAccessor();
-                                $do_show_change = $api_accessor->didAvatarsChange($user->avatar,
+
+                                $avatar_url1_https = preg_replace('/^http:(.+)$/', "https:$1", $user->avatar);
+                                $avatar_url2_https = preg_replace('/^http:(.+)$/', "https:$1",
                                     $last_version['field_value']);
+
+                                //Get the original version of the avatar
+                                //https://dev.twitter.com/overview/general/user-profile-images-and-banners
+                                $avatar_url1_https = str_replace('_normal', '', $avatar_url1_https);
+                                $avatar_url2_https = str_replace('_normal', '', $avatar_url2_https);
+
+                                $do_show_change = $api_accessor->didAvatarsChange($avatar_url1_https,
+                                    $avatar_url2_https);
+
+                                if (!$do_show_change) {
+                                    $this->logger->logInfo("Skipping change for ".$avatar_url1_https." and ".
+                                        $avatar_url2_https, __METHOD__.','.__LINE__);
+                                }
                             }
 
                             if ($do_show_change) {
@@ -126,9 +141,6 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                                     'before' => $last_version['field_value'],
                                     'after' => $user->avatar
                                 );
-                            } else {
-                                $this->logger->logInfo("Skipping change for ".$user->avatar." and ".
-                                    $last_version['field_value'], __METHOD__.','.__LINE__);
                             }
                         }
                     }
