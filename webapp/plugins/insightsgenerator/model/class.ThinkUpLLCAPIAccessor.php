@@ -53,17 +53,44 @@ class ThinkUpLLCAPIAccessor {
         }
     }
     /**
+     * Check to see if two avatars cached on ThinkUp.com are different.
+     * Sometimes, Twitter stores the same avatar at different URLs, and the files have different checksums, but
+     * the images look very similar. This is an extra check for image differences for hosted ThinkUp.com users.
+     * @param  str $image1
+     * @param  str $image2
+     * @return bool
+     */
+    public function didAvatarsChange($image1, $image2) {
+        $config = Config::getInstance();
+        if ($config->getValue('image_proxy_enabled') == true) {
+            $image_proxy_sig = $config->getValue('image_proxy_sig');
+            $api_url = "https://images.thinkup.com/";
+            $params = array('image1'=>$image1, 'image2'=>$image2, 's'=>$image_proxy_sig);
+            $query = http_build_query($params);
+            $api_call = $api_url.'?'.$query;
+            //echo $api_call;
+            $result = self::getURLContents($api_call);
+            //print_r($result);
+            $result_decoded = JSONDecoder::decode($result);
+            //print_r($result_decoded);
+            return $result_decoded->show_diff;
+        }
+        return true;
+    }
+    /**
      * Get the contents of a URL given an http auth username and password.
      * @param  str $url
      * @param  str $username
      * @param  str $password
      * @return str
      */
-    private static function getURLContents($url, $username, $password) {
+    private static function getURLContents($url, $username=null, $password=null) {
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_URL, $url);
-        curl_setopt($c, CURLOPT_USERPWD, $username . ":" . $password);
+        if (isset($username) && isset($password)) {
+            curl_setopt($c, CURLOPT_USERPWD, $username . ":" . $password);
+        }
         $contents = curl_exec($c);
         $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
         curl_close($c);

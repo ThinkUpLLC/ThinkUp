@@ -109,13 +109,27 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                         $user_dao = DAOFactory::getDAO('UserDAO');
                         $user = $user_dao->getDetailsByUserKey($user_key);
                         if ($user && ($user->avatar !== $last_version['field_value'])) {
-                            $changes[] = array(
-                                'user' => $user,
-                                'field_name' => 'avatar',
-                                'field_description' => 'avatar',
-                                'before' => $last_version['field_value'],
-                                'after' => $user->avatar
-                            );
+                            $do_show_change = true;
+
+                            //Extra check for ThinkUp LLC users
+                            if (Utils::isThinkUpLLC()) {
+                                $api_accessor = new ThinkUpLLCAPIAccessor();
+                                $do_show_change = $api_accessor->didAvatarsChange($user->avatar,
+                                    $last_version['field_value']);
+                            }
+
+                            if ($do_show_change) {
+                                $changes[] = array(
+                                    'user' => $user,
+                                    'field_name' => 'avatar',
+                                    'field_description' => 'avatar',
+                                    'before' => $last_version['field_value'],
+                                    'after' => $user->avatar
+                                );
+                            } else {
+                                $this->logger->logInfo("Skipping change for ".$user->avatar." and ".
+                                    $last_version['field_value'], __METHOD__.','.__LINE__);
+                            }
                         }
                     }
                 }
