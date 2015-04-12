@@ -36,7 +36,7 @@ class ForgotPasswordController extends ThinkUpController {
         $config = Config::getInstance();
         $this->addToView('is_registration_open', $config->getValue('is_registration_open'));
 
-        if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send Reset') {
+        if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send') {
             $this->disableCaching();
 
             $dao = DAOFactory::getDAO('OwnerDAO');
