@@ -213,6 +213,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern($expected_pattern, $output);
     }
 
+    //TODO Bring this back when we revive pages
+    /*
     public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedAndManagedPagesWithAuthError() {
         self::buildInstanceData();
         // build some options data
@@ -314,6 +316,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($liked_pages), 0);
         $this->assertNoPattern("/Pages Gina Trapani Manages/", $output);
     }
+*/
 
     private function buildPluginOptions() {
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
@@ -325,6 +328,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         return $builders;
     }
 
+    //TODO Bring this back when we revive pages
+    /*
     public function testAddPage() {
         self::buildInstanceData();
 
@@ -370,7 +375,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($msgs['page_add'], 'This Facebook Page is already in ThinkUp.');
         $this->debug(Utils::varDumpToString($msgs));
     }
-
+*/
     public function testConnectAccountSuccessful()  {
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
         $instance_dao = new InstanceMySQLDAO();
@@ -397,9 +402,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
 
-        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
-        $this->assertEqual($msgs['user_add'], "Success! Your Facebook account has been added to ThinkUp.");
-        $this->debug(Utils::varDumpToString($msgs));
+        $this->assertPattern("/Success! Your Facebook account has been added to ThinkUp./", $output);
+        // $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        // $this->assertEqual($msgs['user_add'], "Success! Your Facebook account has been added to ThinkUp.");
+        //$this->debug(Utils::varDumpToString($msgs));
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNotNull($instance); //Instance created
@@ -411,7 +417,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testConnectBusinessAccountUnsuccessful()  {
-        Facebook::$user_type = 'business';
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
         $instance_dao = new InstanceMySQLDAO();
         $owner_dao = new OwnerMySQLDAO();
@@ -422,7 +427,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $_SERVER['SERVER_NAME'] = "srvr";
         SessionCache::put('facebook_auth_csrf', '123');
         $_GET['p'] = 'facebook';
-        $_GET['code'] = '456';
+        $_GET['code'] = '456biz';
         $_GET['state'] = '123';
 
         $options_array = $this->buildPluginOptions();
@@ -435,15 +440,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
 
-        $v_mgr = $controller->getViewManager();
-
-        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
-        $this->assertEqual(count($msgs['user_add']), 0);
-        $this->debug(Utils::varDumpToString($msgs));
-
-        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->debug(Utils::varDumpToString($msgs));
-        $this->assertEqual($msgs['authorization'], 'Sorry, ThinkUp does not support business accounts.');
+        $this->assertNoPattern('/Success/', $output);
+        $this->assertPattern('/Sorry, ThinkUp does not support business accounts/', $output);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNull($instance); //Instance not created
@@ -556,12 +554,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
 
-        $v_mgr = $controller->getViewManager();
-
-        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($msgs['user_add'],
-            "Could not authenticate Facebook account due to invalid CSRF token.");
-        $this->debug(Utils::varDumpToString($msgs));
+        $this->assertPattern("/Could not authenticate Facebook account due to invalid CSRF token/", $output);
     }
 
     public function testConnectAccountThatAlreadyExists()  {

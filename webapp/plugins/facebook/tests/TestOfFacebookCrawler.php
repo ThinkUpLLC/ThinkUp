@@ -63,19 +63,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         );
         $this->profile1_instance = new Instance($r);
 
-        $r = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0',
-        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
-        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
-        'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
-        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
-        );
-        $this->profile2_instance = new Instance($r);
-
-        $r = array('id'=>3, 'network_username'=>'Mark Linford', 'network_user_id'=>'7568536355',
+        $r = array('id'=>3, 'network_username'=>'Lifehacker', 'network_user_id'=>'7568536355',
         'network_viewer_id'=>'729597743', 'last_post_id'=>'0',
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
@@ -86,18 +74,6 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
         );
         $this->page1_instance = new Instance($r);
-
-        $r = array('id'=>4, 'network_username'=>'Mark Linford', 'network_user_id'=>'133954286636768',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0',
-        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
-        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
-        'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
-        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
-        'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
-        );
-        $this->page2_instance = new Instance($r);
 
         $r = array('id'=>5, 'network_username'=>'Liz Lemon', 'network_user_id'=>'123456-session-expired',
         'network_viewer_id'=>'123456-session-expired', 'last_post_id'=>'0',
@@ -110,12 +86,6 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'2009-01-01 13:48:05', 'favorites_profile' => '0'
         );
         $this->profile3_instance = new Instance($r);
-
-        $r['id'] = 6;
-        $r['network_username'] = 'Chris Moyer';
-        $r['network_user_id'] = '501771984';
-        $r['network_viewer_id'] = '501771984';
-        $this->profile5_instance = new Instance($r);
     }
 
     public function tearDown() {
@@ -124,24 +94,24 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testConstructor() {
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
-        $this->assertEqual($fbc->access_token, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->profile1_instance, 'abc', 10);
+        $this->assertEqual($fbc->access_token, 'abc');
     }
 
     public function testConstructorExtendedInitialMaxCrawlTime() {
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'abc', 10);
         //Assert max_crawl_time gets uppped for initial crawl
         $this->assertEqual($fbc->max_crawl_time, FacebookCrawler::MAX_CRAWL_TIME_EXTENDED);
 
         //Put user in DB
         $fbc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, "Owner Status");
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'abc', 10);
         //Assert max_crawl_time does not get upped
         $this->assertEqual($fbc->max_crawl_time, 10);
     }
 
     public function testFetchUser() {
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'abc', 10);
         $fbc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, "Owner Status");
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
@@ -150,18 +120,13 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->username, 'Gina Trapani');
         $this->assertEqual($user->full_name, 'Gina Trapani');
         $this->assertEqual($user->user_id, 606837591);
-        $this->assertEqual($user->gender, "female");
-        $this->assertEqual($user->birthday, '2003-01-02');
-        $this->assertEqual($user->location, "San Diego, California");
-        $this->assertEqual($user->description,
-            'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
         $this->assertEqual($user->url, '');
         $this->assertTrue($user->is_protected);
         $this->assertNotNull($user->joined);
     }
 
     public function testFetchPostsAndRepliesForProfile1() {
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 120);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'abc', 120);
 
         $config = Config::getInstance();
         $facebook_crawler_log = $config->getValue('log_location');
@@ -178,34 +143,33 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $log_written));
 
         $post_dao = new PostMySQLDAO();
-        $post = $post_dao->getPost('158944054123704', 'facebook');
-        $this->assertEqual($post->post_text, 'that movie made me want to build things');
+        $post = $post_dao->getPost('10152701402567592', 'facebook');
+        $this->assertEqual($post->post_text, 'I hate email, but I love this smart daily email about the day\'s most '.
+            'interesting news.');
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertTrue($post->is_protected);
-        $this->assertEqual($post->favlike_count_cache, 0);
-        $this->assertEqual($post->location, 'San Diego, California');
+        $this->assertEqual($post->favlike_count_cache, 4);
 
-        $post = $post_dao->getPost('10151848164181985', 'facebook');
-        $this->assertEqual($post->post_text,
-        'Britney Glee episode tonight. I may explode into a million pieces, splattered all over my living room walls.');
-        $this->assertEqual($post->reply_count_cache, 31);
+        $post = $post_dao->getPost('10152788568177592', 'facebook');
+        $this->assertPattern('/EqualPayDay/', $post->post_text);
+        $this->assertEqual($post->reply_count_cache, 42);
         $this->assertTrue($post->is_protected);
-        $this->assertEqual($post->favlike_count_cache, 3);
-        $this->assertEqual($post->location, 'San Diego, California');
+        $this->assertEqual($post->favlike_count_cache, 88);
 
-        // wall post
-        $post = $post_dao->getPost('10150414865507812', 'facebook');
-        $this->assertEqual($post->author_user_id, '503315820');
-        $this->assertEqual($post->location, 'Portland, Oregon');
+        //Wall post
+        $post = $post_dao->getPost('10103607414559137', 'facebook');
+        $this->assertEqual($post->author_user_id, '3601796');
         $this->assertEqual($post->in_reply_to_user_id, $this->profile1_instance->network_user_id);
 
-        $post = $post_dao->getPost('29187893', 'facebook');
-        $this->assertPattern('/to myself./', $post->post_text);
+        //Comment
+        $post = $post_dao->getPost('10152788614032592', 'facebook');
+        $this->assertPattern('/thank you for reporting that/', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);
-        $this->assertEqual($post->in_reply_to_post_id, '10151848164181985');
+        $this->assertEqual($post->in_reply_to_post_id, '10152788568177592');
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 0);
 
+        //Author user object
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
         $this->assertTrue(isset($user));
@@ -214,81 +178,36 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, '606837591');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
-        $this->assertEqual($user->gender, 'female');
-        $this->assertEqual($user->birthday, '2003-01-02');
-        $this->assertEqual($user->location, 'San Diego, California');
-        //sleep(1000);
-        $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
-        $this->assertTrue(isset($user));
-        $this->assertEqual($user->user_id, '697015835');
-        $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
-        $this->assertTrue($user->is_protected);
-        $this->assertEqual($user->gender, 'male');
-        $this->assertEqual($user->birthday, null, 'Malformed, partial birthday not saved');
-        $this->assertEqual($user->location, 'La Mesa, California');
 
-        $user = $user_dao->getUserByName('Jeffrey McManus', 'facebook');
+        //Wall poster user object
+        $user = $user_dao->getUserByName('Francisco Zamudio', 'facebook');
         $this->assertTrue(isset($user));
-        $this->assertEqual($user->user_id, '691270740');
-        $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
+        $this->assertEqual($user->user_id, '3601796');
+        $this->assertEqual($user->avatar, 'https://graph.facebook.com/3601796/picture');
         $this->assertTrue($user->is_protected);
-        $this->assertEqual($user->gender, 'male');
-        $this->assertEqual($user->birthday, '1980-03-22');
-        $this->assertEqual($user->location, '');
-    }
 
-    public function testFetchPostsAndRepliesForProfile2() {
         //Test post with a link to a video
-        $fbc2 = new FacebookCrawler($this->profile2_instance, 'fauxaccesstoken', 10);
-
-        $fbc2->fetchPostsAndReplies();
-
-        $post_dao = new PostMySQLDAO();
-        $user_dao = new UserMySQLDAO();
-
-        $post = $post_dao->getPost('10150328374252744', 'facebook');
-        $this->assertEqual($post->post_text, '');
+        $post = $post_dao->getPost('10152432436257592', 'facebook');
+        $this->assertEqual($post->post_text,
+            'Uggh: 10 Hours of Walking in NYC as a Woman: http://youtu.be/b1XGPvbWn0A');
         $this->assertEqual(sizeof($post->links), 1);
-        $this->assertEqual($post->links[0]->url,
-        'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
+        $this->assertEqual($post->links[0]->url, 'http://youtu.be/b1XGPvbWn0A');
         $this->assertEqual($post->links[0]->expanded_url,'');
-        $this->assertEqual($post->links[0]->caption, 'Liked on www.youtube.com');
+        $this->assertEqual($post->links[0]->caption, 'youtube.com');
         $this->assertEqual($post->links[0]->description,
-        'A fan made trailer for the Warner Bros. production of Superman Returns. Fan trailer produced and edited by '.
-        'Julian Francis Adderley.');
-        $this->assertEqual($post->links[0]->title, 'Superman Restored (Theatrical Trailer)');
-        $this->assertEqual($post->links[0]->post_key, 1);
+        'Donate to Hollaback! https://donatenow.networkforgood.org/hollaback Director/Producer/Creator: '.
+        'Rob Bliss Creative - http://robblisscreative.com/ Media Contac...');
+        $this->assertEqual($post->links[0]->title, '10 Hours of Walking in NYC as a Woman');
+        $this->assertEqual($post->links[0]->post_key, 97);
 
         // Test Facebook paging by confirming post on second "page"
-        $post = $post_dao->getPost('10150357566827744', 'facebook');
+        $post = $post_dao->getPost('10152420491407592', 'facebook');
         $this->assertNotNull($post);
-        $this->assertEqual($post->author_user_id, '729597743');
-
-        // Test Facebook subscribers. This user only exists in testing as a subscriber
-        $user = $user_dao->getUserByName('Poppy Linford', 'facebook');
-        $this->assertTrue(isset($user));
-        $this->assertEqual($user->user_id, '682523675');
-        $this->assertTrue($user->is_verified);
-        // Test follow is set
-        $follow_dao = new FollowMySQLDAO();
-        $this->assertTrue($follow_dao->followExists('729597743', '682523675', 'facebook'));
-
-        // Test FollowerCount is set
-        $sql = "SELECT * FROM ".$this->table_prefix.
-        "count_history WHERE network='facebook' AND network_user_id='729597743' AND type='followers';";
-
-        $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
-        $data = array();
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            array_push($data, $row);
-        }
-        $stmt->closeCursor();
-
-        $this->assertEqual($data[0]['count'], 2);
+        $this->assertEqual($post->author_user_id, '606837591');
     }
 
     public function testFetchPostsAndRepliesForProfile3Error() {
-        $fbc = new FacebookCrawler($this->profile3_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile3_instance, 'abc', 10);
 
         $this->expectException('APIOAuthException',
         'Error validating access token: Session has expired at unix time SOME_TIME. The current unix time is '.
@@ -298,76 +217,44 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchPostsAndRepliesForPage() {
-        $fbc = new FacebookCrawler($this->page1_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->page1_instance, 'abc', 10);
 
         $fbc->fetchPostsAndReplies();
 
         $post_dao = new PostMySQLDAO();
-        $post = $post_dao->getPost('437900891355', 'facebook page');
-        $this->assertEqual($post->post_text, 'Top 10 iOS Jailbreak Hacks');
+        $post = $post_dao->getPost('10152714332426356', 'facebook page');
+        $this->assertEqual($post->post_text, 'Looks like a very serene place to work:');
         $this->assertFalse($post->is_protected);
-        $this->assertEqual($post->reply_count_cache, 25);
+        $this->assertEqual($post->reply_count_cache, 4);
 
         //test link with image
         $this->assertEqual(sizeof($post->links), 1);
-        $this->assertEqual($post->links[0]->url,
-        'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
+        $this->assertEqual($post->links[0]->url, 'http://lifehac.kr/Jg0mR3E');
         $this->assertEqual($post->links[0]->expanded_url, '');
         $this->assertEqual($post->links[0]->image_src,
-        'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f66'.
-        'f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak-'.
-        'top-10.jpg');
+        'https://fbexternal-a.akamaihd.net/safe_image.php?d=AQDJyDKV3JDoU0-y&w=130&h=130&url=http%3A%2F%2'.
+        'Fi.kinja-img.com%2Fgawker-media%2Fimage%2Fupload%2Fs--G2ekOhHZ--%2Fgobnypf78nigkkl7cwpl.png&cfs=1');
         $this->assertEqual($post->links[0]->description,
-        'If you purchased an iOS device, you also signed up for its many limitations. Jailbreaking can put you back '.
-        'in control. Here are ten great jailbreak hacks to help you customize and better utilize your iOS device...');
+        'Today’s featured workspace looks immaculate, with its pristine white walls, simple white desk, and '
+        .'wood accents. Those skylights help too.');
 
         //assert user network is set to Facebook, not Facebook Page
         $ud = new UserMySQLDAO();
-        $user = $ud->getUserByName('Matthew Fleisher', 'facebook');
-        $this->assertEqual($user->full_name, 'Matthew Fleisher');
+        $user = $ud->getUserByName('Gregory Robert Dumas', 'facebook');
+        $this->assertEqual($user->full_name, 'Gregory Robert Dumas');
         $this->assertEqual($user->network, 'facebook');
         $this->assertTrue($user->is_protected);
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
         $this->assertEqual($user, null);
 
         $fav_dao = new FavoritePostMySQLDAO();
-        $favs = $fav_dao->getUsersWhoFavedPost('437894121355', 'facebook page');
-        $this->assertEqual($favs[0]['user_name'], 'Tigger Pike');
-        $this->assertEqual($favs[0]['user_id'], '641265671');
+        $favs = $fav_dao->getUsersWhoFavedPost('10152714332426356', 'facebook page');
+        $this->assertEqual($favs[0]['user_name'], 'Peter-Sarah Crofton');
+        $this->assertEqual($favs[0]['user_id'], '25913266');
 
         // Test Facebook paging by confirming post on second "page" was captured
-        $post = $post_dao->getPost('437660146355', 'facebook page');
+        $post = $post_dao->getPost('10152712264921356', 'facebook page');
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '7568536355');
-
-        // Test follower count is set
-        $sql = "SELECT * FROM ".$this->table_prefix.
-        "count_history WHERE network='facebook page' AND network_user_id='7568536355' AND type='followers';";
-
-        $stmt = CountHistoryMySQLDAO::$PDO->query($sql);
-        $data = array();
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            array_push($data, $row);
-        }
-        $stmt->closeCursor();
-        $this->assertEqual($data[0]['count'], 307758);
-    }
-
-    public function testPostReplyPaging() {
-        $fbc = new FacebookCrawler($this->page2_instance, 'fauxaccesstoken', 10);
-
-        $fbc->fetchPostsAndReplies('133954286636768', 'facebook page');
-        $post_dao = new PostMySQLDAO();
-        $post = $post_dao->getPost('775180192497884', 'facebook page');
-        $this->assertEqual($post->reply_count_cache, 51);
-    }
-
-    public function testPaginatedPostLikes() {
-        $fbc = new FacebookCrawler($this->profile5_instance, 'fauxaccesstoken', 10);
-
-        $fbc->fetchPostsAndReplies('501771984', 'facebook');
-        $post_dao = new PostMySQLDAO();
-        $post = $post_dao->getPost('10151734003261985', 'facebook');
-        $this->assertEqual($post->favlike_count_cache, 27);
     }
 }

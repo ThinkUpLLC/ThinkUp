@@ -30,41 +30,62 @@
  * @copyright 2009-2015 Gina Trapani
  */
 class FacebookGraphAPIAccessor {
+
+    //const API_DOMAIN = 'https://graph.facebook.com/v2.3/';
+    const API_DOMAIN = 'https://graph.facebook.com/v1.0/';
     /**
      * Make a Graph API request.
      * @param str $path
      * @param str $access_token
+     * @param array $params HTTP parameters to include on URL
      * @param str $fields Comma-delimited list of fields to return from FB API
      * @return array Decoded JSON response
      */
-    public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://graph.facebook.com';
-        if (strpos($path, '?')===false) {
-            $url = $api_domain.$path.'?access_token='.$access_token;
-        } else {
-            $url = $api_domain.$path.'&access_token='.$access_token;
+    public static function apiRequest($path, $access_token=null, $params=null, $fields=null) {
+        //Set up URL parameters
+        $api_call_params = $params;
+        if (isset($fields)) {
+            //Add fields
+            $params['fields'] = $fields;
         }
-        if ($fields != null ) {
-            $url = $url.'&fields='.$fields;
-        }
-        $result = Utils::getURLContents($url);
-        return json_decode($result);
+        $api_call_params_str = http_build_query($params);
+
+        $url = self::API_DOMAIN.$path.'?'.$api_call_params_str;
+        return self::apiRequestFullURL($url, $access_token);
     }
     /**
      * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.facebook.com/ at
-     * the start and the access token at the end as well as everything in between. It is literally the raw URL that
-     * needs to be passed in.
+     * the start and all the query string parameters EXCEPT the acces token.
      *
-     * @param str $path
-     * @param book $decode_json Defaults to true, if true returns decoded JSON
+     * This is for use in paging, when the API payload specifies the full URL for the next page.
+     *
+     * @param str $url
+     * @param str $access_token
      * @return array Decoded JSON response
      */
-    public static function rawApiRequest($path, $decode_json=true) {
-        if ($decode_json) {
-            $result = Utils::getURLContents($path);
-            return json_decode($result);
-        } else {
-            return Utils::getURLContents($path);
+    public static function apiRequestFullURL($url, $access_token=null) {
+        $params = array();
+        if (isset($access_token)) {
+            //Add access_token
+            $params['access_token'] = $access_token;
+            $access_token_str = http_build_query($params);
+            if (strpos($url, '?')===false) {
+                $url = $url.'?'.$access_token_str;
+            } else {
+                $url = $url.'&'.$access_token_str;
+            }
+        }
+        //DEBUG
+        // if (php_sapi_name() == "cli") {//Crawler being run at the command line
+        //     $logger = Logger::getInstance();
+        //     $logger->logInfo("Graph API call: ".$url, __METHOD__.','.__LINE__);
+        // }
+
+        $result = Utils::getURLContents($url);
+        try {
+            return JSONDecoder::decode($result);
+        } catch (JSONDecoderException $e) {
+            return $result;
         }
     }
 }

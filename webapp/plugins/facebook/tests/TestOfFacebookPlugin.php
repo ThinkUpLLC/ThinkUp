@@ -300,7 +300,7 @@ message: Hi! Your ThinkUp installation is no longer connected to the Liz Lemon F
 
         $instance = $instance_dao->getByUsername('Gina Trapani', 'facebook');
         $this->assertNotNull($instance->profile_updated);
-        $this->assertEqual($instance->profile_updated, '2014-01-30 17:28:18');
+        $this->assertEqual($instance->profile_updated, '2015-03-04 05:03:32');
     }
 
 }

@@ -1,0 +1,32 @@
+{
+  "id": "133954286636768",
+  "about": "The Facebook Hacker Cup is an annual worldwide programming competition where hackers compete against each other for fame, fortune, glory and a shot at the coveted Hacker Cup. Want to compete? checkout our FAQ section for complete details.",
+  "can_post": false,
+  "category": "Website",
+  "checkins": 0,
+  "cover": {
+    "cover_id": 553283041370555,
+    "offset_x": 0,
+    "offset_y": 64,
+    "source": "https://scontent.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/p180x540/601227_553283041370555_1037662786_n.jpg?oh=7775b8173c9bc309672db5ca60fc5889&oe=55E4D263",
+    "id": "553283041370555"
+  },
+  "description": "Started in 2011, the Hacker Cup is Facebook's annual worldwide programming competition.\n\nGet into the Hacker Cup by registering here: http://www.facebook.com/hackercup/register \n\nHacking is core to how we build at Facebook. Whether we’re building a prototype for a major product like Timeline at a Hackathon, creating a smarter search algorithm, or tearing down walls at our new headquarters, we’re always hacking to find better ways to solve problems. In the Hacker Cup, programmers from around the world will be judged on accuracy and speed as they race to solve algorithmic problems to advance through up to five rounds of programming challenges. This is your chance to compete against the world’s best programmers for awesome prizes and the title of World Champion.",
+  "founded": "2011",
+  "has_added_app": false,
+  "is_community_page": false,
+  "is_published": true,
+  "likes": 764126,
+  "link": "https://www.facebook.com/hackercup",
+  "mission": "Many will enter... only one will emerge as world champion.",
+  "name": "Facebook Hacker Cup",
+  "parking": {
+    "lot": 0,
+    "street": 0,
+    "valet": 0
+  },
+  "talking_about_count": 2986,
+  "username": "hackercup",
+  "website": "http://www.facebook.com/hackercup/",
+  "were_here_count": 0
+}
