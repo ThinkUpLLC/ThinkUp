@@ -237,11 +237,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     } else {
                         $error_msg = $error_msg."<br>Facebook's response: \"".$access_token_response. "\"";
                     }
-                    $this->addErrorMessage($error_msg, 'authorization', true);
+                    $this->addErrorMessage($error_msg, 'user_add', true);
                 }
             } else {
                 $this->addErrorMessage("Could not authenticate Facebook account due to invalid CSRF token.",
-                'authorization');
+                    'user_add');
             }
         }
 
