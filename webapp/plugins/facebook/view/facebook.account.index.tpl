@@ -111,7 +111,7 @@
       {if $fbconnect_link}<p class="accounts-privacy">ThinkUp will never post on your behalf.</p>{/if}
 
       {if isset($thinkupllc_endpoint)}
-      {include file="_usermessage-v2.tpl" field="membership_cap"}
+      {include file="_usermessage.tpl" field="membership_cap"}
       {/if}
     </div>
 
