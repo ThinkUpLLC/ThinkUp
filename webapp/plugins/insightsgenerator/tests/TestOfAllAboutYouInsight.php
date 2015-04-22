@@ -39,11 +39,6 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
 
     public function setUp(){
         parent::setUp();
-        $instance = new Instance();
-        $instance->id = 10;
-        $instance->network_username = 'testeriffic';
-        $instance->network = 'twitter';
-        $this->instance = $instance;
     }
 
     public function tearDown() {
@@ -92,6 +87,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
 
 
     public function testAllAboutYouInsightNoPriorBaseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -105,7 +107,35 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/<strong>80%</', $result->text);
-        $this->assertNoPattern('/up/', $result->text);
+        $this->assertNoPattern('/up /', $result->text);
+        $this->assertNoPattern('/down/', $result->text);
+        $this->debug($this->getRenderedInsightInEmail($result));
+
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testOfFirstRunFacebook() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'Jane Doe';
+        $instance->network = 'facebook';
+        $this->instance = $instance;
+
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects();
+        $insight_plugin = new AllAboutYouInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('all_about_you', 10, $today);
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/<strong>80%</', $result->text);
+        $this->assertNoPattern('/up /', $result->text);
         $this->assertNoPattern('/down/', $result->text);
         $this->debug($this->getRenderedInsightInEmail($result));
 
@@ -113,6 +143,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorGreaterBaseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -136,6 +173,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorGreaterBy1Baseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -159,6 +203,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorSmallerBaseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -183,6 +234,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorSmallerByOneBaseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -207,6 +265,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorSame() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -231,6 +296,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testAllAboutYouInsightPriorEqualBaseline() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
@@ -258,6 +330,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testPercentRounding() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         $today = date ('Y-m-d');
         $posts = self::getTestPostObjects();
         $p = new Post();
@@ -278,6 +357,13 @@ class TestOfAllAboutYouInsight extends ThinkUpInsightUnitTestCase {
     }
 
     public function testHeadlines() {
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $this->instance = $instance;
+
         $posts = self::getTestPostObjects();
         $insight_plugin = new AllAboutYouInsight();
         $today = date ('Y-m-d');

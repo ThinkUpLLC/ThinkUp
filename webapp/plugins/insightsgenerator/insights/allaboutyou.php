@@ -32,6 +32,8 @@
 
 class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
 
+    var $slug = 'all_about_you';
+
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
@@ -42,9 +44,12 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
         } else {
             $day_of_week = 3;
         }
+
+        $is_first_run = !$this->insight_dao->doesInsightExist($this->slug, $instance->id);
+
         $should_generate_insight = self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));
-        if ($should_generate_insight) {
+        if ($should_generate_insight || $is_first_run) {
             $text = '';
             $count = 0;
             foreach ($last_week_of_posts as $post) {
@@ -93,7 +98,7 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
 
                 $my_insight = new Insight();
 
-                $my_insight->slug = 'all_about_you'; //slug to label this insight's content
+                $my_insight->slug = $this->slug;
                 $my_insight->instance_id = $instance->id;
                 $my_insight->date = $this->insight_date; //date is often this or $simplified_post_date
                 $my_insight->headline = $headline; // or just set a string like 'Ohai';
