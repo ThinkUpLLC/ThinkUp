@@ -559,8 +559,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
 
         $msgs = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($msgs['authorization'],
-        "Could not authenticate Facebook account due to invalid CSRF token.");
+        $this->assertEqual($msgs['user_add'],
+            "Could not authenticate Facebook account due to invalid CSRF token.");
         $this->debug(Utils::varDumpToString($msgs));
     }
 
