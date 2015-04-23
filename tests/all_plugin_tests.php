@@ -63,7 +63,7 @@ $plugin_tests->add(new TestOfBigReshareInsight());
 $plugin_tests->add(new TestOfBiggestFansInsight());
 $plugin_tests->add(new TestOfClickSpikeInsight());
 $plugin_tests->add(new TestOfFrequencyInsight());
-$plugin_tests->add(new TestOfGenderAnalysisInsight());
+//$plugin_tests->add(new TestOfGenderAnalysisInsight());
 $plugin_tests->add(new TestOfListMembershipInsight());
 $plugin_tests->add(new TestOfSavedSearchResultsInsight());
 $plugin_tests->add(new TestOfStyleStatsInsight());
@@ -105,7 +105,7 @@ $plugin_tests->add(new TestOfBioTrackerInsight());
 $plugin_tests->add(new TestOfNewDictionaryWordsInsight());
 $plugin_tests->add(new TestOfFollowerComparisonInsight());
 $plugin_tests->add(new TestOfDiversifyLinksInsight());
-$plugin_tests->add(new TestOfAgeAnalysisInsight());
+//$plugin_tests->add(new TestOfAgeAnalysisInsight());
 $plugin_tests->add(new TestOfTopWordsInsight());
 $plugin_tests->add(new TestOfBestieInsight());
 // Don't run the developer insight test every time

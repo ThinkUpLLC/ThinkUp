@@ -33,7 +33,7 @@ class CongratsCountInsight extends CriteriaMatchInsightPluginParent implements I
     public function shouldGenerate(Instance $instance, $last_week_of_posts) {
         return $this->shouldGenerateMonthlyInsight($this->getSlug(), $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_month=16, count($last_week_of_posts),
-            array('youtube','foursquare'));
+            array('youtube','foursquare', 'facebook'));
     }
 
     public function getSlug() {

@@ -2,7 +2,7 @@
 /*
  Plugin Name: Location Sharing Awareness
  Description: How often you shared your location.
- When: Weekly, Fridays for Twitter, Wednesday for Facebook and Monthly, 26th for Facebook, 28th for Twitter
+ When: Weekly, Fridays for Twitter, and Monthly,s 28th for Twitter
  */
 /**
  *
@@ -36,37 +36,36 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
     var $slug = 'location_awareness';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
-        parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
-        $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
-        $monthly = 0;
-        $weekly = 0;
-        if ($instance->network == 'twitter') {
-            $weekly = 6;
-            $monthly = 28;
-        } else if ($instance->network == 'facebook') {
-            $weekly = 4;
-            $monthly = 26;
-        } else if ($instance->network == 'test_no_monthly') {
+        if ($instance->network == 'twitter' ||  /* testing */ $instance->network = 'test_no_monthly') {
+            parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
+            $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
             $monthly = 0;
-            $weekly = 2;
-        }
+            $weekly = 0;
+            if ($instance->network == 'twitter') {
+                $weekly = 6;
+                $monthly = 28;
+            } else if ($instance->network == 'test_no_monthly') {
+                $monthly = 0;
+                $weekly = 2;
+            }
 
-        $did_monthly = false;
-        if ($monthly && self::shouldGenerateMonthlyInsight($this->slug, $instance, 'today', false, $monthly)) {
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            $posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username, $instance->network,
-                $count=0, $order_by="pub_date", $in_last_x_days = date('t'),
-                $iterator = false, $is_public = false);
-            $this->generateMonthlyInsight($instance, $posts);
-            $did_monthly = true;
-        }
+            $did_monthly = false;
+            if ($monthly && self::shouldGenerateMonthlyInsight($this->slug, $instance, 'today', false, $monthly)) {
+                $post_dao = DAOFactory::getDAO('PostDAO');
+                $posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username, $instance->network,
+                    $count=0, $order_by="pub_date", $in_last_x_days = date('t'),
+                    $iterator = false, $is_public = false);
+                $this->generateMonthlyInsight($instance, $posts);
+                $did_monthly = true;
+            }
 
-        $do_weekly = $weekly && !$did_monthly;
-        if ($do_weekly && self::shouldGenerateWeeklyInsight($this->slug, $instance, 'today', false, $weekly)) {
-            $this->generateWeeklyInsight($instance, $last_week_of_posts);
-        }
+            $do_weekly = $weekly && !$did_monthly;
+            if ($do_weekly && self::shouldGenerateWeeklyInsight($this->slug, $instance, 'today', false, $weekly)) {
+                $this->generateWeeklyInsight($instance, $last_week_of_posts);
+            }
 
-        $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
+        }
     }
 
     private function generateWeeklyInsight($instance, $posts) {
