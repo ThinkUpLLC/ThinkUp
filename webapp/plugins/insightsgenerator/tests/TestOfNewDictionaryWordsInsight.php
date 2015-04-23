@@ -142,7 +142,8 @@ class TestOfNewDictionaryWordsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual('Before &ldquo;man crush&rdquo; went legit', $result->headline);
         $this->assertEqual('OxfordDictionariesOnline.com <a href="http://blog.oxforddictionaries.com/2014/12/oxford'.
             '-dictionaries-new-words-december-2014/">just added</a> "man crush" and "duckface" to their online '.
-            'dictionary, but no one has to explain them to @testy. Since August 2013, @testy used "man crush" 3 times '.
+            'dictionary, but no one has to explain them to @testy. Since '.$str_earliest_mention.
+            ', @testy used "man crush" 3 times '.
             'and "duckface" once.', $result->text);
 
         $data = unserialize($result->related_data);
