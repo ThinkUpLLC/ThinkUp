@@ -31,8 +31,8 @@
  */
 class FacebookGraphAPIAccessor {
 
-    //const API_DOMAIN = 'https://graph.facebook.com/v2.3/';
-    const API_DOMAIN = 'https://graph.facebook.com/v1.0/';
+    const API_DOMAIN = 'https://graph.facebook.com/v2.3/';
+
     /**
      * Make a Graph API request.
      * @param str $path

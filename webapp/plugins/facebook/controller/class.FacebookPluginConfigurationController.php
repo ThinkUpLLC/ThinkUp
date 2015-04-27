@@ -114,7 +114,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $params = array(
-            'scope'=>'read_stream',
+            'scope'=>'user_posts',
             'state'=>SessionCache::get('facebook_auth_csrf'),
             'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
         );
@@ -172,9 +172,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     return;
                 }
 
-                //Graph API 2.3 migration: Use the next line, delete the one after it.
-                //$access_token = $access_token_response->access_token;
-                parse_str($access_token_response);
+                $access_token = $access_token_response->access_token;
 
                 if (isset($access_token)) {
                     /**
