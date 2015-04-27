@@ -192,9 +192,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     // Logger::getInstance()->logInfo("Exchanged access token response: "
                     //     .Utils::varDumpToString($access_token_response), __METHOD__.','.__LINE__);
 
-                    //Graph API 2.3 migration: Use the next line, delete the one after it.
-                    //$access_token = $access_token_response->access_token;
-                    parse_str($access_token_response);
+                    $access_token = $access_token_response->access_token;
 
                     $fb_user_profile = FacebookGraphAPIAccessor::apiRequest('me', $access_token);
                     //DEBUG
