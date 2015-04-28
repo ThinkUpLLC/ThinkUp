@@ -34,7 +34,6 @@ require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookCrawler.p
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstance.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookInstanceMySQLDAO.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
-require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.facebook.php';
 
 class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     /**

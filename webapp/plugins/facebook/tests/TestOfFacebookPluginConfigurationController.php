@@ -33,7 +33,6 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/model/class.FacebookPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
-require_once THINKUP_WEBAPP_PATH.'plugins/facebook/tests/classes/mock.facebook.php';
 
 class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
@@ -445,7 +444,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNull($instance); //Instance not created
-        Facebook::$user_type = 'user';
     }
 
     public function testConnectAccountSuccessfulNoServerName()  {
