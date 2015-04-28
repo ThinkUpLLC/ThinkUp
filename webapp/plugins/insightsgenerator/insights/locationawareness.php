@@ -36,7 +36,7 @@ class LocationAwarenessInsight extends InsightPluginParent implements InsightPlu
     var $slug = 'location_awareness';
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
-        if ($instance->network == 'twitter' ||  /* testing */ $instance->network = 'test_no_monthly') {
+        if ($instance->network == 'twitter' ||  /* testing */ $instance->network == 'test_no_monthly') {
             parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
             $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
             $monthly = 0;
