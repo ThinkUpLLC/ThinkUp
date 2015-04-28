@@ -155,8 +155,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
                 $access_token_response = FacebookGraphAPIAccessor::apiRequest($api_req, null, $api_req_params, null);
                 //DEBUG
-                Logger::getInstance()->logInfo("Access token response: "
-                    .Utils::varDumpToString($access_token_response), __METHOD__.','.__LINE__);
+                // Logger::getInstance()->logInfo("Access token response: "
+                //     .Utils::varDumpToString($access_token_response), __METHOD__.','.__LINE__);
 
                 if (isset($access_token_response->error)) {
                     $this->addErrorMessage("There was a problem. Facebook says: "
@@ -190,8 +190,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
                     $fb_user_profile = FacebookGraphAPIAccessor::apiRequest('me', $access_token, 'name,id');
                     //DEBUG
-                    Logger::getInstance()->logInfo("FB user profile: ".Utils::varDumpToString($fb_user_profile),
-                        __METHOD__.','.__LINE__);
+                    // Logger::getInstance()->logInfo("FB user profile: ".Utils::varDumpToString($fb_user_profile),
+                    //     __METHOD__.','.__LINE__);
 
                     if (isset($fb_user_profile->error)) {
                         $error_msg = "Problem authorizing your Facebook account!";
