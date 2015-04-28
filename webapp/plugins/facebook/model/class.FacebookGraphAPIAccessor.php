@@ -77,12 +77,14 @@ class FacebookGraphAPIAccessor {
         }
         //DEBUG
         // if (php_sapi_name() == "cli") {//Crawler being run at the command line
-        //     $logger = Logger::getInstance();
-        //     $logger->logInfo("Graph API call: ".$url, __METHOD__.','.__LINE__);
+        //     Logger::getInstance()->logInfo("Graph API call: ".$url, __METHOD__.','.__LINE__);
         // }
 
         $result = Utils::getURLContents($url);
         try {
+            // if (php_sapi_name() == "cli") {//Crawler being run at the command line
+            //     Logger::getInstance()->logInfo("Graph API call payload: ".$result, __METHOD__.','.__LINE__);
+            // }
             return JSONDecoder::decode($result);
         } catch (JSONDecoderException $e) {
             return $result;
