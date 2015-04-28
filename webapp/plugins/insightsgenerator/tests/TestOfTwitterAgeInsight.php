@@ -75,6 +75,28 @@ class TestOfTwitterAgeInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testBadJoinedDate() {
+        $plugin = new TwitterAgeInsight();
+        $plugin->generateInsight($this->instance, $this->makeUser('1970-06-11'), array(), 1);
+        $result = $this->insight_dao->getInsight('twitter_age', $this->instance->id, date('Y-m-d'));
+        $this->assertNull($result);
+    }
+
+    public function testUninitializedUser() {
+        $plugin = new TwitterAgeInsight();
+        $user = new User();
+        $plugin->generateInsight($this->instance, $user, array(), 1);
+        $result = $this->insight_dao->getInsight('twitter_age', $this->instance->id, date('Y-m-d'));
+        $this->assertNull($result);
+    }
+
+    public function testNullUser() {
+        $plugin = new TwitterAgeInsight();
+        $plugin->generateInsight($this->instance, null, array(), 1);
+        $result = $this->insight_dao->getInsight('twitter_age', $this->instance->id, date('Y-m-d'));
+        $this->assertNull($result);
+    }
+
     public function testSuperEarlyAdopter() {
         $plugin = new TwitterAgeInsight();
         $plugin->generateInsight($this->instance, $this->makeUser('2006-06-11'), array(), 1);

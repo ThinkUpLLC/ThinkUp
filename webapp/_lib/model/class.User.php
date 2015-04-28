@@ -129,7 +129,7 @@ class User {
      *
      * @var date
      */
-    var $joined;
+    var $joined = null;
     /**
      *
      * @var int
