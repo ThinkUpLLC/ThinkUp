@@ -90,11 +90,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
      * @param array $options 'facebook_app_id' and 'facebook_api_secret'
      */
     protected function setUpFacebookInteractions($options) {
-        //Create our Facebook Application instance
-        $facebook = new Facebook(array(
-            'appId'  => $options['facebook_app_id']->option_value,
-            'secret' => $options['facebook_api_secret']->option_value
-        ));
+        $facebook_app_id = $options['facebook_app_id']->option_value;
 
         // Plant unique token for CSRF protection during auth per https://developers.facebook.com/docs/authentication/
         if (SessionCache::get('facebook_auth_csrf') == null) {
@@ -113,13 +109,12 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             }
         }
 
-        $params = array(
-            'scope'=>'user_posts',
-            'state'=>SessionCache::get('facebook_auth_csrf'),
-            'redirect_uri'=> (Utils::getApplicationURL(). 'account/?p=facebook')
-        );
+        $scope = 'user_posts,email';
+        $state = SessionCache::get('facebook_auth_csrf');
+        $redirect_url = (Utils::getApplicationURL(). 'account/?p=facebook');
 
-        $fbconnect_link = $facebook->getLoginUrl($params);
+        $fbconnect_link = FacebookGraphAPIAccessor::getLoginURL($facebook_app_id, $scope, $state, $redirect_url);
+
         //For expired connections
         $this->addToView('fb_reconnect_link', $fbconnect_link);
 
@@ -127,7 +122,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $this->addToView('fbconnect_link', $fbconnect_link);
         }
 
-        self::processPageActions($options, $facebook);
+        self::processPageActions($options);
 
         $logger = Logger::getInstance();
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -138,9 +133,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
     /**
      * Process actions based on $_GET parameters. Authorize FB user or add FB page.
      * @param arr $options Facebook plugin options
-     * @param Facebook $facebook Facebook object
      */
-    protected function processPageActions($options, Facebook $facebook) {
+    protected function processPageActions($options) {
         //authorize user
         if (isset($_GET["code"]) && isset($_GET["state"])) {
             //validate state to avoid CSRF attacks
@@ -161,8 +155,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
                 $access_token_response = FacebookGraphAPIAccessor::apiRequest($api_req, null, $api_req_params, null);
                 //DEBUG
-                // Logger::getInstance()->logInfo("Access token response: "
-                //     .Utils::varDumpToString($access_token_response), __METHOD__.','.__LINE__);
+                Logger::getInstance()->logInfo("Access token response: "
+                    .Utils::varDumpToString($access_token_response), __METHOD__.','.__LINE__);
 
                 if (isset($access_token_response->error)) {
                     $this->addErrorMessage("There was a problem. Facebook says: "
@@ -194,18 +188,32 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
                     $access_token = $access_token_response->access_token;
 
-                    $fb_user_profile = FacebookGraphAPIAccessor::apiRequest('me', $access_token);
+                    $fb_user_profile = FacebookGraphAPIAccessor::apiRequest('me', $access_token, 'name,id');
                     //DEBUG
-                    // Logger::getInstance()->logInfo("FB user profile: ".Utils::varDumpToString($fb_user_profile),
-                    //     __METHOD__.','.__LINE__);
-                    $fb_username = $fb_user_profile->name;
-                    $fb_user_id = $fb_user_profile->id;
+                    Logger::getInstance()->logInfo("FB user profile: ".Utils::varDumpToString($fb_user_profile),
+                        __METHOD__.','.__LINE__);
 
-                    if (empty($fb_username)) {
-                        $error = 'Sorry, ThinkUp does not support business accounts.';
-                        $this->addErrorMessage($error, 'user_add');
+                    if (isset($fb_user_profile->error)) {
+                        $error_msg = "Problem authorizing your Facebook account!";
+                        $error_object = $access_token_response;
+                        if (isset($error_object) && isset($error_object->error->type)
+                            && isset($error_object->error->message)) {
+                            $error_msg = $error_msg."<br>Facebook says: \"".$error_object->error->type.": "
+                            .$error_object->error->message. "\"";
+                        } else {
+                            $error_msg = $error_msg."<br>Facebook's response: \"".$access_token_response. "\"";
+                        }
+                        $this->addErrorMessage($error_msg, 'user_add', true);
                     } else {
-                        $this->saveAccessToken($fb_user_id, $access_token, $fb_username);
+                        $fb_username = isset($fb_user_profile->name)?$fb_user_profile->name:'';
+                        $fb_user_id = isset($fb_user_profile->id)?$fb_user_profile->id:'';
+
+                        if (empty($fb_username)) {
+                            $error = 'Sorry, ThinkUp does not support business accounts.';
+                            $this->addErrorMessage($error, 'user_add');
+                        } else {
+                            $this->saveAccessToken($fb_user_id, $access_token, $fb_username);
+                        }
                     }
                 } else {
                     $error_msg = "Problem authorizing your Facebook account! Please correct your plugin settings.";
@@ -223,20 +231,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $this->addErrorMessage("Could not authenticate Facebook account due to invalid CSRF token.",
                     'user_add');
             }
-        }
-
-        //insert pages
-        if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"])
-        && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
-            //get access token
-            $oid = DAOFactory::getDAO('OwnerInstanceDAO');
-            $tokens = $oid->getOAuthTokens($_GET["instance_id"]);
-            $access_token = $tokens['oauth_access_token'];
-
-            $page_data = FacebookGraphAPIAccessor::apiRequest($_GET["facebook_page_id"], $access_token, null,
-                "id,name,picture");
-            self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"], $page_data->name,
-            $page_data->picture->data->url);
         }
     }
     /**

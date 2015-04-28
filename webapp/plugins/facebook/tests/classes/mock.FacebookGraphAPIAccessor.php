@@ -132,4 +132,24 @@ class FacebookGraphAPIAccessor {
             return '';
         }
     }
+
+    /**
+     * Get the Facebook Login URL as per
+     * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#login
+     * @param  str $app_id The ID of your app, found in your app's dashboard
+     * @param  str $scope A comma separated list of Permissions to request from the person using your app
+     * @param  [type] $state An arbitrary unique string created by your app to guard against Cross-site Request Forgery.
+     * @param  str $redirect_url The URL that you want to redirect the person logging in back to.
+     * @return [type]               [description]
+     */
+    public static function getLoginURL($app_id, $scope, $state, $redirect_url) {
+        $request_params = array(
+            'client_id'=>$app_id,
+            'scope'=>$scope,
+            'state'=>$state,
+            'redirect_uri' => $redirect_url
+        );
+        $query_string = http_build_query($request_params);
+        return 'https://www.facebook.com/dialog/oauth?'.$query_string;
+    }
 }
