@@ -102,7 +102,7 @@ class TestOfStarWarsInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $insight_plugin->run_date);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "The Force is strong with @Luke");
+        $this->assertEqual($result->headline, "The Force is strong with @Luke on #StarWarsDay");
         $this->assertEqual($result->text, "@Luke was ready for Star Wars Day. May the fourth be with you... always.");
 
         $this->dumpRenderedInsight($result, $this->instance, "Got Star Wars");

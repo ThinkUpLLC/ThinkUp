@@ -96,7 +96,7 @@ class StarWarsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (count($matched_posts) > 0) {
-                $headline = "The Force is strong with " . $this->username;
+                $headline = "The Force is strong with " . $this->username ." on #StarWarsDay";
                 $insight_text = $this->username
                     . " was ready for Star Wars Day. May the fourth be with you... always.";
 
