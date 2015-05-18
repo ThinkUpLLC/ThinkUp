@@ -128,6 +128,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
 
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        foreach ($instances as $instance) {
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+            $access_token = $tokens['oauth_access_token'];
+            if (isset($tokens['auth_error']) && $tokens['auth_error'] != '') {
+                $instance->auth_error = $tokens['auth_error'];
+            }
+        }
         $this->addToView('instances', $instances);
     }
     /**

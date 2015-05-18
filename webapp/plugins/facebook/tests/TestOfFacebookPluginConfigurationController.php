@@ -602,6 +602,37 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner_instance->auth_error, '');
     }
 
+    public function testAccountWithAuthError()  {
+        self::buildInstanceData();
+
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', '/');
+
+        $_SERVER['SERVER_NAME'] = "srvr";
+
+        $options_array = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNotNull($instance);
+
+        //assert there is an auth error
+        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+        $this->assertEqual($owner_instance->auth_error, 'Token has expired.');
+
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $this->debug($output);
+
+        $this->assertPattern('/Facebook connection expired/', $output );
+    }
+
     public function testForDeleteCSRFToken() {
         self::buildInstanceData();
 
