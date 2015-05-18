@@ -38,6 +38,7 @@ $web_tests->add(new WebTestOfChangePassword());
 $web_tests->add(new WebTestOfCrawlerRun());
 $web_tests->add(new WebTestOfCSRFToken());
 $web_tests->add(new WebTestOfDeleteInstance());
+$web_tests->add(new WebTestOfForgottonPassword());
 $web_tests->add(new WebTestOfLogin());
 $web_tests->add(new WebTestOfLogout());
 $web_tests->add(new WebTestOfRegistration());
