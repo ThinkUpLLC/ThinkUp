@@ -225,6 +225,9 @@ if ((show_plugin && (!window.location.hash || window.location.hash == '' || wind
 
 
 function show_settings() {
+    if( typeof settings_visible == 'undefined'){
+        var settings_visible = false;
+    }
     if (settings_visible) {
         $(".plugin-settings").hide();
         $('#settings-flip-prompt').html('Show');
@@ -258,10 +261,12 @@ function show_advanced() {
   }
 }
 
-if( required_values_set ) {
-  $('#add-account-div').show();
-} else {
-  if(! is_admin) {
-    $('#contact-admin-div').show();
-  }
+if( typeof required_values_set != 'undefined'){
+    if( required_values_set ) {
+        $('#add-account-div').show();
+    } else {
+        if(! is_admin) {
+            $('#contact-admin-div').show();
+        }
+    }
 }
