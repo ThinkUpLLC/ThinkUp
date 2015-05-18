@@ -4675,7 +4675,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                     'post_text' => 'This is very shared',
                     'pub_date' => "$year-02-07",
                     'author_username' => 'a_user',
-                    'network' => 'twitter'
+                    'network' => 'twitter',
+                    'post_id' => 'ablah'.$i
                 )
             );
         }
@@ -4686,7 +4687,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 'post_text' => 'This is pretty well shared',
                 'pub_date' => "$year-08-07",
                 'author_username' => 'a_user',
-                'network' => 'twitter'
+                'network' => 'twitter',
+                'post_id' => 'ablh'
             )
         );
 
@@ -4697,7 +4699,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                     'post_text' => 'This is least shared',
                     'pub_date' => '2013-03-09',
                     'author_username' => 'a_user',
-                    'network' => 'twitter'
+                    'network' => 'twitter',
+                    'post_id' => 'emvi'.$i
                 )
             );
         }
@@ -4709,7 +4712,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                     'post_text' => 'These Sochi games are kind of a cluster already.',
                     'pub_date' => "$year-03-09",
                     'author_username' => 'a_different_user',
-                    'network' => 'twitter'
+                    'network' => 'twitter',
+                    'post_id' => 'eeic'.$i
                 )
             );
         }
