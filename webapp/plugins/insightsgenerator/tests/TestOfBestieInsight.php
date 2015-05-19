@@ -66,7 +66,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies to friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 24) {
             if (($counter % 2) == 1) {
                 $in_reply_to_user_id = 18; //shutterbug
             } else {
@@ -85,7 +85,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies from friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 24) {
             if (($counter % 2) == 1) {
                 $author_user_id = 19;
                 $author_username = 'linkbaiter';
@@ -118,8 +118,8 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("@linkbaiter is @ev's Twitter bestie", $result->headline);
         $this->assertPattern("/Best friends chat each other up about every topic under the sun&mdash;just like "
             ."@linkbaiter and @ev./", $result->text);
-        $this->assertPattern("/5 times/", $result->text);
-        $this->assertPattern("/4 times/", $result->text);
+        $this->assertPattern("/12 times/", $result->text);
+        $this->assertPattern("/11 times/", $result->text);
         $this->assertNoPattern("/months straight/", $result->text);
 
         //Assert baselines got set
@@ -128,7 +128,8 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual('19', $data['value']);
 
-        $sql = "SELECT * FROM tu_insight_baselines WHERE slug = 'bestie_last_bestie_count' and date = '".date('Y-m-d')."'";
+        $sql = "SELECT * FROM tu_insight_baselines WHERE slug = 'bestie_last_bestie_count' and date = '".date('Y-m-d')
+            ."'";
         $stmt = InsightBaselineMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual('1', $data['value']);
@@ -153,7 +154,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies to friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 20) {
             if (($counter % 2) == 1) {
                 $in_reply_to_user_id = 18; //shutterbug
             } else {
@@ -172,7 +173,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies from friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 20) {
             if (($counter % 2) == 1) {
                 $author_user_id = 19;
                 $author_username = 'linkbaiter';
@@ -205,8 +206,8 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("@linkbaiter is still @ev's Twitter bestie", $result->headline);
         $this->assertPattern("/BFFs love to chat/", $result->text);
         $this->assertPattern("/4 months straight/", $result->text);
-        $this->assertPattern("/5 times/", $result->text);
-        $this->assertPattern("/4 times/", $result->text);
+        $this->assertPattern("/10 times/", $result->text);
+        $this->assertPattern("/10 times/", $result->text);
 
         //Assert baselines got set
         $sql = "SELECT * FROM tu_insight_baselines WHERE slug = 'bestie_last_bestie_id' and date = '".date('Y-m-d')."'";
@@ -240,7 +241,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies to friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 20) {
             if (($counter % 2) == 1) {
                 $in_reply_to_user_id = 18; //shutterbug
             } else {
@@ -259,7 +260,7 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
 
         //Add replies from friends
         $counter = 1;
-        while ($counter < 10) {
+        while ($counter < 20) {
             if (($counter % 2) == 1) {
                 $author_user_id = 19;
                 $author_username = 'linkbaiter';
@@ -292,8 +293,8 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("@linkbaiter is @ev's Twitter bestie", $result->headline);
         $this->assertPattern("/Best friends chat each other up about every topic under the sun&mdash;just like "
             ."@linkbaiter and @ev./", $result->text);
-        $this->assertPattern("/5 times/", $result->text);
-        $this->assertPattern("/4 times/", $result->text);
+        $this->assertPattern("/9 times/", $result->text);
+        $this->assertPattern("/9 times/", $result->text);
         $this->assertNoPattern("/months straight/", $result->text);
 
         //Assert baselines got set
@@ -334,7 +335,8 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
             'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
             'source'=>$source, 'pub_date'=>'-12d'. $pseudo_minute.':00',
             'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
-            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>$in_reply_to_user_id,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook',
+            'in_reply_to_user_id'=>$in_reply_to_user_id,
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
@@ -386,10 +388,185 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual('31', $data['value']);
 
-        $sql = "SELECT * FROM tu_insight_baselines WHERE slug = 'bestie_last_bestie_count' and date = '".date('Y-m-d')."'";
+        $sql = "SELECT * FROM tu_insight_baselines WHERE slug = 'bestie_last_bestie_count' and date = '".date('Y-m-d')
+            ."'";
         $stmt = InsightBaselineMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual('1', $data['value']);
+    }
+
+    public function testFacebookCompleteDataOnlyUnderMinimumReplies() {
+        $this->instance = new Instance();
+        $this->instance->id = 1;
+        $this->instance->network_username = 'fbuser1';
+        $this->instance->network_user_id = '30';
+        $this->instance->network = 'facebook';
+
+        //User fixtures set up in buildTruckloadOfFacebookData
+        $builders = self::buildTruckloadOfFacebookData();
+
+        //Add reply from friends
+        $counter = 1;
+        while ($counter < 2) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 31;
+                $author_username = 'fbuser2';
+            } else {
+                $author_user_id = 32;
+                $author_username = 'fbuser3';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>'30',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $posts = array();
+        $insight_plugin = new BestieInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
+        $this->assertNull($result);
+
+        //Add another reply from friends
+        $counter = 3;
+        while ($counter < 4) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 31;
+                $author_username = 'fbuser2';
+            } else {
+                $author_user_id = 32;
+                $author_username = 'fbuser3';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>'30',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $insight_plugin = new BestieInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
+        $this->assertNull($result);
+
+        //Add more than 5 replies from friends
+        $counter = 5;
+        while ($counter < 10) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 31;
+                $author_username = 'fbuser2';
+            } else {
+                $author_user_id = 32;
+                $author_username = 'fbuser3';
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'facebook', 'in_reply_to_user_id'=>'30',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $insight_plugin = new BestieInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
+
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("fbuser2 is fbuser1's Facebook BFF", $result->headline);
+        //Friends comment on friends' status updates—friends like fbuser2 and fbuser1. In the past month, fbuser2
+        //commented on fbuser1's status updates 3 times, more than anyone else. You two!
+        $this->assertPattern("/Friends comment on friends' status updates&mdash;friends like fbuser2 and fbuser1./",
+            $result->text);
+        $this->assertPattern("/5 times/", $result->text);
+
+        $this->dumpRenderedInsight($result, $this->instance, "Facebook complete data no streak");
+    }
+
+    public function testTwitterCompleteDataOnlyUnderMinimumReplies() {
+        $this->instance = new Instance();
+        $this->instance->id = 1;
+        $this->instance->network_user_id = '13';
+        $this->instance->network_username = 'ev';
+        $this->instance->network = 'twitter';
+
+         //User fixtures set up in buildTruckloadOfTwitterData
+        $builders = self::buildTruckloadOfTwitterData();
+
+        //Add 5 replies to friends
+        $counter = 1;
+        while ($counter < 7) {
+            if (($counter % 2) == 1) {
+                $in_reply_to_user_id = 18; //shutterbug
+            } else {
+                $in_reply_to_user_id = 19; //linkbaiter
+            }
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+34358,
+            'author_user_id'=>'13', 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-12d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>$in_reply_to_user_id,
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        //Add replies from friends
+        $counter = 1;
+        while ($counter < 5) {
+            if (($counter % 2) == 1) {
+                $author_user_id = 19;
+                $author_username = 'linkbaiter';
+            } else {
+                $author_user_id = 20;
+                $author_username = 'user1';
+            }
+            $avatar = "https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg";
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter+5467,
+            'author_user_id'=>$author_user_id, 'author_username'=>$author_username,
+            'author_avatar'=>$avatar, 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'-15d'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter', 'in_reply_to_user_id'=>'13',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+            $counter++;
+        }
+
+        $posts = array();
+        $insight_plugin = new BestieInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
+        $this->assertNull($result);
     }
 
     protected function buildTruckloadOfTwitterData() {
@@ -697,13 +874,14 @@ class TestOfBestieInsight extends ThinkUpInsightUnitTestCase {
         // add instance 7
         $builders[] = FixtureBuilder::build('instances',
         array('network_user_id' => '100', 'network_viewer_id' => '100', 'network_username' => 'userhashtag',
-                        'last_post_id'  => '1', 'crawler_last_run' => '2013-02-28 15:21:16', 'total_posts_by_owner' => 0,
+                        'last_post_id'  => '1', 'crawler_last_run' => '2013-02-28 15:21:16', 'total_posts_by_owner' =>0,
                         'total_posts_in_system' => 0, 'total_replies_in_system' => 0, 'total_follows_in_system' => 0,
                         'posts_per_day' => 0, 'posts_per_week' => 0, 'percentage_replies' => 0, 'percentage_links' => 0,
                         'earliest_post_in_system' => '2013-02-28 15:21:16',
                         'earliest_reply_in_system' => '2013-02-28 15:21:16', 'is_archive_loaded_posts' => 0,
                         'is_archive_loaded_replies' => 0, 'is_archive_loaded_follows' => 0, 'is_public' => 0,
-                        'is_active' => 0, 'network' => 'twitter', 'favorites_profile' => 0, 'owner_favs_in_system' => 0));
+                        'is_active' => 0, 'network' => 'twitter', 'favorites_profile' => 0,
+                        'owner_favs_in_system' => 0));
 
         // add instance_twitter
         $builders[] = FixtureBuilder::build('instances_twitter',

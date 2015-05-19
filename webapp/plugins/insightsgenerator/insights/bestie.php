@@ -39,6 +39,12 @@ class BestieInsight extends InsightPluginParent implements InsightPlugin {
      **/
     var $slug = 'bestie';
 
+    /**
+     * Minimum number of one-way replies to qualify as bestie.
+     * 5 replies a month > 1 per week.
+     */
+    const MIN_REPLIES = 5;
+
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
@@ -64,12 +70,27 @@ class BestieInsight extends InsightPluginParent implements InsightPlugin {
         $should_generate_insight = self::shouldGenerateMonthlyInsight($this->slug, $instance,
             $insight_date=$since_date, $regenerate_existing_insight=$regenerate, $day_of_month = $day_of_month);
 
-//        if (true) {
         if ($should_generate_insight) {
             $this->logger->logInfo("Should generate", __METHOD__.','.__LINE__);
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             $bestie = $post_dao->getBestie($instance, 30);
+
+            //If either replies_to or replies_from fails to meet the min threshold, unset $bestie
+            if (isset($bestie['total_replies_to'])) {
+                if ($bestie['total_replies_to'] < self::MIN_REPLIES) {
+                    $this->logger->logInfo("Not enough replies_to to justify insight: ".$bestie['total_replies_to'],
+                        __METHOD__.','.__LINE__);
+                    $bestie = null;
+                }
+            }
+            if (isset($bestie['total_replies_from'])) {
+                if ($bestie['total_replies_from'] < self::MIN_REPLIES) {
+                    $this->logger->logInfo("Not enough replies_from to justify insight: ".$bestie['total_replies_from'],
+                        __METHOD__.','.__LINE__);
+                    $bestie = null;
+                }
+            }
 
             if (isset($bestie)) {
                 //Assume a streak of one, unless baselines tell us differently
