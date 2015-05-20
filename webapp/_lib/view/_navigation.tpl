@@ -66,27 +66,34 @@
 
             {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances }
 
-                <!--search posts-->
-                <form class="navbar-form navbar-search dropdown hidden-xs" style="" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&amp;n={$instances[0]->network|urlencode}&amp;c=posts&amp;q=');">
+            {assign var='has_twitter' value=false}
 
-                    <input type="text" id="search-keywords" class="search-query dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q|replace:'name:':''}"{else}placeholder="Search"{/if} />
+            {foreach from=$instances key=tid item=i}
+                {if $i->network eq 'twitter'}
+                  {assign var='has_twitter' value=true}
+                  {assign var='default_username' value=$i->network_username}
+                {/if}
+            {/foreach}
+
+                {if $has_twitter}
+                <!--search posts-->
+                <form class="navbar-form navbar-search dropdown hidden-xs" style="" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$default_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=');">
+
+                    <input type="search" id="search-keywords" class="search-query dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
 
                     <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     {foreach from=$instances key=tid item=i}
-                      {if !isset($thinkupllc_endpoint)}
-                        <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n={$i->network|urlencode}&amp;c=posts&amp;q=');" href="#"><i class="fa fa-{$i->network}{if $i->network eq 'google+'} fa-google-plus{/if} icon-muted fa-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}Foursquare check-ins{else}{$i->network|ucwords} posts{/if}</a></li>
-                      {/if}
                         {if $i->network eq 'twitter'}
-                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
-                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=name:');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search @{$i->network_username}'s followers for people named <span class="searchterm"></span></a></li>
+                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=');" href="#"><i class="fa fa-twitter icon-muted"></i> Search @{$i->network_username}'s followers' bios for "<span class="searchterm"></span>"</a></li>
+                            <!--
+                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=name:');" href="#"><i class="fa fa-twitter icon-muted"></i> Search @{$i->network_username}'s followers for people named "<span class="searchterm"></span>"</a></li>
+                            -->
                         {/if}
-                    {/foreach}
-                    {foreach from=$saved_searches key=tid item=i}
-                        <li ><a onclick="searchMe('{$site_root_path}search.php?u={$i.network_username|urlencode}&amp;n=twitter&amp;c=searches&amp;k={$i.hashtag|urlencode}&amp;q=');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search tweets which contain {$i.hashtag} for <span class="searchterm"></span></a></li>
                     {/foreach}
                     </ul>
 
                 </form>
+                {/if}
 
             {/if}
 
