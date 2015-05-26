@@ -868,7 +868,7 @@ a:hover {
   position: absolute;
   padding: 0;
   color: #2785d3;
-  top: 4px;
+  top: 3px;
   right: 10px;
   margin: 0;
   background: transparent;
@@ -892,13 +892,55 @@ a:hover {
   }
 }
 .navbar-default #search-keywords {
-  border-radius: 8px;
-  border: 1px solid #2785d3;
+  border-radius: 0;
+  border: 1px solid #3ea5cf;
   padding: 4px;
+  color: white;
+  background-color: #2785d3;
+}
+.navbar-default #search-keywords::-webkit-input-placeholder {
+  color: white;
+}
+.navbar-default #search-keywords:-moz-placeholder {
+  /* Firefox 18- */
+  color: white;
+}
+.navbar-default #search-keywords::-moz-placeholder {
+  /* Firefox 19+ */
+  color: white;
+}
+.navbar-default #search-keywords:-ms-input-placeholder {
+  color: white;
+}
+.navbar-default #search-keywords:focus {
+  background-color: white;
+}
+.navbar-default #search-keywords:focus::-webkit-input-placeholder {
+  color: #dbdbdb;
+}
+.navbar-default #search-keywords:focus:-moz-placeholder {
+  /* Firefox 18- */
+  color: #dbdbdb;
+}
+.navbar-default #search-keywords:focus::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #dbdbdb;
+}
+.navbar-default #search-keywords:focus:-ms-input-placeholder {
+  color: #dbdbdb;
 }
 #search-refine {
   right: 0;
+  top: 28px;
   left: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.175);
+  border-radius: 0;
+}
+#search-refine li > a i {
+  color: #00aeef;
+}
+.searchterm {
+  font-weight: bolder;
 }
 body.menu-off .navbar-default .navbar-header .menu-trigger {
   display: none;
