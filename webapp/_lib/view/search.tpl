@@ -15,7 +15,6 @@
         <div class="date-marker">
 
             <div class="relative"></div>
-            <div class="absolute"></div>
         </div>
 
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
@@ -86,9 +85,10 @@
   </div>
 </div>
 
-
-
     <div class="stream-pagination-control">
+
+      <p class="text-muted ">Results seem incomplete? ThinkUp may not have captured all your Twitter data.</p>
+
       <ul class="pager">
       {if $next_page}
         <li class="previous">
@@ -102,6 +102,7 @@
       {/if}
       </ul>
     </div>
+
 
   </div><!-- end stream -->
 </div><!-- end container -->
