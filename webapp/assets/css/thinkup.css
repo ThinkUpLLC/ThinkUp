@@ -895,7 +895,7 @@ a:hover {
   border-radius: 0;
   border: 1px solid #3ea5cf;
   padding: 4px;
-  color: white;
+  color: black;
   background-color: #2785d3;
 }
 .navbar-default #search-keywords::-webkit-input-placeholder {
