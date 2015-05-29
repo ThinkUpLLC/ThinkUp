@@ -93,8 +93,12 @@
                     </ul>
 
                 </form>
-                {/if}
+                {/if}<!-- // has twitter -->
 
+            {else}<!-- not logged in -->
+                <form class="navbar-form navbar-search hidden-xs">
+                  <input type="search" id="search-keywords" class="search-query" autocomplete="off" placeholder="Search" data-toggle="popover" data-trigger="click focus" title="<a href='{$site_root_path}session/login.php{if isset($redirect_url)}?redirect={$redirect_url}{/if}' class='btn btn-default btn-signup btn-sm'>Log in</a> to search" data-html="true" data-content="Not a member yet? <a href='https://thinkup.com/?utm_source=permalink_tout&utm_medium=banner&utm_campaign=touts' style='text-decoration: underline;' >Join now!</a>" data-placement="bottom" onfocus="$('[data-toggle=popover]').popover()" />
+                </form>
             {/if}
 
         </div>

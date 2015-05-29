@@ -1,14 +1,6 @@
 {include file="_header.tpl"}
 {include file="_navigation.tpl"}
 
-{literal}
-<script>
-var app_message = {};
-app_message.msg = {/literal}"<strong>FYI:</strong> You might not see complete results here yet &mdash; we're still gathering data from Twitter."{literal};
-app_message.type = {/literal}"info"{literal};
-</script>
-{/literal}
-
 {assign var='color' value='blue'}
 <div class="container">
   {if $message_header}
@@ -23,7 +15,6 @@ app_message.type = {/literal}"info"{literal};
         <div class="date-marker">
 
             <div class="relative"></div>
-            <div class="absolute"></div>
         </div>
 
 <div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
@@ -94,9 +85,10 @@ app_message.type = {/literal}"info"{literal};
   </div>
 </div>
 
-
-
     <div class="stream-pagination-control">
+
+      <p class="text-muted ">Results seem incomplete? ThinkUp may not have captured all your Twitter data.</p>
+
       <ul class="pager">
       {if $next_page}
         <li class="previous">
@@ -110,6 +102,7 @@ app_message.type = {/literal}"info"{literal};
       {/if}
       </ul>
     </div>
+
 
   </div><!-- end stream -->
 </div><!-- end container -->

@@ -895,22 +895,22 @@ a:hover {
   border-radius: 0;
   border: 1px solid #3ea5cf;
   padding: 4px;
-  color: #2785d3;
-  background-color: #46bcff;
+  color: black;
+  background-color: #2785d3;
 }
 .navbar-default #search-keywords::-webkit-input-placeholder {
-  color: #2785d3;
+  color: white;
 }
 .navbar-default #search-keywords:-moz-placeholder {
   /* Firefox 18- */
-  color: #2785d3;
+  color: white;
 }
 .navbar-default #search-keywords::-moz-placeholder {
   /* Firefox 19+ */
-  color: #2785d3;
+  color: white;
 }
 .navbar-default #search-keywords:-ms-input-placeholder {
-  color: #2785d3;
+  color: white;
 }
 .navbar-default #search-keywords:focus {
   background-color: white;
