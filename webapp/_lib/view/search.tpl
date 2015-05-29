@@ -1,6 +1,14 @@
 {include file="_header.tpl"}
 {include file="_navigation.tpl"}
 
+{literal}
+<script>
+var app_message = {};
+app_message.msg = {/literal}"<strong>FYI:</strong> You might not see complete results here yet &mdash; we're still gathering data from Twitter."{literal};
+app_message.type = {/literal}"info"{literal};
+</script>
+{/literal}
+
 {assign var='color' value='blue'}
 <div class="container">
   {if $message_header}
@@ -32,9 +40,9 @@
         {/if}
         {if $smarty.get.c eq 'followers'}
           {if $users|@count > 0}
-            Looks like {$users|@count} people answer to "{$smarty.get.q}".
+            Looks like {$users|@count} people answer to "{$smarty.get.q|replace:'name:':''}".
           {else}
-            Hmm, no luck looking for "{$smarty.get.q}" people.
+            Hmm, no luck looking for "{$smarty.get.q|replace:'name:':''}" people.
           {/if}
         {/if}
     </h2>
