@@ -37,7 +37,8 @@ class ThanksCountInsight extends CriteriaMatchInsightPluginParent implements Ins
             $day_of_month = 4;
         }
         return $this->shouldGenerateMonthlyInsight($this->getSlug(), $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_month=$day_of_month, count($last_week_of_posts));
+            $regenerate_existing_insight=false, $day_of_month=$day_of_month, count($last_week_of_posts),
+            $excluded_networks = array('instagram'));
     }
 
     public function getSlug() {

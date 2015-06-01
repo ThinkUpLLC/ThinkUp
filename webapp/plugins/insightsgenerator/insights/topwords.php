@@ -108,9 +108,6 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
         } else if ($instance->network == 'facebook') {
             $weekly = 5;
             $monthly = 25;
-        } else if ($instance->network == 'instagram') {
-            $weekly = 4;
-            $monthly = 23;
         } else if ($instance->network == 'test_no_monthly') {
             $monthly = 0;
             $weekly = 2;
@@ -118,7 +115,8 @@ class TopWordsInsight extends InsightPluginParent implements InsightPlugin {
 
         $did_monthly = false;
         $post_dao = DAOFactory::getDAO('PostDAO');
-        if ($monthly && self::shouldGenerateMonthlyInsight('top_words_month', $instance, 'today', false, $monthly)) {
+        if ($monthly && self::shouldGenerateMonthlyInsight('top_words_month', $instance, 'today', false, $monthly, null,
+            $excluded_networks=array('instagram'))) {
             $this->logger->logInfo("Generating monthly", __METHOD__.','.__LINE__);
             $day = 60 * 60 * 24;
             $month_days = date('t');

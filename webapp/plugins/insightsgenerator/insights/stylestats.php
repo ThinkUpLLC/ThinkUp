@@ -44,7 +44,7 @@ class StyleStatsInsight extends InsightPluginParent implements InsightPlugin {
 
         $should_generate_insight = self::shouldGenerateWeeklyInsight('style_stats', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts),
-            $excluded_networks=array('foursquare'));
+            $excluded_networks=array('foursquare', 'instagram'));
 
         if ($should_generate_insight) {
             $total_posts = array("questions" => 0, "quotations" => 0, "links" => 0, "photos" => 0);

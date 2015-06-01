@@ -43,7 +43,8 @@ class AllAboutYouInsight extends InsightPluginParent implements InsightPlugin {
             $day_of_week = 3;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight( 'all_about_you', $instance, $insight_date='today',
-            $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));
+            $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts),
+            $excluded_networks = array('instagram'));
         if ($should_generate_insight) {
             $text = '';
             $count = 0;

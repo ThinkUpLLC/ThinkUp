@@ -44,7 +44,7 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
         $is_first_run = !$this->insight_dao->doesInsightExist($this->slug, $instance->id);
 
         $should_generate_insight = $this->shouldGenerateMonthlyInsight($this->slug, $instance, 'today',
-            $regenerate=false, 3);
+            $regenerate=false, 3, $excluded_networks = array('instagram'));
 
         if ($instance->network == 'facebook' && ($is_first_run || $should_generate_insight)) {
             if ($is_first_run) {
@@ -92,32 +92,6 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
                     $insight->text = $this->postsToInsightText($number_of_posts);
                     $insight->headline = $this->username . " has tweeted ".number_format($number_of_posts)
                         ." time".($number_of_posts==1?'':'s');
-                    $this->insight_dao->insertInsight($insight);
-                }
-            }
-        }
-
-        if ($instance->network == 'instagram') {
-            $number_of_posts = $user->post_count;
-            $hundreds_of_posts = intval($number_of_posts / 100);
-            // At least a minute of posts and either 100 or the first run.
-            if ($number_of_posts > 4 && ($archived_posts_in_hundreds > 0 || $is_first_run)) {
-                $baseline_slug = "time_spent_".$hundreds_of_posts;
-                $baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
-                if (!$baseline_dao->doesInsightBaselineExist($baseline_slug, $instance->id)) {
-                    if ($hundreds_of_posts) {
-                        $baseline_dao->insertInsightBaseline($baseline_slug, $instance->id, $hundreds_of_posts);
-                    }
-
-                    $insight = new Insight();
-                    $insight->slug = $this->slug;
-                    $insight->emphasis = Insight::EMPHASIS_MED;
-                    $insight->filename = basename(__FILE__, ".php");
-                    $insight->instance_id = $instance->id;
-                    $insight->date = $this->insight_date;
-                    $insight->text = $this->postsToInsightText($number_of_posts);
-                    $insight->headline = $this->username . " has posted ".number_format($number_of_posts)
-                        ." photo".($number_of_posts==1?'':'s')." on Instagram";
                     $this->insight_dao->insertInsight($insight);
                 }
             }
