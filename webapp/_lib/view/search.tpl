@@ -87,7 +87,7 @@
 
     <div class="stream-pagination-control">
 
-      <p class="text-muted ">Results seem incomplete? ThinkUp may not have captured all your Twitter data.</p>
+      <p class="text-muted ">Results seem incomplete? ThinkUp may not have captured your latest data.</p>
 
       <ul class="pager">
       {if $next_page}
