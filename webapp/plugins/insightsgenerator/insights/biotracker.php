@@ -44,7 +44,8 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         $this->logger->logInfo("Begin generating profile change insight", __METHOD__.','.__LINE__);
 
         //Bio changes
-        if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug_bio, $instance)) {
+        if (($instance->network == 'twitter' || $instance->network == 'instagram')
+            && $this->shouldGenerateInsight($this->slug_bio, $instance)) {
             $this->logger->logInfo("Should generate bio change tracker", __METHOD__.','.__LINE__);
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
             $versions = $user_versions_dao->getRecentFriendsVersions($user, 7, array('description'));
@@ -93,20 +94,21 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
         }
 
         //Avatar changes
-        if ($instance->network == 'twitter' && $this->shouldGenerateInsight($this->slug_avatar, $instance)) {
+        if (($instance->network == 'twitter' || $instance->network == 'instagram')
+            && $this->shouldGenerateInsight($this->slug_avatar, $instance)) {
             $this->logger->logInfo("Should generate avatar change tracker", __METHOD__.','.__LINE__);
             $user_versions_dao = DAOFactory::getDAO('UserVersionsDAO');
             $versions = $user_versions_dao->getRecentFriendsVersions($user, 7, array('avatar'));
             //$this->logger->logInfo(Utils::varDumpToString($versions), __METHOD__.','.__LINE__);
             $changes = array();
             $examined_users = array();
+            $user_dao = DAOFactory::getDAO('UserDAO');
             foreach ($versions as $change) {
                 $user_key = intval($change['user_key']);
                 if (!in_array($user_key, $examined_users)) {
                     $examined_users[] = $user_key;
                     $last_version = $user_versions_dao->getVersionBeforeDay($user_key,date('Y-m-d'),'avatar');
                     if ($last_version) {
-                        $user_dao = DAOFactory::getDAO('UserDAO');
                         $user = $user_dao->getDetailsByUserKey($user_key);
                         if ($user && ($user->avatar !== $last_version['field_value'])) {
                             $do_show_change = true;
@@ -119,10 +121,12 @@ class BioTrackerInsight extends InsightPluginParent implements InsightPlugin {
                                 $avatar_url2_https = preg_replace('/^http:(.+)$/', "https:$1",
                                     $last_version['field_value']);
 
-                                //Get the original version of the avatar
-                                //https://dev.twitter.com/overview/general/user-profile-images-and-banners
-                                $avatar_url1_https = str_replace('_normal', '', $avatar_url1_https);
-                                $avatar_url2_https = str_replace('_normal', '', $avatar_url2_https);
+                                if ($instance->network == 'twitter') {
+                                    //Get the original version of the avatar
+                                    //https://dev.twitter.com/overview/general/user-profile-images-and-banners
+                                    $avatar_url1_https = str_replace('_normal', '', $avatar_url1_https);
+                                    $avatar_url2_https = str_replace('_normal', '', $avatar_url2_https);
+                                }
 
                                 $do_show_change = $api_accessor->didAvatarsChange($avatar_url1_https,
                                     $avatar_url2_https);
