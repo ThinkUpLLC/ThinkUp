@@ -66,17 +66,17 @@
 
             {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances }
 
-            {assign var='has_twitter' value=false}
+            {assign var='do_show_search' value=false}
 
             {foreach from=$instances key=tid item=i}
-                {if $i->network eq 'twitter'}
-                  {assign var='has_twitter' value=true}
+                {if $i->network eq 'twitter' || $i->network eq 'instagram'}
+                  {assign var='do_show_search' value=true}
                   {assign var='default_username' value=$i->network_username}
                 {/if}
             {/foreach}
 
-                {if $has_twitter}
-                <!--search posts-->
+                {if $do_show_search}
+                <!--search box-->
                 <form class="navbar-form navbar-search dropdown hidden-xs" style="" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$default_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=');">
 
                     <input type="search" id="search-keywords" class="search-query dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
@@ -89,11 +89,17 @@
                             <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=name:');" href="#"><i class="fa fa-twitter icon-muted"></i> Search @{$i->network_username}'s followers for people named "<span class="searchterm"></span>"</a></li>
                             -->
                         {/if}
+                        {if $i->network eq 'instagram'}
+                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=instagram&amp;c=followers&amp;q=');" href="#"><i class="fa fa-instagram icon-muted"></i> Search {$i->network_username}'s followers' bios for "<span class="searchterm"></span>"</a></li>
+                            <!--
+                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=name:');" href="#"><i class="fa fa-twitter icon-muted"></i> Search @{$i->network_username}'s followers for people named "<span class="searchterm"></span>"</a></li>
+                            -->
+                        {/if}
                     {/foreach}
                     </ul>
 
                 </form>
-                {/if}<!-- // has twitter -->
+                {/if}<!-- // do_show_search -->
 
             {else}<!-- not logged in -->
                 <form class="navbar-form navbar-search hidden-xs">
