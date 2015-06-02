@@ -16,18 +16,6 @@ namespace Instagram\Collection;
 class TagMediaCollection extends \Instagram\Collection\MediaCollection {
 
     /**
-     * Get next max tag id
-     *
-     * Get the next max tag id for use in pagination
-     *
-     * @return string Returns the next max tag id
-     * @access public
-     */
-    public function getNextMaxTagId() {
-        return isset( $this->pagination->next_max_tag_id ) ? $this->pagination->next_max_tag_id : null;
-    }
-
-    /**
      * Get min tag id
      *
      * Get the minimum tag id.
@@ -42,6 +30,17 @@ class TagMediaCollection extends \Instagram\Collection\MediaCollection {
         return isset( $this->pagination->min_tag_id ) ? $this->pagination->min_tag_id : null;
     }
 
+    /**
+     * Get next max tag id
+     *
+     * Get the next max tag id for use in pagination
+     *
+     * @return string Returns the next max tag id
+     * @access public
+     */
+    public function getNextMaxTagId() {
+        return isset( $this->pagination->next_max_tag_id ) ? $this->pagination->next_max_tag_id : null;
+    }
 
     /**
      * Get next max tag id

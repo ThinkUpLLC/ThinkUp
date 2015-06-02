@@ -53,6 +53,27 @@ class Media extends \Instagram\Core\BaseObjectAbstract {
     protected $tags = null;
 
     /**
+     * Get the ID
+     * Get the media type
+     *
+     * @return string
+     * @access public
+     */
+    public function getId() {
+        return $this->data->id;
+     }
+
+    /**
+     * Get the media type
+     *
+     * @return string
+     * @access public
+     */
+    public function getType() {
+        return $this->data->type;
+    }
+
+    /**
      * Get the thumbnail
      *
      * @return string
@@ -63,12 +84,32 @@ class Media extends \Instagram\Core\BaseObjectAbstract {
     }
 
     /**
+     * Get the standard resolution video
+     *
+     * @return string
+     * @access public
+     */
+    public function getStandardResVideo() {
+        return $this->data->videos->standard_resolution;
+    }
+
+    /**
+     * Get the low resolution video
+     *
+     * @return string
+     * @access public
+     */
+    public function getLowResVideo() {
+        return $this->data->videos->low_resolution;
+    }
+
+    /**
      * Get the standard resolution image
      *
      * @return string
      * @access public
      */
-    public function getStandardRes() {
+    public function getStandardResImage() {
         return $this->data->images->standard_resolution;
     }
 
@@ -78,8 +119,32 @@ class Media extends \Instagram\Core\BaseObjectAbstract {
      * @return string
      * @access public
      */
-    public function getLowRes() {
+    public function getLowResImage() {
         return $this->data->images->low_resolution;
+    }
+
+    /**
+     * Get the standard resolution image
+     *
+     * Alias for getStandardResImage since Instagram added videos
+     * 
+     * @return string
+     * @access public
+     */
+    public function getStandardRes() {
+        return $this->getStandardResImage();
+    }
+
+    /**
+     * Get the low resolution image
+     *
+     * Alias for getLowResImage since Instagram added videos
+     *
+     * @return string
+     * @access public
+     */
+    public function getLowRes() {
+        return $this->getLowResImage();
     }
 
     /**

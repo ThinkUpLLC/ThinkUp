@@ -64,6 +64,7 @@ class Proxy {
 
     /**
      * Get the access token
+     * 
      * @param array $data Auth data
      * @return string Returns the access token
      */

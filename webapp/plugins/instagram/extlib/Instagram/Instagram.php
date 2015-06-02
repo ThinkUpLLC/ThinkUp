@@ -10,6 +10,7 @@ namespace Instagram;
 
 use \Instagram\Collection\MediaSearchCollection;
 use \Instagram\Collection\TagCollection;
+use \Instagram\Collection\TagMediaCollection;
 use \Instagram\Collection\UserCollection;
 use \Instagram\Collection\MediaCollection;
 use \Instagram\Collection\LocationCollection;
@@ -265,6 +266,18 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
         $params['lng'] = (float)$lng;
         $location_collection = new LocationCollection( $this->proxy->searchLocations( $params ), $this->proxy );
         return $location_collection;
+    }
+
+    /**
+     * Get tag media
+     *
+     * @param string $tag
+     * @param array $params Optional params to pass to the endpoint
+     * @return TagMediaCollection
+     */
+    public function getTagMedia( $tag, array $params = null ) {
+        $params = (array)$params;
+        return new TagMediaCollection( $this->proxy->getTagMedia( $tag, $params ), $this->proxy );
     }
 
 }
