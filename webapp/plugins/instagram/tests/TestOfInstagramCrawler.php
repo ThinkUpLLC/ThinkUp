@@ -251,13 +251,14 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         fseek($log_reader_handle, 0, SEEK_END);
         //Check if newest posts are returned.
         try {
-        $ic->fetchPostsAndReplies();
+            $ic->fetchPostsAndReplies();
         } catch (Exception $e) {
             //print_r($e);
         }
 
         $post = $photo_dao->getPhoto('519671854563291086', 'instagram');
         $this->assertEqual($post->post_id, '519671854563291086' );
+        $this->assertFalse($post->is_short_video);
         $this->assertEqual($post->author_user_id, '502993749' );
         $this->assertEqual($post->author_username, 'ni_ato' );
         $this->assertEqual($post->author_fullname, 'niki' );

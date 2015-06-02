@@ -309,6 +309,7 @@ class InstagramCrawler {
                   'low_resolution_url'=>$p->getLowRes()->url,
                   'thumbnail_url'=>$p->getThumbnail()->url,
                   'filter'=>$p->getFilter(),
+                  'is_short_video' => (($p->getType() == 'video')?1:0)
                 );
 
                 $new_photo_key = $this->storePhotoAndAuthor($photo_to_process, "Owner stream");
