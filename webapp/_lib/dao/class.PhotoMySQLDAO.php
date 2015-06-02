@@ -40,7 +40,7 @@ class PhotoMySQLDAO extends PostMySQLDAO implements PhotoDAO {
      * Optional fields in a photo
      * @var array
      */
-    var $OPTIONAL_PHOTO_FIELDS = array('filter', 'low_resolution_url', 'thumbnail_url');
+    var $OPTIONAL_PHOTO_FIELDS = array('filter', 'low_resolution_url', 'thumbnail_url', 'is_short_video');
 
     /**
      * Checks to see if the $vals array contains all the required fields to insert a photo

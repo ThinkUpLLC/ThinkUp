@@ -66,7 +66,8 @@ class TestOfPhotoMySQLDAO extends ThinkUpUnitTestCase {
             'standard_resolution_url' =>
             'http://distilleryimage0.s3.amazonaws.com/a2e8b5f0f4f911e2af6f22000a1f9a09_7.jpg',
             'low_resolution_url' => 'http://distilleryimage0.s3.amazonaws.com/a2e8b5f0f4f911e2af6f22000a1f9a09_6.jpg',
-            'thumbnail_url' => 'http://distilleryimage0.s3.amazonaws.com/a2e8b5f0f4f911e2af6f22000a1f9a09_5.jpg'
+            'thumbnail_url' => 'http://distilleryimage0.s3.amazonaws.com/a2e8b5f0f4f911e2af6f22000a1f9a09_5.jpg',
+            'is_short_video' => 0
         ));
 
         return $builders;

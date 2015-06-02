@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Photo.php
  *
- * Copyright (c) 2013 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
+ * Copyright (c) 2013-2015 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
  *
  * LICENSE:
  *
@@ -22,11 +22,11 @@
  *
  * Photo Class
  *
- * This class represents a photo posted on networks like Instagram.
+ * This class represents a photo or short video posted on networks like Instagram.
  *
  * @author Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
+ * @copyright 2013-2015 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
  *
  */
 class Photo extends Post {
@@ -54,6 +54,10 @@ class Photo extends Post {
      * @var str URL of thumbnail image file.
      */
     var $thumbnail_url;
+    /**
+     * @var bool Whether or not this is a short video (1 if so, 0 if not).
+     */
+    var $is_short_video = false;
     public function __construct($val = false) {
         parent::__construct($val);
         $this->id = $val['id'];
@@ -62,5 +66,6 @@ class Photo extends Post {
         $this->standard_resolution_url = $val['standard_resolution_url'];
         $this->low_resolution_url = $val['low_resolution_url'];
         $this->thumbnail_url = $val['thumbnail_url'];
+        $this->is_short_video = PDODAO::convertDBToBool($val['is_short_video']);
     }
 }
