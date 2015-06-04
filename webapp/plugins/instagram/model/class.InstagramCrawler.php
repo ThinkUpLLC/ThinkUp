@@ -141,26 +141,14 @@ class InstagramCrawler {
         //Force-refresh instance user in data store
         self::fetchUser($this->instance->network_user_id, 'Owner info', true);
 
-        //Checks if last friends update is over 2 days ago and runs storeFriends if it is.
-        $friends_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_friends');
-        $friends_last_updated_check = microtime(true) - 172800;
-        if($friends_last_updated == NULL) {
-            $this->storeFriends();
-            $option_dao->insertOption($namespace,'last_crawled_friends', microtime(true));
-        } elseif($friends_last_updated->option_value < $friends_last_updated_check) {
-            $this->storeFriends();
-            $option_dao->updateOptionByName($namespace,'last_crawled_friends', microtime(true));
-        }
-
         $fetch_next_page = true;
         $current_page_number = 1;
         $api_param = array();
-        if($this->instance->total_posts_in_system !=0) {
+        if ($this->instance->total_posts_in_system !=0) {
             $last_crawl = $this->instance->crawler_last_run;
             $crawl_less_week = date($last_crawl, strtotime("-1 week"));
             $unix_less_week = strtotime($crawl_less_week);
             $api_param = array('min_timestamp' => $unix_less_week ,'count' => 20);
-
         } else {
             $api_param = array('count' => 20);
         }
@@ -206,6 +194,37 @@ class InstagramCrawler {
                 $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
                 ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
             }
+        }
+    }
+    /**
+     * Fetch and save the instance users's followers.
+     */
+    public function fetchFollowers() {
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('instagram');
+        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
+        $id = $this->instance->network_user_id;
+        $option_dao = DAOFactory::getDAO('OptionDAO');
+        $network = $this->instance->network;
+
+        //Cap crawl time for very busy pages with thousands of likes/comments
+        $fetch_stop_time = time() + $this->max_crawl_time;
+
+        //Checks if last friends update is over 2 days ago and runs storeFriends if it is.
+        $friends_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $friends_last_updated_check = microtime(true) - 172800;
+        if($friends_last_updated == NULL) {
+            $this->storeFriends();
+            $option_dao->insertOption($namespace,'last_crawled_friends', microtime(true));
+        } elseif($friends_last_updated->option_value < $friends_last_updated_check) {
+            $this->storeFriends();
+            $option_dao->updateOptionByName($namespace,'last_crawled_friends', microtime(true));
+        }
+
+        if (time() > $fetch_stop_time) {
+            $fetch_next_page = false;
+            $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
+            ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
         }
     }
     /**

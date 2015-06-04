@@ -127,6 +127,7 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         fseek($log_reader_handle, 0, SEEK_END);
         // Fetch all of our mock testing data
         $ic->fetchPostsAndReplies();
+        $ic->fetchFollowers();
 
         fflush($this->logger->log);
         $log_written = stream_get_contents($log_reader_handle);
@@ -279,6 +280,7 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $option_dao = new OptionMySQLDAO();
         $ic = new InstagramCrawler($this->profile3_instance, 'fauxaccesstoken', 120);
         $ic->fetchPostsAndReplies();
+        $ic->fetchFollowers();
         //Checks to see if date value has been inserted into table after first crawl.
         $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_friends');
         $this->assertNotNull($select_insert->option_value);

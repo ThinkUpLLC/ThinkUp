@@ -80,7 +80,16 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
             $instagram_crawler = new InstagramCrawler($instance, $access_token, $max_crawl_time);
             $dashboard_module_cacher = new DashboardModuleCacher($instance);
             try {
+                /**
+                 * 1. Fetch user info.
+                 * 2. Fetch user's media + its likes and comments.
+                 * 3. Fetch user's likes.
+                 * 4. Fetch user's followers.
+                 */
                 $instagram_crawler->fetchPostsAndReplies();
+                //TODO
+                // $instagram_crawler->fetchLikes();
+                $instagram_crawler->fetchFollowers();
             } catch (Instagram\Core\ApiAuthException $e) {
                 //The access token is invalid, save in owner_instances table
                 $owner_instance_dao->setAuthError($current_owner->id, $instance->id, $e->getMessage());
