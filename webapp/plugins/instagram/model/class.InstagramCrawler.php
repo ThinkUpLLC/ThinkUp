@@ -129,60 +129,98 @@ class InstagramCrawler {
     /**
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
+     * // If archive isn't loaded, attempt to load it
+     * api_call = /users/{id}/media/recent
+     *
+     * If instances.is_archive_loaded == 0 and instances.last_post_id != ''
+     * set api_call param max_id = last_post_id.
+     *
+     *     posts = Fetch page of media via api_call
+     *
+     *     insert posts
+     * endif
+     *
+     * //Get recent
+     * api_call = /users/{id}/media/recent
+     * param min_timestamp = instance.last_crawled_time (-week if not set)
+     * posts = Fetch page of media via api_call
+     *
+     * insert posts
+     *
      */
     public function fetchPostsAndReplies() {
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId('instagram');
-        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
+        //Cap crawl time for very busy pages with thousands of likes/comments
+        $fetch_stop_time = time() + $this->max_crawl_time;
+
         $id = $this->instance->network_user_id;
-        $option_dao = DAOFactory::getDAO('OptionDAO');
         $network = $this->instance->network;
 
         //Force-refresh instance user in data store
         self::fetchUser($this->instance->network_user_id, 'Owner info', true);
 
+        // If archive isn't loaded, attempt to load it
+        if (!$this->instance->is_archive_loaded_posts && $this->instance->last_post_id != '') {
+            $this->logger->logUserInfo("Media archive is not loaded, fetching starting from max_id "
+                .$this->instance->last_post_id, __METHOD__.','.__LINE__);
+            $api_param = array('max_id' => $this->instance->last_post_id);
+            $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, $api_param);
+
+            $fetch_next_page = true;
+            while ($fetch_next_page) {
+                if ($posts->count() > 0) {
+                    $this->logger->logInfo($posts->count()." Instagram posts found", __METHOD__.','.__LINE__);
+
+                    $this->processPosts($posts, $network);
+
+                    if ($posts->getNext() != null) {
+                        $api_param['max_id'] = $posts->getNext();
+                        $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token,$api_param);
+                    } else {
+                        $fetch_next_page = false;
+                        $this->instance->is_archive_loaded_posts = true;
+                    }
+                } else {
+                    $this->logger->logInfo("No Instagram posts found before max id ".$this->instance->last_post_id,
+                        __METHOD__.','.__LINE__);
+                    $fetch_next_page = false;
+                }
+            }
+            if (time() > $fetch_stop_time) {
+                $fetch_next_page = false;
+                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
+                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
+            }
+        }
+
+        if ($this->instance->is_archive_loaded_posts) {
+            $this->logger->logUserInfo("Media archive is loaded",__METHOD__.','.__LINE__);
+        }
+
+        //Get recent media
         $fetch_next_page = true;
-        $current_page_number = 1;
-        $api_param = array();
-        if ($this->instance->total_posts_in_system !=0) {
-            $last_crawl = $this->instance->crawler_last_run;
-            $crawl_less_week = date($last_crawl, strtotime("-1 week"));
-            $unix_less_week = strtotime($crawl_less_week);
-            $api_param = array('min_timestamp' => $unix_less_week ,'count' => 20);
-        } else {
-            $api_param = array('count' => 20);
-        }
+        $api_param = array('count' => 20);
 
-        $this->logger->logUserInfo("About to request media",__METHOD__.','.__LINE__);
+        $this->logger->logUserInfo("About to request recent media",__METHOD__.','.__LINE__);
         $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, $api_param);
-        $this->logger->logUserInfo("Media requested",__METHOD__.','.__LINE__);
-
-        //Cap crawl time for very busy pages with thousands of likes/comments
-        $fetch_stop_time = time() + $this->max_crawl_time;
-
-        //Determine 'since', datetime of oldest post in datastore
-        $post_dao = DAOFactory::getDAO('PostDAO');
-        $since_post = $post_dao->getAllPosts($id, $network, 1, 1, true, 'pub_date', 'ASC');
-        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
-        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
-        if ($since < 0) {
-            $since=0;
-        } else {
-            $since=$since;
-        }
+        $this->logger->logUserInfo("Recent media requested with params ".Utils::varDumpToString($api_param),
+            __METHOD__.','.__LINE__);
 
         while ($fetch_next_page) {
             if ($posts->count() > 0) {
-                $this->logger->logInfo(sizeof($stream->data)." Instagram posts found on page ".$current_page_number,
-                __METHOD__.','.__LINE__);
+                $this->logger->logInfo($posts->count()." Instagram posts found", __METHOD__.','.__LINE__);
 
-                $this->processPosts($posts, $network, $current_page_number);
+                $did_capture_new_data = $this->processPosts($posts, $network);
 
-                if ($posts->getNext() != null) {
+                if ($did_capture_new_data && $posts->getNext() != null) {
                     $api_param['max_id'] = $posts->getNext();
                     $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token,$api_param);
-                    $current_page_number++;
                 } else {
+                    if (!$did_capture_new_data) {
+                        $this->logger->logInfo("No new data captured in last set, stopping here",
+                            __METHOD__.','.__LINE__);
+                    } else {
+                        $this->logger->logInfo("No posts in the next set", __METHOD__.','.__LINE__);
+                    }
                     $fetch_next_page = false;
                 }
             } else {
@@ -231,9 +269,9 @@ class InstagramCrawler {
      * Convert a collection of profile posts into ThinkUp posts and users
      * @param Object $posts
      * @param str $source The network for the post, always 'instagram'
-     * @param int Page number being processed
+     * @return Whether or not a post (or comment), user or like was written to storage
      */
-    private function processPosts(Instagram\Collection\MediaCollection $posts, $network, $page_number) {
+    private function processPosts(Instagram\Collection\MediaCollection $posts, $network) {
         $thinkup_posts = array();
         $total_added_posts = 0;
 
@@ -255,8 +293,8 @@ class InstagramCrawler {
 
         foreach ($posts as $index=>$p) {
             $post_id = $p->getId();
-            $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($posts->count()).
-            " on page ".$page_number, __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".($posts->count()),
+                __METHOD__.','.__LINE__);
 
             // stream can contain posts from multiple users.  get profile for this post
             $profile = $p->getUser();
@@ -335,6 +373,7 @@ class InstagramCrawler {
 
                 if ($new_photo_key !== false ) {
                     $total_added_posts++;
+                    $this->instance->last_post_id = $post_id;
                 }
             } else { // post already exists in storage
                 if ($must_process_likes) { //update its like count only
@@ -463,8 +502,14 @@ class InstagramCrawler {
             $likes_difference = false;
         }
 
-        $this->logger->logUserSuccess("On page ".$page_number.", captured ".$total_added_posts." post(s), ".
+        $this->logger->logUserSuccess("On this set, captured ".$total_added_posts." post(s), ".
         $total_added_users." user(s) and ".$total_added_likes." like(s)", __METHOD__.','.__LINE__);
+        //Return whether or not something new was written to storage
+        if ($total_added_posts == 0 && $total_added_users == 0 && $total_added_likes == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

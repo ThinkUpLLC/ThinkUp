@@ -446,7 +446,11 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
 
         //former subquery 2 for total_posts_in_system
         $q = "SELECT COUNT(*) AS total_posts_in_system FROM #prefix#posts ";
-        $q .= "WHERE author_user_id=:user_id AND network = :network";
+        $q .= "WHERE author_user_id=:user_id AND network = :network ";
+        if ($instance_object->network == 'instagram') {
+            //Don't count comments on Instagram posts in total_posts_in_system, just photos/videos
+            $q .= "AND in_reply_to_post_id IS NULL ";
+        }
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowAsArray($ps);

@@ -50,9 +50,9 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $r = array('id'=>1, 'network_username'=>'snoopdogg', 'network_user_id'=>'494785218',
-        'network_viewer_id'=>'494785218', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'network_viewer_id'=>'494785218', 'last_post_id'=>'', 'last_page_fetched_replies'=>0,
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_posts'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'instagram',
         'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -62,9 +62,9 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->profile1_instance = new Instance($r);
 
         $r = array('id'=>5, 'network_username'=>'ni_ato', 'network_user_id'=>'502993749',
-        'network_viewer_id'=>'502993749', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'network_viewer_id'=>'502993749', 'last_post_id'=>'', 'last_page_fetched_replies'=>0,
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_posts'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'instagram',
         'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -74,9 +74,9 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->profile2_instance = new Instance($r);
 
         $r = array('id'=>5, 'network_username'=>'ni_ato', 'network_user_id'=>'502993749',
-        'network_viewer_id'=>'502993749', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'network_viewer_id'=>'502993749', 'last_post_id'=>'', 'last_page_fetched_replies'=>0,
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'7', 'total_replies_in_system'=>'0',
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_posts'=>'0',
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'2014-01-01 13:48:05-0000', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'instagram',
         'last_favorite_id' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -285,12 +285,12 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_friends');
         $this->assertNotNull($select_insert->option_value);
         //Checks to see if date value hasn't changed after a crawl within two days of the last.
-        $ic->fetchPostsAndReplies();
+        $ic->fetchFollowers();
         $select_under_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
         $this->assertEqual($select_insert->option_value, $select_under_two_days->option_value);
         //Checks to see if date value has changed after a crawl 3 days after last crawl.
         $option_dao->updateOptionByName($namespace,'last_crawled_friends', '1396566000');
-        $ic->fetchPostsAndReplies();
+        $ic->fetchFollowers();
         $select_over_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
         $this->assertNotEqual($select_insert->option_value, $select_over_two_days->option_value);
     }
