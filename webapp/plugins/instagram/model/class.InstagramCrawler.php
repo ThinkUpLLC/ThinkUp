@@ -248,15 +248,15 @@ class InstagramCrawler {
         //Cap crawl time for very busy pages with thousands of likes/comments
         $fetch_stop_time = time() + $this->max_crawl_time;
 
-        //Checks if last friends update is over 2 days ago and runs storeFriends if it is.
-        $friends_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_friends');
-        $friends_last_updated_check = microtime(true) - 172800;
-        if($friends_last_updated == NULL) {
-            $this->storeFriends();
-            $option_dao->insertOption($namespace,'last_crawled_friends', microtime(true));
-        } elseif($friends_last_updated->option_value < $friends_last_updated_check) {
-            $this->storeFriends();
-            $option_dao->updateOptionByName($namespace,'last_crawled_friends', microtime(true));
+        //Checks if last followers update was over 2 days ago and run storeFollowers if it is.
+        $followers_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_followers');
+        $followers_last_updated_check = microtime(true) - 172800;
+        if ($followers_last_updated == NULL) {
+            $this->storeFollowers();
+            $option_dao->insertOption($namespace,'last_crawled_followers', microtime(true));
+        } elseif ($followers_last_updated->option_value < $followers_last_updated_check) {
+            $this->storeFollowers();
+            $option_dao->updateOptionByName($namespace,'last_crawled_followers', microtime(true));
         }
 
         if (time() > $fetch_stop_time) {
@@ -614,37 +614,37 @@ class InstagramCrawler {
         return $added_likes;
     }
     /**
-     * Retrives all of a users friends from the Instagram API and stores them in the database
+     * Retrives all of a users followers from the Instagram API and stores them in the database
      * @return null
      */
-    private function storeFriends() {
+    private function storeFollowers() {
         if ($this->instance->network != 'instagram') {
             return;
         }
-        //Retrieve friends via the Instagram API
+        //Retrieve followers via the Instagram API
         $user_id = $this->instance->network_user_id;
         $access_token = $this->access_token;
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
         try {
-            $friends = InstagramAPIAccessor::apiRequest('friends', $user_id, $access_token);
+            $followers = InstagramAPIAccessor::apiRequest('followers', $user_id, $access_token);
         } catch (Instagram\Core\ApiException $e) {
-            $this->logger->logInfo(get_class($e). " Error fetching friends from Instagram API, error was ".
+            $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
             $e->getMessage(), __METHOD__.','.__LINE__);
             return;
         }
 
-        if (isset($friends)) {
+        if (isset($followers)) {
             //store relationships in follows table
             $follows_dao = DAOFactory::getDAO('FollowDAO');
             $count_dao = DAOFactory::getDAO('CountHistoryDAO');
             $user_dao = DAOFactory::getDAO('UserDAO');
 
-            foreach ($friends as $friend) {
+            foreach ($followers as $follower) {
                 $follower_id = null;
                 try {
-                    $follower_id = $friend->getId();
+                    $follower_id = $follower->getId();
                 } catch (Instagram\Core\ApiException $e) {
-                    $this->logger->logInfo(get_class($e). " Error fetching ".Utils::varDumpToString($friend).
+                    $this->logger->logInfo(get_class($e). " Error fetching ".Utils::varDumpToString($follower).
                     "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
                 }
                 if (isset($follower_id)) {
@@ -656,7 +656,7 @@ class InstagramCrawler {
                         $follows_dao->insert($user_id, $follower_id, $network);
                     }
 
-                    $follower_details = $friend;
+                    $follower_details = $follower;
                     if (isset($follower_details)) {
                         $follower_details->network = $network;
                     }
@@ -669,7 +669,7 @@ class InstagramCrawler {
                 }
             }
             //totals in follower_count table
-            $count_dao->insert($user_id, $network, $friends->count(), null, 'followers');
+            $count_dao->insert($user_id, $network, $followers->count(), null, 'followers');
         } else {
             throw new Instagram\Core\ApiAuthException('Error retrieving friends');
         }

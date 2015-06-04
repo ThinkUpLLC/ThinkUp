@@ -273,7 +273,7 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_reply_to_post_id, '519644594447805677_494785218');
     }
 
-    public function testFetchFriendsAfterTwoDays() {
+    public function testFetchFollowersAfterTwoDays() {
         $plugin_dao = new PluginMySQLDAO();
         $plugin_id = $plugin_dao->getPluginId('instagram');
         $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
@@ -282,16 +282,16 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $ic->fetchPostsAndReplies();
         $ic->fetchFollowers();
         //Checks to see if date value has been inserted into table after first crawl.
-        $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_followers');
         $this->assertNotNull($select_insert->option_value);
         //Checks to see if date value hasn't changed after a crawl within two days of the last.
         $ic->fetchFollowers();
-        $select_under_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $select_under_two_days = $option_dao->getOptionByName($namespace,'last_crawled_followers');
         $this->assertEqual($select_insert->option_value, $select_under_two_days->option_value);
         //Checks to see if date value has changed after a crawl 3 days after last crawl.
-        $option_dao->updateOptionByName($namespace,'last_crawled_friends', '1396566000');
+        $option_dao->updateOptionByName($namespace,'last_crawled_followers', '1396566000');
         $ic->fetchFollowers();
-        $select_over_two_days = $option_dao->getOptionByName($namespace,'last_crawled_friends');
+        $select_over_two_days = $option_dao->getOptionByName($namespace,'last_crawled_followers');
         $this->assertNotEqual($select_insert->option_value, $select_over_two_days->option_value);
     }
 }

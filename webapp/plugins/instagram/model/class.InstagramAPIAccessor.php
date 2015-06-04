@@ -40,7 +40,7 @@ class InstagramAPIAccessor {
         $instagram = new Instagram\Instagram($access_token);
         if ($type == 'user') {
             return $instagram->getUser($id);
-        } else if ($type == 'friends') {
+        } else if ($type == 'followers') {
             $user = $instagram->getUser($id);
             return $user->getFollowers();
         } else if ($type == 'media') {
