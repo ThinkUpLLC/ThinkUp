@@ -29,7 +29,6 @@
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
     {/foreach}
 
-
     {if isset($include_jstz) and $include_jstz}
     <script type="text/javascript">
     {literal}
@@ -53,30 +52,15 @@
             $(function () {
                 $('#settingsTabs a:first').tab('show');
             })
-
     {/literal}
-        {if $logged_in_user}
+        {if !$logged_in_user}
     {literal}
             $('#search-keywords').focus(function() {
                 $('#search-refine').dropdown();
-                if ($('#search-keywords').val()) {
-                    $('#search-refine a span.searchterm').text($('#search-keywords').val());
-                }
             }).blur(function() {
                 $('#search-refine').dropdown();
             });
-
-            $('#search-keywords').keyup(function() {
-                $('#search-refine a span.searchterm').text($('#search-keywords').val());
-            });
         });
-
-      function searchMe(_baseu) {
-        var _mu = $("input#search-keywords").val();
-        if (_mu != "null") {
-          document.location.href = _baseu + encodeURIComponent(_mu);
-        }
-      }
     {/literal}
     {else}
     {literal}
