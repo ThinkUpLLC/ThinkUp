@@ -24,9 +24,9 @@
   <div class="panel-heading ">
     <h2 class="panel-title">
       {if $i.search_results|@count > 0}
-        Looks like {$i.search_results|@count} {if $i.search_results|@count eq 1}person following you on {$i.instance->network|ucfirst} has{else}people following you on {$i.instance->network|ucfirst} have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio.
+        Looks like {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio.
       {else}
-        Hmm, no luck looking for people following you on {$i.instance->network|ucfirst} with "{$smarty.get.q|replace:'name:':''}" in their bio.
+        Hmm, no luck with "{$smarty.get.q|replace:'name:':''}" for {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}.
       {/if}
     </h2>
     <!--
@@ -34,17 +34,17 @@
         Here are the {if $current_page eq 1}first {$posts|@count} {/if}results
     </p>
     -->
-    {if $ir.instance->header_image neq ''}
-    <img src="{$ir.instance->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
+    {if $i.instance->header_image neq ''}
+    <img src="{$i.instance->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
     {/if}
   </div>
   <div class="panel-desktop-right">
     <div class="panel-body">
       <div class="panel-body-inner">
-        {if $ir.search_results|@count > 0}
+        {if $i.search_results|@count > 0}
           {include file=$tpl_path|cat:"_users.tpl" users=$i.search_results }
         {else}
-          <p>Sorry, that search doesn't turn up any followers.</p>
+          <p>Seems like none of of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$smarty.get.q|replace:'name:':''}" in their bio.</p>
         {/if}
 
         </div><!-- / panel-body-inner -->
