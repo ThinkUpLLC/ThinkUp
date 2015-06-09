@@ -10,12 +10,12 @@ $bio_after (optional) If this is a bio change, the current bio
 {if isset($user)}
 <div class="user{if $i->header_image eq $user->avatar || isset($avatar_before)} hide-photo{/if}">
        {if $user->avatar ne $i->header_image && !isset($avatar_before)}
-       <a href="{if $user->network eq 'twitter' or $user->network eq 'facebook'}{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={else}https://facebook.com/{/if}{$user->user_id}{else}https://instagram.com/{$user->username}{/if}">
+       <a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$user->network user_id=$user->user_id username=$user->username}">
         <img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->full_name}" class="img-circle pull-left user-photo">
         </a>
         {/if}
         <div class="user-about">
-            <div class="user-name"><a href="{if $user->network eq 'twitter' or $user->network eq 'facebook'}{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={else}https://facebook.com/{/if}{$user->user_id}{else}https://instagram.com/{$user->username}{/if}">{if $user->full_name}{$user->full_name}{else}{$user->username}{/if} <i class="fa fa-{$user->network} icon icon-network"></i></a></div>
+            <div class="user-name"><a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$user->network user_id=$user->user_id username=$user->username}">{if $user->full_name}{$user->full_name}{else}{$user->username}{/if} <i class="fa fa-{$user->network} icon icon-network"></i></a></div>
             <div class="user-text">
                 <p>{if $user->network eq 'twitter'}
                     {$user->follower_count|number_format} followers

@@ -8,8 +8,8 @@ $hide_avatar (optional) do not display the user's avatar, typically used if the 
 
 {if isset($post)}
 <blockquote class="tweet{if $hide_avatar} hide-photo{/if}">
-  <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{insert name='user_avatar' avatar_url=$post->author_avatar image_proxy_sig=$image_proxy_sig}" alt="{$post->author_username}" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
-  <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
+  <a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$post->network user_id=$post->author_user_id username=$post->author_username}" title="{$post->author_username}"><img src="{insert name='user_avatar' avatar_url=$post->author_avatar image_proxy_sig=$image_proxy_sig}" alt="{$post->author_username}" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
+  <div class="byline"><a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$post->network user_id=$post->author_user_id username=$post->author_username}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
   <div class="tweet-body">{$post->post_text|filter_xss|link_usernames_to_twitter}</div>
 
 {*
