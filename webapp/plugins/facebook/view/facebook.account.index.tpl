@@ -37,11 +37,11 @@
 
         <div class="account-action account-action-delete">
           <form method="post" action="{$site_root_path}account/?p=facebook"
-            name="{$i->network_username}-delete">
+            name="{$i->network_user_id}-delete">
           <input type="hidden" name="instance_id" value="{$i->id}">
           <input type="hidden" name="action" value="Delete">
           {insert name="csrf_token"}<!-- delete account csrf token -->
-          <a href="javascript:document.forms['{$i->network_username}-delete'].submit();"
+          <a href="javascript:document.forms['{$i->network_user_id}-delete'].submit();"
             onClick="return confirm('Do you really want to delete the {$i->network_username} account?');">
             <i class="fa fa-minus-circle icon"></i>
           </a>
