@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "code": 200
+  },
+  "data": {
+    "outgoing_status": "none",
+    "target_user_is_private": true,
+    "incoming_status": "none"
+  }
+}

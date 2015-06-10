@@ -193,7 +193,8 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->full_name, 'niki');
         $this->assertEqual($user->user_id, '502993749');
         $this->assertEqual($user->avatar, 'http://images.ak.instagram.com/profiles/anonymousUser.jpg');
-        $this->assertFalse($user->is_protected);
+        // User is private based on relationship data
+        $this->assertTrue($user->is_protected);
         $this->assertEqual($user->network, 'instagram');
         // Check the second photo was added, it has no comments and two likes
         $post = $photo_dao->getPhoto('519642461157682352_494785218', 'instagram');

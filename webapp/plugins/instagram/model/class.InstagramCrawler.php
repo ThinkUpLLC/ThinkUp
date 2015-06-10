@@ -133,30 +133,36 @@ class InstagramCrawler {
      * @return array $user_vals
      */
     private function parseUserDetails(Instagram\User $details) {
-        try {
-            if ($details->getUserName() != null && $details->getId() != null) {
-                $user_vals = array();
+        $user_vals = null;
+        if ($details->getUserName() != null && $details->getId() != null) {
+            $user_vals = array();
 
-                $user_vals["post_count"] = $details->getMediaCount();
-                $user_vals["follower_count"] = $details->getFollowersCount();
-                $user_vals["user_name"] = $details->getUserName();
-                $user_vals["full_name"] = $details->getFullName();
-                $user_vals["user_id"] = $details->getId();
-                $user_vals["avatar"] = $details->getProfilePicture();
-                $user_vals['url'] = $details->getWebsite()!=null?$details->getWebsite():'';
-                $user_vals["location"] = '';
-                $user_vals["description"] = $details->getBio()!=null?$details->getBio():'';
-                $user_vals["is_protected"] = 0;
-                $user_vals["joined"] = ''; //Column 'joined' cannot be null
-                $user_vals["network"] = $details->network;
-                //this will help us in getting correct range of posts
-                $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
-                return $user_vals;
+            $user_vals["post_count"] = $details->getMediaCount();
+            $user_vals["follower_count"] = $details->getFollowersCount();
+            $user_vals["user_name"] = $details->getUserName();
+            $user_vals["full_name"] = $details->getFullName();
+            $user_vals["user_id"] = $details->getId();
+            $user_vals["avatar"] = $details->getProfilePicture();
+            $user_vals['url'] = $details->getWebsite()!=null?$details->getWebsite():'';
+            $user_vals["location"] = '';
+            $user_vals["description"] = $details->getBio()!=null?$details->getBio():'';
+            $user_vals["joined"] = ''; //Column 'joined' cannot be null
+            $user_vals["network"] = $details->network;
+            //this will help us in getting correct range of posts
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
+
+            try {
+                $user_vals['is_protected'] = $this->getIsUserPrivate($user_vals["user_id"]);
+            } catch (Instagram\Core\ApiException $e) {
+                if ($e->getMessage() == 'you cannot view this resource') {
+                    $user_vals['is_protected'] = 1;
+                } else {
+                    $this->logger->logInfo("Error fetching ".$details->username.
+                    "'s details. Instagram says '".$e->getMessage()."'", __METHOD__.','.__LINE__);
+                }
             }
-        } catch (Instagram\Core\ApiException $e) {
-            $this->logger->logInfo("Error fetching ".$details->username.
-            "'s details. Instagram says '".$e->getMessage()."'", __METHOD__.','.__LINE__);
         }
+        return $user_vals;
     }
     /**
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
@@ -271,6 +277,7 @@ class InstagramCrawler {
      * Fetch and save the instance users's followers.
      */
     public function fetchFollowers() {
+        $this->logger->logUserInfo("Start fetchFollowers",__METHOD__.','.__LINE__);
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId('instagram');
         $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
@@ -662,10 +669,11 @@ class InstagramCrawler {
         $access_token = $this->access_token;
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
         try {
+            $this->logger->logInfo("Make API call", __METHOD__.','.__LINE__);
             $followers = $this->api_accessor->apiRequest('followers');
         } catch (Instagram\Core\ApiException $e) {
             $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
-            $e->getMessage(), __METHOD__.','.__LINE__);
+                $e->getMessage(), __METHOD__.','.__LINE__);
             return;
         }
 
