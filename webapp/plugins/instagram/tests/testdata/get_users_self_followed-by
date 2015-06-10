@@ -1,0 +1,23 @@
+{
+    "data": [{
+        "username": "meeker",
+        "first_name": "Tom",
+        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_6623_75sq.jpg",
+        "id": "6623",
+        "last_name": "Meeker"
+    },
+    {
+        "username": "Mark",
+        "first_name": "Mark",
+        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_29648_75sq_1294520029.jpg",
+        "id": "29648",
+        "last_name": "Shin"
+    },
+    {
+        "username": "nancy",
+        "first_name": "Nancy",
+        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_13096_75sq_1286441317.jpg",
+        "id": "13096",
+        "last_name": "Smith"
+    }]
+}

@@ -29,30 +29,47 @@
  */
 class InstagramAPIAccessor {
     /**
+     * Currently-authenticated Instagram user
+     * @var Instagram/User
+     */
+    var $current_user;
+    /**
+     * Instagram object
+     * @var Instagram/Instagram
+     */
+    var $instagram;
+    /**
+     * Constructor
+     * @param str $access_token
+     * @return InstagramAPIAccessor
+     */
+    public function __construct($access_token) {
+        $this->instagram = new Instagram\Instagram($access_token);
+        $this->current_user = $this->instagram->getCurrentUser();
+    }
+    /**
+     * Return the currently-authenticated Instagram user.
+     * @return Instagram/User
+     */
+    public function getCurrentUser() {
+        return $this->current_user;
+    }
+    /**
      * Make an API request.
      * @param str $type String representing the endpoint, 'user', 'followers', 'media', 'relationship'
-     * @param str $id User ID
-     * @param str $access_token
      * @param arr $params API call params
      * @return Object
      */
-    public static function apiRequest($type, $id, $access_token, $params = array()) {
-        $logger = Logger::getInstance();
-        $instagram = new Instagram\Instagram($access_token);
+    public function apiRequest($type, $params = array()) {
         if ($type == 'user') {
-            return $instagram->getUser($id);
+            return $this->instagram->getUser($params['user_id']);
         } else if ($type == 'followers') {
-            $user = $instagram->getUser($id);
-            return $user->getFollowers();
+            return $this->current_user->getFollowers();
         } else if ($type == 'media') {
-            $user = $instagram->getUser($id);
-            $media = $user->getMedia($params);
-            return $media;
+            return $this->current_user->getMedia($params);
         } else if ($type == 'relationship') {
-            $current_user = $instagram->getCurrentUser();
-            $user = $instagram->getUser($id);
-            $relationship = $current_user->getRelationship($user);
-            return $relationship;
+            $user = $this->instagram->getUser($params['user_id']);
+            return $this->current_user->getRelationship($user);
         }
     }
 }

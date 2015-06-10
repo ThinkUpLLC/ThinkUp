@@ -37,13 +37,13 @@ class InstagramCrawler {
      */
     var $logger;
     /**
-     * @var str
-     */
-    var $access_token;
-    /**
      * @var int Maximum amount of time the crawler should spend fetching a profile or page in seconds
      */
     var $max_crawl_time;
+    /**
+     * @var InstagramAPIAccessor
+     */
+    var $api_accessor;
     /**
      * @param Instance $instance
      * @return InstagramCrawler
@@ -51,8 +51,8 @@ class InstagramCrawler {
     public function __construct($instance, $access_token, $max_crawl_time) {
         $this->instance = $instance;
         $this->logger = Logger::getInstance();
-        $this->access_token = $access_token;
         $this->max_crawl_time = $max_crawl_time;
+        $this->api_accessor = new InstagramAPIAccessor($access_token);
     }
     /**
      * If user doesn't exist in the datastore, fetch details from instagram API and insert into the datastore.
@@ -74,7 +74,7 @@ class InstagramCrawler {
             // Get user details and save them to DB
             $user_details = null;
             try {
-                $user_details = InstagramAPIAccessor::apiRequest('user', $user_id, $this->access_token);
+                $user_details = $this->api_accessor->apiRequest('user', array('user_id'=> $user_id));
                 $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network.
                     "'s details from Instagram", __METHOD__.','.__LINE__);
                 $user_details->network = $network;
@@ -119,7 +119,7 @@ class InstagramCrawler {
     public function getIsUserPrivate($user_id) {
         $is_protected = 0;
         if ($user_id !== $this->instance->network_user_id) {
-            $relationship = InstagramAPIAccessor::apiRequest( 'relationship', $user_id, $this->access_token );
+            $relationship = $this->api_accessor->apiRequest( 'relationship', array('user_id'=>$user_id) );
             if ($relationship->target_user_is_private) {
                 $is_protected = 1;
             }
@@ -196,7 +196,7 @@ class InstagramCrawler {
             $this->logger->logUserInfo("Media archive is not loaded, fetching starting from max_id "
                 .$this->instance->last_post_id, __METHOD__.','.__LINE__);
             $api_param = array('max_id' => $this->instance->last_post_id);
-            $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, $api_param);
+            $posts = $this->api_accessor->apiRequest('media', $api_param);
 
             $fetch_next_page = true;
             while ($fetch_next_page) {
@@ -207,7 +207,7 @@ class InstagramCrawler {
 
                     if ($posts->getNext() != null) {
                         $api_param['max_id'] = $posts->getNext();
-                        $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token,$api_param);
+                        $posts = $this->api_accessor->apiRequest('media', $api_param);
                     } else {
                         $fetch_next_page = false;
                         $this->instance->is_archive_loaded_posts = true;
@@ -234,7 +234,7 @@ class InstagramCrawler {
         $api_param = array('count' => 20);
 
         $this->logger->logUserInfo("About to request recent media",__METHOD__.','.__LINE__);
-        $posts = InstagramAPIAccessor::apiRequest('media', $id, $this->access_token, $api_param);
+        $posts = $this->api_accessor->apiRequest('media', $api_param);
         $this->logger->logUserInfo("Recent media requested with params ".Utils::varDumpToString($api_param),
             __METHOD__.','.__LINE__);
 
@@ -246,7 +246,7 @@ class InstagramCrawler {
 
                 if ($did_capture_new_data && $posts->getNext() != null) {
                     $api_param['max_id'] = $posts->getNext();
-                    $posts = InstagramAPIaccessor::apiRequest('media', $id, $this->access_token,$api_param);
+                    $posts = $this->api_accessor->apiRequest('media', $api_param);
                 } else {
                     if (!$did_capture_new_data) {
                         $this->logger->logInfo("No new data captured in last set, stopping here",
@@ -662,7 +662,7 @@ class InstagramCrawler {
         $access_token = $this->access_token;
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
         try {
-            $followers = InstagramAPIAccessor::apiRequest('followers', $user_id, $access_token);
+            $followers = $this->api_accessor->apiRequest('followers');
         } catch (Instagram\Core\ApiException $e) {
             $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
             $e->getMessage(), __METHOD__.','.__LINE__);

@@ -93,7 +93,7 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
 
     public function testConstructor() {
         $ic = new InstagramCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
-        $this->assertEqual($ic->access_token, 'fauxaccesstoken');
+        $this->assertIsA($ic->api_accessor, 'InstagramAPIAccessor');
     }
 
     public function testFetchUser() {
@@ -244,8 +244,8 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
 
     // Check the correct exception is raised when the wrong access tokens are provided
     public function testFetchPostsAndRepliesForProfile2Error() {
-        $ic = new InstagramCrawler($this->profile2_instance, 'fauxaccesstokeninvalid', 10);
         $this->expectException('Instagram\Core\ApiAuthException', 'The "access_token" provided is invalid.');
+        $ic = new InstagramCrawler($this->profile2_instance, 'fauxaccesstokeninvalid', 10);
         $ic->fetchPostsAndReplies();
     }
 
