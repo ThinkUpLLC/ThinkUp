@@ -230,9 +230,9 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         'http://images.ak.instagram.com/profiles/profile_20065178_75sq_1335521050.jpg');
         $this->assertFalse($user->is_protected);
         // Check we stored the number of followers our owner has
-        $number_of_followers = $count_history_dao->getLatestCountByNetworkUserIDAndType('494785218','instagram',
-        'followers');
-        $this->assertEqual($number_of_followers['count'], 3);
+        // $number_of_followers = $count_history_dao->getLatestCountByNetworkUserIDAndType('494785218','instagram',
+        // 'followers');
+        // $this->assertEqual($number_of_followers['count'], 3);
         // Also check the relationship is in the follows table
         $this->assertTrue($follow_dao->followExists('494785218', '6623', 'instagram'));
         $this->assertTrue($follow_dao->followExists('494785218', '29648', 'instagram'));
@@ -286,25 +286,14 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_reply_to_post_id, '519644594447805677_494785218');
     }
 
-    public function testFetchFollowersAfterTwoDays() {
-        $plugin_dao = new PluginMySQLDAO();
-        $plugin_id = $plugin_dao->getPluginId('instagram');
-        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
-        $option_dao = new OptionMySQLDAO();
+    public function testPageThroughFollowers() {
         $ic = new InstagramCrawler($this->profile3_instance, 'fauxaccesstoken', 120);
         $ic->fetchPostsAndReplies();
         $ic->fetchFollowers();
-        //Checks to see if date value has been inserted into table after first crawl.
-        $select_insert = $option_dao->getOptionByName($namespace,'last_crawled_followers');
-        $this->assertNotNull($select_insert->option_value);
-        //Checks to see if date value hasn't changed after a crawl within two days of the last.
-        $ic->fetchFollowers();
-        $select_under_two_days = $option_dao->getOptionByName($namespace,'last_crawled_followers');
-        $this->assertEqual($select_insert->option_value, $select_under_two_days->option_value);
-        //Checks to see if date value has changed after a crawl 3 days after last crawl.
-        $option_dao->updateOptionByName($namespace,'last_crawled_followers', '1396566000');
-        $ic->fetchFollowers();
-        $select_over_two_days = $option_dao->getOptionByName($namespace,'last_crawled_followers');
-        $this->assertNotEqual($select_insert->option_value, $select_over_two_days->option_value);
+        //@TODO Finish writing tests here
+        //Test no next page, assert archive loaded is set
+        //Test next page till end, assert archive loaded is set
+        //Test enough pages to exceed max API limit, assert last cursor is set
+        //Test archive is loaded, and updateStaleFollows runs as expected
     }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/instagram/model/PHP5.3/class.InstagramCrawler.php
+ * ThinkUp/webapp/plugins/instagram/model/class.InstagramCrawler.php
  *
- * Copyright (c) 2013 Dimosthenis Nikoudis
+ * Copyright (c) 2013-2015 Dimosthenis Nikoudis, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,8 +24,9 @@
  * Instagram Crawler
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Dimosthenis Nikoudis
+ * @copyright 2013-2015 Dimosthenis Nikoudis, Gina Trapani
  */
 class InstagramCrawler {
     /**
@@ -44,6 +45,11 @@ class InstagramCrawler {
      * @var InstagramAPIAccessor
      */
     var $api_accessor;
+    /**
+     * Current Instagram user.
+     * @var User
+     */
+    var $user;
     /**
      * @param Instance $instance
      * @return InstagramCrawler
@@ -66,6 +72,7 @@ class InstagramCrawler {
      * @return User
      */
     public function fetchUser($user_id, $found_in, $username, $full_name, $avatar, $force_reload_from_instagram=false) {
+        $this->logger->logInfo("Start fetching user ".$username, __METHOD__.','.__LINE__);
         //assume all users except the instance user is a instagram profile, not a page
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
         $user_dao = DAOFactory::getDAO('UserDAO');
@@ -101,11 +108,18 @@ class InstagramCrawler {
 
             if (isset($user)) {
                 $user_object = new User($user, $found_in);
-                $user_dao->updateUser($user_object);
+                $updated_user = $user_dao->updateUser($user_object);
+                if ($updated_user > 0) {
+                    $this->logger->logInfo("Updated user successfully", __METHOD__.','.__LINE__);
+                } else {
+                    $this->logger->logInfo("No changes to user ".$username, __METHOD__.','.__LINE__);
+                }
             } else {
                 $this->logger->logInfo("Error parsing user details ".Utils::varDumpToString($user_details),
                     __METHOD__.','.__LINE__);
             }
+        } else {
+            $this->logger->logInfo("No need to update user ", __METHOD__.','.__LINE__);
         }
         return $user_object;
     }
@@ -194,8 +208,11 @@ class InstagramCrawler {
         $network = $this->instance->network;
 
         //Force-refresh instance user in data store
-        self::fetchUser($this->instance->network_user_id, 'Owner info', $this->instance->network_username,
+        $this->user = self::fetchUser($this->instance->network_user_id, 'Owner info', $this->instance->network_username,
             null, null, true);
+
+        //@TODO Set the current count in the follower_count table
+        //$count_dao->insert($user_id, $network, $followers->count(), null, 'followers');
 
         // If archive isn't loaded, attempt to load it
         if (!$this->instance->is_archive_loaded_posts && $this->instance->last_post_id != '') {
@@ -275,35 +292,107 @@ class InstagramCrawler {
     }
     /**
      * Fetch and save the instance users's followers.
+     *
+     * if is_archive_loaded
+     *     if ($this->instance->total_follows_in_system !== $this->user->follow_count) {
+     *         is_archive_loaded = false;
+     *
+     * if !is_archive_loaded
+     *     if followed_by_next_cursor is set
+     *         page(followed_by_next_cursor)
+     *     else
+     *         page()
+     *
+     * if is_archive_loaded
+     *     updateStaleFollows()
+     *
      */
     public function fetchFollowers() {
-        $this->logger->logUserInfo("Start fetchFollowers",__METHOD__.','.__LINE__);
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId('instagram');
-        $namespace = OptionDAO::PLUGIN_OPTIONS.'-'.$plugin_id;
-        $id = $this->instance->network_user_id;
-        $option_dao = DAOFactory::getDAO('OptionDAO');
-        $network = $this->instance->network;
-
-        //Cap crawl time for very busy pages with thousands of likes/comments
-        $fetch_stop_time = time() + $this->max_crawl_time;
-
-        //Checks if last followers update was over 2 days ago and run storeFollowers if it is.
-        $followers_last_updated = $option_dao->getOptionByName($namespace,'last_crawled_followers');
-        $followers_last_updated_check = microtime(true) - 172800;
-        if ($followers_last_updated == NULL) {
-            $this->storeFollowers();
-            $option_dao->insertOption($namespace,'last_crawled_followers', microtime(true));
-        } elseif ($followers_last_updated->option_value < $followers_last_updated_check) {
-            $this->storeFollowers();
-            $option_dao->updateOptionByName($namespace,'last_crawled_followers', microtime(true));
+        if ($this->instance->is_archive_loaded_follows) {
+            $this->logger->logUserInfo("Starting with follow archive marked as loaded",__METHOD__.','.__LINE__);
+            if ($this->instance->total_follows_in_system !== $this->user->follower_count) {
+                $this->instance->is_archive_loaded_follows = false;
+                $this->logger->logUserInfo("Marking follow archive as NOT loaded",__METHOD__.','.__LINE__);
+            }
         }
 
-        if (time() > $fetch_stop_time) {
-            $fetch_next_page = false;
-            $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
-            ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
+        //@TODO set up instance->followed_by_next_cursor var
+        if (!$this->instance->is_archive_loaded_follows) {
+            $this->pageThroughFollowers($this->instance->followed_by_next_cursor);
         }
+
+        //@TODO if archive is loaded, updateStaleFollows
+    }
+
+    /**
+     *  Page back through followers starting at the beginning (cursor is null) or at cursor
+     *  until either
+     *      A. No more next cursor
+     *          if A mark archive as loaded
+     *      or B. out of API calls
+     *          if B store followed_by_next_cursor for pickup next time
+     * @param  str $followed_by_next_cursor
+     * @return void
+     */
+    public function pageThroughFollowers($followed_by_next_cursor = null) {
+        $this->logger->logInfo("Start paging through followers", __METHOD__.','.__LINE__);
+        //Retrieve followers via the Instagram API
+        $user_id = $this->instance->network_user_id;
+        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
+
+        $api_param = null;
+        if (isset($followed_by_next_cursor)) {
+            $api_param = array('next_cursor'=>$followed_by_next_cursor);
+        }
+        try {
+            $this->logger->logInfo("Make api call", __METHOD__.','.__LINE__);
+            $followers = $this->api_accessor->apiRequest('followers', $api_param);
+        } catch (Instagram\Core\ApiException $e) {
+            $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
+                $e->getMessage(), __METHOD__.','.__LINE__);
+            return;
+        }
+
+        $follows_dao = DAOFactory::getDAO('FollowDAO');
+
+        $continue = isset($followers);
+        while ($continue) {
+            foreach ($followers as $follower) {
+                //store user in users table
+                $this->fetchUser($follower->id, 'Followers', $follower->username, $follower->full_name,
+                    $follower->profile_picture );
+
+                //store relationships in follows table
+                if ($follows_dao->followExists($user_id, $follower->id, $network)) {
+                    // follow relationship already exists
+                    $follows_dao->update($user_id, $follower->id, $network);
+                } else {
+                    // follow relationship does not exist yet
+                    $follows_dao->insert($user_id, $follower->id, $network);
+                }
+            }
+            $this->logger->logInfo("Done with ".$followers->count()." followers", __METHOD__.','.__LINE__);
+
+            $next_cursor = $followers->getNext();
+            $followers = null;
+            if (isset($next_cursor)) {
+                $this->logger->logInfo("Next cursor is set to ".$next_cursor, __METHOD__.','.__LINE__);
+                //Persist the next cursor in the instance
+                $this->instance->followed_by_next_cursor = $next_cursor;
+                $api_param['cursor'] = $next_cursor;
+                $followers = $this->api_accessor->apiRequest('followers', $api_param);
+
+                if (!isset($followers) || $followers->count() == 0) {
+                    $this->logger->logInfo("No followers returned, marking archive loaded", __METHOD__.','.__LINE__);
+                    $this->instance->is_archive_loaded_follows = true;
+                    $continue = false;
+                }
+            } else {
+                $this->logger->logInfo("No paging info provided", __METHOD__.','.__LINE__);
+                $continue = false;
+            }
+        }
+        $this->logger->logInfo("Done paging through followers", __METHOD__.','.__LINE__);
     }
     /**
      * Convert a collection of profile posts into ThinkUp posts and users
@@ -655,68 +744,5 @@ class InstagramCrawler {
             }
         }
         return $added_likes;
-    }
-    /**
-     * Retrives all of a users followers from the Instagram API and stores them in the database
-     * @return null
-     */
-    private function storeFollowers() {
-        if ($this->instance->network != 'instagram') {
-            return;
-        }
-        //Retrieve followers via the Instagram API
-        $user_id = $this->instance->network_user_id;
-        $access_token = $this->access_token;
-        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
-        try {
-            $this->logger->logInfo("Make API call", __METHOD__.','.__LINE__);
-            $followers = $this->api_accessor->apiRequest('followers');
-        } catch (Instagram\Core\ApiException $e) {
-            $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
-                $e->getMessage(), __METHOD__.','.__LINE__);
-            return;
-        }
-
-        if (isset($followers)) {
-            //store relationships in follows table
-            $follows_dao = DAOFactory::getDAO('FollowDAO');
-            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
-            $user_dao = DAOFactory::getDAO('UserDAO');
-
-            foreach ($followers as $follower) {
-                $follower_id = null;
-                try {
-                    $follower_id = $follower->getId();
-                } catch (Instagram\Core\ApiException $e) {
-                    $this->logger->logInfo(get_class($e). " Error fetching ".Utils::varDumpToString($follower).
-                    "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
-                }
-                if (isset($follower_id)) {
-                    if ($follows_dao->followExists($user_id, $follower_id, $network)) {
-                        // follow relationship already exists
-                        $follows_dao->update($user_id, $follower_id, $network);
-                    } else {
-                        // follow relationship does not exist yet
-                        $follows_dao->insert($user_id, $follower_id, $network);
-                    }
-
-                    $follower_details = $follower;
-                    if (isset($follower_details)) {
-                        $follower_details->network = $network;
-                    }
-
-                    $follower = $this->parseUserDetails($follower_details);
-                    $follower_object = new User($follower);
-                    if (isset($follower_object)) {
-                        $user_dao->updateUser($follower_object);
-                    }
-                }
-            }
-            //totals in follower_count table
-            $count_dao->insert($user_id, $network, $followers->count(), null, 'followers');
-        } else {
-            throw new Instagram\Core\ApiAuthException('Error retrieving friends');
-        }
-        $this->logger->logInfo("Ending", __METHOD__.','.__LINE__);
     }
 }

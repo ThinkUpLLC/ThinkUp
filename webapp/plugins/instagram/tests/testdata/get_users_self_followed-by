@@ -1,23 +1,20 @@
 {
     "data": [{
         "username": "meeker",
-        "first_name": "Tom",
+        "full_name": "Tom Meeker",
         "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_6623_75sq.jpg",
-        "id": "6623",
-        "last_name": "Meeker"
+        "id": "6623"
     },
     {
         "username": "Mark",
-        "first_name": "Mark",
+        "full_name": "Mark Shin",
         "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_29648_75sq_1294520029.jpg",
-        "id": "29648",
-        "last_name": "Shin"
+        "id": "29648"
     },
     {
         "username": "nancy",
-        "first_name": "Nancy",
+        "full_name": "Nancy Smith",
         "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_13096_75sq_1286441317.jpg",
-        "id": "13096",
-        "last_name": "Smith"
+        "id": "13096"
     }]
 }
