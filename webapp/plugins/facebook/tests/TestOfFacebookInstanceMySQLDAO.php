@@ -103,7 +103,8 @@ class TestOfFacebookInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($instance->network_username, 'julie');
         $this->assertEqual($instance->network_user_id, $instance_builder->columns['network_user_id']);
         $this->assertEqual($instance->network_viewer_id, $instance_builder->columns['network_viewer_id']);
-        $this->assertEqual($instance->profile_updated, $facebook_instance_builder->columns['profile_updated']);
+        $this->assertEqual($instance->profile_updated, substr( $facebook_instance_builder->columns['profile_updated'],
+            0, 19));
 
         //Try a non existent one
         $result = $this->DAO->getFreshestByOwnerId(3);

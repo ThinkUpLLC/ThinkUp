@@ -38,6 +38,7 @@ $plugin_tests->add(new TestOfExpandURLsPluginConfigurationController());
 $plugin_tests->add(new TestOfFlickrAPIAccessor());
 $plugin_tests->add(new TestOfFacebookCrawler());
 $plugin_tests->add(new TestOfFacebookPlugin());
+$plugin_tests->add(new TestOfFacebookInstanceMySQLDAO());
 $plugin_tests->add(new TestOfFacebookPluginConfigurationController());
 $plugin_tests->add(new TestOfTwitterAPIAccessorOAuth());
 $plugin_tests->add(new TestOfTwitterAPIEndpoint());
