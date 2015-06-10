@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/twitter/model/class.FacebookInstanceMySQLDAO.php
+ * ThinkUp/webapp/plugins/facebook/model/class.FacebookInstanceMySQLDAO.php
  *
  * Copyright (c) 2014-2015 Chris Moyer
  *

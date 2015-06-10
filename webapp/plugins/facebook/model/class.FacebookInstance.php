@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/twitter/model/class.FacebookInstance.php
+ * ThinkUp/webapp/plugins/facebook/model/class.FacebookInstance.php
  *
- * Copyright (c) 2011-2015 Gina Trapani
+ * Copyright (c) 2014-2015 Chris Moyer
  *
  * LICENSE:
  *
