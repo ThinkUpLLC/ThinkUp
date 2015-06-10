@@ -30,7 +30,7 @@
  */
 class InstagramCrawler {
     /**
-     * @var Instance
+     * @var InstagramInstance
      */
     var $instance;
     /**
@@ -51,7 +51,7 @@ class InstagramCrawler {
      */
     var $user;
     /**
-     * @param Instance $instance
+     * @param InstagramInstance $instance
      * @return InstagramCrawler
      */
     public function __construct($instance, $access_token, $max_crawl_time) {
@@ -397,10 +397,14 @@ class InstagramCrawler {
                         $continue = false;
                     }
                 } catch (Exception $e) {
+                    $this->instance->followed_by_next_cursor = $next_cursor;
+                    $this->logger->logInfo("Stopping due to ".get_class($e)."; saving cursor ".$next_cursor,
+                        __METHOD__.','.__LINE__);
                     $continue = false;
                 }
             } else {
-                $this->logger->logInfo("No paging info provided", __METHOD__.','.__LINE__);
+                $this->logger->logInfo("No next cursor available", __METHOD__.','.__LINE__);
+                $this->instance->is_archive_loaded_follows = true;
                 $continue = false;
             }
         }

@@ -64,6 +64,10 @@ class DAOFactory {
         'FacebookInstanceDAO' => array(
     //MySQL Version
             'mysql' => 'FacebookInstanceMySQLDAO' ),
+    //Instagram Instance DAO
+        'InstagramInstanceDAO' => array(
+    //MySQL Version
+            'mysql' => 'InstagramInstanceMySQLDAO' ),
     //Invite DAO
         'InviteDAO' => array(
     //MySQL Version

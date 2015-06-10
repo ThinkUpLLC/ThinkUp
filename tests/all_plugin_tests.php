@@ -53,6 +53,7 @@ $plugin_tests->add(new TestOfHelloThinkUpPluginConfigurationController());
 $plugin_tests->add(new TestOfHelloThinkUpPlugin());
 $plugin_tests->add(new TestOfSmartyModifierLinkUsernames());
 $plugin_tests->add(new TestOfInstagramPlugin());
+$plugin_tests->add(new TestOfInstagramInstanceMySQLDAO());
 $plugin_tests->add(new TestOfInstagramCrawler());
 $plugin_tests->add(new TestOfInstagramPluginConfigurationController());
 $plugin_tests->add(new TestOfInsightPluginParent());

@@ -32,6 +32,8 @@ require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramPlugin.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramCrawler.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramAPIAccessor.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramInstance.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/instagram/model/class.InstagramInstanceMySQLDAO.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/instagram/tests/classes/mock.Proxy.php';
 
 class TestOfInstagramPlugin extends ThinkUpUnitTestCase {

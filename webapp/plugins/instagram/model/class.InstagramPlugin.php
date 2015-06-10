@@ -41,7 +41,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
 
     public function deactivate() {
         //Pause all active instagram user profile and page instances
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $instance_dao = DAOFactory::getDAO('InstagramInstanceDAO');
         $instagram_instances = $instance_dao->getAllInstances("DESC", true, "instagram");
         foreach ($instagram_instances as $ti) {
             $instance_dao->setActive($ti->id, false);
@@ -51,7 +51,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
     public function crawl() {
         $logger = Logger::getInstance();
         $config = Config::getInstance();
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $instance_dao = DAOFactory::getDAO('InstagramInstanceDAO');
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
@@ -88,8 +88,9 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                  * 5. Fetch user's followers.
                  */
                 $instagram_crawler->fetchPostsAndReplies();
-                //TODO
+                //@TODO
                 // $instagram_crawler->fetchLikes();
+                // $instagram_crawler->fetchFriends();
                 $instagram_crawler->fetchFollowers();
             } catch (Instagram\Core\ApiAuthException $e) {
                 //The access token is invalid, save in owner_instances table
