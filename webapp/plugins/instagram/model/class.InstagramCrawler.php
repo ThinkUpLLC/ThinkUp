@@ -59,38 +59,52 @@ class InstagramCrawler {
      * If $reload_from_instagram is true, update existing user details in store with data from instagram API.
      * @param int $user_id instagram user ID
      * @param str $found_in Where the user was found
+     * @param str $username
+     * @param str $full_name
+     * @param str $avatar
      * @param bool $reload_from_instagram Defaults to false; if true will query instagram API and update existing user
      * @return User
      */
-    public function fetchUser($user_id, $found_in, $force_reload_from_instagram=false) {
+    public function fetchUser($user_id, $found_in, $username, $full_name, $avatar, $force_reload_from_instagram=false) {
         //assume all users except the instance user is a instagram profile, not a page
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_object = null;
         if ($force_reload_from_instagram || !$user_dao->isUserInDB($user_id, $network)) {
-            // Get owner user details and save them to DB
+            // Get user details and save them to DB
             $user_details = null;
             try {
                 $user_details = InstagramAPIAccessor::apiRequest('user', $user_id, $this->access_token);
-            } catch (Instagram\Core\ApiException $e) {
-                $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Instagram API, ".
-                "error was ".$e->getMessage(), __METHOD__.','.__LINE__);
-            }
-            if (isset($user_details)) {
+                $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network.
+                    "'s details from Instagram", __METHOD__.','.__LINE__);
                 $user_details->network = $network;
                 $user = $this->parseUserDetails($user_details);
-                if (isset($user)) {
-                    $user_object = new User($user, $found_in);
-                    $user_dao->updateUser($user_object);
-                }
-
-                if (isset($user_object)) {
-                    $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network.
-                    "'s details from Instagram", __METHOD__.','.__LINE__);
+            } catch (Instagram\Core\ApiException $e) {
+                if ($e->getMessage() == 'you cannot view this resource') {
+                    $user = array();
+                    $user["user_name"] = $username;
+                    $user["full_name"] = $full_name;
+                    $user["user_id"] = $user_id;
+                    $user["avatar"] = $avatar;
+                    $user['url'] = '';
+                    $user["location"] = '';
+                    $user["description"] = '';
+                    $user["is_protected"] = 1;
+                    $user["joined"] = ''; //Column 'joined' cannot be null
+                    $user["network"] = 'instagram';
+                    $this->logger->logInfo("Private user ".$username. " with limited details", __METHOD__.','.__LINE__);
                 } else {
-                    $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Instagram API, ".
-                    "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
+                    $this->logger->logInfo(get_class($e)." fetching ".$user_id." ". $network.
+                        "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
                 }
+            }
+
+            if (isset($user)) {
+                $user_object = new User($user, $found_in);
+                $user_dao->updateUser($user_object);
+            } else {
+                $this->logger->logInfo("Error parsing user details ".Utils::varDumpToString($user_details),
+                    __METHOD__.','.__LINE__);
             }
         }
         return $user_object;
@@ -156,7 +170,8 @@ class InstagramCrawler {
         $network = $this->instance->network;
 
         //Force-refresh instance user in data store
-        self::fetchUser($this->instance->network_user_id, 'Owner info', true);
+        self::fetchUser($this->instance->network_user_id, 'Owner info', $this->instance->network_username,
+            null, null, true);
 
         // If archive isn't loaded, attempt to load it
         if (!$this->instance->is_archive_loaded_posts && $this->instance->last_post_id != '') {
@@ -545,7 +560,8 @@ class InstagramCrawler {
         $post_dao = DAOFactory::getDAO('PostDAO');
         if (isset($post['author_user_id'])) {
             try {
-                $user_object = $this->fetchUser($post['author_user_id'], $post_source);
+                $user_object = $this->fetchUser($post['author_user_id'], $post_source, $post['author_username'],
+                    $post['author_fullname'], $post['author_avatar'], false);
                 if (isset($user_object)) {
                     $post["author_username"] = $user_object->username;
                     $post["author_fullname"] = $user_object->full_name;
@@ -569,7 +585,8 @@ class InstagramCrawler {
     private function storePhotoAndAuthor($photo, $photo_source){
         $photo_dao = DAOFactory::getDAO('PhotoDAO');
         if (isset($photo['author_user_id'])) {
-            $user_object = $this->fetchUser($photo['author_user_id'], $photo_source);
+            $user_object = $this->fetchUser($photo['author_user_id'], $photo_source, $photo['author_username'],
+                $photo['author_fullname'], $photo['author_avatar'], false);
             if (isset($user_object)) {
                 $photo["author_username"] = $user_object->username;
                 $photo["author_fullname"] = $user_object->full_name;
@@ -590,7 +607,8 @@ class InstagramCrawler {
         $added_users = 0;
         if (count($users) > 0) {
             foreach ($users as $user) {
-                $user_object = $this->fetchUser($user['user_id'], $users_source);
+                $user_object = $this->fetchUser($user['user_id'], $users_source, $user['user_name'],
+                    $user['full_name'], $user['avatar']);
                 if (isset($user_object)) {
                     $added_users = $added_users + 1;
                 }
