@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/instagram/model/PHP5.3/class.InstagramPlugin.php
+ * ThinkUp/webapp/plugins/instagram/model/class.InstagramPlugin.php
  *
- * Copyright (c) 2013 Dimosthenis Nikoudis
+ * Copyright (c) 2013-2015 Dimosthenis Nikoudis
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Dimosthenis Nikoudis
+ * @copyright 2013-2015 Dimosthenis Nikoudis
  */
 class InstagramPlugin extends Plugin implements CrawlerPlugin {
 

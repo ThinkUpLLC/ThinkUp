@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/instagram/model/PHP5.3/class.InstagramAPIAccessor.php
+ * ThinkUp/webapp/plugins/instagram/model/class.InstagramAPIAccessor.php
  *
- * Copyright (c) 2013 Dimosthenis Nikoudis
+ * Copyright (c) 2013-2015 Dimosthenis Nikoudis
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  *
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013 Dimosthenis Nikoudis
+ * @copyright 2013-2015 Dimosthenis Nikoudis
  */
 class InstagramAPIAccessor {
     /**
@@ -43,11 +43,22 @@ class InstagramAPIAccessor {
      */
     var $logger;
     /**
+     * Maximum number of API calls to make per crawl.
+     * @var int
+     */
+    var $max_api_calls;
+    /**
+     * Total number of API calls made this crawl so far.
+     * @var integer
+     */
+    var $total_api_calls = 0;
+    /**
      * Constructor
      * @param str $access_token
      * @return InstagramAPIAccessor
      */
-    public function __construct($access_token) {
+    public function __construct($access_token, $max_api_calls = 500) {
+        $this->max_api_calls = $max_api_calls;
         $this->instagram = new Instagram\Instagram($access_token);
         $this->current_user = $this->instagram->getCurrentUser();
         $this->logger = Logger::getInstance();
@@ -66,6 +77,13 @@ class InstagramAPIAccessor {
      * @return Object
      */
     public function apiRequest($type, $params = array()) {
+        if ($this->total_api_calls >= $this->max_api_calls) {
+            $this->logger->logInfo("Throw APICallLimitExceededException", __METHOD__.','.__LINE__);
+            throw new APICallLimitExceededException();
+        } else {
+            $this->total_api_calls++;
+            $this->logger->logInfo("Made ".$this->total_api_calls." API calls", __METHOD__.','.__LINE__);
+        }
         try {
             if ($type == 'user') {
                 return $this->instagram->getUser($params['user_id']);
