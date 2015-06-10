@@ -39,6 +39,10 @@ class InstagramAPIAccessor {
      */
     var $instagram;
     /**
+     * @var Logger
+     */
+    var $logger;
+    /**
      * Constructor
      * @param str $access_token
      * @return InstagramAPIAccessor
@@ -46,6 +50,7 @@ class InstagramAPIAccessor {
     public function __construct($access_token) {
         $this->instagram = new Instagram\Instagram($access_token);
         $this->current_user = $this->instagram->getCurrentUser();
+        $this->logger = Logger::getInstance();
     }
     /**
      * Return the currently-authenticated Instagram user.
@@ -61,15 +66,30 @@ class InstagramAPIAccessor {
      * @return Object
      */
     public function apiRequest($type, $params = array()) {
-        if ($type == 'user') {
-            return $this->instagram->getUser($params['user_id']);
-        } else if ($type == 'followers') {
-            return $this->current_user->getFollowers($params);
-        } else if ($type == 'media') {
-            return $this->current_user->getMedia($params);
-        } else if ($type == 'relationship') {
-            $user = $this->instagram->getUser($params['user_id']);
-            return $this->current_user->getRelationship($user);
+        try {
+            if ($type == 'user') {
+                return $this->instagram->getUser($params['user_id']);
+            } else if ($type == 'followers') {
+                return $this->current_user->getFollowers($params);
+            } else if ($type == 'media') {
+                return $this->current_user->getMedia($params);
+            } else if ($type == 'relationship') {
+                $user = $this->instagram->getUser($params['user_id']);
+                return $this->current_user->getRelationship($user);
+            }
+        } catch (Instagram\Core\ApiException $e) {
+            if ($e->getMessage() == 'you cannot view this resource') {
+                $this->logger->logInfo("Throw APICallPermissionDeniedException: ".$e->getMessage(),
+                    __METHOD__.','.__LINE__);
+                throw new APICallPermissionDeniedException($e->getMessage());
+            } elseif (strpos( $e->getMessage(), 'exceeded the maximum number of requests per hour') !== false) {
+                $this->logger->logInfo("Throw APICallLimitExceededException: ".$e->getMessage(),
+                    __METHOD__.','.__LINE__);
+                throw new APICallLimitExceededException($e->getMessage());
+            } else {
+                $this->logger->logInfo("Throw APIErrorException: ".$e->getMessage(), __METHOD__.','.__LINE__);
+                throw new APIErrorException($e->getMessage());
+            }
         }
     }
 }

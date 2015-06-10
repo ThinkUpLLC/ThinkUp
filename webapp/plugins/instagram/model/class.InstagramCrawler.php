@@ -86,24 +86,22 @@ class InstagramCrawler {
                     "'s details from Instagram", __METHOD__.','.__LINE__);
                 $user_details->network = $network;
                 $user = $this->parseUserDetails($user_details);
-            } catch (Instagram\Core\ApiException $e) {
-                if ($e->getMessage() == 'you cannot view this resource') {
-                    $user = array();
-                    $user["user_name"] = $username;
-                    $user["full_name"] = $full_name;
-                    $user["user_id"] = $user_id;
-                    $user["avatar"] = $avatar;
-                    $user['url'] = '';
-                    $user["location"] = '';
-                    $user["description"] = '';
-                    $user["is_protected"] = 1;
-                    $user["joined"] = ''; //Column 'joined' cannot be null
-                    $user["network"] = 'instagram';
-                    $this->logger->logInfo("Private user ".$username. " with limited details", __METHOD__.','.__LINE__);
-                } else {
-                    $this->logger->logInfo(get_class($e)." fetching ".$user_id." ". $network.
-                        "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
-                }
+            } catch (APICallPermissionDeniedException $e) {
+                $user = array();
+                $user["user_name"] = $username;
+                $user["full_name"] = $full_name;
+                $user["user_id"] = $user_id;
+                $user["avatar"] = $avatar;
+                $user['url'] = '';
+                $user["location"] = '';
+                $user["description"] = '';
+                $user["is_protected"] = 1;
+                $user["joined"] = ''; //Column 'joined' cannot be null
+                $user["network"] = 'instagram';
+                $this->logger->logInfo("Private user ".$username. " with limited details", __METHOD__.','.__LINE__);
+            } catch (APIErrorException $e) {
+                $this->logger->logInfo(get_class($e)." fetching ".$user_id." ". $network.
+                    "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
             }
 
             if (isset($user)) {
@@ -167,13 +165,11 @@ class InstagramCrawler {
 
             try {
                 $user_vals['is_protected'] = $this->getIsUserPrivate($user_vals["user_id"]);
-            } catch (Instagram\Core\ApiException $e) {
-                if ($e->getMessage() == 'you cannot view this resource') {
-                    $user_vals['is_protected'] = 1;
-                } else {
-                    $this->logger->logInfo("Error fetching ".$details->username.
-                    "'s details. Instagram says '".$e->getMessage()."'", __METHOD__.','.__LINE__);
-                }
+            } catch (APICallPermissionDeniedException $e) {
+                $user_vals['is_protected'] = 1;
+            } catch (APIErrorException $e) {
+                $this->logger->logInfo("Error fetching ".$details->username. "'s details. Instagram says '"
+                    .$e->getMessage()."'", __METHOD__.','.__LINE__);
             }
         }
         return $user_vals;
@@ -201,9 +197,6 @@ class InstagramCrawler {
      *
      */
     public function fetchPostsAndReplies() {
-        //Cap crawl time for very busy pages with thousands of likes/comments
-        $fetch_stop_time = time() + $this->max_crawl_time;
-
         $id = $this->instance->network_user_id;
         $network = $this->instance->network;
 
@@ -219,9 +212,16 @@ class InstagramCrawler {
             $this->logger->logUserInfo("Media archive is not loaded, fetching starting from max_id "
                 .$this->instance->last_post_id, __METHOD__.','.__LINE__);
             $api_param = array('max_id' => $this->instance->last_post_id);
-            $posts = $this->api_accessor->apiRequest('media', $api_param);
 
-            $fetch_next_page = true;
+            try {
+                $posts = $this->api_accessor->apiRequest('media', $api_param);
+                $fetch_next_page = true;
+            } catch (APICallLimitExceededException $e) {
+                $fetch_next_page = false;
+            } catch (APIErrorException $e) {
+                $fetch_next_page = false;
+            }
+
             while ($fetch_next_page) {
                 if ($posts->count() > 0) {
                     $this->logger->logInfo($posts->count()." Instagram posts found", __METHOD__.','.__LINE__);
@@ -230,7 +230,13 @@ class InstagramCrawler {
 
                     if ($posts->getNext() != null) {
                         $api_param['max_id'] = $posts->getNext();
-                        $posts = $this->api_accessor->apiRequest('media', $api_param);
+                        try {
+                            $posts = $this->api_accessor->apiRequest('media', $api_param);
+                        } catch (APICallLimitExceededException $e) {
+                            $fetch_next_page = false;
+                        } catch (APIErrorException $e) {
+                            $fetch_next_page = false;
+                        }
                     } else {
                         $fetch_next_page = false;
                         $this->instance->is_archive_loaded_posts = true;
@@ -241,11 +247,6 @@ class InstagramCrawler {
                     $fetch_next_page = false;
                 }
             }
-            if (time() > $fetch_stop_time) {
-                $fetch_next_page = false;
-                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
-                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
-            }
         }
 
         if ($this->instance->is_archive_loaded_posts) {
@@ -253,13 +254,19 @@ class InstagramCrawler {
         }
 
         //Get recent media
-        $fetch_next_page = true;
         $api_param = array('count' => 20);
 
         $this->logger->logUserInfo("About to request recent media",__METHOD__.','.__LINE__);
-        $posts = $this->api_accessor->apiRequest('media', $api_param);
-        $this->logger->logUserInfo("Recent media requested with params ".Utils::varDumpToString($api_param),
-            __METHOD__.','.__LINE__);
+        try {
+            $posts = $this->api_accessor->apiRequest('media', $api_param);
+            $fetch_next_page = true;
+            $this->logger->logUserInfo("Recent media requested with params ".Utils::varDumpToString($api_param),
+                __METHOD__.','.__LINE__);
+        } catch (APICallLimitExceededException $e) {
+            $fetch_next_page = false;
+        } catch (APIErrorException $e) {
+            $fetch_next_page = false;
+        }
 
         while ($fetch_next_page) {
             if ($posts->count() > 0) {
@@ -269,7 +276,14 @@ class InstagramCrawler {
 
                 if ($did_capture_new_data && $posts->getNext() != null) {
                     $api_param['max_id'] = $posts->getNext();
-                    $posts = $this->api_accessor->apiRequest('media', $api_param);
+                    try {
+                        $posts = $this->api_accessor->apiRequest('media', $api_param);
+                        $fetch_next_page = true;
+                    } catch (APICallLimitExceededException $e) {
+                        $fetch_next_page = false;
+                    } catch (APIErrorException $e) {
+                        $fetch_next_page = false;
+                    }
                 } else {
                     if (!$did_capture_new_data) {
                         $this->logger->logInfo("No new data captured in last set, stopping here",
@@ -282,11 +296,6 @@ class InstagramCrawler {
             } else {
                 $this->logger->logInfo("No Instagram posts found for ID $id", __METHOD__.','.__LINE__);
                 $fetch_next_page = false;
-            }
-            if (time() > $fetch_stop_time) {
-                $fetch_next_page = false;
-                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
-                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
             }
         }
     }
@@ -347,7 +356,7 @@ class InstagramCrawler {
         try {
             $this->logger->logInfo("Make api call", __METHOD__.','.__LINE__);
             $followers = $this->api_accessor->apiRequest('followers', $api_param);
-        } catch (Instagram\Core\ApiException $e) {
+        } catch (Exception $e) {
             $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
                 $e->getMessage(), __METHOD__.','.__LINE__);
             return;
@@ -380,11 +389,14 @@ class InstagramCrawler {
                 //Persist the next cursor in the instance
                 $this->instance->followed_by_next_cursor = $next_cursor;
                 $api_param['cursor'] = $next_cursor;
-                $followers = $this->api_accessor->apiRequest('followers', $api_param);
-
-                if (!isset($followers) || $followers->count() == 0) {
-                    $this->logger->logInfo("No followers returned, marking archive loaded", __METHOD__.','.__LINE__);
-                    $this->instance->is_archive_loaded_follows = true;
+                try {
+                    $followers = $this->api_accessor->apiRequest('followers', $api_param);
+                    if (!isset($followers) || $followers->count() == 0) {
+                        $this->logger->logInfo("No followers returned, marking archive loaded", __METHOD__.','.__LINE__);
+                        $this->instance->is_archive_loaded_follows = true;
+                        $continue = false;
+                    }
+                } catch (Exception $e) {
                     $continue = false;
                 }
             } else {
@@ -673,18 +685,13 @@ class InstagramCrawler {
     private function storePostAndAuthor($post, $post_source){
         $post_dao = DAOFactory::getDAO('PostDAO');
         if (isset($post['author_user_id'])) {
-            try {
-                $user_object = $this->fetchUser($post['author_user_id'], $post_source, $post['author_username'],
-                    $post['author_fullname'], $post['author_avatar'], false);
-                if (isset($user_object)) {
-                    $post["author_username"] = $user_object->username;
-                    $post["author_fullname"] = $user_object->full_name;
-                    $post["author_avatar"] = $user_object->avatar;
-                    $post["location"] = $user_object->location;
-                }
-            } catch (Instagram\Core\ApiException $e) {
-                $this->logger->logInfo(get_class($e). " Error fetching ".$post['author_user_id'].
-                "'s details from Instagram API, error was ".$e->getMessage(), __METHOD__.','.__LINE__);
+            $user_object = $this->fetchUser($post['author_user_id'], $post_source, $post['author_username'],
+                $post['author_fullname'], $post['author_avatar'], false);
+            if (isset($user_object)) {
+                $post["author_username"] = $user_object->username;
+                $post["author_fullname"] = $user_object->full_name;
+                $post["author_avatar"] = $user_object->avatar;
+                $post["location"] = $user_object->location;
             }
         }
         $added_post_key = $post_dao->addPost($post);
