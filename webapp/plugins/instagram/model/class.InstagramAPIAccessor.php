@@ -30,10 +30,11 @@
 class InstagramAPIAccessor {
     /**
      * Make an API request.
-     * @param str $path
+     * @param str $type String representing the endpoint, 'user', 'followers', 'media', 'relationship'
+     * @param str $id User ID
      * @param str $access_token
-     * @param str $fields Comma-delimited list of fields to return from Instagram API
-     * @return array Decoded JSON response
+     * @param arr $params API call params
+     * @return Object
      */
     public static function apiRequest($type, $id, $access_token, $params = array()) {
         $logger = Logger::getInstance();
@@ -47,6 +48,11 @@ class InstagramAPIAccessor {
             $user = $instagram->getUser($id);
             $media = $user->getMedia($params);
             return $media;
+        } else if ($type == 'relationship') {
+            $current_user = $instagram->getCurrentUser();
+            $user = $instagram->getUser($id);
+            $relationship = $current_user->getRelationship($user);
+            return $relationship;
         }
     }
 }

@@ -111,6 +111,18 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         $this->assertFalse($user->is_protected);
     }
 
+    public function testGetIsUserPrivate() {
+        $ic = new InstagramCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+
+        //Test private user
+        $is_user_private = $ic->getIsUserPrivate('13096');
+        $this->assertEqual($is_user_private, 1);
+
+        //Test public user
+        $is_user_private = $ic->getIsUserPrivate('29648');
+        $this->assertEqual($is_user_private, 0);
+    }
+
     // Test that the crawler can capture photos, replies and likes correctly for an authenticated user
     public function testFetchPostsAndRepliesForProfile1() {
         $user_dao = new UserMySQLDAO();

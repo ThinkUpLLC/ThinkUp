@@ -109,6 +109,24 @@ class InstagramCrawler {
         }
         return $user_object;
     }
+
+    /**
+     * Get whether or not a user is private based on the relationship with current user. Only call this for users
+     * who had a successful get user call.
+     * @param  str $user_id
+     * @return int 1 or 0
+     */
+    public function getIsUserPrivate($user_id) {
+        $is_protected = 0;
+        if ($user_id !== $this->instance->network_user_id) {
+            $relationship = InstagramAPIAccessor::apiRequest( 'relationship', $user_id, $this->access_token );
+            if ($relationship->target_user_is_private) {
+                $is_protected = 1;
+            }
+        }
+        return $is_protected;
+    }
+
     /**
      * Convert an Instagram user object into a ThinkUp user object.
      * @param array $details

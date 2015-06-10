@@ -84,7 +84,8 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                  * 1. Fetch user info.
                  * 2. Fetch user's media + its likes and comments.
                  * 3. Fetch user's likes.
-                 * 4. Fetch user's followers.
+                 * 4. Fetch user's friends.
+                 * 5. Fetch user's followers.
                  */
                 $instagram_crawler->fetchPostsAndReplies();
                 //TODO
