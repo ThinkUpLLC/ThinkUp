@@ -57,7 +57,7 @@ class InstagramAPIAccessor {
      * @param str $access_token
      * @return InstagramAPIAccessor
      */
-    public function __construct($access_token, $max_api_calls = 2000) {
+    public function __construct($access_token, $max_api_calls = 2500) {
         $this->max_api_calls = $max_api_calls;
         $this->instagram = new Instagram\Instagram($access_token);
         $this->current_user = $this->instagram->getCurrentUser();

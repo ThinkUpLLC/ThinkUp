@@ -71,7 +71,7 @@ class InstagramCrawler {
      * @param bool $reload_from_instagram Defaults to false; if true will query instagram API and update existing user
      * @return User
      */
-    public function fetchUser($user_id, $found_in, $username, $full_name, $avatar, $force_reload_from_instagram=true) {
+    public function fetchUser($user_id, $found_in, $username, $full_name, $avatar, $force_reload_from_instagram=false) {
         $this->logger->logInfo("Start fetching user ".$username, __METHOD__.','.__LINE__);
         //assume all users except the instance user is a instagram profile, not a page
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
