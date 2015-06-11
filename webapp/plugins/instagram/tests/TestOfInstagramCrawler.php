@@ -230,9 +230,9 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         'http://images.ak.instagram.com/profiles/profile_20065178_75sq_1335521050.jpg');
         $this->assertFalse($user->is_protected);
         // Check we stored the number of followers our owner has
-        // $number_of_followers = $count_history_dao->getLatestCountByNetworkUserIDAndType('494785218','instagram',
-        // 'followers');
-        // $this->assertEqual($number_of_followers['count'], 3);
+        $number_of_followers = $count_history_dao->getLatestCountByNetworkUserIDAndType('494785218','instagram',
+        'followers');
+        $this->assertEqual($number_of_followers['count'], 3410);
         // Also check the relationship is in the follows table
         $this->assertTrue($follow_dao->followExists('494785218', '6623', 'instagram'));
         $this->assertTrue($follow_dao->followExists('494785218', '29648', 'instagram'));

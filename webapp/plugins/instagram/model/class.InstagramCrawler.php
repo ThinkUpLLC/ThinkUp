@@ -177,6 +177,7 @@ class InstagramCrawler {
     /**
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
+     *
      * // If archive isn't loaded, attempt to load it
      * api_call = /users/{id}/media/recent
      *
@@ -204,8 +205,11 @@ class InstagramCrawler {
         $this->user = self::fetchUser($this->instance->network_user_id, 'Owner info', $this->instance->network_username,
             null, null, true);
 
-        //@TODO Set the current count in the follower_count table
-        //$count_dao->insert($user_id, $network, $followers->count(), null, 'followers');
+        //Update follower count in history store
+        if (isset($this->user->follower_count) && $this->user->follower_count>0) {
+            $count_dao = DAOFactory::getDAO('CountHistoryDAO');
+            $count_dao->insert($this->user->user_id, 'instagram', $this->user->follower_count, null, 'followers');
+        }
 
         // If archive isn't loaded, attempt to load it
         if (!$this->instance->is_archive_loaded_posts && $this->instance->last_post_id != '') {
