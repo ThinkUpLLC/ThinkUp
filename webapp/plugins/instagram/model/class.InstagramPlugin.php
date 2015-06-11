@@ -81,11 +81,11 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
             $dashboard_module_cacher = new DashboardModuleCacher($instance);
             try {
                 /**
-                 * 1. Fetch user info.
-                 * 2. Fetch user's media + its likes and comments.
-                 * 3. Fetch user's likes.
-                 * 4. Fetch user's friends.
-                 * 5. Fetch user's followers.
+                 * 1. Fetch user info, media + its likes and comments.
+                 * 2. Fetch user's likes.
+                 * 3. Fetch user's friends, and update stale relationships.
+                 * 4. Fetch user's followers, and update stale relationships.
+                 * 5. Update stale friends' profiles.
                  */
                 $instagram_crawler->fetchPostsAndReplies();
                 //@TODO
