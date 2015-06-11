@@ -296,4 +296,53 @@ class TestOfInstagramCrawler extends ThinkUpUnitTestCase {
         //Test enough pages to exceed max API limit, assert last cursor is set
         //Test archive is loaded, and updateStaleFollows runs as expected
     }
+
+    public function testUpdateStaleFollows() {
+        //Insert stale follows for 502993749
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'502993749', 'first_seen'=>'-5d',
+            'follower_id'=>'123-both-follow', 'network'=>'instagram', 'last_seen'=>'-5d', 'active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'123-both-follow', 'first_seen'=>'-5d',
+            'follower_id'=>'502993749', 'network'=>'instagram', 'last_seen'=>'-5d', 'active'=>1));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'502993749', 'first_seen'=>'-5d',
+            'follower_id'=>'123-source-follows', 'network'=>'instagram', 'last_seen'=>'-5d', 'active'=>1));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'123-target-follows', 'first_seen'=>'-5d',
+            'follower_id'=>'502993749', 'network'=>'instagram', 'last_seen'=>'-5d', 'active'=>1));
+
+        //Run the crawl
+        $ic = new InstagramCrawler($this->profile3_instance, 'fauxaccesstoken', 120);
+        $ic->updateStaleFollows();
+
+        $follow_dao = new FollowMySQLDAO();
+        //Assert source follows but target doesn't
+        //Target follows source - false
+        $result = $follow_dao->followExists($user_id='502993749', $follower_id='123-source-follows', 'instagram',
+            $is_active = true);
+        $this->assertFalse($result);
+        //Source follows target - true
+        $result = $follow_dao->followExists($user_id='123-source-follows', $follower_id='502993749', 'instagram',
+            $is_active = true);
+        $this->assertTrue($result);
+
+        //Assert target follows but source doesn't
+        //Target follows source - true
+        $result = $follow_dao->followExists($user_id='502993749', $follower_id='123-target-follows', 'instagram',
+            $is_active = true);
+        $this->assertTrue($result);
+        //Source follows target - false
+        $result = $follow_dao->followExists($user_id='123-target-follows', $follower_id='502993749', 'instagram',
+            $is_active = true);
+        $this->assertFalse($result);
+
+        //Assert both follow
+        //Target follows source - true
+        $result = $follow_dao->followExists($user_id='502993749', $follower_id='123-both-follow', 'instagram',
+            $is_active = true);
+        $this->assertTrue($result);
+        //Source follows target - true
+        $result = $follow_dao->followExists($user_id='123-both-follow', $follower_id='502993749', 'instagram',
+            $is_active = true);
+        $this->assertTrue($result);
+    }
 }

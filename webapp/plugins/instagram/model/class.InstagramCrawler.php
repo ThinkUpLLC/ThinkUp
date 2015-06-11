@@ -312,9 +312,9 @@ class InstagramCrawler {
      *
      * if !is_archive_loaded
      *     if followed_by_next_cursor is set
-     *         page(followed_by_next_cursor)
+     *         pageThroughFollowers(followed_by_next_cursor)
      *     else
-     *         page()
+     *         pageThroughFollowers()
      *
      * if is_archive_loaded
      *     updateStaleFollows()
@@ -329,14 +329,115 @@ class InstagramCrawler {
             }
         }
 
-        //@TODO set up instance->followed_by_next_cursor var
+        //If archive is not loaded, page through followers
         if (!$this->instance->is_archive_loaded_follows) {
             $this->pageThroughFollowers($this->instance->followed_by_next_cursor);
         }
 
-        //@TODO if archive is loaded, updateStaleFollows
+        //If archive is loaded, updateStaleFollows
+        if ($this->instance->is_archive_loaded_follows) {
+            $this->updateStaleFollows();
+        }
     }
+    /**
+     * Grab oldest follow relationship, check if it exists, and update table.
+     * @param bool $friends_only If true, only check for stale friends, not just follows in general
+     */
+    public function updateStaleFollows($friends_only = false) {
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $continue_fetching = true;
+        while ($continue_fetching) {
+            $old_follow = null;
+            if ($friends_only) {
+                $old_follow = $follow_dao->getOldestFriend($this->instance->network_user_id, 'instagram');
+                $this->logger->logInfo("Checking stale friends", __METHOD__.','.__LINE__);
+            } else {
+                $old_follow = $follow_dao->getOldestFollow('instagram');
+                $this->logger->logInfo("Checking stale followers", __METHOD__.','.__LINE__);
+            }
+            if ($old_follow !== null) {
+                // $old_follow["followee_id"];
+                // $old_follow["follower_id"];
+                if ($old_follow['followee_id'] == $this->instance->network_user_id) {
+                    $user_to_check = $old_follow["follower_id"];
+                } elseif  ($old_follow["follower_id"] == $this->instance->network_user_id) {
+                    $user_to_check = $old_follow["followee_id"];
+                } else {
+                    // print_r($old_follow);
+                    // print_r($this->instance);
+                    // It should never come to this.
+                    $continue_fetching = false;
+                }
 
+                if (isset($user_to_check)) {
+                    try {
+                        $this->logger->logInfo("Checking stale follow last seen ".$old_follow["last_seen"],
+                            __METHOD__.','.__LINE__);
+                        $relationship = $this->api_accessor->apiRequest( 'relationship',
+                            array('user_id'=>$user_to_check) );
+
+                        //Outgoing status
+                        //outgoing_status values: follows, none, requested_by
+                        if ($relationship->outgoing_status == 'follows') {
+                            $this->logger->logInfo("Outgoing status is follows. ".
+                                $this->instance->network_user_id." follows ". $user_to_check, __METHOD__.','.__LINE__);
+
+                            //$follow_dao->update($user_to_check, $this->instance->network_user_id, 'instagram', true);
+
+                            //store relationship in follows table
+                            if ($follow_dao->followExists($user_to_check, $this->instance->network_user_id,
+                                'instagram')) {
+                                $this->logger->logInfo("Update", __METHOD__.','.__LINE___);
+                                // follow relationship already exists
+                                $follow_dao->update($user_to_check, $this->instance->network_user_id, 'instagram');
+                            } else {
+                                $this->logger->logInfo("Insert", __METHOD__.','.__LINE___);
+                                // follow relationship does not exist yet
+                                $follow_dao->insert($user_to_check, $this->instance->network_user_id, 'instagram');
+                            }
+                        } else {
+                            $this->logger->logInfo("Outgoing status: Deactivating follow outgoing_status is ".
+                                $relationship->outgoing_status .". ". $this->instance->network_user_id.
+                                " does not follow ". $user_to_check, __METHOD__.','.__LINE__);
+
+                            $follow_dao->deactivate($user_to_check, $this->instance->network_user_id, 'instagram');
+                        }
+
+                        //Incoming status
+                        //incoming_status: followed_by
+                        if ($relationship->incoming_status == 'followed_by') {
+                            $this->logger->logInfo("Incoming status is ".$relationship->incoming_status. ". ".
+                                $user_to_check." follows ". $this->instance->network_user_id, __METHOD__.','.__LINE__);
+
+                            //$follow_dao->update($this->instance->network_user_id, $user_to_check, 'instagram', true);
+
+                            //store relationship in follows table
+                            if ($follow_dao->followExists($this->instance->network_user_id, $user_to_check,
+                                'instagram')) {
+                                $this->logger->logInfo("Update", __METHOD__.','.__LINE___);
+                                // follow relationship already exists
+                                $follow_dao->update($this->instance->network_user_id, $user_to_check, 'instagram');
+                            } else {
+                                $this->logger->logInfo("Insert", __METHOD__.','.__LINE___);
+                                // follow relationship does not exist yet
+                                $follow_dao->insert($this->instance->network_user_id, $user_to_check, 'instagram');
+                            }
+                        } else {
+                            $this->logger->logInfo("Incoming status: Deactivating follow incoming_status is ".
+                                $relationship->incoming_status, __METHOD__.','.__LINE__);
+
+                            $follow_dao->deactivate($this->instance->network_user_id, $user_to_check, 'instagram');
+                        }
+                    } catch (APICallLimitExceededException $e) {
+                        $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+                        break;
+                    }
+                }
+            } else {
+                $continue_fetching = false;
+            }
+        }
+    }
     /**
      *  Page back through followers starting at the beginning (cursor is null) or at cursor
      *  until either
@@ -398,6 +499,7 @@ class InstagramCrawler {
                     if (!isset($followers) || $followers->count() == 0) {
                         $this->logger->logInfo("No followers returned, marking archive loaded", __METHOD__.','.__LINE__);
                         $this->instance->is_archive_loaded_follows = true;
+                        $this->instance->followed_by_next_cursor = null;
                         $continue = false;
                     }
                 } catch (Exception $e) {
@@ -409,6 +511,7 @@ class InstagramCrawler {
             } else {
                 $this->logger->logInfo("No next cursor available", __METHOD__.','.__LINE__);
                 $this->instance->is_archive_loaded_follows = true;
+                $this->instance->followed_by_next_cursor = null;
                 $continue = false;
             }
         }
