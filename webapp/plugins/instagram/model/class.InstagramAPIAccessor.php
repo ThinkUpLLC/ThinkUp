@@ -89,6 +89,8 @@ class InstagramAPIAccessor {
                 return $this->instagram->getUser($params['user_id']);
             } else if ($type == 'followers') {
                 return $this->current_user->getFollowers($params);
+            } else if ($type == 'friends') {
+                return $this->current_user->getFollows($params);
             } else if ($type == 'media') {
                 return $this->current_user->getMedia($params);
             } else if ($type == 'relationship') {

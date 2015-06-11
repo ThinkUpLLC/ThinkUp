@@ -151,6 +151,7 @@ class InstagramCrawler {
 
             $user_vals["post_count"] = $details->getMediaCount();
             $user_vals["follower_count"] = $details->getFollowersCount();
+            $user_vals["friend_count"] = $details->getFollowsCount();
             $user_vals["user_name"] = $details->getUserName();
             $user_vals["full_name"] = $details->getFullName();
             $user_vals["user_id"] = $details->getId();
@@ -340,6 +341,57 @@ class InstagramCrawler {
         }
     }
     /**
+     * Fetch and save the instance users's friends.
+     *
+     * if is_archive_loaded
+     *     if ($this->instance->total_follows_in_system !== $this->user->friend_count) {
+     *         is_archive_loaded = false;
+     *
+     * if !is_archive_loaded
+     *     if followed_by_next_cursor is set
+     *         pageThroughFriends(followed_by_next_cursor)
+     *     else
+     *         pageThroughFriends()
+     *
+     * if is_archive_loaded
+     *     updateStaleFollows()
+     *
+     */
+    public function fetchFriends() {
+        if (!isset($this->user)) {
+            //Force-refresh instance user in data store
+            $this->user = self::fetchUser($this->instance->network_user_id, 'Owner info',
+                $this->instance->network_username, null, null, true);
+        }
+
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->instance->total_friends_in_system = $follow_dao->countTotalFriends($this->instance->network_user_id,
+            'instagram');
+
+        $this->logger->logUserInfo($this->instance->total_friends_in_system." friends in system, ".
+            $this->user->friend_count." friends according to Instagram", __METHOD__.','.__LINE__);
+
+        if ($this->instance->total_friends_in_system < $this->user->friend_count) {
+            $this->instance->is_archive_loaded_friends = false;
+        } elseif ($this->instance->total_friends_in_system > $this->user->friend_count) {
+            $this->instance->is_archive_loaded_friends = true;
+        } else {
+            $this->instance->is_archive_loaded_friends = true;
+        }
+
+        //If archive is not loaded, page through friends
+        if (!$this->instance->is_archive_loaded_friends) {
+            $this->logger->logInfo("Friend archive  is not loaded, start paging", __METHOD__.','.__LINE__);
+            $this->pageThroughFriends($this->instance->follows_next_cursor);
+        }
+
+        //If archive is loaded, updateStaleFollows
+        if ($this->instance->is_archive_loaded_friends) {
+            $this->logger->logInfo("Friend archive loaded, start updating stale friendships", __METHOD__.','.__LINE__);
+            $this->updateStaleFollows(true);
+        }
+    }
+    /**
      * Grab oldest follow relationship, check if it exists, and update table.
      * @param bool $friends_only If true, only check for stale friends, not just follows in general
      */
@@ -497,7 +549,8 @@ class InstagramCrawler {
                 try {
                     $followers = $this->api_accessor->apiRequest('followers', $api_param);
                     if (!isset($followers) || $followers->count() == 0) {
-                        $this->logger->logInfo("No followers returned, marking archive loaded", __METHOD__.','.__LINE__);
+                        $this->logger->logInfo("No followers returned, marking archive loaded",
+                            __METHOD__.','.__LINE__);
                         $this->instance->is_archive_loaded_follows = true;
                         $this->instance->followed_by_next_cursor = null;
                         $continue = false;
@@ -516,6 +569,86 @@ class InstagramCrawler {
             }
         }
         $this->logger->logInfo("Done paging through followers", __METHOD__.','.__LINE__);
+    }
+    /**
+     *  Page back through friends starting at the beginning (cursor is null) or at cursor
+     *  until either
+     *      A. No more next cursor
+     *          if A mark next cursor null
+     *      or B. out of API calls
+     *          if B store follows_next_cursor for pickup next time
+     * @param  str $follows_next_cursor
+     * @return void
+     */
+    public function pageThroughFriends($follows_next_cursor = null) {
+        $this->logger->logInfo("Start paging through friends", __METHOD__.','.__LINE__);
+        //Retrieve friends via the Instagram API
+        $user_id = $this->instance->network_user_id;
+        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'instagram';
+
+        $api_param = null;
+        if (isset($follows_next_cursor)) {
+            $api_param = array('next_cursor'=>$follows_next_cursor);
+        }
+        try {
+            $this->logger->logInfo("Make api call", __METHOD__.','.__LINE__);
+            $friends = $this->api_accessor->apiRequest('friends', $api_param);
+        } catch (Exception $e) {
+            $this->logger->logInfo(get_class($e). " Error fetching followers from Instagram API, error was ".
+                $e->getMessage(), __METHOD__.','.__LINE__);
+            return;
+        }
+
+        $follows_dao = DAOFactory::getDAO('FollowDAO');
+
+        $continue = isset($friends);
+        while ($continue) {
+            foreach ($friends as $friend) {
+                //store user in users table
+                $this->fetchUser($friend->id, 'Friends', $friend->username, $friend->full_name,
+                    $friend->profile_picture );
+
+                //store relationships in follows table
+                if ($follows_dao->followExists($friend->id, $user_id, $network)) {
+                    // follow relationship already exists
+                    $follows_dao->update( $friend->id, $user_id, $network);
+                } else {
+                    // follow relationship does not exist yet
+                    $follows_dao->insert($friend->id, $user_id, $network);
+                }
+            }
+            $this->logger->logInfo("Done with ".$friends->count()." followers", __METHOD__.','.__LINE__);
+
+            $next_cursor = $friends->getNext();
+            $friends = null;
+            if (isset($next_cursor)) {
+                $this->logger->logInfo("Next cursor is set to ".$next_cursor, __METHOD__.','.__LINE__);
+                //Persist the next cursor in the instance
+                $this->instance->followed_by_next_cursor = $next_cursor;
+                $api_param['cursor'] = $next_cursor;
+                try {
+                    $friends = $this->api_accessor->apiRequest('friends', $api_param);
+                    if (!isset($friends) || $friends->count() == 0) {
+                        $this->logger->logInfo("No friends returned, marking archive loaded",
+                            __METHOD__.','.__LINE__);
+                        $this->instance->is_archive_loaded_friends = true;
+                        $this->instance->follows_next_cursor = null;
+                        $continue = false;
+                    }
+                } catch (Exception $e) {
+                    $this->instance->follows_next_cursor = $next_cursor;
+                    $this->logger->logInfo("Stopping due to ".get_class($e)."; saving cursor ".$next_cursor,
+                        __METHOD__.','.__LINE__);
+                    $continue = false;
+                }
+            } else {
+                $this->logger->logInfo("No next cursor available", __METHOD__.','.__LINE__);
+                $this->instance->is_archive_loaded_follows = true;
+                $this->instance->follows_next_cursor = null;
+                $continue = false;
+            }
+        }
+        $this->logger->logInfo("Done paging through friends", __METHOD__.','.__LINE__);
     }
     /**
      * Convert a collection of profile posts into ThinkUp posts and users

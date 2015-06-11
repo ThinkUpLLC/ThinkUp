@@ -90,7 +90,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                 $instagram_crawler->fetchPostsAndReplies();
                 //@TODO
                 // $instagram_crawler->fetchLikes();
-                // $instagram_crawler->fetchFriends();
+                $instagram_crawler->fetchFriends();
                 $instagram_crawler->fetchFollowers();
             } catch (Instagram\Core\ApiAuthException $e) {
                 //The access token is invalid, save in owner_instances table
