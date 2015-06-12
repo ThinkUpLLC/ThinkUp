@@ -239,8 +239,10 @@ class InstagramCrawler {
                             $posts = $this->api_accessor->apiRequest('media', $api_param);
                         } catch (APICallLimitExceededException $e) {
                             $fetch_next_page = false;
+                            $this->instance->last_post_id = $api_param['max_id'];
                         } catch (APIErrorException $e) {
                             $fetch_next_page = false;
+                            $this->instance->last_post_id = $api_param['max_id'];
                         }
                     } else {
                         $fetch_next_page = false;
@@ -286,8 +288,10 @@ class InstagramCrawler {
                         $fetch_next_page = true;
                     } catch (APICallLimitExceededException $e) {
                         $fetch_next_page = false;
+                        $this->instance->last_post_id = $api_param['max_id'];
                     } catch (APIErrorException $e) {
                         $fetch_next_page = false;
+                        $this->instance->last_post_id = $api_param['max_id'];
                     }
                 } else {
                     if (!$did_capture_new_data) {
@@ -301,6 +305,78 @@ class InstagramCrawler {
             } else {
                 $this->logger->logInfo("No Instagram posts found for ID $id", __METHOD__.','.__LINE__);
                 $fetch_next_page = false;
+            }
+        }
+    }
+    /**
+     * Fetch a user's likes and page back to capture archive.
+     */
+    public function fetchLikes() {
+        if (!isset($this->user)) {
+            //Force-refresh instance user in data store
+            $this->user = self::fetchUser($this->instance->network_user_id, 'Owner info',
+                $this->instance->network_username, null, null, true);
+        }
+        $network = 'instagram';
+
+        $this->logger->logUserInfo("Fetching likes, next max like id is " .$this->instance->next_max_like_id,
+            __METHOD__.','.__LINE__);
+        $api_param = array('max_like_id' => $this->instance->next_max_like_id);
+
+        try {
+            $posts = $this->api_accessor->apiRequest('likes', $api_param);
+            $fetch_next_page = true;
+        } catch (APICallLimitExceededException $e) {
+            $fetch_next_page = false;
+        } catch (APIErrorException $e) {
+            $fetch_next_page = false;
+        }
+
+        $favorite_dao = DAOFactory::getDAO('FavoritePostDAO');
+
+        while ($fetch_next_page) {
+            if ($posts->count() > 0) {
+                $this->logger->logInfo($posts->count()." Instagram posts found", __METHOD__.','.__LINE__);
+
+                //Insert posts
+                $did_capture_new_data = $this->processPosts($posts, $network, false);
+
+                //Insert faves
+                foreach ($posts as $post) {
+                    $vals = array('post_id'=>$post->getId(), 'network'=>'instagram',
+                        'author_user_id'=> $post->getUser()->getId());
+                    $favorite_dao->addFavorite($this->instance->network_user_id, $vals);
+                }
+
+                if ($did_capture_new_data && $posts->getNext() !== null) {
+                    $api_param['max_like_id'] = $posts->getNext();
+                    try {
+                        $this->logger->logUserInfo("Fetching more likes, next max like id is "
+                            .$api_param['max_like_id'], __METHOD__.','.__LINE__);
+                        $posts = $this->api_accessor->apiRequest('likes', $api_param);
+                    } catch (APICallLimitExceededException $e) {
+                        $fetch_next_page = false;
+                        $this->instance->next_max_like_id = $api_param['max_like_id'];
+                    } catch (APIErrorException $e) {
+                        $fetch_next_page = false;
+                        $this->instance->next_max_like_id = $api_param['max_like_id'];
+                    }
+                } else {
+                    if (!$did_capture_new_data) {
+                        $this->logger->logInfo("No new data captured in this set, stopping here",
+                            __METHOD__.','.__LINE__);
+                    }
+                    if ($posts->getNext() !== null) {
+                        $this->logger->logInfo("No next page", __METHOD__.','.__LINE__);
+                    }
+                    $fetch_next_page = false;
+                    $this->instance->next_max_like_id = null;
+                }
+            } else {
+                $this->logger->logInfo("No Instagram posts found before max id ".$this->instance->last_post_id,
+                    __METHOD__.','.__LINE__);
+                $fetch_next_page = false;
+                $this->instance->next_max_like_id = null;
             }
         }
     }
@@ -653,10 +729,11 @@ class InstagramCrawler {
     /**
      * Convert a collection of profile posts into ThinkUp posts and users
      * @param Object $posts
-     * @param str $source The network for the post, always 'instagram'
+     * @param str $network The network for the post, always 'instagram'
+     * @param bool $do_fetch_comments_likes Whether or not to also fetch likes and comments for the posts
      * @return Whether or not a post (or comment), user or like was written to storage
      */
-    private function processPosts(Instagram\Collection\MediaCollection $posts, $network) {
+    private function processPosts(Instagram\Collection\MediaCollection $posts, $network, $do_fetch_comments_likes=true){
         $thinkup_posts = array();
         $total_added_posts = 0;
 
@@ -703,15 +780,15 @@ class InstagramCrawler {
                     __METHOD__.','.__LINE__);
                 }
 
-                $commentsCount = $comments->count();
-                if ($commentsCount > 0) {
-                    if ($post_in_storage->reply_count_cache >= $commentsCount) {
+                $comments_count = $comments->count();
+                if ($comments_count > 0) {
+                    if ($post_in_storage->reply_count_cache >= $comments_count) {
                         $must_process_comments = false;
-                        $this->logger->logInfo("Already have ".$commentsCount." comment(s) for post ".$post_id.
+                        $this->logger->logInfo("Already have ".$comments_count." comment(s) for post ".$post_id.
                         "; skipping comment processing", __METHOD__.','.__LINE__);
                     } else {
-                        $comments_difference = $commentsCount - $post_in_storage->reply_count_cache;
-                        $this->logger->logInfo($comments_difference." new comment(s) of ".$commentsCount.
+                        $comments_difference = $comments_count - $post_in_storage->reply_count_cache;
+                        $this->logger->logInfo($comments_difference." new comment(s) of ".$comments_count.
                         " total to process for post ".$post_id, __METHOD__.','.__LINE__);
                     }
                 }
@@ -768,7 +845,7 @@ class InstagramCrawler {
                 }
             }
 
-            if ($must_process_comments) {
+            if ($do_fetch_comments_likes && $must_process_comments) {
                 if ($comments->count() > 0) {
                     $comments_captured = 0;
                     $post_comments = $comments;
@@ -822,7 +899,7 @@ class InstagramCrawler {
             }
 
             //process "likes"
-            if ($must_process_likes) {
+            if ($do_fetch_comments_likes && $must_process_likes) {
                 if ($likes_count > 0) {
                     $likes_captured = 0;
                     $post_likes = $p->getLikes();

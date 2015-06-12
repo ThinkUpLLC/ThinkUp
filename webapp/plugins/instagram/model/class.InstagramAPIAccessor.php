@@ -95,6 +95,8 @@ class InstagramAPIAccessor {
                 return $this->current_user->getMedia($params);
             } else if ($type == 'relationship') {
                 return $this->current_user->getRelationship($params['user_id']);
+            } else if ($type == 'likes') {
+                return $this->current_user->getLikedMedia($params);
             }
         } catch (Instagram\Core\ApiException $e) {
             if ($e->getMessage() == 'you cannot view this resource') {
