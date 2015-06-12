@@ -366,7 +366,7 @@ class InstagramCrawler {
                         $this->logger->logInfo("No new data captured in this set, stopping here",
                             __METHOD__.','.__LINE__);
                     }
-                    if ($posts->getNext() !== null) {
+                    if ($posts->getNext() == null) {
                         $this->logger->logInfo("No next page", __METHOD__.','.__LINE__);
                     }
                     $fetch_next_page = false;
