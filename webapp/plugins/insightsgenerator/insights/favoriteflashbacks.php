@@ -46,7 +46,20 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                 //Generate flashback post list
                 $flashback_favs = $fav_dao->getFavoritesFromOneYearAgo($instance->network_user_id,
                     $instance->network, $since_date);
+
                 if (isset($flashback_favs) && sizeof($flashback_favs) > 0 ) {
+
+                    //Load photos for Instagram
+                    if ($instance->network == 'instagram') {
+                        foreach ($flashback_favs as $post) {
+                            $flashback_fav_photos = array();
+                            $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                            $post =$photo_dao->getPhoto($post->post_id, 'instagram');
+                            $flashback_fav_photos[] = $post;
+                        }
+                        $flashback_favs = $flashback_fav_photos;
+                    }
+
                     $post_year = date(date( 'Y' , strtotime($flashback_favs[0]->pub_date)));
                     $current_year = date('Y');
                     $number_of_years_ago = $current_year - $post_year;
