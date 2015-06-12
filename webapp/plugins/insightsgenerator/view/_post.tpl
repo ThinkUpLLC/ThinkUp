@@ -10,7 +10,7 @@ $hide_avatar (optional) do not display the user's avatar, typically used if the 
 <blockquote class="tweet{if $hide_avatar} hide-photo{/if}">
   <a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$post->network user_id=$post->author_user_id username=$post->author_username}" title="{$post->author_username}"><img src="{insert name='user_avatar' avatar_url=$post->author_avatar image_proxy_sig=$image_proxy_sig}" alt="{$post->author_username}" width="60" height="60" class="img-circle pull-left tweet-photo user-photo"></a>
   <div class="byline"><a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$post->network user_id=$post->author_user_id username=$post->author_username}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
-  <div class="tweet-body">{$post->post_text|filter_xss|link_usernames_to_twitter}</div>
+  <div class="tweet-body">{$post->post_text|filter_xss|link_usernames_to_network:$post->network}</div>
 
 {*
 On Facebook, links may be included with a post but not inline in post_text.

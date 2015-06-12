@@ -33,9 +33,9 @@ $bio_after (optional) If this is a bio change, the current bio
 
                     <div class="bio-before-after">
                         <p class="bio-before"><strong>Before:</strong><br>
-                        {$bio_before|link_usernames_to_twitter}</p>
+                        {$bio_before|link_usernames_to_network:$user->network}</p>
                         <p class="bio-after"><strong>After:</strong><br>
-                        {$bio_after|link_usernames_to_twitter}</p>
+                        {$bio_after|link_usernames_to_network:$user->network}</p>
                     </div>
                     <p><a class="diff-toggle" href="#" data-alt-text="Show diff">Show before/after</a></p>
                 </div>

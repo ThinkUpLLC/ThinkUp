@@ -28,7 +28,7 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/view/plugins/modifier.link_usernames.php';
-require_once THINKUP_WEBAPP_PATH.'_lib/view/plugins/modifier.link_usernames_to_twitter.php';
+require_once THINKUP_WEBAPP_PATH.'_lib/view/plugins/modifier.link_usernames_to_network.php';
 
 class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
     /**
@@ -45,7 +45,12 @@ class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
      *
      * @var array string
      */
-    var $externally_linked_tweets;
+    var $externally_linked_twitter_posts;
+    /**
+     *
+     * @var array string
+     */
+    var $externally_linked_instagram_posts;
 
     public function setUp() {
         $config = Config::getInstance();
@@ -67,7 +72,7 @@ class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
         'Blah blah blah (<a href="' . $config->getValue('site_root_path') .
         'user/?u=username&n=twitter&i=me">@username</a>). Blah blah');
 
-        $this->externally_linked_tweets = array(
+        $this->externally_linked_twitter_posts = array(
         'Hey <a href="https://twitter.com/intent/user?screen_name=anildash">@anildash</a> think this up!',
         "If you're interested, @ me details",
         '.<a href="https://twitter.com/intent/user?screen_name=anildash">@anildash</a> thinks so',
@@ -75,6 +80,15 @@ class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
         '<a href="https://twitter.com/intent/user?screen_name=waxpancake">@waxpancake</a> '.
         'and <a href="https://twitter.com/intent/user?screen_name=thinkupapp">@thinkupapp</a>',
         'Blah blah blah (<a href="https://twitter.com/intent/user?screen_name=username">@username</a>). Blah blah');
+
+        $this->externally_linked_instagram_posts = array(
+        'Hey <a href="https://instagram.com/anildash">@anildash</a> think this up!',
+        "If you're interested, @ me details",
+        '.<a href="https://instagram.com/anildash">@anildash</a> thinks so',
+        'This is a tweet with multiple usernames like '.
+        '<a href="https://instagram.com/waxpancake">@waxpancake</a> '.
+        'and <a href="https://instagram.com/thinkupapp">@thinkupapp</a>',
+        'Blah blah blah (<a href="https://instagram.com/username">@username</a>). Blah blah');
     }
 
     public function testLinks() {
@@ -86,8 +100,20 @@ class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
 
         //test Twitter.com links
         foreach ($this->test_tweets as $index => $test_tweet) {
-            $linked_tweet = smarty_modifier_link_usernames_to_twitter($test_tweet, "me", "twitter");
-            $this->assertEqual($this->externally_linked_tweets[$index], $linked_tweet);
+            $linked_tweet = smarty_modifier_link_usernames_to_network($test_tweet, "twitter");
+            $this->assertEqual($this->externally_linked_twitter_posts[$index], $linked_tweet);
+        }
+
+        //test Instagram.com links
+        foreach ($this->test_tweets as $index => $test_tweet) {
+            $linked_tweet = smarty_modifier_link_usernames_to_network($test_tweet, "instagram");
+            $this->assertEqual($this->externally_linked_instagram_posts[$index], $linked_tweet);
+        }
+
+        //test Facebook links
+        foreach ($this->test_tweets as $index => $test_tweet) {
+            $linked_tweet = smarty_modifier_link_usernames_to_network($test_tweet, "facebook");
+            $this->assertEqual($test_tweet, $linked_tweet);
         }
     }
 }

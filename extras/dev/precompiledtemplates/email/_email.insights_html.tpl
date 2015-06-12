@@ -1373,7 +1373,7 @@ or isset($insight->related_data.changes)}
                         </td>
                         <td class="ten sub-columns last">
                             <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
-                            <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_twitter|color_html_email_links}</div>
+                            <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_network:$post->network|color_html_email_links}</div>
                             <div class="tweet-actions">
                               <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
                                 class="tweet-action tweet-action-permalink">{$post->pub_date|date_format:'%b %e, %Y'}</a>

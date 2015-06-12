@@ -27,7 +27,7 @@ $posts An array of posts (that contain links!)
                 </div>
                 <div class="link-metadata">
                 {if $post->network eq 'twitter'}
-                    Posted by {'@'|cat:$post->author_username|link_usernames_to_twitter}
+                    Posted by {'@'|cat:$post->author_username|link_usernames_to_network:$post->network}
                     on <a href="http://twitter.com/{$post->author_user_id}/statuses/{$post->post_id}">
                     {$post->adj_pub_date|date_format:"%b %e"}</a>
                 {else}

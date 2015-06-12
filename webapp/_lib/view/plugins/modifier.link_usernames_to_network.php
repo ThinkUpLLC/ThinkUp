@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/view/plugins/modifier.link_usernames_to_twitter.php
+ * ThinkUp/webapp/_lib/view/plugins/modifier.link_usernames_to_network.php
  *
  * Copyright (c) 2009-2015 Gina Trapani
  *
@@ -27,14 +27,14 @@
  */
 
 /**
- * Smarty link usernames plugin
+ * Smarty link usernames plugin.
  *
  * Type:     modifier<br>
- * Name:     link_usernames_to_twitter<br>
+ * Name:     link_usernames_to_network<br>
  * Date:     July 4, 2009
  * Purpose:  links a Twitter username to their user page
  * Input:    status update text
- * Example:  {$status_html|link_usernames_to_twitter}
+ * Example:  {$status_html|link_usernames_to_network}
  * @TODO Find a more elegant way to do this that's totally regex-based, not loving this explode/implode approach
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2015 Gina Trapani
@@ -43,7 +43,14 @@
  * @param string
  * @return string
  */
-function smarty_modifier_link_usernames_to_twitter($text) {
-    return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i',
-    '$1<a href="https://twitter.com/intent/user?screen_name=$2">@$2</a>', $text);
+function smarty_modifier_link_usernames_to_network($text, $network) {
+    if ($network == 'twitter') {
+        return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i',
+        '$1<a href="https://twitter.com/intent/user?screen_name=$2">@$2</a>', $text);
+    } elseif ($network == 'instagram') {
+        return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i',
+        '$1<a href="https://instagram.com/$2">@$2</a>', $text);
+    } else {
+        return $text;
+    }
 }

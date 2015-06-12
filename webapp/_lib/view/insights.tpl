@@ -118,7 +118,7 @@
   <div class="panel-heading{if $i->header_image neq ''} panel-heading-illustrated{/if}">
     <h2 class="panel-title">{$i->headline}</h2>
     {if ($i->slug eq 'posts_on_this_day_popular_flashback')}
-    <p class="panel-subtitle">{$i->text|link_usernames_to_twitter}</p>{/if}
+    <p class="panel-subtitle">{$i->text|link_usernames_to_network:$i->network}</p>{/if}
     {if $i->header_image neq ''}
     <img src="{insert name='user_avatar' avatar_url=$i->header_image image_proxy_sig=$image_proxy_sig}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
     {/if}
@@ -133,7 +133,7 @@
       {if isset($i->related_data.hero_image.img_link)}</a>{/if}</figure>{/if}
       <div class="panel-body-inner">
       {if $i->text neq '' and $i->slug neq 'posts_on_this_day_popular_flashback'}
-        <p id="insight-text-{$i->id}">{$i->text|link_usernames_to_twitter}</p>{/if}
+        <p id="insight-text-{$i->id}">{$i->text|link_usernames_to_network:$i->network}</p>{/if}
 
       {if $i->filename neq ''}
           {assign var='tpl_filename' value=$i->filename|cat:'.tpl'}
