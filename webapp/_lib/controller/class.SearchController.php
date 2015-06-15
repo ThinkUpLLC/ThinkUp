@@ -96,7 +96,7 @@ class SearchController extends ThinkUpAuthController {
 
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $users = $follow_dao->searchFollowers($keywords, $network, $user_id, $page_number,
-            $page_count=(self::PAGE_RESULTS_COUNT+1));
+            $page_count=(self::PAGE_RESULTS_COUNT));
 
         if (isset($users) && sizeof($users) > 0) {
             if (sizeof($posts) == (self::PAGE_RESULTS_COUNT+1)) {

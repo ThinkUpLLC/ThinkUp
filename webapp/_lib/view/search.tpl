@@ -24,9 +24,13 @@
   <div class="panel-heading ">
     <h2 class="panel-title">
       {if $i.search_results|@count > 0}
-        Looks like {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio.
+        {if $i.search_results|@count == 20} {* This is a full page of followers, there may be more beyond this *}
+        Lots of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio
+        {else}
+        {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio
+        {/if}
       {else}
-        Hmm, no luck with "{$smarty.get.q|replace:'name:':''}" for {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}.
+        Hmm, no luck finding "{$smarty.get.q|replace:'name:':''}" in {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s followers bios
       {/if}
     </h2>
     <!--
