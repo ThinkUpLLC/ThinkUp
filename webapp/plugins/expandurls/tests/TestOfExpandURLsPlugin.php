@@ -70,11 +70,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders = $this->buildData();
 
         //use fake Bitly API key
-        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
         'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
 
         //use fake Bitly login name
-        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
+        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
         'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
 
         $this->simulateLogin('admin@example.com', true);
@@ -552,7 +552,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $crawler_plugin_registrar = PluginRegistrarCrawler::getInstance();
         $config = Config::getInstance();
 
-        $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-4',
+        $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
         'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);

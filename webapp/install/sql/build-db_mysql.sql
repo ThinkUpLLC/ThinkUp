@@ -588,6 +588,9 @@ INSERT INTO tu_plugins (name , folder_name, description, author, homepage, versi
 VALUES ('Facebook', 'facebook', 'Facebook support', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
+VALUES ('Instagram', 'instagram', 'Instagram support', 'Dimosthenis Nikoudis', 'http://thinkup.com', '0.01', '1');
+
+INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
 VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 'http://thinkup.com', '0.01', '1');
 
 INSERT INTO tu_plugins (name , folder_name, description, author, homepage, version, is_active )
