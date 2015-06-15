@@ -66,10 +66,10 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
         $this->addPluginOptionRequiredMessage('instagram_api_secret',
         'The instagram plugin requires a valid Client Secret.');
 
-        $max_crawl_time_label = 'Max crawl time in minutes';
-        $max_crawl_time = array('name' => 'max_crawl_time', 'label' => $max_crawl_time_label,
-        'default_value' => '20', 'advanced'=>true, 'size' => 3);
-        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_crawl_time);
+        $max_api_calls_label = 'API calls per crawl (5000 max)';
+        $max_api_calls = array('name' => 'max_api_calls', 'label' => $max_api_calls_label,
+        'default_value' => '2500', 'advanced'=>true, 'size' => 5);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls);
 
         $this->addToView('thinkup_site_url', Utils::getApplicationURL());
 

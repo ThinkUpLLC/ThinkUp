@@ -38,10 +38,6 @@ class InstagramCrawler {
      */
     var $logger;
     /**
-     * @var int Maximum amount of time the crawler should spend fetching a profile or page in seconds
-     */
-    var $max_crawl_time;
-    /**
      * @var InstagramAPIAccessor
      */
     var $api_accessor;
@@ -54,11 +50,10 @@ class InstagramCrawler {
      * @param InstagramInstance $instance
      * @return InstagramCrawler
      */
-    public function __construct($instance, $access_token, $max_crawl_time) {
+    public function __construct($instance, $access_token, $max_api_calls) {
         $this->instance = $instance;
         $this->logger = Logger::getInstance();
-        $this->max_crawl_time = $max_crawl_time;
-        $this->api_accessor = new InstagramAPIAccessor($access_token);
+        $this->api_accessor = new InstagramAPIAccessor($access_token, $max_api_calls);
     }
     /**
      * If user doesn't exist in the datastore, fetch details from instagram API and insert into the datastore.

@@ -58,9 +58,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('instagram', true); //get cached
 
-        $max_crawl_time = isset($options['max_crawl_time']) ? $options['max_crawl_time']->option_value : 20;
-        //convert to seconds
-        $max_crawl_time = $max_crawl_time * 60;
+        $max_api_calls = isset($options['max_api_calls']) ? $options['max_api_calls']->option_value : 2500;
 
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
@@ -77,7 +75,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
             $access_token = $tokens['oauth_access_token'];
 
             $instance_dao->updateLastRun($instance->id);
-            $instagram_crawler = new InstagramCrawler($instance, $access_token, $max_crawl_time);
+            $instagram_crawler = new InstagramCrawler($instance, $access_token, $max_api_calls);
             $dashboard_module_cacher = new DashboardModuleCacher($instance);
             try {
                 /**

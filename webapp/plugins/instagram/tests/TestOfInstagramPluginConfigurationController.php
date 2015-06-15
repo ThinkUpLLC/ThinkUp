@@ -151,7 +151,7 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_instagram_app_id/', $output); // should have no app id
         $this->assertNoPattern('/plugin_options_error_message_instagram_api_secret/', $output); // no secret
-        $this->assertNoPattern('/plugin_options_max_crawl_time/', $output); // no advanced option
+        $this->assertNoPattern('/plugin_options_max_api_calls/', $output); // no advanced option
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
@@ -184,7 +184,7 @@ class TestOfInstagramPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/Pause crawling/', $output);
         $this->assertPattern('/Save Settings/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_message_instagram_api_secret/', $output); // secret option
-        $this->assertPattern('/plugin_options_max_crawl_time/', $output); // advanced option
+        $this->assertPattern('/plugin_options_max_api_calls/', $output); // advanced option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
