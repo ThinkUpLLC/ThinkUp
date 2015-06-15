@@ -9,75 +9,50 @@
     {$message_body}
     </div>
   {/if}
-  <div class="stream stream-permalink">
+  <div class="stream {if count($instances_search_results) eq 1} stream-permalink{/if}">
 
     <div class="date-group{if $i->date|relative_day eq "today"} today{/if}">
         <div class="date-marker">
 
             <div class="relative"></div>
-            <div class="absolute"></div>
         </div>
 
-<div class="panel panel-default insight insight-default insight-{$i->slug|replace:'_':'-'}
-  {if $i->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
-  isset($i->related_data.hero_image) and $i->emphasis > '1'}insight-wide{/if}" id="insight-{$i->id}">
+{foreach from=$instances_search_results key=ir item=i name=instance_results}
+<div class="panel panel-default insight insight-default insight-{$ir.instance->slug|replace:'_':'-'}
+  {if $ir.instance->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
+  isset($ir.instance->related_data.hero_image) and $ir.instance->emphasis > '1'}insight-wide{/if}" id="insight-{$ir.instance->id}">
   <div class="panel-heading ">
     <h2 class="panel-title">
-        {if $smarty.get.c eq 'posts'}
-          {if $posts|@count > 0}
-            Are these the posts you were looking for?
-          {else}
-            Hmm, didn't find anything for that.
-          {/if}
-        {/if}
-        {if $smarty.get.c eq 'followers'}
-          {if $users|@count > 0}
-            Looks like {$users|@count} people answer to "{$smarty.get.q}".
-          {else}
-            Hmm, no luck looking for "{$smarty.get.q}" people.
-          {/if}
-        {/if}
+      {if $i.search_results|@count > 0}
+        Looks like {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio.
+      {else}
+        Hmm, no luck with "{$smarty.get.q|replace:'name:':''}" for {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}.
+      {/if}
     </h2>
     <!--
     <p class="panel-subtitle">
         Here are the {if $current_page eq 1}first {$posts|@count} {/if}results
     </p>
     -->
-    {if $i->header_image neq ''}
-    <img src="{$i->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
+    {if $i.instance->header_image neq ''}
+    <img src="{$i.instance->header_image|use_https}" alt="" width="50" height="50" class="img-circle userpic userpic-featured">
     {/if}
   </div>
   <div class="panel-desktop-right">
     <div class="panel-body">
       <div class="panel-body-inner">
-    {if $smarty.get.c eq 'posts'}
-        {if $posts|@count > 0}
-            {include file=$tpl_path|cat:"_posts.tpl" posts=$posts}
+        {if $i.search_results|@count > 0}
+          {include file=$tpl_path|cat:"_users.tpl" users=$i.search_results }
         {else}
-         <p>Sorry, ThinkUp couldn't find anything for your search.</p>
+          <p>Seems like none of of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$smarty.get.q|replace:'name:':''}" in their bio.</p>
         {/if}
-    {/if}<!-- / posts -->
-    {if $smarty.get.c eq 'searches'}
-        {if $posts|@count > 0}
-            {include file=$tpl_path|cat:"_posts.tpl" posts=$posts}
-        {else}
-         <p>ThinkUp couldn't find any matching results.</p>
-        {/if}
-    {/if}<!-- / searches -->
-    {if $smarty.get.c eq 'followers'}
-        {if $users|@count > 0}
-          {include file=$tpl_path|cat:"_users.tpl" users=$users }
-        {else}
-          <p>Sorry, that search doesn't turn up any followers.</p>
-        {/if}
-    {/if}<!-- / followers -->
 
         </div><!-- / panel-body-inner -->
       </div><!-- / panel-body -->
     <div class="panel-footer">
       <div class="insight-metadata">
         <i class="fa fa-{$u->network}-square icon icon-network"></i>
-        <a class="permalink" href="{$permalink}">{$i->date|date_format:"%b %e"}</a>
+        <a class="permalink" href="{$permalink}">{$ir.instance->date|date_format:"%b %e"}</a>
       </div>
       <div class="share-menu">
         <i class="fa fa-lock icon icon-share text-muted" title="Search results are private."></i>
@@ -85,10 +60,12 @@
     </div>
   </div>
 </div>
-
-
+{/foreach}
 
     <div class="stream-pagination-control">
+
+      <p class="text-muted ">Results seem incomplete? ThinkUp may not have captured your latest data.</p>
+
       <ul class="pager">
       {if $next_page}
         <li class="previous">
@@ -102,6 +79,7 @@
       {/if}
       </ul>
     </div>
+
 
   </div><!-- end stream -->
 </div><!-- end container -->

@@ -64,28 +64,32 @@
           {/if}
           <a class="navbar-brand" href="{$logo_link}"><strong>Think</strong>Up</span></a>
 
-            {if $logged_in_user && !$smarty.get.m && !$smarty.get.p && $instances && !isset($thinkupllc_endpoint)}
+            {if $logged_in_user && $instances && !$smarty.get.m && !$smarty.get.p}
 
-                <!--search posts-->
-                <form class="navbar-form navbar-search dropdown hidden-xs" style="" method="get" action="javascript:searchMe('{$site_root_path}search.php?u={$instances[0]->network_username|urlencode}&amp;n={$instances[0]->network|urlencode}&amp;c=posts&amp;q=');">
+            {assign var='do_show_search' value=false}
 
-                    <input type="text" id="search-keywords" class="search-query dropdown-toggle" data-toggle="dropdown" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}"{else}placeholder="Search"{/if} />
+            {foreach from=$instances key=tid item=i}
+                {if $i->network eq 'twitter' || $i->network eq 'instagram'}
+                  {assign var='do_show_search' value=true}
+                  {assign var='default_username' value=$i->network_username}
+                {/if}
+            {/foreach}
 
-                    <ul id="search-refine" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    {foreach from=$instances key=tid item=i}
-                        <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n={$i->network|urlencode}&amp;c=posts&amp;q=');" href="#"><i class="fa fa-{$i->network}{if $i->network eq 'google+'} fa-google-plus{/if} icon-muted fa-2x"></i> Find <span class="searchterm"></span> in {if $i->network eq 'twitter'}@{/if}{$i->network_username}'s {if $i->network eq 'twitter'}tweets{elseif $i->network eq 'foursquare'}Foursquare check-ins{else}{$i->network|ucwords} posts{/if}</a></li>
-                        {if $i->network eq 'twitter'}
-                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search @{$i->network_username}'s followers' bios for <span class="searchterm"></span></a></li>
-                            <li><a onclick="searchMe('{$site_root_path}search.php?u={$i->network_username|urlencode}&amp;n=twitter&amp;c=followers&amp;q=name:');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search @{$i->network_username}'s followers for people named <span class="searchterm"></span></a></li>
-                        {/if}
-                    {/foreach}
-                    {foreach from=$saved_searches key=tid item=i}
-                        <li ><a onclick="searchMe('{$site_root_path}search.php?u={$i.network_username|urlencode}&amp;n=twitter&amp;c=searches&amp;k={$i.hashtag|urlencode}&amp;q=');" href="#"><i class="fa fa-twitter icon-muted fa-2x"></i> Search tweets which contain {$i.hashtag} for <span class="searchterm"></span></a></li>
-                    {/foreach}
-                    </ul>
+                {if $do_show_search}
+                <!--search box-->
+                <form class="navbar-form navbar-search hidden-xs" style="" method="get" action="{$site_root_path}search.php">
+
+                    <input type="search" id="search-keywords" name="q" class="search-query" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
 
                 </form>
+                {/if}<!-- // do_show_search -->
 
+            {else}<!-- not logged in -->
+              {if !$smarty.get.m && !$smarty.get.p}
+                <form class="navbar-form navbar-search dropdown hidden-xs">
+                  <input type="search" id="search-keywords" class="search-query" autocomplete="off" placeholder="Search" data-toggle="popover" data-trigger="click focus" title="<a href='{$site_root_path}session/login.php{if isset($redirect_url)}?redirect={$redirect_url}{/if}' class='btn btn-default btn-signup btn-sm'>Log in</a> to search" data-html="true" data-content="Not a member yet? <a href='https://thinkup.com/?utm_source=permalink_tout&utm_medium=banner&utm_campaign=touts' style='text-decoration: underline;' >Join now!</a>" data-placement="bottom" onfocus="$('[data-toggle=popover]').popover()" />
+                </form>
+              {/if}
             {/if}
 
         </div>
