@@ -709,7 +709,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
                 $counter++;
             }
         }
-        $q .= "ORDER BY first_seen DESC ";
+        $q .= "ORDER BY follower_count DESC ";
         if ($page_count > 0) {
             $q .= "LIMIT :start_on_record, :limit;";
         } else {
