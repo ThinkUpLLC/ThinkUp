@@ -124,7 +124,8 @@ class TestOfInterestingFollowersInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($related['people'], 'Array');
         $this->assertEqual($related['people'][0]->username,'popular1');
         $rendered = $this->getRenderedInsightInHTML($result);
-        $this->assertPattern('/<div class="user-name">.*popular1/', $rendered);
+        $this->assertPattern('/<div class="user-name">/', $rendered);
+        $this->assertPattern('/popular1/', $rendered);
         $this->assertEqual('', $result->text);
         $this->assertEqual('https://pbs.twimg.com/profile_images/476939811702718464/Qq0LPfRy_400x400.jpeg',
             $result->header_image);
