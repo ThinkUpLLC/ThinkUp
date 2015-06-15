@@ -18,9 +18,7 @@
         </div>
 
 {foreach from=$instances_search_results key=ir item=i name=instance_results}
-<div class="panel panel-default insight insight-default insight-{$ir.instance->slug|replace:'_':'-'}
-  {if $ir.instance->emphasis > '1'}insight-hero{/if} insight-{$color|strip} {if
-  isset($ir.instance->related_data.hero_image) and $ir.instance->emphasis > '1'}insight-wide{/if}" id="insight-{$ir.instance->id}">
+<div class="panel panel-default insight insight-default insight-{$ir|replace:'_':'-'} insight-{$color|strip}" id="insight-{$ir.instance->id}">
   <div class="panel-heading ">
     <h2 class="panel-title">
       {if $i.search_results|@count > 0}
