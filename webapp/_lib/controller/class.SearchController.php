@@ -61,14 +61,20 @@ class SearchController extends ThinkUpAuthController {
                     //Foreach instance
                     foreach ($instances as $instance) {
                         if ($instance->network !== 'facebook') {
-                            $arr_key = $instance->network_user_id.'-'.$instance->network;
-                            $instances_search_results[$arr_key]['instance'] = $instance;
                             //Get follower search results
-                            $instances_search_results[$arr_key]['search_results'] =
-                                self::searchFollowers($instance->network_user_id, $instance->network);
+                            $results = self::searchFollowers($instance->network_user_id, $instance->network);
+                            //Unique array key
+                            $arr_key = count($results)."-"
+                                .$instance->network_user_id.'-'.$instance->network;
+                            $instances_search_results[$arr_key]['instance'] = $instance;
+                            $instances_search_results[$arr_key]['search_results'] = $results;
                             $arr_key = null;
+                            $results = null;
                         }
                     }
+                    //Order sets of results by network with most results first
+                    ksort($instances_search_results, SORT_STRING);
+                    $instances_search_results = array_reverse($instances_search_results);
                     $this->addToView('instances_search_results', $instances_search_results);
                 }
             } else {
