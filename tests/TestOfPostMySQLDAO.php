@@ -4739,9 +4739,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $year = date('Y');
         $user = "a_user";
         $network = "twitter";
+        $post_id = 189;
         for ($i=0; $i<5; $i++) {
+            $post_id ++;
             $builders[] = FixtureBuilder::build('posts',
                 array(
+                    'post_id' => $post_id,
                     'post_text' => 'This is very shared',
                     'pub_date' => "$year-02-07 $i0:$i0:00",
                     'author_username' => $user,
@@ -4749,16 +4752,20 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 )
             );
         }
+        $post_id ++;
         $builders[] = FixtureBuilder::build('posts',
             array(
+                'post_id' => $post_id,
                 'post_text' => 'This is very shared',
                 'pub_date' => "$year-02-06",
                 'author_username' => $user,
                 'network' => $network
             )
         );
+        $post_id ++;
         $builders[] = FixtureBuilder::build('posts',
             array(
+                'post_id' => $post_id,
                 'post_text' => 'This is very shared',
                 'pub_date' => "$year-02-08",
                 'author_username' => $user,
