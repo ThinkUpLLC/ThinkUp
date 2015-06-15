@@ -1068,4 +1068,41 @@ class InstagramCrawler {
         }
         return $added_likes;
     }
+
+    /**
+     * Update profiles of users who are friends of the instance user, and haven't been checked in 2 days.
+     * @return void
+     */
+    public function updateStaleFriendsProfiles() {
+        if (!isset($this->user)) {
+            //Force-refresh instance user in data store
+            $this->user = self::fetchUser($this->instance->network_user_id, 'Owner info',
+                $this->instance->network_username, null, null, true);
+        }
+
+        if (isset($this->user)) {
+            //Get stalest friends
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
+            $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'instagram', $number_days_old = 2,
+                $limit = 25);
+            $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
+            $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+
+            while (isset($stalest_friends) && count($stalest_friends) > 0) {
+                try {
+                    foreach ($stalest_friends as $user) {
+                        $this->fetchUser($user->user_id, "Friends stale update", $user->username, $user->full_name,
+                            $user->avatar, true);
+                    }
+                    $stalest_friends = $follow_dao->getStalestFriends($this->user->user_id, 'instagram',
+                        $number_days_old = 2, $limit = 25);
+                    $status_message = count($stalest_friends).' friends haven\'t been updated recently.';
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                } catch (APICallLimitExceededException $e) {
+                    $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
+                    break;
+                }
+            }
+        }
+    }
 }
