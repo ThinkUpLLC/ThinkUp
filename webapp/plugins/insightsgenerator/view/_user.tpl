@@ -17,7 +17,7 @@ $bio_after (optional) If this is a bio change, the current bio
         <div class="user-about">
             <div class="user-name"><a href="{include file=$tpl_path|cat:"_user.networklink.tpl" network=$user->network user_id=$user->user_id username=$user->username}">{if $user->full_name}{$user->full_name}{else}{$user->username}{/if} <i class="fa fa-{$user->network} icon icon-network"></i></a></div>
             <div class="user-text">
-                <p>{if $user->network eq 'twitter'}
+                <p>{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                     {$user->follower_count|number_format} followers
                 {else}
                     {if isset($user->other.total_likes)}
