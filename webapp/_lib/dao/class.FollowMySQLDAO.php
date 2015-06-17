@@ -627,6 +627,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
     public function searchFollowers(array $keywords, $network, $user_id, $page_number=1, $page_count=20) {
+        $start_on_record = ($page_number - 1) * $page_count;
         //parse advanced operators
         $name_keywords = array();
         $description_keywords = array();

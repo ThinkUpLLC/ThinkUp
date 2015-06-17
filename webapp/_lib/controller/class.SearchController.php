@@ -35,6 +35,11 @@ class SearchController extends ThinkUpAuthController {
      * @var int
      */
     const PAGE_RESULTS_COUNT = 20;
+    /**
+     * Query
+     * @var str
+     */
+    var $query;
 
     public function authControl() {
         $this->setViewTemplate('search.tpl');
@@ -51,11 +56,15 @@ class SearchController extends ThinkUpAuthController {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
             if (isset($_GET['q'])) {
-                if ($_GET['q'] == '') {
+                //Get an owner's instances
+                $instances = $instance_dao->getByOwner($owner);
+
+                $this->query = htmlentities(trim($_GET['q']));
+                $this->addToView('query', $this->query);
+
+                if ($this->query == '') {
                     $this->addErrorMessage("Uh-oh. Your search term is missing. Please try again.");
                 } else {
-                    //Get an owner's instances
-                    $instances = $instance_dao->getByOwner($owner);
                     $instances_search_results = array();
                     //Foreach instance
                     foreach ($instances as $instance) {
@@ -91,7 +100,7 @@ class SearchController extends ThinkUpAuthController {
      */
     private function searchFollowers($user_id, $network) {
         $page_number = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
-        $keywords = explode(' ', $_GET['q']);
+        $keywords = explode(' ', $this->query);
 
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $users = $follow_dao->searchFollowers($keywords, $network, $user_id, $page_number,

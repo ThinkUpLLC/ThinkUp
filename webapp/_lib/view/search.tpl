@@ -23,12 +23,12 @@
             <h2 class="panel-title">
               {if $i.search_results|@count > 0}
                 {if $i.search_results|@count == 20} {* This is a full page of followers, there may be more beyond this *}
-                Lots of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio
+                Lots of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$query}" in their bio
                 {else}
-                {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$smarty.get.q|replace:'name:':''}" in their bio
+                {$i.search_results|@count} of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers {if $i.search_results|@count eq 1}has{else}have{/if} "{$query}" in their bio
                 {/if}
               {else}
-                Aw, no "{$smarty.get.q|replace:'name:':''}" here!
+                Aw, no "{$query}" here!
               {/if}
             </h2>
             {if $i.instance->header_image neq ''}
@@ -44,7 +44,7 @@
                 {if $i.search_results|@count > 0}
                   {include file=$tpl_path|cat:"_users.tpl" users=$i.search_results }
                 {else}
-                  <p>Seems like none of of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$smarty.get.q|replace:'name:':''}" in their bio.</p>
+                  <p>Seems like none of of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$query}" in their bio.</p>
                 {/if}
 
                 </div><!-- / panel-body-inner -->
