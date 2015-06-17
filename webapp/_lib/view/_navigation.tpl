@@ -47,12 +47,21 @@
           <button class="btn menu-trigger">
             <i class="fa fa-bars"></i>
           </button>
+
           {else}
           <div class="navbar-actions">
             <a href="{$thinkupllc_endpoint}" class="btn btn-sm btn-default btn-login btn-transparent">Login</a>
             <a href="https://thinkup.com/" class="btn btn-sm btn-default btn-signup">Sign Up</a>
           </div>
           {/if}
+
+          {if $display_search_box}
+          <button type="button" class="navbar-toggle collapsed btn btn-lg" data-toggle="collapse" data-target="#search-form" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="fa fa-search"></span>
+          </button>
+          {/if}
+
           {*
             If any visitor is logged in or on a permalink page, link to the stream.
             If the user is on logged out, on thinkup.com, and visiting the stream, link to the homepage.
@@ -78,12 +87,15 @@
               {/if}
 
               {if $do_show_search}
+
               <!--search box-->
-              <form class="navbar-form navbar-search hidden-xs" style="" method="get" action="{$site_root_path}search.php">
+              <div class="navbar-collapse collapse in" id="search-form">
+                <form class="navbar-form navbar-search" style="" method="get" action="{$site_root_path}search.php">
 
-                  <input type="search" id="search-keywords" name="q" class="search-query" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
+                    <input type="text" id="search-keywords" name="q" class="search-query" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
 
-              </form>
+                </form>
+              </div>
               {/if}<!-- // do_show_search -->
 
             {else}<!-- not logged in

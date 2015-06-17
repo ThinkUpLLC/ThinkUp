@@ -865,14 +865,44 @@ a:hover {
   color: #2785d3;
 }
 .navbar-default .navbar-header .navbar-search {
-  position: absolute;
-  padding: 0;
   color: #2785d3;
-  top: 3px;
-  right: 10px;
   margin: 0;
   background: transparent;
   border: 0;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .navbar-default .navbar-header .navbar-search {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+  }
+}
+.navbar-default .navbar-header .in .navbar-search {
+  padding-bottom: 8px;
+}
+.navbar-default .navbar-collapse {
+  border-top: none;
+  box-shadow: none;
+  border-color: transparent;
+  padding: 2px 8px 0 8px;
+}
+.navbar-default .navbar-form {
+  box-shadow: none;
+}
+.navbar-default .navbar-toggle {
+  border: none;
+  padding: 2px;
+  margin: 4px 12px 0 0;
+  border-radius: 0;
+  color: white;
+}
+.navbar-default .navbar-toggle.collapsed {
+  color: #2785d3;
+}
+.navbar-default .navbar-toggle:hover {
+  color: white;
+  background-color: transparent;
 }
 .navbar-default .navbar-actions {
   position: absolute;
@@ -897,6 +927,7 @@ a:hover {
   padding: 4px;
   color: black;
   background-color: #2785d3;
+  width: 100%;
 }
 .navbar-default #search-keywords::-webkit-input-placeholder {
   color: white;

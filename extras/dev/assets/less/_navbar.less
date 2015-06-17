@@ -55,14 +55,49 @@
         }
 
         .navbar-search {
-            position: absolute;
-            padding: 0;
             color: #2785d3;
-            top: 3px;
-            right: 10px;
             margin: 0;
             background: transparent;
             border: 0;
+            padding: 0;
+
+            @media (min-width: 768px) {
+                position: absolute;
+                top: 3px;
+                right: 10px;
+            }
+        }
+
+        .in .navbar-search {
+            padding-bottom: 8px;
+        }
+    }
+
+    .navbar-collapse {
+        border-top: none;
+        box-shadow: none;
+        border-color: transparent;
+        padding: 2px 8px 0 8px;
+    }
+
+    .navbar-form {
+        box-shadow: none;
+    }
+
+    .navbar-toggle {
+        border: none;
+        padding: 2px;
+        margin: 4px 12px 0 0;
+        border-radius: 0;
+        color: white;
+
+        &.collapsed {
+            color: @blue-darker;
+        }
+
+        &:hover {
+            color: white;
+            background-color: transparent;
         }
     }
 
@@ -97,6 +132,7 @@
         padding: 4px;
         color: black;
         background-color: @blue-darker;
+        width: 100%;
 
         &::-webkit-input-placeholder {
            color: white;
