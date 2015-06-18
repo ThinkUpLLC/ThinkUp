@@ -135,20 +135,21 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     }
                 }
 
-                $my_insight = new Insight();
-                $my_insight->slug = 'weekly_graph';
-                $my_insight->instance_id = $instance->id;
-                $my_insight->date = $this->insight_date;
-                $my_insight->headline = $insight_headline;
-                $my_insight->text = $insight_text;
-                $my_insight->header_image = $user->avatar;
-                $my_insight->filename = basename(__FILE__, ".php");
-                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                //Only show this insight if there's a chart with more than 3 posts on it
                 if (count($posts) > 3) {
+                    $my_insight = new Insight();
+                    $my_insight->slug = 'weekly_graph';
+                    $my_insight->instance_id = $instance->id;
+                    $my_insight->date = $this->insight_date;
+                    $my_insight->headline = $insight_headline;
+                    $my_insight->text = $insight_text;
+                    $my_insight->header_image = $user->avatar;
+                    $my_insight->filename = basename(__FILE__, ".php");
+                    $my_insight->emphasis = Insight::EMPHASIS_MED;
                     $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
                     $my_insight->setPosts($formatted_posts);
+                    $this->insight_dao->insertInsight($my_insight);
                 }
-                $this->insight_dao->insertInsight($my_insight);
             }
         }
 
