@@ -2,7 +2,7 @@
 /*
  Plugin Name: Outreach Punchcard
  Description: What times of day your posts get the biggest reaction.
- When: Saturdays for Twitter, Tuesdays otherwise
+ When: 7th for Twitter, 14th for Facebook, 23rd for Instagram
  */
 
 /**
@@ -32,20 +32,40 @@
  */
 
 class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlugin {
+    /**
+     * Slug for this insight
+     **/
+    var $slug = 'outreach_punchcard';
+
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if ($instance->network == 'twitter') {
-            $day_of_week = 6;
-        } else {
-            $day_of_week = 2;
+        $since_date = date("Y-m-d");
+        $filename = basename(__FILE__, ".php");
+        $regenerate = false;
+
+        switch ($instance->network) {
+            case 'twitter':
+                $day_of_month = 7;
+                break;
+            case 'facebook':
+                $day_of_month = 14;
+                break;
+            case 'instagram':
+                $day_of_month = 23;
+                break;
+            default:
+                $day_of_month = 23;
         }
-        $should_generate_insight = self::shouldGenerateWeeklyInsight('outreach_punchcard', $instance,
-            $insight_date='today', $regenerate_existing_insight=false, $day_of_week=$day_of_week,
-            count($last_week_of_posts));
+
+        $should_generate_insight = self::shouldGenerateMonthlyInsight($this->slug, $instance,
+            $insight_date=$since_date, $regenerate_existing_insight=$regenerate, $day_of_month = $day_of_month,
+            $count_related_posts=null, $excluded_networks=null, $enable_bonus_alternate_day = true);
 
         if ($should_generate_insight) {
+            $this->logger->logInfo("Should generate", __METHOD__.','.__LINE__);
+
             $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
@@ -62,20 +82,24 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
             $now = new DateTime();
             $offset = timezone_offset_get($owner_timezone, $now);
 
-
             $post_dao = DAOFactory::getDAO('PostDAO');
+
+            $last_months_posts = $post_dao->getAllPostsByUsernameOrderedBy($instance->network_username,
+                $instance->network, $count=null, $order_by="pub_date", $in_last_x_days = 30,
+                $iterator = false, $is_public = false);
+
             $punchcard = array();
             $responses_chron = array();
             $response_avg_timediffs = array();
             for ($hotd = 0; $hotd < 24; $hotd++) {
-                for ($dotw = 1; $dotw <= 7; $dotw++) {
-                    $punchcard['posts'][$dotw][$hotd] = 0;
-                    $punchcard['responses'][$dotw][$hotd] = 0;
+                for ($dotm = 1; $dotm <= 30; $dotm++) {
+                    $punchcard['posts'][$dotm][$hotd] = 0;
+                    $punchcard['responses'][$dotm][$hotd] = 0;
                 }
                 $responses_chron[$hotd] = 0;
             }
 
-            foreach ($last_week_of_posts as $post) {
+            foreach ($last_months_posts as $post) {
                 $responses = array();
                 $responses = array_merge(
                 (array)$post_dao->getRepliesToPost($post->post_id, $post->network),
@@ -84,17 +108,17 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
                 foreach ($responses as $response) {
                     $response_pub_date = new DateTime($response->pub_date);
-                    $response_dotw = date('N', (date('U', strtotime($response->pub_date)+$offset))); // Day of week
+                    $response_dotm = date('j', (date('U', strtotime($response->pub_date)+$offset))); // Day of month
                     $response_hotd = date('G', (date('U', strtotime($response->pub_date)+$offset))); // Hour of day
-                    $punchcard['responses'][$response_dotw][$response_hotd]++;
+                    $punchcard['responses'][$response_dotm][$response_hotd]++;
 
                     $responses_chron[$response_hotd]++;
                 }
 
                 $post_pub_date = new DateTime($post->pub_date);
-                $post_dotw = date('N', (date('U', strtotime($post->pub_date)+$offset))); // Day of the week
+                $post_dotm = date('j', (date('U', strtotime($post->pub_date)+$offset))); // Day of the month
                 $post_hotd = date('G', (date('U', strtotime($post->pub_date)+$offset))); // Hour of the day
-                $punchcard['posts'][$post_dotw][$post_hotd]++;
+                $punchcard['posts'][$post_dotm][$post_hotd]++;
             }
 
             arsort($responses_chron);
@@ -102,7 +126,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
             $insight_text = '';
 
-            if ($most_responses['value'] > 0) {
+            if ($most_responses['value'] > 2) {
                 $time1_low_hotd = $most_responses['key'];
                 $time1_high_hotd = $time1_low_hotd + 1;
 
@@ -112,7 +136,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
                 $plural = $most_responses['value']==1 ? InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                $insight_text = "Last week, ". $this->username."'s "
+                $insight_text = "In the past month, ". $this->username."'s "
                     . $this->terms->getNoun('post', InsightTerms::PLURAL)
                     ." got the biggest response between <strong>".$time1_low." and ".$time1_high."</strong> - "
                     .$most_responses['value']." "
@@ -135,7 +159,7 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 }
 
                 $insight_text .= $comparison_text;
-                $headline = $this->username."'s best time is <strong>around " . $time1_low . "</strong>";
+                $headline = $this->username."'s best time is around " . $time1_low;
 
                 $optimal_hour = substr($time1_low, 0, -2);
 
@@ -144,18 +168,21 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
 
                 //REQUIRED: Set the insight's required attributes
                 $my_insight->instance_id = $instance->id;
-                $my_insight->slug = 'outreach_punchcard'; //slug to label this insight's content
+                $my_insight->slug = $this->slug; //slug to label this insight's content
                 $my_insight->date = $this->insight_date; //date of the data this insight applies to
                 $my_insight->headline = $headline;
                 $my_insight->text = $insight_text;
                 $my_insight->header_image = '';
-                $my_insight->emphasis = Insight::EMPHASIS_MED;
+                $my_insight->emphasis = Insight::EMPHASIS_HIGH;
                 $my_insight->filename = basename(__FILE__, ".php");
                 // $my_insight->related_data = $punchcard;
                 $my_insight->related_data = $optimal_hour;
 
                 $this->insight_dao->insertInsight($my_insight);
 
+            } else {
+                $this->logger->logInfo("No insight: Most responses is ".Utils::varDumpToString($most_responses),
+                    __METHOD__.','.__LINE__);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);

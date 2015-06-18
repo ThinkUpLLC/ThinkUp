@@ -50,38 +50,17 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $cfg = Config::getInstance();
         $install_timezone = new DateTimeZone($cfg->getValue('timezone'));
         $owner_timezone = new DateTimeZone($test_timezone='America/Los_Angeles');
-
-        // Get data ready that insight requires
-        $posts = self::getTestPostObjects();
-
-        $post_pub_date = new DateTime($posts[0]->pub_date);
         $now = new DateTime();
         $offset = timezone_offset_get($owner_timezone, $now) - timezone_offset_get($install_timezone, $now);
-        $post_dotw = date('N', (date('U', strtotime($posts[0]->pub_date)))+ timezone_offset_get($owner_timezone, $now));
-        // Response between 1pm and 2pm install time
-        $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 13:01:13'));
-        $builders[] = FixtureBuilder::build('posts', array('id'=>137, 'post_id'=>137, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a reply.', 'source'=>'web',
-        'pub_date'=>$time, 'in_reply_to_post_id'=>133, 'reply_count_cache'=>0, 'is_protected'=>0));
 
-        // Response between 1pm and 2pm install time
-        $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 13:13:56'));
-        $builders[] = FixtureBuilder::build('posts', array('id'=>138, 'post_id'=>138, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'post_text'=>'This is a reply.', 'source'=>'web',
-        'pub_date'=>$time, 'in_reply_to_post_id'=>135, 'reply_count_cache'=>0, 'is_protected'=>0));
-
-        // Response between 11am and 12pm install time
-        $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 11:07:42'));
-        $builders[] = FixtureBuilder::build('posts', array('id'=>139, 'post_id'=>139, 'author_user_id'=>7654321,
-        'author_username'=>'twitteruser', 'author_fullname'=>'Twitter User', 'author_avatar'=>'avatar.jpg',
-        'network'=>'twitter', 'source'=>'web',
-        'post_text'=>'RT @testeriffic: New Year\'s Eve! Feeling very gay today, but not very homosexual.',
-        'pub_date'=>$time, 'in_retweet_of_post_id'=>134, 'reply_count_cache'=>0, 'is_protected'=>0));
-        $post_hotd = date('G', (date('U', strtotime($posts[0]->pub_date)))+ timezone_offset_get($owner_timezone, $now));
-
+        // Get data ready that insight requires
         $builders = array();
+
+        $posts = self::getTestPostObjects();
+        $post_arrays = self::getTestPostArrays();
+        foreach ($post_arrays as $post_array) {
+            $builders[] = FixtureBuilder::build('posts', $post_array);
+        }
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'7654321', 'user_name'=>'twitteruser',
         'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
@@ -145,23 +124,19 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('outreach_punchcard', 10, $today);
-        $this->debug(Utils::varDumpToString($result));
+        //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern("/\@testeriffic's best time is <strong>around $around_time<\/strong>/", $result->headline);
+        $this->assertPattern("/\@testeriffic's best time is around $around_time/", $result->headline);
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies in all/', $result->text);
         $this->assertPattern('/That\'s compared to 1 response/', $result->text);
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
 
-        //Test email rendering
-        $email_insight = $this->getRenderedInsightInEmail($result);
-        $this->debug($email_insight);
-
         //Ugh, this number isn't serialized before it's stored, so we have to serialize it here
         //TODO: Refactor how this number is stored in related_data
         $result->related_data = serialize($result->related_data);
-        $html_insight = $this->getRenderedInsightInHTML($result);
-        $this->debug($html_insight);
+
+        $this->dumpRenderedInsight($result, $instance);
     }
 
     public function testOutreachPunchcardInsightOneResponse() {
@@ -170,15 +145,19 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $owner_timezone = new DateTimeZone($test_timezone='America/Los_Angeles');
 
         // Get data ready that insight requires
+        $builders = array();
+
         $posts = self::getTestPostObjects();
+        $post_arrays = self::getTestPostArrays();
+        foreach ($post_arrays as $post_array) {
+            $builders[] = FixtureBuilder::build('posts', $post_array);
+        }
 
         $post_pub_date = new DateTime($posts[0]->pub_date);
         $now = new DateTime();
         $offset = timezone_offset_get($owner_timezone, $now) - timezone_offset_get($install_timezone, $now);
         $post_dotw = date('N', (date('U', strtotime($posts[0]->pub_date)))+ timezone_offset_get($owner_timezone, $now));
         $post_hotd = date('G', (date('U', strtotime($posts[0]->pub_date)))+ timezone_offset_get($owner_timezone, $now));
-
-        $builders = array();
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>'7654321', 'user_name'=>'twitteruser',
         'full_name'=>'Twitter User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
@@ -217,21 +196,12 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin = new OutreachPunchcardInsight();
         $insight_plugin->generateInsight($instance, null, $posts, 3);
 
-        // Assert that insight got inserted with correct punchcard information
+        // Assert that insight did not got inserted for less than 2 responses
         $insight_dao = new InsightMySQLDAO();
         $today = date ('Y-m-d');
         $result = $insight_dao->getInsight('outreach_punchcard', 10, $today);
         $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertPattern('/Tester Person\'s best time is <strong>around '.$around_time.'<\/strong>/', 
-            $result->headline);
-        $this->assertPattern('/Last week, Tester Person\'s status updates got/', $result->text);
-        $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 1 comment in all/', $result->text);
-
-        //Test email rendering
-        $email_insight = $this->getRenderedInsightInEmail($result);
-        $this->debug($email_insight);
+        $this->assertNull($result);
     }
 
     public function testOutreachPunchcardInsightNoResponse() {
@@ -279,6 +249,31 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
             $p->post_text = $test_text;
             $p->pub_date = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
             $posts[] = $p;
+        }
+        return $posts;
+    }
+    /**
+     * Get test post arrays
+     * @return array of post value arrays
+     */
+    private function getTestPostArrays() {
+        $post_text_arr = array();
+        $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
+        "I want it everywhere.";
+        $post_text_arr[] = "New Year's Eve! Feeling very gay today, but not very homosexual.";
+        $post_text_arr[] = "When @anildash told me he was writing this I was ".
+        "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
+
+        $posts = array();
+        $counter = 133;
+        foreach ($post_text_arr as $test_text) {
+            $post = array();
+            $post['post_id'] = $counter++;
+            $post['network'] = 'twitter';
+            $post['author_username'] = 'testeriffic';
+            $post['post_text'] = $test_text;
+            $post['pub_date'] = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
+            $posts[] = $post;
         }
         return $posts;
     }
