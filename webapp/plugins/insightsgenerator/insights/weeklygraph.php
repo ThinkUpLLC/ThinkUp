@@ -38,8 +38,10 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
 
         if ($instance->network == 'twitter') {
             $day_of_week = 3;
-        } else {
-            $day_of_week = 6;
+        } elseif ($instance->network == 'instagram') {
+            $day_of_week = 5;
+        } else  {
+            $day_of_week = 0;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_graph', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week=$day_of_week, count($last_week_of_posts));
@@ -52,6 +54,18 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
             $total_likes = 0;
 
             $engaged_posts = array();
+
+            //Load photos for Instagram to display whether or not it was a video
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $last_week_of_posts_with_photos = array();
+                foreach ($last_week_of_posts as $post) {
+                    $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                    $last_week_of_posts_with_photos[] = $post;
+                }
+                $last_week_of_posts = $last_week_of_posts_with_photos;
+            }
+
             foreach ($last_week_of_posts as $post) {
                 $reply_count = $post->reply_count_cache;
                 $retweet_count = $post->retweet_count_cache;
@@ -61,12 +75,18 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                 $total_retweets += $retweet_count;
                 $total_likes += $fav_count;
 
-                $popularity_index = (5 * $reply_count) + (3 * $retweet_count) + (2 * $fav_count);
+                if ($instance->network !== 'instagram') {
+                    $popularity_index = (5 * $reply_count) + (3 * $retweet_count) + (2 * $fav_count);
+                } else {
+                    $popularity_index = (3 * $reply_count) + (0 * $retweet_count) + (5 * $fav_count);
+                }
 
                 if ($popularity_index > $best_popularity_params['index']) {
                     $best_popularity_params['index'] = $popularity_index;
                     $best_popularity_params['reply'] = $reply_count;
-                    $best_popularity_params['retweet'] = $retweet_count;
+                    if ($instance->network !== 'instagram') {
+                        $best_popularity_params['retweet'] = $retweet_count;
+                    }
                     $best_popularity_params['like'] = $fav_count;
 
                     $most_popular_post = $post;
@@ -99,7 +119,11 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                             ' to '.$this->username.' outnumbered '.join(' or ', $lower).'.';
                     }
                 } else if ($total_likes >= $total_replies && $total_likes >= $total_retweets) {
-                    $insight_headline = "Whatever ".$this->username." said must have been memorable";
+                    if ($instance->network !== 'instagram') {
+                        $insight_headline = "Whatever ".$this->username." said must have been memorable";
+                    } else {
+                        $insight_headline = $this->username." really won hearts";
+                    }
                     $insight_text = 'In the past week, '.$this->username.' got '.number_format($total_likes).' '.
                         $this->terms->getNoun('like', $total_likes==1?InsightTerms::SINGULAR : InsightTerms::PLURAL);
                     $lower = array();
@@ -149,6 +173,8 @@ class WeeklyGraphInsight extends InsightPluginParent implements InsightPlugin {
                     $formatted_posts =array(ChartHelper::getPostActivityVisualizationData($posts, $instance->network));
                     $my_insight->setPosts($formatted_posts);
                     $this->insight_dao->insertInsight($my_insight);
+                } else {
+                    $this->logger->logInfo("Not enough posts to display chart", __METHOD__.','.__LINE__);
                 }
             }
         }

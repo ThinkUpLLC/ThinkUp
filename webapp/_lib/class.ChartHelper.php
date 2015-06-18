@@ -53,10 +53,10 @@ class ChartHelper {
                 $share_label = 'Shares';
                 $reply_label = 'Comments';
                 break;
-            case 'google+':
+            case 'instagram':
                 $post_label = 'Post';
-                $approval_label = "+1s";
-                $share_label = 'Shares';
+                $approval_label = "Likes";
+                $share_label = 'Regrams';
                 $reply_label = 'Comments';
                 break;
             default:
@@ -66,12 +66,20 @@ class ChartHelper {
                 $reply_label = 'Comments';
                 break;
         }
-        $metadata = array(
-        array('type' => 'string', 'label' => $post_label),
-        array('type' => 'number', 'label' => $reply_label),
-        array('type' => 'number', 'label' => $share_label),
-        array('type' => 'number', 'label' => $approval_label),
-        );
+        if ($network !== 'instagram') {
+            $metadata = array(
+            array('type' => 'string', 'label' => $post_label),
+            array('type' => 'number', 'label' => $reply_label),
+            array('type' => 'number', 'label' => $share_label),
+            array('type' => 'number', 'label' => $approval_label),
+            );
+        } else {
+            $metadata = array(
+            array('type' => 'string', 'label' => $post_label),
+            array('type' => 'number', 'label' => $reply_label),
+            array('type' => 'number', 'label' => $approval_label),
+            );
+        }
         $result_set = array();
         foreach ($posts as $post) {
             if (isset($post->post_text) && $post->post_text != '') {
@@ -84,18 +92,30 @@ class ChartHelper {
                 $post_text_label = date("M j",  date_format (date_create($post->pub_date), 'U' ));
             }
 
+            if ($network == 'instagram' && $post->is_short_video) {
+                $post_text_label = "Video: ".$post_text_label;
+            }
+
             // Concat text and clean up any encoding snags
             $text_shortened = substr($post_text_label, 0, 100) . '...';
             // Doesn't work as expected on PHP 5.4
             //$text_clean = iconv("UTF-8", "ISO-8859-1//IGNORE", $text_shortened);
             $text_clean= mb_convert_encoding($text_shortened, 'UTF-8', 'UTF-8');
 
-            $result_set[] = array('c' => array(
-            array('v' => $text_clean),
-            array('v' => intval($post->reply_count_cache)),
-            array('v' => intval($post->all_retweets)),
-            array('v' => intval($post->favlike_count_cache)),
-            ));
+            if ($network !== 'instagram') {
+                $result_set[] = array('c' => array(
+                array('v' => $text_clean),
+                array('v' => intval($post->reply_count_cache)),
+                array('v' => intval($post->all_retweets)),
+                array('v' => intval($post->favlike_count_cache)),
+                ));
+            } else {
+                $result_set[] = array('c' => array(
+                array('v' => $text_clean),
+                array('v' => intval($post->reply_count_cache)),
+                array('v' => intval($post->favlike_count_cache)),
+                ));
+            }
         }
         return json_encode(array('rows' => $result_set, 'cols' => $metadata));
     }

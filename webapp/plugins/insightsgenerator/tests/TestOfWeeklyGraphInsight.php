@@ -277,6 +277,90 @@ class TestOfWeeklyGraphInsight extends ThinkUpInsightUnitTestCase {
         $this->dumpRenderedInsight($result, $instance, "");
     }
 
+    public function testWeeklyGraphInsightInstagramWithFavorites() {
+        // Get data ready that insight requires
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+
+        $builders = array();
+        $builders[] = FixtureBuilder::build('insights', array('id'=>33, 'instance_id'=>10,
+        'slug'=> 'PostMySQLDAO::getHotPosts', 'date'=>'-1d', 'related_data'=>serialize('sample hot posts data') ));
+
+        $posts = array();
+
+        $post_vals = array(
+            'id' => 33,
+            'post_id' => 33,
+            'reply_count_cache' => 0,
+            'retweet_count_cache' => 0,
+            'favlike_count_cache' => 3,
+            'network' => 'instagram',
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        );
+        $posts[] = new Post($post_vals); // popularity_index = 6
+        $builders[] = FixtureBuilder::build('posts', $post_vals);
+        $builders[] = FixtureBuilder::build('photos', array('post_key'=>33, 'post_id'=>33, 'is_short_video'=>0));
+        $post_vals = array(
+            'id' => 44,
+            'post_id' => 44,
+            'reply_count_cache' => 0,
+            'favlike_count_cache' => 15,
+            'network' => 'instagram',
+            'is_short_video'=>1,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        );
+        $posts[] = new Post($post_vals); // popularity_index = 30
+        $builders[] = FixtureBuilder::build('posts', $post_vals);
+        $builders[] = FixtureBuilder::build('photos', array('post_key'=>44, 'post_id'=>44, 'is_short_video'=>1));
+
+        $post_vals = array(
+            'id' => 35,
+            'post_id' => 35,
+            'reply_count_cache' => 0,
+            'favlike_count_cache' => 1,
+            'network' => 'instagram',
+            'is_short_video'=>0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        );
+        $posts[] = new Post($post_vals); // popularity_index = 12
+        $builders[] = FixtureBuilder::build('posts', $post_vals);
+        $builders[] = FixtureBuilder::build('photos', array('post_key'=>35, 'post_id'=>35, 'is_short_video'=>0));
+
+        $post_vals = array(
+            'id' => 36,
+            'post_id' => 36,
+            'reply_count_cache' => 0,
+            'favlike_count_cache' => 1,
+            'network' => 'instagram',
+            'is_short_video'=>0,
+            'pub_date' => date('Y-m-d H:i:s', strtotime('-1 day'))
+        );
+        $posts[] = new Post($post_vals); // popularity_index = 12
+        $builders[] = FixtureBuilder::build('posts', $post_vals);
+        $builders[] = FixtureBuilder::build('photos', array('post_key'=>36, 'post_id'=>36, 'is_short_video'=>1));
+
+        TimeHelper::setTime(1); //use the first possible headline
+        $insight_plugin = new WeeklyGraphInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('weekly_graph', 10, $today);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("testeriffic really won hearts", $result->headline);
+        $this->assertEqual('In the past week, testeriffic got 20 likes.', $result->text);
+        $html = $this->getRenderedInsightInHTML($result);
+        //Two of the posts in the chart should have the video prefix
+        $this->assertPattern('/Video/', $html);
+        //'/Unable to describe table "tu_notable"/', $e->getMessage());
+        $this->dumpRenderedInsight($result, $instance, "");
+    }
+
     public function testWeeklyGraphInsightTwitterWithRepliesAndFavorites() {
         // Get data ready that insight requires
         $instance = new Instance();
