@@ -2571,6 +2571,12 @@ body.app-message-visible.account .container {
   text-align: center;
   margin: 5px 0;
 }
+.photo.video:before {
+  content: url(../img/play-button-overlay.png);
+  position: absolute;
+  left: 75px;
+  top: 100px;
+}
 .photo .photo_img {
   max-width: 100%;
 }

@@ -5,6 +5,7 @@ Parameters:
 $post (required) post object
 $hide_avatar (optional) do not display the user's avatar, typically used if the post is the user's own
 *}
+{assign var="is_video" value=true}
 
 {if isset($post)}
 <blockquote class="tweet{if $hide_avatar} hide-photo{/if}">
@@ -40,7 +41,7 @@ Therefore, on Facebook posts, list links that are not images.
 
 {foreach from=$post->links item=l}
   {if !isset($breakphotos) and isset($l->image_src) and $l->image_src neq ""}
-  <div class="photo clearfix">
+  <div class="photo {if isset($is_video) and ($is_video)}video{/if} clearfix">
     <a href="{$l->url}"><img src="{$l->image_src}" class="photo_img" alt="Photo from {$post->author_fullname}"></a>
   </div>
   {assign var="breakphotos" value="true"}
@@ -48,7 +49,7 @@ Therefore, on Facebook posts, list links that are not images.
 {/foreach}
 
 {if isset($post->standard_resolution_url)}
-  <div class="photo clearfix">
+  <div class="photo {if isset($is_video) and ($is_video)}video{/if} clearfix">
     <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" class="photo_img" alt="Photo from {$post->author_fullname}"></a>
   </div>
 {/if}
