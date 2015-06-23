@@ -144,8 +144,8 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         $posts = array();
         $instance = new Instance();
         $instance->id = 1;
-        $instance->network_username = 'Silent Bob';
-        $instance->network = 'instagram';
+        $instance->network_username = 'SilentBob';
+        $instance->network = 'twitter';
         $insight_plugin = new FrequencyInsight();
         $user = new User();
         $user->avatar = 'https://farm7.staticflickr.com/6146/5976784449_4fe7c02760_q.jpg';
@@ -159,17 +159,43 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertNotNull($result->time_generated);
 
-        $this->assertEqual('Silent Bob didn\'t post any new photos this week',
+        $this->assertEqual('@SilentBob didn\'t have any new tweets this week',
         $result->headline);
-        $this->assertEqual('Huh, nothing. Fill the emptiness inside you by donating to an underfunded classroom.',
+        $this->assertEqual('Nothing wrong with waiting until there\'s something to say.',
             $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
-    public function testFrequencyInsightExactly1Post() {
+    public function testFrequencyInsightExactly1PostTwitter() {
         // Get data ready that insight requires
         $posts = self::getTestPostObjects();
+        $posts = array_slice( $posts, 0, 1);
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'twitter';
+        $insight_plugin = new FrequencyInsight();
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
+            'instance_id'=>10, 'value'=>19));
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 10, $today);
+        $this->assertNotNull($result);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFrequencyInsightExactly1PostInstagram() {
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects('instagram');
         $posts = array_slice( $posts, 0, 1);
         $instance = new Instance();
         $instance->id = 10;
@@ -179,8 +205,53 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
 
         // Add a baseline from prior week
         $last_week = date('Y-m-d', strtotime('-7 day'));
-        $builder = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
+        $builders = array();
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
             'instance_id'=>10, 'value'=>19));
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week,
+            'slug'=>'frequency_photo_count', 'instance_id'=>10, 'value'=>9));
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week,
+            'slug'=>'frequency_video_count', 'instance_id'=>10, 'value'=>6));
+        foreach ($posts as $post) {
+            $builders[] = FixtureBuilder::build('photos', array('post_key'=>$post->id, 'is_short_video'=>1));
+        }
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('frequency', 10, $today);
+        $this->assertNotNull($result);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFrequencyInsightInstagram() {
+        // Get data ready that insight requires
+        $posts = self::getTestPostObjects('instagram');
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FrequencyInsight();
+
+        // Add a baseline from prior week
+        $last_week = date('Y-m-d', strtotime('-7 day'));
+        $builders = array();
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week, 'slug'=>'frequency',
+            'instance_id'=>10, 'value'=>19));
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week,
+            'slug'=>'frequency_photo_count', 'instance_id'=>10, 'value'=>9));
+        $builders[] = FixtureBuilder::build('insight_baselines', array('date'=>$last_week,
+            'slug'=>'frequency_video_count', 'instance_id'=>10, 'value'=>6));
+
+        foreach ($posts as $post) {
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post->id, 'post_id'=>$post->post_id,
+                'network'=>'instagram'));
+            $builders[] = FixtureBuilder::build('photos', array('post_key'=>$post->id, 'post_id'=>$post->post_id,
+                'network'=>'instagram', 'is_short_video'=>(($post->id % 2) == 1)));
+        }
 
         // Assert that insight got inserted
         $insight_dao = new InsightMySQLDAO();
@@ -370,7 +441,7 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
      * Get test post objects
      * @return array of post objects for use in testing
      */
-    private function getTestPostObjects() {
+    private function getTestPostObjects($network = 'twitter') {
         $post_text_arr = array();
         $post_text_arr[] = "I don't know, really? I thought so.";
         $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
@@ -380,12 +451,16 @@ class TestOfFrequencyInsight extends ThinkUpInsightUnitTestCase {
         "fantasy of stopping an attacker was just that: http://bit.ly/mybH2j  Slate: http://slate.me/T6vwde";
         $post_text_arr[] = "When @anildash told me he was writing this I was ".
         "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
-        $i++;
+        $i = 1;
         $posts = array();
         foreach ($post_text_arr as $test_text) {
             $p = new Post();
+            $p->id = $i;
+            $p->post_id = 'pid'.$i;
+            $p->network = $network;
             $p->post_text = $test_text;
             $posts[] = $p;
+            $i++;
         }
         return $posts;
     }

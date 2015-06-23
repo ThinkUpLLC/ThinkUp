@@ -52,28 +52,77 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
         if ($should_generate_insight) {
             $count = sizeof($last_week_of_posts);
             $this->logger->logInfo("Last week had $count posts", __METHOD__.','.__LINE__);
+
+            //Load photos for Instagram to display whether or not it was a video
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $last_week_of_posts_with_photos = array();
+                foreach ($last_week_of_posts as $post) {
+                    $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                    $last_week_of_posts_with_photos[] = $post;
+                }
+
+                $last_week_of_posts = $last_week_of_posts_with_photos;
+                $photo_count = 0;
+                $video_count = 0;
+
+                foreach ($last_week_of_posts as $post) {
+                    if ($post->is_short_video) {
+                        $video_count++;
+                    } else {
+                        $photo_count++;
+                    }
+                }
+            }
+
             if ($count > 1) {
-                $info['headline'] = $this->getVariableCopy(array(
-                    '%username %posted <strong>%count times</strong> in the past week',
-                    '%username had <strong>%count %posts</strong> over the past week',
-                    '%username had <strong>%count %posts</strong> over the past week', // twice as likely on purpose
-                ), array('count' => number_format($count)));
-                $milestones = array(
-                    "per_row"    => 1,
-                    "label_type" => "icon",
-                    "items" => array(
-                        0 => array(
-                            "number" => number_format($count),
-                            "label"  => $this->terms->getNoun('post', $count),
+                if ($instance->network !== 'instagram') {
+                    $info['headline'] = $this->getVariableCopy(array(
+                        '%username %posted <strong>%count times</strong> in the past week',
+                        '%username had <strong>%count %posts</strong> over the past week',
+                        '%username had <strong>%count %posts</strong> over the past week', // twice as likely on purpose
+                    ), array('count' => number_format($count)));
+                    $milestones = array(
+                        "per_row"    => 1,
+                        "label_type" => "icon",
+                        "items" => array(
+                            0 => array(
+                                "number" => number_format($count),
+                                "label"  => $this->terms->getNoun('post', $count),
+                            ),
                         ),
-                    ),
-                );
+                    );
+                } else { //Network is Instagram so count photos and videos separately
+                    if ($photo_count > 0 && $video_count > 0) {
+                        $photos_term = ($photo_count == 1)?'photo':'photos';
+                        $videos_term = ($video_count == 1)?'video':'videos';
+                        $headline = $this->username
+                            ." had $photo_count $photos_term and $video_count $videos_term over the past week";
+                    } else {
+                        if ($photo_count > 0) {
+                            $headline = $this->username. " had $photo_count photos over the past week";
+                        } else {
+                            $headline = $this->username. " had $video_count videos over the past week";
+                        }
+                    }
+
+                    $info['headline'] =  $headline;
+                    $milestones = array(
+                        "per_row"    => 1,
+                        "label_type" => "icon",
+                        "items" => array(
+                            0 => array(
+                                "number" => number_format($count),
+                                "label"  => $this->terms->getNoun('post', $count),
+                            ),
+                        ),
+                    );
+                }
             } elseif ($count == 1) {
                 $info['headline'] = $this->getVariableCopy(array(
-                    '%username %posted <strong>once</strong> in the past week',
-                    '%username had <strong>one photo</strong> over the past week',
-                    '%username had <strong>one photo</strong> over the past week', // twice as likely on purpose
+                    '%username %posted <strong>once</strong> in the past week'
                 ), array('count' => number_format($count)));
+
                 $milestones = array(
                     "per_row"    => 1,
                     "label_type" => "icon",
@@ -145,24 +194,74 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
 
             $insight_baseline_dao = DAOFactory::getDAO('InsightBaselineDAO');
             $insight_baseline_dao->insertInsightBaseline("frequency", $instance->id, $count, $this->insight_date);
+            if ($instance->network == 'instagram') {
+                $insight_baseline_dao->insertInsightBaseline("frequency_photo_count", $instance->id, $photo_count,
+                    $this->insight_date);
+                $insight_baseline_dao->insertInsightBaseline("frequency_video_count", $instance->id, $video_count,
+                    $this->insight_date);
+            }
 
             if ($count > 0) {
                 //Week over week comparison
-                //Get insight baseline from last Monday
-                $last_monday = date('Y-m-d', strtotime('-7 day'));
-                $last_monday_insight_baseline = $insight_baseline_dao->getInsightBaseline("frequency",
-                    $instance->id, $last_monday);
-                if (isset($last_monday_insight_baseline) ) {
-                    $this->logger->logInfo("Baseline had $last_monday_insight_baseline->value posts",
-                        __METHOD__.','.__LINE__);
-                    //compare it to this Monday's  number, and add a sentence comparing it.
-                    $diff = abs($last_monday_insight_baseline->value - $count);
-                    $comp = ($last_monday_insight_baseline->value > ($count)) ? 'fewer' : 'more';
-                    if ($diff == 1) {
-                        $info['text'] =$this->terms->getProcessedText("That's 1 $comp %post than the prior week.");
-                    } elseif ($diff > 0) {
-                        $info['text'] =$this->terms->getProcessedText("That's ".number_format($diff).
-                            " $comp %posts than the prior week.");
+                $week_ago_date = date('Y-m-d', strtotime('-7 day'));
+                if ($instance->network !== 'instagram') { //Just compare total posts
+                    //Get insight baselines from a week ago
+                    $week_ago_insight_baseline = $insight_baseline_dao->getInsightBaseline("frequency",
+                        $instance->id, $week_ago_date);
+                    if (isset($week_ago_insight_baseline) ) {
+                        $this->logger->logInfo("Baseline had $week_ago_insight_baseline->value posts",
+                            __METHOD__.','.__LINE__);
+                        //compare it to today's number, and add a sentence comparing it
+                        $diff = abs($week_ago_insight_baseline->value - $count);
+                        $comp = ($week_ago_insight_baseline->value > ($count)) ? 'fewer' : 'more';
+                        if ($diff == 1) {
+                            $info['text'] =$this->terms->getProcessedText("That's 1 $comp %post than the prior week.");
+                        } elseif ($diff > 0) {
+                            $info['text'] =$this->terms->getProcessedText("That's ".number_format($diff).
+                                " $comp %posts than the prior week.");
+                        }
+                    }
+                } else { //Compare photos and videos separately
+                    //Get insight baselines from a week ago
+                    $week_ago_photo_count_insight_baseline = $insight_baseline_dao->getInsightBaseline(
+                        "frequency_photo_count", $instance->id, $week_ago_date);
+                    $week_ago_video_count_insight_baseline = $insight_baseline_dao->getInsightBaseline(
+                        "frequency_video_count", $instance->id, $week_ago_date);
+
+                    if (isset($week_ago_photo_count_insight_baseline) && isset($week_ago_video_count_insight_baseline)){
+                        $this->logger->logInfo("Baseline had $week_ago_photo_count_insight_baseline->value photos "
+                            ." and $week_ago_video_count_insight_baseline->value videos", __METHOD__.','.__LINE__);
+
+                        //compare it to today's number, and add a sentence comparing it
+
+                        //First, photos
+                        $diff_photos = abs($week_ago_photo_count_insight_baseline->value - $photo_count);
+                        $comp_photos = ($week_ago_photo_count_insight_baseline->value > ($photo_count))?'fewer':'more';
+
+                        //Next, videos
+                        $diff_videos = abs($week_ago_video_count_insight_baseline->value - $video_count);
+                        $comp_videos = ($week_ago_video_count_insight_baseline->value > ($video_count))?'fewer':'more';
+
+                        $this->logger->logInfo("Diff photos ".$diff_photos.", diff videos ".$diff_videos,
+                            __METHOD__.','.__LINE__);
+
+                        if ($diff_photos > 0) {
+                            if ($diff_photos == 1) {
+                                $photo_comp_phrase = " 1 $comp_photos photo ";
+                            } else {
+                                $photo_comp_phrase = " ".number_format($diff_photos)." $comp_photos photos ";
+                            }
+                            if ($diff_videos > 0) {
+                                if ($diff_videos == 1) {
+                                    $video_comp_phrase = " and 1 $comp_videos video ";
+                                } else {
+                                    $video_comp_phrase = " and ".number_format($diff_videos)." $comp_videos videos ";
+                                }
+                            } else {
+                                $video_comp_phrase = '';
+                            }
+                            $info['text'] ="That's ".$photo_comp_phrase.$video_comp_phrase." than the prior week.";
+                        }
                     }
                 }
             }
@@ -184,6 +283,8 @@ class FrequencyInsight extends InsightPluginParent implements InsightPlugin {
             if (!empty($info['text'])) {
                 $my_insight->text = $info['text'];
                 $this->insight_dao->insertInsight($my_insight);
+            } else{
+                $this->logger->logInfo("No insight text set, so no insight inserted", __METHOD__.','.__LINE__);
             }
         }
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
