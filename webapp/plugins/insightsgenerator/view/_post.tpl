@@ -48,8 +48,8 @@ Therefore, on Facebook posts, list links that are not images.
 {/foreach}
 
 {if isset($post->standard_resolution_url)}
-  <div class="photo clearfix">
-    <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" class="photo_img" alt="Photo from {$post->author_fullname}"></a>
+  <div class="photo {if $post->is_short_video}video{/if} clearfix">
+    <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" class="photo_img" alt="Instagram post from {$post->author_fullname}"></a>
   </div>
 {/if}
 
