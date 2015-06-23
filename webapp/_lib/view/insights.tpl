@@ -68,6 +68,12 @@
     {capture name="share_link" assign="share_link"}
       <a class="{$i->instance->network}" href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
     {/capture}
+  {elseif $i->instance->network eq 'instagram'}
+    {if $twitter_card eq 'summary_large_image'}
+    {capture name="share_link" assign="share_link"}
+      <a class="{$i->instance->network}" href="{$insight_image}">Share on Instagram</a>
+    {/capture}
+    {/if}
   {/if}
 
   {math equation="x % 10" x=$i->id assign=random_color_num}
