@@ -74,9 +74,20 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
         $this->addToView('thinkup_site_url', Utils::getApplicationURL());
 
         $instagram_plugin = new InstagramPlugin();
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'instagram');
         if ($instagram_plugin->isConfigured()) {
-            $this->setUpInstagramInteractions($instagram_plugin->getOptionsHash());
             $this->addToView('is_configured', true);
+            if (isset($this->owner) && $this->owner->isMemberAtAnyLevel()) {
+                if ($this->owner->isMemberLevel()) {
+                    if (sizeof($owner_instances) > 0) {
+                        $this->do_show_add_button = false;
+                        $this->addInfoMessage("To connect another Instagram account to ThinkUp, upgrade your "
+                            ."membership.", 'membership_cap');
+                    }
+                }
+            }
+            $this->setUpInstagramInteractions($instagram_plugin->getOptionsHash());
         } else {
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
             $this->addToView('is_configured', false);
@@ -104,13 +115,15 @@ class InstagramPluginConfigurationController extends PluginConfigurationControll
             'redirect_uri' => $redirect_uri,
         ));
 
-        $instagramconnect_link = sprintf(
-            'https://api.instagram.com/oauth/authorize/?client_id=%s&redirect_uri=%s&response_type=code&scope=%s',
-            $options['instagram_app_id']->option_value,
-            $redirect_uri,
-            implode( '+', $scope )
-        );
-        $this->addToView('instaconnect_link', $instagramconnect_link);
+        if ($this->do_show_add_button) {
+            $instagramconnect_link = sprintf(
+                'https://api.instagram.com/oauth/authorize/?client_id=%s&redirect_uri=%s&response_type=code&scope=%s',
+                $options['instagram_app_id']->option_value,
+                $redirect_uri,
+                implode( '+', $scope )
+            );
+            $this->addToView('instaconnect_link', $instagramconnect_link);
+        }
 
         self::processPageActions($options, $instagram);
 
