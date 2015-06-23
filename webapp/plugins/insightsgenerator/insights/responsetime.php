@@ -39,6 +39,8 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
 
         if ($instance->network == 'twitter') {
             $day_of_week = 5;
+        } elseif ($instance->network == 'instagram') {
+            $day_of_week = 3;
         } else {
             $day_of_week = 1;
         }
