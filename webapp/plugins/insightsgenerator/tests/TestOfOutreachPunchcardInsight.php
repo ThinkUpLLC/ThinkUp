@@ -46,7 +46,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         parent::tearDown();
     }
 
-    public function testOutreachPunchcardInsight() {
+    public function testOutreachPunchcardInsightTwitter() {
         $cfg = Config::getInstance();
         $install_timezone = new DateTimeZone($cfg->getValue('timezone'));
         $owner_timezone = new DateTimeZone($test_timezone='America/Los_Angeles');
@@ -131,6 +131,71 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/between <strong>'.$time1str.'<\/strong> - 3 replies in all/', $result->text);
         $this->assertPattern('/That\'s compared to 1 response/', $result->text);
         $this->assertPattern('/1 response between '.$time2str.'/', $result->text);
+
+        //Ugh, this number isn't serialized before it's stored, so we have to serialize it here
+        //TODO: Refactor how this number is stored in related_data
+        $result->related_data = serialize($result->related_data);
+
+        $this->dumpRenderedInsight($result, $instance);
+    }
+
+    public function testOutreachPunchcardInsightInstagram() {
+        $cfg = Config::getInstance();
+        $install_timezone = new DateTimeZone($cfg->getValue('timezone'));
+        $owner_timezone = new DateTimeZone($test_timezone='America/Los_Angeles');
+        $now = new DateTime();
+        $offset = timezone_offset_get($owner_timezone, $now) - timezone_offset_get($install_timezone, $now);
+
+        // Get data ready that insight requires
+        $builders = array();
+
+        $posts = self::getTestPostObjects('instagram');
+        $post_arrays = self::getTestPostArrays('instagram');
+        foreach ($post_arrays as $post_array) {
+            $builders[] = FixtureBuilder::build('posts', $post_array);
+        }
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'7654321', 'user_name'=>'instagramuser',
+        'full_name'=>'Instagram User', 'avatar'=>'avatar.jpg', 'follower_count'=>36000, 'is_protected'=>0,
+        'network'=>'instagram', 'description'=>'A test Instagram User'));
+
+        $instance_id = 10;
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'test@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'never', 'is_admin' => 0,
+        'timezone' => $test_timezone));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>'1','instance_id'=>$instance_id));
+
+        $install_offset = $install_timezone->getOffset(new DateTime());
+        $date_r = date("Y-m-d",strtotime('-1 day')-$install_offset);
+
+        $around_time = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
+        $time1str_low = date('ga', (date('U', strtotime($date_r.' 13:00:00')) + $offset));
+        $time1str_high = date('ga', (date('U', strtotime($date_r.' 14:00:00')) + $offset));
+        $time1str = $time1str_low." and ".$time1str_high;
+
+        $time2str_low = date('ga', (date('U', strtotime($date_r.' 17:00:00')) + $offset));
+        $time2str_high = date('ga', (date('U', strtotime($date_r.' 18:00:00')) + $offset));
+        $time2str = $time2str_low." and ".$time2str_high;
+
+        $instance = new Instance();
+        $instance->id = $instance_id;
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new OutreachPunchcardInsight();
+        $insight_plugin->generateInsight($instance, null, $posts, 3);
+
+        // Assert that insight got inserted with correct punchcard information
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('outreach_punchcard', 10, $today);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern("/testeriffic's best time is around $around_time/", $result->headline);
+        $this->assertPattern('/between <strong>'.$time1str
+            .'<\/strong> on Instagram got the most love - 30 likes in all/', $result->text);
+        $this->assertPattern('/That\'s compared to 2 hearts/', $result->text);
+        $this->assertPattern('/2 hearts between '.$time2str.'/', $result->text);
 
         //Ugh, this number isn't serialized before it's stored, so we have to serialize it here
         //TODO: Refactor how this number is stored in related_data
@@ -232,7 +297,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
      * Get test post objects
      * @return array of post objects for use in testing
      */
-    private function getTestPostObjects() {
+    private function getTestPostObjects($network = 'twitter') {
         $post_text_arr = array();
         $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
         "I want it everywhere.";
@@ -240,14 +305,32 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $post_text_arr[] = "When @anildash told me he was writing this I was ".
         "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
 
+        $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 13:11:09'));
+
         $posts = array();
         $counter = 133;
         foreach ($post_text_arr as $test_text) {
             $p = new Post();
             $p->post_id = $counter++;
-            $p->network = 'twitter';
+            $p->network = $network;
             $p->post_text = $test_text;
-            $p->pub_date = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
+            $p->favlike_count_cache = 10;
+            if ($network == 'instagram') {
+                $p->pub_date = $time;
+            } else {
+                $p->pub_date = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
+            }
+            $posts[] = $p;
+        }
+
+        if ($network == 'instagram') {
+            $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 17:11:09'));
+            $p = new Post();
+            $p->post_id = $counter++;
+            $p->network = $network;
+            $p->post_text = $test_text;
+            $p->favlike_count_cache = 2;
+            $p->pub_date = $time;
             $posts[] = $p;
         }
         return $posts;
@@ -256,7 +339,7 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
      * Get test post arrays
      * @return array of post value arrays
      */
-    private function getTestPostArrays() {
+    private function getTestPostArrays($network = 'twitter') {
         $post_text_arr = array();
         $post_text_arr[] = "Now that I'm back on Android, realizing just how under sung Google Now is. ".
         "I want it everywhere.";
@@ -264,15 +347,34 @@ class TestOfOutreachPunchcardInsight extends ThinkUpInsightUnitTestCase {
         $post_text_arr[] = "When @anildash told me he was writing this I was ".
         "like 'yah whatever cool' then I read it and it knocked my socks off http://bit.ly/W9ASnj ";
 
+        $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 13:11:09'));
+
         $posts = array();
         $counter = 133;
         foreach ($post_text_arr as $test_text) {
             $post = array();
             $post['post_id'] = $counter++;
-            $post['network'] = 'twitter';
+            $post['network'] = $network;
             $post['author_username'] = 'testeriffic';
+            $post['favlike_count_cache'] = 10;
             $post['post_text'] = $test_text;
-            $post['pub_date'] = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
+            if ($network == 'instagram') {
+                $post['pub_date'] = $time;
+            } else {
+                $post['pub_date'] = gmdate("Y-m-d H:i:s", strtotime('-2 days'));
+            }
+            $posts[] = $post;
+        }
+
+        if ($network == 'instagram') {
+            $time = gmdate('Y-m-d H:i:s', strtotime('yesterday 17:11:09'));
+            $post = array();
+            $post['post_id'] = $counter++;
+            $post['network'] = $network;
+            $post['author_username'] = 'testeriffic';
+            $post['post_text'] = 'asssimov';
+            $post['favlike_count_cache'] = 2;
+            $post['pub_date'] = $time;
             $posts[] = $post;
         }
         return $posts;

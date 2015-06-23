@@ -99,26 +99,43 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 $responses_chron[$hotd] = 0;
             }
 
-            foreach ($last_months_posts as $post) {
-                $responses = array();
-                $responses = array_merge(
-                (array)$post_dao->getRepliesToPost($post->post_id, $post->network),
-                (array)$post_dao->getRetweetsOfPost($post->post_id, $post->network)
-                );
+            // $this->logger->logInfo("Last month's posts: ".Utils::varDumpToString($last_months_posts),
+            //     __METHOD__.','.__LINE__);
 
-                foreach ($responses as $response) {
-                    $response_pub_date = new DateTime($response->pub_date);
-                    $response_dotm = date('j', (date('U', strtotime($response->pub_date)+$offset))); // Day of month
-                    $response_hotd = date('G', (date('U', strtotime($response->pub_date)+$offset))); // Hour of day
-                    $punchcard['responses'][$response_dotm][$response_hotd]++;
+            if ($instance->network !== 'instagram') { //count replies and retweets
+                foreach ($last_months_posts as $post) {
+                    $responses = array();
+                    $responses = array_merge(
+                    (array)$post_dao->getRepliesToPost($post->post_id, $post->network),
+                    (array)$post_dao->getRetweetsOfPost($post->post_id, $post->network)
+                    );
 
-                    $responses_chron[$response_hotd]++;
+                    foreach ($responses as $response) {
+                        $response_pub_date = new DateTime($response->pub_date);
+                        $response_dotm = date('j', (date('U', strtotime($response->pub_date)+$offset))); // Day of month
+                        $response_hotd = date('G', (date('U', strtotime($response->pub_date)+$offset))); // Hour of day
+                        $punchcard['responses'][$response_dotm][$response_hotd]++;
+
+                        $responses_chron[$response_hotd]++;
+                    }
+
+                    $post_pub_date = new DateTime($post->pub_date);
+                    $post_dotm = date('j', (date('U', strtotime($post->pub_date)+$offset))); // Day of the month
+                    $post_hotd = date('G', (date('U', strtotime($post->pub_date)+$offset))); // Hour of the day
+                    $punchcard['posts'][$post_dotm][$post_hotd]++;
                 }
+            } else { //count likes
+                foreach ($last_months_posts as $post) {
+                    $post_pub_date = new DateTime($post->pub_date);
+                    $post_dotm = date('j', (date('U', strtotime($post->pub_date)+$offset))); // Day of month
+                    $post_hotd = date('G', (date('U', strtotime($post->pub_date)+$offset))); // Hour of day
+                    $punchcard['responses'][$post_dotm][$post_hotd]++;
 
-                $post_pub_date = new DateTime($post->pub_date);
-                $post_dotm = date('j', (date('U', strtotime($post->pub_date)+$offset))); // Day of the month
-                $post_hotd = date('G', (date('U', strtotime($post->pub_date)+$offset))); // Hour of the day
-                $punchcard['posts'][$post_dotm][$post_hotd]++;
+                    //$this->logger->logInfo("HOTD: ".$post_hotd, __METHOD__.','.__LINE__);
+
+                    $responses_chron[$post_hotd] += $post->favlike_count_cache;
+                    $punchcard['posts'][$post_dotm][$post_hotd]++;
+                }
             }
 
             arsort($responses_chron);
@@ -136,11 +153,22 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                 .((floor($time1_high_hotd / 12) == 1) ? 'pm' : 'am');
 
                 $plural = $most_responses['value']==1 ? InsightTerms::SINGULAR : InsightTerms::PLURAL;
-                $insight_text = "In the past month, ". $this->username."'s "
-                    . $this->terms->getNoun('post', InsightTerms::PLURAL)
-                    ." got the biggest response between <strong>".$time1_low." and ".$time1_high."</strong> - "
-                    .$most_responses['value']." "
-                    . $this->terms->getNoun('reply', $plural) . " in all.";
+
+                if ($instance->network == 'instagram')  {
+                    $insight_text = "In the past month, what ". $this->username." posted "
+                        ."between <strong>".$time1_low." and ".$time1_high
+                        ."</strong> on Instagram got the most love - " .$most_responses['value']
+                        . " " .$this->terms->getNoun('like', $plural) . " in all.";
+                } else {
+                    $insight_text = "In the past month, ". $this->username."'s "
+                        . $this->terms->getNoun('post', InsightTerms::PLURAL)
+                        ." got the biggest response between <strong>".$time1_low." and ".$time1_high."</strong> - "
+                        . $most_responses['value']." "
+                        . $this->terms->getNoun('reply', $plural) . " in all.";
+                }
+
+                // $this->logger->logInfo("Responses chron: ".Utils::varDumpToString($responses_chron),
+                //     __METHOD__.','.__LINE__);
 
                 foreach ($responses_chron as $key => $value) {
                     if ($value > 0 && $value < $most_responses['value']) {
@@ -152,9 +180,13 @@ class OutreachPunchcardInsight extends InsightPluginParent implements InsightPlu
                         $time2_high = (($time2_high_hotd % 12) ? ($time2_high_hotd % 12) : 12)
                         .((floor($time2_high_hotd / 12) == 1) ? 'pm' : 'am');
 
+                        if ($instance->network == 'instagram') {
+                            $response_text = ($value > 1 ? 'hearts' : 'heart');
+                        } else {
+                            $response_text = ($value > 1 ? 'responses' : 'response');
+                        }
                         $comparison_text = " That's compared to ".$value." "
-                        .($value > 1 ? 'responses' : 'response').""
-                        ." between ".$time2_low." and ".$time2_high.". ";
+                            .$response_text ." between ".$time2_low." and ".$time2_high.". ";
                     }
                 }
 
