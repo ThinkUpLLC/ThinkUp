@@ -73,9 +73,15 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
                     substr(InsightTerms::getSyntacticTimeDifference($time_per_response), 2)
                     : InsightTerms::getSyntacticTimeDifference($time_per_response);
 
-                $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
-                    ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
-                    ."</strong> every <strong>".$time_str."</strong> this week";
+                if ($instance->network !== 'instagram') {
+                    $headline = $this->username."'s ".$this->terms->getNoun('post', InsightTerms::PLURAL)
+                        ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
+                        ."</strong> every <strong>".$time_str."</strong> this week";
+                } else { //Instagram: be photo and video inclusive
+                    $headline = $this->username."'s Instagram posts"
+                        ." averaged <strong>1 new ".$this->terms->getNoun($response_factor['key'])
+                        ."</strong> every <strong>".$time_str."</strong> this week";
+                }
 
                 $last_fri = date('Y-m-d', strtotime('-7 day'));
                 $last_fri_insight_baseline = $insight_baseline_dao->getInsightBaseline(
