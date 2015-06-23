@@ -66,12 +66,13 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
                     if ($instance->network == 'twitter') {
-                        $headline = $number_of_years_ago." year". $plural." ago " . $this->username
-                            ." favorited @" .$flashback_favs[0]->author_username;
+                        $headline = $this->username ." favorited @" .$flashback_favs[0]->author_username
+                            ."'s tweet from " .$number_of_years_ago." year". $plural." ago";
                     } else {
-                        $headline = $this->terms->getProcessedText($number_of_years_ago." year"
-                            . $plural." ago " . $this->username ." " .$this->terms->getVerb('liked') . " "
-                            . $flashback_favs[0]->author_username."'s %post");
+                        $headline = $this->username ." " .$this->terms->getVerb('liked') . " "
+                            . $flashback_favs[0]->author_username
+                            . $this->terms->getProcessedText("'s %post from ". $number_of_years_ago
+                            ." year" . $plural." ago" );
                     }
                     $my_insight = new Insight();
                     $my_insight->instance_id = $instance->id;

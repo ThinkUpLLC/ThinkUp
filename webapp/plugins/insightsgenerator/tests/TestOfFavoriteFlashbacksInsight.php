@@ -62,7 +62,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('1 year ago @testeriffic favorited @twitteruser', $result->headline);
+        $this->assertEqual('@testeriffic favorited @twitteruser\'s tweet from 1 year ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -91,7 +91,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('3 years ago @testeriffic favorited @twitteruser', $result->headline);
+        $this->assertEqual('@testeriffic favorited @twitteruser\'s tweet from 3 years ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -120,7 +120,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('1 year ago testeriffic liked twitteruser\'s status update', $result->headline);
+        $this->assertEqual('testeriffic liked twitteruser\'s status update from 1 year ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -149,7 +149,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('3 years ago testeriffic liked twitteruser\'s status update', $result->headline);
+        $this->assertEqual('testeriffic liked twitteruser\'s status update from 3 years ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
