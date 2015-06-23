@@ -2575,7 +2575,7 @@ body.app-message-visible.account .container {
   content: url(../img/play-button-overlay.png);
   position: absolute;
   left: 75px;
-  top: 100px;
+  bottom: 150px;
 }
 .photo .photo_img {
   max-width: 100%;
