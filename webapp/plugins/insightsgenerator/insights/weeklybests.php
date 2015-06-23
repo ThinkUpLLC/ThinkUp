@@ -2,7 +2,7 @@
 /*
  Plugin Name: Weekly and Monthly Best Posts
  Description: Your most popular posts from last week and last month.
- When: Thursdays for Twitter, Sunday otherwise, and 1st of the month
+ When: Thursdays for Twitter, Tuesdays for Instagram, Sunday otherwise, and 1st of the month
  */
 
 /**
@@ -83,18 +83,32 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
                 $my_insight = new Insight();
 
                 $my_insight->headline = $this->getVariableCopy(array(
-                    'Happy %new_month!',
-                    'Welcome to %new_month!'
-                ), array('new_month'=> date('F')));
+                    '%username\'s best of %last_month',
+                ), array('last_month'=> date('F', $last_month_time)));
 
-                $my_insight->text = $this->getVariableCopy(array(
-                    "This was %username's most popular %post of %last_month %month_year.",
-                    "Behold, %username's most popular %post of %last_month %month_year."
-                    ),
-                    array(
-                    'last_month'=> date('F', $last_month_time),
-                    'month_year'=> date('Y', $last_month_time))
-                );
+                if ($instance->network == 'instagram' && $most_popular_post->is_short_video) {
+                    $my_insight->text = $this->getVariableCopy(array(
+                        "Happy %new_month! %username's most popular Instagram post of %last_month %month_year was a video.",
+                        "Welcome to %new_month! This video was %username's most popular Instagram post "
+                        ."of %last_month %month_year."
+                        ),
+                        array(
+                        'last_month'=> date('F', $last_month_time),
+                        'month_year'=> date('Y', $last_month_time),
+                        'new_month'=> date('F'))
+                    );
+                } else {
+                    $my_insight->text = $this->getVariableCopy(array(
+                        "Happy %new_month! This was %username's most popular %post of %last_month %month_year.",
+                        "Welcome to %new_month! Take a quick look back at %username's most popular %post "
+                        ."of %last_month %month_year."
+                        ),
+                        array(
+                        'last_month'=> date('F', $last_month_time),
+                        'month_year'=> date('Y', $last_month_time),
+                        'new_month'=> date('F'))
+                    );
+                }
 
                 $my_insight->slug = 'monthly_best'; //slug to label this insight's content
                 $my_insight->instance_id = $instance->id;
@@ -112,7 +126,9 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
         //Weekly
         if ($instance->network == 'twitter') {
             $day_of_week = 4;
-        } else {
+        } elseif ($instance->network == 'instagram') {
+            $day_of_week = 2;
+        } else  {
             $day_of_week = 0;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('weekly_best', $instance, $insight_date='today',
@@ -145,10 +161,24 @@ class WeeklyBestsInsight extends InsightPluginParent implements InsightPlugin {
             }
 
             if (isset($most_popular_post)) {
-                $headlines = array(
-                    "$this->username's biggest %post last week",
-                    "$this->username's most popular %post last week",
-                );
+                if ($instance->network !== 'instagram') {
+                    $headlines = array(
+                        "$this->username's biggest %post last week",
+                        "$this->username's most popular %post last week",
+                    );
+                } else { //Instagram: Be video-aware
+                    if ($most_popular_post->is_short_video) {
+                        $headlines = array(
+                            "$this->username's biggest post last week was a video",
+                            "$this->username's most popular post last week was a video",
+                        );
+                    } else {
+                        $headlines = array(
+                            "$this->username's biggest %post last week",
+                            "$this->username's most popular %post last week",
+                        );
+                    }
+                }
                 $insight_text = $this->username." earned ";
                 foreach ($best_popularity_params as $key => $value) {
                     if ($value && $key != 'index') {
