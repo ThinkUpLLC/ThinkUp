@@ -2,7 +2,7 @@
 /*
  Plugin Name: Weekly Graph
  Description: Summarize and display a simple chart of responses to last week's posts.
- When: Wednesdays for Twitter, Saturday otherwise
+ When: Wednesdays for Twitter, Fridays for Instagram, Sunday otherwise
  */
 
 /**

@@ -3,7 +3,7 @@
 /*
  Plugin Name: Response Time
  Description: How quickly your posts generate replies, favorites, and reshares every week.
- When: Fridays for Twitter, Mondays otherwise
+ When: Fridays for Twitter, Wednesdays for Instagram, Mondays otherwise
  */
 
 /**

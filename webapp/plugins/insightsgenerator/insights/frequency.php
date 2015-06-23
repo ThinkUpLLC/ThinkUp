@@ -2,7 +2,7 @@
 /*
  Plugin Name: Frequency
  Description: How frequently you posted this week as compared to last week.
- When: Mondays for Twitter, Thursdays otherwise
+ When: Mondays for Twitter, Wednesdays for Instagram, Fridays otherwise
  */
 /**
  *
