@@ -49,7 +49,7 @@ Therefore, on Facebook posts, list links that are not images.
 
 {if isset($post->standard_resolution_url)}
   <div class="photo clearfix">
-    <img src="{$post->standard_resolution_url}" class="photo_img" alt="Photo from {$post->author_fullname}">
+    <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" class="photo_img" alt="Photo from {$post->author_fullname}"></a>
   </div>
 {/if}
 
