@@ -72,6 +72,69 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testFavoriteFlashbackInstagramPhoto1YearAgo() {
+        // Get data ready that insight requires
+        $builders = self::buildData('instagram', 1);
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = '7612345';
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FavoriteFlashbackInsight();
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('favorites_year_ago_flashback', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('testeriffic liked twitteruser\'s photo from 1 year ago', $result->headline);
+        $this->assertEqual('Can you believe how fast time flies?', $result->text);
+        $this->assertIsA($fav_posts, "array");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFavoriteFlashbackInstagramVideo1YearAgo() {
+        // Get data ready that insight requires
+        $builders = self::buildData('instagram', 1);
+
+        // Set this particular photo to a video
+        $builders[] = FixtureBuilder::build('photos', array('post_id'=>135, 'post_key'=>135, 'is_short_video'=>1));
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = '7612345';
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FavoriteFlashbackInsight();
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('favorites_year_ago_flashback', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual('testeriffic liked twitteruser\'s video from 1 year ago', $result->headline);
+        $this->assertEqual('Can you believe how fast time flies?', $result->text);
+        $this->assertIsA($fav_posts, "array");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testFavoriteFlashbackTwitter3YearsAgo() {
         // Get data ready that insight requires
         $builders = self::buildData('twitter', 3);
