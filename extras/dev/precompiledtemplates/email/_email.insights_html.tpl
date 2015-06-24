@@ -1400,6 +1400,20 @@ or isset($insight->related_data.changes)}
           </td>
         </tr>
         {/if}
+        {if isset($post->standard_resolution_url)}
+        <tr class="insight-image-inline">
+          <td class="sub-grid">
+            <table class="twelve sub-columns last">
+              <tr>
+                <td>
+                    <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" alt="{$post->author_fullname}" class="center"></a>
+                </td>
+                <td class="expander"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {/if}
         {/foreach}
         {/if}
 

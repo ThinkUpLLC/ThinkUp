@@ -752,6 +752,20 @@ or isset($insight->related_data.changes)}
           </td>
         </tr>
         {/if}
+        {if isset($post->standard_resolution_url)}
+        <tr class="insight-image-inline" style="vertical-align: top; text-align: left; padding: 0;" align="left">
+          <td class="sub-grid" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 10px;" align="left" valign="top">
+            <table class="twelve sub-columns last" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; background: #{$color_light}; padding: 0;">
+              <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0 0px;" align="left" valign="top">
+                    <a href="{$post->permalink}" style="color: #2ba6cb; text-decoration: none;"><img src="{$post->standard_resolution_url}" alt="{$post->author_fullname}" class="center" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; clear: both; display: block; margin: 0 auto; border: none;" align="none" /></a>
+                </td>
+                <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {/if}
         {/foreach}
         {/if}
 
