@@ -65,6 +65,7 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
 
                     $time = strtotime("-" . $number_of_years_ago . " year", time());
                     $past_date =date('Y', $time);
+                    $post_term = ($most_popular_post->is_short_video)?'video':$this->terms->getNoun('post');
                     if (TimeHelper::getTime() % 2 == 0) {
                         if ($number_of_years_ago == 1 ){
                             $headlines = array(
@@ -76,12 +77,12 @@ class FlashbackInsight extends InsightPluginParent implements InsightPlugin {
                             );
                         }
                         $insight_text = "On this day in " .$past_date . ", this was $this->username's most popular "
-                        .$this->terms->getNoun('post').".";
+                        .$post_term.".";
                     } else {
                         $headlines = array(
                           "On this day in ".$past_date,
                         );
-                        $insight_text = "This was $this->username's most popular ".$this->terms->getNoun('post')
+                        $insight_text = "This was $this->username's most popular ".$post_term
                         ." <strong>$number_of_years_ago year$plural ago</strong>.";
                     }
                     $posts[] = $most_popular_post;

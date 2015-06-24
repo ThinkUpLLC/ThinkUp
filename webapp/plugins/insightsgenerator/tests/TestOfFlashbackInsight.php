@@ -82,6 +82,81 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         $this->debug($this->getRenderedInsightInEmail($result));
     }
 
+    public function testFlashbackInsightForInstagramPhoto() {
+        // Get data ready that insight requires
+        $builders = self::buildData();
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = '765432insta';
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FlashbackInsight();
+        TimeHelper::setTime(3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/On this day in 2014/', $result->headline);
+        $last_year = (date('Y')) - 1;
+        $possible_text = array("This was testeriffic's most popular photo <strong>1 year ago</strong>.",
+            "On this day in ".$last_year.", this was testeriffic's most popular photo.");
+        $this->assertTrue(in_array( $result->text, $possible_text), $result->text);
+        $this->assertIsA($fav_posts, "array");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
+    public function testFlashbackInsightForInstagramVideo() {
+        // Get data ready that insight requires
+        $builders = self::buildData();
+
+        //Add a slighly more popular video
+        $builders[] = FixtureBuilder::build('posts', array('id'=>141, 'post_id'=>141, 'author_user_id'=>'765432insta',
+        'author_username'=>'testeriffic', 'author_fullname'=>'Instagram User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'instagram', 'post_text'=>'Here is a photo', 'source'=>'web',
+        'pub_date'=>'-365d', 'reply_count_cache'=>170, 'is_protected'=>0, 'in_reply_to_post_id'=>null,
+        'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'in_rt_of_user_id'=>null));
+
+        $builders[] = FixtureBuilder::build('photos', array('post_id'=>141, 'post_key'=>141, 'network'=>'instagram',
+        'is_short_video'=>1));
+
+        $instance = new Instance();
+        $instance->id = 10;
+        $instance->network_user_id = '765432insta';
+        $instance->network_username = 'testeriffic';
+        $instance->network = 'instagram';
+        $insight_plugin = new FlashbackInsight();
+        TimeHelper::setTime(3);
+        $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $today = date ('Y-m-d');
+        $result = $insight_dao->getInsight('posts_on_this_day_popular_flashback', 10, $today);
+        $fav_posts = unserialize($result->related_data);
+        //$this->debug(Utils::varDumpToString($result));
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertPattern('/On this day in 2014/', $result->headline);
+        $last_year = (date('Y')) - 1;
+        $possible_text = array("This was testeriffic's most popular video <strong>1 year ago</strong>.",
+            "On this day in ".$last_year.", this was testeriffic's most popular video.");
+        $this->assertTrue(in_array( $result->text, $possible_text), $result->text);
+        $this->assertIsA($fav_posts, "array");
+        $this->assertIsA($fav_posts["posts"][0], "Post");
+        $this->assertEqual(count($fav_posts), 1);
+
+        $this->debug($this->getRenderedInsightInHTML($result));
+        $this->debug($this->getRenderedInsightInEmail($result));
+    }
+
     public function testFlashbackInsightForFacebookYearAgo() {
         // Get data ready that insight requires
         $builders = self::buildData();
@@ -194,6 +269,15 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         'network'=>'facebook', 'post_text'=>'This is a post http://t.co/B5LAotKMWY with a link.', 'source'=>'web',
         'pub_date'=>$date->format('Y-m-d H:i:s'), 'reply_count_cache'=>60, 'is_protected'=>0, 'in_reply_to_post_id'=>null,
         'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'in_rt_of_user_id'=>null));
+
+        $builders[] = FixtureBuilder::build('posts', array('id'=>140, 'post_id'=>140, 'author_user_id'=>'765432insta',
+        'author_username'=>'testeriffic', 'author_fullname'=>'Instagram User', 'author_avatar'=>'avatar.jpg',
+        'network'=>'instagram', 'post_text'=>'Here is a photo', 'source'=>'web',
+        'pub_date'=>'-365d', 'reply_count_cache'=>70, 'is_protected'=>0, 'in_reply_to_post_id'=>null,
+        'in_reply_to_user_id'=>null, 'in_retweet_of_post_id'=>null, 'in_rt_of_user_id'=>null));
+
+        $builders[] = FixtureBuilder::build('photos', array('post_id'=>140, 'post_key'=>140, 'network'=>'instagram',
+        'is_short_video'=>0));
 
         return $builders;
     }
