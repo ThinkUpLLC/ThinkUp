@@ -3,7 +3,7 @@
 /*
  Plugin Name: Response Time
  Description: How quickly your posts generate replies, favorites, and reshares every week.
- When: Fridays for Twitter, Wednesdays for Instagram, Mondays otherwise
+ When: Mondays for Instagram, Thursdays for Facebook, Fridays for Twitter
  */
 
 /**
@@ -40,9 +40,9 @@ class ResponseTimeInsight extends InsightPluginParent implements InsightPlugin {
         if ($instance->network == 'twitter') {
             $day_of_week = 5;
         } elseif ($instance->network == 'instagram') {
-            $day_of_week = 3;
-        } else {
             $day_of_week = 1;
+        } else {
+            $day_of_week = 4;
         }
         $should_generate_insight = self::shouldGenerateWeeklyInsight('response_time', $instance, $insight_date='today',
             $regenerate_existing_insight=false, $day_of_week = $day_of_week, count($last_week_of_posts));

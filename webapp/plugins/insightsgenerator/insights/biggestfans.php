@@ -2,7 +2,7 @@
 /*
  Plugin Name: Biggest Fans
  Description: Who has liked your posts the most over the last 7 and 30 days.
- When: Wednesdays and the 2nd of the month, Facebook only
+ When: Wednesdays for Facebook, Thursdays for Instagram, 1st of the month, Facebook, 3rd of the month, Instagram
  */
 
 /**
@@ -39,10 +39,11 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
         $since_date = date("Y-m-d");
         $filename = basename(__FILE__, ".php");
 
+        //Monthly
         if ($instance->network == 'facebook') {
             $day_of_month = 1;
         } elseif ($instance->network == 'instagram') {
-            $day_of_month = 2;
+            $day_of_month = 3;
         } else { //This doesn't actually run for Twitter since crawler doesn't capture favoriters
             $day_of_month = 3;
         }
@@ -85,11 +86,15 @@ class BiggestFansInsight extends InsightPluginParent implements InsightPlugin {
             }
         }
 
-        if ($instance->network == 'twitter') {
-            $day_of_week = 0;
-        } else {
+        //Weekly
+        if ($instance->network == 'facebook') {
             $day_of_week = 3;
+        } elseif ($instance->network == 'instagram') {
+            $day_of_week = 4;
+        } else { //This doesn't actually run for Twitter since crawler doesn't capture favoriters
+            $day_of_week = 6;
         }
+
         $should_generate_insight = self::shouldGenerateWeeklyInsight('biggest_fans_last_7_days', $instance,
             $insight_date=$since_date, $regenerate_existing_insight=false, $day_of_week = $day_of_week,
             null, array('twitter') );
