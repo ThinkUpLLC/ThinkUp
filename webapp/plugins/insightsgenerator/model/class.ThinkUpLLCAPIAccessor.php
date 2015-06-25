@@ -74,8 +74,8 @@ class ThinkUpLLCAPIAccessor {
             try {
                 $result_decoded = JSONDecoder::decode($result);
             } catch (JSONDecoderException $e) {
-                //Punt
-                return true;
+                //Punt - something went very wrong. Err on the side of nothing changed.
+                return false;
             }
             //print_r($result_decoded);
             return $result_decoded->show_diff;
