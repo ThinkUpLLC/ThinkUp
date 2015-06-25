@@ -920,6 +920,9 @@ a:hover {
   .navbar-default.is-logged-out .navbar-header .navbar-brand {
     margin: 9px 5px 6px;
   }
+  .navbar-default.is-logged-out #search-toggle {
+    display: none;
+  }
 }
 .navbar-default #search-keywords {
   border-radius: 0;
