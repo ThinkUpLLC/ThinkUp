@@ -652,18 +652,23 @@
 
 .photo {
     text-align: center;
-    margin: 5px 0;
+    margin: 5px 0 0 70px;
 
-        &.video:before {
-           content: url(../img/play-button-overlay.png);
-           position: absolute;
-           left: 75px;
-           bottom: 150px;
+        .play-button-overlay {
+            color: rgba(255,255,255,0.5);
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            margin-left: -25px;
+            margin-top: -140px;
+            @media (min-width: 540px) {
+                margin-top: -10px;
+            }
         }
 
     .photo_img {
         max-width: 100%;
-
+        height: auto;
     }
 }
 
@@ -674,7 +679,7 @@
             margin-right: 0;
         }
 
-        .tweet-actions, .tweet-body, .user-about {
+        .tweet-actions, .tweet-body, .photo, .user-about {
             margin-left: 0;
         }
     }
