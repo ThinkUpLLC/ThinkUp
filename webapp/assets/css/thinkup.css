@@ -920,6 +920,9 @@ a:hover {
   .navbar-default.is-logged-out .navbar-header .navbar-brand {
     margin: 9px 5px 6px;
   }
+  .navbar-default.is-logged-out #search-toggle {
+    display: none;
+  }
 }
 .navbar-default #search-keywords {
   border-radius: 0;
@@ -2569,16 +2572,24 @@ body.app-message-visible.account .container {
 }
 .photo {
   text-align: center;
-  margin: 5px 0;
+  margin: 5px 0 0 70px;
 }
-.photo.video:before {
-  content: url(../img/play-button-overlay.png);
+.photo .play-button-overlay {
+  color: rgba(255, 255, 255, 0.5);
+  top: 50%;
+  left: 50%;
   position: absolute;
-  left: 75px;
-  bottom: 150px;
+  margin-left: -25px;
+  margin-top: -140px;
+}
+@media (min-width: 540px) {
+  .photo .play-button-overlay {
+    margin-top: -10px;
+  }
 }
 .photo .photo_img {
   max-width: 100%;
+  height: auto;
 }
 .hide-photo.user .user-photo,
 .hide-photo.tweet .user-photo {
@@ -2589,6 +2600,8 @@ body.app-message-visible.account .container {
 .hide-photo.tweet .tweet-actions,
 .hide-photo.user .tweet-body,
 .hide-photo.tweet .tweet-body,
+.hide-photo.user .photo,
+.hide-photo.tweet .photo,
 .hide-photo.user .user-about,
 .hide-photo.tweet .user-about {
   margin-left: 0;
