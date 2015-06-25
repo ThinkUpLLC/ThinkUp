@@ -92,7 +92,7 @@
               <div class="navbar-collapse collapse in" id="search-form">
                 <form class="navbar-form navbar-search" style="" method="get" action="{$site_root_path}search.php">
 
-                    <input type="text" id="search-keywords" name="q" class="search-query" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search"{/if} />
+                    <input type="text" id="search-keywords" name="q" class="search-query" autocomplete="off" {if $smarty.get.q}value="{$smarty.get.q}" autofocus="true"{else}placeholder="Search followers"{/if} />
 
                 </form>
               </div>
