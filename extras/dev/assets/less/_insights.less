@@ -654,21 +654,24 @@
     text-align: center;
     margin: 5px 0 0 70px;
 
+    i {
+        margin-left: 30px;
+    }
+
     .play-button-overlay {
         color: rgba(255,255,255,0.5);
         font-size: 10em;
         height: 0;
         display: block;
         position: relative;
-        top: -230px;
+        top: -180px;
         left: 0;
 
         @media (min-width: 540px) {
             position: absolute;
-            top: 33%;
+            top: 40%;
             left: 33%;
         }
-
     }
 
     a:hover {
@@ -688,9 +691,14 @@
             margin-right: 0;
         }
 
-        .tweet-actions, .tweet-body, .photo, .user-about {
+        .tweet-actions,
+        .tweet-body,
+        .photo,
+        .photo i,
+        .user-about {
             margin-left: 0;
         }
+
     }
 }
 

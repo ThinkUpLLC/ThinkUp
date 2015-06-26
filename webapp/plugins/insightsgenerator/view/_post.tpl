@@ -52,7 +52,7 @@ Therefore, on Facebook posts, list links that are not images.
 {if isset($post->standard_resolution_url)}
   <div class="photo {if $post->is_short_video}video{/if} clearfix">
     <a href="{$post->permalink}"><img src="{$post->standard_resolution_url}" class="photo_img" alt="Instagram post from {$post->author_fullname}">
-    {if 1}<i class="play-button-overlay fa fa-play-circle-o"></i>{/if}
+    {if $post->is_short_video}<i class="play-button-overlay fa fa-play-circle-o"></i>{/if}
     </a>
   </div>
 {/if}
