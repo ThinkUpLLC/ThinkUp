@@ -654,17 +654,29 @@
     text-align: center;
     margin: 5px 0 0 70px;
 
-        .play-button-overlay {
-            color: rgba(255,255,255,0.5);
-            top: 50%;
-            left: 50%;
+    i {
+        margin-left: 30px;
+    }
+
+    .play-button-overlay {
+        color: rgba(255,255,255,0.5);
+        font-size: 10em;
+        height: 0;
+        display: block;
+        position: relative;
+        top: -180px;
+        left: 0;
+
+        @media (min-width: 540px) {
             position: absolute;
-            margin-left: -25px;
-            margin-top: -140px;
-            @media (min-width: 540px) {
-                margin-top: -10px;
-            }
+            top: 40%;
+            left: 33%;
         }
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
 
     .photo_img {
         max-width: 100%;
@@ -679,9 +691,14 @@
             margin-right: 0;
         }
 
-        .tweet-actions, .tweet-body, .photo, .user-about {
+        .tweet-actions,
+        .tweet-body,
+        .photo,
+        .photo i,
+        .user-about {
             margin-left: 0;
         }
+
     }
 }
 

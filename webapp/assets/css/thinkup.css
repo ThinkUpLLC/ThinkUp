@@ -2574,18 +2574,27 @@ body.app-message-visible.account .container {
   text-align: center;
   margin: 5px 0 0 70px;
 }
+.photo i {
+  margin-left: 30px;
+}
 .photo .play-button-overlay {
   color: rgba(255, 255, 255, 0.5);
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  margin-left: -25px;
-  margin-top: -140px;
+  font-size: 10em;
+  height: 0;
+  display: block;
+  position: relative;
+  top: -180px;
+  left: 0;
 }
 @media (min-width: 540px) {
   .photo .play-button-overlay {
-    margin-top: -10px;
+    position: absolute;
+    top: 40%;
+    left: 33%;
   }
+}
+.photo a:hover {
+  text-decoration: none;
 }
 .photo .photo_img {
   max-width: 100%;
@@ -2602,6 +2611,8 @@ body.app-message-visible.account .container {
 .hide-photo.tweet .tweet-body,
 .hide-photo.user .photo,
 .hide-photo.tweet .photo,
+.hide-photo.user .photo i,
+.hide-photo.tweet .photo i,
 .hide-photo.user .user-about,
 .hide-photo.tweet .user-about {
   margin-left: 0;
