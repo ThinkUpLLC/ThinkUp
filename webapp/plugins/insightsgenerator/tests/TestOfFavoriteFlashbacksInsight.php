@@ -107,7 +107,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         $builders = self::buildData('instagram', 1);
 
         // Set this particular photo to a video
-        $builders[] = FixtureBuilder::build('photos', array('post_id'=>135, 'post_key'=>135, 'is_short_video'=>1));
+        $builders[] = FixtureBuilder::build('photos', array('post_id'=>133, 'post_key'=>133, 'is_short_video'=>1));
 
         $instance = new Instance();
         $instance->id = 10;
