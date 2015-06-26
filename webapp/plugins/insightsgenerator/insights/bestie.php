@@ -2,7 +2,7 @@
 /*
  Plugin Name: Bestie
  Description: Who you've interacted with most in the past month.
- When: 17th for Twitter, 19th for Facebook, 21st for Instagram
+ When: 17th for Twitter, 19th for Facebook
  */
 
 /**
@@ -59,9 +59,6 @@ class BestieInsight extends InsightPluginParent implements InsightPlugin {
                 break;
             case 'facebook':
                 $day_of_month = 19;
-                break;
-            case 'instagram':
-                $day_of_month = 21;
                 break;
             default:
                 $day_of_month = 23;
