@@ -42,6 +42,14 @@ class ThinkUpLLCAPIAccessor {
 }
 EOD;
             return JSONDecoder::decode($resp);
+        } elseif ($email == 'paymentdue@example.com') {
+            $resp = <<<EOD
+{
+    "email":"paymentdue@example.com",
+    "subscription_status":"Payment due"
+}
+EOD;
+            return JSONDecoder::decode($resp);
         } elseif ($email == 'paid@example.com') {
             $resp = <<<EOD
 {

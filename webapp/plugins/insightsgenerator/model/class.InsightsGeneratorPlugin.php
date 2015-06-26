@@ -316,8 +316,7 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             }
                         }
                     } else {
-                        //Check subscription status and show a message if Payment failed
-                        //@TODO Handle Payment due state here as well
+                        //Check subscription status and show a message if Payment failed or due
                         $logger->logUserInfo("User is not in free trial; check subscription status",
                             __METHOD__.','.__LINE__);
 
@@ -327,7 +326,8 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             __METHOD__.','.__LINE__);
 
                         if (isset($membership_details->subscription_status)
-                            && $membership_details->subscription_status == 'Payment failed') {
+                            && ($membership_details->subscription_status == 'Payment failed'
+                                || $membership_details->subscription_status == 'Payment due')) {
 
                             $logger->logUserInfo("Owner has payment failure; include alert in email",
                                 __METHOD__.','.__LINE__);
@@ -335,12 +335,12 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                             $payment_failed_copy = array ();
                             $payment_failed_copy[] = array(
                                 'headline'=>'Oops! Your account needs attention',
-                                'explainer' => "We had a problem processing your last membership payment. "
+                                'explainer' => "We had a problem processing your membership payment. "
                                     ."But it's easy to fix."
                             );
                             $payment_failed_copy[] = array(
                                 'headline'=>'Uh oh, problem with your subscription...',
-                                'explainer' => "There was a problem processing your last membership payment. "
+                                'explainer' => "There was a problem processing your membership payment. "
                                     ."To fix it, update your payment info."
                             );
                             $payment_failed_copy[] = array(
