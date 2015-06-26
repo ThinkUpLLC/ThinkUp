@@ -55,8 +55,8 @@
           </div>
           {/if}
 
-          {if $display_search_box}
-          <button type="button" class="navbar-toggle collapsed btn btn-lg" data-toggle="collapse" data-target="#search-form" aria-expanded="false">
+          {if isset($logged_in_user) && $display_search_box}
+          <button type="button" class="navbar-toggle collapsed btn btn-lg" data-toggle="collapse" data-target="#search-form" aria-expanded="false" id="search-toggle">
             <span class="sr-only">Toggle navigation</span>
             <span class="fa fa-search"></span>
           </button>

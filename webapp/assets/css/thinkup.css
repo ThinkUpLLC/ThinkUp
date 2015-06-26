@@ -916,12 +916,12 @@ a:hover {
   color: #2785d3;
   text-decoration: underline;
 }
+.navbar-default.is-logged-out #search-toggle {
+  display: none;
+}
 @media (max-width: 540px) {
   .navbar-default.is-logged-out .navbar-header .navbar-brand {
     margin: 9px 5px 6px;
-  }
-  .navbar-default.is-logged-out #search-toggle {
-    display: none;
   }
 }
 .navbar-default #search-keywords {
