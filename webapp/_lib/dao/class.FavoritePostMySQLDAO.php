@@ -373,13 +373,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($rows as $row) {
-            if($row->network == 'instagram') {
-                $photo_dao = DAOFactory::getDAO('PhotoDAO');
-                $row = $photo_dao->getPhoto($row->post_id, 'instagram');
-                $posts[] = new Photo($row);
-            } else {
-                $posts[] = new Post($row);
-            }
+            $posts[] = new Post($row);
         }
         return $posts;
     }

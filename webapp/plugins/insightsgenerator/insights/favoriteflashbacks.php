@@ -51,11 +51,13 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
 
                     //Load photos for Instagram
                     if ($instance->network == 'instagram') {
+                        $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                        $flashback_fav_photos = array();
+
                         foreach ($flashback_favs as $post) {
-                            $flashback_fav_photos = array();
-                            $photo_dao = DAOFactory::getDAO('PhotoDAO');
-                            $post =$photo_dao->getPhoto($post->post_id, 'instagram');
-                            $flashback_fav_photos[] = $post;
+                            $photo = $photo_dao->getPhoto($post->post_id, 'instagram');
+                            $flashback_fav_photos[] = $photo;
+                            $photo = null;
                         }
                         $flashback_favs = $flashback_fav_photos;
                     }
