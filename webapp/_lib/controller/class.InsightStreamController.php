@@ -159,6 +159,7 @@ class InsightStreamController extends ThinkUpController {
                     $insight_image = "https://www.thinkup.com/join/assets/ico/apple-touch-icon-144-precomposed.png";
                     $twitter_card = "summary";
                 }
+                $this->addToView('install_folder', Config::getInstance()->getValue('install_folder'));
                 $this->addToView('insight_image', $insight_image);
                 $this->addToView('twitter_card', $twitter_card);
             } else {
@@ -199,6 +200,7 @@ class InsightStreamController extends ThinkUpController {
             if ($page != 1) {
                 $this->addToView('last_page', $page-1);
             }
+            $this->addToView('install_folder', Config::getInstance()->getValue('install_folder'));
             $this->addToView('insights', $insights);
         } else {
             if ($this->isLoggedIn()) {
