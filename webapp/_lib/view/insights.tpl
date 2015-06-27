@@ -70,7 +70,7 @@
     {/capture}
   {elseif $i->instance->network eq 'instagram' && isset($thinkupllc_endpoint)}
     {capture name="share_link" assign="share_link"}
-      <a class="{$i->instance->network}" href="https://shares.thinkup.com/insight?tu={$install_folder}&u={$i->instance->network_username|urlencode_network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}&share=1&square=1">Share on Instagram</a>
+      <a class="{$i->instance->network}" href="https://shares.thinkup.com/insight?tu={$install_folder}&u={$i->instance->network_username|urlencode_network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}&square=1&share=1">Share on Instagram</a>
     {/capture}
   {/if}
 
