@@ -38,7 +38,7 @@
     {/if}
   {/if}
 
-  <div class="stream{if isset($smarty.get.s)} stream-permalink{/if}{if $is_year_end} stream-yearend{/if}">
+  <div class="stream{if isset($smarty.get.s) && !isset($smarty.get.square)} stream-permalink{/if}{if $is_year_end} stream-yearend{/if}">
 
   {if $is_year_end && $tomorrows_teaser}
     <div class="date-group">
@@ -68,12 +68,10 @@
     {capture name="share_link" assign="share_link"}
       <a class="{$i->instance->network}" href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
     {/capture}
-  {elseif $i->instance->network eq 'instagram'}
-    {if $twitter_card eq 'summary_large_image'}
+  {elseif $i->instance->network eq 'instagram' && isset($thinkupllc_endpoint)}
     {capture name="share_link" assign="share_link"}
-      <a class="{$i->instance->network}" href="{$insight_image}">Share on Instagram</a>
+      <a class="{$i->instance->network}" href="https://shares.thinkup.com/insight?u={$i->instance->network_username|urlencode_network_username}&n={$i->instance->network}&d={$i->date|date_format:'%Y-%m-%d'}&s={$i->slug}&share=1&square=1">Share on Instagram</a>
     {/capture}
-    {/if}
   {/if}
 
   {math equation="x % 10" x=$i->id assign=random_color_num}
