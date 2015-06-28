@@ -102,9 +102,11 @@
     {/if}
 
 {else} <!-- in share mode -->
-    <script src="{$site_root_path}assets/js/thinkup.js "></script>
+    <script>window.jQuery || document.write('<script src="{$site_root_path}assets/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+    <script src="{$site_root_path}assets/js/vendor/jpanelmenu.js"></script>
+    <script src="{$site_root_path}assets/js/thinkup.js "></script>
 {/if} <!-- /not in share mode -->
 
 {if isset($thinkupllc_endpoint)}
