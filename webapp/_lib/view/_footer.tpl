@@ -102,7 +102,7 @@
     {/if}
 
 {else} <!-- in share mode -->
-
+    <script src="{$site_root_path}assets/js/thinkup.js "></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 {/if} <!-- /not in share mode -->
