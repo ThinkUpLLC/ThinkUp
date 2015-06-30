@@ -3,15 +3,13 @@
   {include file="_navigation.tpl" display_search_box="true"}
 {/if}
 
-{if isset($thinkupllc_endpoint)}
+{if isset($thinkupllc_endpoint) && isset($logged_in_user)}
   {if $instagram_connection_status neq 'active'}
-
           <script>{literal}
           var app_message = {};
           app_message.msg = {/literal}"<strong>New:</strong> Get insights for your Instagram account! <a href=\"{$site_root_path}account/?p=instagram\">Try it out &raquo;</a>"{literal};
           app_message.type = "info";
           {/literal}</script>
-
   {/if}
 {/if}
 
