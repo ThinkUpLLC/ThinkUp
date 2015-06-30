@@ -71,7 +71,7 @@ class TestOfSearchController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertPattern("/Results seem incomplete\? ThinkUp may not have captured your latest data./", $results);
         $this->assertPattern("/Aw, no \"Apple\" here\!/", $results);
-        $this->assertPattern("/Seems like none of of @ev's Twitter followers has \"Apple\" in their bio./", $results);
+        $this->assertPattern("/Seems like none of @ev's Twitter followers has \"Apple\" in their bio./", $results);
         $this->debug($results);
     }
 
@@ -92,7 +92,7 @@ class TestOfSearchController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertPattern("/Results seem incomplete\? ThinkUp may not have captured your latest data./", $results);
         $this->assertNoPattern("/Aw, no \"Apple\" here\!/", $results);
-        $this->assertNoPattern("/Seems like none of of @ev's Twitter followers has \"Apple\" in their bio./", $results);
+        $this->assertNoPattern("/Seems like none of @ev's Twitter followers has \"Apple\" in their bio./", $results);
         $this->assertPattern("/1 of @ev's Twitter followers has \"Apple\" in their bio/", $results);
         $this->debug($results);
     }

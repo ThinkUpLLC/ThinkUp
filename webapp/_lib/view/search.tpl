@@ -44,7 +44,7 @@
                 {if $i.search_results|@count > 0}
                   {include file=$tpl_path|cat:"_users.tpl" users=$i.search_results }
                 {else}
-                  <p>Seems like none of of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$query}" in their bio.</p>
+                  <p>Seems like none of {if $i.instance->network eq "twitter"}@{/if}{$i.instance->network_username}'s {$i.instance->network|ucfirst} followers has "{$query}" in their bio.</p>
                 {/if}
 
                 </div><!-- / panel-body-inner -->
