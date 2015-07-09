@@ -250,9 +250,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/@testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/@testeriffic\'s best of '.date('F', $last_month_time).'/', $result->headline);
         $this->assertPattern('/Take a quick look back at @testeriffic\'s most popular tweet of '
             .date('F', $last_month_time). ' '.date('Y', $last_month_time).'./', $result->text);
 
@@ -284,9 +284,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/@testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/@testeriffic\'s best of '.date('F', $last_month_time).'/', $result->headline);
         $this->assertPattern('/This was @testeriffic\'s most popular tweet of '.date('F', $last_month_time).
             ' '.date('Y', $last_month_time).'./', $result->text);
 
@@ -380,9 +380,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/testeriffic\'s best of '.date('F', $last_month_time). '/', $result->headline);
         $this->assertPattern('/his video was testeriffic\'s most popular Instagram post of '
             .date('F', $last_month_time). ' '.date('Y', $last_month_time).'./', $result->text);
 
@@ -414,9 +414,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/testeriffic\'s best of '.date('F', $last_month_time).'/', $result->headline);
         $this->assertPattern('/testeriffic\'s most popular Instagram post of '.date('F', $last_month_time).
             ' '.date('Y', $last_month_time).' was a video./', $result->text);
 
@@ -489,9 +489,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/@testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/@testeriffic\'s best of '.date('F', $last_month_time).'/', $result->headline);
         $this->assertPattern('/This was @testeriffic\'s most popular tweet of '.date('F', $last_month_time).
             ' '.date('Y', $last_month_time).'./', $result->text);
 
@@ -523,9 +523,9 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/@testeriffic\'s best of May/', $result->headline);
 
         $last_month_time = strtotime('first day of last month');
+        $this->assertPattern('/@testeriffic\'s best of '.date('F', $last_month_time).'/', $result->headline);
         $this->assertPattern('/This was @testeriffic\'s most popular tweet of '.date('F', $last_month_time).
             ' '.date('Y', $last_month_time).'./', $result->text);
 
