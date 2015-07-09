@@ -1283,7 +1283,7 @@ or isset($insight->related_data.changes)}
                             <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
                         </td>
                         <td class="ten sub-columns">
-                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}">{$user->full_name}</a></div>
+                            <div class="byline"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}"><strong>{$user->full_name}</strong> {if $user->network eq 'twitter' || $user->network eq 'instagram'}<span class="username">@{$user->username}</span>{/if}</a></div>
                             <div class="user-text">
                                 <p>{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                                     {$user->follower_count|number_format} followers
@@ -1328,7 +1328,7 @@ or isset($insight->related_data.changes)}
                         <td class="twelve sub-columns">
                         {else}
                         <td class="two sub-columns center">
-                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
                         </td>
                         <td class="ten sub-columns">
                         {/if}
@@ -1377,13 +1377,13 @@ or isset($insight->related_data.changes)}
                 <table>
                     <tr>
                         <td class="two sub-columns center">
-                            <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><img src="{insert name='user_avatar' avatar_url=$post->author_avatar image_proxy_sig=$image_proxy_sig}" alt="{$post->author_username}" width="60" height="60" class="img-circle"></a>
+                            <a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={$post->author_user_id}{elseif $post->network eq 'facebook'}https://facebook.com/{$post->author_user_id}{elseif $post->network eq 'instagram'}https://instagram.com/{$post->author_username}{/if}" title="{$post->author_username}"><img src="{insert name='user_avatar' avatar_url=$post->author_avatar image_proxy_sig=$image_proxy_sig}" alt="{$post->author_username}" width="60" height="60" class="img-circle"></a>
                         </td>
                         <td class="ten sub-columns last">
-                            <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $post->network eq 'facebook'}https://facebook.com/{/if}{$post->author_user_id}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
+                            <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={$post->author_user_id}{elseif $post->network eq 'facebook'}https://facebook.com/{$post->author_user_id}{elseif $post->network eq 'instagram'}https://instagram.com/{$post->author_username}{/if}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter' || $post->network eq 'instagram'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
                             <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_network:$post->network|color_html_email_links}</div>
                             <div class="tweet-actions">
-                              <a href="{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}"
+                              <a href="{$post->permalink}"
                                 class="tweet-action tweet-action-permalink">{$post->pub_date|date_format:'%b %e, %Y'}</a>
                             </div>
                         </td>
