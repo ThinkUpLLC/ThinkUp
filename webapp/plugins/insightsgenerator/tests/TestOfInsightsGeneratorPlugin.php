@@ -332,6 +332,8 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $plugin = new InsightsGeneratorPlugin();
         $config = Config::getInstance();
         $config->setValue('mandrill_api_key', null);
+        $config->setValue('install_folder', 'giantairnap');
+        $config->setValue('thinkupllc_endpoint', 'http://example.com/thinkup/');
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -345,14 +347,22 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp Q. User','is_admin'=>1,
         'email'=>'admin@example.com', 'is_activated'=>1, 'email_notification_frequency' => 'daily',
         'timezone' => 'America/New_York'));
+
+        //Twitter instance
         $builders[] = FixtureBuilder::build('instances', array('network_username'=>'cdmoyer', 'id' => 6,
         'network'=>'twitter', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>6, 'id'=>1));
 
-        //accented character
+        //Facebook instance with accented character
         $builders[] = FixtureBuilder::build('instances', array('id' => 7, 'network_username'=>'Bill Jõnes',
         'network'=>'facebook', 'is_activated'=>1, 'is_public'=>1));
         $builders[] = FixtureBuilder::build('owner_instances', array('id'=>2, 'owner_id'=>1, 'instance_id'=>7));
+
+        //Instagram instance
+        $builders[] = FixtureBuilder::build('instances', array('network_username'=>'giantairnap', 'id' => 8,
+        'network'=>'instagram', 'is_activated'=>1, 'is_public'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>8, 'id'=>3));
+
         $builders[] = FixtureBuilder::build('insights', array('id'=>3, 'instance_id'=>6,
         'slug'=>'new_group_memberships', 'headline'=>'Made the List:',
         'text'=>'Joe Test is on 1234 new lists', 'related_data'=>null,
@@ -415,6 +425,13 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         'slug'=>'posts_on_this_day_popular_flashback', 'headline'=>'This is a Twitter photo',
         'text'=>'',
         'related_data'=>$this->getRelatedDataListOfPosts('twitter', 2, 2),
+        'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
+
+        // Instagram Users
+        $builders[] = FixtureBuilder::build('insights', array('id'=>13, 'instance_id'=>8,
+        'slug'=>'biggest_fans_last_7_days', 'headline'=>'Last week, these were Serena Williams\'s biggest admirers.',
+        'text'=>'',
+        'related_data'=>$this->getRelatedDataListOfUsers('instagram'),
         'time_generated'=>date('Y-m-d 03:00:00', strtotime('1am'))));
 
         $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
@@ -489,7 +506,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/1234 new lists/', $merge_vars['insights']);
         $this->debug($merge_vars['insights']);
         //assert unsub link
-        $this->assertPattern('/http:\/\/downtonabb\.ey\/.*account\/index.php\?m\=manage\#instances/',
+        $this->assertPattern('/http:\/\/example.com\/thinkup\/settings.php/',
             $merge_vars['insights']);
         $this->assertEqual($config->getValue('app_title_prefix').'ThinkUp', $merge_vars['app_title']);
         //assert hero image

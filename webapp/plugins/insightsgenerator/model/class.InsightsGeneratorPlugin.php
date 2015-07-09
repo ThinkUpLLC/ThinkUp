@@ -267,7 +267,9 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                 $logger->logUserInfo("Email via ThinkUpLLC, process welcome / free trial messaging",
                     __METHOD__.','.__LINE__);
                 $thinkupllc_endpoint = $config->getValue('thinkupllc_endpoint');
+                $view->assign('thinkupllc_endpoint', $thinkupllc_endpoint);
                 $view->assign('unsub_url', $thinkupllc_endpoint.'settings.php');
+                $view->assign('install_folder', $config->getValue('install_folder'));
                 if (!isset($options['last_daily_email'])) {
                     $logger->logUserInfo("No daily email ever sent before, include welcome message",
                         __METHOD__.','.__LINE__);

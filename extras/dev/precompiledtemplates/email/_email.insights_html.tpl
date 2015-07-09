@@ -1166,6 +1166,14 @@ body.outlook p {
   {capture name="share_link" assign="share_link"}
     <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}">Share on Facebook</a>
   {/capture}
+{elseif $insight->instance->network eq 'instagram'}
+  {if isset($thinkupllc_endpoint)}
+    {capture name="share_link" assign="share_link"}
+      <a href="https://shares.thinkup.com/insight?tu={$install_folder}&u={$insight->instance->network_username|urlencode_network_username}&n={$insight->instance->network}&d={$insight->date|date_format:'%Y-%m-%d'}&s={$insight->slug}&square=1&share=1">Share on Instagram</a>
+    {/capture}
+  {else}
+    {assign var="share_link" value=""}
+  {/if}
 {/if}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
@@ -1272,12 +1280,12 @@ or isset($insight->related_data.changes)}
                 <table>
                     <tr>
                         <td class="two sub-columns center">
-                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle"></a>
                         </td>
                         <td class="ten sub-columns">
-                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
+                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}">{$user->full_name}</a></div>
                             <div class="user-text">
-                                <p>{if $user->network eq 'twitter'}
+                                <p>{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}
@@ -1324,9 +1332,9 @@ or isset($insight->related_data.changes)}
                         </td>
                         <td class="ten sub-columns">
                         {/if}
-                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}">{$user->full_name}</a></div>
+                            <div class="user-name"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}">{$user->full_name}</a></div>
                             <div class="user-text">
-                                <p>{if $user->network eq 'twitter'}
+                                <p>{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}

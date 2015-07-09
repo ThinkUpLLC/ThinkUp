@@ -519,6 +519,14 @@ color: #417505 !important;
   {capture name="share_link" assign="share_link"}
     <a href="https://www.facebook.com/sharer.php?u={$permalink|html_entity_decode|escape:'url'}" style="color: #2ba6cb; text-decoration: none;">Share on Facebook</a>
   {/capture}
+{elseif $insight->instance->network eq 'instagram'}
+  {if isset($thinkupllc_endpoint)}
+    {capture name="share_link" assign="share_link"}
+      <a href="https://shares.thinkup.com/insight?tu={$install_folder}&u={$insight->instance->network_username|urlencode_network_username}&n={$insight->instance->network}&d={$insight->date|date_format:'%Y-%m-%d'}&s={$insight->slug}&square=1&share=1" style="color: #2ba6cb; text-decoration: none;">Share on Instagram</a>
+    {/capture}
+  {else}
+    {assign var="share_link" value=""}
+  {/if}
 {/if}
 {math equation="x % 10" x=$insight->id assign=random_color_num}
 {if $i->slug eq 'posts_on_this_day_popular_flashback' | 'favorites_year_ago_flashback'}
@@ -625,12 +633,12 @@ or isset($insight->related_data.changes)}
                 <table style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0;">
                     <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
                         <td class="two sub-columns center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; min-width: 0px; width: 16.666666%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="center" valign="top">
-                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
+                            <a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;"><img src="{insert name='user_avatar' avatar_url=$user->avatar image_proxy_sig=$image_proxy_sig}" alt="{$user->user_fullname}" width="60" height="60" class="img-circle" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block; border-radius: 50%; -webkit-border-radius: 50%; border: none;" align="left" /></a>
                         </td>
                         <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
-                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
+                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
                             <div class="user-text">
-                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}
@@ -677,9 +685,9 @@ or isset($insight->related_data.changes)}
                         </td>
                         <td class="ten sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 83.333333%; color: #222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 18px; font-size: 14px; margin: 0; padding: 10px 10px 0 0px;" align="left" valign="top">
                         {/if}
-                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={elseif $user->network eq 'facebook'}https://facebook.com/{/if}{$user->user_id}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
+                            <div class="user-name" style="font-weight: bold;"><a href="{if $user->network eq 'twitter'}https://twitter.com/intent/user?user_id={$user->user_id}{elseif $user->network eq 'facebook'}https://facebook.com/{$user->user_id}{elseif $user->network eq 'instagram'}https://instagram.com/{$user->username}{/if}" title="{$user->user_fullname}" style="color: #2ba6cb; text-decoration: none;">{$user->full_name}</a></div>
                             <div class="user-text">
-                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter'}
+                                <p style="color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; text-align: left; line-height: 19px; font-size: 14px; margin: 0 0 10px; padding: 0;" align="left">{if $user->network eq 'twitter' || $user->network eq 'instagram'}
                                     {$user->follower_count|number_format} followers
                                 {else}
                                     {if isset($user->other.total_likes)}

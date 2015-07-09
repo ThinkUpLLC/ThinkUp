@@ -852,7 +852,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         $tw_users = array();
         $tw_users[] = new User(array(
             "id" => 2756,
-            "username" => "Gjetting",
+            "user_name" => "Gjetting",
             "full_name" => "Jon Angelo Gjetting",
             "avatar" => "http://pbs.twimg.com/profile_images/436950275908055040/0Z8Pa9fD_normal.jpeg",
             "location" => null,
@@ -878,7 +878,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         ), 'Test Insert');
         $tw_users[] = new User(array(
             "id" => 2760,
-            "username" => "blakesamic",
+            "user_name" => "blakesamic",
             "full_name" => "Blake Samic",
             "avatar" => "http://pbs.twimg.com/profile_images/2218712648/6625198569_2f790a5a46_o_normal.jpeg",
             "location" => "San Francisco",
@@ -905,7 +905,7 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         ), 'Test Insert');
         $tw_users[] = new User(array(
             "id" => 49,
-            "username" => "mulegirl",
+            "user_name" => "mulegirl",
             "full_name" => "Erika Hall",
             "avatar" => "http://pbs.twimg.com/profile_images/418628800293793792/FO4GD-Gj_normal.jpeg",
             "location" => "San Francisco",
@@ -926,6 +926,62 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
             "network" => "twitter",
             "user_id" => "2391",
             "other" => array()
+        ), 'Test Insert');
+
+        //Instagram users
+        $insta_users = array();
+        $insta_users[] = new User(array(
+            "id" => 2756,
+            "user_name" => "Gjetting",
+            "full_name" => "Jon Angelo Gjetting",
+            "avatar" => "http://pbs.twimg.com/profile_images/436950275908055040/0Z8Pa9fD_normal.jpeg",
+            "location" => null,
+            "description" => "Creative Director thriving at the intersection of creativity, strategy, and technology.",
+            "url" => "http://t.co/kTimxNUWE7",
+            "is_verified" => 0,
+            "is_protected" => 0,
+            "follower_count" => 3682,
+            "friend_count" => 1741,
+            "favorites_count" => 10257,
+            "post_count" => 5077,
+            "last_updated" => "2014-03-03 17:56:37",
+            "found_in" => "Follows",
+            "last_post" => "0000-00-00 00:00:00",
+            "joined" => "2009-07-25 10:36:19",
+            "last_post_id" => null,
+            "network" => "instagram",
+            "user_id" => "60031833",
+            "other" => array(
+                "likelihood_of_follow" => "47.2841",
+                "avg_tweets_per_day" => "3.02"
+            )
+        ), 'Test Insert');
+        $insta_users[] = new User(array(
+            "id" => 2760,
+            "user_name" => "blakesamic",
+            "full_name" => "Blake Samic",
+            "avatar" => "http://pbs.twimg.com/profile_images/2218712648/6625198569_2f790a5a46_o_normal.jpeg",
+            "location" => "San Francisco",
+            "description" => "Product and Partnerships at @Shoutlet. Fascinated by creative people, product design, ".
+                "tech, music, & travel.",
+            "url" => "http://t.co/iepIgg4Ia6",
+            "is_verified" => 0,
+            "is_protected" => 0,
+            "follower_count" => 1996,
+            "friend_count" => 963,
+            "favorites_count" => 1125,
+            "post_count" => 6550,
+            "last_updated" => "2014-03-03 17:56:37",
+            "found_in" => "Follows",
+            "last_post" => "0000-00-00 00:00:00",
+            "joined" => "2007-11-06 09:03:17",
+            "last_post_id" => null,
+            "network" => "instagram",
+            "user_id" => "9991942",
+            "other" => array(
+                "likelihood_of_follow" => "48.2465",
+                "avg_tweets_per_day" => "2.84",
+            )
         ), 'Test Insert');
 
         // Now some Facebook users
@@ -1171,8 +1227,10 @@ class ThinkUpInsightUnitTestCase extends ThinkUpUnitTestCase {
         ), 'Test Insert');
         if ($network == 'facebook') {
             $users = $fb_users;
-        } else {
+        } elseif ($network == 'twitter') {
             $users = $tw_users;
+        } elseif ($network == 'instagram') {
+            $users = $insta_users;
         }
         if ($serialize) {
             $related_data = array();
