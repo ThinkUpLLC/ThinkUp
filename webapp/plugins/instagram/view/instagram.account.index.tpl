@@ -72,6 +72,16 @@
       {/if}
     </div>
 
+    {foreach from=$instances key=iid item=i name=foo}
+        {if isset($i->auth_error)}
+          <script>{literal}
+          var app_message = {};
+          app_message.msg = {/literal}"{$i->network_username}’s Instagram connection expired.  To fix it, <a href=\"{$instaconnect_link}\">re-connect</a>."{literal};
+          app_message.type = "warning";
+          {/literal}</script>
+        {/if}
+    {/foreach}
+
   {if !isset($thinkupllc_endpoint)}
   <div id="contact-admin-div" style="display: none;">
   {include file="_plugin.admin-request.tpl"}
