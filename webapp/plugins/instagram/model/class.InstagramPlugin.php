@@ -75,7 +75,6 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
             $access_token = $tokens['oauth_access_token'];
 
             $instance_dao->updateLastRun($instance->id);
-            $instagram_crawler = new InstagramCrawler($instance, $access_token, $max_api_calls);
             $dashboard_module_cacher = new DashboardModuleCacher($instance);
             try {
                 /**
@@ -85,6 +84,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                  * 4. Fetch user's followers, and update stale relationships.
                  * 5. Update stale friends' profiles.
                  */
+                $instagram_crawler = new InstagramCrawler($instance, $access_token, $max_api_calls);
                 $instagram_crawler->fetchPostsAndReplies();
                 $instagram_crawler->fetchLikes();
                 $instagram_crawler->fetchFriends();
@@ -92,7 +92,7 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                 $instagram_crawler->updateStaleFriendsProfiles();
             } catch (Instagram\Core\ApiAuthException $e) {
                 //The access token is invalid, save in owner_instances table
-                $owner_instance_dao->setAuthError($current_owner->id, $instance->id, $e->getMessage());
+                $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
                 //Send email alert
                 $this->sendInvalidOAuthEmailAlert($current_owner->email, $instance->network_username);
                 $logger->logUserError(get_class($e) . ' '.$e->getMessage(), __METHOD__.','.__LINE__);
