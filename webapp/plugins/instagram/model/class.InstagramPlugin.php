@@ -94,7 +94,15 @@ class InstagramPlugin extends Plugin implements CrawlerPlugin {
                 //The access token is invalid, save in owner_instances table
                 $owner_instance_dao->setAuthErrorByTokens($instance->id, $access_token, '', $e->getMessage());
                 //Send email alert
-                $this->sendInvalidOAuthEmailAlert($current_owner->email, $instance->network_username);
+                //Get owner by auth tokens first, then send to that person
+                $owner_email_to_notify = $owner_instance_dao->getOwnerEmailByInstanceTokens($instance->id,
+                    $access_token, '');
+                $email_attempt = $this->sendInvalidOAuthEmailAlert($owner_email_to_notify, $instance->network_username);
+                if ($email_attempt) {
+                    $logger->logUserInfo('Sent reauth email to '.$owner_email_to_notify, __METHOD__.','.__LINE__);
+                } else {
+                    $logger->logInfo('Didn\'t send reauth email to '.$owner_email_to_notify, __METHOD__.','.__LINE__);
+                }
                 $logger->logUserError(get_class($e) . ' '.$e->getMessage(), __METHOD__.','.__LINE__);
             } catch (Exception $e) {
                 $logger->logUserError(get_class($e) . ' '.$e->getMessage(), __METHOD__.','.__LINE__);
