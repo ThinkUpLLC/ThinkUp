@@ -1,0 +1,12 @@
+thinkup:
+  build: .
+  ports:
+   - "80:80"
+  links:
+   - mysql
+mysql:
+  image: mysql
+  volumes:
+    - /var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: thinkup
