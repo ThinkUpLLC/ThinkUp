@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfThanksgivingWhoThankedYouInsight.php
+ * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfThanksgivingWhoYouThankedInsight.php
  *
  * Copyright (c) Chris Moyer
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Test of Follower Count History
+ * Test of Thanksgiving Who You Thanked Insight
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Chris Moyer
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_WEBAPP_PATH.'_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/model/class.InsightPluginParent.php';
-require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/thanksgivingwhothankedyou.php';
+require_once THINKUP_ROOT_PATH. 'webapp/plugins/insightsgenerator/insights/thanksgivingwhoyouthanked.php';
 
-class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase {
+class TestOfThanksgivingWhoYouThankedInsight extends ThinkUpInsightUnitTestCase {
     public function setUp(){
         parent::setUp();
 
@@ -63,8 +63,8 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
     }
 
     public function testConstructor() {
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
-        $this->assertIsA($insight_plugin, 'ThanksgivingWhoThankedYouInsight' );
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
+        $this->assertIsA($insight_plugin, 'ThanksgivingWhoYouThankedInsight' );
     }
 
     public function testNoThanks() {
@@ -73,11 +73,11 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'author_username'=> 'testy',
-            'network' => $this->instance->network, 'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'author_user_id' => 2, 'post_text' => "I hate it all."));
+            'in_reply_to_user_id' => '1', 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d', strtotime('January 9')),
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "I hate it all."));
 
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
@@ -85,23 +85,23 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
 
         // One thank is not quite enough, either
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'author_username'=> 'testy',
-            'network' => $this->instance->network, 'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'author_user_id' => 2, 'post_text' => "Thanks"));
+            'in_reply_to_user_id' => '1', 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d', strtotime('January 9')),
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNull($result);
 
-        $post_builders[] = FixtureBuilder::build('posts', array(
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'author_username'=> 'testy',
-            'network' => $this->instance->network, 'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'author_user_id' => 1, 'post_text' => "Thanks"));
         // Two should generate
+        $post_builders[] = FixtureBuilder::build('posts', array(
+            'in_reply_to_user_id' => '2', 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'pub_date' => date('Y-m-d', strtotime('January 9')),
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
@@ -113,87 +113,87 @@ class TestOfThanksgivingWhoThankedYouInsight extends ThinkUpInsightUnitTestCase 
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 1, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 1, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "I hate it all."));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "I hate it all."));
 
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 1, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 1, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 2, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 2, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
 
         $data = unserialize($result->related_data);
-        $this->assertEqual($result->headline, '2 people were thankful for @Thankster');
-        $this->assertEqual($result->text, "These are all the people who shared an appreciation for @Thankster this "
-            ."year. Who says you can't build meaningful relationships on Twitter?");
+        $this->assertEqual($result->headline, 'Who @Thankster was thankful for in '.date('Y'));
+        $this->assertEqual($result->text, 'These are all the people @Thankster thanked this year.');
         $this->assertEqual(count($data['people']), 2);
-        $this->assertEqual($data['people'][0]->username, 'one');
-        $this->assertEqual($data['people'][1]->username, 'two');
-        $this->assertEqual($data['hero_image']['alt_text'], '');
-        $this->assertEqual($data['hero_image']['img_link'],
-            'https://www.flickr.com/photos/deapeajay/3024604627/');
+        $this->assertEqual($data['people'][0]->username, 'two');
+        $this->assertEqual($data['people'][1]->username, 'one');
+        $this->assertEqual($data['hero_image']['alt_text'], $result->headline);
+        $this->assertEqual($data['hero_image']['img_link'], 'https://www.flickr.com/photos/voght/2441818832/');
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
+
+        $terms = new InsightTerms('twitter');
+        $notification_line = $terms->swapInSecondPerson($this->instance->network_username, $result->headline);
+        $this->assertEqual($notification_line, 'Who you were thankful for in '.date('Y'));
     }
 
     public function testFacebook() {
         $this->instance->network = 'facebook';
-        $this->instance->network_username = 'Ms. Thankable';
+        $this->instance->network_username = 'Mr. Thankful';
         $today = date('Y-m-d');
         $insight_dao = DAOFactory::getDAO('InsightDAO');
         $post_builders = array();
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 3, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 3, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "I hate it all."));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "I hate it all."));
 
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
         // We shouldn't get three users now
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 5, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 5, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 9')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks everyone"));
 
         // We shouldn't get three users still
         $post_builders[] = FixtureBuilder::build('posts', array(
-            'author_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
+            'in_reply_to_user_id' => 4, 'author_username'=> 'testy', 'network' => $this->instance->network,
             'pub_date' => date('Y-m-d', strtotime('January 14')),
-            'in_reply_to_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks a lot"));
+            'author_user_id' => $this->instance->network_user_id, 'post_text' => "Thanks a lot"));
 
-        $insight_plugin = new ThanksgivingWhoThankedYouInsight();
+        $insight_plugin = new ThanksgivingWhoYouThankedInsight();
         $insight_plugin->generateInsight($this->instance, null, $posts, 3);
 
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
 
         $data = unserialize($result->related_data);
-        $this->assertEqual($result->headline, '2 Facebook friends were thankful for Ms. Thankable');
-        $this->assertEqual($result->text, "It's great to have friends who share the love. These 2 people were "
-            . "thankful for Ms. Thankable over the past year.");
+        $this->assertEqual($result->headline, 'Mr. Thankful had friends to be thankful for in '.date('Y'));
+        $this->assertEqual($result->text, 'These are the friends Mr. Thankful was thankful for this year.');
         $this->assertEqual(count($data['people']), 2);
         $this->assertEqual($data['people'][0]->username, 'Second User');
         $this->assertEqual($data['people'][1]->username, 'Third User');
-        $this->assertEqual($data['hero_image']['alt_text'], '');
-        $this->assertEqual($data['hero_image']['img_link'],
-            'https://www.flickr.com/photos/dexxus/2981387336/');
+        $this->assertEqual($data['hero_image']['alt_text'], $result->headline);
+        $this->assertEqual($data['hero_image']['img_link'], 'https://www.flickr.com/photos/aidanmorgan/4135626581/');
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }

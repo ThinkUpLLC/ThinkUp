@@ -39,10 +39,14 @@ class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements In
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
 
         $thanksgiving_day = date('m/j', strtotime("3 weeks thursday",mktime(0,0,0,11,1,date('Y'))));
+        $regenerate = false;
         //test
-        //$thanksgiving_day = date('m/j');
-        if (!$this->shouldGenerateAnnualInsight($this->slug, $instance, 'today', false, $thanksgiving_day)) {
-            $this->logger->logInfo("Skipped generating insight", __METHOD__ . ',' . __LINE__);
+        // $thanksgiving_day = date('11/20');
+        // $regenerate = true;
+
+        if (!$this->shouldGenerateAnnualInsight($this->slug, $instance, 'today', $regenerate, $thanksgiving_day,
+            null, array('instagram'))) {
+            $this->logger->logInfo("Skipped generating insight on ".$instance->network, __METHOD__ . ',' . __LINE__);
             return;
         }
 
@@ -91,7 +95,7 @@ class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements In
             $insight->instance_id = $instance->id;
             $insight->date = $this->insight_date;
             if ($instance->network == 'facebook') {
-                $insight->headline = $this->username . ' has friends to be thankful for';
+                $insight->headline = $this->username . ' had friends to be thankful for in '.date('Y');
                 $insight->text = "These are the friends ".$this->username." was thankful for this year.";
                 $insight->setHeroImage(array(
                     'url' => 'https://www.thinkup.com/assets/images/insights/2014-11/thanksgiving-2.jpg',
@@ -100,7 +104,7 @@ class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements In
                     'img_link' => 'https://www.flickr.com/photos/aidanmorgan/4135626581/'
                 ));
             } else {
-                $insight->headline = 'Who '.$this->username." was thankful for";
+                $insight->headline = 'Who '.$this->username." was thankful for in ".date('Y');
                 if (count($thankees) > 20) {
                     $insight->text = "These are just some of the <strong>".(count($thankees))
                         ." people</strong> ".$this->username." thanked this year.";
