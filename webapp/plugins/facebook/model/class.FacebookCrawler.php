@@ -57,7 +57,7 @@ class FacebookCrawler {
      * @var str Fields to request from Facebook for the user's feed
      */
     static $feed_fields =
-        "comments.limit(25).summary(true),likes.limit(25).summary(true),from,message,name,link,caption,description,picture";
+        "comments.limit(25).summary(true),likes.limit(25).summary(true),from,message,name,link,caption,description,picture,created_time";
 
     /**
      * Extended max_crawl_time.
