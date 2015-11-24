@@ -75,12 +75,19 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
             $insight->date = "$year-$this->run_date";
 
             $top_three_favliked = $this->topThreeThisYear($instance);
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+            }
             foreach ($top_three_favliked as $key => $post) {
                 if ($post->favlike_count_cache == 0) {
                     unset($top_three_favliked[$key]);
                 } else {
                     //Avoid broken avatars
                     $post->author_avatar = $user->avatar;
+                }
+                if ($post->network == 'instagram') {
+                    $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                    $top_three_favliked[$key] = $post;
                 }
             }
 
@@ -98,18 +105,18 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
-                        'headline' => "%username's most-faved tweets of %year",
+                        'headline' => "%username's most-liked tweets of %year",
                         'body' => "In the Walk of Fame that is %username's Twitter " .
-                            "stream, these fan favorites earned the most stars in %qualified_year."
+                            "stream, these fan favorites earned the most hearts in %qualified_year."
                     ),
                     'one' => array(
-                        'headline' => "%username's most-faved tweet of %year",
+                        'headline' => "%username's most-liked tweet of %year",
                         'body' => "In the Walk of Fame that is %username's Twitter " .
-                            "stream, this fan favorite earned the most stars in %qualified_year."
+                            "stream, this fan favorite earned the most hearts in %qualified_year."
                     ),
                     'none' => array(
                         'headline' => "What's in a fave?",
-                        'body' => "%username didn't get any faves in %year, which is " .
+                        'body' => "%username didn't get any likes in %year, which is " .
                         "crazy! Give @thinkup a mention and we'd be happy to " .
                         "change that."
                     ),
@@ -131,6 +138,25 @@ class EOYMostFavlikedPostInsight extends InsightPluginParent implements InsightP
                         'headline' => "Like, what's the deal?",
                         'body' => "No one liked %username's status updates on Facebook " .
                             "in %year, but no biggie: We like %username plenty."
+                    ),
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's most-liked photos of %year",
+                        'body' => "%username's %year photos weren't just #instagood, they were InstaGREAT. " .
+                            "These are the photos that made %username's friends tap the most hearts " .
+                            "in %qualified_year."
+                    ),
+                    'one' => array(
+                        'headline' => "%username's most-liked photo of %year",
+                        'body' => "%username's %year photos weren't just #instagood, they were InstaGREAT. " .
+                            "This photo made %username's tap the most hearts " .
+                            "in %qualified_year."
+                    ),
+                    'none' => array(
+                        'headline' => "#instawhaaat?",
+                        'body' => "No one liked %username's photos on Instagram " .
+                            "in %year, but no biggie: We love %username plenty."
                     ),
                 )
             );
