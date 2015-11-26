@@ -179,7 +179,7 @@ class InsightTerms {
     private function getNounForFavlike($network, $plural) {
         switch ($network) {
             case 'twitter':
-                return (!$plural) ? 'favorite' : 'favorites';
+                return (!$plural) ? 'like' : 'likes';
                 break;
 
             case 'google+':
@@ -284,7 +284,7 @@ class InsightTerms {
     private function getPastTenseVerbToFavlike($network) {
         switch ($network) {
             case 'twitter':
-                return 'favorited';
+                return 'liked';
                 break;
 
             case 'google+':
