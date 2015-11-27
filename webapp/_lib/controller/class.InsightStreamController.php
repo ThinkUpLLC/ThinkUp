@@ -93,10 +93,6 @@ class InsightStreamController extends ThinkUpController {
             }
         }
 
-        if (Utils::isTest() || date("Y-m-d") == '2015-11-26') {
-            $this->addInfoMessage("Happy Thanksgiving! We're thankful you're using ThinkUp.");
-        }
-
         $this->addToView('tpl_path', THINKUP_WEBAPP_PATH.'plugins/insightsgenerator/view/');
         if ($config->getValue('image_proxy_enabled') == true) {
             $this->addToView('image_proxy_sig', $config->getValue('image_proxy_sig'));
