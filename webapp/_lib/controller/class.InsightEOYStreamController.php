@@ -37,6 +37,16 @@ class InsightEOYStreamController extends InsightStreamController {
      */
     var $tpl_name = 'insights-eoy.tpl';
     /**
+     * Show insights since.
+     * @var str
+     */
+    var $since;
+
+    public function __construct($session_started=false, $since=null) {
+        parent::__construct($session_started);
+        $this->since = $since;
+    }
+    /**
      * Load view with data to display page of insights.
      */
     protected function displayPageOfInsights() {
@@ -48,6 +58,7 @@ class InsightEOYStreamController extends InsightStreamController {
         $this->addToView('tomorrows_teaser', $tomorrows_teaser);
 
         $this->addToView('is_year_end', true);
+        $this->addToView('year_end_year', substr($this->since, 0, 4));
         $insight_dao = DAOFactory::getDAO('InsightDAO');
 
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
@@ -55,18 +66,19 @@ class InsightEOYStreamController extends InsightStreamController {
             if ($this->isAdmin()) {
                 ///show all insights for all service users
                 $insights = $insight_dao->getAllInstanceEOYInsights($page_count=(self::PAGE_INSIGHTS_COUNT+1),
-                $page);
+                    $page, $this->since);
             } else {
                 //show only service users owner owns
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
                 $insights = $insight_dao->getAllOwnerInstanceEOYInsights($owner->id,
-                $page_count=(self::PAGE_INSIGHTS_COUNT+1), $page);
+                    $page_count=(self::PAGE_INSIGHTS_COUNT+1), $page, $this->since);
             }
         } else {
             //show just public service users in stream
-            $insights = $insight_dao->getPublicEOYInsights($page_count=(self::PAGE_INSIGHTS_COUNT+1), $page);
+            $insights = $insight_dao->getPublicEOYInsights($page_count=(self::PAGE_INSIGHTS_COUNT+1), $page,
+                $this->since);
         }
         if (isset($insights) && sizeof($insights) > 0) {
             if (sizeof($insights) == (self::PAGE_INSIGHTS_COUNT+1)) {

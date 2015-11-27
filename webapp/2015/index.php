@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/2014/index.php
+ * ThinkUp/webapp/2015/index.php
  *
  * Copyright (c) 2014-2015 Gina Trapani
  *
@@ -28,5 +28,5 @@
 chdir('..');
 require_once 'init.php';
 
-$controller = new InsightEOYStreamController(false, '2014-11-01');
+$controller = new InsightEOYStreamController(false, '2015-11-01');
 echo $controller->go();

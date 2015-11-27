@@ -27,10 +27,10 @@
     {/capture}
     <div class="stream-yearend-header">
        <h1>
-         <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of 2014
+         <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of {$year_end_year}
 
          <span class="share-buttons">
-           <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+2014&amp;url={$thinkup_application_url}2014/&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$thinkup_application_url}2014/"><i class="fa fa-fw fa-facebook"></i></a>
+           <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+{$year_end_year}&amp;url={$thinkup_application_url}{$year_end_year}/&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$thinkup_application_url}{$year_end_year}/"><i class="fa fa-fw fa-facebook"></i></a>
          </span>
        </h1>
 
@@ -125,8 +125,8 @@
   (isset($i->related_data.hero_image) and $i->emphasis > '1') | $i->slug eq 'weekly_graph'}insight-wide{/if}{if $i->slug|strpos:'eoy_'===0}insight-yearend insight-wide{/if}" id="insight-{$i->id}">
   {if $i->slug|strpos:'eoy_'===0}
   <div class="insight-yearend-header">
-    <img src="{$site_root_path}assets/img/thinkup-logo-white.png" alt="ThinkUp" class="logo"> Best of 2014
-    <a class="btn" href="{$site_root_path}2014/">See more</a>
+    <img src="{$site_root_path}assets/img/thinkup-logo-white.png" alt="ThinkUp" class="logo"> Best of {$i->date|date_format:"%Y"}
+    <a class="btn" href="{$site_root_path}{$i->date|date_format:'%Y'}/">See more</a>
   </div>
   {/if}
   <div class="panel-heading{if $i->header_image neq ''} panel-heading-illustrated{/if}">
@@ -184,12 +184,12 @@
       <ul class="pager">
       {if $next_page}
         <li class="previous">
-          <a href="{$site_root_path}{if $is_year_end}2014/{else}insights.php{/if}?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
+          <a href="{$site_root_path}{if $is_year_end}{$year_end_year}/{else}insights.php{/if}?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}page={$next_page}" id="next_page" class="pull-left btn btn-small"><i class="fa fa-arrow-left"></i> Older</a>
         </li>
       {/if}
       {if $last_page}
         <li class="next">
-          <a href="{$site_root_path}{if $is_year_end}2014/{else}insights.php{/if}?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
+          <a href="{$site_root_path}{if $is_year_end}{$year_end_year}/{else}insights.php{/if}?{if $smarty.get.v}v={$smarty.get.v}&amp;{/if}{if $smarty.get.u}u={$smarty.get.u}&amp;{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&amp;{/if}page={$last_page}" id="last_page" class="pull-right btn btn-small">Newer <i class="fa fa-arrow-right"></i></a>
         </li>
       {/if}
       </ul>
