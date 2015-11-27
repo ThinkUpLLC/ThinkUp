@@ -101,6 +101,10 @@ class EOYAllAboutYouInsight extends InsightPluginParent implements InsightPlugin
                 $headline = $this->getVariableCopy(array(
                     "A year's worth of %username"
                 ));
+            } elseif ($instance->network == 'instagram') {
+                $headline = $this->getVariableCopy(array(
+                    "A year of %username photos"
+                ));
             } else {
                 $headline = $this->getVariableCopy(array(
                     "A year about %username"
@@ -108,22 +112,39 @@ class EOYAllAboutYouInsight extends InsightPluginParent implements InsightPlugin
             }
             $percent = round($count / $total_posts * 100);
             if ($count > 0) {
-                $insight_text = $this->getVariableCopy(
-                    array(
-                        "In %year, <strong>$percent%</strong> of %username's %posts " .
-                        "&mdash; a grand total of %total &mdash; contained " .
-                        "the words &ldquo;I&rdquo;, &ldquo;me&rdquo;, &ldquo;my&rdquo;, " .
-                        "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;%qualified_year. " .
-                        (($instance->network == 'facebook')?
-                            "Go ahead: tell your story"
-                            :"Sometimes, you've just got to get personal")."."
-                    ),
-                    array(
-                        'total' => number_format($count),
-                        'year' => $year,
-                        'qualified_year' => $qualified_year
-                    )
-                );
+                if ($instance->network == 'twitter' || $instance->network == 'facebook') {
+                    $insight_text = $this->getVariableCopy(
+                        array(
+                            "In %year, <strong>$percent%</strong> of %username's %posts " .
+                            "&mdash; a grand total of %total &mdash; contained " .
+                            "the words &ldquo;I&rdquo;, &ldquo;me&rdquo;, &ldquo;my&rdquo;, " .
+                            "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;%qualified_year. " .
+                            (($instance->network == 'facebook')?
+                                "Go ahead: tell your story"
+                                :"Sometimes, you've just got to get personal")."."
+                        ),
+                        array(
+                            'total' => number_format($count),
+                            'year' => $year,
+                            'qualified_year' => $qualified_year
+                        )
+                    );
+                } else {
+                    $insight_text = $this->getVariableCopy(
+                        array(
+                            "In %year, <strong>$percent%</strong> of %username's Instagram captions " .
+                            "&mdash; a grand total of %total &mdash; contained " .
+                            "the words &ldquo;I&rdquo;, &ldquo;me&rdquo;, &ldquo;my&rdquo;, " .
+                            "&ldquo;mine&rdquo;, or &ldquo;myself&rdquo;%qualified_year. " .
+                            "What a life in pictures!"
+                        ),
+                        array(
+                            'total' => number_format($count),
+                            'year' => $year,
+                            'qualified_year' => $qualified_year
+                        )
+                    );
+                }
             } else {
                 $insight_text = $this->getVariableCopy(
                     array(
