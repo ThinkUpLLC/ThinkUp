@@ -16,15 +16,22 @@
 
 <div class="container">
   {if $is_year_end}
-    {capture name=img_date assign="img_date"}
-    {if $smarty.now|date_format:"%Y%m%d" > 20141130 && $smarty.now|date_format:"%Y%m%d" < 20141224}
-      {$smarty.now|date_format:"%Y%m%d"}
-    {elseif $smarty.now|date_format:"%Y%m%d" > 20141223}
-      20141223
+    {if $year_end_year eq '2014'}
+      {capture name=img_date assign="img_date"}
+        20141223
+      {/capture}
     {else}
-      20141201
+      {capture name=img_date assign="img_date"}
+      {if $smarty.now|date_format:"%Y%m%d" > 20151130 && $smarty.now|date_format:"%Y%m%d" < 20151224}
+        {$smarty.now|date_format:"%Y%m%d"}
+      {elseif $smarty.now|date_format:"%Y%m%d" > 20151223}
+        20151223
+      {else}
+        20151201
+      {/if}
+      {/capture}
     {/if}
-    {/capture}
+
     <div class="stream-yearend-header">
        <h1>
          <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of {$year_end_year}
