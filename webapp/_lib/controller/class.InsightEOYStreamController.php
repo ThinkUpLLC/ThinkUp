@@ -157,6 +157,28 @@ class InsightEOYStreamController extends InsightStreamController {
         $teaser['2014-12-21'] = 'Words of the year';
         $teaser['2014-12-22'] = 'Best of the year';
 
+        //2015
+        $teaser['2015-11-30'] = 'Your most-loved';
+        $teaser['2015-12-01'] = 'But what about you?';
+        $teaser['2015-12-02'] = 'What was your chattiest day?';
+        $teaser['2015-12-03'] = 'Photo of the year';
+        $teaser['2015-12-04'] = 'Keep it clean?';
+        $teaser['2015-12-06'] = 'What was <em>really</em> exciting?';
+        $teaser['2015-12-07'] = 'RT FTW';
+        $teaser['2015-12-08'] = "2015's BFFs";
+        $teaser['2015-12-09'] = 'Enough to fill a book?';
+        $teaser['2015-12-10'] = 'Getting a response';
+        $teaser['2015-12-11'] = 'Laughs of the year';
+        $teaser['2015-12-13'] = 'Who got link love?';
+        $teaser['2015-12-14'] = 'Link of the year';
+        $teaser['2015-12-15'] = 'Most likeable';
+        $teaser['2015-12-16'] = 'Going streaking?';
+        $teaser['2015-12-17'] = 'Repeat after me';
+        $teaser['2015-12-20'] = 'The final count';
+        $teaser['2015-12-21'] = 'Words of the year';
+        $teaser['2015-12-22'] = 'Most popular, 2015';
+        $teaser['2015-12-29'] = 'Best of the year';
+
         $today = date('Y-m-d');
         if (isset($teaser[$today])) {
             return $teaser[$today];
