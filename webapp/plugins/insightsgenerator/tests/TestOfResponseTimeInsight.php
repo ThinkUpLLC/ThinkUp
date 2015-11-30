@@ -234,10 +234,10 @@ class TestOfResponseTimeInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new favorite/', $result->headline);
+        $this->assertPattern('/\@testeriffic\'s tweets averaged <strong>1 new like/', $result->headline);
         $this->assertPattern('/every <strong>hour<\/strong>/', $result->headline);
         $this->assertPattern('/That\'s faster than the previous week\'s average/', $result->text);
-        $this->assertPattern('/of 1 favorite every day./', $result->text);
+        $this->assertPattern('/of 1 like every day./', $result->text);
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
     }

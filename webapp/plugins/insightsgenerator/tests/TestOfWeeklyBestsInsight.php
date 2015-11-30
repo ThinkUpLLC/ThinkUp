@@ -103,7 +103,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/\@testeriffic\'s most popular tweet last week/', $result->headline);
         $this->assertPattern('/5 replies/', $result->text);
         $this->assertPattern('/1 retweet/', $result->text);
-        $this->assertPattern('/3 favorites/', $result->text);
+        $this->assertPattern('/3 likes/', $result->text);
 
         $controller = new InsightStreamController();
         $_GET['u'] = 'testeriffic';
@@ -179,7 +179,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertPattern('/\@testeriffic\'s biggest tweet last week/', $result->headline);
         $this->assertPattern('/5 replies/', $result->text);
         $this->assertPattern('/1 retweet/', $result->text);
-        $this->assertPattern('/3 favorites/', $result->text);
+        $this->assertPattern('/3 likes/', $result->text);
 
         $controller = new InsightStreamController();
         $_GET['u'] = 'testeriffic';
@@ -741,7 +741,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s most popular tweet last week/', $result->headline);
-        $this->assertPattern('/3 favorites/', $result->text);
+        $this->assertPattern('/3 likes/', $result->text);
         $this->assertNoPattern('/reply/', $result->text);
         $this->assertNoPattern('/retweet/', $result->text);
         $this->assertNoPattern('/and/', $result->text);
@@ -794,7 +794,7 @@ class TestOfWeeklyBestsInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/\@testeriffic\'s most popular tweet last week/', $result->headline);
         $this->assertPattern('/4 replies/', $result->text);
-        $this->assertPattern('/5 favorites/', $result->text);
+        $this->assertPattern('/5 likes/', $result->text);
         $this->assertPattern('/and/', $result->text);
 
         /**

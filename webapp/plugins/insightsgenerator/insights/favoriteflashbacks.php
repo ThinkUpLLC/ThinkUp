@@ -68,7 +68,7 @@ class FavoriteFlashbackInsight extends InsightPluginParent implements InsightPlu
                     $plural = ($number_of_years_ago > 1 )?'s':'';
 
                     if ($instance->network == 'twitter') {
-                        $headline = $this->username ." favorited @" .$flashback_favs[0]->author_username
+                        $headline = $this->username ." liked @" .$flashback_favs[0]->author_username
                             ."'s tweet from " .$number_of_years_ago." year". $plural." ago";
                     } else {
                         $post_term = ($flashback_favs[0]->is_short_video)?'video':'%post';

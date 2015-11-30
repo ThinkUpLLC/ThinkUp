@@ -22,7 +22,7 @@
 {elseif ($i->filename eq 'facebookprofileprompt')}
   {assign var='tout_headline' value="We can help you keep your online profiles up to date."}
 {elseif ($i->filename eq 'favoritedlinks')}
-  {assign var='tout_headline' value="Want a handy list of the links you've favorited? We can help!"}
+  {assign var='tout_headline' value="Want a handy list of the links you've liked? We can help!"}
 {elseif ($i->filename eq 'favoriteflashbacks')}
   {assign var='tout_headline' value="Remember what you found interesting online on this day in years past."}
 {elseif ($i->filename eq 'flashbacks')}
