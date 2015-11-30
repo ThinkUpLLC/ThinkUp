@@ -38,7 +38,7 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
         ." your ".$terms->getNoun('post');
 
         $this->assertNotNull($terms);
-        $this->assertEqual($text, "Two of your followers favorited your tweet");
+        $this->assertEqual($text, "Two of your followers liked your tweet");
     }
 
     public function testInsightTermsForGooglePlus() {
@@ -151,7 +151,7 @@ class TestOfInsightTerms extends ThinkUpBasicUnitTestCase {
     public function testGetProcessedText() {
         $twitter_terms = new InsightTerms('twitter');
         $result = $twitter_terms->getProcessedText('%posts %posted %post %likes %liked %like %reply %replies');
-        $this->assertEqual('tweets tweeted tweet favorites favorited favorite reply replies', $result);
+        $this->assertEqual('tweets tweeted tweet likes liked like reply replies', $result);
         $result = $twitter_terms->getProcessedText('%retweets %retweet %followers %follower %shared');
         $this->assertEqual('retweets retweet followers follower retweeted', $result);
 

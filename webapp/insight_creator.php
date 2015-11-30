@@ -251,7 +251,7 @@
                            <a href="https://twitter.com/feliciaday/status/212418013163552768" class="tweet-action tweet-action-permalink">Jun 12, 2012</a>
                            <a href="http://twitter.com/intent/tweet?in_reply_to=212418013163552768" class="tweet-action"><i class="fa fa-reply icon"></i></a>
                           <a href="http://twitter.com/intent/retweet?tweet_id=212418013163552768" class="tweet-action"><i class="fa fa-retweet icon"></i></a>
-                          <a href="http://twitter.com/intent/favorite?tweet_id=212418013163552768" class="tweet-action"><i class="fa fa-star icon"></i></a>
+                          <a href="http://twitter.com/intent/favorite?tweet_id=212418013163552768" class="tweet-action"><i class="fa fa-heart icon"></i></a>
                        </div>
                     </blockquote>
                 </li>
@@ -275,7 +275,7 @@
     <a href="https://twitter.com/shl/status/508969172722675712" class="tweet-action tweet-action-permalink">Sep  8, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=508969172722675712" class="tweet-action"><i class="fa fa-reply icon"></i></a>
     <a href="http://twitter.com/intent/retweet?tweet_id=508969172722675712" class="tweet-action"><i class="fa fa-retweet icon"></i></a>
-    <a href="http://twitter.com/intent/favorite?tweet_id=508969172722675712" class="tweet-action"><i class="fa fa-star icon"></i></a>
+    <a href="http://twitter.com/intent/favorite?tweet_id=508969172722675712" class="tweet-action"><i class="fa fa-heart icon"></i></a>
     </div>
 </blockquote>
     </li>
@@ -291,7 +291,7 @@
     <a href="https://twitter.com/ftrain/status/505416713580867585" class="tweet-action tweet-action-permalink">Aug 29, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=505416713580867585" class="tweet-action"><i class="fa fa-reply icon"></i></a>
     <a href="http://twitter.com/intent/retweet?tweet_id=505416713580867585" class="tweet-action"><i class="fa fa-retweet icon"></i></a>
-    <a href="http://twitter.com/intent/favorite?tweet_id=505416713580867585" class="tweet-action"><i class="fa fa-star icon"></i></a>
+    <a href="http://twitter.com/intent/favorite?tweet_id=505416713580867585" class="tweet-action"><i class="fa fa-heart icon"></i></a>
     </div>
 </blockquote>
     </li>
@@ -307,7 +307,7 @@
     <a href="https://twitter.com/trammell/status/501926686527479808" class="tweet-action tweet-action-permalink">Aug 20, 2014</a>
       <a href="http://twitter.com/intent/tweet?in_reply_to=501926686527479808" class="tweet-action"><i class="fa fa-reply icon"></i></a>
     <a href="http://twitter.com/intent/retweet?tweet_id=501926686527479808" class="tweet-action"><i class="fa fa-retweet icon"></i></a>
-    <a href="http://twitter.com/intent/favorite?tweet_id=501926686527479808" class="tweet-action"><i class="fa fa-star icon"></i></a>
+    <a href="http://twitter.com/intent/favorite?tweet_id=501926686527479808" class="tweet-action"><i class="fa fa-heart icon"></i></a>
     </div>
 </blockquote>
     </li>

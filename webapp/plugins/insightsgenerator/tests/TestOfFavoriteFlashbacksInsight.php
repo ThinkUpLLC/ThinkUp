@@ -62,7 +62,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('@testeriffic favorited @twitteruser\'s tweet from 1 year ago', $result->headline);
+        $this->assertEqual('@testeriffic liked @twitteruser\'s tweet from 1 year ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -154,7 +154,7 @@ class TestOfFavoriteFlashbacksInsight extends ThinkUpInsightUnitTestCase {
         $this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('@testeriffic favorited @twitteruser\'s tweet from 3 years ago', $result->headline);
+        $this->assertEqual('@testeriffic liked @twitteruser\'s tweet from 3 years ago', $result->headline);
         $this->assertEqual('Can you believe how fast time flies?', $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");

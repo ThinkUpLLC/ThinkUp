@@ -65,8 +65,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual('The latest link @testeriffic favorited', $result->headline);
-        $this->assertPattern('|^@testeriffic favorited 1 tweet with a link in it.$|',
+        $this->assertEqual('The latest link @testeriffic liked', $result->headline);
+        $this->assertPattern('|^@testeriffic liked 1 tweet with a link in it.$|',
             $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
@@ -159,8 +159,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
-        $this->assertPattern('|@testeriffic favorited 1 tweet with <strong>2 links</strong> in it.|', $result->text);
+        $this->assertEqual('The latest links @testeriffic liked', $result->headline);
+        $this->assertPattern('|@testeriffic liked 1 tweet with <strong>2 links</strong> in it.|', $result->text);
 
         $email = $this->getRenderedInsightInEmail($result);
         $count = substr_count($email, '2 links:');
@@ -205,8 +205,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
-        $this->assertPattern('|@testeriffic favorited 2 tweets with <strong>4 links</strong> in them.|', $result->text);
+        $this->assertEqual('The latest links @testeriffic liked', $result->headline);
+        $this->assertPattern('|@testeriffic liked 2 tweets with <strong>4 links</strong> in them.|', $result->text);
         $fav_posts = unserialize($result->related_data);
         $this->assertEqual(2, count($fav_posts['posts']));
         $this->assertEqual(2, count($fav_posts['posts'][0]->links));
@@ -230,8 +230,8 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $this->assertNotNull($result);
-        $this->assertEqual('The latest links @testeriffic favorited', $result->headline);
-        $this->assertPattern('|Here are the latest links from tweets @testeriffic favorited.|', $result->text);
+        $this->assertEqual('The latest links @testeriffic liked', $result->headline);
+        $this->assertPattern('|Here are the latest links from tweets @testeriffic liked.|', $result->text);
 
         $this->debug($this->getRenderedInsightInHTML($result));
         $this->debug($this->getRenderedInsightInEmail($result));
@@ -290,7 +290,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
 
         $insight_plugin->generateInsight($instance, null, $last_week_of_posts, 3);
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
-        $this->assertEqual('@refavey favorited 4 tweets with <strong>2 links</strong> in them.', $result>title);
+        $this->assertEqual('@refavey liked 4 tweets with <strong>2 links</strong> in them.', $result>title);
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['posts']), 2);
 
@@ -316,7 +316,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $fav_posts = unserialize($result->related_data);
         $this->assertNotNull($result);
-        $this->assertEqual('1 link @testeriffic favorited', $result->headline);
+        $this->assertEqual('1 link @testeriffic liked', $result->headline);
         $this->assertEqual(count($fav_posts), 1);
 
         $this->debug($this->getRenderedInsightInHTML($result));
@@ -335,7 +335,7 @@ class TestOfFavoritedLinksInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight('favorited_links', 10, $today);
         $fav_posts = unserialize($result->related_data);
         $this->assertNotNull($result);
-        $this->assertEqual('2 links @testeriffic favorited', $result->headline);
+        $this->assertEqual('2 links @testeriffic liked', $result->headline);
         $this->assertEqual(count($fav_posts), 1);
 
         $this->debug($this->getRenderedInsightInHTML($result));
