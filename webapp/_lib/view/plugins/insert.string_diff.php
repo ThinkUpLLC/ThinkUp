@@ -55,8 +55,10 @@ function smarty_insert_string_diff($params, &$smarty) {
   $diff = FineDiff::renderDiffToHTMLFromOpcodes($params['from_text'], $opcodes);
 
   if (isset($params['is_email']) && $params['is_email']) {
-    $diff = str_replace('<ins', '<ins style="background: #e4f9e8; text-decoration: none;"', $diff);
-    $diff = str_replace('<del', '<del style="background: #f8d9dd; color: #dc4154;"', $diff);
+    $diff = str_replace('<ins', '<span style="background: #e4f9e8; text-decoration: none;"', $diff);
+    $diff = str_replace('<del', '<span style="background: #f8d9dd; color: #dc4154;"', $diff);
+    $diff = str_replace('</ins>', '</span>', $diff);
+    $diff = str_replace('</del>', '</span>', $diff);
   }
 
   return $diff;
