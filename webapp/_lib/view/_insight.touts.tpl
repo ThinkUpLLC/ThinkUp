@@ -68,7 +68,7 @@
 {/if}
 
 {if $i->slug|strpos:'eoy_'===0}
-  {assign var='tout_headline' value="What's <em>your</em> Best of 2014? Find out!"}
+  {assign var='tout_headline' value="What's <em>your</em> Best of 2015? Find out!"}
 {/if}
 
 <div class="panel panel-default insight insight-default insight-hero insight-wide insight-message insight-tout">
