@@ -1383,7 +1383,8 @@ or isset($insight->related_data.changes)}
                             <div class="byline"><a href="{if $post->network eq 'twitter'}https://twitter.com/intent/user?user_id={$post->author_user_id}{elseif $post->network eq 'facebook'}https://facebook.com/{$post->author_user_id}{elseif $post->network eq 'instagram'}https://instagram.com/{$post->author_username}{/if}" title="{$post->author_username}"><strong>{$post->author_fullname}</strong> {if $post->network eq 'twitter' || $post->network eq 'instagram'}<span class="username">@{$post->author_username}</span>{/if}</a></div>
                             <div class="tweet-body">{$post->post_text|filter_xss|link_urls|link_usernames_to_network:$post->network|color_html_email_links}</div>
                             <div class="tweet-actions">
-                              <a href="{$post->permalink}"
+                              <a href="{if $post->network eq 'facebook' || $post->network eq 'twitter'}{if $post->network eq 'twitter'}https://twitter.com/{$post->author_username}/status/{/if}{if
+      $post->network eq 'facebook'}https://www.facebook.com/{$post->author_user_id}/posts/{/if}{$post->post_id}{elseif $post->network eq 'instagram'}{$post->permalink}{/if}"
                                 class="tweet-action tweet-action-permalink">{$post->pub_date|date_format:'%b %e, %Y'}</a>
                             </div>
                         </td>
