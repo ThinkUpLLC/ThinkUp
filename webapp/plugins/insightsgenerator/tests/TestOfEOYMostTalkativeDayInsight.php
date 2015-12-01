@@ -60,12 +60,12 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
     public function testMostTalkativeDay() {
         $insight_plugin = new EOYMostTalkativeDayInsight();
 
-        // A bunch of posts on 2014-02-07
+        // A bunch of posts on 02-07
         for ($i=0; $i<3; $i++) {
             $builders[] = FixtureBuilder::build('posts',
                 array(
                 'post_text' => 'This is very shared',
-                'pub_date' => '2014-02-07',
+                'pub_date' => date('Y').'-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'retweet_count_cache' => 100
@@ -73,11 +73,11 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             );
         }
 
-        // One post on 2014-08-07
+        // One post on 08-07
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is pretty well shared',
-            'pub_date' => '2014-08-07',
+            'pub_date' => date('Y').'-08-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_cache' => 50
@@ -108,7 +108,7 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             $builders[] = FixtureBuilder::build('posts',
                 array(
                     'post_text' => 'This is pretty well shared',
-                    'pub_date' => '2014-09-07',
+                    'pub_date' => date('Y').'-09-07',
                     'author_username' => $this->instance->network_username,
                     'network' => $this->instance->network,
                     'retweet_count_cache' => 50
@@ -190,6 +190,104 @@ class TestOfEOYMostTalkativeDayInsight extends ThinkUpInsightUnitTestCase {
             $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
+    }
+
+    public function testInstagramNormalCase() {
+        // Set up and test normal insta case
+        $this->instance->network = 'instagram';
+
+        $builders = self::setUpPublicInsight($this->instance);
+        $year = date('Y');
+        for ($i=0; $i<5; $i++) {
+            $post_builder = FixtureBuilder::build('posts',
+                array(
+                    'post_text' => 'This is very shared',
+                    'pub_date' => "$year-02-07",
+                    'author_username' => $this->instance->network_username,
+                    'network' => $this->instance->network,
+                )
+            );
+            $builders[] = $post_builder;
+            $builders[] = FixtureBuilder::build('photos', array(
+                'post_key'=>$post_builder->columns['last_insert_id'],
+                'post_id'=>$post_builder->columns['post_id'],
+                'standard_resolution_url'=>'/example.jpg',
+                'is_short_video'=>0 ));
+        }
+
+        $post_builder = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is very popular',
+                'pub_date' => "$year-02-07",
+                'author_username' => $this->instance->network_username,
+                'network' => $this->instance->network,
+                'retweet_count_cache' => 100,
+                'favlike_count_cache' => 100,
+                'reply_count_cache' => 100
+            )
+        );
+        $builders[] = $post_builder;
+        $builders[] = FixtureBuilder::build('photos', array(
+            'post_key'=>$post_builder->columns['last_insert_id'],
+            'post_id'=>$post_builder->columns['post_id'],
+            'standard_resolution_url'=>'/example.jpg',
+            'is_short_video'=>0 ));
+
+        $post_builder = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is less popular',
+                'pub_date' => "$year-02-07",
+                'author_username' => $this->instance->network_username,
+                'network' => $this->instance->network,
+                'retweet_count_cache' => 10,
+                'favlike_count_cache' => 10,
+                'reply_count_cache' => 10
+            )
+        );
+        $builders[] = $post_builder;
+        $builders[] = FixtureBuilder::build('photos', array(
+            'post_key'=>$post_builder->columns['last_insert_id'],
+            'post_id'=>$post_builder->columns['post_id'],
+            'standard_resolution_url'=>'/example.jpg',
+            'is_short_video'=>0 ));
+
+        $post_builder = FixtureBuilder::build('posts',
+            array(
+                'post_text' => 'This is least popular',
+                'pub_date' => "$year-02-07",
+                'author_username' => $this->instance->network_username,
+                'network' => $this->instance->network,
+                'retweet_count_cache' => 1,
+                'favlike_count_cache' => 1,
+                'reply_count_cache' => 1
+            )
+        );
+
+        $builders[] = $post_builder;
+        $builders[] = FixtureBuilder::build('photos', array(
+            'post_key'=>$post_builder->columns['last_insert_id'],
+            'post_id'=>$post_builder->columns['post_id'],
+            'standard_resolution_url'=>'/example.jpg',
+            'is_short_video'=>0 ));
+
+        $posts = array();
+        $insight_plugin = new EOYMostTalkativeDayInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $year = date('Y');
+        $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id,
+            $year.'-'.$insight_plugin->run_date);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("buffy's most Instagrammed day in $year", $result->headline);
+        $this->assertEqual("buffy posted on Instagram <strong>8 times on February 7th</strong>, more than " .
+            "any other day this year (at least since February). These are ".
+            "buffy's most popular photos and videos from that day.",
+            $result->text);
+
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Instagram");
     }
 
     public function testFacebookNormalCase() {

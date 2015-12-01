@@ -118,6 +118,22 @@ class EOYMostTalkativeDayInsight extends InsightPluginParent implements InsightP
                         "days %qualified_year These are %username's most popular " .
                         "status updates from each day."
                     )
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's most Instagrammed day in %year",
+                        'body' => "%username posted on Instagram <strong>%total times on " .
+                        "%talkative_date</strong>, more than any other day %qualified_year " .
+                        "These are %username's most popular photos and videos from that day."
+                    ),
+                    'multiple' => array(
+                        'headline' => "%username's most Instagrammed day in %year",
+                        'body' => "In the running for %username's most Instagrammed day " .
+                        "in %year, we've got a tie: %username posted " .
+                        "<strong>%total times on %talkative_date</strong> — more than on any other " .
+                        "days %qualified_year These are %username's most popular " .
+                        "posts from each day."
+                    )
                 )
             );
 
@@ -174,8 +190,20 @@ class EOYMostTalkativeDayInsight extends InsightPluginParent implements InsightP
             $insight->emphasis = Insight::EMPHASIS_HIGH;
             $insight->filename = $filename;
 
-            //Avoid broken avatars
+            //Populate Instagram photos
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $popular_photos = array();
+                foreach ($popular_posts as $post) {
+                    if ($post->network == 'instagram') {
+                        $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                        $popular_photos[] = $post;
+                    }
+                }
+                $popular_posts = $popular_photos;
+            }
             foreach ($popular_posts as $post) {
+                //Avoid broken avatars
                 $post->author_avatar = $user->avatar;
             }
             $insight->setPosts($popular_posts);
