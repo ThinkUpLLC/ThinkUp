@@ -73,7 +73,7 @@ class InsightEOYStreamController extends InsightStreamController {
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
                 $insights = $insight_dao->getAllOwnerInstanceEOYInsights($owner->id,
-                    $page_count=(self::PAGE_INSIGHTS_COUNT+1), $page, $this->since);
+                    $page_count=(self::PAGE_INSIGHTS_COUNT+1), $page, 1, $this->since);
             }
         } else {
             //show just public service users in stream
