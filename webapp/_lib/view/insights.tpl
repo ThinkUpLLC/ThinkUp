@@ -57,7 +57,7 @@
 
   <div class="stream{if isset($smarty.get.s) && !isset($smarty.get.square)} stream-permalink{/if}{if $is_year_end} stream-yearend{/if}">
 
-  {if $is_year_end && $tomorrows_teaser}
+  {if $is_year_end && $tomorrows_teaser && $year_end_year eq '2015'}
     <div class="date-group">
       <div class="date-marker">
         <div class="relative">Tomorrow</div>
