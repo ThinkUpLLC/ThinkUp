@@ -120,9 +120,10 @@ interface InsightDAO {
      * Get a page of end-of-year insights for all public users.
      * @param int $page_count Number of insight baselines to return
      * @param int $page_number Page number
+     * @param str $since Since this date
      * @return array Insights
      */
-    public function getPublicEOYInsights($page_count=10, $page_number=1);
+    public function getPublicEOYInsights($page_count=10, $page_number=1, $since=null);
     /**
      * Get a page of insights for all users, public and private.
      * @param int $page_count
@@ -134,9 +135,10 @@ interface InsightDAO {
      * Get a page of end-of-year insights for all users, public and private.
      * @param int $page_count
      * @param int $page_number
+     * @param str $since Since this date
      * @return array Insights
      */
-    public function getAllInstanceEOYInsights($page_count=10, $page_number=1);
+    public function getAllInstanceEOYInsights($page_count=10, $page_number=1, $since=null);
     /**
      * Get a insights for all users, public and private, created since a specified timestamp.
      * @param int $since Timestamp
@@ -165,9 +167,11 @@ interface InsightDAO {
      * @param int $page_count
      * @param int $page
      * @param int $page_count_offset Default 1
+     * @param str $since Since this date
      * @return array Insights
      */
-    public function getAllOwnerInstanceEOYInsights($owner_id, $page_count=20, $page=1, $page_count_offset=1);
+    public function getAllOwnerInstanceEOYInsights($owner_id, $page_count=20, $page=1, $page_count_offset=1,
+        $since=null);
     /**
      * Check whether or not a insight exists for an instance by slug.
      * @param $slug

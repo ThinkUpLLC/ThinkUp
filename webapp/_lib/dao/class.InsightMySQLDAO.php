@@ -279,7 +279,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return self::getInsightsForInstances($page_count, $page_number, $public_only = true);
     }
 
-    public function getPublicEOYInsights($page_count=10, $page_number=1, $since='12-01-2014') {
+    public function getPublicEOYInsights($page_count=10, $page_number=1, $since=null) {
         return self::getEOYInsightsForInstances($page_count, $page_number, $public_only = true, 1, $since);
     }
 
@@ -287,7 +287,7 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return self::getInsightsForInstances($page_count, $page_number, $public_only = false);
     }
 
-    public function getAllInstanceEOYInsights($page_count=10, $page_number=1, $since='12-01-2014') {
+    public function getAllInstanceEOYInsights($page_count=10, $page_number=1, $since=null) {
         return self::getEOYInsightsForInstances($page_count, $page_number, $public_only = false, 1, $since);
     }
 
@@ -331,19 +331,26 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         return $insights;
     }
 
-    public function getAllOwnerInstanceEOYInsights($owner_id, $page_count=20, $page_number=1, $page_count_offset=1) {
+    public function getAllOwnerInstanceEOYInsights($owner_id, $page_count=20, $page_number=1, $page_count_offset=1,
+        $since=null) {
         $start_on_record = ($page_number - 1) * ($page_count - $page_count_offset);
-        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
-        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
-        $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
-        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
-        $q .= "WHERE slug REGEXP '^eoy_' AND su.is_active = 1 AND oi.owner_id = :owner_id ";
-        $q .= $this->stream_conditionals_order;
+
         $vars = array(
             ":start_on_record"=>(int)$start_on_record,
             ":limit"=>(int)$page_count,
             ":owner_id"=>(int)$owner_id
         );
+
+        $q = "SELECT i.*, i.id as insight_key, su.*, u.avatar FROM #prefix#insights i ";
+        $q .= "INNER JOIN #prefix#instances su ON i.instance_id = su.id ";
+        $q .= "INNER JOIN #prefix#owner_instances oi ON su.id = oi.instance_id ";
+        $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
+        $q .= "WHERE slug REGEXP '^eoy_' AND su.is_active = 1 AND oi.owner_id = :owner_id ";
+        if (isset($since)) {
+             $q .= "AND time_generated > :since ";
+             $vars[':since'] = $since;
+        }
+        $q .= $this->stream_conditionals_order;
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
         $ps = $this->execute($q, $vars);
         $rows = $this->getDataRowsAsArrays($ps);
