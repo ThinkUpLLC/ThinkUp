@@ -347,8 +347,11 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         $q .= "LEFT JOIN #prefix#users u ON (su.network_user_id = u.user_id AND su.network = u.network) ";
         $q .= "WHERE slug REGEXP '^eoy_' AND su.is_active = 1 AND oi.owner_id = :owner_id ";
         if (isset($since)) {
-             $q .= "AND time_generated > :since ";
-             $vars[':since'] = $since;
+            $q .= "AND time_generated > :since ";
+            $year_since = ((int) substr($since, 0, 4))+1;
+            $q .= "AND time_generated < :until ";
+            $vars[':since'] = $since;
+            $vars[':until'] = $year_since . '-01-01';
         }
         $q .= $this->stream_conditionals_order;
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
@@ -449,6 +452,10 @@ class InsightMySQLDAO  extends PDODAO implements InsightDAO {
         if (isset($since)) {
              $q .= "AND time_generated > :since ";
              $vars[':since'] = $since;
+             $year_since = ((int) substr($since, 0, 4))+1;
+             $q .= "AND time_generated < :until ";
+             $vars[':since'] = $since;
+             $vars[':until'] = $year_since . '-01-01';
         }
         $q .= $this->stream_conditionals_order;
         if ($this->profiler_enabled) { Profiler::setDAOMethod(__METHOD__); }
