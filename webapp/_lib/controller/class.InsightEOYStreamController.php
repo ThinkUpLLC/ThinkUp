@@ -45,6 +45,7 @@ class InsightEOYStreamController extends InsightStreamController {
     public function __construct($session_started=false, $since=null) {
         parent::__construct($session_started);
         $this->since = $since;
+        $_GET['since'] = $since;
     }
     /**
      * Load view with data to display page of insights.
