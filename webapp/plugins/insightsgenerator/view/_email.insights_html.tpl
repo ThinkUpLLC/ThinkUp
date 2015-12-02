@@ -450,6 +450,14 @@ color: #417505 !important;
     </td>
   </tr>
 </table>
+{else}
+<table style="width: 100%; position: relative; display: block; margin-bottom: 18px; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0;">
+  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+    <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; line-height: 19px; font-size: 14px; margin: 0; padding: 0;" align="left" valign="top">
+    <center style="width: 100%; min-width: 580px;"><a href="{$application_url}" style="color: gray; font-size: 12px; text-decoration: underline;">Email cut off? View insights in your browser</a></center>
+    </td>
+  </tr>
+</table>
 {/if}
 {if isset($pay_prompt_explainer) and isset($pay_prompt_headline) and isset($pay_prompt_button_label)}
 <table class="row insight payment-reminder" style="border-top-width: 1px; border-top-color: #1b5c92; border-top-style: solid; border-bottom-width: 1px; border-bottom-color: #1b5c92; border-bottom-style: solid; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; margin-bottom: 18px; background: #2785d3; padding: 0px;">

@@ -1095,6 +1095,14 @@ body.outlook p {
     </td>
   </tr>
 </table>
+{else}
+<table style="width: 100%; position: relative; display: block; margin-bottom: 18px">
+  <tr>
+    <td>
+    <center><a href="{$application_url}" style="color:gray;font-size:12px;text-decoration:underline">Email cut off? View insights in your browser</a></center>
+    </td>
+  </tr>
+</table>
 {/if}
 {if isset($pay_prompt_explainer) and isset($pay_prompt_headline) and isset($pay_prompt_button_label)}
 <table class="row insight payment-reminder" style="border-top: 1px solid #1b5c92;border-bottom: 1px solid #1b5c92;">
