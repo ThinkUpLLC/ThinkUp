@@ -12,7 +12,13 @@
           {/literal}</script>
   {/if}
 {/if}
-
+{if isset($thinkupllc_endpoint) && !isset($logged_in_user) && !isset($year_end_year)}
+    <script>{literal}
+    var app_message = {};
+    app_message.msg = {/literal}"<strong>New from ThinkUp:</strong> <a href=\"https://makerbase.co/?utm_source=ThinkUp&utm_medium=Webapp&utm_campaign=Tout\">Makerbase</a> is a directory of digital projects and their makers. <a href=\"https://makerbase.co/?utm_source=ThinkUp&utm_medium=Webapp&utm_campaign=Tout\">Add yours &raquo;</a>"{literal};
+    app_message.type = "info";
+    {/literal}</script>
+{/if}
 
 <div class="container">
   {if $is_year_end}
