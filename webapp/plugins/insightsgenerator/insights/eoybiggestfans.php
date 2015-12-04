@@ -100,6 +100,13 @@ class EOYBiggestFansInsight extends InsightPluginParent implements InsightPlugin
                         'body' => "It feels great to have friends who support you. " .
                         "%user_list liked %username's status updates the most this year%qualified_year"
                     )
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's biggest Instagram fans of %year",
+                        'body' => "It means a lot to have friends who love your stuff. " .
+                        "%user_list liked %username's Instagram photos and videos the most this year%qualified_year"
+                    )
                 )
             );
 

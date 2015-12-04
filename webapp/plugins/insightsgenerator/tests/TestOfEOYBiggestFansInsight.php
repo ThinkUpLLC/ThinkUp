@@ -133,4 +133,86 @@ class TestOfEOYBiggestFansInsight extends ThinkUpInsightUnitTestCase {
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Facebook");
     }
+
+    public function testInstagramNormalCase() {
+        // set up posts
+        $this->instance->network_username = 'kevins';
+        $this->instance->network = 'instagram';
+        $builders = self::setUpPublicInsight($this->instance);
+        $year = date('Y');
+        $this->instance->total_posts_in_system = 1500;
+        $builders[] = FixtureBuilder::build('instances', array('id'=>11, 'network'=>$this->instance->network,
+            'network_username'=>'angel', 'network_user_id'=>100)) ;
+
+        // Users
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>101, 'network'=>$this->instance->network,
+            'user_name'=>'cordelia', 'avatar' => 'http://www.virginmedia.com/images/cordelia-buffy-then.jpg',
+            'full_name' => 'Cordelia Chase'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>102, 'network'=>$this->instance->network,
+            'user_name'=>'wesley', 'full_name' => 'Wesley Wyndam-Pryce'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>103, 'network'=>$this->instance->network,
+            'user_name'=>'fred', 'avatar' => 'http://38.media.tumblr.com/tumblr_m847r5Q62E1ram4jpo1_500.jpg',
+            'full_name' => 'Winifred &ldquo;Fred&rdquo; Burkle'));
+
+        // Posts by instance
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'aabbccdd', 'author_user_id'=>100,
+            'network'=>$this->instance->network, 'post_text'=>'You gonna like this',
+            'author_username'=>'Mark Zuckerberg', 'pub_date'=>"-1d" ));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abcde', 'author_user_id'=>100,
+            'network'=>$this->instance->network, 'post_text'=>"Puppy", 'author_username'=>'Mark Zuckerberg',
+            'pub_date'=>"-2d" ));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abcd', 'author_user_id'=>100,
+            'network'=>$this->instance->network, 'post_text'=>"I'm a champion",
+            'author_username'=>'Mark Zuckerberg', 'pub_date'=>"-2d" ));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abcdef', 'author_user_id'=>100,
+            'network'=>$this->instance->network, 'post_text'=>"I'm a champion",
+            'author_username'=>'Mark Zuckerberg', 'pub_date'=>"-2d" ));
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>'abcdefg', 'author_user_id'=>100,
+            'network'=>$this->instance->network, 'post_text'=>"I'm a champion",
+            'author_username'=>'Mark Zuckerberg', 'pub_date'=>"-2d" ));
+
+        // Favorites, in order of most to least: cordelia, wesley, fred
+        for ($i=1; $i<4; $i++) {
+            $fav_of_user_id = 100 + $i;
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'aabbccdd', 'author_user_id'=>100,
+                'fav_of_user_id'=>$i, 'network'=>$this->instance->network));
+        }
+        for ($i=1; $i<4; $i++) {
+            $fav_of_user_id = 100 + $i;
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcd', 'author_user_id'=>100,
+                'fav_of_user_id'=>$fav_of_user_id, 'network'=>$this->instance->network));
+        }
+        for ($i=1; $i<4; $i++) {
+            $fav_of_user_id = 100 + $i;
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcde', 'author_user_id'=>100,
+                'fav_of_user_id'=>$fav_of_user_id, 'network'=>$this->instance->network));
+        }
+
+        for ($i=1; $i<3; $i++) {
+            $fav_of_user_id = 100 + $i;
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcdef', 'author_user_id'=>100,
+                'fav_of_user_id'=>$fav_of_user_id, 'network'=>$this->instance->network));
+        }
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>'abcdefg', 'author_user_id'=>100,
+            'fav_of_user_id'=>101, 'network'=>$this->instance->network));
+
+        $posts = array();
+        $insight_plugin = new EOYBiggestFansInsight();
+        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
+
+        // Assert that insight got inserted
+        $insight_dao = new InsightMySQLDAO();
+        $year = date('Y');
+        $result = $insight_dao->getInsight('eoy_biggest_fans', $this->instance->id,
+            $year.'-'.$insight_plugin->run_date);
+        $this->assertNotNull($result);
+        $this->assertIsA($result, "Insight");
+        $this->assertEqual("kevins's biggest Instagram fans of $year", $result->headline);
+        $this->assertEqual("It means a lot to have friends who love your stuff. " .
+            "Cordelia Chase, Wesley Wyndam-Pryce, and Winifred &ldquo;Fred&rdquo; " .
+            "Burkle liked kevins's Instagram photos and videos the most this year.",
+            $result->text);
+
+        $this->dumpRenderedInsight($result, $this->instance, "Normal case, Instagram");
+    }
 }
