@@ -62,7 +62,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
             $builders[] = FixtureBuilder::build('posts',
                 array(
                     'post_text' => 'This is a post!',
-                    'pub_date' => '2014-02-07',
+                    'pub_date' => '2015-02-07',
                     'post_id' => $i + 100,
                     'author_username' => $this->instance->network_username,
                     'author_user_id' => $this->instance->network_user_id,
@@ -76,7 +76,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
             $builders[] = FixtureBuilder::build('posts',
                 array(
                     'post_text' => 'This is a post',
-                    'pub_date' => '2014-02-07',
+                    'pub_date' => '2015-02-07',
                     'author_username' => $this->instance->network_username,
                     'author_user_id' => $this->instance->network_user_id,
                     'network' => $this->instance->network,
@@ -103,7 +103,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $builders = self::setUpPublicInsight($this->instance);
         $counter = 0;
         $max_month = 12;//date('n');
-        $year = 2014;//date('Y');
+        $year = 2015;//date('Y');
         for ($i=1; $i<=$max_month; $i++) {
             $month = "".$i;
             if ($i < 10) {
@@ -136,7 +136,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
         $this->assertEqual("@ev's !!!'s of Twitter, $year", $result->headline);
-        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>78 " .
+        $this->assertEqual("OMG! In $year, @ev used exclamation points in <strong>66 " .
             "tweets</strong>. That's 100% of @ev's tweets this year!",
             $result->text);
 
@@ -188,7 +188,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->instance->network_username = 'Mark Zuckerberg';
         $this->instance->network = 'facebook';
         $builders = self::setUpPublicInsight($this->instance);
-        $year = 2014; //date('Y');
+        $year = 2015; //date('Y');
         $max_month = 12; //Date('n');
         $counter = 0;
         for ($i=3; $i<=$max_month; $i++) {
@@ -225,7 +225,7 @@ class TestOfEOYExclamationCountInsight extends ThinkUpInsightUnitTestCase {
         $this->assertEqual("Mark Zuckerberg's emphatic $year on Facebook!",
             $result->headline);
         $this->assertEqual("Enthusiasm is contagious, and in $year, Mark Zuckerberg " .
-            "spread the excitement in a total of <strong>75 status updates</strong> ".
+            "spread the excitement in a total of <strong>63 status updates</strong> ".
             "containing exclamation points. That's 100% of Mark Zuckerberg's " .
             "Facebook posts this year (at least since March)!", $result->text);
 

@@ -41,7 +41,7 @@ class EOYExclamationCountInsight extends InsightPluginParent implements InsightP
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-05';
+    var $run_date = '12-07';
     //staging
     //var $run_date = '11-05';
 
@@ -59,7 +59,9 @@ class EOYExclamationCountInsight extends InsightPluginParent implements InsightP
             $instance,
             $insight_date = "$year-$this->run_date",
             $regenerate,
-            $day_of_year = $this->run_date
+            $day_of_year = $this->run_date,
+            $count_related_posts=null,
+            array('instagram') //exclude instagram
         );
 
         if ($should_generate_insight) {
