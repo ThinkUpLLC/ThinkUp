@@ -64,7 +64,7 @@ class EOYMostRetweetedPostInsight extends InsightPluginParent implements Insight
             $regenerate,
             $day_of_year = $this->run_date,
             null,
-            $excluded_networks = array('facebook')
+            $excluded_networks = array('facebook', 'instagram')
         );
 
         if ($should_generate_insight) {

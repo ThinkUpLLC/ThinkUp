@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * EOYMostRetweetedPost (name of file)
+ * EOYMostRetweetedPost
  *
  * Description of what this class does
  *
@@ -63,7 +63,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 100
@@ -72,7 +72,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is pretty well shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 50
@@ -81,7 +81,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is least shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 25
@@ -90,7 +90,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'These Sochi games are kind of a cluster already.',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 1
@@ -126,7 +126,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => 1001,
             'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-02',
+            'pub_date' => '2015-02-02',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 100
@@ -136,7 +136,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => 1002,
             'post_text' => 'This is pretty well shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 50
@@ -146,7 +146,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => 1003,
             'post_text' => 'This is least shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 25
@@ -172,61 +172,6 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");
     }
 
-    public function testFacebookNormalCase() {
-        // set up and test facebook
-        $this->instance->network_username = 'Buffy Summers';
-        $this->instance->network = 'facebook';
-        $builders = self::setUpPublicInsight($this->instance);
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-            'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
-            'author_username' => $this->instance->network_username,
-            'author_fullname' => $this->instance->network_username,
-            'network' => $this->instance->network,
-            'retweet_count_api' => 100
-            )
-        );
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-            'post_text' => 'This is pretty well shared',
-            'pub_date' => '2014-02-07',
-            'author_username' => $this->instance->network_username,
-            'author_fullname' => $this->instance->network_username,
-            'network' => $this->instance->network,
-            'retweet_count_api' => 50
-            )
-        );
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-            'post_text' => 'This is least shared',
-            'pub_date' => '2014-02-07',
-            'author_username' => $this->instance->network_username,
-            'author_fullname' => $this->instance->network_username,
-            'network' => $this->instance->network,
-            'retweet_count_api' => 1
-            )
-        );
-
-        $posts = array();
-        $insight_plugin = new EOYMostRetweetedPostInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-
-        // Assert that insight got inserted
-        $insight_dao = new InsightMySQLDAO();
-        $year = date('Y');
-        $result = $insight_dao->getInsight('eoy_most_retweeted', $this->instance->id,
-            $year.'-'.$insight_plugin->run_date);
-        // $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertEqual("Buffy Summers's most-shared status updates of $year", $result->headline);
-        $this->assertEqual("With shares on the rise, $year was a bull market for " .
-            "Buffy Summers's most-shared status updates.", $result->text);
-
-        $this->dumpRenderedInsight($result, $this->instance, "Normal case: Facebook");
-    }
-
     // Text variations in amount: if matches == 1
     public function testTwitterOneMatch() {
         // on twitter
@@ -234,7 +179,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 100
@@ -260,39 +205,6 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $this->dumpRenderedInsight($result, $this->instance, "One match: Twitter");
     }
 
-    public function testFacebookOneMatch() {
-        // now test facebook
-        $this->instance->network_username = 'Buffy Summers';
-        $this->instance->network = 'facebook';
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-            'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
-            'author_username' => $this->instance->network_username,
-            'network' => $this->instance->network,
-            'retweet_count_api' => 100
-            )
-        );
-
-        $posts = array();
-        $insight_plugin = new EOYMostRetweetedPostInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-
-        // Assert that insight got inserted
-        $insight_dao = new InsightMySQLDAO();
-        $year = date('Y');
-        $result = $insight_dao->getInsight('eoy_most_retweeted', $this->instance->id,
-            $year.'-'.$insight_plugin->run_date);
-        // $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertEqual("Buffy Summers's most-shared status update of $year", $result->headline);
-        $this->assertEqual("With shares on the rise, $year was a bull market for " .
-            "Buffy Summers's most-shared status update.", $result->text);
-
-        $this->dumpRenderedInsight($result, $this->instance, "One match: Facebook");
-    }
-
     // test if user had no shares this year
     public function testTwitterNoMatches() {
         // on twitter
@@ -300,7 +212,7 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'retweet_count_api' => 0
@@ -324,40 +236,6 @@ class TestOfEOYMostRetweetedPostInsight extends ThinkUpInsightUnitTestCase {
             "We're not all here to broadcast.", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "No matches: Twitter");
-    }
-
-    public function testFacebookNoMatches() {
-        // now test facebook
-        $this->instance->network_username = 'Buffy Summers';
-        $this->instance->network = 'facebook';
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-            'post_text' => 'This is very shared',
-            'pub_date' => '2014-02-07',
-            'author_username' => $this->instance->network_username,
-            'network' => $this->instance->network,
-            'retweet_count_api' => 0
-            )
-        );
-
-        $posts = array();
-        $insight_plugin = new EOYMostRetweetedPostInsight();
-        $insight_plugin->generateInsight($this->instance, null, $posts, 3);
-
-        // Assert that insight got inserted
-        $insight_dao = new InsightMySQLDAO();
-        $year = date('Y');
-        $result = $insight_dao->getInsight('eoy_most_retweeted', $this->instance->id,
-            $year.'-'.$insight_plugin->run_date);
-        // $this->debug(Utils::varDumpToString($result));
-        $this->assertNotNull($result);
-        $this->assertIsA($result, "Insight");
-        $this->assertEqual("Shares aren't everything", $result->headline);
-        $this->assertEqual("No one shared Buffy Summers's status updates on Facebook " .
-            "in $year — not that there's anything wrong with that. Sometimes it's best " .
-            "to keep things close-knit.", $result->text);
-
-        $this->dumpRenderedInsight($result, $this->instance, "No matches: Facebook");
     }
 }
 
