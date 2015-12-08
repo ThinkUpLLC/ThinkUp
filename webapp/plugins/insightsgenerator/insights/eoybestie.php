@@ -100,8 +100,8 @@ class EOYBestieInsight extends InsightPluginParent implements InsightPlugin {
                         'headline' => "%username's Twitter bestie of %year",
                         'body' => "Nobody likes tweeting into the void. %username and @%bestie made Twitter a ".
                             "void-free place to tweet this year. %username tweeted at @%bestie ".
-                            "<strong>%u_to_b times</strong> in 2014, and @%bestie replied ".
-                            "<strong>%b_to_u times</strong>%qualified_year. OMG get a room!"
+                            "<strong>%u_to_b times</strong> in 2015, and @%bestie replied ".
+                            "<strong>%b_to_u times</strong>%qualified_year. OMG you two!"
                     ),
                     'none' => array(
                         'headline' => "%username's Twitter bestie of %year",
@@ -113,7 +113,7 @@ class EOYBestieInsight extends InsightPluginParent implements InsightPlugin {
                 'facebook' => array(
                     'normal' => array(
                         'headline' => "%username's Facebook bestie of %year",
-                        'body' => "Everyone loves getting comments from their friends. In 2014, %bestie commented ".
+                        'body' => "Everyone loves getting comments from their friends. In 2015, %bestie commented ".
                             "on %username's status updates <strong>%b_to_u times</strong>, more than ".
                             "anyone else%qualified_year. Best friends forever!"
                     ),
@@ -121,6 +121,19 @@ class EOYBestieInsight extends InsightPluginParent implements InsightPlugin {
                         'headline' => "%username's Facebook bestie of %year",
                         'body' => "%username's friends must consider %username's words definitive - no one replied ".
                             "more than three times to %username's status updates all year%qualified_year."
+                    )
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's Instagram bestie of %year",
+                        'body' => "Everyone loves getting comments from their friends. In 2015, %bestie commented ".
+                            "on %username's Instagram photos and videos <strong>%b_to_u times</strong>, more than ".
+                            "anyone else%qualified_year. Best friends forever!"
+                    ),
+                    'none' => array(
+                        'headline' => "%username's Instagram bestie of %year",
+                        'body' => "%username's photos and videos left %username's friends speechless - no one replied ".
+                            "more than three times to %username's Instagram posts all year%qualified_year."
                     )
                 )
             );

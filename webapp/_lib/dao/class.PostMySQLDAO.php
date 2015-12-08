@@ -2846,7 +2846,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getBestie(Instance $instance, $in_last_x_days) {
-        if ($instance->network == 'facebook') {
+        if ($instance->network == 'facebook' || $instance->network == 'instagram') {
             //For Facebook bestie, only count comments on user's status updates
             $q = "SELECT count(*) AS total_replies_from, author_user_id AS user_id, u.user_name, u.avatar ";
             $q .= "FROM #prefix#posts p INNER JOIN #prefix#users u ON p.author_user_id = u.user_id WHERE ";

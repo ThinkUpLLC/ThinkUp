@@ -61,7 +61,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1001',
             'post_text' => 'This is very liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 100
@@ -71,7 +71,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1002',
             'post_text' => 'This is pretty well liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 50
@@ -81,7 +81,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1003',
             'post_text' => 'This is least liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 25
@@ -100,7 +100,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@buffy's Twitter bestie of 2014", $result->headline);
+        $this->assertEqual("@buffy's Twitter bestie of 2015", $result->headline);
         $this->assertEqual("@buffy didn't reply to any one person more than 3 times this year ".
             "(at least since February). That means no one can claim the title of @buffy's Twitter bestie. ".
             "Playing hard-to-get, huh?", $result->text);
@@ -117,7 +117,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1001',
             'post_text' => 'This is very liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 100
@@ -127,7 +127,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1002',
             'post_text' => 'This is pretty well liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 50
@@ -137,7 +137,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             array(
             'post_id' => '1003',
             'post_text' => 'This is least liked',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'favlike_count_cache' => 25
@@ -156,7 +156,7 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("Buffy Summers's Facebook bestie of 2014", $result->headline);
+        $this->assertEqual("Buffy Summers's Facebook bestie of 2015", $result->headline);
         $this->assertEqual("Buffy Summers's friends must consider Buffy Summers's words definitive - ".
             "no one replied more than three times to Buffy Summers's status updates all year ".
             "(at least since February).", $result->text);
@@ -238,11 +238,11 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@ev's Twitter bestie of 2014", $result->headline);
+        $this->assertEqual("@ev's Twitter bestie of 2015", $result->headline);
         $this->assertEqual("Nobody likes tweeting into the void. @ev and @linkbaiter made Twitter a void-free place ".
-            "to tweet this year. @ev tweeted at @linkbaiter <strong>4 times</strong> in 2014, and @linkbaiter ".
+            "to tweet this year. @ev tweeted at @linkbaiter <strong>4 times</strong> in 2015, and @linkbaiter ".
             "replied <strong>5 times</strong>. ".
-            "OMG get a room!", $result->text);
+            "OMG you two!", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "No bestie incomplete data, Twitter");
     }
@@ -322,9 +322,9 @@ class TestOfEOYBestieInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("fbuser1's Facebook bestie of 2014", $result->headline);
-        $this->assertEqual("Everyone loves getting comments from their friends. In 2014, fbuser2 commented on ".
-            "fbuser1's status updates <strong>5 times</strong>, more than anyone else (at least since December). ".
+        $this->assertEqual("fbuser1's Facebook bestie of 2015", $result->headline);
+        $this->assertEqual("Everyone loves getting comments from their friends. In 2015, fbuser2 commented on ".
+            "fbuser1's status updates <strong>5 times</strong>, more than anyone else (at least since November). ".
             "Best friends forever!",
             $result->text);
 
