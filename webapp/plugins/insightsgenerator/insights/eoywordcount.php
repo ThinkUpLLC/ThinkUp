@@ -60,7 +60,9 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
             $instance,
             $insight_date = "$year-$this->run_date",
             $regenerate,
-            $day_of_year = $this->run_date
+            $day_of_year = $this->run_date,
+            $count_related_posts=null,
+            array('instagram') //exclude instagram
         );
 
         if ($should_generate_insight) {
@@ -139,7 +141,7 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
-                        'headline' => "%username tweeted %total words in 2014",
+                        'headline' => "%username tweeted %total words in 2015",
                         'body' => "In %year, %username entered a grand total of <strong>%total words</strong> " .
                             "into the Twitter data entry box%qualified_year, reaching peak wordage " .
                             "in %month, with %words_in_month words. %page_copyHere's the month-by-month breakdown."
@@ -147,7 +149,7 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
                 ),
                 'facebook' => array(
                     'normal' => array(
-                        'headline' => "%username had a word or two (or %total) for Facebook in 2014",
+                        'headline' => "%username had a word or two (or %total) for Facebook in 2015",
                         'body' => "In %year, %username typed and tapped <strong>%total words</strong> " .
                             "into Facebook's status update or comment box%qualified_year, topping " .
                             "out with %words_in_month words in %month. %page_copyHere's a breakdown by month."
@@ -203,7 +205,7 @@ class EOYWordCountInsight extends InsightPluginParent implements InsightPlugin {
 
     public function getMaxMonth($point_chart) {
         $short_month = array_search(max($point_chart),$point_chart);
-        return date('F', strtotime("$short_month 1 2014"));
+        return date('F', strtotime("$short_month 1 2015"));
     }
 
     public function countWords($str) {

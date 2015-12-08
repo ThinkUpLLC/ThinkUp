@@ -121,8 +121,8 @@ class TestOfEOYWordCountInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("@ev tweeted 3,437 words in 2014", $result->headline);
-        $this->assertEqual("In 2014, @ev entered a grand total of <strong>3,437 words</strong> into the Twitter ".
+        $this->assertEqual("@ev tweeted 3,437 words in 2015", $result->headline);
+        $this->assertEqual("In 2015, @ev entered a grand total of <strong>3,437 words</strong> into the Twitter ".
             "data entry box, reaching peak wordage in February, with 1,722 words. If @ev were writing a book, that ".
             "would be about 12 pages. Here's the month-by-month breakdown.",
             $result->text);
@@ -171,8 +171,8 @@ class TestOfEOYWordCountInsight extends ThinkUpInsightUnitTestCase {
             $year.'-'.$insight_plugin->run_date);
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertEqual("Mark Zuckerberg had a word or two (or 7) for Facebook in 2014", $result->headline);
-        $this->assertEqual("In 2014, Mark Zuckerberg typed and tapped <strong>7 words</strong> into Facebook's ".
+        $this->assertEqual("Mark Zuckerberg had a word or two (or 7) for Facebook in 2015", $result->headline);
+        $this->assertEqual("In 2015, Mark Zuckerberg typed and tapped <strong>7 words</strong> into Facebook's ".
             "status update or comment box (at least since February), topping out with 7 words in February. ".
             "Here's a breakdown by month.", $result->text);
 
