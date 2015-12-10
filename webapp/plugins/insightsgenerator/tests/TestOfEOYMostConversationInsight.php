@@ -63,7 +63,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This is very liked',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 100
@@ -72,7 +72,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This is pretty well liked',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 50
@@ -81,7 +81,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This is least liked',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 25
@@ -90,7 +90,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'These Sochi games are kind of a cluster already.',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 1
@@ -125,7 +125,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked a ton of conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 100
@@ -134,7 +134,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked medium conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 50
@@ -143,7 +143,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked small conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 25
@@ -176,7 +176,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked a ton of conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 100
@@ -185,7 +185,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked medium conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 50
@@ -194,7 +194,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'post_text' => 'This sparked small conversation',
-                'pub_date' => '2014-02-07',
+                'pub_date' => '2015-02-07',
                 'author_username' => $this->instance->network_username,
                 'network' => $this->instance->network,
                 'reply_count_cache' => 25
@@ -229,7 +229,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This has a lot of conversation',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'reply_count_cache' => 100
@@ -262,7 +262,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This has a lot of conversation',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'reply_count_cache' => 100
@@ -297,7 +297,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This has no conversation',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'reply_count_cache' => 0
@@ -330,7 +330,7 @@ class TestOfEOYMostConversationInsight extends ThinkUpInsightUnitTestCase {
         $builders[] = FixtureBuilder::build('posts',
             array(
             'post_text' => 'This has no conversation',
-            'pub_date' => '2014-02-07',
+            'pub_date' => '2015-02-07',
             'author_username' => $this->instance->network_username,
             'network' => $this->instance->network,
             'reply_count_cache' => 0

@@ -24,9 +24,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * EOYMostConversation (name of file)
- *
- * Description of what this class does
+ * EOYMostConversation
  *
  * Copyright (c) 2014-2015 Adam Pash
  *
@@ -76,6 +74,17 @@ class EOYMostConversationInsight extends InsightPluginParent implements InsightP
             $top_three_replied_to = $this->topThreeThisYear($instance);
             foreach ($top_three_replied_to as $key => $post) {
                 $post->author_avatar = $user->avatar;
+            }
+
+            //Populate Instagram photos
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $popular_photos = array();
+                foreach ($top_three_replied_to as $key => $post) {
+                    $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                    $popular_photos[] = $post;
+                }
+                $top_three_replied_to = $popular_photos;
             }
 
             $post_dao = DAOFactory::getDAO('PostDAO');
@@ -128,6 +137,27 @@ class EOYMostConversationInsight extends InsightPluginParent implements InsightP
                         'headline' => "No comment",
                         'body' => "Is this thing on? No one commented on %username's " .
                         "status updates on Facebook in %year".$qualified_year."."
+                    ),
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's most commented-on Instagram posts of %year",
+                        'body' => "There's lots of eye candy on Instagram, and not much conversation. " .
+                        "But some photos and videos are so good people can't help but respond. " .
+                        "In %year, %username received the most comments " .
+                        "on these Instagram posts%qualified_year."
+                    ),
+                    'one' => array(
+                        'headline' => "%username's most commented-on Instagram of %year",
+                        'body' => "There's lots of eye candy on Instagram, and not much conversation. " .
+                        "But some photos and videos are so good people can't help but respond. " .
+                        "In %year, %username received the most comments " .
+                        "on these Instagram posts%qualified_year."
+                    ),
+                    'none' => array(
+                        'headline' => "No comment",
+                        'body' => "Is this thing on? No one commented on %username's " .
+                        "Instagram photos and videos in %year".$qualified_year."."
                     ),
                 )
             );
