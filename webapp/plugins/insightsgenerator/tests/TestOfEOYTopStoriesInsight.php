@@ -61,8 +61,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $day);
         $this->assertNotNull($result);
         $this->assertEqual($result->headline, "Anderson Cooper didn't rehash $year's top news on Facebook");
-        $this->assertEqual($result->text, "No Ice Bucket Challenge, Robin Williams, or Malaysia Airlines here. ".
-            "Anderson Cooper broke away from the herd and avoided talking about 2014's biggest stories on Facebook ".
+        $this->assertEqual($result->text, "No Trump or Syrian refugee crisis here. ".
+            "Anderson Cooper broke away from the herd and avoided talking about 2015's biggest stories on Facebook ".
             "this year.");
         $data = unserialize($result->related_data);
         $this->assertNull($data['posts']);
@@ -89,8 +89,8 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper didn't rehash $year's top news on Facebook");
-        $this->assertEqual($result->text, "No Ice Bucket Challenge, Robin Williams, or Malaysia Airlines here. ".
-            "Anderson Cooper broke away from the herd and avoided talking about 2014's biggest stories on Facebook ".
+        $this->assertEqual($result->text, "No Trump or Syrian refugee crisis here. ".
+            "Anderson Cooper broke away from the herd and avoided talking about 2015's biggest stories on Facebook ".
             "this year (at least since June).");
         $data = unserialize($result->related_data);
         $this->assertNull($data['posts']);
@@ -105,7 +105,7 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
             array(
                 'pub_date' => $year.'-02-01', 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'Are you ready for the Super Bowl?',
+                'post_text' => 'What did you think about Charleston?',
             )
         );
         $insight_plugin = new EOYTopStoriesInsight();
@@ -116,9 +116,9 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
-        $this->assertEqual($result->text, "Anderson Cooper's $year included the Super Bowl. That was one of "
-            . '<a href="http://newsroom.fb.com/news/2014/12/2014-year-in-review/">Facebook\'s top topics of the year'
-            . '</a> &mdash; that\'s so '.$year.'!');
+        $this->assertEqual($result->text, "Anderson Cooper's $year included Charleston. That was one of "
+            . '<a href="http://newsroom.fb.com/news/2015/12/2015-year-in-review/">Facebook\'s top topics of the year'
+            . '</a>.');
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
 
@@ -132,21 +132,21 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
             array(
                 'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'I wonder if the gang will survive on walking dead.',
+                'post_text' => 'I wonder what will happen next year.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-02-05", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'I am really sad about Robin Williams.',
+                'post_text' => 'I am really sad about the Paris attacks.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-01-02", 'post_id' => 3, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'The Walking Dead is my favorite show!',
+                'post_text' => 'Let us not forget Freddie Gray',
             )
         );
         $insight_plugin = new EOYTopStoriesInsight();
@@ -157,13 +157,13 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
-        $this->assertEqual($result->text, "Anderson Cooper's $year included The Walking Dead and "
-            . "Robin Williams. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
-            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
+        $this->assertEqual($result->text, "Anderson Cooper's $year included #BlackLivesMatter and "
+            . "terror attacks. Those were some of <a href=\"http://newsroom.fb.com/news/2015/12/2015-year-in-"
+            . "review/\">Facebook's top topics of the year</a>.");
         $data = unserialize($result->related_data);
         $this->assertEqual(2, count($data['posts']));
-        $this->assertEqual($data['posts'][0]->post_text, 'The Walking Dead is my favorite show!');
-        $this->assertEqual($data['posts'][1]->post_text, 'I am really sad about Robin Williams.');
+        $this->assertEqual($data['posts'][0]->post_text, 'Let us not forget Freddie Gray');
+        $this->assertEqual($data['posts'][1]->post_text, 'I am really sad about the Paris attacks.');
 
         $this->dumpRenderedInsight($result, $this->instance, "Two Topics");
     }
@@ -173,23 +173,23 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $builders = array();
         $builders[] = FixtureBuilder::build('posts',
             array(
+                'pub_date' => "$year-01-01", 'post_id' => 3, 'author_username' => $this->instance->network_username,
+                'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
+                'post_text' => 'Syria is still missing.',
+            )
+        );
+        $builders[] = FixtureBuilder::build('posts',
+            array(
                 'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'The World Cup is a soccer thing, I guess.',
+                'post_text' => 'Baltimore needs our help.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-04-05", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'I just poured an Ice Bucket on my head.',
-            )
-        );
-        $builders[] = FixtureBuilder::build('posts',
-            array(
-                'pub_date' => "$year-01-01", 'post_id' => 3, 'author_username' => $this->instance->network_username,
-                'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'MH370 is still missing.',
+                'post_text' => 'I hate Trump.',
             )
         );
         $insight_plugin = new EOYTopStoriesInsight();
@@ -200,14 +200,15 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
-        $this->assertEqual($result->text, "Anderson Cooper's $year included MH370, the World Cup, and the Ice "
-            . "Bucket Challenge. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
-            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
+        $this->assertEqual($result->text, "Anderson Cooper's $year included the Syrian refugee crisis, "
+            . "#BlackLivesMatter, and the U.S. Presidential election. Those were some of "
+            . "<a href=\"http://newsroom.fb.com/news/2015/12/2015-year-in-"
+            . "review/\">Facebook's top topics of the year</a>.");
         $data = unserialize($result->related_data);
         $this->assertEqual(3, count($data['posts']));
-        $this->assertEqual($data['posts'][0]->post_text, 'MH370 is still missing.');
-        $this->assertEqual($data['posts'][1]->post_text, 'The World Cup is a soccer thing, I guess.');
-        $this->assertEqual($data['posts'][2]->post_text, 'I just poured an Ice Bucket on my head.');
+        $this->assertEqual($data['posts'][0]->post_text, 'Syria is still missing.');
+        $this->assertEqual($data['posts'][1]->post_text, 'Baltimore needs our help.');
+        $this->assertEqual($data['posts'][2]->post_text, 'I hate Trump.');
 
         $this->dumpRenderedInsight($result, $this->instance, "Three Topics");
     }
@@ -219,28 +220,28 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
             array(
                 'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'World Cup!!!!',
+                'post_text' => 'Oh no, Paris attacks.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-03-01", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'Super Bowl!!!!',
+                'post_text' => 'Let in the refugees.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-04-05", 'post_id' => 3, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'Robin Williams. ;(',
+                'post_text' => 'I stand for gay marriage.',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-01-01", 'post_id' => 4, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'MH370?',
+                'post_text' => 'istandwithahmed?',
             )
         );
         $insight_plugin = new EOYTopStoriesInsight();
@@ -251,14 +252,15 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
-        $this->assertEqual($result->text, "Anderson Cooper's $year included MH370, the World Cup, the Super Bowl, and "
-            . "Robin Williams. Those were some of <a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-"
-            . "review/\">Facebook's top topics of the year</a> &mdash; that's so $year!");
+        $this->assertEqual($result->text, "Anderson Cooper's $year included Ahmed Mohamed, terror attacks,"
+            . " the Syrian refugee crisis, and marriage equality. "
+            . "Those were some of <a href=\"http://newsroom.fb.com/news/2015/12/2015-year-in-"
+            . "review/\">Facebook's top topics of the year</a>.");
         $data = unserialize($result->related_data);
-        $this->assertEqual(3, count($data['posts']));
-        $this->assertEqual($data['posts'][0]->post_text, 'MH370?');
-        $this->assertEqual($data['posts'][1]->post_text, 'World Cup!!!!');
-        $this->assertEqual($data['posts'][2]->post_text, 'Super Bowl!!!!');
+        $this->assertEqual(4, count($data['posts']));
+        $this->assertEqual($data['posts'][0]->post_text, 'istandwithahmed?');
+        $this->assertEqual($data['posts'][1]->post_text, 'Oh no, Paris attacks.');
+        $this->assertEqual($data['posts'][2]->post_text, 'Let in the refugees.');
 
         $this->dumpRenderedInsight($result, $this->instance, "Four Topics (three posts)");
     }
@@ -270,14 +272,14 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
             array(
                 'pub_date' => "$year-02-01", 'post_id' => 1, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'Super Bowl!!!',
+                'post_text' => 'Nepal. :(',
             )
         );
         $builders[] = FixtureBuilder::build('posts',
             array(
                 'pub_date' => "$year-01-11", 'post_id' => 2, 'author_username' => $this->instance->network_username,
                 'author_user_id' => $this->instance->network_user_id, 'network' => $this->instance->network,
-                'post_text' => 'Super bowl, tomorrow!',
+                'post_text' => 'Sad about the earthquake.',
             )
         );
         $insight_plugin = new EOYTopStoriesInsight();
@@ -288,12 +290,12 @@ class TestOfEOYTopStoriesInsight extends ThinkUpInsightUnitTestCase {
         $this->assertNotNull($result);
 
         $this->assertEqual($result->headline, "Anderson Cooper was part of $year's biggest trends");
-        $this->assertEqual($result->text, "Anderson Cooper's $year included the Super Bowl. That was one of "
-            . "<a href=\"http://newsroom.fb.com/news/2014/12/2014-year-in-review/\">Facebook's top topics of the "
-            . "year</a> &mdash; that's so $year!");
+        $this->assertEqual($result->text, "Anderson Cooper's $year included the Nepal earthquake. That was one of "
+            . "<a href=\"http://newsroom.fb.com/news/2015/12/2015-year-in-review/\">Facebook's top topics of the "
+            . "year</a>.");
         $data = unserialize($result->related_data);
         $this->assertEqual(1, count($data['posts']));
-        $this->assertEqual($data['posts'][0]->post_text, 'Super bowl, tomorrow!');
+        $this->assertEqual($data['posts'][0]->post_text, 'Sad about the earthquake.');
 
         $this->dumpRenderedInsight($result, $this->instance, "One Topic, Mentioned multiple times");
     }
