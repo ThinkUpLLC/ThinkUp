@@ -340,7 +340,7 @@ class TestOfEOYMostLinksInsight extends ThinkUpInsightUnitTestCase {
                 'retweet_count_cache' => $days,
                 'reply_count_cache' => $days,
                 'favlike_count_cache' => $days,
-                'post_text'=>'Link post #' . $counter . ' http://lifehacker.com/'.$counter, 'pub_date'=>'2014-10-01'));
+                'post_text'=>'Link post #' . $counter . ' http://lifehacker.com/'.$counter, 'pub_date'=>'2015-10-01'));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://lifehacker.com/'.$counter,
                 'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'http://lifehacker.com/'.$counter,
@@ -360,7 +360,7 @@ class TestOfEOYMostLinksInsight extends ThinkUpInsightUnitTestCase {
                 'in_reply_to_user_id' => NULL,
                 'in_retweet_of_post_id' => NULL,
                 'in_reply_to_post_id'=>0, 'is_protected' => 0, 'author_fullname'=>'User',
-                'post_text'=>'Link post http://nytimes.com/'.$counter, 'pub_date'=>'2014-10-01'));
+                'post_text'=>'Link post http://nytimes.com/'.$counter, 'pub_date'=>'2015-10-01'));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://nytimes.com/'.$counter,
                 'title'=>'Link '.$counter, 'post_key'=>$post_key, 'expanded_url'=>'http://nytimes.com/'.$counter,
