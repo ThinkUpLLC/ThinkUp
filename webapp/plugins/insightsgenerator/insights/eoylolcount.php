@@ -41,7 +41,7 @@ class EOYLOLCountInsight extends InsightPluginParent implements InsightPlugin {
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-13';
+    var $run_date = '12-12';
     //staging
     //var $run_date = '12-08';
     /**
@@ -64,7 +64,9 @@ class EOYLOLCountInsight extends InsightPluginParent implements InsightPlugin {
             $instance,
             $insight_date = "$year-$this->run_date",
             $regenerate,
-            $day_of_year = $this->run_date
+            $day_of_year = $this->run_date,
+            $count_related_posts=null,
+            array('instagram') //exclude instagram
         );
 
         if ($should_generate_insight) {
