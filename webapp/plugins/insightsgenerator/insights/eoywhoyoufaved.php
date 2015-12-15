@@ -49,11 +49,6 @@ class EOYWhoYouFavedInsight extends InsightPluginParent implements InsightPlugin
         parent::generateInsight($instance, $user, $last_week_of_posts, $number_days);
         $this->logger->logInfo("Begin generating insight", __METHOD__.','.__LINE__);
 
-        if ($instance->network != 'twitter') {
-            $this->logger->logInfo("Done generating insight (Skipped non-Twitter)", __METHOD__.','.__LINE__);
-            return;
-        }
-
         $regenerate = false;
         //testing
         // $regenerate = true;
@@ -61,7 +56,10 @@ class EOYWhoYouFavedInsight extends InsightPluginParent implements InsightPlugin
         $year = date('Y');
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug, $instance, $insight_date = "$year-$this->run_date",
-            $regenerate, $day_of_year = $this->run_date
+            $regenerate, $day_of_year = $this->run_date,
+            $count_related_posts=null,
+            array('facebook') //exclude facebook
+
         );
 
         if (!$should_generate_insight) {
@@ -110,13 +108,13 @@ class EOYWhoYouFavedInsight extends InsightPluginParent implements InsightPlugin
         }
 
         if (count($people) == 1) {
-            $title = $this->username."'s favorite person on Twitter, $year";
-            $text = "When you favorite a tweet, you give someone a gold star. ".$this->username
-                . " gave the most gold stars to @".$people[0]->username." in $year".$qualified_year.".";
+            $title = $this->username."'s most-liked person on ".ucfirst($instance->network).", $year";
+            $text = $this->getVariableCopy(array("Every time you like a %post, a little red heart lights up. "
+                . $this->username. " gave the most hearts to @".$people[0]->username." in $year".$qualified_year."."));
         } else {
-            $title = $this->username."'s favorite people on Twitter, $year";
-            $text = "When you favorite a tweet, you give someone a gold star. ".$this->username
-                . " gave the most gold stars to these fine folks in $year".$qualified_year.".";
+            $title = $this->username."'s most-liked people on ".ucfirst($instance->network).", $year";
+            $text = $this->getVariableCopy(array("Every time you like a %post, a little red heart lights up. "
+                . $this->username . " gave the most hearts to these fine folks in $year".$qualified_year."."));
         }
 
         $insight = new Insight();

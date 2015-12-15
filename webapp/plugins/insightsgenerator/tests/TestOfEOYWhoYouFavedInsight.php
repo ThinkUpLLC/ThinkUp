@@ -90,9 +90,9 @@ class TestOfEOYWhoYouFavedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "@georgemichael's favorite person on Twitter, 2014");
-        $this->assertEqual($result->text, "When you favorite a tweet, you give someone a gold star. @georgemichael "
-            ."gave the most gold stars to @Michael in 2014.");
+        $this->assertEqual($result->headline, "@georgemichael's most-liked person on Twitter, 2015");
+        $this->assertEqual($result->text, "Every time you like a tweet, a little red heart lights up. @georgemichael "
+            ."gave the most hearts to @Michael in 2015.");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
         $this->assertEqual($data['people'][0]->username, 'Michael');
@@ -126,9 +126,9 @@ class TestOfEOYWhoYouFavedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "@georgemichael's favorite people on Twitter, 2014");
-        $this->assertEqual($result->text, "When you favorite a tweet, you give someone a gold star. ".
-            "@georgemichael gave the most gold stars to these fine folks in 2014 (at least since March).");
+        $this->assertEqual($result->headline, "@georgemichael's most-liked people on Twitter, 2015");
+        $this->assertEqual($result->text, "Every time you like a tweet, a little red heart lights up. ".
+            "@georgemichael gave the most hearts to these fine folks in 2015 (at least since March).");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 3);
         $this->assertEqual($data['people'][0]->username, 'Maeby');
@@ -167,9 +167,9 @@ class TestOfEOYWhoYouFavedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "@georgemichael's favorite people on Twitter, 2014");
-        $this->assertEqual($result->text, "When you favorite a tweet, you give someone a gold star. @georgemichael "
-            ."gave the most gold stars to these fine folks in 2014 (at least since March).");
+        $this->assertEqual($result->headline, "@georgemichael's most-liked people on Twitter, 2015");
+        $this->assertEqual($result->text, "Every time you like a tweet, a little red heart lights up. @georgemichael "
+            ."gave the most hearts to these fine folks in 2015 (at least since March).");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 3);
         $this->assertEqual($data['people'][0]->username, 'George');
