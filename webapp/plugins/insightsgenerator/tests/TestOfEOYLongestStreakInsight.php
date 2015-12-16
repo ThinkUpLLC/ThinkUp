@@ -321,7 +321,7 @@ class TestOfEOYLongestStreakInsight extends ThinkUpInsightUnitTestCase {
             "$year!", $result->headline);
         $this->assertEqual("Facebook is great for sharing what we're up to, and in $year, " .
             "Mark Zuckerberg was up to a lot &mdash; posting at least one time every day " .
-            "so far in 2014 for a streak of <strong>$total_days days</strong>, from January 1st through $end_date.",
+            "so far in 2015 for a streak of <strong>$total_days days</strong>, from January 1st through $end_date.",
             $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Everyday case, Facebook");

@@ -124,6 +124,22 @@ class EOYLongestStreakInsight extends InsightPluginParent implements InsightPlug
                             "so far in %qualified_year for a streak of <strong>%total days</strong>, ".
                             "from %date1 through %date2.",
                     ),
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's longest Instagram streak of %year",
+                        'body' => "Instagram is the place to share scenes from your life, " .
+                            "and sometimes there's a lot of life to share. In %qualified_year, %username " .
+                            "posted at least one photo or video on Instagram " .
+                            "for <strong>%total days</strong> in a row, from %date1 to %date2."
+                    ),
+                    'everyday' => array(
+                        'headline' => "%username has posted to Instagram every single day in %year!",
+                        'body' => "Instagram is the place to share scenes from your life, and in %year, " .
+                            "%username had lots of life to share &mdash; posting at least one time every day " .
+                            "so far in %qualified_year for a streak of <strong>%total days</strong>, ".
+                            "from %date1 through %date2.",
+                    ),
                 )
             );
 
