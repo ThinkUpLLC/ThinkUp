@@ -90,8 +90,8 @@ class TestOfEOYWhoYouAmplifiedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2014");
-        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2014, @jerryseinfeld retweeted this "
+        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2015");
+        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2015, @jerryseinfeld retweeted this "
             . "user more than any others.");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 1);
@@ -126,8 +126,8 @@ class TestOfEOYWhoYouAmplifiedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2014");
-        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2014, @jerryseinfeld retweeted "
+        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2015");
+        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2015, @jerryseinfeld retweeted "
             . "these users more than any others (at least since March).");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 3);
@@ -165,8 +165,8 @@ class TestOfEOYWhoYouAmplifiedInsight extends ThinkUpInsightUnitTestCase {
         $result = $insight_dao->getInsight($insight_plugin->slug, $this->instance->id, $today);
         $this->assertNotNull($result);
 
-        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2014");
-        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2014, @jerryseinfeld retweeted "
+        $this->assertEqual($result->headline, "Who @jerryseinfeld amplified most on Twitter, 2015");
+        $this->assertEqual($result->text, "Let's turn this tweet up to 11! In 2015, @jerryseinfeld retweeted "
             . "these users more than any others.");
         $data = unserialize($result->related_data);
         $this->assertEqual(count($data['people']), 3);
