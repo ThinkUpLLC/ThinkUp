@@ -43,7 +43,7 @@ class EOYTotalPostsInsight extends InsightPluginParent implements InsightPlugin 
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-19';
+    var $run_date = '12-21';
     //staging
     //var $run_date = '12-12';
 
@@ -61,7 +61,9 @@ class EOYTotalPostsInsight extends InsightPluginParent implements InsightPlugin 
             $instance,
             $insight_date = "$year-$this->run_date",
             $regenerate,
-            $day_of_year = $this->run_date
+            $day_of_year = $this->run_date,
+            $count_related_posts=null,
+            array('instagram') //exclude instagram
         );
         if ($should_generate_insight) {
             $this->logger->logInfo("Should generate", __METHOD__.','.__LINE__);
