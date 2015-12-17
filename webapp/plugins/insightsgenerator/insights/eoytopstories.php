@@ -76,35 +76,32 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
             );
 
             $topics = array(
-                'the Ice Bucket Challenge' => array('ice bucket','ALS Ice'),
-                'Robin Williams' => array('Robin Williams'),
-                'the Super Bowl' => array('Super Bowl','Superbowl'),
-                'MH370' => array('MH370','MH 370', 'Malaysia Airlines'),
-                'the World Cup' => array("World Cup"),
-                'the Sochi Olympics' => array('Sochi','Olympics'),
-                'LeBron James' => array('lebron'),
-                'Derek Jeter' => array('jeter'),
-                'Floyd Wayweather Jr.' => array('mayweather'),
-                'Carmelo Anthony' => array('carmelo'),
-                'Cristiano Ronaldo' => array('ronaldo'),
-                'Dale Earnhardt Jr.' => array('earnhardt'),
-                'Dale Earnhardt Jr.' => array('earnhardt'),
-                'Beyoncé' => array('beyonce'),
-                'Pharrell' => array('pharrell'),
-                'Nicki Minaj' => array('minaj'),
-                'Taylor Swift' => array('Taylor Swift'),
-                'Sam Smith' => array('Sam Smith'),
-                'Jimmy Fallon' => array('fallon'),
-                'Kim Kardashian' => array('kardashian'),
-                'Game of Thrones' => array('game of thrones'),
-                'Orange is the New Black' => array('Orange is the New Black','oitnb'),
+                'the U.S. Presidential election' => array('trump','clinton', 'sanders', 'jeb bush'),
+                'the Syrian refugee crisis' => array('Syria', 'refugee'),
+                'terror attacks' => array('ISIS', 'daesh', 'ISIL', 'Paris', 'hebdo', 'jesuischarlie'),
+                'the Nepal earthquake' => array('Nepal', 'earthquake'),
+                'marriage equality' => array('marriage equality', 'gay marriage', 'obergefell', 'lovewins'),
+                'the Planned Parenthood attack' => array('planned parenthood', 'abortion', 'colorado springs'),
+                '#BlackLivesMatter' => array('Freddie Gray', 'Baltimore', 'blacklivesmatter'),
+                'Charleston' => array('Charleston', 'confederate', 'emanuel'),
+                'Ahmed Mohamed' => array('Ahmed Mohamed', 'istandwithahmed'),
+                'Floyd Mayweather, Jr.' => array('mayweather'),
+                'Manny Pacquiao' => array('pacquiao'),
+                'Ronda Rousey' => array('ronda', 'rousey'),
+                'Tom Brady' => array('tom brady'),
+                'Stephen Curry' => array('stephen curry'),
+                'Serena Williams' => array('serena'),
+                'Ed Sheeran' => array('sheeran'),
+                'Taylor Swift' => array('taylor swift'),
+                'Kanye West' => array('kanye'),
+                'Caitlyn Jenner' => array('jenner'),
+                'Star Wars' => array('star wars', 'force awakens', 'episode vii', 'episode 7'),
+                'Avengers: Age of Ultron' => array('avengers'),
+                'Mad Max: Fury Road' => array('mad max', 'fury road', 'imperator', 'furiosa'),
+                'Magic Mike XXL' => array('magic mike'),
+                'Game of Thrones' => array('game of thrones', 'jon snow'),
                 'The Walking Dead' => array('walking dead'),
-                'Downton Abbey' => array('downton'),
-                'True Detective' => array('True Detective'),
-                //'Frozen' => array('Frozen'),
-                'Guardians of the Galaxy' => array('Guardians of the Galaxy'),
-                'The Lego Movie' => array('lego movie'),
-                'Gone Girl' => array('Gone Girl'),
+
             );
 
             $matches = array();
@@ -132,16 +129,16 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                         $qualified_year = " (at least since ".$since.")";
                     }
                 }
-                $headline = $this->username." didn't rehash 2014's top news on Facebook";
-                $insight_text = "No Ice Bucket Challenge, Robin Williams, or Malaysia Airlines here. "
-                    . $this->username." broke away from the herd and avoided talking about 2014's biggest stories "
+                $headline = $this->username." didn't rehash 2015's top news on Facebook";
+                $insight_text = "No Trump or Syrian refugee crisis here. "
+                    . $this->username." broke away from the herd and avoided talking about 2015's biggest stories "
                     ."on Facebook this year" . $qualified_year. '.';
                 $posts = null;
                 //Show avatar if there are no posts
                 $insight->header_image = $user->avatar;
                 //Show button if there are no posts
                 $insight->setButton(array(
-                    'url' => 'http://newsroom.fb.com/news/2014/12/2014-year-in-review/',
+                    'url' => 'http://newsroom.fb.com/news/2015/12/2015-year-in-review/',
                     'label' => "See Facebook's Year in Review"
                 ));
             } else {
@@ -161,8 +158,8 @@ class EOYTopStoriesInsight extends InsightPluginParent implements InsightPlugin 
                 $mention_string = join($num==2?' ':', ', $mentioned);
                 $thatwas = $num == 1 ? 'That was one' : 'Those were some';
                 $insight_text = $this->username."'s $year included $mention_string. $thatwas of "
-                    . '<a href="http://newsroom.fb.com/news/2014/12/2014-year-in-review/">Facebook\'s top topics of '
-                    . "the year</a> &mdash; that's so $year!";
+                    . '<a href="http://newsroom.fb.com/news/2015/12/2015-year-in-review/">Facebook\'s top topics of '
+                    . "the year</a>.";
             }
 
             $insight->instance_id = $instance->id;
