@@ -172,7 +172,7 @@ class TestOfEOYMostPopularInsight extends ThinkUpInsightUnitTestCase {
         // $this->assertEqual(1, count($result->posts));
         $this->assertEqual("@ev's most popular tweet of $year", $result->headline);
         $this->assertEqual("We don't tweet for the glory, but a little attention doesn't " .
-            "hurt. With <strong>30 favorites, 20 retweets, and 10 replies</strong>, this is @ev's " .
+            "hurt. With <strong>30 likes, 20 retweets, and 10 replies</strong>, this is @ev's " .
             "most popular tweet of $year.", $result->text);
 
         $this->dumpRenderedInsight($result, $this->instance, "Normal case, Twitter");

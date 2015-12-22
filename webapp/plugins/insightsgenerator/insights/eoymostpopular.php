@@ -82,6 +82,12 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
             $scored_posts = $this->getScoredPosts($last_year_of_posts);
             $top_post = $this->getMostPopularPost($instance, $scored_posts);
 
+            //Populate Instagram photo
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $top_post = $photo_dao->getPhoto($top_post->post_id, 'instagram');
+            }
+
             $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
             $qualified_year = $year.".";
             if ( date('Y', strtotime($earliest_pub_date)) == date('Y') ) {
@@ -107,6 +113,14 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
                         'body' => "Sometimes you just say the right thing. With <strong>" .
                             "%list_of_stats</strong>, this is %username's most " .
                             "popular status update of %qualified_year"
+                    ),
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's most popular Instagram post of %year",
+                        'body' => "Once in awhile, a photo or video really stands out. With <strong>" .
+                            "%list_of_stats</strong>, this is %username's most " .
+                            "popular Instagram post of %qualified_year"
                     ),
                 )
             );
