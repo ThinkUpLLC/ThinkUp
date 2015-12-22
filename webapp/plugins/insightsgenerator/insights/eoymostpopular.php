@@ -41,9 +41,9 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-23';
+    //var $run_date = '12-23';
     //staging
-    //var $run_date = '12-15';
+    var $run_date = '12-22';
 
 
     public function generateInsight(Instance $instance, User $user, $last_week_of_posts, $number_days) {
@@ -53,7 +53,7 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
         $year = date('Y');
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
