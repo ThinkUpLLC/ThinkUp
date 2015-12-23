@@ -41,9 +41,9 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-31';
+    //var $run_date = '12-31';
     //staging
-    //var $run_date = '12-19';
+    var $run_date = '12-23';
     /**
      * Popular posts per month
      * @var array [month int] => array('post_id'=>x, 'popularity_index'=>y)
@@ -57,7 +57,7 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
         $year = date('Y');
         $regenerate = false;
         //testing
-        //$regenerate = true;
+        $regenerate = true;
 
         $should_generate_insight = self::shouldGenerateEndOfYearAnnualInsight(
             $this->slug,
