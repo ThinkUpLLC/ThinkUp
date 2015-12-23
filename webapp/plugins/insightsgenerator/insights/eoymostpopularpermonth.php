@@ -2,7 +2,7 @@
 /*
  Plugin Name: Most popular post per month (End of Year)
  Description: Your most popular post each month this year.
- When: December 31
+ When: December 30
  */
 
 /**
@@ -41,7 +41,7 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
     /**
      * Date to run this insight
      **/
-    var $run_date = '12-31';
+    var $run_date = '12-30';
     //staging
     //var $run_date = '12-19';
     /**
@@ -110,6 +110,17 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
                 return;
             }
 
+            //Populate Instagram photos
+            if ($instance->network == 'instagram') {
+                $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                $popular_photos = array();
+                foreach ($top_posts as $key => $post) {
+                    $post = $photo_dao->getPhoto($post->post_id, 'instagram');
+                    $popular_photos[] = $post;
+                }
+                $top_posts = $popular_photos;
+            }
+
             $copy = array(
                 'twitter' => array(
                     'normal' => array(
@@ -123,6 +134,13 @@ class EOYMostPopularPerMonthInsight extends InsightPluginParent implements Insig
                         'headline' => "%username's biggest posts of each month in %year",
                         'body' => "This year's about to enter the history books. For better or for worse, these were ".
                             "%username's most popular status updates of each month of %qualified_year"
+                    ),
+                ),
+                'instagram' => array(
+                    'normal' => array(
+                        'headline' => "%username's biggest Instagram posts of each month in %year",
+                        'body' => "The calendar is about to flip to a new year. Before it does, check out ".
+                            "%username's most popular Instagram photos and videos of each month of %qualified_year"
                     ),
                 )
             );
