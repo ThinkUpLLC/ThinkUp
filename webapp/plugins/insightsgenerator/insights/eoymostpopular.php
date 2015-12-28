@@ -82,91 +82,95 @@ class EOYMostPopularInsight extends InsightPluginParent implements InsightPlugin
             $scored_posts = $this->getScoredPosts($last_year_of_posts);
             $top_post = $this->getMostPopularPost($instance, $scored_posts);
 
-            //Populate Instagram photo
-            if ($instance->network == 'instagram') {
-                $photo_dao = DAOFactory::getDAO('PhotoDAO');
-                $top_post = $photo_dao->getPhoto($top_post->post_id, 'instagram');
-            }
-
-            $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
-            $qualified_year = $year.".";
-            if ( date('Y', strtotime($earliest_pub_date)) == date('Y') ) {
-                if ( date('n', strtotime($earliest_pub_date)) > 1 ) { //not January
-                    //Earliest post was this year; figure out what month we have data since this year
-                    $since = date('F', strtotime($earliest_pub_date));
-                    $qualified_year = $year." (at least since ".$since.").";
+            if (isset($top_post)) {
+                //Populate Instagram photo
+                if ($instance->network == 'instagram') {
+                    $photo_dao = DAOFactory::getDAO('PhotoDAO');
+                    $top_post = $photo_dao->getPhoto($top_post->post_id, 'instagram');
                 }
-            }
 
-            $copy = array(
-                'twitter' => array(
-                    'normal' => array(
-                        'headline' => "%username's most popular tweet of %year",
-                        'body' => "We don't tweet for the glory, but a little " .
-                        "attention doesn't hurt. With <strong>%list_of_stats</strong>, " .
-                        "this is %username's most popular tweet of %qualified_year"
+                $earliest_pub_date = $post_dao->getEarliestCapturedPostPubDate($instance);
+                $qualified_year = $year.".";
+                if ( date('Y', strtotime($earliest_pub_date)) == date('Y') ) {
+                    if ( date('n', strtotime($earliest_pub_date)) > 1 ) { //not January
+                        //Earliest post was this year; figure out what month we have data since this year
+                        $since = date('F', strtotime($earliest_pub_date));
+                        $qualified_year = $year." (at least since ".$since.").";
+                    }
+                }
+
+                $copy = array(
+                    'twitter' => array(
+                        'normal' => array(
+                            'headline' => "%username's most popular tweet of %year",
+                            'body' => "We don't tweet for the glory, but a little " .
+                            "attention doesn't hurt. With <strong>%list_of_stats</strong>, " .
+                            "this is %username's most popular tweet of %qualified_year"
+                        ),
                     ),
-                ),
-                'facebook' => array(
-                    'normal' => array(
-                        'headline' => "%username's most popular status update of %year",
-                        'body' => "Sometimes you just say the right thing. With <strong>" .
-                            "%list_of_stats</strong>, this is %username's most " .
-                            "popular status update of %qualified_year"
+                    'facebook' => array(
+                        'normal' => array(
+                            'headline' => "%username's most popular status update of %year",
+                            'body' => "Sometimes you just say the right thing. With <strong>" .
+                                "%list_of_stats</strong>, this is %username's most " .
+                                "popular status update of %qualified_year"
+                        ),
                     ),
-                ),
-                'instagram' => array(
-                    'normal' => array(
-                        'headline' => "%username's most popular Instagram post of %year",
-                        'body' => "Once in awhile, a photo or video really stands out. With <strong>" .
-                            "%list_of_stats</strong>, this is %username's most " .
-                            "popular Instagram post of %qualified_year"
+                    'instagram' => array(
+                        'normal' => array(
+                            'headline' => "%username's most popular Instagram post of %year",
+                            'body' => "Once in awhile, a photo or video really stands out. With <strong>" .
+                                "%list_of_stats</strong>, this is %username's most " .
+                                "popular Instagram post of %qualified_year"
+                        ),
+                    )
+                );
+
+                $stats = array();
+                if ($top_post->favlike_count_cache > 0) {
+                    $stats[] = $top_post->favlike_count_cache . " " .
+                        $this->terms->getNoun('like', $top_post->favlike_count_cache);
+                }
+                if ($top_post->retweet_count_cache > 0) {
+                    $stats[] = $top_post->retweet_count_cache . " " .
+                        $this->terms->getNoun('retweet', $top_post->retweet_count_cache);
+                }
+                if ($top_post->reply_count_cache > 0) {
+                    $stats[] = $top_post->reply_count_cache . " " .
+                        $this->terms->getNoun('reply', $top_post->reply_count_cache);
+                }
+                $list_of_stats = $this->makeList($stats);
+
+                $type = 'normal';
+                $headline = $this->getVariableCopy(
+                    array(
+                        $copy[$network][$type]['headline']
                     ),
-                )
-            );
+                    array(
+                        'year' => $year
+                    )
+                );
 
-            $stats = array();
-            if ($top_post->favlike_count_cache > 0) {
-                $stats[] = $top_post->favlike_count_cache . " " .
-                    $this->terms->getNoun('like', $top_post->favlike_count_cache);
+                $insight_text = $this->getVariableCopy(
+                    array(
+                        $copy[$network][$type]['body']
+                    ),
+                    array(
+                        'qualified_year' => $qualified_year,
+                        'list_of_stats' => $list_of_stats
+                    )
+                );
+
+                $insight->headline = $headline;
+                $insight->text = $insight_text;
+                $insight->setPosts(array($top_post));
+                $insight->filename = basename(__FILE__, ".php");
+                $insight->emphasis = Insight::EMPHASIS_HIGH;
+
+                $this->insight_dao->insertInsight($insight);
+            } else {
+                $this->logger->logInfo("No top post to report", __METHOD__.','.__LINE__);
             }
-            if ($top_post->retweet_count_cache > 0) {
-                $stats[] = $top_post->retweet_count_cache . " " .
-                    $this->terms->getNoun('retweet', $top_post->retweet_count_cache);
-            }
-            if ($top_post->reply_count_cache > 0) {
-                $stats[] = $top_post->reply_count_cache . " " .
-                    $this->terms->getNoun('reply', $top_post->reply_count_cache);
-            }
-            $list_of_stats = $this->makeList($stats);
-
-            $type = 'normal';
-            $headline = $this->getVariableCopy(
-                array(
-                    $copy[$network][$type]['headline']
-                ),
-                array(
-                    'year' => $year
-                )
-            );
-
-            $insight_text = $this->getVariableCopy(
-                array(
-                    $copy[$network][$type]['body']
-                ),
-                array(
-                    'qualified_year' => $qualified_year,
-                    'list_of_stats' => $list_of_stats
-                )
-            );
-
-            $insight->headline = $headline;
-            $insight->text = $insight_text;
-            $insight->setPosts(array($top_post));
-            $insight->filename = basename(__FILE__, ".php");
-            $insight->emphasis = Insight::EMPHASIS_HIGH;
-
-            $this->insight_dao->insertInsight($insight);
         }
 
         $this->logger->logInfo("Done generating insight", __METHOD__.','.__LINE__);
