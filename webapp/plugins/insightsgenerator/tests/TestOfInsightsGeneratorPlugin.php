@@ -750,7 +750,7 @@ class TestOfInsightsGeneratorPlugin extends ThinkUpInsightUnitTestCase {
             }
             $html_email = $merge_vars['insights'];
             $this->debug($html_email);
-            $this->assertPattern('/Update your payment info/', $html_email);
+            $this->assertPattern('/Make your payment/', $html_email);
             unlink(FileDataManager::getDataPath(Mailer::EMAIL));
             $plugin_option_dao->updateOption($options['last_daily_email']->id, 'last_daily_email', $long_ago);
             $owner_builder = null;

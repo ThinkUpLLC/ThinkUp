@@ -335,37 +335,67 @@ class InsightsGeneratorPlugin extends Plugin implements CrawlerPlugin {
                                 __METHOD__.','.__LINE__);
 
                             $payment_failed_copy = array ();
-                            $payment_failed_copy[] = array(
-                                'headline'=>'Oops! Your account needs attention',
-                                'explainer' => "We had a problem processing your membership payment. "
-                                    ."But it's easy to fix."
-                            );
-                            $payment_failed_copy[] = array(
-                                'headline'=>'Uh oh, problem with your subscription...',
-                                'explainer' => "There was a problem processing your membership payment. "
-                                    ."To fix it, update your payment info."
-                            );
-                            $payment_failed_copy[] = array(
-                                'headline'=>'Your ThinkUp subscription is out of date...',
-                                'explainer' => "We tried to charge your Amazon account for your ThinkUp membership,"
-                                    ." and there was an error. But it's easy to fix."
-                            );
-                            $payment_failed_copy[] = array(
-                                'headline'=>'Action required to keep your ThinkUp account active',
-                                'explainer' => "We weren't able to process your last membership payment—maybe your "
-                                    ."info is out of date? Fixing it just takes a moment."
-                            );
-                            $payment_failed_copy[] = array(
-                                'headline'=>"Urgent! Keep your ThinkUp account active",
-                                'explainer' => "We tried to process your ThinkUp subscription, but "
-                                    ."the payment was not successful. Please update your payment information "
-                                    ."now to make sure your ThinkUp membership stays in good standing."
-                            );
+                            if ($membership_details->subscription_status == 'Payment failed') {
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Oops! Your account needs attention',
+                                    'explainer' => "We had a problem processing your membership payment. "
+                                        ."But it's easy to fix."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Uh oh, problem with your subscription...',
+                                    'explainer' => "There was a problem processing your membership payment. "
+                                        ."To fix it, update your payment info."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Your ThinkUp subscription is out of date...',
+                                    'explainer' => "We tried to charge your Amazon account for your ThinkUp membership,"
+                                        ." and there was an error. But it's easy to fix."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Action required to keep your ThinkUp account active',
+                                    'explainer' => "We weren't able to process your last membership payment—maybe your "
+                                        ."info is out of date? Fixing it just takes a moment."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>"Urgent! Keep your ThinkUp account active",
+                                    'explainer' => "We tried to process your ThinkUp subscription, but "
+                                        ."the payment was not successful. Please update your payment information "
+                                        ."now to make sure your ThinkUp membership stays in good standing."
+                                );
+                                $payment_failed_button_label = "Update your payment info";
+                            } else { //Payment due
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Oops! Your ThinkUp membership needs attention',
+                                    'explainer' => "Looks like you've got a membership payment due. "
+                                        ."But it's easy to make it."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>"Uh-oh, don't let your subscription expire",
+                                    'explainer' => "Looks like your ThinkUp payment is due. "
+                                        ."Make it now so your account doesn't expire."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Hey, your ThinkUp subscription payment is due',
+                                    'explainer' => "Your membership payment isn't up-to-date. "
+                                        ." But it's easy to fix."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>'Action required: Keep your ThinkUp account active',
+                                    'explainer' => "Looks like you've got a membership payment due. "
+                                        ."Making it just takes a moment."
+                                );
+                                $payment_failed_copy[] = array(
+                                    'headline'=>"Urgent! Keep your ThinkUp account active",
+                                    'explainer' => "Your subscription payment is due. "
+                                        ."Please update your information now to keep your ThinkUp membership "
+                                        ."in good standing."
+                                );
+                                $payment_failed_button_label = "Make your payment";
+                            }
 
                             $copy_index = TimeHelper::getDayOfYear() % count($payment_failed_copy);
                             $payment_failed_headline = $payment_failed_copy[$copy_index]['headline'];
                             $payment_failed_explainer = $payment_failed_copy[$copy_index]['explainer'];
-                            $payment_failed_button_label = "Update your payment info";
 
                             $view->assign('payment_failed_headline', $payment_failed_headline);
                             $view->assign('payment_failed_explainer', $payment_failed_explainer);
