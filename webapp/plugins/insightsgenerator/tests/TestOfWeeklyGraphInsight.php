@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfWeeklyGraphInsight.php
  *
- * Copyright (c) 2013-2015 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2013-2016 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the WeeklyGraphInsight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2015 Nilaksh Das, Gina Trapani
+ * @copyright 2013-2016 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 

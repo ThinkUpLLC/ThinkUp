@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.VideoMySQLDAO.php
  *
- * Copyright (c) 2009-2015 Aaron Kalair
+ * Copyright (c) 2009-2016 Aaron Kalair
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving videos in the ThinkUp database
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Aaron Kalair
+ * @copyright 2009-2016 Aaron Kalair
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  */
 class VideoMySQLDAO extends PostMySQLDAO implements VideoDAO  {

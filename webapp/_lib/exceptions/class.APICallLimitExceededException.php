@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/APICallLimitExceededException.php
  *
- * Copyright (c) 2011-2015 Mark Wilkie
+ * Copyright (c) 2011-2016 Mark Wilkie
  *
  * LICENSE:
  *
@@ -23,6 +23,6 @@
  *
  * @author Mark Wilkie <mwilkie@gmail.com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2015 Mark Wilkie
+ * @copyright 2011-2016 Mark Wilkie
  */
 class APICallLimitExceededException extends Exception { }

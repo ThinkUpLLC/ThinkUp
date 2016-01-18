@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.InsightFieldExceedsMaxLengthException.php
  *
- * Copyright (c) 2014-2015 Gina Trapani
+ * Copyright (c) 2014-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,6 +22,6 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Gina Trapani
+ * @copyright 2014-2016 Gina Trapani
  */
 class InsightFieldExceedsMaxLengthException extends Exception {}

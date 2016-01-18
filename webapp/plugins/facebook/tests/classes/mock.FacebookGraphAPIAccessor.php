@@ -23,11 +23,11 @@
  *
  * Reads test data files instead of the actual Facebook servers for the purposes of running tests.
  *
- * Copyright (c) 2009-2015 Gina Trapani
+ * Copyright (c) 2009-2016 Gina Trapani
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Gina Trapani
+ * @copyright 2009-2016 Gina Trapani
  */
 class FacebookGraphAPIAccessor {
     //const API_DOMAIN = 'https://graph.facebook.com/v2.3/';

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.HashtagMySQLDAO.php
  *
- * Copyright (c) 2011-2015 Amy Unruh
+ * Copyright (c) 2011-2016 Amy Unruh
  *
  * LICENSE:
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2015
+ * @copyright 2011-2016
  * @author Amy Unruh
  */
 class HashtagMySQLDAO extends PDODAO implements HashtagDAO {

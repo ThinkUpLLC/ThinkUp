@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfEOYExclamationCountInsight.php
  *
- * Copyright (c) 2012-2015 Gina Trapani
+ * Copyright (c) 2012-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,11 +24,11 @@
  *
  * Test for the EOYExclamationCountInsight class.
  *
- * Copyright (c) 2014-2015 Adam Pash
+ * Copyright (c) 2014-2016 Adam Pash
  *
  * @author Adam Pash adam.pash@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Adam Pash
+ * @copyright 2014-2016 Adam Pash
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

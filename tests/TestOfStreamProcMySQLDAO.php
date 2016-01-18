@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfStreamProcMySQLDAO.php
  *
- * Copyright (c) 2011-2015 Amy Unruh
+ * Copyright (c) 2011-2016 Amy Unruh
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test of StreamProcDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011-2015 Amy Unruh
+ * @copyright 2011-2016 Amy Unruh
  * @author Amy Unruh
  *
  */

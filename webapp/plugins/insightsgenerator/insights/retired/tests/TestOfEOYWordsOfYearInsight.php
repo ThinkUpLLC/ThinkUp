@@ -23,7 +23,7 @@
  * Test of LOL Count Insight
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Gina Trapani
+ * @copyright 2014-2016 Gina Trapani
  * @author Gina Trapani <chris[at]inarow[dot]net>
  */
 

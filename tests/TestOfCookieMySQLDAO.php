@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfCookieMySQLDAO.php
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * LICENSE:
  *
@@ -22,7 +22,7 @@
  *
  * Test of CookieMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer
  */
 require_once dirname(__FILE__).'/init.tests.php';

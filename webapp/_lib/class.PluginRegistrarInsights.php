@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.PluginRegistrarInsights.php
  *
- * Copyright (c) 2012-2015 Gina Trapani
+ * Copyright (c) 2012-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Singleton provides hooks for insight plugins.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Gina Trapani
+ * @copyright 2012-2016 Gina Trapani
  * @author Gina Trapani
  */
 class PluginRegistrarInsights extends PluginRegistrar {

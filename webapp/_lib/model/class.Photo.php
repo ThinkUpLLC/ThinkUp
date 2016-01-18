@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Photo.php
  *
- * Copyright (c) 2013-2015 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
+ * Copyright (c) 2013-2016 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  *
  * @author Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2015 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
+ * @copyright 2013-2016 Dimosthenis Nikoudis, Aaron Kalair, Gina Trapani
  *
  */
 class Photo extends Post {

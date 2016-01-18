@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.use_https.php
  *
- * Copyright (c) 2014-2015 Matt Jacobs
+ * Copyright (c) 2014-2016 Matt Jacobs
  *
  * LICENSE:
  *

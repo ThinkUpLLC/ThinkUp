@@ -25,11 +25,11 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2014-2015 Chris Moyer, Anil Dash
+ * Copyright (c) 2014-2016 Chris Moyer, Anil Dash
  *
  * @author Chris Moyer chris@inarow.net, Anil Dash anil@thinkup.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer, Anil Dash
+ * @copyright 2014-2016 Chris Moyer, Anil Dash
  */
 
 class LlamasInsight extends InsightPluginParent implements InsightPlugin {

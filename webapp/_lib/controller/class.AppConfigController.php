@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.AppConfigController.php
  *
- * Copyright (c) 2009-2015 Mark Wilkie
+ * Copyright (c) 2009-2016 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Saves/Updates application-wide options/settings.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Mark Wilkie
+ * @copyright 2009-2016 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

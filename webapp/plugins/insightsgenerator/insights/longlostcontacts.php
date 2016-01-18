@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/longlostcontacts.php
  *
- * Copyright (c) 2012-2015 Nilaksh Das, Gina Trapani
+ * Copyright (c) 2012-2016 Nilaksh Das, Gina Trapani
  *
  * LICENSE:
  *
@@ -27,7 +27,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Nilaksh Das, Gina Trapani
+ * @copyright 2012-2016 Nilaksh Das, Gina Trapani
  * @author Nilaksh Das <nilakshdas [at] gmail [dot] com>
  */
 

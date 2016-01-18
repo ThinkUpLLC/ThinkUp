@@ -28,7 +28,7 @@
  *
  * @author Gareth Brady gareth.brady92@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Gareth Brady
+ * @copyright 2014-2016 Gareth Brady
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

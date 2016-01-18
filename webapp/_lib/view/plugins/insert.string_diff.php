@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/insert.string_diff.php
  *
- * Copyright (c) 2009-2015 Matt Jacobs
+ * Copyright (c) 2009-2016 Matt Jacobs
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    two strings
  * Example:  {insert name="string_diff" from_text="foo" to_text="bar"}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Matt Jacobs
+ * @copyright 2009-2016 Matt Jacobs
  * @author   Matt Jacobs
  * @version 1.0
  */

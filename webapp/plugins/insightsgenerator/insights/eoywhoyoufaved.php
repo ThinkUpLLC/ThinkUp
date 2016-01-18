@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/eoywhoyoufaved.php
  *
- * Copyright (c) 2012-2015 Gina Trapani
+ * Copyright (c) 2012-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,11 +26,11 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * @author Chris Moyer chri@inarow.net
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  */
 
 class EOYWhoYouFavedInsight extends InsightPluginParent implements InsightPlugin {

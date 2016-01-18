@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.UserVersionsDAO.php
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * UserVersions Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer
  *
  */

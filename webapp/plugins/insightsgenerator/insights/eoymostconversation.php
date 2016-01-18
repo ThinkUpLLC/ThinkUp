@@ -26,11 +26,11 @@
  *
  * EOYMostConversation
  *
- * Copyright (c) 2014-2015 Adam Pash
+ * Copyright (c) 2014-2016 Adam Pash
  *
  * @author Adam Pash adam.pash@gmail.com
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Adam Pash
+ * @copyright 2014-2016 Adam Pash
  */
 
 class EOYMostConversationInsight extends InsightPluginParent implements InsightPlugin {

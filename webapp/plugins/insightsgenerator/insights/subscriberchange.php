@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/subscriberchange.php
  *
- * Copyright (c) 2012-2015 Aaron Kalair
+ * Copyright (c) 2012-2016 Aaron Kalair
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Aaron Kalair
+ * @copyright 2012-2016 Aaron Kalair
  * @author Aaron Kalair <aaronkalair [at] gmail [dot] com>
  */
 

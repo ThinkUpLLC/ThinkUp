@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.SearchController.php
  *
- * Copyright (c) 2013-2015 Gina Trapani
+ * Copyright (c) 2013-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Display search results for all an owner's instances.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2015 Gina Trapani
+ * @copyright 2013-2016 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

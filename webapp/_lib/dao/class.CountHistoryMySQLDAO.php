@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.CountHistoryMySQLDAO.php
  *
- * Copyright (c) 2009-2015 Gina Trapani
+ * Copyright (c) 2009-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  * Count History MySQL Data Access Object Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Gina Trapani
+ * @copyright 2009-2016 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

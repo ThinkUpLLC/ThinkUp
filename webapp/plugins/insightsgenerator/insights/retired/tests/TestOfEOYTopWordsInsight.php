@@ -23,7 +23,7 @@
  * Test of Top Words Insight
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer <chris[at]inarow[dot]net>
  */
 

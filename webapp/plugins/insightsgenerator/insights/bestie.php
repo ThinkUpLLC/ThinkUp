@@ -9,7 +9,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/bestie.php
  *
- * Copyright (c) 2014-2015 Gina Trapani
+ * Copyright (c) 2014-2016 Gina Trapani
  *
  * LICENSE:
  *
@@ -26,11 +26,11 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2014-2015 Gina Trapani
+ * Copyright (c) 2014-2016 Gina Trapani
  *
  * @author Gina Trapani <ginatrapani at gmail dot com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Gina Trap9ani
+ * @copyright 2014-2016 Gina Trap9ani
  */
 
 class BestieInsight extends InsightPluginParent implements InsightPlugin {

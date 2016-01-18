@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/view/plugins/modifier.color_html_email_links.php
  *
- * Copyright (c) 2009-2015 Matt Jacobs
+ * Copyright (c) 2009-2016 Matt Jacobs
  *
  * LICENSE:
  *
@@ -36,7 +36,7 @@
  * Input:    post text
  * Example:  {$post->post_text|color_html_email_links}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Matt Jacobs
+ * @copyright 2009-2016 Matt Jacobs
  * @author   Matt Jacobs
  * @version 1.0
  * @param string

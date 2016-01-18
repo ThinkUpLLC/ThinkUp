@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfChartHelper.php
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  * Test Of ChartHelper
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 require_once dirname(__FILE__).'/init.tests.php';

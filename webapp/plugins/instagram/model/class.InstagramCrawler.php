@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/instagram/model/class.InstagramCrawler.php
  *
- * Copyright (c) 2013-2015 Dimosthenis Nikoudis, Gina Trapani
+ * Copyright (c) 2013-2016 Dimosthenis Nikoudis, Gina Trapani
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * @author Dimosthenis Nikoudis <dnna[at]dnna[dot]gr>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2013-2015 Dimosthenis Nikoudis, Gina Trapani
+ * @copyright 2013-2016 Dimosthenis Nikoudis, Gina Trapani
  */
 class InstagramCrawler {
     /**

@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfVideoMySQLDAO.php
  *
- * Copyright (c) 2009-2015 Aaron Kalair
+ * Copyright (c) 2009-2016 Aaron Kalair
  *
  * LICENSE:
  *
@@ -23,7 +23,7 @@
  *
  * Test of VideoMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Aaron Kalair
+ * @copyright 2009-2016 Aaron Kalair
  * @author Aaron Kalair <aaronkalair[at]gmail[dot]com>
  *
  */

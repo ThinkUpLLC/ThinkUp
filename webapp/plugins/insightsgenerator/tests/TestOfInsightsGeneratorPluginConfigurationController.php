@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfInsightsGeneratorPluginConfigurationController.php
  *
- * Copyright (c) 2012-2015 (Your Name)
+ * Copyright (c) 2012-2016 (Your Name)
  *
  *
  * LICENSE:
@@ -25,7 +25,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Gina Trapani
+ * @copyright 2012-2016 Gina Trapani
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

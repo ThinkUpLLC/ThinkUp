@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.StreamDataDAO.php
  *
- * Copyright (c) 2011-2015 Amy Unruh
+ * Copyright (c) 2011-2016 Amy Unruh
  *
  * LICENSE:
  *

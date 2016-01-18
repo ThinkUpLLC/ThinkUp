@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/class.TimeHelper.php
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * A simple helper function to facilitate time-based testing
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer <chris[at]inarow[dot]net>
  *
  */

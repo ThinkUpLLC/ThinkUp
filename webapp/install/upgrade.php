@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/upgrade.php
  *
- * Copyright (c) 2012-2015 Mark Wilkie
+ * Copyright (c) 2012-2016 Mark Wilkie
  *
  * LICENSE:
  *
@@ -24,7 +24,7 @@
  *
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Mark Wilkie
+ * @copyright 2012-2016 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

@@ -21,11 +21,11 @@
  *
  * Test of EOYGenderAnalysisInsight
  *
- * Copyright (c) 2014-2015 Anna Shkerina
+ * Copyright (c) 2014-2016 Anna Shkerina
  *
  * @author Chris Moyer chris@inarow.net
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  */
 
 require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';

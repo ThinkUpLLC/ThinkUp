@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ExportServiceUserDataController.php
  *
- * Copyright (c) 2011-2015 Gina Trapani
+ * Copyright (c) 2011-2016 Gina Trapani
  *
  * LICENSE:
  *

@@ -8,7 +8,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/insights/thanksgivingwhoyouthanked.php
  *
- * Copyright (c) 2014-2015 Chris Moyer
+ * Copyright (c) 2014-2016 Chris Moyer
  *
  * LICENSE:
  *
@@ -26,7 +26,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Chris Moyer
+ * @copyright 2014-2016 Chris Moyer
  * @author Chris Moyer <chris [at] inarow [dot] net>
  */
 class ThanksgivingWhoYouThankedInsight extends InsightPluginParent implements InsightPlugin {

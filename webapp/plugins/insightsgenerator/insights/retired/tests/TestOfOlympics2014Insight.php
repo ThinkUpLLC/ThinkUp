@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/insightsgenerator/tests/TestOfOlympics2014Insight.php
  *
- * Copyright (c) 2012-2015 Gina Trapani, Anil Dash
+ * Copyright (c) 2012-2016 Gina Trapani, Anil Dash
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * Test for the Olympics2014Insight class.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2012-2015 Gina Trapani, Anil Dash
+ * @copyright 2012-2016 Gina Trapani, Anil Dash
  * @author Anil Dash <anil[at]thinkup[dot]com>
  */
 
