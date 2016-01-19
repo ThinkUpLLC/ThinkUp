@@ -69,7 +69,7 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/On this day in 2014/', $result->headline);
+        $this->assertPattern('/On this day in 2015/', $result->headline);
         $last_year = (date('Y')) - 1;
         $possible_text = array("This was @testeriffic's most popular tweet <strong>1 year ago</strong>.",
             "On this day in ".$last_year.", this was @testeriffic's most popular tweet.");
@@ -101,7 +101,7 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/On this day in 2014/', $result->headline);
+        $this->assertPattern('/On this day in 2015/', $result->headline);
         $last_year = (date('Y')) - 1;
         $possible_text = array("This was testeriffic's most popular photo <strong>1 year ago</strong>.",
             "On this day in ".$last_year.", this was testeriffic's most popular photo.");
@@ -144,7 +144,7 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         //$this->debug(Utils::varDumpToString($result));
         $this->assertNotNull($result);
         $this->assertIsA($result, "Insight");
-        $this->assertPattern('/On this day in 2014/', $result->headline);
+        $this->assertPattern('/On this day in 2015/', $result->headline);
         $last_year = (date('Y')) - 1;
         $possible_text = array("This was testeriffic's most popular video <strong>1 year ago</strong>.",
             "On this day in ".$last_year.", this was testeriffic's most popular video.");
@@ -210,7 +210,7 @@ class TestOfFlashbackInsight extends ThinkUpInsightUnitTestCase {
         $this->assertIsA($result, "Insight");
         $this->assertPattern('/3 years ago today/', $result->headline);
         $last_year = (date('Y')) - 1;
-        $this->assertEqual("On this day in 2012, this was testeriffic's most popular status update.", $result->text);
+        $this->assertEqual("On this day in 2013, this was testeriffic's most popular status update.", $result->text);
         $this->assertIsA($fav_posts, "array");
         $this->assertIsA($fav_posts["posts"][0], "Post");
         $this->assertEqual(count($fav_posts), 1);
