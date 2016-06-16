@@ -3,22 +3,12 @@
   {include file="_navigation.tpl" display_search_box="true"}
 {/if}
 
-{if isset($thinkupllc_endpoint) && isset($logged_in_user)}
-  {if $instagram_connection_status neq 'active'}
-          <script>{literal}
-          var app_message = {};
-          app_message.msg = {/literal}"<strong>New:</strong> Get insights for your Instagram account! <a href=\"{$site_root_path}account/?p=instagram\">Try it out &raquo;</a>"{literal};
-          app_message.type = "info";
-          {/literal}</script>
-  {/if}
-{/if}
-{if isset($thinkupllc_endpoint) && !isset($logged_in_user) && !isset($year_end_year)}
-    <script>{literal}
-    var app_message = {};
-    app_message.msg = {/literal}"<strong>New from ThinkUp:</strong> <a href=\"https://makerbase.co/?utm_source=ThinkUp&utm_medium=Webapp&utm_campaign=Tout\">Makerbase</a> is a directory of digital projects and their makers. <a href=\"https://makerbase.co/?utm_source=ThinkUp&utm_medium=Webapp&utm_campaign=Tout\">Add yours &raquo;</a>"{literal};
-    app_message.type = "info";
-    {/literal}</script>
-{/if}
+<script>{literal}
+var app_message = {};
+app_message.msg = {/literal}"<strong>ThinkUp is closing down on July 18.</strong> Get <a href=\"https://medium.com/p/e600bc46cc56#.133usdh6u\">details &amp; refund info &raquo;</a>"{literal};
+app_message.type = "info";
+{/literal}</script>
+
 
 <div class="container">
   {if $is_year_end}
