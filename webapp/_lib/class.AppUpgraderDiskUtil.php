@@ -29,14 +29,14 @@ class AppUpgraderDiskUtil {
      * @var int Required amount of disk space to run web update, 100MB default
      */
     static $DISK_SPACE_NEEDED = 104857600;
-    /**
+    /**
      * @var array Config file regexes
      */
     var $CONFIG = array( array('/\/config\.inc\.php$/', 'config.inc.php') );
     /**
      * @var array Files to ignore during web update
      */
-    var $IGNORE_FILES = array('/_lib\/view\/compiled_view/', '/\/data\//');
+    var $IGNORE_FILES = array('/_lib\/view\/compiled_view/', '/\/data\//', '/\/plugins\//');
     /**
      * @var str ThinkUp's current version
      */
