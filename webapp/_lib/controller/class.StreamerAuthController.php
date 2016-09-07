@@ -45,6 +45,10 @@ class StreamerAuthController extends ThinkUpController {
         $this->argv = $argv;
     }
 
+    private function usage() {
+       return sprintf("Usage: %s <start|process|shutdown> <admin_user_email> <pwd>", $this->argv[0]);
+    }
+
     /**
      * @return string
      */
@@ -70,25 +74,30 @@ class StreamerAuthController extends ThinkUpController {
             } else {
                 $output = "ERROR: Incorrect username and password.";
             }
+        } else {
+            $output = $this->usage();
         }
 
         if ($authorized) {
             $streamer = Streamer::getInstance();
             // print "have streamer method: $streamer_method\n";
             switch($streamer_method) {
-                case 'stream':
+                case 'start':
                     $streamer->stream();
                     break;
-                case 'streamProcess':
+                case 'process':
                     $streamer->streamProcess();
                     break;
-                case 'shutdownStreams':
+                case 'shutdown':
                     $streamer->shutdownStreams();
                     break;
                 default:
                     $output = "Error: could not identify stream method to run.";
+                    $output .= "\n" . $this->usage();
             }
         }
+
+        $output = empty($output) ? '' : $output . "\n";
 
         return $output;
     }
