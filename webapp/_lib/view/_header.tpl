@@ -2,7 +2,7 @@
 <html lang="en" prefix="og: http://ogp.me/ns#" itemscope itemtype="http://schema.org/Article">
 <head>
     <meta charset="utf-8">
-    <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
+    <title>{$app_title}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{$site_root_path}assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$site_root_path}assets/ico/apple-touch-icon-114-precomposed.png">
