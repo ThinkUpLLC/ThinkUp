@@ -40,7 +40,11 @@
 
     <div class="stream-yearend-header">
        <h1>
-         <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of {$year_end_year}
+        {if $year_end_year eq '2014'}
+         <img src="{$site_root_path}assets/img/yearend/calendar-{$img_date|strip|substr:1:8}.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of 2014
+        {else}
+         <img src="{$site_root_path}assets/img/yearend/eoy-heart-star.png" class="calendar">{if isset($thinkup_username)}{$thinkup_username}'s {else}My {/if}Best of {$year_end_year}
+        {/if}
 
          <span class="share-buttons">
            <a class="btn btn-yearend" href="https://twitter.com/intent/tweet?related=thinkup&amp;text={if isset($thinkup_username)}{$thinkup_username}'s+{else}Your+{/if}Best+of+{$year_end_year}&amp;url={$thinkup_application_url}{$year_end_year}/&amp;via=thinkup"><i class="fa fa-fw fa-twitter"></i></a><a class="btn btn-yearend" href="https://www.facebook.com/sharer.php?u={$thinkup_application_url}{$year_end_year}/"><i class="fa fa-fw fa-facebook"></i></a>
