@@ -123,6 +123,15 @@ class TimeSpentInsight extends InsightPluginParent implements InsightPlugin {
 
         $insight_text .= '</strong> of '. $this->username.'\'s life.';
 
+        if ($instance->network == 'instagram') {
+            $posting_pixels = ($number_of_posts * .4);
+
+            $insight_text = 'That\'s about <strong>';
+            $insight_text .= $posting_pixels . ' million</strong> pixels worth of photos';
+            $insight_text .= ' from ' . $this->username . '.';
+
+        }
+
         return $insight_text;
     }
 }
