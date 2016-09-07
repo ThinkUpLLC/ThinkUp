@@ -172,4 +172,13 @@ class HashtagPostMySQLDAO extends PDODAO implements HashtagPostDAO {
         $result = $this->getDataRowAsArray($ps);
         return $result['total'];
     }
+    
+    public function getLastPostIDByHashtag($hashtag_id) {
+        $vars = array(':hashtag_id'=>$hashtag_id);       
+        $q = "SELECT max(post_id) AS post_id FROM  #prefix#hashtags_posts ";
+        $q .= "WHERE  hashtag_id = :hashtag_id;";      
+        $ps = $this->execute($q, $vars);
+        $result = $this->getDataRowAsArray($ps);
+        return $result['post_id'];
+    }
 }
