@@ -93,6 +93,9 @@
                 </div>
                 <div><label class="blue">Full width <input type="checkbox" id="show-wide" class="cb" /></label>
                 </div>
+                <div><label class="blue">Full width:</label>
+                    <input type="checkbox" id="show-wide" class="cb" />
+                </div>
                 <div><label class="blue">Embed:</label>
                   <input type="radio" name="embeds" id="embed-none" class="cb" checked />None
                   <input type="radio" name="embeds" id="show-post" class="cb" /><label for="show-post" class="embedLabel">Post</label>
