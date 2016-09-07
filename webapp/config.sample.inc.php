@@ -41,6 +41,17 @@ $THINKUP_CFG['mandrill_api_key'] = '';
 /***  DATABASE CONFIG                         ***/
 /************************************************/
 
+// For Appfog - http://www.appfog.com
+/*
+$services_json = json_decode(getenv("VCAP_SERVICES"),true);
+$mysql_config = $services_json["mysql-5.1"][0]["credentials"];
+$username = $mysql_config["username"];
+$password = $mysql_config["password"];
+$hostname = $mysql_config["hostname"];
+$port = $mysql_config["port"];
+$db = $mysql_config["name"];
+*/
+
 $THINKUP_CFG['db_host']                   = 'localhost'; //On a shared host? Try mysql.yourdomain.com, or see your web host's documentation.
 $THINKUP_CFG['db_type']                   = 'mysql';
 $THINKUP_CFG['db_user']                   = 'your_database_username';
